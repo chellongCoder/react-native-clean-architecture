@@ -7,6 +7,8 @@ import {hideBottomTab, showBottomTab} from './actions/RootNavigationActions';
 import PostScreen from 'src/post/presentation/screens/PostsScreen';
 import PostsScreen from 'src/post/presentation/screens/PostsScreen';
 import LessonScreen from 'src/lesson/presentation/screens/LessonScreen';
+import OnBoardingScreen from '../screens/OnBoardingScreen';
+import NotFoundScreen from '../screens/NotFoundScreen';
 
 const AuthStack = createStackNavigator();
 const HomeStack = createStackNavigator();
@@ -155,7 +157,7 @@ function AppNavigator(): React.ReactElement {
       <AppStack.Screen
         name={STACK_NAVIGATOR.BOTTOM_TAB_SCREENS}
         key={STACK_NAVIGATOR.BOTTOM_TAB_SCREENS}
-        component={TabNavigator}
+        component={OnBoardingScreen}
       />
       <AppStack.Screen
         name={STACK_NAVIGATOR.AUTH_NAVIGATOR}
