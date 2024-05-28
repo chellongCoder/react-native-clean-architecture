@@ -15,6 +15,8 @@ import AchievementScreen from 'src/achievement/presentation/AchievementScreen';
 import RankScreen from 'src/rank/presentation/RankScreen';
 import LoginScreen from 'src/post/presentation/screens/LoginScreen';
 import OnBoardingScreen from '../screens/OnBoardingScreen';
+import NotFoundScreen from '../screens/NotFoundScreen';
+import DoneLessonScreen from '../screens/DoneLessonScreen';
 
 const AuthStack = createStackNavigator();
 const HomeStack = createStackNavigator();
@@ -257,7 +259,7 @@ function AppNavigator(): React.ReactElement {
       <AppStack.Screen
         name={STACK_NAVIGATOR.BOTTOM_TAB_SCREENS}
         key={STACK_NAVIGATOR.BOTTOM_TAB_SCREENS}
-        component={OnBoardingScreen}
+        component={DoneLessonScreen}
       />
       <AppStack.Screen
         name={STACK_NAVIGATOR.AUTH_NAVIGATOR}
