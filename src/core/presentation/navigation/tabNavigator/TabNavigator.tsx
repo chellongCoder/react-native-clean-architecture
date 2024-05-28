@@ -11,6 +11,7 @@ import {
   ParentStackScreens,
   ChildStackScreens,
 } from '../AppNavigator';
+import StudyRoadmapScreen from 'src/lesson/presentation/screens/StudyRoadmap';
 
 const BottomTab = createBottomTabNavigator();
 
@@ -32,7 +33,7 @@ export default function TabNavigator(): React.ReactElement {
       <BottomTab.Screen
         name={STACK_NAVIGATOR.BOTTOM_TAB.TARGET_TAB}
         key={STACK_NAVIGATOR.BOTTOM_TAB.TARGET_TAB}
-        component={TargetStackScreens}
+        component={StudyRoadmapScreen}
       />
       <BottomTab.Screen
         name={STACK_NAVIGATOR.BOTTOM_TAB.PARENT_TAB}

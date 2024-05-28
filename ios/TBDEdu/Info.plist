@@ -32,7 +32,19 @@
 		<true/>
 	</dict>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string/>
+	<string></string>
+	<key>UIAppFonts</key>
+	<array>
+		<string>eina-01-bold.ttf</string>
+		<string>eina-01-light.ttf</string>
+		<string>eina-01-regular.ttf</string>
+		<string>eina-01-semibold.ttf</string>
+		<string>eina-03-bold.ttf</string>
+		<string>eina-03-regular.ttf</string>
+		<string>eina-03-semibold.ttf</string>
+		<string>eina-04-regular.ttf</string>
+		<string>SVN-Cherish Moment.ttf</string>
+	</array>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIRequiredDeviceCapabilities</key>
@@ -47,17 +59,5 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
-	<key>UIAppFonts</key>
-	<array>
-		<string>eina-01-bold.ttf</string>
-		<string>eina-01-light.ttf</string>
-		<string>eina-01-regular.ttf</string>
-		<string>eina-01-semibold.ttf</string>
-		<string>eina-03-bold.ttf</string>
-		<string>eina-03-regular.ttf</string>
-		<string>eina-03-semibold.ttf</string>
-		<string>eina-04-regular.ttf</string>
-		<string>SVN-Cherish Moment.ttf</string>
-	</array>
 </dict>
 </plist>
