@@ -63,7 +63,6 @@
     "@types/color": "^3.0.6",
     "@types/i18n-js": "^3.8.3",
     "@types/react": "^18.2.6",
-    "@types/color": "^3.0.6",
     "@types/react-native": "~0.69.1",
     "@types/react-test-renderer": "^18.0.0",
     "babel-jest": "^29.6.3",

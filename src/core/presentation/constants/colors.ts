@@ -23,4 +23,5 @@ export const COLORS = {
   BLUE_A3F0DF: '#A3F0DF',
   WHITE_FBF8CC: '#FBF8CC',
   BLUE_258F78: '#258F78',
+  GREEN_1C6349: '#1C6349',
 };

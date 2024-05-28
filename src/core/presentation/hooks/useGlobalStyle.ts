@@ -4,6 +4,10 @@ import {moderateScale, scale, verticalScale} from 'react-native-size-matters';
 
 export default function useGlobalStyle() {
   return StyleSheet.create({
+    txtNote: {
+      fontSize: moderateScale(8),
+      fontFamily: FontFamily.Eina01Regular,
+    },
     txtLabel: {
       fontSize: moderateScale(15),
       fontFamily: FontFamily.Eina01Bold,
@@ -16,10 +20,6 @@ export default function useGlobalStyle() {
       fontSize: moderateScale(20),
       fontFamily: FontFamily.SVNCherishMoment,
     },
-    txtNote: {
-      fontSize: moderateScale(8),
-      fontFamily: FontFamily.Eina01Regular,
-    },
     txtButton: {
       fontSize: moderateScale(10),
       fontFamily: FontFamily.Eina01Bold,
@@ -29,6 +29,10 @@ export default function useGlobalStyle() {
     },
     heightElement: {
       height: verticalScale(64),
+    },
+    rowCenter: {
+      flexDirection: 'row',
+      alignItems: 'center',
     },
   });
 }
