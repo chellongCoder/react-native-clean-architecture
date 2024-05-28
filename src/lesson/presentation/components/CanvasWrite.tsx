@@ -32,6 +32,7 @@ type Props = {
     };
   };
   matchDistance?: number;
+  backgroundColor?: string;
   matchPoints?: {x: number; y: number; passed?: boolean}[];
 };
 
@@ -207,7 +208,10 @@ const CanvasWrite = forwardRef<CanvasWriteRef, Props>((props: Props, ref) => {
 
   return (
     <View
-      style={styles.container}
+      style={[
+        styles.container,
+        props.backgroundColor ? {backgroundColor: props.backgroundColor} : null,
+      ]}
       onLayout={e => {
         setSize({
           height: e.nativeEvent.layout.height,
@@ -251,7 +255,7 @@ const CanvasWrite = forwardRef<CanvasWriteRef, Props>((props: Props, ref) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'white',
+    backgroundColor: '#FBF8CC',
     borderRadius: 20,
     overflow: 'hidden',
   },
