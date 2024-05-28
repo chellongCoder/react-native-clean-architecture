@@ -3,6 +3,11 @@ import React, {useState} from 'react';
 import useGlobalStyle from 'src/core/presentation/hooks/useGlobalStyle';
 import PrimaryButton from '../components/PrimaryButton';
 import CommonInput, {CommonInputPassword} from '../components/CommonInput';
+import {
+  navigateScreen,
+  pushScreen,
+} from 'src/core/presentation/navigation/actions/RootNavigationActions';
+import {STACK_NAVIGATOR} from 'src/core/presentation/navigation/ConstantNavigator';
 
 const LoginScreen = () => {
   const commonStyle = useGlobalStyle();
@@ -11,6 +16,10 @@ const LoginScreen = () => {
   const [useName, setUserName] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+
+  const onGoHomeScreen = () => {
+    navigateScreen(STACK_NAVIGATOR.HOME.HOME_SCREEN);
+  };
 
   return (
     <View style={[styles.container]}>
@@ -57,8 +66,8 @@ const LoginScreen = () => {
         </View>
 
         <View style={[styles.rowAround]}>
-          <PrimaryButton text="Log in" />
-          <PrimaryButton text="Next" />
+          <PrimaryButton text="Log in" onPress={onGoHomeScreen} />
+          <PrimaryButton text="Next" onPress={onGoHomeScreen} />
         </View>
       </ScrollView>
     </View>

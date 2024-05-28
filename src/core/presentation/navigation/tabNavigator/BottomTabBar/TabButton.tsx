@@ -18,6 +18,8 @@ const BottomTabColor = {
   [BOTTOM_TAB.TARGET_TAB]: COLORS.YELLOW_F2B559,
   [BOTTOM_TAB.PARENT_TAB]: COLORS.RED_F28759,
   [BOTTOM_TAB.CHILD_TAB]: COLORS.BLUE_A3F0DF,
+  [BOTTOM_TAB.ACHIEVEMENT_TAB]: COLORS.WHITE_FFE699,
+  [BOTTOM_TAB.RANK_TAB]: COLORS.YELLOW_F2B559,
 };
 
 const TitleTabBar = (name: string, isFocused: boolean) => {
@@ -26,6 +28,8 @@ const TitleTabBar = (name: string, isFocused: boolean) => {
     [BOTTOM_TAB.TARGET_TAB]: 'Target',
     [BOTTOM_TAB.PARENT_TAB]: 'Parent',
     [BOTTOM_TAB.CHILD_TAB]: 'Child',
+    [BOTTOM_TAB.ACHIEVEMENT_TAB]: 'Achievement',
+    [BOTTOM_TAB.RANK_TAB]: 'Rank',
   };
   const title = titles[name];
   if (!title) {
@@ -52,7 +56,7 @@ const TabButton = ({options, onPress, route, isFocused, numberOfTab}) => {
     scales.value = withTiming(isFocused ? scale(48) : scale(24), {
       duration: 250,
     });
-  }, [isFocused]);
+  }, [isFocused, scales, translate]);
 
   useEffect(() => {
     handleAnimated();
