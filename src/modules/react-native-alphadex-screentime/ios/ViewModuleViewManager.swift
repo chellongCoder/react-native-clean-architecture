@@ -97,13 +97,21 @@ class ViewModuleView : UIView {
 struct ScreenTimeSelectAppsContentView: View {
     @State private var pickerIsPresented = false
     @ObservedObject var model: ScreenTimeSelectAppsModel
+    @State private var showAlert = false
 
     var body: some View {
         VStack {
             Button {
-                pickerIsPresented = true
+//              model.sentEvent(event: "BlockApps")
+              showAlert = true // Add this line
+
             } label: {
               Text("").frame(width: 100 , height: 30, alignment: .center).cornerRadius(10)
+            }
+            .alert(isPresented: $showAlert) {
+              Alert(title: Text("Important message"), message: Text("You need to select blocked apps in this session."), dismissButton: .default(Text("Got it!")) {
+                pickerIsPresented = true
+              })
             }
             .familyActivityPicker(
                 isPresented: $pickerIsPresented,
@@ -112,6 +120,7 @@ struct ScreenTimeSelectAppsContentView: View {
               if !newValue {
                   // Picker has been dismissed
                 model.startAppRestrictions()
+                showAlert = false
               }
             }
 

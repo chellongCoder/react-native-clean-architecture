@@ -2,6 +2,7 @@ import ManagedSettings
 import FamilyControls
 import DeviceActivity
 import Foundation
+import React
 
 @objc(AlphadexScreentime)
 class AlphadexScreentime: NSObject {
@@ -14,13 +15,17 @@ class AlphadexScreentime: NSObject {
 
 @available(iOS 16.0, *)
 @objc(ScreenTimeSelectAppsModel)
-class ScreenTimeSelectAppsModel: NSObject, ObservableObject {
+class ScreenTimeSelectAppsModel: RCTEventEmitter, ObservableObject {
   static let shared = ScreenTimeSelectAppsModel()
   let center = AuthorizationCenter.shared
   private let decoder = JSONDecoder()
   private let encoder = JSONEncoder()
 
   let store = ManagedSettingsStore(named: .mySettingStore)
+
+  override func supportedEvents() -> [String]! {
+    return ["BlockApps", "FFmpegKitCompleteCallbackEvent", "FFmpegKitLogCallbackEvent"]
+  }
 
   @Published var activitySelection = FamilyActivitySelection(includeEntireCategory: true)
   @Published var selectionToDiscourage = FamilyActivitySelection() {
@@ -98,6 +103,10 @@ class ScreenTimeSelectAppsModel: NSObject, ObservableObject {
     }
   }
 
+  func sentEvent(event: String) -> Void {
+    sendEvent(withName: "BlockApps", body: ["key": "value"])
+  }
+
   func startAppRestrictions() -> Void {
     let store = ManagedSettingsStore()
     let userDefaults = UserDefaults.init(suiteName: "group.com.hisoft.tbd.app")!
@@ -135,6 +144,17 @@ class ScreenTimeSelectAppsModel: NSObject, ObservableObject {
     store.shield.applicationCategories = ShieldSettings.ActivityCategoryPolicy.none
     store.shield.applications = Set()
     userDefaults.set(false, forKey:"blocked")
+    // Clear the data for the key "ScreenTimeSelection"
+    userDefaults.removeObject(forKey: AlphadexScreentime.userDefaultsKey)
+    do {
+      let deselectedFamilyActivitySelection = FamilyActivitySelection(includeEntireCategory: true) // adjust this line as needed
+
+        // Save the decoded data back to the UserDefaults
+        userDefaults.set(try encoder.encode(deselectedFamilyActivitySelection), forKey: AlphadexScreentime.userDefaultsKey)
+    } catch {
+        print("Failed to decode or encode data: \(error)")
+    }
+
     resolve(true)
 //    sendEvent("onChangeBlocked", [
 //      "isBlocked": false
@@ -152,6 +172,7 @@ class ScreenTimeSelectAppsModel: NSObject, ObservableObject {
 
 
   override init() {
+    super.init()
   }
 }
 

@@ -1,5 +1,6 @@
 #import <React/RCTBridgeModule.h>
 #import <React/RCTViewManager.h>
+#import <React/RCTEventEmitter.h>
 
 @interface RCT_EXTERN_MODULE(AlphadexScreentime, NSObject)
 
@@ -14,7 +15,7 @@ RCT_EXTERN_METHOD(multiply:(float)a withB:(float)b
 
 @end
 
-@interface RCT_EXTERN_MODULE(ScreenTimeSelectAppsModel, NSObject)
+@interface RCT_EXTERN_MODULE(ScreenTimeSelectAppsModel, RCTEventEmitter)
 
 RCT_EXTERN_METHOD(multiply:(float)a withB:(float)b
                  withResolver:(RCTPromiseResolveBlock)resolve
