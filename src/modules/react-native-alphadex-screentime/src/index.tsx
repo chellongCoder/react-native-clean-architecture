@@ -57,6 +57,10 @@ export function requestScreenTime(): Promise<boolean> {
   return ScreenTimeSelectApps.requestScreenTime();
 }
 
-export function selectedAppsData(): Promise<boolean> {
+export function selectedAppsData(): Promise<any> {
   return ScreenTimeSelectApps.selectedAppsData();
+}
+
+export function unBlockApps(): Promise<boolean> {
+  return ScreenTimeSelectApps.unBlockApps();
 }

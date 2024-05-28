@@ -21,7 +21,6 @@ class ViewModuleViewManager: RCTViewManager {
 @available(iOS 16.0, *)
 class ViewModuleView : UIView {
   var onSelectEvent: RCTDirectEventBlock? = nil
-  let model = ScreenTimeSelectAppsModel()
   private var cancellables = Set<AnyCancellable>()
   private let userDefaultsKey = AlphadexScreentime.userDefaultsKey
   private let encoder = JSONEncoder()
@@ -60,21 +59,7 @@ class ViewModuleView : UIView {
 
     override init(frame: CGRect) {
       super.init(frame: frame)
-      setupView()
-    }
-
-    required init?(coder: NSCoder) {
-      super.init(coder: coder)
-      setupView()
-    }
-
-    private func setupView() {
-      let view = ScreenTimeSelectAppsContentView(model: model)
-      let vc = UIHostingController(rootView: view)
-      vc.view.frame = bounds
-      vc.view.backgroundColor = UIColor(white: 1, alpha: 0.0)
-      self.addSubview(vc.view)
-      self.view = vc.view
+      let model = ScreenTimeSelectAppsModel()
 
       model.activitySelection = savedSelection() ?? FamilyActivitySelection(includeEntireCategory: true)
 
@@ -82,6 +67,23 @@ class ViewModuleView : UIView {
         self.saveSelection(selection: selection)
       }
       .store(in: &cancellables)
+      setupView(model: model)
+
+    }
+
+    required init?(coder: NSCoder) {
+      super.init(coder: coder)
+    }
+
+  private func setupView(model: ScreenTimeSelectAppsModel) {
+      let view = ScreenTimeSelectAppsContentView(model: model)
+      let vc = UIHostingController(rootView: view)
+      vc.view.frame = bounds
+      vc.view.backgroundColor = UIColor(white: 1, alpha: 0.0)
+      self.addSubview(vc.view)
+      self.view = vc.view
+
+
 
     }
 
@@ -106,7 +108,12 @@ struct ScreenTimeSelectAppsContentView: View {
             .familyActivityPicker(
                 isPresented: $pickerIsPresented,
                 selection: $model.activitySelection
-            )
+            ).onChange(of: pickerIsPresented) { newValue in
+              if !newValue {
+                  // Picker has been dismissed
+                model.startAppRestrictions()
+              }
+            }
 
             // if let categoryToken = model.activitySelection.categoryTokens.first {
             //     Label(categoryToken)

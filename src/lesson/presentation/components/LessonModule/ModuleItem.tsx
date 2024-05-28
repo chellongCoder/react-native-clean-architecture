@@ -9,7 +9,9 @@ import {
   ScreenTimeComponent,
   requestScreenTime,
   selectedAppsData,
+  unBlockApps,
 } from 'react-native-alphadex-screentime';
+import {TouchableOpacity} from 'react-native-gesture-handler';
 
 type Props = {isFinished: boolean};
 const ModuleItem = (props: Props) => {
@@ -46,7 +48,23 @@ const ModuleItem = (props: Props) => {
         </View>
       </View>
       <View style={styles.buttonContainer}>
-        <Text style={[styles.title, globalStyle.txtLabel]}>10/10</Text>
+        <TouchableOpacity
+          onPress={async () => {
+            // selectedAppsData().then(apps => {
+            //   console.log(
+            //     '🛠 LOG: 🚀 --> -------------------------------------------🛠 LOG: 🚀 -->',
+            //   );
+            //   console.log('🛠 LOG: 🚀 --> ~ onDoHomework ~ apps:', apps);
+            //   console.log(
+            //     '🛠 LOG: 🚀 --> -------------------------------------------🛠 LOG: 🚀 -->',
+            //   );
+            // });
+            console.log('isloading true');
+            await unBlockApps();
+            console.log('isloading false');
+          }}>
+          <Text style={[styles.title, globalStyle.txtLabel]}>10/10</Text>
+        </TouchableOpacity>
         <View style={{height: verticalScale(14)}} />
         {/* <Button color={COLORS.GREEN_66C270} title="Study" /> */}
         <View>
