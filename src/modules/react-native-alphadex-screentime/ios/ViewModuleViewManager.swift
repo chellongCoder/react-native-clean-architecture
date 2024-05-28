@@ -23,7 +23,7 @@ class ViewModuleView : UIView {
   var onSelectEvent: RCTDirectEventBlock? = nil
   let model = ScreenTimeSelectAppsModel()
   private var cancellables = Set<AnyCancellable>()
-  private let userDefaultsKey = "ScreenTimeSelection"
+  private let userDefaultsKey = AlphadexScreentime.userDefaultsKey
   private let encoder = JSONEncoder()
   private let decoder = JSONDecoder()
 
@@ -35,7 +35,7 @@ class ViewModuleView : UIView {
   var view: UIView?
 
   func saveSelection(selection: FamilyActivitySelection) {
-    let defaults = UserDefaults.init(suiteName: "group.screentime.expo")!
+    let defaults = UserDefaults.init(suiteName: "group.com.hisoft.tbd.app")!
 
     defaults.set(
         try? encoder.encode(selection),
@@ -46,7 +46,7 @@ class ViewModuleView : UIView {
   }
 
   func savedSelection() -> FamilyActivitySelection? {
-      let defaults = UserDefaults.init(suiteName: "group.screentime.expo")!
+      let defaults = UserDefaults.init(suiteName: "group.com.hisoft.tbd.app")!
 
       guard let data = defaults.data(forKey: userDefaultsKey) else {
           return nil
@@ -72,6 +72,7 @@ class ViewModuleView : UIView {
       let view = ScreenTimeSelectAppsContentView(model: model)
       let vc = UIHostingController(rootView: view)
       vc.view.frame = bounds
+      vc.view.backgroundColor = UIColor(white: 1, alpha: 0.0)
       self.addSubview(vc.view)
       self.view = vc.view
 
@@ -100,12 +101,13 @@ struct ScreenTimeSelectAppsContentView: View {
             Button {
                 pickerIsPresented = true
             } label: {
-                Text("Select Apps")
+              Text("").frame(width: 100 , height: 30, alignment: .center).cornerRadius(10)
             }
             .familyActivityPicker(
                 isPresented: $pickerIsPresented,
                 selection: $model.activitySelection
             )
+
             // if let categoryToken = model.activitySelection.categoryTokens.first {
             //     Label(categoryToken)
             // }

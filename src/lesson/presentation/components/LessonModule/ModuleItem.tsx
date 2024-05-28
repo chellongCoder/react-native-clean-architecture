@@ -48,8 +48,14 @@ const ModuleItem = (props: Props) => {
       <View style={styles.buttonContainer}>
         <Text style={[styles.title, globalStyle.txtLabel]}>10/10</Text>
         <View style={{height: verticalScale(14)}} />
-        <Button color={COLORS.GREEN_66C270} title="Study" />
-        <ScreenTimeComponent style={{width: 100, height: 50}} />
+        {/* <Button color={COLORS.GREEN_66C270} title="Study" /> */}
+        <View>
+          <ScreenTimeComponent style={styles.buttonBlockApp}>
+            <Text style={[globalStyle.txtButton, {color: COLORS.WHITE}]}>
+              {'study'}
+            </Text>
+          </ScreenTimeComponent>
+        </View>
       </View>
     </View>
   ) : (
@@ -115,5 +121,13 @@ const styles = StyleSheet.create({
   buttonContainer: {
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  buttonBlockApp: {
+    width: scale(70.23),
+    height: verticalScale(28),
+    borderRadius: scale(10),
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: COLORS.GREEN_66C270,
   },
 });

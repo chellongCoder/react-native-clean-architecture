@@ -5,7 +5,7 @@ import Foundation
 
 @objc(AlphadexScreentime)
 class AlphadexScreentime: NSObject {
-
+  static var userDefaultsKey = "ScreenTimeSelection"
   @objc(multiply:withB:withResolver:withRejecter:)
   func multiply(a: Float, b: Float, resolve:RCTPromiseResolveBlock,reject:RCTPromiseRejectBlock) -> Void {
     resolve(a*b)
@@ -54,7 +54,7 @@ class ScreenTimeSelectAppsModel: NSObject, ObservableObject {
   @objc(selectedAppsData:withRejecter:)
   func selectedAppsData(resolve:RCTPromiseResolveBlock,reject:RCTPromiseRejectBlock) -> Void {
     let userDefaults = UserDefaults.init(suiteName: "group.com.hisoft.tbd.app")!
-    let data = userDefaults.data(forKey: "ScreenTimeSelection")
+    let data = userDefaults.data(forKey: AlphadexScreentime.userDefaultsKey)
     if let data = data {
         do {
             let decodedData = try decoder.decode(FamilyActivitySelection.self, from: data)
