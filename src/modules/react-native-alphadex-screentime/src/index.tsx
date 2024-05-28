@@ -26,8 +26,8 @@ const AlphadexScreentime = NativeModules.AlphadexScreentime
 export default AlphadexScreentime;
 
 type ViewModuleProps = {
-  color: string;
   style: ViewStyle;
+  children: React.ReactNode;
 };
 
 const ComponentName = 'ViewModuleView';
