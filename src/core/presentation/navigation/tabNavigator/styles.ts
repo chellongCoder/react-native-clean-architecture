@@ -22,8 +22,7 @@ export default StyleSheet.create({
   },
   blockRoutes: {
     flexDirection: 'row',
-    borderTopRightRadius: scale(32),
-    borderTopLeftRadius: scale(32),
+    backgroundColor: COLORS.WHITE_FFFBE3,
   },
   containerIconWrapper: {
     alignContent: 'center',
