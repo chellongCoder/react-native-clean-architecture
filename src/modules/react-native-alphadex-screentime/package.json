@@ -2,9 +2,7 @@
   "name": "react-native-alphadex-screentime",
   "version": "0.1.0",
   "description": "block apps, monitor time using device",
-  "main": "lib/commonjs/index",
-  "module": "lib/module/index",
-  "types": "lib/typescript/src/index.d.ts",
+  "main": "src/index",
   "react-native": "src/index",
   "source": "src/index",
   "files": [
