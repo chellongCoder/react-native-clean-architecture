@@ -9,6 +9,7 @@ import PostsScreen from 'src/post/presentation/screens/PostsScreen';
 import LessonScreen from 'src/lesson/presentation/screens/LessonScreen';
 import OnBoardingScreen from '../screens/OnBoardingScreen';
 import NotFoundScreen from '../screens/NotFoundScreen';
+import DoneLessonScreen from '../screens/DoneLessonScreen';
 
 const AuthStack = createStackNavigator();
 const HomeStack = createStackNavigator();
@@ -157,7 +158,7 @@ function AppNavigator(): React.ReactElement {
       <AppStack.Screen
         name={STACK_NAVIGATOR.BOTTOM_TAB_SCREENS}
         key={STACK_NAVIGATOR.BOTTOM_TAB_SCREENS}
-        component={OnBoardingScreen}
+        component={DoneLessonScreen}
       />
       <AppStack.Screen
         name={STACK_NAVIGATOR.AUTH_NAVIGATOR}
