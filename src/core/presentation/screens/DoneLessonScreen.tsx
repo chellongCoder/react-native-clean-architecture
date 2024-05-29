@@ -25,7 +25,7 @@ export default function DoneLessonScreen({
         </View>
         <View style={styles.achievementContent}>
           <View style={styles.backgroundStar}>
-            <ICStar width={108} height={103} />
+            <ICStar width={108} color={'#FFD75A'} height={103} />
           </View>
           <View style={styles.wrapperContent}>
             <Text style={[styleHook.txtLabel, styles.contentTitle]}>
