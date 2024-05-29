@@ -11,10 +11,10 @@ export default function DoneLessonScreen({
   return (
     <View style={styles.container}>
       <View style={styles.titleContainer}>
-        <Text style={[styles.text, styleHook.txtWord]}>
+        <Text style={[styleHook.txtWord, styles.text]}>
           EXCELLENT !!{'\n'} YOU DID GREAT WORK !
         </Text>
-        <Text style={[styles.subText, styleHook.txtLabel]}>
+        <Text style={[styleHook.txtLabel, styles.subText]}>
           Your score {'\n'}10/10
         </Text>
       </View>
@@ -28,8 +28,10 @@ export default function DoneLessonScreen({
             <ICStar width={108} height={103} />
           </View>
           <View style={styles.wrapperContent}>
-            <Text style={styles.contentTitle}>Achievement</Text>
-            <Text style={styles.contentDescription}>
+            <Text style={[styleHook.txtLabel, styles.contentTitle]}>
+              Achievement
+            </Text>
+            <Text style={[styleHook.txtNote, styles.contentDescription]}>
               Lorem Ipsum is simply dummy text of the printing and typesetting
               industry. Lorem Ipsum has been the industry's standard dummy text
               Lorem Ipsum has been....
@@ -37,15 +39,17 @@ export default function DoneLessonScreen({
           </View>
           <View style={styles.wrapperDot}>
             <View style={styles.Dot} />
-            <Text style={styles.numberDot}>x 5</Text>
+            <Text style={[styleHook.txtButton, styles.numberDot]}>x 5</Text>
           </View>
         </View>
         <View style={styles.wrapperButton}>
           <TouchableOpacity style={styles.button}>
-            <Text style={[styles.textBtn]}>Recieve award</Text>
+            <Text style={[styleHook.txtButton, styles.textBtn]}>
+              Recieve award
+            </Text>
           </TouchableOpacity>
           <TouchableOpacity style={styles.button}>
-            <Text style={[styles.textBtn]}>Continue</Text>
+            <Text style={[styleHook.txtButton, styles.textBtn]}>Continue</Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -73,7 +77,6 @@ const styles = StyleSheet.create({
     paddingTop: '50%',
   },
   subText: {
-    fontWeight: '400',
     fontSize: 20,
     textAlign: 'center',
     color: '#258F78',
