@@ -20,7 +20,7 @@ class ViewModuleViewManager: RCTViewManager {
 
 @available(iOS 16.0, *)
 class ViewModuleView : UIView {
-  var onSelectEvent: RCTDirectEventBlock? = nil
+  @objc var onChangeBlock: RCTDirectEventBlock? = nil
   private var cancellables = Set<AnyCancellable>()
   private let userDefaultsKey = AlphadexScreentime.userDefaultsKey
   private let encoder = JSONEncoder()
@@ -40,8 +40,8 @@ class ViewModuleView : UIView {
         try? encoder.encode(selection),
         forKey: userDefaultsKey
     )
+    self.onChangeBlock?(["isBlocked": true])
 
-    self.onSelectEvent?([:])
   }
 
   func savedSelection() -> FamilyActivitySelection? {
@@ -55,6 +55,7 @@ class ViewModuleView : UIView {
           FamilyActivitySelection.self,
           from: data
       )
+
   }
 
     override init(frame: CGRect) {
@@ -76,7 +77,7 @@ class ViewModuleView : UIView {
     }
 
   private func setupView(model: ScreenTimeSelectAppsModel) {
-      let view = ScreenTimeSelectAppsContentView(model: model)
+    let view = ScreenTimeSelectAppsContentView(model: model)
       let vc = UIHostingController(rootView: view)
       vc.view.frame = bounds
       vc.view.backgroundColor = UIColor(white: 1, alpha: 0.0)
@@ -104,7 +105,6 @@ struct ScreenTimeSelectAppsContentView: View {
             Button {
 //              model.sentEvent(event: "BlockApps")
               showAlert = true // Add this line
-
             } label: {
               Text("").frame(width: 100 , height: 30, alignment: .center).cornerRadius(10)
             }

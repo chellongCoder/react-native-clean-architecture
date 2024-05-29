@@ -16,10 +16,21 @@ RCT_EXTERN_METHOD(multiply:(float)a withB:(float)b
 @end
 
 @interface RCT_EXTERN_MODULE(ScreenTimeSelectAppsModel, RCTEventEmitter)
+//- (NSArray<NSString *> *)supportedEvents {
+//    return @[@"BlockApps", @"FFmpegKitCompleteCallbackEvent", @"FFmpegKitLogCallbackEvent"];
+//}
+//- (void)sendEventName:(NSString *)eventName body:(id)body {
+//  NSLog(@"CustomEventsEmitter sendEventName emitting event: %@", eventName);
+//  [self sendEventWithName:eventName body:body];
+//}
+RCT_EXPORT_VIEW_PROPERTY(onChangeBlock, RCTDirectEventBlock)
 
 RCT_EXTERN_METHOD(multiply:(float)a withB:(float)b
                  withResolver:(RCTPromiseResolveBlock)resolve
                  withRejecter:(RCTPromiseRejectBlock)reject)
+
+RCT_EXTERN_METHOD(sentEvent:(RCTPromiseResolveBlock)resolve
+                  withRejecter:(RCTPromiseRejectBlock)reject)
 
 RCT_EXTERN_METHOD(requestScreenTime:(RCTPromiseResolveBlock)resolve
                  withRejecter:(RCTPromiseRejectBlock)reject)
@@ -40,5 +51,6 @@ RCT_EXTERN_METHOD(unBlockApps:(RCTPromiseResolveBlock)resolve
 @interface RCT_EXTERN_MODULE(ViewModuleViewManager, RCTViewManager)
 
 RCT_EXPORT_VIEW_PROPERTY(color, NSString)
+RCT_EXPORT_VIEW_PROPERTY(onChangeBlock, RCTDirectEventBlock)
 
 @end

@@ -16,15 +16,30 @@ class AlphadexScreentime: NSObject {
 @available(iOS 16.0, *)
 @objc(ScreenTimeSelectAppsModel)
 class ScreenTimeSelectAppsModel: RCTEventEmitter, ObservableObject {
+  @objc var onChangeBlock: RCTBubblingEventBlock?
+
   static let shared = ScreenTimeSelectAppsModel()
   let center = AuthorizationCenter.shared
   private let decoder = JSONDecoder()
   private let encoder = JSONEncoder()
+  public static var emitter: RCTEventEmitter!
 
   let store = ManagedSettingsStore(named: .mySettingStore)
 
-  override func supportedEvents() -> [String]! {
-    return ["BlockApps", "FFmpegKitCompleteCallbackEvent", "FFmpegKitLogCallbackEvent"]
+  @objc override public static func requiresMainQueueSetup() -> Bool {
+      return false
+  }
+
+  override init() {
+    super.init()
+    EventEmitter.sharedInstance.registerEventEmitter(eventEmitter: self)
+  }
+
+  /// Base overide for RCTEventEmitter.
+    ///
+    /// - Returns: all supported events
+  @objc open override func supportedEvents() -> [String] {
+      return EventEmitter.sharedInstance.allEvents
   }
 
   @Published var activitySelection = FamilyActivitySelection(includeEntireCategory: true)
@@ -103,8 +118,10 @@ class ScreenTimeSelectAppsModel: RCTEventEmitter, ObservableObject {
     }
   }
 
-  func sentEvent(event: String) -> Void {
-    sendEvent(withName: "BlockApps", body: ["key": "value"])
+  @objc(sentEvent:withRejecter:)
+  func sentEvent(resolve:RCTPromiseResolveBlock,reject:RCTPromiseRejectBlock) -> Void {
+    EventEmitter.sharedInstance.dispatch(name: "Test", body: "Hello")
+    resolve(true)
   }
 
   func startAppRestrictions() -> Void {
@@ -120,6 +137,7 @@ class ScreenTimeSelectAppsModel: RCTEventEmitter, ObservableObject {
         store.shield.applicationCategories = ShieldSettings.ActivityCategoryPolicy.specific(unwrapped.categoryTokens)
         store.shield.applications = unwrapped.applicationTokens
         userDefaults.set(true, forKey:"blocked")
+        onChangeBlock?(["isBlocked": true])
         //            sendEvent("onChangeBlocked", [
         //              "isBlocked": true
         //            ]);
@@ -171,9 +189,6 @@ class ScreenTimeSelectAppsModel: RCTEventEmitter, ObservableObject {
 
 
 
-  override init() {
-    super.init()
-  }
 }
 
 

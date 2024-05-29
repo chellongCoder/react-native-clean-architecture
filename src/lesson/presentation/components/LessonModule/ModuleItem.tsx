@@ -10,8 +10,11 @@ import {
   requestScreenTime,
   selectedAppsData,
   unBlockApps,
+  sentEvent,
 } from 'react-native-alphadex-screentime';
 import {TouchableOpacity} from 'react-native-gesture-handler';
+import {navigateScreen} from 'src/core/presentation/navigation/actions/RootNavigationActions';
+import {STACK_NAVIGATOR} from 'src/core/presentation/navigation/ConstantNavigator';
 
 type Props = {isFinished: boolean};
 const ModuleItem = (props: Props) => {
@@ -40,7 +43,12 @@ const ModuleItem = (props: Props) => {
         </View>
         <View style={{width: scale(22)}} />
         <View style={styles.textContainer}>
-          <Text style={[styles.title, globalStyle.txtLabel]}>{'title'}</Text>
+          <TouchableOpacity
+            onPress={() => {
+              sentEvent();
+            }}>
+            <Text style={[styles.title, globalStyle.txtLabel]}>{'title'}</Text>
+          </TouchableOpacity>
           <View style={{height: verticalScale(4)}} />
           <Text style={[styles.subtitle, globalStyle.txtNote]}>
             {'subtitle'}
@@ -68,7 +76,18 @@ const ModuleItem = (props: Props) => {
         <View style={{height: verticalScale(14)}} />
         {/* <Button color={COLORS.GREEN_66C270} title="Study" /> */}
         <View>
-          <ScreenTimeComponent style={styles.buttonBlockApp}>
+          <ScreenTimeComponent
+            onChangeBlock={e => {
+              console.log(
+                '🛠 LOG: 🚀 --> -----------------------------------🛠 LOG: 🚀 -->',
+              );
+              console.log('🛠 LOG: 🚀 --> ~ ModuleItem ~ e:', e);
+              console.log(
+                '🛠 LOG: 🚀 --> -----------------------------------🛠 LOG: 🚀 -->',
+              );
+              navigateScreen(STACK_NAVIGATOR.HOME.LESSON);
+            }}
+            style={styles.buttonBlockApp}>
             <Text style={[globalStyle.txtButton, {color: COLORS.WHITE}]}>
               {'study'}
             </Text>

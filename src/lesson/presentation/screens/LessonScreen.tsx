@@ -11,6 +11,7 @@ import IconCup from 'assets/svg/IconCup';
 import IconListen from 'assets/svg/IconListen';
 import IconMic from 'assets/svg/IconMic';
 import IconFrequency from 'assets/svg/IconFrequency';
+import {alertMessage} from 'src/core/presentation/utils/alert';
 
 const matchPointsA = [
   [8.456913341175436, 130.62562561035156],
@@ -614,7 +615,12 @@ const LessonScreen = () => {
             text="Submit"
             style={[styles.mt32]}
             onPress={() => {
-              nextModule();
+              alertMessage(
+                'Important message',
+                'You reached 75 point so that you archived 30minutes free time to use another apps',
+              );
+
+              // nextModule();
             }}
           />
         </View>

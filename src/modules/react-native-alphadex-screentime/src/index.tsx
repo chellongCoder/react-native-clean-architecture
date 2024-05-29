@@ -29,6 +29,7 @@ export default AlphadexScreentime;
 type ViewModuleProps = {
   style: ViewStyle;
   children: React.ReactNode;
+  onChangeBlock: (e: any) => void;
 };
 
 const ComponentName = 'ViewModuleView';
@@ -69,4 +70,8 @@ export function selectedAppsData(): Promise<any> {
 
 export function unBlockApps(): Promise<boolean> {
   return ScreenTimeSelectApps.unBlockApps();
+}
+
+export function sentEvent(): Promise<boolean> {
+  return ScreenTimeSelectApps.sentEvent();
 }
