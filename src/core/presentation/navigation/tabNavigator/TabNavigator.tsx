@@ -10,6 +10,8 @@ import {
   TargetStackScreens,
   ParentStackScreens,
   ChildStackScreens,
+  AchievementStackScreens,
+  RankStackScreens,
 } from '../AppNavigator';
 import StudyRoadmapScreen from 'src/lesson/presentation/screens/StudyRoadmap';
 
@@ -44,6 +46,16 @@ export default function TabNavigator(): React.ReactElement {
         name={STACK_NAVIGATOR.BOTTOM_TAB.CHILD_TAB}
         key={STACK_NAVIGATOR.BOTTOM_TAB.CHILD_TAB}
         component={ChildStackScreens}
+      />
+      <BottomTab.Screen
+        name={STACK_NAVIGATOR.BOTTOM_TAB.ACHIEVEMENT_TAB}
+        key={STACK_NAVIGATOR.BOTTOM_TAB.ACHIEVEMENT_TAB}
+        component={AchievementStackScreens}
+      />
+      <BottomTab.Screen
+        name={STACK_NAVIGATOR.BOTTOM_TAB.RANK_TAB}
+        key={STACK_NAVIGATOR.BOTTOM_TAB.RANK_TAB}
+        component={RankStackScreens}
       />
     </BottomTab.Navigator>
   );

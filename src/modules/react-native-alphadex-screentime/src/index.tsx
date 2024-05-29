@@ -1,4 +1,5 @@
 import {
+  NativeEventEmitter,
   NativeModules,
   Platform,
   UIManager,
@@ -43,6 +44,11 @@ export function multiply(a: number, b: number): Promise<number> {
   return AlphadexScreentime.multiply(a, b);
 }
 
+const myModuleEvt = new NativeEventEmitter(
+  NativeModules.ScreenTimeSelectAppsModel
+);
+
+myModuleEvt.addListener('BlockApps', (data) => console.log('data event', data));
 const ScreenTimeSelectApps = NativeModules.ScreenTimeSelectAppsModel
   ? NativeModules.ScreenTimeSelectAppsModel
   : new Proxy(

@@ -13,6 +13,10 @@
 		13B07FBC1A68108700A75B9A /* AppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.mm */; };
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
+		18B49EED2C064A37004B87A0 /* ManagedSettings.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 18B49EEC2C064A37004B87A0 /* ManagedSettings.framework */; };
+		18B49EEF2C064A37004B87A0 /* ManagedSettingsUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 18B49EEE2C064A37004B87A0 /* ManagedSettingsUI.framework */; };
+		18B49EF22C064A37004B87A0 /* ShieldConfigurationExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18B49EF12C064A37004B87A0 /* ShieldConfigurationExtension.swift */; };
+		18B49EF72C064A37004B87A0 /* ScreenTimeShield.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 18B49EEB2C064A37004B87A0 /* ScreenTimeShield.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		2487DFDE52B54DB59FFF430D /* eina-03-regular.eot in Resources */ = {isa = PBXBuildFile; fileRef = 567A11D4C3804455A4EF370D /* eina-03-regular.eot */; };
 		25C8BE1F3EE54D4FB7A7E211 /* eina-04-regular.woff2 in Resources */ = {isa = PBXBuildFile; fileRef = 28F62B8243CE430FBF80AE68 /* eina-04-regular.woff2 */; };
 		2716D284BCBF459297BB7225 /* eina-01-semibold.woff2 in Resources */ = {isa = PBXBuildFile; fileRef = F5CA4C3C8BA44666AAC3121D /* eina-01-semibold.woff2 */; };
@@ -59,7 +63,28 @@
 			remoteGlobalIDString = 13B07F861A680F5B00A75B9A;
 			remoteInfo = TBDEdu;
 		};
+		18B49EF52C064A37004B87A0 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 83CBB9F71A601CBA00E9B192 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 18B49EEA2C064A37004B87A0;
+			remoteInfo = ScreenTimeShield;
+		};
 /* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		18B49EF82C064A37004B87A0 /* Embed Foundation Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				18B49EF72C064A37004B87A0 /* ScreenTimeShield.appex in Embed Foundation Extensions */,
+			);
+			name = "Embed Foundation Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		00E356EE1AD99517003FC87E /* TBDEduTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TBDEduTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -76,6 +101,12 @@
 		13B07FB81A68108700A75B9A /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = PrivacyInfo.xcprivacy; path = TBDEdu/PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		15D64A52477B4BC3B0F64EE2 /* eina-03-bold.eot */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "eina-03-bold.eot"; path = "../assets/fonts/eina-03-bold.eot"; sourceTree = "<group>"; };
 		18B49EE52C04A4F3004B87A0 /* TBDEdu.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = TBDEdu.entitlements; path = TBDEdu/TBDEdu.entitlements; sourceTree = "<group>"; };
+		18B49EEB2C064A37004B87A0 /* ScreenTimeShield.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = ScreenTimeShield.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		18B49EEC2C064A37004B87A0 /* ManagedSettings.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ManagedSettings.framework; path = System/Library/Frameworks/ManagedSettings.framework; sourceTree = SDKROOT; };
+		18B49EEE2C064A37004B87A0 /* ManagedSettingsUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ManagedSettingsUI.framework; path = System/Library/Frameworks/ManagedSettingsUI.framework; sourceTree = SDKROOT; };
+		18B49EF12C064A37004B87A0 /* ShieldConfigurationExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShieldConfigurationExtension.swift; sourceTree = "<group>"; };
+		18B49EF32C064A37004B87A0 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		18B49EF42C064A37004B87A0 /* ScreenTimeShield.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = ScreenTimeShield.entitlements; sourceTree = "<group>"; };
 		1A66EB8D0D8C45208AF23766 /* Pods-TBDEdu.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TBDEdu.debug.xcconfig"; path = "Target Support Files/Pods-TBDEdu/Pods-TBDEdu.debug.xcconfig"; sourceTree = "<group>"; };
 		1C015D7CCAA649DBA33AFA1A /* eina-03-bold.woff2 */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "eina-03-bold.woff2"; path = "../assets/fonts/eina-03-bold.woff2"; sourceTree = "<group>"; };
 		21838D7E2B2140A2999F1122 /* eina-01-regular.eot */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "eina-01-regular.eot"; path = "../assets/fonts/eina-01-regular.eot"; sourceTree = "<group>"; };
@@ -135,6 +166,15 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		18B49EE82C064A37004B87A0 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				18B49EED2C064A37004B87A0 /* ManagedSettings.framework in Frameworks */,
+				18B49EEF2C064A37004B87A0 /* ManagedSettingsUI.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -168,6 +208,16 @@
 				13B07FB81A68108700A75B9A /* PrivacyInfo.xcprivacy */,
 			);
 			name = TBDEdu;
+			sourceTree = "<group>";
+		};
+		18B49EF02C064A37004B87A0 /* ScreenTimeShield */ = {
+			isa = PBXGroup;
+			children = (
+				18B49EF12C064A37004B87A0 /* ShieldConfigurationExtension.swift */,
+				18B49EF32C064A37004B87A0 /* Info.plist */,
+				18B49EF42C064A37004B87A0 /* ScreenTimeShield.entitlements */,
+			);
+			path = ScreenTimeShield;
 			sourceTree = "<group>";
 		};
 		212BA0D309D64B05840AEDE4 /* Resources */ = {
@@ -216,6 +266,8 @@
 				ED297162215061F000B7C4FE /* JavaScriptCore.framework */,
 				F74AF6930A6C04BF3EF6D79C /* libPods-TBDEdu.a */,
 				416C6E9D04FDCD10E13D775C /* libPods-TBDEdu-TBDEduTests.a */,
+				18B49EEC2C064A37004B87A0 /* ManagedSettings.framework */,
+				18B49EEE2C064A37004B87A0 /* ManagedSettingsUI.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -241,6 +293,7 @@
 				13B07FAE1A68108700A75B9A /* TBDEdu */,
 				832341AE1AAA6A7D00B99B32 /* Libraries */,
 				00E356EF1AD99517003FC87E /* TBDEduTests */,
+				18B49EF02C064A37004B87A0 /* ScreenTimeShield */,
 				83CBBA001A601CBA00E9B192 /* Products */,
 				2D16E6871FA4F8E400B85C8A /* Frameworks */,
 				BBD78D7AC51CEA395F1C20DB /* Pods */,
@@ -257,6 +310,7 @@
 			children = (
 				13B07F961A680F5B00A75B9A /* TBDEdu.app */,
 				00E356EE1AD99517003FC87E /* TBDEduTests.xctest */,
+				18B49EEB2C064A37004B87A0 /* ScreenTimeShield.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -326,15 +380,34 @@
 				00DD1BFF1BD5951E006B06BC /* Bundle React Native code and images */,
 				AC1A009E4B7F0078C66EA563 /* [CP] Embed Pods Frameworks */,
 				38594AAB5E7A0D81B10FE925 /* [CP] Copy Pods Resources */,
+				18B49EF82C064A37004B87A0 /* Embed Foundation Extensions */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				18B49EF62C064A37004B87A0 /* PBXTargetDependency */,
 			);
 			name = TBDEdu;
 			productName = TBDEdu;
 			productReference = 13B07F961A680F5B00A75B9A /* TBDEdu.app */;
 			productType = "com.apple.product-type.application";
+		};
+		18B49EEA2C064A37004B87A0 /* ScreenTimeShield */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 18B49EFB2C064A37004B87A0 /* Build configuration list for PBXNativeTarget "ScreenTimeShield" */;
+			buildPhases = (
+				18B49EE72C064A37004B87A0 /* Sources */,
+				18B49EE82C064A37004B87A0 /* Frameworks */,
+				18B49EE92C064A37004B87A0 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = ScreenTimeShield;
+			productName = ScreenTimeShield;
+			productReference = 18B49EEB2C064A37004B87A0 /* ScreenTimeShield.appex */;
+			productType = "com.apple.product-type.app-extension";
 		};
 /* End PBXNativeTarget section */
 
@@ -342,6 +415,7 @@
 		83CBB9F71A601CBA00E9B192 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
+				LastSwiftUpdateCheck = 1540;
 				LastUpgradeCheck = 1210;
 				TargetAttributes = {
 					00E356ED1AD99517003FC87E = {
@@ -350,6 +424,9 @@
 					};
 					13B07F861A680F5B00A75B9A = {
 						LastSwiftMigration = 1120;
+					};
+					18B49EEA2C064A37004B87A0 = {
+						CreatedOnToolsVersion = 15.4;
 					};
 				};
 			};
@@ -368,6 +445,7 @@
 			targets = (
 				13B07F861A680F5B00A75B9A /* TBDEdu */,
 				00E356ED1AD99517003FC87E /* TBDEduTests */,
+				18B49EEA2C064A37004B87A0 /* ScreenTimeShield */,
 			);
 		};
 /* End PBXProject section */
@@ -419,6 +497,13 @@
 				D09C99B2C24B47AC93FD3013 /* eina-04-regular.woff in Resources */,
 				25C8BE1F3EE54D4FB7A7E211 /* eina-04-regular.woff2 in Resources */,
 				C471862CED844E529ACD4D8A /* SVN-Cherish Moment.ttf in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		18B49EE92C064A37004B87A0 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -613,6 +698,14 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		18B49EE72C064A37004B87A0 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				18B49EF22C064A37004B87A0 /* ShieldConfigurationExtension.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
@@ -620,6 +713,11 @@
 			isa = PBXTargetDependency;
 			target = 13B07F861A680F5B00A75B9A /* TBDEdu */;
 			targetProxy = 00E356F41AD99517003FC87E /* PBXContainerItemProxy */;
+		};
+		18B49EF62C064A37004B87A0 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 18B49EEA2C064A37004B87A0 /* ScreenTimeShield */;
+			targetProxy = 18B49EF52C064A37004B87A0 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -689,6 +787,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 1A66EB8D0D8C45208AF23766 /* Pods-TBDEdu.debug.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = TBDEdu/TBDEdu.entitlements;
@@ -724,6 +823,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = C41ED8FE952DE89C6CCE95BC /* Pods-TBDEdu.release.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = TBDEdu/TBDEdu.entitlements;
@@ -750,6 +850,91 @@
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
+			};
+			name = Release;
+		};
+		18B49EF92C064A37004B87A0 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_ENTITLEMENTS = ScreenTimeShield/ScreenTimeShield.entitlements;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = VDXKAYGU93;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = ScreenTimeShield/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = ScreenTimeShield;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 17.5;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MARKETING_VERSION = 1.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = com.hisoft.tbd.app.ScreenTimeShield;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		18B49EFA2C064A37004B87A0 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_ENTITLEMENTS = ScreenTimeShield/ScreenTimeShield.entitlements;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = VDXKAYGU93;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = ScreenTimeShield/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = ScreenTimeShield;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 17.5;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MARKETING_VERSION = 1.0;
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = com.hisoft.tbd.app.ScreenTimeShield;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
 		};
@@ -925,6 +1110,15 @@
 			buildConfigurations = (
 				13B07F941A680F5B00A75B9A /* Debug */,
 				13B07F951A680F5B00A75B9A /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		18B49EFB2C064A37004B87A0 /* Build configuration list for PBXNativeTarget "ScreenTimeShield" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				18B49EF92C064A37004B87A0 /* Debug */,
+				18B49EFA2C064A37004B87A0 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
