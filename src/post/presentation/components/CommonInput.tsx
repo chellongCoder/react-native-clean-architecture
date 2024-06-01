@@ -7,6 +7,9 @@ import {
   StyleProp,
   TextStyle,
   Keyboard,
+  NativeSyntheticEvent,
+  TextInputKeyPressEventData,
+  Pressable,
 } from 'react-native';
 import React, {useEffect, useRef, useState} from 'react';
 import useGlobalStyle from 'src/core/presentation/hooks/useGlobalStyle';
@@ -63,30 +66,51 @@ export const CommonInputPassword = (props: Props) => {
       }
     } else if (text === '') {
       setPassword(password.substring(0, password.length - 1));
-      if (index > 0) {
-        refs[index - 1]?.current?.focus();
-      } else {
+    }
+  };
+
+  const handleKeyPress = (
+    {nativeEvent}: NativeSyntheticEvent<TextInputKeyPressEventData>,
+    index: number,
+  ) => {
+    if (nativeEvent.key === 'Backspace') {
+      if (!password[index]) {
+        setPassword(password.substring(0, password.length - 1));
+        if (index > 0) {
+          refs[index - 1]?.current?.focus();
+        } else {
+        }
       }
     }
+  };
+
+  const onPress = () => {
+    const length = password.length;
+    const index = length >= 4 ? length - 1 : length;
+    refs[index].current?.focus();
   };
 
   return (
     <View style={styles.pb32}>
       <Text style={[commonStyle.txtLabel, styles.txtLabel]}>{props.label}</Text>
       <View style={[styles.rowBetween]}>
-        <View style={[styles.rowBetween, styles.fill]}>
+        <Pressable style={[styles.rowBetween, styles.fill]} onPress={onPress}>
           {refs.map((r, i) => (
-            <View style={[styles.boxInput, styles.w64]} key={i}>
+            <View
+              style={[styles.boxInput, styles.w64]}
+              key={i}
+              pointerEvents="none">
               <TextInput
                 value={password[i] ?? ''}
                 onChangeText={t => onChangePassword(t, i)}
                 ref={r}
                 style={[styles.inputPassword]}
                 maxLength={1}
+                onKeyPress={e => handleKeyPress(e, i)}
               />
             </View>
           ))}
-        </View>
+        </Pressable>
         {props.suffiex}
       </View>
     </View>

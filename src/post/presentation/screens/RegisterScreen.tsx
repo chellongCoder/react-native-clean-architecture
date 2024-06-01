@@ -3,22 +3,14 @@ import React, {useState} from 'react';
 import useGlobalStyle from 'src/core/presentation/hooks/useGlobalStyle';
 import PrimaryButton from '../components/PrimaryButton';
 import CommonInput, {CommonInputPassword} from '../components/CommonInput';
-import {
-  navigateScreen,
-  pushScreen,
-} from 'src/core/presentation/navigation/actions/RootNavigationActions';
-import {STACK_NAVIGATOR} from 'src/core/presentation/navigation/ConstantNavigator';
-import {FontFamily} from 'src/core/presentation/hooks/useFonts';
 
-const LoginScreen = () => {
+const RegisterScreen = () => {
   const commonStyle = useGlobalStyle();
 
   const [emailOrPhone, setEmailOrPhone] = useState('');
+  const [useName, setUserName] = useState('');
   const [password, setPassword] = useState('');
-
-  const onGoHomeScreen = () => {
-    navigateScreen(STACK_NAVIGATOR.HOME.HOME_SCREEN);
-  };
+  const [confirmPassword, setConfirmPassword] = useState('');
 
   return (
     <View style={[styles.container]}>
@@ -38,39 +30,42 @@ const LoginScreen = () => {
             }}
           />
 
+          <CommonInput
+            label="User Name"
+            textInputProp={{
+              placeholder: 'Enter name',
+              value: useName,
+              onChangeText: setUserName,
+            }}
+          />
+
           <CommonInputPassword
-            label="Password"
+            label="Enter password"
             textInputProp={{
               value: password,
               onChangeText: setPassword,
             }}
           />
 
-          <Text style={[styles.txtLink]}>Forget password</Text>
-
-          <View style={[styles.mt48]}>
-            <Text style={[styles.txtLink, styles.mv8]}>Another account?</Text>
-            <View style={[styles.rowAround]}>
-              <PrimaryButton text="Register" style={styles.fill} />
-              <View style={styles.mh12} />
-              <PrimaryButton text="Login" style={styles.fill} />
-            </View>
-          </View>
+          <CommonInputPassword
+            label="Confirm password"
+            textInputProp={{
+              value: confirmPassword,
+              onChangeText: setConfirmPassword,
+            }}
+          />
         </View>
 
-        <View style={[]}>
-          <Text style={[styles.txtLink, styles.mv8, styles.textCenter]}>
-            Or log in with
-          </Text>
-          <PrimaryButton text="Google" wrapContent={false} style={styles.mv8} />
-          <PrimaryButton text="Facebook" wrapContent={false} />
+        <View style={[styles.rowAround]}>
+          <PrimaryButton text="Log in" />
+          <PrimaryButton text="Next" />
         </View>
       </ScrollView>
     </View>
   );
 };
 
-export default LoginScreen;
+export default RegisterScreen;
 
 const styles = StyleSheet.create({
   fill: {
@@ -101,24 +96,6 @@ const styles = StyleSheet.create({
   },
   ph16: {
     paddingHorizontal: 16,
-  },
-  mh12: {
-    marginHorizontal: 12,
-  },
-  mv8: {
-    marginVertical: 8,
-  },
-  mt48: {
-    marginTop: 48,
-  },
-  txtLink: {
-    fontFamily: FontFamily.Eina01Regular,
-    fontSize: 10,
-    textDecorationLine: 'underline',
-    color: '#1C6349',
-  },
-  textCenter: {
-    textAlign: 'center',
   },
   rowAround: {
     flexDirection: 'row',
