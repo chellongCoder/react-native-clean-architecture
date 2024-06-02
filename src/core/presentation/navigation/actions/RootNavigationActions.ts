@@ -7,8 +7,10 @@ import {
   TabActions,
 } from '@react-navigation/native';
 import {createRef} from 'react';
+import {STACK_NAVIGATOR} from '../ConstantNavigator';
 
-const navigationRef = createRef<NavigationContainerRef>();
+const navigationRef =
+  createRef<NavigationContainerRef<typeof STACK_NAVIGATOR>>();
 
 export const navigateScreen = (
   screen: string,

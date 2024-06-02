@@ -1,10 +1,12 @@
 import React, {useState} from 'react';
-import {View, Text, StyleSheet} from 'react-native';
+import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
 import {scale} from 'react-native-size-matters';
 import ICStar from 'src/core/components/icons/ICStar';
 import {COLORS} from 'src/core/presentation/constants/colors';
 import {CustomTextStyle} from 'src/core/presentation/constants/typography';
 import CustomSwitch from './CustomSwitch';
+import {navigateScreen} from 'src/core/presentation/navigation/actions/RootNavigationActions';
+import {STACK_NAVIGATOR} from 'src/core/presentation/navigation/ConstantNavigator';
 
 type TProps = {
   title?: string;
@@ -38,7 +40,12 @@ const AccountStatus = (props: TProps) => {
         )}
         <View style={styles.wrapIconContainer}>
           <Text style={styles.text}>150</Text>
-          <ICStar />
+          <TouchableOpacity
+            onPress={() => {
+              navigateScreen(STACK_NAVIGATOR.BOTTOM_TAB.ACHIEVEMENT_TAB, {});
+            }}>
+            <ICStar width={20} height={20} />
+          </TouchableOpacity>
         </View>
       </View>
     </View>

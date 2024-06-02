@@ -5,7 +5,7 @@ import Foundation
 import React
 
 @objc(AlphadexScreentime)
-class AlphadexScreentime: NSObject {
+class AlphadexScreentime: RCTEventEmitter {
   static var userDefaultsKey = "ScreenTimeSelection"
   @objc(multiply:withB:withResolver:withRejecter:)
   func multiply(a: Float, b: Float, resolve:RCTPromiseResolveBlock,reject:RCTPromiseRejectBlock) -> Void {
@@ -122,6 +122,11 @@ class ScreenTimeSelectAppsModel: RCTEventEmitter, ObservableObject {
   func sentEvent(resolve:RCTPromiseResolveBlock,reject:RCTPromiseRejectBlock) -> Void {
     EventEmitter.sharedInstance.dispatch(name: "Test", body: "Hello")
     resolve(true)
+  }
+
+
+  func sentEvent(event: String) -> Void {
+    EventEmitter.sharedInstance.dispatch(name: "Test", body: "Hello")
   }
 
   func startAppRestrictions() -> Void {

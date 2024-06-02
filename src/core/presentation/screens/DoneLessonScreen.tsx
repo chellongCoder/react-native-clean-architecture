@@ -2,10 +2,16 @@ import React, {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
 import {RootStackScreenProps} from '../navigation/types';
 import useGlobalStyle from '../hooks/useGlobalStyle';
 import ICStar from 'src/core/components/icons/ICStar';
-
-export default function DoneLessonScreen({
-  navigation,
-}: RootStackScreenProps<'NotFound'>) {
+import {STACK_NAVIGATOR} from '../navigation/ConstantNavigator';
+import {resetNavigator} from '../navigation/actions/RootNavigationActions';
+import {
+  ScreenTimeComponent,
+  requestScreenTime,
+  selectedAppsData,
+  unBlockApps,
+  sentEvent,
+} from 'react-native-alphadex-screentime';
+const DoneLessonScreen = ({navigation}) => {
   const styleHook = useGlobalStyle();
 
   return (
@@ -48,15 +54,23 @@ export default function DoneLessonScreen({
               Recieve award
             </Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.button}>
+          <TouchableOpacity
+            onPress={async () => {
+              resetNavigator(STACK_NAVIGATOR.HOME.HOME_SCREEN);
+              console.log('isloading true');
+              await unBlockApps();
+              console.log('isloading false');
+            }}
+            style={styles.button}>
             <Text style={[styleHook.txtButton, styles.textBtn]}>Continue</Text>
           </TouchableOpacity>
         </View>
       </View>
     </View>
   );
-}
+};
 
+export default DoneLessonScreen;
 const styles = StyleSheet.create({
   container: {
     backgroundColor: '#FBF8CC',

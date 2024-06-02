@@ -2,7 +2,7 @@
 #import <React/RCTViewManager.h>
 #import <React/RCTEventEmitter.h>
 
-@interface RCT_EXTERN_MODULE(AlphadexScreentime, NSObject)
+@interface RCT_EXTERN_MODULE(AlphadexScreentime, RCTEventEmitter)
 
 RCT_EXTERN_METHOD(multiply:(float)a withB:(float)b
                  withResolver:(RCTPromiseResolveBlock)resolve
