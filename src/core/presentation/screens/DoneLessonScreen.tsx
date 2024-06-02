@@ -5,6 +5,7 @@ import ICStar from 'src/core/components/icons/ICStar';
 import {STACK_NAVIGATOR} from '../navigation/ConstantNavigator';
 import {resetNavigator} from '../navigation/actions/RootNavigationActions';
 import {unBlockApps} from 'react-native-alphadex-screentime';
+
 const DoneLessonScreen = ({navigation}) => {
   const styleHook = useGlobalStyle();
 
