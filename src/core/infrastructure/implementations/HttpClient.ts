@@ -2,6 +2,7 @@ import axios, {AxiosRequestConfig} from 'axios';
 import {provided, injectable} from 'inversify-sugar';
 import IHttpClient from '../../domain/specifications/IHttpClient';
 import Env, {EnvToken} from 'src/core/domain/entities/Env';
+import {Credentials} from '../models/Crendentials';
 
 @injectable()
 class HttpClient implements IHttpClient {
@@ -11,9 +12,16 @@ class HttpClient implements IHttpClient {
     this.axios = axios;
 
     axios.interceptors.request.use(requestConfig => {
-      requestConfig.baseURL = this.env.EXPO_BASE_API_URL;
+      requestConfig.baseURL = this.env.EXPO_BASE_API_DOMAIN;
 
-      // TODO: add authentication
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      requestConfig.headers = {
+        ...requestConfig.headers,
+        'Content-Type': 'application/json',
+        Accept: 'application/json',
+        Origin: this.env.EXPO_BASE_API_DOMAIN,
+      };
 
       return requestConfig;
     });
@@ -28,37 +36,40 @@ class HttpClient implements IHttpClient {
       return Promise.reject(err);
     });
   }
-
-  public get<ResponseType>(url: string, config?: AxiosRequestConfig) {
-    return this.axios
-      .get<ResponseType>(url, config)
-      .then(response => response.data);
+  public setAuthCredentials(credentials: Credentials) {
+    this.axios.defaults.headers.common.Authorization = `Bearer ${credentials.token}`;
   }
 
-  public post<DataType, ResponseType>(
+  public removeCurrentCredentials() {
+    this.axios.defaults.headers.common.Authorization = '';
+  }
+
+  public async get<ResponseType>(url: string, config?: AxiosRequestConfig) {
+    const response = await this.axios.get<ResponseType>(url, config);
+    return response.data;
+  }
+
+  public async post<DataType, ResponseType>(
     url: string,
     data?: DataType,
     config?: AxiosRequestConfig,
   ) {
-    return this.axios
-      .post<ResponseType>(url, data, config)
-      .then(response => response.data);
+    const response = await this.axios.post<ResponseType>(url, data, config);
+    return response.data;
   }
 
-  public patch<DataType, ResponseType>(
+  public async patch<DataType, ResponseType>(
     url: string,
     data?: DataType,
     config?: AxiosRequestConfig,
   ) {
-    return this.axios
-      .patch<ResponseType>(url, data, config)
-      .then(response => response.data);
+    const response = await this.axios.patch<ResponseType>(url, data, config);
+    return response.data;
   }
 
-  public delete<ResponseType>(url: string, config?: AxiosRequestConfig) {
-    return this.axios
-      .delete<ResponseType>(url, config)
-      .then(response => response.data);
+  public async delete<ResponseType>(url: string, config?: AxiosRequestConfig) {
+    const response = await this.axios.delete<ResponseType>(url, config);
+    return response.data;
   }
 }
 

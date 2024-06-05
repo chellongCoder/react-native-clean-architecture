@@ -115,7 +115,7 @@ export const CustomTextStyle = StyleSheet.create({
   },
   captionBold: {
     fontSize: TYPOGRAPHY.SIZE.caption,
-    fontFamily: TYPOGRAPHY.FAMILY.ROBOTO,
+    fontFamily: TYPOGRAPHY.FAMILY.ROBOTO_BOLD,
     lineHeight: 20,
     color: COLORS.PRIMARY,
     fontWeight: '700',

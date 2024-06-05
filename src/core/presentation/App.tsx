@@ -8,6 +8,8 @@ import {
 import RootNavigator from './navigation/RootNavigator';
 import RootNavigation from './navigation/actions/RootNavigationActions';
 import {screenTracking} from './utils/ScreenTracking';
+import {AuthenticationProvider} from 'src/authentication/presentation/stores/AuthenticationProvider';
+import {LoadingGlobalProvider} from './hooks/loading/LoadingGlobalProvider';
 
 const App = () => {
   const routeNameRef = useRef<string>();
@@ -36,8 +38,11 @@ const App = () => {
       onReady={onNavigationReady}
       onStateChange={changeRouteName}>
       <SafeAreaProvider initialMetrics={initialWindowMetrics}>
-        <RootNavigator />
-        {/* <GlobalModal /> */}
+        <AuthenticationProvider>
+          <LoadingGlobalProvider>
+            <RootNavigator />
+          </LoadingGlobalProvider>
+        </AuthenticationProvider>
       </SafeAreaProvider>
     </NavigationContainer>
   );

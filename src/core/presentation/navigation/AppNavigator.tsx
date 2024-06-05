@@ -10,9 +10,7 @@ import HomeScreen from 'src/home/presentation/HomeScreen';
 import SubjectScreen from 'src/home/presentation/SubjectScreen';
 import AchievementScreen from 'src/achievement/presentation/AchievementScreen';
 import RankScreen from 'src/rank/presentation/RankScreen';
-import LoginScreen from 'src/post/presentation/screens/LoginScreen';
-import OnBoardingScreen from '../screens/OnBoardingScreen';
-import NotFoundScreen from '../screens/NotFoundScreen';
+import LoginScreen from 'src/authentication/presentation/screens/LoginScreen';
 import DoneLessonScreen from '../screens/DoneLessonScreen';
 
 const AuthStack = createStackNavigator();
@@ -29,19 +27,7 @@ export const AuthStackScreens = (): React.ReactElement => {
       screenOptions={{
         cardOverlayEnabled: false,
         headerShown: false,
-      }}
-      initialRouteName={STACK_NAVIGATOR.ONBOARDING_NAVIGATOR}>
-      <AppStack.Screen
-        name={STACK_NAVIGATOR.ONBOARDING_NAVIGATOR}
-        key={STACK_NAVIGATOR.ONBOARDING_NAVIGATOR}
-        component={OnBoardingScreen}
-        listeners={({navigation: navBottom}) => ({
-          focus: () => {
-            hideBottomTab(navBottom);
-          },
-        })}
-      />
-
+      }}>
       <AuthStack.Screen
         name={STACK_NAVIGATOR.AUTH.LOGIN_SCREEN}
         key={STACK_NAVIGATOR.AUTH.LOGIN_SCREEN}
@@ -119,16 +105,6 @@ export const TargetStackScreens = (): React.ReactElement => {
           },
         })}
       />
-      {/* <TargetStack.Screen
-        name={STACK_NAVIGATOR.AUTH.LOGIN_SCREEN}
-        key={STACK_NAVIGATOR.AUTH.LOGIN_SCREEN}
-        component={Login}
-        listeners={({navigation: navBottom}) => ({
-          focus: () => {
-            showBottomTab(navBottom);
-          },
-        })}
-      /> */}
     </TargetStack.Navigator>
   );
 };
@@ -150,16 +126,6 @@ export const ParentStackScreens = (): React.ReactElement => {
           },
         })}
       />
-      {/* <ParentStack.Screen
-        name={STACK_NAVIGATOR.AUTH.LOGIN_SCREEN}
-        key={STACK_NAVIGATOR.AUTH.LOGIN_SCREEN}
-        component={Login}
-        listeners={({navigation: navBottom}) => ({
-          focus: () => {
-            showBottomTab(navBottom);
-          },
-        })}
-      /> */}
     </ParentStack.Navigator>
   );
 };
@@ -181,16 +147,6 @@ export const ChildStackScreens = (): React.ReactElement => {
           },
         })}
       />
-      {/* <ChildStack.Screen
-        name={STACK_NAVIGATOR.AUTH.LOGIN_SCREEN}
-        key={STACK_NAVIGATOR.AUTH.LOGIN_SCREEN}
-        component={Login}
-        listeners={({navigation: navBottom}) => ({
-          focus: () => {
-            showBottomTab(navBottom);
-          },
-        })}
-      /> */}
     </ChildStack.Navigator>
   );
 };
@@ -212,16 +168,6 @@ export const AchievementStackScreens = (): React.ReactElement => {
           },
         })}
       />
-      {/* <AchievementStack.Screen
-        name={STACK_NAVIGATOR.AUTH.LOGIN_SCREEN}
-        key={STACK_NAVIGATOR.AUTH.LOGIN_SCREEN}
-        component={Login}
-        listeners={({navigation: navBottom}) => ({
-          focus: () => {
-            showBottomTab(navBottom);
-          },
-        })}
-      /> */}
     </AchievementStack.Navigator>
   );
 };
@@ -243,16 +189,6 @@ export const RankStackScreens = (): React.ReactElement => {
           },
         })}
       />
-      {/* <RankStack.Screen
-        name={STACK_NAVIGATOR.AUTH.LOGIN_SCREEN}
-        key={STACK_NAVIGATOR.AUTH.LOGIN_SCREEN}
-        component={Login}
-        listeners={({navigation: navBottom}) => ({
-          focus: () => {
-            showBottomTab(navBottom);
-          },
-        })}
-      /> */}
     </RankStack.Navigator>
   );
 };
