@@ -17,6 +17,8 @@ export type RootStackParamList = {
   NotFound: undefined;
   TestCanvas: undefined;
   Lesson: undefined;
+  Home: undefined;
+  Onboard: undefined;
 };
 
 export type RootStackScreenProps<Screen extends keyof RootStackParamList> =

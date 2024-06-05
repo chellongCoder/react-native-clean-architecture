@@ -103,7 +103,7 @@ struct ScreenTimeSelectAppsContentView: View {
     var body: some View {
         VStack {
             Button {
-//              model.sentEvent(event: "BlockApps")
+              // model.sentEvent(event: "BlockApps")
               showAlert = true // Add this line
             } label: {
               Text("").frame(width: 100 , height: 30, alignment: .center).cornerRadius(10)

@@ -62,6 +62,7 @@ function BottomTabBar({
 
           return (
             <TabButton
+              key={index}
               options={options}
               onPress={onPress}
               route={route}

@@ -17,7 +17,7 @@ const LoginScreen = () => {
   const [password, setPassword] = useState('');
 
   const onGoHomeScreen = () => {
-    navigateScreen(STACK_NAVIGATOR.HOME.HOME_SCREEN);
+    navigateScreen(STACK_NAVIGATOR.BOTTOM_TAB_SCREENS);
   };
 
   return (

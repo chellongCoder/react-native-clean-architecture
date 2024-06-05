@@ -59,9 +59,9 @@ const ListSubject = () => {
     navigateScreen(STACK_NAVIGATOR.HOME.SUBJECT_SCREEN, {subject});
   };
 
-  const renderItem = ({item}: {item: TDataItem; index: number}) => {
+  const renderItem = ({item, index}: {item: TDataItem; index: number}) => {
     return (
-      <View style={[styles.contentContainer]}>
+      <View key={index} style={[styles.contentContainer]}>
         {item.position === 'right' && (
           <View style={[styles.container, {height: scale(132)}]} />
         )}

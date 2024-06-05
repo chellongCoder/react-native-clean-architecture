@@ -12,6 +12,12 @@ import IconListen from 'assets/svg/IconListen';
 import IconMic from 'assets/svg/IconMic';
 import IconFrequency from 'assets/svg/IconFrequency';
 import {alertMessage} from 'src/core/presentation/utils/alert';
+import {
+  navigateScreen,
+  replaceScreen,
+  resetNavigator,
+} from 'src/core/presentation/navigation/actions/RootNavigationActions';
+import {STACK_NAVIGATOR} from 'src/core/presentation/navigation/ConstantNavigator';
 
 const matchPointsA = [
   [8.456913341175436, 130.62562561035156],
@@ -619,7 +625,7 @@ const LessonScreen = () => {
                 'Important message',
                 'You reached 75 point so that you archived 30minutes free time to use another apps',
               );
-
+              resetNavigator(STACK_NAVIGATOR.HOME.DONE_LESSON_SCREEN);
               // nextModule();
             }}
           />

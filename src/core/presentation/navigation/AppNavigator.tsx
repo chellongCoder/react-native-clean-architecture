@@ -6,9 +6,6 @@ import TabNavigator from './tabNavigator/TabNavigator';
 import {hideBottomTab, showBottomTab} from './actions/RootNavigationActions';
 import PostsScreen from 'src/post/presentation/screens/PostsScreen';
 import LessonScreen from 'src/lesson/presentation/screens/LessonScreen';
-import OnBoardingScreen from '../screens/OnBoardingScreen';
-import NotFoundScreen from '../screens/NotFoundScreen';
-import DoneLessonScreen from '../screens/DoneLessonScreen';
 import HomeScreen from 'src/home/presentation/HomeScreen';
 import SubjectScreen from 'src/home/presentation/SubjectScreen';
 import AchievementScreen from 'src/achievement/presentation/AchievementScreen';
@@ -32,7 +29,19 @@ export const AuthStackScreens = (): React.ReactElement => {
       screenOptions={{
         cardOverlayEnabled: false,
         headerShown: false,
-      }}>
+      }}
+      initialRouteName={STACK_NAVIGATOR.ONBOARDING_NAVIGATOR}>
+      <AppStack.Screen
+        name={STACK_NAVIGATOR.ONBOARDING_NAVIGATOR}
+        key={STACK_NAVIGATOR.ONBOARDING_NAVIGATOR}
+        component={OnBoardingScreen}
+        listeners={({navigation: navBottom}) => ({
+          focus: () => {
+            hideBottomTab(navBottom);
+          },
+        })}
+      />
+
       <AuthStack.Screen
         name={STACK_NAVIGATOR.AUTH.LOGIN_SCREEN}
         key={STACK_NAVIGATOR.AUTH.LOGIN_SCREEN}
@@ -54,16 +63,6 @@ export const HomeStackScreens = (): React.ReactElement => {
         cardOverlayEnabled: false,
         headerShown: false,
       }}>
-      <HomeStack.Screen
-        name={STACK_NAVIGATOR.AUTH.LOGIN_SCREEN}
-        key={STACK_NAVIGATOR.AUTH.LOGIN_SCREEN}
-        component={LoginScreen}
-        listeners={({navigation: navBottom}) => ({
-          focus: () => {
-            hideBottomTab(navBottom);
-          },
-        })}
-      />
       <HomeStack.Screen
         name={STACK_NAVIGATOR.HOME.HOME_SCREEN}
         key={STACK_NAVIGATOR.HOME.HOME_SCREEN}
@@ -93,6 +92,11 @@ export const HomeStackScreens = (): React.ReactElement => {
             showBottomTab(navBottom);
           },
         })}
+      />
+      <HomeStack.Screen
+        name={STACK_NAVIGATOR.HOME.DONE_LESSON_SCREEN}
+        key={STACK_NAVIGATOR.HOME.DONE_LESSON_SCREEN}
+        component={DoneLessonScreen}
       />
     </HomeStack.Navigator>
   );
@@ -257,11 +261,6 @@ function AppNavigator(): React.ReactElement {
   return (
     <>
       <AppStack.Screen
-        name={STACK_NAVIGATOR.BOTTOM_TAB_SCREENS}
-        key={STACK_NAVIGATOR.BOTTOM_TAB_SCREENS}
-        component={DoneLessonScreen}
-      />
-      <AppStack.Screen
         name={STACK_NAVIGATOR.AUTH_NAVIGATOR}
         key={STACK_NAVIGATOR.AUTH_NAVIGATOR}
         component={AuthStackScreens}
@@ -270,11 +269,6 @@ function AppNavigator(): React.ReactElement {
         name={STACK_NAVIGATOR.BOTTOM_TAB_SCREENS}
         key={STACK_NAVIGATOR.BOTTOM_TAB_SCREENS}
         component={TabNavigator}
-      />
-      <AppStack.Screen
-        name={STACK_NAVIGATOR.HOME_NAVIGATOR}
-        key={STACK_NAVIGATOR.HOME_NAVIGATOR}
-        component={HomeStackScreens}
       />
       <AppStack.Screen
         name={STACK_NAVIGATOR.TARGET_NAVIGATOR}
