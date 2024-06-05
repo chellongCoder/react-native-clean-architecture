@@ -33,7 +33,8 @@ const appConfig: ExpoConfig = {
     favicon: './assets/images/favicon.png',
   },
   extra: {
-    EXPO_BASE_API_URL: 'https://jsonplaceholder.typicode.com',
+    EXPO_BASE_API_DOMAIN: 'https://dev.tbd-alphadex.com',
+    EXPO_BASE_API_URL: 'https://dev.tbd-alphadex.com',
   },
 };
 

@@ -5,22 +5,42 @@ import ICStar from 'src/core/components/icons/ICStar';
 import {COLORS} from 'src/core/presentation/constants/colors';
 import {CustomTextStyle} from 'src/core/presentation/constants/typography';
 import CustomSwitch from './CustomSwitch';
-import {navigateScreen} from 'src/core/presentation/navigation/actions/RootNavigationActions';
+import {
+  navigateScreen,
+  resetNavigator,
+} from 'src/core/presentation/navigation/actions/RootNavigationActions';
 import {STACK_NAVIGATOR} from 'src/core/presentation/navigation/ConstantNavigator';
+import ICLogout from 'src/core/components/icons/ICLogout';
+import useAuthenticationStore from 'src/authentication/presentation/stores/useAuthenticationStore';
 
 type TProps = {
   title?: string;
   subject?: string;
+  isShowLogout?: boolean;
 };
 
 const AccountStatus = (props: TProps) => {
-  const {title, subject} = props;
+  const {title, subject, isShowLogout} = props;
+  const {removeCurrentCredentials} = useAuthenticationStore();
 
   const [isEnabled, setIsEnabled] = useState(false);
+
+  const onLogout = () => {
+    removeCurrentCredentials();
+    resetNavigator(STACK_NAVIGATOR.AUTH_NAVIGATOR);
+  };
 
   return (
     <View style={styles.container}>
       <View style={styles.iconContainer}>
+        {isShowLogout && (
+          <TouchableOpacity
+            style={styles.wrapLogoutContainer}
+            onPress={onLogout}>
+            <ICLogout />
+            <Text style={styles.logoutTitle}>Log out</Text>
+          </TouchableOpacity>
+        )}
         {title ? (
           <View>
             <Text style={styles.title}>{title}</Text>
@@ -66,6 +86,19 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'flex-end',
     marginRight: scale(8),
+  },
+  wrapLogoutContainer: {
+    paddingHorizontal: scale(12),
+    paddingVertical: scale(8),
+    backgroundColor: COLORS.GREEN_66C270,
+    borderRadius: scale(30),
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  logoutTitle: {
+    marginLeft: scale(4),
+    ...CustomTextStyle.captionBold,
+    color: COLORS.BLUE_1C6349,
   },
   title: {
     ...CustomTextStyle.h1_bold,

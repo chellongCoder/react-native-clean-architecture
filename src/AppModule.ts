@@ -5,6 +5,7 @@ import {LessonModule} from './lesson/LessonModule';
 import {HomeModule} from './home/HomeModule';
 import {AchievementModule} from './achievement/AchievementModule';
 import {RankModule} from './rank/RankModule';
+import {AuthenticationModule} from './authentication/AuthenticationModule';
 
 @module({
   imports: [
@@ -14,6 +15,7 @@ import {RankModule} from './rank/RankModule';
     LessonModule,
     AchievementModule,
     RankModule,
+    AuthenticationModule,
   ],
 })
 export default class AppModule {}
