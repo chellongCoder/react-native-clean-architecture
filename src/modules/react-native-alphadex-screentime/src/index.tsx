@@ -75,3 +75,7 @@ export function unBlockApps(): Promise<boolean> {
 export function sentEvent(): Promise<boolean> {
   return ScreenTimeSelectApps.sentEvent();
 }
+
+export function getInstalledApps(): Promise<boolean> {
+  return Platform.OS === 'android' && ScreenTimeSelectApps.getInstalledApps();
+}

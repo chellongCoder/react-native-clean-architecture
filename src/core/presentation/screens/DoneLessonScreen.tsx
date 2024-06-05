@@ -4,13 +4,7 @@ import useGlobalStyle from '../hooks/useGlobalStyle';
 import ICStar from 'src/core/components/icons/ICStar';
 import {STACK_NAVIGATOR} from '../navigation/ConstantNavigator';
 import {resetNavigator} from '../navigation/actions/RootNavigationActions';
-import {
-  ScreenTimeComponent,
-  requestScreenTime,
-  selectedAppsData,
-  unBlockApps,
-  sentEvent,
-} from 'react-native-alphadex-screentime';
+import {unBlockApps} from 'react-native-alphadex-screentime';
 const DoneLessonScreen = ({navigation}) => {
   const styleHook = useGlobalStyle();
 
@@ -69,7 +63,6 @@ const DoneLessonScreen = ({navigation}) => {
     </View>
   );
 };
-
 export default DoneLessonScreen;
 const styles = StyleSheet.create({
   container: {

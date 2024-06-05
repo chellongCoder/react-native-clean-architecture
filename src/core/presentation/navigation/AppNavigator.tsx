@@ -6,9 +6,6 @@ import TabNavigator from './tabNavigator/TabNavigator';
 import {hideBottomTab, showBottomTab} from './actions/RootNavigationActions';
 import PostsScreen from 'src/post/presentation/screens/PostsScreen';
 import LessonScreen from 'src/lesson/presentation/screens/LessonScreen';
-import OnBoardingScreen from '../screens/OnBoardingScreen';
-import NotFoundScreen from '../screens/NotFoundScreen';
-import DoneLessonScreen from '../screens/DoneLessonScreen';
 import HomeScreen from 'src/home/presentation/HomeScreen';
 import SubjectScreen from 'src/home/presentation/SubjectScreen';
 import AchievementScreen from 'src/achievement/presentation/AchievementScreen';
@@ -44,6 +41,7 @@ export const AuthStackScreens = (): React.ReactElement => {
           },
         })}
       />
+
       <AuthStack.Screen
         name={STACK_NAVIGATOR.AUTH.LOGIN_SCREEN}
         key={STACK_NAVIGATOR.AUTH.LOGIN_SCREEN}
