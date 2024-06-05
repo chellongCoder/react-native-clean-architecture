@@ -12,6 +12,7 @@ import AchievementScreen from 'src/achievement/presentation/AchievementScreen';
 import RankScreen from 'src/rank/presentation/RankScreen';
 import LoginScreen from 'src/authentication/presentation/screens/LoginScreen';
 import DoneLessonScreen from '../screens/DoneLessonScreen';
+import OnBoardingScreen from '../screens/OnBoardingScreen';
 
 const AuthStack = createStackNavigator();
 const HomeStack = createStackNavigator();
