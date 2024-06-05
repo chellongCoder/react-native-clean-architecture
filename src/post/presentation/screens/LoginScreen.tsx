@@ -3,12 +3,10 @@ import React, {useState} from 'react';
 import useGlobalStyle from 'src/core/presentation/hooks/useGlobalStyle';
 import PrimaryButton from '../components/PrimaryButton';
 import CommonInput, {CommonInputPassword} from '../components/CommonInput';
-import {
-  navigateScreen,
-  pushScreen,
-} from 'src/core/presentation/navigation/actions/RootNavigationActions';
+import {navigateScreen} from 'src/core/presentation/navigation/actions/RootNavigationActions';
 import {STACK_NAVIGATOR} from 'src/core/presentation/navigation/ConstantNavigator';
 import {FontFamily} from 'src/core/presentation/hooks/useFonts';
+import {getInstalledApps} from 'react-native-alphadex-screentime';
 
 const LoginScreen = () => {
   const commonStyle = useGlobalStyle();
@@ -18,6 +16,17 @@ const LoginScreen = () => {
 
   const onGoHomeScreen = () => {
     navigateScreen(STACK_NAVIGATOR.BOTTOM_TAB_SCREENS);
+  };
+
+  const onLogin = async () => {
+    const apps = await getInstalledApps();
+    console.log(
+      '🛠 LOG: 🚀 --> --------------------------------------🛠 LOG: 🚀 -->',
+    );
+    console.log('🛠 LOG: 🚀 --> ~ onLogin ~ apps:', apps);
+    console.log(
+      '🛠 LOG: 🚀 --> --------------------------------------🛠 LOG: 🚀 -->',
+    );
   };
 
   return (
@@ -51,9 +60,17 @@ const LoginScreen = () => {
           <View style={[styles.mt48]}>
             <Text style={[styles.txtLink, styles.mv8]}>Another account?</Text>
             <View style={[styles.rowAround]}>
-              <PrimaryButton text="Register" style={styles.fill} />
+              <PrimaryButton
+                onPress={onGoHomeScreen}
+                text="Register"
+                style={styles.fill}
+              />
               <View style={styles.mh12} />
-              <PrimaryButton text="Login" style={styles.fill} />
+              <PrimaryButton
+                onPress={onLogin}
+                text="Login"
+                style={styles.fill}
+              />
             </View>
           </View>
         </View>
