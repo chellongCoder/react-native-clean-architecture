@@ -105,7 +105,13 @@ const LessonScreen = () => {
         return (
           <MathLesson
             moduleIndex={lessonIndex}
-            nextModule={nextModule}
+            nextModule={() => {
+              alertMessage(
+                'Important message',
+                'You reached 60 point so that you archived 30minutes free time to use another apps',
+              );
+              resetNavigator(STACK_NAVIGATOR.HOME.DONE_LESSON_SCREEN);
+            }}
             totalModule={lessons.length}
           />
         );
