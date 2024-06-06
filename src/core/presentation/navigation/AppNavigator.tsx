@@ -13,6 +13,7 @@ import RankScreen from 'src/rank/presentation/RankScreen';
 import LoginScreen from 'src/authentication/presentation/screens/LoginScreen';
 import DoneLessonScreen from '../screens/DoneLessonScreen';
 import OnBoardingScreen from '../screens/OnBoardingScreen';
+import ProfileScreen from 'src/post/presentation/screens/ProfileScreen';
 
 const AuthStack = createStackNavigator();
 const HomeStack = createStackNavigator();
@@ -150,9 +151,9 @@ export const ChildStackScreens = (): React.ReactElement => {
         headerShown: false,
       }}>
       <ChildStack.Screen
-        name={STACK_NAVIGATOR.AUTH.LOGIN_SCREEN}
-        key={STACK_NAVIGATOR.AUTH.LOGIN_SCREEN}
-        component={PostsScreen}
+        name={STACK_NAVIGATOR.PROFILE.CHILD_SCREEN}
+        key={STACK_NAVIGATOR.PROFILE.CHILD_SCREEN}
+        component={ProfileScreen}
         listeners={({navigation: navBottom}) => ({
           focus: () => {
             showBottomTab(navBottom);

@@ -5,6 +5,7 @@ import {IPostRepositoryToken} from './domain/specifications/IPostRepository';
 import PostRepository from './infrastructure/implementations/PostRepository';
 import FindPostUseCase from './application/useCases/FindPostUseCase';
 import GetPostsUseCase from './application/useCases/GetPostsUseCase';
+import {LessonStore} from './presentation/stores/LessonStore/LessonStore';
 
 @module({
   providers: [
@@ -22,8 +23,12 @@ import GetPostsUseCase from './application/useCases/GetPostsUseCase';
       useClass: FindPostStore,
       scope: 'Transient',
     },
+    {
+      useClass: LessonStore,
+      scope: 'Singleton',
+    },
   ],
 })
 export class LessonModule {}
 
-export const postModuleContainer = getModuleContainer(LessonModule);
+export const lessonModuleContainer = getModuleContainer(LessonModule);
