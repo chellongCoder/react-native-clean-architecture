@@ -8,6 +8,8 @@ import useLoginWithCredentials from 'src/authentication/presentation/hooks/useLo
 import {observer} from 'mobx-react';
 import {useLoadingGlobal} from 'src/core/presentation/hooks/loading/useLoadingGlobal';
 import useAuthenticationStore from '../stores/useAuthenticationStore';
+import {navigateScreen} from 'src/core/presentation/navigation/actions/RootNavigationActions';
+import {STACK_NAVIGATOR} from 'src/core/presentation/navigation/ConstantNavigator';
 
 const LoginScreen = observer(() => {
   const commonStyle = useGlobalStyle();
@@ -24,6 +26,10 @@ const LoginScreen = observer(() => {
       password,
     };
     handleLoginWithCredentials(params);
+  };
+
+  const onRegister = () => {
+    navigateScreen(STACK_NAVIGATOR.AUTH.REGISTER_SCREEN);
   };
 
   return (
@@ -57,7 +63,11 @@ const LoginScreen = observer(() => {
           <View style={[styles.mt48]}>
             <Text style={[styles.txtLink, styles.mv8]}>Another account?</Text>
             <View style={[styles.rowAround]}>
-              <PrimaryButton text="Register" style={styles.fill} />
+              <PrimaryButton
+                text="Register"
+                style={styles.fill}
+                onPress={onRegister}
+              />
               <View style={styles.mh12} />
               <PrimaryButton
                 text="Login"

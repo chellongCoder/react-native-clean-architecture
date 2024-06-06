@@ -7,11 +7,12 @@ import useNavigateAuthSuccess from './useNavigateAuthSuccess';
 import {CustomErrorType, StatusCode} from '../types/StatusCode';
 import {Messages} from '../constants/message';
 import useAuthenticationStore from '../stores/useAuthenticationStore';
+import {RegisterPayload} from 'src/authentication/application/types/RegisterPayload';
 
 const DefaultFormData = {email: '', password: ''};
 
 const useLoginWithCredentials = () => {
-  const {loginUsernamePassword, setErrorMessage, setIsLoading} =
+  const {loginUsernamePassword, setErrorMessage, setIsLoading, register} =
     useAuthenticationStore();
   const {handleNavigateAuthenticationSuccess} = useNavigateAuthSuccess();
 
@@ -66,6 +67,33 @@ const useLoginWithCredentials = () => {
     [setErrorMessage],
   );
 
+  const handleErrorRegister = useCallback(
+    (error: AxiosError) => {
+      const {response} = error;
+      if (!response) {
+        setErrorMessage('Cannot register');
+      }
+      const {message} = response?.data as CustomErrorType;
+      switch (response?.status) {
+        case StatusCode.Forbidden: {
+          // Yêu cầu nhập mã xác thực.
+          setErrorMessage(message);
+          return;
+        }
+        case StatusCode.BadGateway: {
+          setErrorMessage(Messages.BAD_GATEWAY);
+          return;
+        }
+        case StatusCode.BadRequest:
+        default: {
+          setErrorMessage(message);
+          return;
+        }
+      }
+    },
+    [setErrorMessage],
+  );
+
   const handleLoginWithCredentials = useCallback(
     async (props: {email: string; password: string}) => {
       const {email, password} = props;
@@ -96,12 +124,48 @@ const useLoginWithCredentials = () => {
     ],
   );
 
+  const handleRegister = useCallback(
+    async (props: RegisterPayload) => {
+      const {
+        email,
+        username,
+        password,
+        confirmPassword,
+        name,
+        gender,
+        address,
+        phone,
+      } = props;
+      try {
+        await register({
+          email,
+          username,
+          password,
+          confirmPassword,
+          name,
+          gender,
+          address,
+          phone,
+        });
+      } catch (error) {
+        if (isAxiosError(error)) {
+          handleErrorRegister(error as AxiosError);
+        }
+      } finally {
+        setIsLoading(false);
+      }
+    },
+    [handleErrorRegister, register, setIsLoading],
+  );
+
   return {
     formData,
     setUsername,
     setPassword,
     handleLoginWithCredentials,
     handleErrorLoginCredentials,
+    handleRegister,
+    handleErrorRegister,
   };
 };
 export default useLoginWithCredentials;

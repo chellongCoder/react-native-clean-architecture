@@ -11,6 +11,8 @@ import LoginUsernamePasswordUseCase from 'src/authentication/application/useCase
 import LoginResponse from 'src/authentication/application/types/LoginResponse';
 import {LoginUsernamePasswordPayload} from 'src/authentication/application/types/LoginPayload';
 import {LoginMethods} from '../constants/common';
+import RegisterUseCase from 'src/authentication/application/useCases/RegisterUsecase';
+import {RegisterPayload} from 'src/authentication/application/types/RegisterPayload';
 
 @injectable()
 export class AuthenticationStore implements AuthenticationStoreState {
@@ -25,6 +27,9 @@ export class AuthenticationStore implements AuthenticationStoreState {
     @provided(LoginUsernamePasswordUseCase)
     private loginUsernamePasswordUseCase: LoginUsernamePasswordUseCase,
 
+    @provided(RegisterUseCase)
+    private registerUseCase: RegisterUseCase,
+
     @provided(IHttpClientToken) private readonly httpClient: IHttpClient, // @provided(CoreStore) private coreStore: CoreStore,
   ) {
     this.loginUsernamePassword = this.loginUsernamePassword.bind(this);
@@ -33,6 +38,7 @@ export class AuthenticationStore implements AuthenticationStoreState {
     this.setLoginMethod = this.setLoginMethod.bind(this);
     this.removeCurrentCredentials = this.removeCurrentCredentials.bind(this);
     this.initializePersistence();
+    this.register = this.register.bind(this);
   }
 
   private async initializePersistence() {
@@ -76,6 +82,16 @@ export class AuthenticationStore implements AuthenticationStoreState {
     const response = await this.loginUsernamePasswordUseCase.execute(args);
     this.setCurrentCredentials(response);
     this.setLoginMethod(LoginMethods.UsernamePassword);
+    this.setIsLoading(false);
+    return response;
+  }
+
+  @action
+  public async register(args: RegisterPayload) {
+    this.setIsLoading(true);
+    const response = await this.registerUseCase.execute(args);
+    console.log('response: ', response);
+    this.setCurrentCredentials(response);
     this.setIsLoading(false);
     return response;
   }

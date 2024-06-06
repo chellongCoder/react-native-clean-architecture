@@ -12,6 +12,7 @@ import {
 import {STACK_NAVIGATOR} from 'src/core/presentation/navigation/ConstantNavigator';
 import ICLogout from 'src/core/components/icons/ICLogout';
 import useAuthenticationStore from 'src/authentication/presentation/stores/useAuthenticationStore';
+import {useLoadingGlobal} from 'src/core/presentation/hooks/loading/useLoadingGlobal';
 
 type TProps = {
   title?: string;
@@ -21,7 +22,8 @@ type TProps = {
 
 const AccountStatus = (props: TProps) => {
   const {title, subject, isShowLogout} = props;
-  const {removeCurrentCredentials} = useAuthenticationStore();
+  const {removeCurrentCredentials, isLoading} = useAuthenticationStore();
+  useLoadingGlobal(isLoading);
 
   const [isEnabled, setIsEnabled] = useState(false);
 
@@ -101,7 +103,7 @@ const styles = StyleSheet.create({
     color: COLORS.BLUE_1C6349,
   },
   title: {
-    ...CustomTextStyle.h1_bold,
+    ...CustomTextStyle.h1_SVNCherishMoment,
     color: COLORS.RED_F28759,
   },
   subTitle: {

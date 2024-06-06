@@ -6,8 +6,9 @@ import {COLORS} from 'src/core/presentation/constants/colors';
 import {scale} from 'react-native-size-matters';
 import ListLesson from '../components/ListLesson';
 import ListModule from '../components/ListModule';
+import {observer} from 'mobx-react';
 
-const SubjectScreen = (props: any) => {
+const SubjectScreen = observer((props: any) => {
   const {route} = props;
 
   return (
@@ -21,7 +22,7 @@ const SubjectScreen = (props: any) => {
       </SafeAreaView>
     </Fragment>
   );
-};
+});
 
 const styles = StyleSheet.create({
   container: {

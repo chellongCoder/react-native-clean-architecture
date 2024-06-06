@@ -1,16 +1,46 @@
-import {ScrollView, StyleSheet, Text, View} from 'react-native';
+import {
+  KeyboardAvoidingView,
+  Platform,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+} from 'react-native';
 import React, {useState} from 'react';
 import useGlobalStyle from 'src/core/presentation/hooks/useGlobalStyle';
 import CommonInput, {CommonInputPassword} from '../components/CommonInput';
 import PrimaryButton from '../components/PrimaryButton';
+import {observer} from 'mobx-react';
+import {goBack} from 'src/core/presentation/navigation/actions/RootNavigationActions';
+import useLoginWithCredentials from '../hooks/useLoginWithCredentials';
+import useAuthenticationStore from '../stores/useAuthenticationStore';
+import {useLoadingGlobal} from 'src/core/presentation/hooks/loading/useLoadingGlobal';
+import {RegisterPayload} from 'src/authentication/application/types/RegisterPayload';
 
-const RegisterScreen = () => {
+const RegisterScreen = observer(() => {
   const commonStyle = useGlobalStyle();
+  const {handleRegister} = useLoginWithCredentials();
+  const {isLoading} = useAuthenticationStore();
+  useLoadingGlobal(isLoading);
 
   const [emailOrPhone, setEmailOrPhone] = useState('');
-  const [useName, setUserName] = useState('');
+  const [userName, setUserName] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+
+  const onRegister = () => {
+    const params: RegisterPayload = {
+      email: emailOrPhone,
+      username: userName,
+      password: password,
+      confirmPassword: confirmPassword,
+      name: 'string',
+      gender: 'male',
+      address: 'string',
+      phone: 'string',
+    };
+    handleRegister(params);
+  };
 
   return (
     <View style={[styles.container]}>
@@ -20,7 +50,9 @@ const RegisterScreen = () => {
           <View style={[styles.arrowIcon]} />
         </View>
 
-        <View style={[styles.fill, styles.justifyCenter]}>
+        <KeyboardAvoidingView
+          style={[styles.fill, styles.justifyCenter]}
+          behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
           <CommonInput
             label="Email or phone number"
             textInputProp={{
@@ -34,7 +66,7 @@ const RegisterScreen = () => {
             label="User Name"
             textInputProp={{
               placeholder: 'Enter name',
-              value: useName,
+              value: userName,
               onChangeText: setUserName,
             }}
           />
@@ -54,16 +86,16 @@ const RegisterScreen = () => {
               onChangeText: setConfirmPassword,
             }}
           />
-        </View>
+        </KeyboardAvoidingView>
 
         <View style={[styles.rowAround]}>
-          <PrimaryButton text="Log in" />
-          <PrimaryButton text="Next" />
+          <PrimaryButton text="Log in" onPress={goBack} />
+          <PrimaryButton text="Next" onPress={onRegister} />
         </View>
       </ScrollView>
     </View>
   );
-};
+});
 
 export default RegisterScreen;
 

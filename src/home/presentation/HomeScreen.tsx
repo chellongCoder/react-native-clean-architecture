@@ -5,8 +5,9 @@ import {COLORS} from 'src/core/presentation/constants/colors';
 import ListSubject from '../components/ListSubject';
 import AccountStatus from '../components/AccountStatus';
 import {scale} from 'react-native-size-matters';
+import {observer} from 'mobx-react';
 
-const HomeScreen = () => {
+const HomeScreen = observer(() => {
   return (
     <Fragment>
       <SafeAreaView style={styles.container} edges={['top']}>
@@ -17,7 +18,7 @@ const HomeScreen = () => {
       </SafeAreaView>
     </Fragment>
   );
-};
+});
 
 const styles = StyleSheet.create({
   container: {

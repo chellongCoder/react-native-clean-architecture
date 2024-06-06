@@ -119,7 +119,7 @@ const styles = StyleSheet.create({
     right: 0,
   },
   itemTitle: {
-    ...CustomTextStyle.h5_bold,
+    ...CustomTextStyle.h1_SVNCherishMoment,
     textTransform: 'uppercase',
   },
 });
