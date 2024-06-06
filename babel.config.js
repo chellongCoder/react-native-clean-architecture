@@ -9,20 +9,7 @@ module.exports = function (api) {
         "module-resolver",
         {
           extensions: [".js", ".jsx", ".ts", ".tsx", ".json"],
-          root: [".", './src'],
-          alias: {
-            src: './src',
-            common: './src/common',
-            components: './src/components',
-            core: './src/core',
-            hooks: './src/hooks',
-            manager: './src/manager',
-            post: './src/post',
-            screens: './src/screens',
-            service: './src/service',
-            store: './src/store',
-            utils: './src/utils'
-          }
+          root: ["."],
         },
       ],
     ],

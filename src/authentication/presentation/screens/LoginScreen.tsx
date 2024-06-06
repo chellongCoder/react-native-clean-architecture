@@ -3,30 +3,27 @@ import React, {useState} from 'react';
 import useGlobalStyle from 'src/core/presentation/hooks/useGlobalStyle';
 import PrimaryButton from '../components/PrimaryButton';
 import CommonInput, {CommonInputPassword} from '../components/CommonInput';
-import {navigateScreen} from 'src/core/presentation/navigation/actions/RootNavigationActions';
-import {STACK_NAVIGATOR} from 'src/core/presentation/navigation/ConstantNavigator';
 import {FontFamily} from 'src/core/presentation/hooks/useFonts';
-import {getInstalledApps} from 'react-native-alphadex-screentime';
+import useLoginWithCredentials from 'src/authentication/presentation/hooks/useLoginWithCredentials';
+import {observer} from 'mobx-react';
+import {useLoadingGlobal} from 'src/core/presentation/hooks/loading/useLoadingGlobal';
+import useAuthenticationStore from '../stores/useAuthenticationStore';
 
-const LoginScreen = () => {
+const LoginScreen = observer(() => {
   const commonStyle = useGlobalStyle();
+  const {handleLoginWithCredentials} = useLoginWithCredentials();
+  const {isLoading} = useAuthenticationStore();
+  useLoadingGlobal(isLoading);
 
   const [emailOrPhone, setEmailOrPhone] = useState('');
   const [password, setPassword] = useState('');
 
-  const onGoHomeScreen = () => {
-    navigateScreen(STACK_NAVIGATOR.BOTTOM_TAB_SCREENS);
-  };
-
-  const onLogin = async () => {
-    const apps = await getInstalledApps();
-    console.log(
-      '🛠 LOG: 🚀 --> --------------------------------------🛠 LOG: 🚀 -->',
-    );
-    console.log('🛠 LOG: 🚀 --> ~ onLogin ~ apps:', apps);
-    console.log(
-      '🛠 LOG: 🚀 --> --------------------------------------🛠 LOG: 🚀 -->',
-    );
+  const onLogin = () => {
+    const params = {
+      email: emailOrPhone,
+      password,
+    };
+    handleLoginWithCredentials(params);
   };
 
   return (
@@ -60,16 +57,12 @@ const LoginScreen = () => {
           <View style={[styles.mt48]}>
             <Text style={[styles.txtLink, styles.mv8]}>Another account?</Text>
             <View style={[styles.rowAround]}>
-              <PrimaryButton
-                onPress={onGoHomeScreen}
-                text="Register"
-                style={styles.fill}
-              />
+              <PrimaryButton text="Register" style={styles.fill} />
               <View style={styles.mh12} />
               <PrimaryButton
-                onPress={onLogin}
                 text="Login"
                 style={styles.fill}
+                onPress={onLogin}
               />
             </View>
           </View>
@@ -85,7 +78,7 @@ const LoginScreen = () => {
       </ScrollView>
     </View>
   );
-};
+});
 
 export default LoginScreen;
 

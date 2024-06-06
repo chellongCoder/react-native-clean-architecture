@@ -76,6 +76,14 @@ export function sentEvent(): Promise<boolean> {
   return ScreenTimeSelectApps.sentEvent();
 }
 
-export function getInstalledApps(): Promise<boolean> {
-  return Platform.OS === 'android' && ScreenTimeSelectApps.getInstalledApps();
+export function getInstalledApps(
+  includeSystemApps: boolean = true,
+  includeAppIcons: boolean = true,
+  onlyAppsWithLaunchIntent: boolean = true
+): Promise<boolean> {
+  return AlphadexScreentime.getInstalledApps(
+    includeSystemApps,
+    includeAppIcons,
+    onlyAppsWithLaunchIntent
+  );
 }

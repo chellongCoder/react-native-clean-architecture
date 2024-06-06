@@ -5,10 +5,12 @@ import android.content.pm.PackageInfo
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.os.Build
+import com.facebook.react.bridge.Arguments
 import com.facebook.react.bridge.Promise
 import com.facebook.react.bridge.ReactApplicationContext
 import com.facebook.react.bridge.ReactContextBaseJavaModule
 import com.facebook.react.bridge.ReactMethod
+import com.facebook.react.bridge.WritableArray
 
 class AlphadexScreentimeModule(reactContext: ReactApplicationContext) :
   ReactContextBaseJavaModule(reactContext) {
@@ -44,7 +46,23 @@ class AlphadexScreentimeModule(reactContext: ReactApplicationContext) :
         installedApps.add(map)
     }
 
-    promise.resolve(installedApps)
+    val installedAppsArray: WritableArray = Arguments.createArray()
+
+    for (map in installedApps) {
+      val writableMap = Arguments.createMap()
+      for ((key, value) in map) {
+        when (value) {
+          is String -> writableMap.putString(key, value)
+          is Int -> writableMap.putInt(key, value)
+          is Boolean -> writableMap.putBoolean(key, value)
+          is Double -> writableMap.putDouble(key, value)
+          else -> writableMap.putString(key, value.toString())
+        }
+      }
+      installedAppsArray.pushMap(writableMap)
+    }
+
+    promise.resolve(installedAppsArray)
   }
 
 
