@@ -90,8 +90,7 @@ export class AuthenticationStore implements AuthenticationStoreState {
   public async register(args: RegisterPayload) {
     this.setIsLoading(true);
     const response = await this.registerUseCase.execute(args);
-    console.log('response: ', response);
-    this.setCurrentCredentials(response);
+    // this.setCurrentCredentials(response);
     this.setIsLoading(false);
     return response;
   }

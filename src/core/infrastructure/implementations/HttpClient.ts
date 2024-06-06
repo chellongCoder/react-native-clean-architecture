@@ -26,15 +26,18 @@ class HttpClient implements IHttpClient {
       return requestConfig;
     });
 
-    this.axios.interceptors.response.use(undefined, err => {
-      if (err.response) {
-        if (err.response.status === 401 || err.response.status === 403) {
-          // TODO: logout
+    this.axios.interceptors.response.use(
+      response => response,
+      err => {
+        if (err.response) {
+          if (err.response.status === 401 || err.response.status === 403) {
+            // TODO: logout
+          }
         }
-      }
 
-      return Promise.reject(err);
-    });
+        return Promise.reject(err);
+      },
+    );
   }
   public setAuthCredentials(credentials: Credentials) {
     this.axios.defaults.headers.common.Authorization = `Bearer ${credentials.token}`;

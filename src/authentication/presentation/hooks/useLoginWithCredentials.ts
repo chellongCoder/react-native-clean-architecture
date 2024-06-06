@@ -8,6 +8,8 @@ import {CustomErrorType, StatusCode} from '../types/StatusCode';
 import {Messages} from '../constants/message';
 import useAuthenticationStore from '../stores/useAuthenticationStore';
 import {RegisterPayload} from 'src/authentication/application/types/RegisterPayload';
+import {goBack} from 'src/core/presentation/navigation/actions/RootNavigationActions';
+import Toast from 'react-native-toast-message';
 
 const DefaultFormData = {email: '', password: ''};
 
@@ -101,8 +103,8 @@ const useLoginWithCredentials = () => {
         Keyboard.dismiss();
         setErrorMessage('');
         await loginUsernamePassword({
-          email: 'doannv@gmail.com',
-          password: 'doannv',
+          email: email,
+          password: password,
         });
         resetForm();
         handleNavigateAuthenticationSuccess();
@@ -127,7 +129,7 @@ const useLoginWithCredentials = () => {
   const handleRegister = useCallback(
     async (props: RegisterPayload) => {
       const {
-        email,
+        emailOrPhoneNumber,
         username,
         password,
         confirmPassword,
@@ -137,8 +139,8 @@ const useLoginWithCredentials = () => {
         phone,
       } = props;
       try {
-        await register({
-          email,
+        const res = await register({
+          emailOrPhoneNumber,
           username,
           password,
           confirmPassword,
@@ -147,6 +149,18 @@ const useLoginWithCredentials = () => {
           address,
           phone,
         });
+        if (res.error) {
+          Toast.show({
+            type: 'error',
+            text1: res.error.message,
+          });
+        } else {
+          Toast.show({
+            type: 'success',
+            text1: res.message,
+          });
+          goBack();
+        }
       } catch (error) {
         if (isAxiosError(error)) {
           handleErrorRegister(error as AxiosError);

@@ -30,7 +30,7 @@ const RegisterScreen = observer(() => {
 
   const onRegister = () => {
     const params: RegisterPayload = {
-      email: emailOrPhone,
+      emailOrPhoneNumber: emailOrPhone,
       username: userName,
       password: password,
       confirmPassword: confirmPassword,

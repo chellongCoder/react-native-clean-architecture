@@ -10,6 +10,7 @@ import RootNavigation from './navigation/actions/RootNavigationActions';
 import {screenTracking} from './utils/ScreenTracking';
 import {AuthenticationProvider} from 'src/authentication/presentation/stores/AuthenticationProvider';
 import {LoadingGlobalProvider} from './hooks/loading/LoadingGlobalProvider';
+import Toast from 'react-native-toast-message';
 
 const App = () => {
   const routeNameRef = useRef<string>();
@@ -41,6 +42,7 @@ const App = () => {
         <AuthenticationProvider>
           <LoadingGlobalProvider>
             <RootNavigator />
+            <Toast />
           </LoadingGlobalProvider>
         </AuthenticationProvider>
       </SafeAreaProvider>
