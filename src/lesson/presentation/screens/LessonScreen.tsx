@@ -10,6 +10,8 @@ import MathLesson from './LessonComponent/MathLesson';
 import {alertMessage} from 'src/core/presentation/utils/alert';
 import {resetNavigator} from 'src/core/presentation/navigation/actions/RootNavigationActions';
 import {STACK_NAVIGATOR} from 'src/core/presentation/navigation/ConstantNavigator';
+import {withProviders} from 'src/core/presentation/utils/withProviders';
+import {LessonStoreProvider} from '../stores/LessonStore/LessonStoreProvider';
 
 enum LessonTypeE {
   ACHIEVEMENT,
@@ -114,7 +116,7 @@ const LessonScreen = () => {
   return <View style={[styles.fill]}>{buildLesson()}</View>;
 };
 
-export default LessonScreen;
+export default withProviders(LessonStoreProvider)(LessonScreen);
 
 const styles = StyleSheet.create({
   fill: {
