@@ -1,6 +1,5 @@
 import {View, StyleSheet} from 'react-native';
 import React, {useState} from 'react';
-import AchievementLesson from './LessonComponent/AchievementLesson';
 import WriteLesson from './LessonComponent/WriteLesson';
 import ListenLesson from './LessonComponent/ListenLesson';
 import FillBlankLesson from './LessonComponent/FillBlankLesson';
@@ -12,6 +11,7 @@ import {resetNavigator} from 'src/core/presentation/navigation/actions/RootNavig
 import {STACK_NAVIGATOR} from 'src/core/presentation/navigation/ConstantNavigator';
 import {withProviders} from 'src/core/presentation/utils/withProviders';
 import {LessonStoreProvider} from '../stores/LessonStore/LessonStoreProvider';
+import AchievementLesson from './LessonComponent/AchievementLesson';
 
 enum LessonTypeE {
   ACHIEVEMENT,
