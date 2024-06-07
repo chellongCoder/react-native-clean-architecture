@@ -102,12 +102,23 @@ const useLoginWithCredentials = () => {
       try {
         Keyboard.dismiss();
         setErrorMessage('');
-        await loginUsernamePassword({
+        const res = await loginUsernamePassword({
           email: email,
           password: password,
         });
+        if (res.error) {
+          Toast.show({
+            type: 'error',
+            text1: res.error.message,
+          });
+        } else {
+          Toast.show({
+            type: 'success',
+            text1: res.message,
+          });
+          handleNavigateAuthenticationSuccess();
+        }
         resetForm();
-        handleNavigateAuthenticationSuccess();
       } catch (error) {
         if (isAxiosError(error)) {
           handleErrorLoginCredentials(error as AxiosError);

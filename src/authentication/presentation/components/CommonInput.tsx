@@ -11,7 +11,7 @@ import {
   TextInputKeyPressEventData,
   Pressable,
 } from 'react-native';
-import React, {useEffect, useRef, useState} from 'react';
+import React, {useRef, useState} from 'react';
 import useGlobalStyle from 'src/core/presentation/hooks/useGlobalStyle';
 
 type Props = {
@@ -45,14 +45,9 @@ export const CommonInputPassword = (props: Props) => {
     useRef<TextInput>(null),
   ];
 
-  useEffect(() => {
-    props.textInputProp?.onChangeText?.(password);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [password, props.textInputProp?.onChangeText]);
-
-  useEffect(() => {
-    setPassword(props.textInputProp?.value ?? '');
-  }, [props.textInputProp?.value]);
+  const onChangeText = (text: string) => {
+    props.textInputProp?.onChangeText?.(text);
+  };
 
   const onChangePassword = (text: string, index: number) => {
     if (text.trim() !== '') {
@@ -60,6 +55,7 @@ export const CommonInputPassword = (props: Props) => {
       newPassword[index] = text;
 
       setPassword(newPassword.join(''));
+      onChangeText(newPassword.join(''));
 
       if (index < refs.length - 1) {
         refs[index + 1]?.current?.focus();
@@ -71,6 +67,7 @@ export const CommonInputPassword = (props: Props) => {
         const newPassword = [...password];
         newPassword[index - 1] = '';
         setPassword(newPassword.join(''));
+        onChangeText(newPassword.join(''));
         refs[index - 1]?.current?.focus();
       }
     }
@@ -122,13 +119,14 @@ export const CommonInputPassword = (props: Props) => {
                   style={[styles.inputPassword]}
                   maxLength={1}
                   onKeyPress={e => handleKeyPress(e, i)}
+                  secureTextEntry
                 />
               </View>
             );
           })}
         </Pressable>
-        {props.suffiex}
       </View>
+      {props.suffiex}
     </View>
   );
 };

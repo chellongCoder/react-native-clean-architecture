@@ -4,4 +4,8 @@ export default interface AuthenticationEntity {
   data: {
     accessToken: string;
   };
+  error?: {
+    code: number;
+    message: string;
+  };
 }

@@ -4,4 +4,8 @@ export default interface LoginResponse {
   data: {
     accessToken: string;
   };
+  error?: {
+    code: number;
+    message: string;
+  };
 }
