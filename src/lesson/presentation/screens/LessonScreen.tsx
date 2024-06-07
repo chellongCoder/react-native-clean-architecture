@@ -114,9 +114,9 @@ const LessonScreen = () => {
             }}
             totalModule={lessons.length}
           />
-      );
+        );
     }
-  }
+  };
   const [layoutIndex, setLayoutIndex] = useState(0);
 
   const layout = listLayouts[layoutIndex];
@@ -126,75 +126,7 @@ const LessonScreen = () => {
     lessonStore.setIsShow(true);
   };
 
-  return (
-    <View
-      style={[
-        styles.screen,
-        {paddingTop: insets.top, backgroundColor: layout.backgroundColor},
-      ]}>
-      <View style={[styles.ph24, styles.container]}>
-        <View style={[styles.rowBetween]}>
-          <View>
-            <Text style={[styles.fonts_SVN_Cherish, styles.textTitle]}>
-              VIETNAMESE
-            </Text>
-            <Text style={[styles.fonts_SVN_Cherish, styles.textModule]}>
-              {layout.module}
-            </Text>
-          </View>
-          <View style={styles.alightEnd}>
-            <View style={[styles.boxPrice]}>
-              <Text style={[styles.fonts_SVN_Cherish, styles.textPrice]}>
-                FREE
-              </Text>
-              <IconDiamond />
-            </View>
-            <View style={styles.rowAlignCenter}>
-              <Text style={[styles.fonts_SVN_Cherish, styles.textPrice]}>
-                150
-              </Text>
-              <IconStar />
-            </View>
-          </View>
-        </View>
-        <View style={[styles.boxQuestion, styles.pb32]}>
-          {layout.buildQuestion}
-        </View>
-        <View style={[styles.tabs]}>
-          {Array.from({length: listLayouts.length}, (_, i) => {
-            const bg =
-              i < layoutIndex
-                ? 'white'
-                : i === layoutIndex
-                ? '#F2B559'
-                : '#258F78';
-            return <Dotline key={i} bg={bg} />;
-          })}
-        </View>
-      </View>
-      <View style={[styles.h450]}>
-        <View style={styles.backgroundAnswer}>
-          <View
-            style={[
-              styles.backgroundLeft,
-              {backgroundColor: layout.backgroundAnswerColor},
-            ]}
-          />
-          <View
-            style={[
-              styles.backgroundRight,
-              {backgroundColor: layout.backgroundAnswerColor},
-            ]}
-          />
-        </View>
-        <View style={[styles.boxAnswer]}>{layout.buildAnswer}</View>
-      </View>
-    </View>
-  );
-});
-
-const Dotline = ({bg}: {bg: string}) => {
-  return <View style={[styles.dotline, {backgroundColor: bg}]} />;
+  return <View style={[styles.fill]}>{buildLesson()}</View>;
 };
 
 export default withProviders(LessonStoreProvider)(LessonScreen);
