@@ -85,7 +85,6 @@ const ProfileScreen = observer(({route, navigation}) => {
             </View>
           </View>
         </View>
-
         <ScrollView
           contentContainerStyle={{
             width: '100%',
