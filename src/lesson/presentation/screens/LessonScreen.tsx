@@ -1,6 +1,6 @@
 import {View, StyleSheet} from 'react-native';
 import React, {useState} from 'react';
-import AchievementLesson from './LessonComponent/ACHIEVEMENTLesson';
+import AchievementLesson from './LessonComponent/AchievementLesson';
 import WriteLesson from './LessonComponent/WriteLesson';
 import ListenLesson from './LessonComponent/ListenLesson';
 import FillBlankLesson from './LessonComponent/FillBlankLesson';
@@ -26,16 +26,31 @@ type LessonType = {
 };
 
 const LessonScreen = () => {
-  const lessons: LessonType[] = [];
+  const lessons: LessonType[] = [
+    {lessonType: LessonTypeE.ACHIEVEMENT},
+    {lessonType: LessonTypeE.WRITE},
+    {lessonType: LessonTypeE.VOCABULARY_LISTEN},
+    {lessonType: LessonTypeE.VOCABULARY_FILL_BLANK},
+    {lessonType: LessonTypeE.VOCABULARY_TRANSLATE},
+    {lessonType: LessonTypeE.GEOMETRY},
+    {lessonType: LessonTypeE.MATH},
+  ];
 
   const [lessonIndex, setLessonIndex] = useState(0);
 
   const nextModule = () => {
+    if (lessonIndex >= lessons.length - 1) {
+      alertMessage(
+        'Important message',
+        'You reached 75 point so that you archived 30minutes free time to use another apps',
+      );
+      resetNavigator(STACK_NAVIGATOR.HOME.DONE_LESSON_SCREEN);
+    }
     setLessonIndex((lessonIndex + 1) % lessons.length);
   };
 
   const buildLesson = () => {
-    switch (lessons[lessonIndex].lessonType) {
+    switch (lessons[lessonIndex]?.lessonType) {
       case LessonTypeE.ACHIEVEMENT:
         return (
           <AchievementLesson
@@ -88,13 +103,7 @@ const LessonScreen = () => {
         return (
           <MathLesson
             moduleIndex={lessonIndex}
-            nextModule={() => {
-              alertMessage(
-                'Important message',
-                'You reached 75 point so that you archived 30minutes free time to use another apps',
-              );
-              resetNavigator(STACK_NAVIGATOR.HOME.DONE_LESSON_SCREEN);
-            }}
+            nextModule={nextModule}
             totalModule={lessons.length}
           />
         );
