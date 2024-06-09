@@ -1,5 +1,6 @@
 import {View, StyleSheet} from 'react-native';
 import React, {useState} from 'react';
+import AchievementLesson from './LessonComponent/AchievementLesson';
 import WriteLesson from './LessonComponent/WriteLesson';
 import ListenLesson from './LessonComponent/ListenLesson';
 import FillBlankLesson from './LessonComponent/FillBlankLesson';
@@ -9,9 +10,6 @@ import MathLesson from './LessonComponent/MathLesson';
 import {alertMessage} from 'src/core/presentation/utils/alert';
 import {resetNavigator} from 'src/core/presentation/navigation/actions/RootNavigationActions';
 import {STACK_NAVIGATOR} from 'src/core/presentation/navigation/ConstantNavigator';
-import {withProviders} from 'src/core/presentation/utils/withProviders';
-import {LessonStoreProvider} from '../stores/LessonStore/LessonStoreProvider';
-import AchievementLesson from './LessonComponent/AchievementLesson';
 
 enum LessonTypeE {
   ACHIEVEMENT,
@@ -105,31 +103,18 @@ const LessonScreen = () => {
         return (
           <MathLesson
             moduleIndex={lessonIndex}
-            nextModule={() => {
-              alertMessage(
-                'Important message',
-                'You reached 60 point so that you archived 30minutes free time to use another apps',
-              );
-              resetNavigator(STACK_NAVIGATOR.HOME.DONE_LESSON_SCREEN);
-            }}
+            nextModule={nextModule}
             totalModule={lessons.length}
           />
         );
     }
-  };
-  const [layoutIndex, setLayoutIndex] = useState(0);
-
-  const layout = listLayouts[layoutIndex];
-
-  const nextModule = () => {
-    setLayoutIndex((layoutIndex + 1) % listLayouts.length);
-    lessonStore.setIsShow(true);
+    return <View />;
   };
 
   return <View style={[styles.fill]}>{buildLesson()}</View>;
 };
 
-export default withProviders(LessonStoreProvider)(LessonScreen);
+export default LessonScreen;
 
 const styles = StyleSheet.create({
   fill: {
