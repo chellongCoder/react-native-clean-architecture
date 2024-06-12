@@ -5,7 +5,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import React from 'react';
+import React, {useCallback, useMemo, useState} from 'react';
 import Price from '../components/Price';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import IconLogout from 'assets/svg/IconLogout';
@@ -22,10 +22,227 @@ import IconArrowUp from 'assets/svg/IconArrowUp';
 import IconBlock from 'assets/svg/IconBlock';
 import IconArrowFill from 'assets/svg/IconArrowFill';
 import IconAddCircle from 'assets/svg/IconAddCircle';
+import ItemCard from '../components/ItemCard';
+import IconListen from 'assets/svg/IconListen';
+import IconBrightness from 'assets/svg/IconBrightness';
+import IconTheme from 'assets/svg/IconTheme';
+import IconDiamond from 'assets/svg/IconDiamond';
+import IconSoundFill from 'assets/svg/IconSoundFill';
+
+enum TabParentE {
+  APP_BLOCK = 'App block',
+  SETTING = 'Setting',
+  PURCHASE = 'Purchase',
+}
+
+enum TabSettingE {
+  SOUND = 'Sound',
+  BRIGHTNESS = 'Brightness',
+  THEME = 'Theme',
+}
+
+const tabsData = [
+  {id: TabParentE.APP_BLOCK, name: TabParentE.APP_BLOCK, icon: IconLock},
+  {id: TabParentE.SETTING, name: TabParentE.SETTING, icon: IconSetting},
+  {id: TabParentE.PURCHASE, name: TabParentE.PURCHASE, icon: IconPurchase},
+];
+
+const tabsSeting = [
+  {id: TabSettingE.SOUND, name: TabSettingE.SOUND, icon: IconListen},
+  {
+    id: TabSettingE.BRIGHTNESS,
+    name: TabSettingE.BRIGHTNESS,
+    icon: IconBrightness,
+  },
+  {id: TabSettingE.THEME, name: TabSettingE.THEME, icon: IconTheme},
+];
 
 const ParentScreen = () => {
   const insets = useSafeAreaInsets();
   const globalStyle = useGlobalStyle();
+
+  const [tabParent, setTabparent] = useState(TabParentE.APP_BLOCK);
+
+  const tabsBlock = [
+    {id: '1', name: 'youtube', icon: IconBlock},
+    {id: '2', icon: IconBlock},
+    {id: '3', icon: IconBlock},
+  ];
+
+  const tabsPurchase = [
+    {id: '4', name: '???.000 vnd', icon: IconDiamond},
+    {id: '5', name: '???.000 vnd', icon: IconDiamond},
+    {id: '6', name: '???.000 vnd', icon: IconDiamond},
+  ];
+
+  const [tabBlock, setTabBlock] = useState<string>(tabsBlock[0]?.id ?? '');
+
+  const [tabSetting, setTabSetting] = useState<string>(tabsSeting[0]?.id ?? '');
+
+  const [tabPurchase, setTabPurchase] = useState<string>(
+    tabsPurchase[0]?.id ?? '',
+  );
+
+  const tabsBody = useMemo(() => {
+    switch (tabParent) {
+      case TabParentE.APP_BLOCK:
+        return tabsBlock;
+      case TabParentE.SETTING:
+        return tabsSeting;
+      case TabParentE.PURCHASE:
+        return tabsPurchase;
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [tabParent]);
+
+  const tabBody = useMemo(() => {
+    switch (tabParent) {
+      case TabParentE.APP_BLOCK:
+        return tabBlock;
+      case TabParentE.SETTING:
+        return tabSetting;
+      case TabParentE.PURCHASE:
+        return tabPurchase;
+    }
+  }, [tabBlock, tabParent, tabPurchase, tabSetting]);
+
+  const setTabBody = useCallback(
+    (id: string) => {
+      switch (tabParent) {
+        case TabParentE.APP_BLOCK:
+          setTabBlock(id);
+          break;
+        case TabParentE.SETTING:
+          setTabSetting(id);
+          break;
+        case TabParentE.PURCHASE:
+          setTabPurchase(id);
+          break;
+      }
+    },
+    [tabParent],
+  );
+
+  const buildBodyContent = useMemo(() => {
+    if (tabParent === TabParentE.APP_BLOCK) {
+      return (
+        <View style={[styles.rowBetween]}>
+          <View style={[styles.fill, styles.rowBetween]}>
+            <View style={[styles.fill]}>
+              <View style={[]}>
+                <Text style={[globalStyle.txtButton, styles.textColor]}>
+                  App to lock
+                </Text>
+                <View style={[styles.card]}>
+                  <Text style={[globalStyle.txtButton, styles.textCard]}>
+                    Youtobe
+                  </Text>
+                  <IconArrowDown />
+                </View>
+              </View>
+              <View style={[]}>
+                <Text style={[globalStyle.txtButton, styles.textColor]}>
+                  Lessons to unlock
+                </Text>
+                <View style={[styles.card]}>
+                  <Text style={[globalStyle.txtButton, styles.textCard]}>
+                    Vietnamese
+                  </Text>
+                  <IconArrowDown />
+                </View>
+              </View>
+            </View>
+            <View style={[styles.fill]}>
+              <View style={[]}>
+                <Text style={[globalStyle.txtButton, styles.textColor]}>
+                  Score to unlock
+                </Text>
+                <View style={[styles.card]}>
+                  <Text style={[globalStyle.txtButton, styles.textCard]}>
+                    100
+                  </Text>
+                  <IconArrowUp />
+                </View>
+              </View>
+              <View style={[]}>
+                <Text style={[globalStyle.txtButton, styles.textColor]}>
+                  Your unlock score
+                </Text>
+                <View style={[styles.card]}>
+                  <Text style={[globalStyle.txtButton, styles.textCard]}>
+                    100
+                  </Text>
+                  <IconArrowUp />
+                </View>
+              </View>
+            </View>
+          </View>
+          <View>
+            <View style={[styles.fill]} />
+            <PrimaryButton
+              text="Unlock"
+              style={[styles.btnCommon, styles.btnRed]}
+            />
+            <PrimaryButton text="Save" style={[styles.btnCommon]} />
+          </View>
+        </View>
+      );
+    } else if (tabParent === TabParentE.SETTING) {
+      switch (tabSetting) {
+        case TabSettingE.SOUND:
+          return (
+            <View style={[styles.rowBetween]}>
+              <View style={[styles.fill]}>
+                <Text style={[globalStyle.txtButton, styles.textColor]}>
+                  Background sound
+                </Text>
+
+                <View style={[styles.rowHCenter, styles.mb12, styles.mt4]}>
+                  <IconSoundFill />
+                  <View style={[styles.fill, styles.soundBar]}>
+                    <View style={[styles.soundDot]} />
+                  </View>
+                </View>
+
+                <Text style={[globalStyle.txtButton, styles.textColor]}>
+                  Character sound
+                </Text>
+                <View style={[styles.rowHCenter, styles.mb12, styles.mt4]}>
+                  <IconSoundFill />
+                  <View style={[styles.fill, styles.soundBar]}>
+                    <View style={[styles.soundDot]} />
+                  </View>
+                </View>
+              </View>
+              <View>
+                <View style={[styles.fill]} />
+                <PrimaryButton text="Save" style={[styles.btnCommon]} />
+              </View>
+            </View>
+          );
+      }
+    } else if (tabParent === TabParentE.PURCHASE) {
+    }
+    return (
+      <View>
+        <Text style={[globalStyle.txtLabel, styles.textColor, styles.mb12]}>
+          Coming soon
+        </Text>
+        <Text style={[globalStyle.txtNote, styles.textColor, styles.mb12]}>
+          Lorem Ipsum is simply dummy text of the printing and typesetting
+          industry. Lorem Ipsum has been the industry's standard dummy text
+          Lorem Ipsum has been....
+        </Text>
+      </View>
+    );
+  }, [
+    tabParent,
+    globalStyle.txtLabel,
+    globalStyle.txtNote,
+    globalStyle.txtButton,
+    tabSetting,
+  ]);
+
   return (
     <View style={[styles.fill, styles.bg, {paddingTop: insets.top}]}>
       <View style={[styles.head]}>
@@ -55,49 +272,39 @@ const ParentScreen = () => {
       <BookView style={[styles.mt16, styles.fill]}>
         <ScrollView contentContainerStyle={[styles.bookContent]}>
           <View style={[styles.rowBetween, styles.ph16]}>
-            <TouchableOpacity>
-              <View style={[styles.tabItem]}>
-                <IconLock />
-              </View>
-              <Text style={[globalStyle.txtButton, styles.txtTab]}>
-                App block
-              </Text>
-            </TouchableOpacity>
-            <TouchableOpacity>
-              <View style={[styles.tabItem]}>
-                <IconSetting />
-              </View>
-              <Text style={[globalStyle.txtButton, styles.txtTab]}>
-                Setting
-              </Text>
-            </TouchableOpacity>
-            <TouchableOpacity>
-              <View style={[styles.tabItem]}>
-                <IconPurchase />
-              </View>
-              <Text style={[globalStyle.txtButton, styles.txtTab]}>
-                Purchase
-              </Text>
-            </TouchableOpacity>
+            {tabsData.map(t => (
+              <ItemCard
+                key={t.id}
+                name={t.name}
+                Icon={t.icon}
+                isFocus={tabParent === t.id}
+                onPress={() => setTabparent(t.id)}
+              />
+            ))}
           </View>
           <View style={[styles.bodyBook]}>
             <Text style={[globalStyle.txtLabel, styles.txtTitleBook]}>
-              App Block
+              {tabParent}
             </Text>
             <View style={[styles.rowBetween, styles.rowHCenter]}>
               <View style={[styles.arrowLeft]}>
                 <IconArrowFill />
               </View>
               <View style={[styles.rowBetween, styles.fill]}>
-                <View style={[styles.bodyItem]}>
-                  <IconBlock />
-                </View>
-                <View style={[styles.bodyItem]}>
-                  <IconBlock />
-                </View>
-                <View style={[styles.bodyItem]}>
-                  <IconBlock />
-                </View>
+                {tabsBody.map(t => (
+                  <ItemCard
+                    key={t.id}
+                    Icon={t.icon}
+                    isFocus={tabBody === t.id}
+                    name={t.name}
+                    onPress={() => setTabBody(t.id)}
+                    iconFocusColor="#F2B559"
+                    backgroundFocusColor="#FBF8CC"
+                    borderWidth={3}
+                    space={4}
+                    size={85}
+                  />
+                ))}
               </View>
               <View style={[styles.arrowRight]}>
                 <IconArrowFill type="right" />
@@ -105,64 +312,7 @@ const ParentScreen = () => {
             </View>
           </View>
           <View style={[styles.bodyContent, styles.rowBetween]}>
-            <View style={[styles.fill, styles.rowBetween]}>
-              <View style={[styles.fill]}>
-                <View style={[]}>
-                  <Text style={[globalStyle.txtButton, styles.textColor]}>
-                    App to lock
-                  </Text>
-                  <View style={[styles.card]}>
-                    <Text style={[globalStyle.txtButton, styles.textCard]}>
-                      Youtobe
-                    </Text>
-                    <IconArrowDown />
-                  </View>
-                </View>
-                <View style={[]}>
-                  <Text style={[globalStyle.txtButton, styles.textColor]}>
-                    Lessons to unlock
-                  </Text>
-                  <View style={[styles.card]}>
-                    <Text style={[globalStyle.txtButton, styles.textCard]}>
-                      Vietnamese
-                    </Text>
-                    <IconArrowDown />
-                  </View>
-                </View>
-              </View>
-              <View style={[styles.fill]}>
-                <View style={[]}>
-                  <Text style={[globalStyle.txtButton, styles.textColor]}>
-                    Score to unlock
-                  </Text>
-                  <View style={[styles.card]}>
-                    <Text style={[globalStyle.txtButton, styles.textCard]}>
-                      100
-                    </Text>
-                    <IconArrowUp />
-                  </View>
-                </View>
-                <View style={[]}>
-                  <Text style={[globalStyle.txtButton, styles.textColor]}>
-                    Your unlock score
-                  </Text>
-                  <View style={[styles.card]}>
-                    <Text style={[globalStyle.txtButton, styles.textCard]}>
-                      100
-                    </Text>
-                    <IconArrowUp />
-                  </View>
-                </View>
-              </View>
-            </View>
-            <View>
-              <View style={[styles.fill]} />
-              <PrimaryButton
-                text="Unlock"
-                style={[styles.btnCommon, styles.btnRed]}
-              />
-              <PrimaryButton text="Save" style={[styles.btnCommon]} />
-            </View>
+            {buildBodyContent}
           </View>
           <View style={[styles.bodyBookTwo]}>
             <Text style={[globalStyle.txtLabel, styles.txtTitleBookTwo]}>
@@ -173,15 +323,19 @@ const ParentScreen = () => {
                 <IconArrowFill />
               </View>
               <View style={[styles.rowBetween, styles.fill]}>
-                <View style={[styles.bodyItemTwo]}>
-                  <IconAddCircle />
-                </View>
-                <View style={[styles.bodyItemTwo]}>
-                  <IconAddCircle />
-                </View>
-                <View style={[styles.bodyItemTwo]}>
-                  <IconAddCircle />
-                </View>
+                {Array.from({length: 3}, (_, i) => i).map(i => (
+                  <ItemCard
+                    key={i}
+                    Icon={IconAddCircle}
+                    isFocus={i === 0}
+                    iconFocusColor="#F2B559"
+                    backgroundFocusColor="#FBF8CC"
+                    backgroundColor="#F2B559"
+                    borderWidth={3}
+                    space={4}
+                    size={85}
+                  />
+                ))}
               </View>
               <View style={[styles.arrowRight]}>
                 <IconArrowFill type="right" />
@@ -265,11 +419,6 @@ const styles = StyleSheet.create({
   textColor: {
     color: '#1C6349',
   },
-  txtTab: {
-    textAlign: 'center',
-    color: '#1C6349',
-    paddingTop: 8,
-  },
   txtParentName: {
     color: '#1C6349',
     marginRight: 12,
@@ -282,6 +431,9 @@ const styles = StyleSheet.create({
   },
   mb12: {
     marginBottom: 12,
+  },
+  mt4: {
+    marginTop: 4,
   },
   mt16: {
     marginTop: 16,
@@ -298,18 +450,10 @@ const styles = StyleSheet.create({
   bookContent: {
     paddingHorizontal: 16,
   },
-  tabItem: {
-    height: 64,
-    width: 64,
-    borderRadius: 15,
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: '#258F78',
-  },
   bodyBook: {
     borderRadius: 30,
     backgroundColor: '#78C5B4',
-    paddingVertical: 24,
+    paddingVertical: 20,
     paddingHorizontal: 8,
     marginTop: 32,
     zIndex: 50,
@@ -331,26 +475,6 @@ const styles = StyleSheet.create({
     color: '#1C6349',
     marginBottom: 16,
     marginLeft: 16,
-  },
-  bodyItem: {
-    height: 85,
-    width: 85,
-    borderRadius: 15,
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: '#258F78',
-    borderColor: '#258F78',
-    borderWidth: 3,
-  },
-  bodyItemTwo: {
-    height: 85,
-    width: 85,
-    borderRadius: 15,
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: '#F2B559',
-    borderColor: '#F2B559',
-    borderWidth: 3,
   },
   bodyContent: {
     marginTop: -50,
@@ -383,5 +507,20 @@ const styles = StyleSheet.create({
   textCard: {
     color: '#1C6349',
     marginRight: 4,
+  },
+  soundBar: {
+    height: 3,
+    backgroundColor: '#258F78',
+    marginLeft: 12,
+    marginRight: 24,
+    justifyContent: 'center',
+  },
+  soundDot: {
+    backgroundColor: '#66C270',
+    height: 12,
+    width: 12,
+    borderRadius: 6,
+    position: 'absolute',
+    left: 30,
   },
 });

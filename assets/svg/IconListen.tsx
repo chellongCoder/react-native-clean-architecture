@@ -1,18 +1,20 @@
 import * as React from 'react';
 import Svg, {Path} from 'react-native-svg';
 
-function IconListen(props: any) {
+function IconListen({
+  width = 47,
+  height = 42,
+  color = '#FBF8CC',
+}: {
+  width?: number;
+  height?: number;
+  color?: string;
+}) {
   return (
-    <Svg
-      width={47}
-      height={42}
-      viewBox="0 0 47 42"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-      {...props}>
+    <Svg width={width} height={height} viewBox="0 0 47 42" fill="none">
       <Path
         d="M43.349 32.79l-5.786-3.342a.832.832 0 00-1.138.31l-1.044 1.81a.839.839 0 00.304 1.143l5.786 3.341a.835.835 0 001.138-.31l1.044-1.81a.843.843 0 00-.304-1.143zm-6.93-20.657a.834.834 0 001.139.309L43.344 9.1a.839.839 0 00.304-1.144l-1.039-1.804a.833.833 0 00-1.138-.31l-5.786 3.341a.839.839 0 00-.304 1.144l1.039 1.805zm9.128 6.924h-6.714a.842.842 0 00-.84.839v2.098c0 .462.378.84.84.84h6.714c.461 0 .84-.378.84-.84v-2.098a.842.842 0 00-.84-.84zM29.385.12c-.31 0-.624.084-.912.278L9.877 12.552H1.274a.842.842 0 00-.839.84v15.107c0 .461.378.839.84.839h8.602l18.596 12.154c.288.189.608.278.912.278.876 0 1.684-.698 1.684-1.684V1.804c0-.986-.808-1.684-1.684-1.684z"
-        fill="#FBF8CC"
+        fill={color}
       />
     </Svg>
   );
