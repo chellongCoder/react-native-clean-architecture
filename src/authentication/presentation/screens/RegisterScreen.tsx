@@ -101,8 +101,8 @@ const RegisterScreen = observer(() => {
       Object.values(registerState.error).every(error => error === '')
     ) {
       const params: RegisterPayload = {
-        emailOrPhoneNumber: registerState.emailOrPhone || '',
-        username: registerState.userName || '',
+        emailOrPhoneNumber: registerState.emailOrPhone?.toLowerCase() || '',
+        username: registerState.userName?.toLowerCase() || '',
         password: registerState.password || '',
         confirmPassword: registerState.confirmPassword || '',
         name: 'string',

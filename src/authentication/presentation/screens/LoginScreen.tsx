@@ -22,7 +22,7 @@ const LoginScreen = observer(() => {
 
   const onLogin = () => {
     const params = {
-      email: emailOrPhone,
+      email: emailOrPhone.toLowerCase(),
       password,
     };
     handleLoginWithCredentials(params);
