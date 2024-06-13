@@ -1,6 +1,6 @@
 import {StyleSheet, View} from 'react-native';
 import React from 'react';
-import ChartProfile from '../components/ChartProfile';
+import ChartProfile from '../../../lesson/presentation/components/ChartProfile';
 
 const ProfileScreen = () => {
   return (
