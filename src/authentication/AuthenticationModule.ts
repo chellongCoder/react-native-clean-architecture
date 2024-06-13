@@ -4,6 +4,9 @@ import LoginUsernamePasswordUseCase from './application/useCases/LoginUsernamePa
 import {IAuthenticationRepositoryToken} from './domain/IAuthenRepository';
 import AuthenticationRepository from './infrastructure/implementations/AuthenticationRepository';
 import RegisterUseCase from './application/useCases/RegisterUsecase';
+import RegisterChildUseCase from './application/useCases/RegisterChildUsecase';
+import GetListSubjectUseCase from './application/useCases/GetListSubjectUsecase';
+import GetUserProfileUseCase from './application/useCases/GetUserProfile';
 
 @module({
   providers: [
@@ -17,6 +20,9 @@ import RegisterUseCase from './application/useCases/RegisterUsecase';
     },
     LoginUsernamePasswordUseCase,
     RegisterUseCase,
+    RegisterChildUseCase,
+    GetListSubjectUseCase,
+    GetUserProfileUseCase,
   ],
 })
 export class AuthenticationModule {}

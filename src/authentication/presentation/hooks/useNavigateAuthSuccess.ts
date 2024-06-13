@@ -4,7 +4,7 @@ import {pushScreen} from 'src/core/presentation/navigation/actions/RootNavigatio
 
 const useNavigateAuthSuccess = () => {
   const handleNavigateAuthenticationSuccess = useCallback(async () => {
-    pushScreen(STACK_NAVIGATOR.BOTTOM_TAB_SCREENS);
+    pushScreen(STACK_NAVIGATOR.AUTH.LIST_CHILDREN_SCREEN);
   }, []);
 
   return {

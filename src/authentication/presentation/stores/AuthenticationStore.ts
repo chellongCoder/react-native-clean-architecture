@@ -13,6 +13,10 @@ import {LoginUsernamePasswordPayload} from 'src/authentication/application/types
 import {LoginMethods} from '../constants/common';
 import RegisterUseCase from 'src/authentication/application/useCases/RegisterUsecase';
 import {RegisterPayload} from 'src/authentication/application/types/RegisterPayload';
+import {RegisterChildPayload} from 'src/authentication/application/types/RegisterChildPayload';
+import RegisterChildUseCase from 'src/authentication/application/useCases/RegisterChildUsecase';
+import GetListSubjectUseCase from 'src/authentication/application/useCases/GetListSubjectUsecase';
+import GetUserProfileUseCase from 'src/authentication/application/useCases/GetUserProfile';
 
 @injectable()
 export class AuthenticationStore implements AuthenticationStoreState {
@@ -29,6 +33,15 @@ export class AuthenticationStore implements AuthenticationStoreState {
 
     @provided(RegisterUseCase)
     private registerUseCase: RegisterUseCase,
+
+    @provided(RegisterChildUseCase)
+    private registerChildUseCase: RegisterChildUseCase,
+
+    @provided(GetListSubjectUseCase)
+    private getListSubjectUseCase: GetListSubjectUseCase,
+
+    @provided(GetUserProfileUseCase)
+    private getUserProfileUseCase: GetUserProfileUseCase,
 
     @provided(IHttpClientToken) private readonly httpClient: IHttpClient, // @provided(CoreStore) private coreStore: CoreStore,
   ) {
@@ -101,6 +114,38 @@ export class AuthenticationStore implements AuthenticationStoreState {
     return response;
   }
 
+  @action
+  public async registerChild(args: RegisterChildPayload) {
+    this.setIsLoading(true);
+    const response = await this.registerChildUseCase.execute(args);
+    if (response.error) {
+      return response;
+    }
+    this.setIsLoading(false);
+    return response;
+  }
+
+  @action
+  public async getListAllSubject() {
+    this.setIsLoading(true);
+    const response = await this.getListSubjectUseCase.execute();
+    if (response.error) {
+      return response;
+    }
+    this.setIsLoading(false);
+    return response;
+  }
+
+  @action
+  public async getUserProfile() {
+    this.setIsLoading(true);
+    const response = await this.getUserProfileUseCase.execute();
+    if (response.error) {
+      return response;
+    }
+    this.setIsLoading(false);
+    return response;
+  }
   // @action
   // public async loginWithGoogle(args: LoginWithGooglePayload) {
   //   this.setIsLoading(true);
