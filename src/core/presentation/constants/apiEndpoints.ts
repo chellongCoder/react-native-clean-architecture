@@ -25,6 +25,7 @@ export const API_ENDPOINTS = {
   USER: {
     REGISTER: getUserEndPointServices('register'),
     REGISTER_CHILD: getUserEndPointServices('register-children'),
+    PROFILE: getUserEndPointServices('profile'),
   },
   SUBJECT: {
     LIST_ALL_SUBJECT: getSubjectEndPointServices('list-all-subject'),

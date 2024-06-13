@@ -1,10 +1,11 @@
-import React from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {
   View,
   Text,
   TouchableOpacity,
   StyleSheet,
   Dimensions,
+  ScrollView,
 } from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {scale} from 'react-native-size-matters';
@@ -15,20 +16,25 @@ import {CustomTextStyle} from 'src/core/presentation/constants/typography';
 import useAuthenticationStore from '../stores/useAuthenticationStore';
 import {useLoadingGlobal} from 'src/core/presentation/hooks/loading/useLoadingGlobal';
 import {
-  navigateScreen,
   pushScreen,
   resetNavigator,
 } from 'src/core/presentation/navigation/actions/RootNavigationActions';
 import {STACK_NAVIGATOR} from 'src/core/presentation/navigation/ConstantNavigator';
 import ICAddChild from 'src/core/components/icons/ICAddChild';
+import {
+  data,
+  children,
+} from 'src/authentication/application/types/GetUserProfileResponse';
 
 const screenWidth = Dimensions.get('screen').width;
 
 const ListChildrenScreen = () => {
-  const dataChild = ['', '', ''];
-
-  const {removeCurrentCredentials, isLoading} = useAuthenticationStore();
+  const {removeCurrentCredentials, isLoading, getUserProfile} =
+    useAuthenticationStore();
   useLoadingGlobal(isLoading);
+
+  const [userProfile, setUserProfile] = useState<data>();
+  const [isChooseChildren, setIsChooseChildren] = useState<string>();
 
   const onLogout = () => {
     removeCurrentCredentials();
@@ -39,9 +45,26 @@ const ListChildrenScreen = () => {
     resetNavigator(STACK_NAVIGATOR.AUTH.REGISTER_CHILD_SCREEN);
   };
 
-  const onEnter = () => {
-    pushScreen(STACK_NAVIGATOR.BOTTOM_TAB_SCREENS);
+  const onSelectChild = (item: children) => {
+    setIsChooseChildren(item._id);
   };
+
+  const onEnter = () => {
+    if (isChooseChildren) {
+      pushScreen(STACK_NAVIGATOR.BOTTOM_TAB_SCREENS);
+    }
+  };
+
+  const handleGetUserProfile = useCallback(async () => {
+    const res = await getUserProfile();
+    if (res.data) {
+      setUserProfile(res.data);
+    }
+  }, [getUserProfile]);
+
+  useEffect(() => {
+    handleGetUserProfile();
+  }, [handleGetUserProfile]);
 
   return (
     <SafeAreaView style={styles.container} edges={['top']}>
@@ -59,7 +82,7 @@ const ListChildrenScreen = () => {
           </View>
           <View style={styles.bodyContainer}>
             <Text style={styles.title}>Hi, Welcome back</Text>
-            <Text style={styles.titleBold}>Hellome.1003</Text>
+            <Text style={styles.titleBold}>{userProfile?.username}</Text>
             <TouchableOpacity onPress={onLogout}>
               <Text style={styles.logoutTitle}>Another account?</Text>
             </TouchableOpacity>
@@ -71,17 +94,48 @@ const ListChildrenScreen = () => {
 
         <View>
           <Text style={styles.bottomTitle}>Children account</Text>
-          <View style={styles.wrapAddChildContainer}>
-            {dataChild.map(item => {
-              return (
-                <TouchableOpacity
-                  style={styles.addChildContainer}
-                  onPress={onAddChild}>
-                  <ICAddChild />
-                </TouchableOpacity>
-              );
-            })}
-          </View>
+          <ScrollView horizontal>
+            <View style={styles.wrapAddChildContainer}>
+              {userProfile?.children.map((item: children) => {
+                return (
+                  <View style={{alignItems: 'center'}}>
+                    <TouchableOpacity
+                      style={styles.addChildContainer}
+                      onPress={() => onSelectChild(item)}>
+                      <View
+                        style={[
+                          styles.addChildContent,
+                          isChooseChildren === item._id
+                            ? {backgroundColor: COLORS.GREEN_66C270}
+                            : {},
+                        ]}>
+                        <ICManIconMedium
+                          color={
+                            isChooseChildren === item._id
+                              ? COLORS.WHITE
+                              : COLORS.BLUE_1C6349
+                          }
+                        />
+                      </View>
+                    </TouchableOpacity>
+                    <Text style={styles.childrenName}>{item.name}</Text>
+                  </View>
+                );
+              })}
+            </View>
+            {userProfile?.children && userProfile?.children.length < 5 && (
+              <View
+                style={[styles.wrapAddChildContainer, {marginLeft: scale(8)}]}>
+                <View style={{alignItems: 'center'}}>
+                  <TouchableOpacity
+                    style={styles.addChildContainer}
+                    onPress={onAddChild}>
+                    <ICAddChild />
+                  </TouchableOpacity>
+                </View>
+              </View>
+            )}
+          </ScrollView>
         </View>
 
         <View style={{justifyContent: 'center', alignItems: 'center'}}>
@@ -189,8 +243,6 @@ const styles = StyleSheet.create({
     borderRadius: scale(4),
   },
   wrapAddChildContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
     marginTop: scale(16),
   },
   bottomButtonTitle: {
@@ -204,6 +256,19 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: scale(8),
+  },
+  addChildContent: {
+    height: scale(80),
+    width: scale(80),
+    backgroundColor: COLORS.WHITE_FBF8CC,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: scale(8),
+  },
+  childrenName: {
+    ...CustomTextStyle.caption,
+    color: COLORS.BLUE_1C6349,
+    marginTop: scale(4),
   },
 });
 

@@ -23,6 +23,7 @@ const useLoginWithCredentials = () => {
     register,
     registerChild,
     getListAllSubject,
+    getUserProfile,
   } = useAuthenticationStore();
   const {handleNavigateAuthenticationSuccess} = useNavigateAuthSuccess();
 
@@ -248,6 +249,30 @@ const useLoginWithCredentials = () => {
     }
   }, [getListAllSubject, handleErrorRegister, setIsLoading]);
 
+  const handleGetUserProfile = useCallback(async () => {
+    try {
+      const res = await getUserProfile();
+      if (res.error) {
+        Toast.show({
+          type: 'error',
+          text1: res.error.message,
+        });
+      } else {
+        Toast.show({
+          type: 'success',
+          text1: res.message,
+        });
+      }
+      return res.data;
+    } catch (error) {
+      if (isAxiosError(error)) {
+        handleErrorRegister(error as AxiosError);
+      }
+    } finally {
+      setIsLoading(false);
+    }
+  }, [getUserProfile, handleErrorRegister, setIsLoading]);
+
   return {
     formData,
     setUsername,
@@ -258,6 +283,7 @@ const useLoginWithCredentials = () => {
     handleErrorRegister,
     handleRegisterChild,
     handleGetListAllSubject,
+    handleGetUserProfile,
   };
 };
 export default useLoginWithCredentials;

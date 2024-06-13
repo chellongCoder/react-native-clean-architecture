@@ -16,6 +16,7 @@ import {RegisterPayload} from 'src/authentication/application/types/RegisterPayl
 import {RegisterChildPayload} from 'src/authentication/application/types/RegisterChildPayload';
 import RegisterChildUseCase from 'src/authentication/application/useCases/RegisterChildUsecase';
 import GetListSubjectUseCase from 'src/authentication/application/useCases/GetListSubjectUsecase';
+import GetUserProfileUseCase from 'src/authentication/application/useCases/GetUserProfile';
 
 @injectable()
 export class AuthenticationStore implements AuthenticationStoreState {
@@ -38,6 +39,9 @@ export class AuthenticationStore implements AuthenticationStoreState {
 
     @provided(GetListSubjectUseCase)
     private getListSubjectUseCase: GetListSubjectUseCase,
+
+    @provided(GetUserProfileUseCase)
+    private getUserProfileUseCase: GetUserProfileUseCase,
 
     @provided(IHttpClientToken) private readonly httpClient: IHttpClient, // @provided(CoreStore) private coreStore: CoreStore,
   ) {
@@ -114,7 +118,6 @@ export class AuthenticationStore implements AuthenticationStoreState {
   public async registerChild(args: RegisterChildPayload) {
     this.setIsLoading(true);
     const response = await this.registerChildUseCase.execute(args);
-    console.log('response: ', response);
     if (response.error) {
       return response;
     }
@@ -126,7 +129,17 @@ export class AuthenticationStore implements AuthenticationStoreState {
   public async getListAllSubject() {
     this.setIsLoading(true);
     const response = await this.getListSubjectUseCase.execute();
-    console.log('response: ', response);
+    if (response.error) {
+      return response;
+    }
+    this.setIsLoading(false);
+    return response;
+  }
+
+  @action
+  public async getUserProfile() {
+    this.setIsLoading(true);
+    const response = await this.getUserProfileUseCase.execute();
     if (response.error) {
       return response;
     }

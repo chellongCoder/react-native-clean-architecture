@@ -6,6 +6,7 @@ import AuthenticationRepository from './infrastructure/implementations/Authentic
 import RegisterUseCase from './application/useCases/RegisterUsecase';
 import RegisterChildUseCase from './application/useCases/RegisterChildUsecase';
 import GetListSubjectUseCase from './application/useCases/GetListSubjectUsecase';
+import GetUserProfileUseCase from './application/useCases/GetUserProfile';
 
 @module({
   providers: [
@@ -21,6 +22,7 @@ import GetListSubjectUseCase from './application/useCases/GetListSubjectUsecase'
     RegisterUseCase,
     RegisterChildUseCase,
     GetListSubjectUseCase,
+    GetUserProfileUseCase,
   ],
 })
 export class AuthenticationModule {}

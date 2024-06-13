@@ -13,6 +13,7 @@ import RegisterResponse from 'src/authentication/application/types/RegisterRespo
 import {RegisterChildPayload} from 'src/authentication/application/types/RegisterChildPayload';
 import RegisterChildResponse from 'src/authentication/application/types/RegisterChildResponse';
 import GetListSubjectResponse from 'src/authentication/application/types/GetListSubjectResponse';
+import GetUserProfileResponse from 'src/authentication/application/types/GetUserProfileResponse';
 
 @injectable()
 class AuthenticationRepository implements IAuthenticationRepository {
@@ -67,6 +68,13 @@ class AuthenticationRepository implements IAuthenticationRepository {
   public async getListAllSubject(): Promise<GetListSubjectResponse> {
     const response: GetListSubjectResponse = await this.httpClient.get(
       API_ENDPOINTS.SUBJECT.LIST_ALL_SUBJECT,
+    );
+    return response;
+  }
+
+  public async getUserProfile(): Promise<GetUserProfileResponse> {
+    const response: GetUserProfileResponse = await this.httpClient.get(
+      API_ENDPOINTS.USER.PROFILE,
     );
     return response;
   }
