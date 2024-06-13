@@ -21,7 +21,6 @@ const ModuleItem = (props: Props) => {
   const globalStyle = useGlobalStyle();
 
   const onDoHomework = useCallback(async () => {
-    await requestScreenTime();
     const apps = await selectedAppsData();
     console.log(
       '🛠 LOG: 🚀 --> -------------------------------------------🛠 LOG: 🚀 -->',

@@ -119,7 +119,9 @@ struct ScreenTimeSelectAppsContentView: View {
             ).onChange(of: pickerIsPresented) { newValue in
               if !newValue {
                   // Picker has been dismissed
-                model.startAppRestrictions()
+                Task {
+                  await model.startAppRestrictions()
+                }
                 showAlert = false
               }
             }

@@ -1,9 +1,21 @@
 import ManagedSettings
+import WidgetKit
 import FamilyControls
 import DeviceActivity
 import Foundation
 import React
+import ActivityKit
 
+
+struct screentimewidgetAttributes: ActivityAttributes {
+    public struct ContentState: Codable, Hashable {
+        // Dynamic stateful properties about your activity go here!
+        var emoji: String
+    }
+
+    // Fixed non-changing properties about your activity go here!
+    var name: String
+}
 @objc(AlphadexScreentime)
 class AlphadexScreentime: RCTEventEmitter {
   static var userDefaultsKey = "ScreenTimeSelection"
@@ -104,16 +116,21 @@ class ScreenTimeSelectAppsModel: RCTEventEmitter, ObservableObject {
         //            sendEvent("onChangeBlocked", [
         //              "isBlocked": true
         //            ]);
-        //            if #available(iOS 16.2, *) {
-        //                let activity = try Activity.request(
-        //                    attributes: screentimewidgetAttributes(name: "Text1"),
-        //                    content: .init(state: screentimewidgetAttributes.ContentState(emoji: "Blocked"), staleDate: nil),
-        //                    pushType: .token
-        //                )
-        //            }
-        //            if #available(iOS 14.0, *) {
-        //              WidgetCenter.shared.reloadAllTimelines()
-        //            }
+                    if #available(iOS 16.2, *) {
+                      do {
+                        let activity = try Activity.request(
+                            attributes: screentimewidgetAttributes(name: "Text1"),
+                            content: .init(state: screentimewidgetAttributes.ContentState(emoji: "Blocked"), staleDate: nil),
+                            pushType: .token
+                        )
+                      } catch {
+                          //handle error
+                          print(error)
+                      }
+                    }
+                    if #available(iOS 14.0, *) {
+                      WidgetCenter.shared.reloadAllTimelines()
+                    }
       }
     }
   }
@@ -129,7 +146,7 @@ class ScreenTimeSelectAppsModel: RCTEventEmitter, ObservableObject {
     EventEmitter.sharedInstance.dispatch(name: "Test", body: "Hello")
   }
 
-  func startAppRestrictions() -> Void {
+  func startAppRestrictions() async -> Void {
     let store = ManagedSettingsStore()
     let userDefaults = UserDefaults.init(suiteName: "group.com.hisoft.tbd.app")!
     let data = userDefaults.data(forKey: AlphadexScreentime.userDefaultsKey)
@@ -143,25 +160,27 @@ class ScreenTimeSelectAppsModel: RCTEventEmitter, ObservableObject {
         store.shield.applications = unwrapped.applicationTokens
         userDefaults.set(true, forKey:"blocked")
         onChangeBlock?(["isBlocked": true])
-        //            sendEvent("onChangeBlocked", [
-        //              "isBlocked": true
-        //            ]);
-        //            if #available(iOS 16.2, *) {
-        //                let activity = try Activity.request(
-        //                    attributes: screentimewidgetAttributes(name: "Text1"),
-        //                    content: .init(state: screentimewidgetAttributes.ContentState(emoji: "Blocked"), staleDate: nil),
-        //                    pushType: .token
-        //                )
-        //            }
-        //            if #available(iOS 14.0, *) {
-        //              WidgetCenter.shared.reloadAllTimelines()
-        //            }
+        if #available(iOS 16.2, *) {
+          do {
+            let activity = try Activity.request(
+                attributes: screentimewidgetAttributes(name: "Text1"),
+                content: .init(state: screentimewidgetAttributes.ContentState(emoji: "Blocked"), staleDate: nil),
+                pushType: .token
+            )
+          } catch {
+              //handle error
+              print(error)
+          }
+        }
+        if #available(iOS 14.0, *) {
+          WidgetCenter.shared.reloadAllTimelines()
+        }
       }
     }
   }
 
   @objc(unBlockApps:withRejecter:)
-  func unBlockApps(resolve:RCTPromiseResolveBlock,reject:RCTPromiseRejectBlock) -> Void {
+  func unBlockApps(resolve:RCTPromiseResolveBlock,reject:@escaping RCTPromiseRejectBlock) -> Void {
     let store = ManagedSettingsStore()
     let userDefaults = UserDefaults.init(suiteName: "group.com.hisoft.tbd.app")!
     store.shield.applicationCategories = ShieldSettings.ActivityCategoryPolicy.none
@@ -178,18 +197,27 @@ class ScreenTimeSelectAppsModel: RCTEventEmitter, ObservableObject {
         print("Failed to decode or encode data: \(error)")
     }
 
-    resolve(true)
 //    sendEvent("onChangeBlocked", [
 //      "isBlocked": false
 //    ]);
-//      if #available(iOS 16.2, *) {
-//        if let activity = Activity<screentimewidgetAttributes>.activities.first {
-//          await activity.end(ActivityContent(state: screentimewidgetAttributes.ContentState(emoji: "closing"), staleDate: nil), dismissalPolicy: .immediate)
-//        }
-//      }
-//    if #available(iOS 14.0, *) {
-//      WidgetCenter.shared.reloadAllTimelines()
-//    }
+    Task {
+      do {
+        if #available(iOS 16.2, *) {
+          if let activity = Activity<screentimewidgetAttributes>.activities.first {
+            await activity.end(ActivityContent(state: screentimewidgetAttributes.ContentState(emoji: "closing"), staleDate: nil), dismissalPolicy: .immediate)
+          }
+        }
+      } catch {
+        reject("Error", "Failed to decode or encode data", error)
+      }
+    }
+
+    if #available(iOS 14.0, *) {
+      WidgetCenter.shared.reloadAllTimelines()
+    }
+
+    resolve(true)
+
   }
 
 

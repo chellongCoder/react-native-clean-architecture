@@ -1,5 +1,5 @@
 import {NavigationContainer} from '@react-navigation/native';
-import React, {useRef} from 'react';
+import React, {useEffect, useRef} from 'react';
 import {
   initialWindowMetrics,
   SafeAreaProvider,
@@ -11,7 +11,7 @@ import {screenTracking} from './utils/ScreenTracking';
 import {AuthenticationProvider} from 'src/authentication/presentation/stores/AuthenticationProvider';
 import {LoadingGlobalProvider} from './hooks/loading/LoadingGlobalProvider';
 import Toast from 'react-native-toast-message';
-
+import {requestScreenTime} from 'react-native-alphadex-screentime';
 const App = () => {
   const routeNameRef = useRef<string>();
 
@@ -32,6 +32,10 @@ const App = () => {
       routeNameRef.current = currentRouteName;
     }
   };
+
+  useEffect(() => {
+    requestScreenTime();
+  }, []);
 
   return (
     <NavigationContainer
