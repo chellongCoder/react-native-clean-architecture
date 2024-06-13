@@ -27,7 +27,7 @@ import IconListen from 'assets/svg/IconListen';
 import IconBrightness from 'assets/svg/IconBrightness';
 import IconTheme from 'assets/svg/IconTheme';
 import IconDiamond from 'assets/svg/IconDiamond';
-import IconSoundFill from 'assets/svg/IconSoundFill';
+import Volume from '../components/Volume';
 
 enum TabParentE {
   APP_BLOCK = 'App block',
@@ -192,26 +192,19 @@ const ParentScreen = () => {
         case TabSettingE.SOUND:
           return (
             <View style={[styles.rowBetween]}>
-              <View style={[styles.fill]}>
+              <View style={[styles.fill, styles.mr32]}>
                 <Text style={[globalStyle.txtButton, styles.textColor]}>
                   Background sound
                 </Text>
-
-                <View style={[styles.rowHCenter, styles.mb12, styles.mt4]}>
-                  <IconSoundFill />
-                  <View style={[styles.fill, styles.soundBar]}>
-                    <View style={[styles.soundDot]} />
-                  </View>
+                <View style={[styles.mb12, styles.mt4]}>
+                  <Volume value={80} onChangValue={v => console.log(v)} />
                 </View>
 
                 <Text style={[globalStyle.txtButton, styles.textColor]}>
                   Character sound
                 </Text>
-                <View style={[styles.rowHCenter, styles.mb12, styles.mt4]}>
-                  <IconSoundFill />
-                  <View style={[styles.fill, styles.soundBar]}>
-                    <View style={[styles.soundDot]} />
-                  </View>
+                <View style={[styles.mb12, styles.mt4]}>
+                  <Volume value={30} onChangValue={v => console.log(v)} />
                 </View>
               </View>
               <View>
@@ -441,6 +434,9 @@ const styles = StyleSheet.create({
   mr16: {
     marginRight: 16,
   },
+  mr32: {
+    marginRight: 32,
+  },
   arrowLeft: {
     marginRight: 8,
   },
@@ -507,20 +503,5 @@ const styles = StyleSheet.create({
   textCard: {
     color: '#1C6349',
     marginRight: 4,
-  },
-  soundBar: {
-    height: 3,
-    backgroundColor: '#258F78',
-    marginLeft: 12,
-    marginRight: 24,
-    justifyContent: 'center',
-  },
-  soundDot: {
-    backgroundColor: '#66C270',
-    height: 12,
-    width: 12,
-    borderRadius: 6,
-    position: 'absolute',
-    left: 30,
   },
 });
