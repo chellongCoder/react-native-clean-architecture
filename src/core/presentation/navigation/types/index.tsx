@@ -19,6 +19,9 @@ export type RootStackParamList = {
   Lesson: undefined;
   Home: undefined;
   Onboard: undefined;
+  Profile: {
+    type: 'BOY' | 'GIRL';
+  };
 };
 
 export type RootStackScreenProps<Screen extends keyof RootStackParamList> =

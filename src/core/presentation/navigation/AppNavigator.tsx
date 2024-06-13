@@ -13,10 +13,10 @@ import RankScreen from 'src/rank/presentation/RankScreen';
 import LoginScreen from 'src/authentication/presentation/screens/LoginScreen';
 import DoneLessonScreen from '../screens/DoneLessonScreen';
 import OnBoardingScreen from '../screens/OnBoardingScreen';
-import ProfileScreen from 'src/post/presentation/screens/ProfileScreen';
 import RegisterScreen from 'src/authentication/presentation/screens/RegisterScreen';
 import RegisterChildScreen from 'src/authentication/presentation/screens/RegisterChildScreen';
 import ListChildrenScreen from 'src/authentication/presentation/screens/ListChildrenScreen';
+import ProfileScreen from '../screens/ProfileScreen';
 
 const AuthStack = createStackNavigator();
 const HomeStack = createStackNavigator();

@@ -13,13 +13,14 @@ import IconUser from 'assets/svg/IconUser';
 import IconDiamond from 'assets/svg/IconDiamond';
 import ICStarOutLine from 'src/core/components/icons/ICStarOutLine';
 import IconPlaySlider from 'assets/svg/IconPlaySlider';
+import {observer} from 'mobx-react';
+import ChartProfile from 'src/lesson/presentation/components/ChartProfile';
+import {verticalScale} from 'react-native-size-matters';
 const {width} = Dimensions.get('window');
 
-interface Props {
-  type: 'BOY' | 'GIRL';
-}
+const ProfileScreen = observer(({route, navigation}) => {
+  const type = 'BOY';
 
-export default function DoneLessonScreen({type}: Props) {
   const styleHook = useGlobalStyle();
 
   const checkType = () => {
@@ -44,7 +45,7 @@ export default function DoneLessonScreen({type}: Props) {
                 style={[styleHook.txtButton, styles.textFree, {paddingTop: 5}]}>
                 150
               </Text>
-              <ICStar />
+              <ICStar width={10} height={10} />
             </View>
           </View>
           <View style={[styles.circle, checkType()]}>
@@ -84,6 +85,7 @@ export default function DoneLessonScreen({type}: Props) {
             </View>
           </View>
         </View>
+
         <ScrollView
           contentContainerStyle={{
             width: '100%',
@@ -91,6 +93,12 @@ export default function DoneLessonScreen({type}: Props) {
             alignItems: 'center',
             paddingTop: 40,
           }}>
+          <View style={[{width: '90%', paddingBottom: verticalScale(50)}]}>
+            <ChartProfile
+              valuesAxitX={['M', 'T', 'W', 'Th', 'F', 'Sa', 'Su']}
+              valueY={[80, 60, 5, 15, 30, 44, 333]}
+            />
+          </View>
           <View style={styles.achievementContainer}>
             <View style={styles.achievementTitle}>
               <View
@@ -160,7 +168,9 @@ export default function DoneLessonScreen({type}: Props) {
                   </View>
                 </ScrollView>
                 <View
-                  style={{transform: [{rotate: '180deg'}, {translateY: -10}]}}>
+                  style={{
+                    transform: [{rotate: '180deg'}, {translateY: -10}],
+                  }}>
                   <IconPlaySlider width={9} height={16} />
                 </View>
                 <View style={styles.wrapperDot}>
@@ -181,12 +191,13 @@ export default function DoneLessonScreen({type}: Props) {
               </Text>
             </View>
           </View>
+          <View style={{height: verticalScale(100)}} />
         </ScrollView>
       </View>
     </View>
   );
-}
-
+});
+export default ProfileScreen;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
