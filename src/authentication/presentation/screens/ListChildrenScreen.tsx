@@ -98,7 +98,7 @@ const ListChildrenScreen = () => {
             <View style={styles.wrapAddChildContainer}>
               {userProfile?.children.map((item: children) => {
                 return (
-                  <View style={{alignItems: 'center'}}>
+                  <View style={{alignItems: 'center', marginRight: scale(8)}}>
                     <TouchableOpacity
                       style={styles.addChildContainer}
                       onPress={() => onSelectChild(item)}>
@@ -124,8 +124,7 @@ const ListChildrenScreen = () => {
               })}
             </View>
             {userProfile?.children && userProfile?.children.length < 5 && (
-              <View
-                style={[styles.wrapAddChildContainer, {marginLeft: scale(8)}]}>
+              <View style={styles.wrapAddChildContainer}>
                 <View style={{alignItems: 'center'}}>
                   <TouchableOpacity
                     style={styles.addChildContainer}
@@ -243,6 +242,7 @@ const styles = StyleSheet.create({
     borderRadius: scale(4),
   },
   wrapAddChildContainer: {
+    flexDirection: 'row',
     marginTop: scale(16),
   },
   bottomButtonTitle: {
