@@ -8,14 +8,22 @@ import {CustomErrorType, StatusCode} from '../types/StatusCode';
 import {Messages} from '../constants/message';
 import useAuthenticationStore from '../stores/useAuthenticationStore';
 import {RegisterPayload} from 'src/authentication/application/types/RegisterPayload';
-import {goBack} from 'src/core/presentation/navigation/actions/RootNavigationActions';
+import {navigateScreen} from 'src/core/presentation/navigation/actions/RootNavigationActions';
 import Toast from 'react-native-toast-message';
+import {RegisterChildPayload} from 'src/authentication/application/types/RegisterChildPayload';
+import {STACK_NAVIGATOR} from 'src/core/presentation/navigation/ConstantNavigator';
 
 const DefaultFormData = {email: '', password: ''};
 
 const useLoginWithCredentials = () => {
-  const {loginUsernamePassword, setErrorMessage, setIsLoading, register} =
-    useAuthenticationStore();
+  const {
+    loginUsernamePassword,
+    setErrorMessage,
+    setIsLoading,
+    register,
+    registerChild,
+    getListAllSubject,
+  } = useAuthenticationStore();
   const {handleNavigateAuthenticationSuccess} = useNavigateAuthSuccess();
 
   const [formData, setFormData] =
@@ -170,7 +178,7 @@ const useLoginWithCredentials = () => {
             type: 'success',
             text1: res.message,
           });
-          goBack();
+          navigateScreen(STACK_NAVIGATOR.AUTH.REGISTER_CHILD_SCREEN);
         }
       } catch (error) {
         if (isAxiosError(error)) {
@@ -183,6 +191,63 @@ const useLoginWithCredentials = () => {
     [handleErrorRegister, register, setIsLoading],
   );
 
+  const handleRegisterChild = useCallback(
+    async (props: RegisterChildPayload) => {
+      const {age, name, subjectIds, gender} = props;
+      try {
+        const res = await registerChild({
+          age,
+          name,
+          subjectIds,
+          gender,
+        });
+        if (res.error) {
+          Toast.show({
+            type: 'error',
+            text1: res.error.message,
+          });
+        } else {
+          Toast.show({
+            type: 'success',
+            text1: res.message,
+          });
+          navigateScreen(STACK_NAVIGATOR.AUTH.LIST_CHILDREN_SCREEN);
+        }
+      } catch (error) {
+        if (isAxiosError(error)) {
+          handleErrorRegister(error as AxiosError);
+        }
+      } finally {
+        setIsLoading(false);
+      }
+    },
+    [handleErrorRegister, registerChild, setIsLoading],
+  );
+
+  const handleGetListAllSubject = useCallback(async () => {
+    try {
+      const res = await getListAllSubject();
+      if (res.error) {
+        Toast.show({
+          type: 'error',
+          text1: res.error.message,
+        });
+      } else {
+        Toast.show({
+          type: 'success',
+          text1: res.message,
+        });
+      }
+      return res.data;
+    } catch (error) {
+      if (isAxiosError(error)) {
+        handleErrorRegister(error as AxiosError);
+      }
+    } finally {
+      setIsLoading(false);
+    }
+  }, [getListAllSubject, handleErrorRegister, setIsLoading]);
+
   return {
     formData,
     setUsername,
@@ -191,6 +256,8 @@ const useLoginWithCredentials = () => {
     handleErrorLoginCredentials,
     handleRegister,
     handleErrorRegister,
+    handleRegisterChild,
+    handleGetListAllSubject,
   };
 };
 export default useLoginWithCredentials;

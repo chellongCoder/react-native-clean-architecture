@@ -15,6 +15,8 @@ import DoneLessonScreen from '../screens/DoneLessonScreen';
 import OnBoardingScreen from '../screens/OnBoardingScreen';
 import ProfileScreen from 'src/post/presentation/screens/ProfileScreen';
 import RegisterScreen from 'src/authentication/presentation/screens/RegisterScreen';
+import RegisterChildScreen from 'src/authentication/presentation/screens/RegisterChildScreen';
+import ListChildrenScreen from 'src/authentication/presentation/screens/ListChildrenScreen';
 
 const AuthStack = createStackNavigator();
 const HomeStack = createStackNavigator();
@@ -56,6 +58,26 @@ export const AuthStackScreens = (): React.ReactElement => {
         name={STACK_NAVIGATOR.AUTH.REGISTER_SCREEN}
         key={STACK_NAVIGATOR.AUTH.REGISTER_SCREEN}
         component={RegisterScreen}
+        listeners={({navigation: navBottom}) => ({
+          focus: () => {
+            hideBottomTab(navBottom);
+          },
+        })}
+      />
+      <AuthStack.Screen
+        name={STACK_NAVIGATOR.AUTH.REGISTER_CHILD_SCREEN}
+        key={STACK_NAVIGATOR.AUTH.REGISTER_CHILD_SCREEN}
+        component={RegisterChildScreen}
+        listeners={({navigation: navBottom}) => ({
+          focus: () => {
+            hideBottomTab(navBottom);
+          },
+        })}
+      />
+      <AuthStack.Screen
+        name={STACK_NAVIGATOR.AUTH.LIST_CHILDREN_SCREEN}
+        key={STACK_NAVIGATOR.AUTH.LIST_CHILDREN_SCREEN}
+        component={ListChildrenScreen}
         listeners={({navigation: navBottom}) => ({
           focus: () => {
             hideBottomTab(navBottom);

@@ -13,6 +13,9 @@ import {LoginUsernamePasswordPayload} from 'src/authentication/application/types
 import {LoginMethods} from '../constants/common';
 import RegisterUseCase from 'src/authentication/application/useCases/RegisterUsecase';
 import {RegisterPayload} from 'src/authentication/application/types/RegisterPayload';
+import {RegisterChildPayload} from 'src/authentication/application/types/RegisterChildPayload';
+import RegisterChildUseCase from 'src/authentication/application/useCases/RegisterChildUsecase';
+import GetListSubjectUseCase from 'src/authentication/application/useCases/GetListSubjectUsecase';
 
 @injectable()
 export class AuthenticationStore implements AuthenticationStoreState {
@@ -29,6 +32,12 @@ export class AuthenticationStore implements AuthenticationStoreState {
 
     @provided(RegisterUseCase)
     private registerUseCase: RegisterUseCase,
+
+    @provided(RegisterChildUseCase)
+    private registerChildUseCase: RegisterChildUseCase,
+
+    @provided(GetListSubjectUseCase)
+    private getListSubjectUseCase: GetListSubjectUseCase,
 
     @provided(IHttpClientToken) private readonly httpClient: IHttpClient, // @provided(CoreStore) private coreStore: CoreStore,
   ) {
@@ -101,6 +110,29 @@ export class AuthenticationStore implements AuthenticationStoreState {
     return response;
   }
 
+  @action
+  public async registerChild(args: RegisterChildPayload) {
+    this.setIsLoading(true);
+    const response = await this.registerChildUseCase.execute(args);
+    console.log('response: ', response);
+    if (response.error) {
+      return response;
+    }
+    this.setIsLoading(false);
+    return response;
+  }
+
+  @action
+  public async getListAllSubject() {
+    this.setIsLoading(true);
+    const response = await this.getListSubjectUseCase.execute();
+    console.log('response: ', response);
+    if (response.error) {
+      return response;
+    }
+    this.setIsLoading(false);
+    return response;
+  }
   // @action
   // public async loginWithGoogle(args: LoginWithGooglePayload) {
   //   this.setIsLoading(true);

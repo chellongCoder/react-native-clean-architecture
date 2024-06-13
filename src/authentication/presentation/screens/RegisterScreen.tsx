@@ -115,7 +115,6 @@ const RegisterScreen = observer(() => {
   };
 
   const onTextInputChange = (key: string, value: string) => {
-    console.log('key: ', key);
     setRegisterState({
       [key]: value,
     });

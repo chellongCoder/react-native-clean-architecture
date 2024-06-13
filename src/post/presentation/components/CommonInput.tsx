@@ -10,6 +10,8 @@ import {
   NativeSyntheticEvent,
   TextInputKeyPressEventData,
   Pressable,
+  ViewStyle,
+  InputModeOptions,
 } from 'react-native';
 import React, {useEffect, useRef, useState} from 'react';
 import useGlobalStyle from 'src/core/presentation/hooks/useGlobalStyle';
@@ -19,16 +21,22 @@ type Props = {
   inputStyle?: StyleProp<TextStyle>;
   label?: string;
   suffiex?: React.ReactNode;
+  contentContainerStyle?: StyleProp<ViewStyle>;
+  inputMode?: InputModeOptions;
 };
 
 const CommonInput = (props: Props) => {
   const commonStyle = useGlobalStyle();
 
   return (
-    <View style={styles.pb32}>
+    <View style={[props.contentContainerStyle, styles.pb32]}>
       <Text style={[commonStyle.txtLabel, styles.txtLabel]}>{props.label}</Text>
       <View style={styles.boxInput}>
-        <TextInput style={[styles.input]} {...props.textInputProp} />
+        <TextInput
+          style={[styles.input]}
+          {...props.textInputProp}
+          inputMode={props.inputMode ?? 'none'}
+        />
       </View>
       {props.suffiex}
     </View>
