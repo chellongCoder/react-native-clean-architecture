@@ -17,6 +17,7 @@ import RegisterScreen from 'src/authentication/presentation/screens/RegisterScre
 import RegisterChildScreen from 'src/authentication/presentation/screens/RegisterChildScreen';
 import ListChildrenScreen from 'src/authentication/presentation/screens/ListChildrenScreen';
 import ProfileScreen from '../screens/ProfileScreen';
+import ParentScreen from 'src/lesson/presentation/screens/ParentScreen';
 
 const AuthStack = createStackNavigator();
 const HomeStack = createStackNavigator();
@@ -163,9 +164,9 @@ export const ParentStackScreens = (): React.ReactElement => {
         headerShown: false,
       }}>
       <ParentStack.Screen
-        name={STACK_NAVIGATOR.AUTH.LOGIN_SCREEN}
-        key={STACK_NAVIGATOR.AUTH.LOGIN_SCREEN}
-        component={PostsScreen}
+        name={STACK_NAVIGATOR.PARENT.PARENT_SCREEN}
+        key={STACK_NAVIGATOR.PARENT.PARENT_SCREEN}
+        component={ParentScreen}
         listeners={({navigation: navBottom}) => ({
           focus: () => {
             showBottomTab(navBottom);
