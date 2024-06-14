@@ -1,5 +1,5 @@
 import {ScrollView, StyleSheet, Text, View} from 'react-native';
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import useGlobalStyle from 'src/core/presentation/hooks/useGlobalStyle';
 import PrimaryButton from '../components/PrimaryButton';
 import CommonInput, {CommonInputPassword} from '../components/CommonInput';
@@ -10,7 +10,9 @@ import {useLoadingGlobal} from 'src/core/presentation/hooks/loading/useLoadingGl
 import useAuthenticationStore from '../stores/useAuthenticationStore';
 import {navigateScreen} from 'src/core/presentation/navigation/actions/RootNavigationActions';
 import {STACK_NAVIGATOR} from 'src/core/presentation/navigation/ConstantNavigator';
-
+// import {getInstalledApps} from 'react-native-alphadex-screentime';
+// import * as ExpoSettings from 'expo-settings';
+// import {addChangeListener} from 'expo-settings';
 const LoginScreen = observer(() => {
   const commonStyle = useGlobalStyle();
   const {handleLoginWithCredentials} = useLoginWithCredentials();
@@ -31,6 +33,18 @@ const LoginScreen = observer(() => {
   const onRegister = () => {
     navigateScreen(STACK_NAVIGATOR.AUTH.REGISTER_SCREEN);
   };
+
+  // useEffect(() => {
+  //   addChangeListener(e => {
+  //     console.log(
+  //       '🛠 LOG: 🚀 --> --------------------------------------🛠 LOG: 🚀 -->',
+  //     );
+  //     console.log('🛠 LOG: 🚀 --> ~ useEffect ~ e:', e);
+  //     console.log(
+  //       '🛠 LOG: 🚀 --> --------------------------------------🛠 LOG: 🚀 -->',
+  //     );
+  //   });
+  // }, []);
 
   return (
     <View style={[styles.container]}>
@@ -82,7 +96,30 @@ const LoginScreen = observer(() => {
           <Text style={[styles.txtLink, styles.mv8, styles.textCenter]}>
             Or log in with
           </Text>
-          <PrimaryButton text="Google" wrapContent={false} style={styles.mv8} />
+          <PrimaryButton
+            // onPress={async () => {
+            //   // const apps = await getInstalledApps();
+            //   // console.log(
+            //   //   '🛠 LOG: 🚀 --> ----------------------------------------🛠 LOG: 🚀 -->',
+            //   // );
+            //   // console.log('🛠 LOG: 🚀 --> ~ onPress={ ~ apps:', apps);
+            //   // console.log(
+            //   //   '🛠 LOG: 🚀 --> ----------------------------------------🛠 LOG: 🚀 -->',
+            //   // );
+            //   const str = ExpoSettings.hello();
+            //   ExpoSettings.setValueAsync('longnn');
+            //   console.log(
+            //     '🛠 LOG: 🚀 --> --------------------------------------🛠 LOG: 🚀 -->',
+            //   );
+            //   console.log('🛠 LOG: 🚀 --> ~ onPress={ ~ str:', str);
+            //   console.log(
+            //     '🛠 LOG: 🚀 --> --------------------------------------🛠 LOG: 🚀 -->',
+            //   );
+            // }}
+            text="Google"
+            wrapContent={false}
+            style={styles.mv8}
+          />
           <PrimaryButton text="Facebook" wrapContent={false} />
         </View>
       </ScrollView>

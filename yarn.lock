@@ -6672,10 +6672,6 @@ expo-pwa@0.0.124:
     commander "2.20.0"
     update-check "1.5.3"
 
-"expo-settings@link:./src/modules/expo-settings":
-  version "0.0.0"
-  uid ""
-
 expo-splash-screen@^0.26.4:
   version "0.26.4"
   resolved "https://registry.yarnpkg.com/expo-splash-screen/-/expo-splash-screen-0.26.4.tgz#bc1fb226c6eae03ee351a3ebe5521a37f868cbc7"

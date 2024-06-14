@@ -12,6 +12,7 @@ import {AuthenticationProvider} from 'src/authentication/presentation/stores/Aut
 import {LoadingGlobalProvider} from './hooks/loading/LoadingGlobalProvider';
 import Toast from 'react-native-toast-message';
 import {requestScreenTime} from 'react-native-alphadex-screentime';
+import {isAndroid} from './utils';
 const App = () => {
   const routeNameRef = useRef<string>();
 
@@ -34,7 +35,7 @@ const App = () => {
   };
 
   useEffect(() => {
-    requestScreenTime();
+    !isAndroid && requestScreenTime();
   }, []);
 
   return (

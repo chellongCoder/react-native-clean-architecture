@@ -2897,6 +2897,13 @@ expo-module-scripts@^3.5.2:
     ts-jest "~29.0.4"
     typescript "^5.1.3"
 
+expo-modules-core@1.12.15:
+  version "1.12.15"
+  resolved "https://registry.yarnpkg.com/expo-modules-core/-/expo-modules-core-1.12.15.tgz#62cd2aa46762f29c4c2271a1dfee5f8e3f651130"
+  integrity sha512-VjDPIgUyhCZzf692NF4p2iFTsKAQMcU3jc0pg33eNvN/kdrJqkeucqCDuuwoNxg0vIBKtoqAJDuPnWiemldsTg==
+  dependencies:
+    invariant "^2.2.4"
+
 fast-diff@^1.1.2:
   version "1.3.0"
   resolved "https://registry.yarnpkg.com/fast-diff/-/fast-diff-1.3.0.tgz#ece407fa550a64d638536cd727e129c61616e0f0"

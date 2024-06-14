@@ -33,7 +33,6 @@
     "expo-localization": "^14.8.4",
     "expo-splash-screen": "^0.26.4",
     "expo-status-bar": "^1.11.1",
-    "expo-settings": "link:./src/modules/expo-settings",
     "i18n-js": "^4.1.1",
     "inversify-sugar": "^0.5.9",
     "lodash": "^4.17.21",
