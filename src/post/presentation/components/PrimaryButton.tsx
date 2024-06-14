@@ -24,7 +24,7 @@ const PrimaryButton = (props: Props) => {
     <TouchableOpacity
       style={[styles.button, {alignSelf: alignSelf}, props.style]}
       onPress={props.onPress}>
-      <Text style={[styles.text, commonStyle.txtLabel]}>{props.text}</Text>
+      <Text style={[styles.text, commonStyle.txtButton]}>{props.text}</Text>
     </TouchableOpacity>
   );
 };
