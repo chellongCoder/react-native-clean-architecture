@@ -5,7 +5,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import React, {useCallback, useMemo, useState} from 'react';
+import React, {useCallback, useEffect, useMemo, useState} from 'react';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import IconLogout from 'assets/svg/IconLogout';
 import useGlobalStyle from 'src/core/presentation/hooks/useGlobalStyle';
@@ -28,6 +28,12 @@ import IconDiamond from 'assets/svg/IconDiamond';
 import Volume from '../components/Volume';
 import Price from '../components/Price';
 import BookView from '../components/BookView';
+import {useLessonStore} from '../stores/LessonStore/useGetPostsStore';
+import {observer} from 'mobx-react';
+import {withProviders} from 'src/core/presentation/utils/withProviders';
+import {LessonStore} from '../stores/LessonStore/LessonStore';
+import {LessonStoreProvider} from '../stores/LessonStore/LessonStoreProvider';
+import {isAndroid} from 'src/core/presentation/utils';
 
 enum TabParentE {
   APP_BLOCK = 'App block',
@@ -57,9 +63,10 @@ const tabsSeting = [
   {id: TabSettingE.THEME, name: TabSettingE.THEME, icon: IconTheme},
 ];
 
-const ParentScreen = () => {
+const ParentScreen = observer(() => {
   const insets = useSafeAreaInsets();
   const globalStyle = useGlobalStyle();
+  const lesson = useLessonStore();
 
   const [tabParent, setTabparent] = useState(TabParentE.APP_BLOCK);
 
@@ -123,6 +130,12 @@ const ParentScreen = () => {
     [tabParent],
   );
 
+  useEffect(() => {
+    setTimeout(() => {
+      isAndroid && lesson.onShowSheetPermission();
+    }, 1000);
+  }, [lesson]);
+
   const buildBodyContent = useMemo(() => {
     if (tabParent === TabParentE.APP_BLOCK) {
       return (
@@ -133,12 +146,16 @@ const ParentScreen = () => {
                 <Text style={[globalStyle.txtButton, styles.textColor]}>
                   App to lock
                 </Text>
-                <View style={[styles.card]}>
+                <TouchableOpacity
+                  onPress={() => {
+                    lesson.onShowSheetApps();
+                  }}
+                  style={[styles.card]}>
                   <Text style={[globalStyle.txtButton, styles.textCard]}>
                     Youtobe
                   </Text>
                   <IconArrowDown />
-                </View>
+                </TouchableOpacity>
               </View>
               <View style={[]}>
                 <Text style={[globalStyle.txtButton, styles.textColor]}>
@@ -233,6 +250,7 @@ const ParentScreen = () => {
     globalStyle.txtLabel,
     globalStyle.txtNote,
     globalStyle.txtButton,
+    lesson,
     tabSetting,
   ]);
 
@@ -363,9 +381,9 @@ const ParentScreen = () => {
       </BookView>
     </View>
   );
-};
+});
 
-export default ParentScreen;
+export default withProviders(LessonStoreProvider)(ParentScreen);
 
 const styles = StyleSheet.create({
   fill: {

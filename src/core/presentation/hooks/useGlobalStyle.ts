@@ -34,5 +34,8 @@ export default function useGlobalStyle() {
       flexDirection: 'row',
       alignItems: 'center',
     },
+    spaceBetween: {
+      justifyContent: 'space-between',
+    },
   });
 }

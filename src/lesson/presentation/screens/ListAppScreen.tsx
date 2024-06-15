@@ -36,7 +36,10 @@ const ListAppScreen = () => {
         text="Mở bottom sheet"
         onPress={() => bottomSheetRef.current?.collapse()}
       />
-      <BottomSheetCustom ref={bottomSheetRef} title="List Apps">
+      <BottomSheetCustom
+        snapPoints={['50']}
+        ref={bottomSheetRef}
+        title="List Apps">
         {listItem.map((v, i) => (
           <ItemApps key={i} {...v} />
         ))}

@@ -12,6 +12,7 @@ import {resetNavigator} from 'src/core/presentation/navigation/actions/RootNavig
 import {STACK_NAVIGATOR} from 'src/core/presentation/navigation/ConstantNavigator';
 import {withProviders} from 'src/core/presentation/utils/withProviders';
 import {LessonStoreProvider} from '../stores/LessonStore/LessonStoreProvider';
+import {observer} from 'mobx-react';
 
 enum LessonTypeE {
   ACHIEVEMENT,
@@ -27,7 +28,7 @@ type LessonType = {
   lessonType: LessonTypeE;
 };
 
-const LessonScreen = () => {
+const LessonScreen = observer(() => {
   const lessons: LessonType[] = [
     {lessonType: LessonTypeE.ACHIEVEMENT},
     {lessonType: LessonTypeE.WRITE},
@@ -114,7 +115,7 @@ const LessonScreen = () => {
   };
 
   return <View style={[styles.fill]}>{buildLesson()}</View>;
-};
+});
 
 export default withProviders(LessonStoreProvider)(LessonScreen);
 

@@ -3,11 +3,13 @@ import {Text, StyleSheet, View} from 'react-native';
 import BottomSheet, {
   BottomSheetBackdrop,
   BottomSheetBackdropProps,
+  BottomSheetProps,
   BottomSheetView,
 } from '@gorhom/bottom-sheet';
 import useGlobalStyle from 'src/core/presentation/hooks/useGlobalStyle';
 import {SharedValue} from 'react-native-reanimated';
 import {BottomSheetMethods} from '@gorhom/bottom-sheet/lib/typescript/types';
+import {COLORS} from 'src/core/presentation/constants/colors';
 
 type Props = {
   title?: string;
@@ -17,10 +19,11 @@ type Props = {
     | SharedValue<(string | number)[]>
     | Readonly<(string | number)[] | SharedValue<(string | number)[]>>
     | undefined;
-};
+  backgroundColor?: string;
+} & BottomSheetProps;
 
 const BottomSheetCustom = forwardRef<BottomSheet, Props>(
-  ({title = '', children, snapPoints}: Props, ref) => {
+  ({title = '', children, snapPoints, ...other}: Props, ref) => {
     const globalStyle = useGlobalStyle();
 
     const renderBackdrop = useCallback(
@@ -48,10 +51,14 @@ const BottomSheetCustom = forwardRef<BottomSheet, Props>(
         enableOverDrag={true}
         snapPoints={snapPoints}
         handleStyle={styles.handleStyle}
-        backgroundStyle={styles.backgroundStyle}
+        backgroundStyle={[
+          styles.backgroundStyle,
+          {backgroundColor: other.backgroundColor},
+        ]}
         handleIndicatorStyle={styles.handleIndicatorStyle}
-        backdropComponent={renderBackdrop}>
-        <BottomSheetView style={styles.contentContainer}>
+        backdropComponent={renderBackdrop}
+        {...other}>
+        <BottomSheetView style={[styles.contentContainer]}>
           {title && (
             <View style={[styles.pb8]}>
               <Text style={[globalStyle.txtLabel, styles.txtTitle]}>
@@ -81,7 +88,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'transparent',
   },
   backgroundStyle: {
-    backgroundColor: '#333',
+    backgroundColor: COLORS.GREEN_66C270,
     borderTopLeftRadius: 24,
     borderTopRightRadius: 24,
     marginTop: 14,
