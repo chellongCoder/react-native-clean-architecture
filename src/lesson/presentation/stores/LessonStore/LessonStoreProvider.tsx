@@ -27,6 +27,8 @@ import {
   startUsageStatsPermission,
 } from 'react-native-alphadex-screentime';
 import {useAsyncEffect} from 'src/core/presentation/hooks';
+import {AppEntity} from 'src/modules/react-native-alphadex-screentime/src/entities/AppEntity';
+import {Image} from 'react-native';
 
 type PropsItemApps = {
   preFixIcon?: React.ReactNode;
@@ -35,39 +37,24 @@ type PropsItemApps = {
   active?: boolean;
   onChange?: (a: boolean) => void;
 };
+
+type AppItem = {
+  title: string;
+  subTitle: string;
+  preFixIcon: any;
+};
 export const LessonStoreProvider = observer(({children}: PropsWithChildren) => {
   const value = lessonModuleContainer.getProvided(LessonStore);
 
-  const icon = <View style={styles.iconBox} />;
+  const transformAppEntityToListItem = (appEntity: AppEntity): AppItem => {
+    return {
+      preFixIcon: <Image src={appEntity.app_icon} width={50} height={50} />,
+      subTitle: appEntity.package_name,
+      title: appEntity.app_name,
+    };
+  };
 
-  const listItem: PropsItemApps[] = [
-    {
-      title: 'YouTobe',
-      subTitle: '19.20.33',
-      preFixIcon: icon,
-    },
-    {title: 'Finder', subTitle: '19.20.33', preFixIcon: icon},
-    {
-      title: 'Service provider location',
-      subTitle: '19.20.33',
-      preFixIcon: icon,
-    },
-    {title: 'Link to windown', subTitle: '19.20.33', preFixIcon: icon},
-    {title: 'Google', subTitle: '19.20.33', preFixIcon: icon},
-    {title: 'Calendar', subTitle: '19.20.33', preFixIcon: icon},
-    {title: 'Facebook', subTitle: '19.20.33', preFixIcon: icon},
-  ];
-
-  useAsyncEffect(async () => {
-    const apps = await getInstalledApps();
-    console.log(
-      '🛠 LOG: 🚀 --> ---------------------------------------------🛠 LOG: 🚀 -->',
-    );
-    console.log('🛠 LOG: 🚀 --> ~ useAsyncEffect ~ apps:', apps);
-    console.log(
-      '🛠 LOG: 🚀 --> ---------------------------------------------🛠 LOG: 🚀 -->',
-    );
-  }, []);
+  const listItem = value.listAppsSystem.map(transformAppEntityToListItem);
 
   return (
     <LessonStoreContext.Provider value={{...value}}>
