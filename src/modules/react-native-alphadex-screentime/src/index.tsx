@@ -6,6 +6,7 @@ import {
   requireNativeComponent,
   type ViewStyle,
 } from 'react-native';
+import type { AppEntity } from './entities/AppEntity';
 
 const LINKING_ERROR =
   `The package 'react-native-alphadex-screentime' doesn't seem to be linked. Make sure: \n\n` +
@@ -80,7 +81,7 @@ export function getInstalledApps(
   includeSystemApps: boolean = true,
   includeAppIcons: boolean = true,
   onlyAppsWithLaunchIntent: boolean = true
-): Promise<boolean> {
+): Promise<AppEntity[]> {
   return AlphadexScreentime.getInstalledApps(
     includeSystemApps,
     includeAppIcons,

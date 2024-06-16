@@ -67,7 +67,6 @@ const ParentScreen = observer(() => {
   const insets = useSafeAreaInsets();
   const globalStyle = useGlobalStyle();
   const lesson = useLessonStore();
-
   const [tabParent, setTabparent] = useState(TabParentE.APP_BLOCK);
 
   const tabsBlock = [
@@ -130,11 +129,11 @@ const ParentScreen = observer(() => {
     [tabParent],
   );
 
-  useEffect(() => {
-    setTimeout(() => {
-      isAndroid && lesson.onShowSheetPermission();
-    }, 1000);
-  }, [lesson]);
+  // useEffect(() => {
+  //   setTimeout(() => {
+  //     isAndroid && lesson.onShowSheetPermission();
+  //   }, 1000);
+  // }, [lesson]);
 
   const buildBodyContent = useMemo(() => {
     if (tabParent === TabParentE.APP_BLOCK) {
@@ -148,6 +147,7 @@ const ParentScreen = observer(() => {
                 </Text>
                 <TouchableOpacity
                   onPress={() => {
+                    lesson.changeListAppSystem();
                     lesson.onShowSheetApps();
                   }}
                   style={[styles.card]}>

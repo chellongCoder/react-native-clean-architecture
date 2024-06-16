@@ -25,7 +25,7 @@ import {LessonStore} from './presentation/stores/LessonStore/LessonStore';
     },
     {
       useClass: LessonStore,
-      scope: 'Transient',
+      scope: 'Singleton',
     },
   ],
 })
