@@ -12,13 +12,21 @@ import {lessonModuleContainer} from 'src/lesson/LessonModule';
 import Scoring from 'src/core/presentation/components/Scoring';
 import {observer} from 'mobx-react';
 import BottomSheetCustom from '../../components/BottomSheet';
-import {View} from 'react-native';
+import {TouchableOpacity, View} from 'react-native';
 import {moderateScale, scale, verticalScale} from 'react-native-size-matters';
 import useGlobalStyle from 'src/core/presentation/hooks/useGlobalStyle';
 import {StyleSheet} from 'react-native';
 import {Text} from 'react-native';
 import {Switch} from 'react-native';
 import {COLORS} from 'src/core/presentation/constants/colors';
+import {
+  askOverlayPermission,
+  checkOverlayPermission,
+  getInstalledApps,
+  hasUsageStatsPermission,
+  startUsageStatsPermission,
+} from 'react-native-alphadex-screentime';
+import {useAsyncEffect} from 'src/core/presentation/hooks';
 
 type PropsItemApps = {
   preFixIcon?: React.ReactNode;
@@ -49,6 +57,17 @@ export const LessonStoreProvider = observer(({children}: PropsWithChildren) => {
     {title: 'Calendar', subTitle: '19.20.33', preFixIcon: icon},
     {title: 'Facebook', subTitle: '19.20.33', preFixIcon: icon},
   ];
+
+  useAsyncEffect(async () => {
+    const apps = await getInstalledApps();
+    console.log(
+      '🛠 LOG: 🚀 --> ---------------------------------------------🛠 LOG: 🚀 -->',
+    );
+    console.log('🛠 LOG: 🚀 --> ~ useAsyncEffect ~ apps:', apps);
+    console.log(
+      '🛠 LOG: 🚀 --> ---------------------------------------------🛠 LOG: 🚀 -->',
+    );
+  }, []);
 
   return (
     <LessonStoreContext.Provider value={{...value}}>
@@ -117,26 +136,41 @@ const ItemApps = ({
 
 const ItemPermission = () => {
   const globalStyle = useGlobalStyle();
+  const [isOverlay, setIsOverlay] = useState(false);
+  const [isUsageStats, setIsUsageStats] = useState(false);
+
+  useAsyncEffect(async () => {
+    setIsOverlay(await checkOverlayPermission());
+
+    setIsUsageStats(await hasUsageStatsPermission());
+  }, []);
+
   return (
     <View style={{height: verticalScale(150), width: '90%'}}>
-      <View
+      <TouchableOpacity
+        onPress={() => {
+          askOverlayPermission();
+        }}
         style={[
           globalStyle.rowCenter,
           globalStyle.spaceBetween,
           styles.permissionItem,
         ]}>
         <Text>System overlay</Text>
-        <Text>check</Text>
-      </View>
-      <View
+        <Text>{isOverlay ? 'checked' : 'unchecked'}</Text>
+      </TouchableOpacity>
+      <TouchableOpacity
+        onPress={() => {
+          startUsageStatsPermission();
+        }}
         style={[
           globalStyle.rowCenter,
           globalStyle.spaceBetween,
           styles.permissionItem,
         ]}>
         <Text>Usage access</Text>
-        <Text>check</Text>
-      </View>
+        <Text>{isUsageStats ? 'checked' : 'unchecked'}</Text>
+      </TouchableOpacity>
       <View
         style={[
           globalStyle.rowCenter,

@@ -87,3 +87,19 @@ export function getInstalledApps(
     onlyAppsWithLaunchIntent
   );
 }
+
+export function askOverlayPermission(): Promise<boolean> {
+  return AlphadexScreentime.askOverlayPermission();
+}
+
+export function checkOverlayPermission(): Promise<boolean> {
+  return AlphadexScreentime.checkOverlayPermission();
+}
+
+export function hasUsageStatsPermission(): Promise<boolean> {
+  return AlphadexScreentime.hasUsageStatsPermission();
+}
+
+export function startUsageStatsPermission(): Promise<boolean> {
+  return AlphadexScreentime.startUsageStatsPermission();
+}

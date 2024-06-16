@@ -1,10 +1,16 @@
 package com.alphadexscreentime
 
+import android.app.AppOpsManager
+import android.app.NotificationManager
+import android.content.Context
+import android.content.Intent
 import android.content.pm.ApplicationInfo
 import android.content.pm.PackageInfo
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.os.Build
+import android.provider.Settings
+import androidx.core.content.ContextCompat
 import com.facebook.react.bridge.Arguments
 import com.facebook.react.bridge.Promise
 import com.facebook.react.bridge.ReactApplicationContext
@@ -25,6 +31,66 @@ class AlphadexScreentimeModule(reactContext: ReactApplicationContext) :
   @ReactMethod
   fun multiply(a: Double, b: Double, promise: Promise) {
     promise.resolve(a * b)
+  }
+
+  @ReactMethod
+  private fun askOverlayPermission(promise: Promise) {
+    if (!Settings.canDrawOverlays(reactApplicationContext)) {
+      val myIntent = Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION)
+      myIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+      reactApplicationContext.startActivity(myIntent)
+    }
+    promise.resolve(Settings.canDrawOverlays(reactApplicationContext))
+  }
+
+
+
+  @ReactMethod
+  private fun checkOverlayPermission(promise: Promise) {
+    promise.resolve(Settings.canDrawOverlays(reactApplicationContext))
+  }
+
+  @ReactMethod
+  fun startUsageStatsPermission(promise: Promise) {
+    val myIntent = Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS)
+    myIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+    reactApplicationContext.startActivity(myIntent)
+    promise.resolve(hasUsageStatsPermission(promise))
+  }
+
+  @ReactMethod
+  fun hasUsageStatsPermission(promise: Promise): Boolean {
+    val appOps = reactApplicationContext.getSystemService(Context.APP_OPS_SERVICE) as AppOpsManager
+    val mode = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+      appOps.unsafeCheckOpNoThrow(AppOpsManager.OPSTR_GET_USAGE_STATS,
+        reactApplicationContext.applicationInfo.uid, reactApplicationContext.packageName)
+    } else {
+      appOps.checkOpNoThrow(AppOpsManager.OPSTR_GET_USAGE_STATS,
+        reactApplicationContext.applicationInfo.uid, reactApplicationContext.packageName)
+    }
+    val result = mode == AppOpsManager.MODE_ALLOWED
+    promise.resolve(result)
+    return result
+  }
+
+
+  @ReactMethod
+  fun checkAndRequestNotificationPermission() {
+    val notificationManager = reactApplicationContext.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+
+    if (if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+        !notificationManager.areNotificationsEnabled()
+      } else {
+        TODO("VERSION.SDK_INT < N")
+        false
+      }
+    ) {
+      // Notifications are not enabled. Open the settings screen where the user can enable them.
+      val intent = Intent(Settings.ACTION_APP_NOTIFICATION_SETTINGS).apply {
+        putExtra(Settings.EXTRA_APP_PACKAGE, reactApplicationContext.packageName)
+      }
+      reactApplicationContext.startActivity(intent)
+    }
   }
 
   @ReactMethod

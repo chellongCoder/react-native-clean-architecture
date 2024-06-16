@@ -14,7 +14,7 @@ const RootNavigator: FC = () => {
         cardOverlayEnabled: false,
         headerShown: false,
       }}
-      initialRouteName={STACK_NAVIGATOR.AUTH_NAVIGATOR}>
+      initialRouteName={STACK_NAVIGATOR.BOTTOM_TAB_SCREENS}>
       {AppNavigator()}
     </AppStack.Navigator>
   );
