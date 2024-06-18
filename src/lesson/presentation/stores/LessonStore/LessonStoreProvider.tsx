@@ -22,9 +22,10 @@ import {COLORS} from 'src/core/presentation/constants/colors';
 import {
   askOverlayPermission,
   checkOverlayPermission,
-  getInstalledApps,
   hasUsageStatsPermission,
   startUsageStatsPermission,
+  requestPushNotificationPermission,
+  checkAndRequestNotificationPermission,
 } from 'react-native-alphadex-screentime';
 import {useAsyncEffect} from 'src/core/presentation/hooks';
 import {AppEntity} from 'src/modules/react-native-alphadex-screentime/src/entities/AppEntity';
@@ -76,9 +77,9 @@ export const LessonStoreProvider = observer(({children}: PropsWithChildren) => {
         title="ABC needs system permissions to work with:"
         enablePanDownToClose={false}
         backgroundColor={COLORS.GREEN_66C270}
-        backdropComponent={null}
-        enableOverDrag={false}>
-        <ItemPermission />
+        enableOverDrag={false}
+        onBackdropPress={() => {}}>
+        <ItemPermission lesson={value} />
       </BottomSheetCustom>
     </LessonStoreContext.Provider>
   );
@@ -121,17 +122,27 @@ const ItemApps = ({
   );
 };
 
-const ItemPermission = () => {
+const ItemPermission = ({lesson}) => {
   const globalStyle = useGlobalStyle();
   const [isOverlay, setIsOverlay] = useState(false);
   const [isUsageStats, setIsUsageStats] = useState(false);
+  const [isPushNoti, setIsPushNoti] = useState(false);
 
   useAsyncEffect(async () => {
     setIsOverlay(await checkOverlayPermission());
 
     setIsUsageStats(await hasUsageStatsPermission());
+
+    setIsPushNoti(await checkAndRequestNotificationPermission());
   }, []);
 
+  useEffect(() => {
+    if (isOverlay && isUsageStats && isPushNoti) {
+      setTimeout(() => {
+        lesson.onCloseSheetPermission();
+      }, 3000);
+    }
+  }, [isOverlay, isPushNoti, isUsageStats, lesson]);
   return (
     <View style={{height: verticalScale(150), width: '90%'}}>
       <TouchableOpacity
@@ -158,15 +169,31 @@ const ItemPermission = () => {
         <Text>Usage access</Text>
         <Text>{isUsageStats ? 'checked' : 'unchecked'}</Text>
       </TouchableOpacity>
-      <View
+      <TouchableOpacity
+        onPress={() => {
+          console.log('Push notification');
+          requestPushNotificationPermission();
+        }}
         style={[
           globalStyle.rowCenter,
           globalStyle.spaceBetween,
           styles.permissionItem,
         ]}>
         <Text>Push notification</Text>
-        <Text>check</Text>
-      </View>
+        <Text>{isPushNoti ? 'checked' : 'unchecked'}</Text>
+      </TouchableOpacity>
+      <TouchableOpacity
+        onPress={() => {
+          lesson.onCloseSheetPermission();
+        }}
+        style={[
+          globalStyle.rowCenter,
+          globalStyle.spaceBetween,
+          styles.permissionItem,
+        ]}>
+        <Text>Push notification</Text>
+        <Text>{'close'}</Text>
+      </TouchableOpacity>
     </View>
   );
 };

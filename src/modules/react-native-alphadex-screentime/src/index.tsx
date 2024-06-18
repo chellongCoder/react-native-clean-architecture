@@ -104,3 +104,11 @@ export function hasUsageStatsPermission(): Promise<boolean> {
 export function startUsageStatsPermission(): Promise<boolean> {
   return AlphadexScreentime.startUsageStatsPermission();
 }
+
+export function requestPushNotificationPermission(): Promise<boolean> {
+  return AlphadexScreentime.requestPushNotificationPermission();
+}
+
+export function checkAndRequestNotificationPermission(): Promise<boolean> {
+  return AlphadexScreentime.checkAndRequestNotificationPermission();
+}

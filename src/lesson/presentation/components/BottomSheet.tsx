@@ -20,6 +20,7 @@ type Props = {
     | Readonly<(string | number)[] | SharedValue<(string | number)[]>>
     | undefined;
   backgroundColor?: string;
+  onBackdropPress?: () => void;
 } & BottomSheetProps;
 
 const BottomSheetCustom = forwardRef<BottomSheet, Props>(
@@ -30,15 +31,21 @@ const BottomSheetCustom = forwardRef<BottomSheet, Props>(
       (props: BottomSheetBackdropProps) => (
         <BottomSheetBackdrop
           {...props}
+          pressBehavior={other?.onBackdropPress ? 'collapse' : 'close'}
           disappearsOnIndex={-1}
           appearsOnIndex={0}
-          onPress={() => {
-            const bottomSheetRef = ref as React.RefObject<BottomSheetMethods>;
-            bottomSheetRef.current?.close();
-          }}
+          onPress={
+            other?.onBackdropPress
+              ? other.onBackdropPress
+              : () => {
+                  const bottomSheetRef =
+                    ref as React.RefObject<BottomSheetMethods>;
+                  bottomSheetRef.current?.close();
+                }
+          }
         />
       ),
-      [ref],
+      [other.onBackdropPress, ref],
     );
 
     return (

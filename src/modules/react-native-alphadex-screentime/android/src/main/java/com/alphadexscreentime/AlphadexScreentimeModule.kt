@@ -1,5 +1,6 @@
 package com.alphadexscreentime
 
+import android.Manifest
 import android.app.AppOpsManager
 import android.app.NotificationManager
 import android.content.Context
@@ -10,6 +11,8 @@ import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.os.Build
 import android.provider.Settings
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
 import com.facebook.react.bridge.Arguments
 import com.facebook.react.bridge.Promise
@@ -75,23 +78,45 @@ class AlphadexScreentimeModule(reactContext: ReactApplicationContext) :
 
 
   @ReactMethod
-  fun checkAndRequestNotificationPermission() {
+  fun checkAndRequestNotificationPermission(promise : Promise) {
     val notificationManager = reactApplicationContext.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
     if (if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
         !notificationManager.areNotificationsEnabled()
       } else {
         TODO("VERSION.SDK_INT < N")
-        false
+        true
+      }
+    ) {
+
+      promise.resolve(false)
+    } else {
+      promise.resolve(true)
+    }
+  }
+
+  @ReactMethod
+  fun requestPushNotificationPermission(promise : Promise) {
+    val notificationManager = reactApplicationContext.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+
+    if (if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+        !notificationManager.areNotificationsEnabled()
+      } else {
+        // For versions below N, you can't check notification permission programmatically
+        // so we assume it's true
+        true
       }
     ) {
       // Notifications are not enabled. Open the settings screen where the user can enable them.
       val intent = Intent(Settings.ACTION_APP_NOTIFICATION_SETTINGS).apply {
+        this.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         putExtra(Settings.EXTRA_APP_PACKAGE, reactApplicationContext.packageName)
       }
       reactApplicationContext.startActivity(intent)
     }
+    promise.resolve(true)
   }
+
 
   @ReactMethod
   fun getInstalledApps(includeSystemApps: Boolean, includeAppIcons: Boolean, onlyAppsWithLaunchIntent: Boolean, promise: Promise) {

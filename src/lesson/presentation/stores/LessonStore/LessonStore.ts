@@ -42,6 +42,11 @@ export class LessonStore {
   };
 
   @action
+  onCloseSheetPermission = () => {
+    this.bottomSheetPermissionRef?.current?.close();
+  };
+
+  @action
   changeListAppSystem = async () => {
     const apps = await getInstalledApps();
 

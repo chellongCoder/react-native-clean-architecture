@@ -129,11 +129,11 @@ const ParentScreen = observer(() => {
     [tabParent],
   );
 
-  // useEffect(() => {
-  //   setTimeout(() => {
-  //     isAndroid && lesson.onShowSheetPermission();
-  //   }, 1000);
-  // }, [lesson]);
+  useEffect(() => {
+    setTimeout(() => {
+      isAndroid && lesson.onShowSheetPermission();
+    }, 500);
+  }, [lesson]);
 
   const buildBodyContent = useMemo(() => {
     if (tabParent === TabParentE.APP_BLOCK) {
