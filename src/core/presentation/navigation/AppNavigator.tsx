@@ -18,6 +18,7 @@ import RegisterChildScreen from 'src/authentication/presentation/screens/Registe
 import ListChildrenScreen from 'src/authentication/presentation/screens/ListChildrenScreen';
 import ProfileScreen from '../screens/ProfileScreen';
 import ParentScreen from 'src/lesson/presentation/screens/ParentScreen';
+import AuthParentScreen from 'src/lesson/presentation/screens/AuthParentScreen';
 
 const AuthStack = createStackNavigator();
 const HomeStack = createStackNavigator();
@@ -163,6 +164,16 @@ export const ParentStackScreens = (): React.ReactElement => {
         cardOverlayEnabled: false,
         headerShown: false,
       }}>
+      <ParentStack.Screen
+        name={STACK_NAVIGATOR.PARENT.AUTH_PARENT_SCREEN}
+        key={STACK_NAVIGATOR.PARENT.AUTH_PARENT_SCREEN}
+        component={AuthParentScreen}
+        listeners={({navigation: navBottom}) => ({
+          focus: () => {
+            showBottomTab(navBottom);
+          },
+        })}
+      />
       <ParentStack.Screen
         name={STACK_NAVIGATOR.PARENT.PARENT_SCREEN}
         key={STACK_NAVIGATOR.PARENT.PARENT_SCREEN}

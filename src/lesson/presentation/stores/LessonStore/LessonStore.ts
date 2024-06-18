@@ -14,12 +14,19 @@ export class LessonStore {
 
   listAppsSystem: AppEntity[] = [];
 
+  passwordParent?: string;
+
   constructor() {
     makeAutoObservable(this);
     this.bottomSheetAppsRef = React.createRef<BottomSheet>();
     this.bottomSheetPermissionRef = React.createRef<BottomSheet>();
     this.listAppsSystem = [];
   }
+
+  @action
+  setPasswordParent = (password: string) => {
+    this.passwordParent = password;
+  };
 
   @action
   setIsShow = (bool: boolean) => {
