@@ -49,7 +49,7 @@ export const LessonStoreProvider = observer(({children}: PropsWithChildren) => {
 
   const transformAppEntityToListItem = (appEntity: AppEntity): AppItem => {
     return {
-      preFixIcon: <Image src={appEntity.app_icon} width={50} height={50} />,
+      preFixIcon: <View />,
       subTitle: appEntity.package_name,
       title: appEntity.app_name,
     };
@@ -61,26 +61,30 @@ export const LessonStoreProvider = observer(({children}: PropsWithChildren) => {
     <LessonStoreContext.Provider value={{...value}}>
       {children}
       {value.point.isShow && <Scoring onClose={() => value.setIsShow(false)} />}
-      <BottomSheetCustom
-        snapPoints={['50']}
-        ref={value.bottomSheetAppsRef}
-        title="List Apps"
-        backgroundColor={COLORS.BACKGROUND}>
-        {listItem.map((v, i) => (
-          <ItemApps key={i} {...v} />
-        ))}
-      </BottomSheetCustom>
+      {
+        <BottomSheetCustom
+          snapPoints={['50']}
+          ref={value.bottomSheetAppsRef}
+          title="List Apps"
+          backgroundColor={COLORS.BACKGROUND}>
+          {listItem.map((v, i) => (
+            <ItemApps key={i} {...v} />
+          ))}
+        </BottomSheetCustom>
+      }
 
-      <BottomSheetCustom
-        snapPoints={['50']}
-        ref={value.bottomSheetPermissionRef}
-        title="ABC needs system permissions to work with:"
-        enablePanDownToClose={false}
-        backgroundColor={COLORS.GREEN_66C270}
-        enableOverDrag={false}
-        onBackdropPress={() => {}}>
-        <ItemPermission lesson={value} />
-      </BottomSheetCustom>
+      {value.bottomSheetPermissionRef && (
+        <BottomSheetCustom
+          snapPoints={['50']}
+          ref={value.bottomSheetPermissionRef}
+          title="ABC needs system permissions to work with:"
+          enablePanDownToClose={false}
+          backgroundColor={COLORS.GREEN_66C270}
+          enableOverDrag={false}
+          onBackdropPress={() => {}}>
+          <ItemPermission lesson={value} />
+        </BottomSheetCustom>
+      )}
     </LessonStoreContext.Provider>
   );
 });
@@ -140,7 +144,7 @@ const ItemPermission = ({lesson}) => {
     if (isOverlay && isUsageStats && isPushNoti) {
       setTimeout(() => {
         lesson.onCloseSheetPermission();
-      }, 3000);
+      }, 2000);
     }
   }, [isOverlay, isPushNoti, isUsageStats, lesson]);
   return (

@@ -11607,6 +11607,11 @@ react-native-gesture-handler@^2.16.2:
     lodash "^4.17.21"
     prop-types "^15.7.2"
 
+react-native-launcher-kit@^1.0.4:
+  version "1.0.4"
+  resolved "https://registry.yarnpkg.com/react-native-launcher-kit/-/react-native-launcher-kit-1.0.4.tgz#5c35469189825f3e04fbf5a62edf226be4735667"
+  integrity sha512-Tt3wt8eHPQ/3dcGsBMB4dXfTiYdHkyvnwmS/guVh/UrIl1wlX+mZjfKSc87yj3ttUv6UQXjOuX9D2Lk5naqJIQ==
+
 react-native-linear-gradient@^2.8.3:
   version "2.8.3"
   resolved "https://registry.yarnpkg.com/react-native-linear-gradient/-/react-native-linear-gradient-2.8.3.tgz#9a116649f86d74747304ee13db325e20b21e564f"

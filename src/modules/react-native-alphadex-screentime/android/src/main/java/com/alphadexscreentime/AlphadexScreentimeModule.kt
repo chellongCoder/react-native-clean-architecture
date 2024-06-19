@@ -1,6 +1,5 @@
 package com.alphadexscreentime
 
-import android.Manifest
 import android.app.AppOpsManager
 import android.app.NotificationManager
 import android.content.Context
@@ -11,21 +10,21 @@ import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.os.Build
 import android.provider.Settings
-import androidx.activity.result.contract.ActivityResultContracts
-import androidx.annotation.RequiresApi
-import androidx.core.content.ContextCompat
 import com.facebook.react.bridge.Arguments
 import com.facebook.react.bridge.Promise
 import com.facebook.react.bridge.ReactApplicationContext
 import com.facebook.react.bridge.ReactContextBaseJavaModule
 import com.facebook.react.bridge.ReactMethod
 import com.facebook.react.bridge.WritableArray
+import java.io.File
 
-class AlphadexScreentimeModule(reactContext: ReactApplicationContext) :
-  ReactContextBaseJavaModule(reactContext) {
+
+class AlphadexScreentimeModule(reactContext: ReactApplicationContext) : ReactContextBaseJavaModule(reactContext) {
   val SYSTEM_APP_MASK = ApplicationInfo.FLAG_SYSTEM or ApplicationInfo.FLAG_UPDATED_SYSTEM_APP
 
+
   override fun getName(): String {
+
     return NAME
   }
 
@@ -116,12 +115,11 @@ class AlphadexScreentimeModule(reactContext: ReactApplicationContext) :
     }
     promise.resolve(true)
   }
-
-
+ 
   @ReactMethod
   fun getInstalledApps(includeSystemApps: Boolean, includeAppIcons: Boolean, onlyAppsWithLaunchIntent: Boolean, promise: Promise) {
-
-    val packageManager = reactApplicationContext.packageManager
+    val applicationContext = reactApplicationContext.applicationContext
+    val packageManager = applicationContext.getPackageManager()
     val apps = packageManager.getInstalledPackages(0)
     val installedApps = ArrayList<Map<String, Any>>(apps.size)
 

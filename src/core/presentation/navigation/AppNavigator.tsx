@@ -163,7 +163,8 @@ export const ParentStackScreens = (): React.ReactElement => {
       screenOptions={{
         cardOverlayEnabled: false,
         headerShown: false,
-      }}>
+      }}
+      initialRouteName={STACK_NAVIGATOR.PARENT.AUTH_PARENT_SCREEN}>
       <ParentStack.Screen
         name={STACK_NAVIGATOR.PARENT.AUTH_PARENT_SCREEN}
         key={STACK_NAVIGATOR.PARENT.AUTH_PARENT_SCREEN}

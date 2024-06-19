@@ -129,12 +129,6 @@ const ParentScreen = observer(() => {
     [tabParent],
   );
 
-  useEffect(() => {
-    setTimeout(() => {
-      isAndroid && lesson.onShowSheetPermission();
-    }, 500);
-  }, [lesson]);
-
   const buildBodyContent = useMemo(() => {
     if (tabParent === TabParentE.APP_BLOCK) {
       return (
@@ -146,8 +140,8 @@ const ParentScreen = observer(() => {
                   App to lock
                 </Text>
                 <TouchableOpacity
-                  onPress={() => {
-                    lesson.changeListAppSystem();
+                  onPress={async () => {
+                    await lesson.changeListAppSystem();
                     lesson.onShowSheetApps();
                   }}
                   style={[styles.card]}>

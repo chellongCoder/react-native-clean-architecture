@@ -5,6 +5,8 @@ import {action, makeAutoObservable, runInAction} from 'mobx';
 import React, {RefObject} from 'react';
 import {AppEntity} from 'src/modules/react-native-alphadex-screentime/src/entities/AppEntity';
 import {getInstalledApps} from 'react-native-alphadex-screentime';
+import {InstalledApps} from 'react-native-launcher-kit';
+
 @injectable()
 export class LessonStore {
   point: {value: number; isShow: boolean} = {value: 0, isShow: false};
@@ -40,12 +42,13 @@ export class LessonStore {
 
   @action
   onShowSheetApps = () => {
-    this.bottomSheetAppsRef?.current?.collapse();
+    this.bottomSheetPermissionRef?.current?.close();
+    this.bottomSheetAppsRef?.current?.expand();
   };
 
   @action
   onShowSheetPermission = () => {
-    this.bottomSheetPermissionRef?.current?.collapse();
+    this.bottomSheetPermissionRef?.current?.snapToIndex(0);
   };
 
   @action
@@ -53,10 +56,24 @@ export class LessonStore {
     this.bottomSheetPermissionRef?.current?.close();
   };
 
-  @action
   changeListAppSystem = async () => {
     const apps = await getInstalledApps();
+    console.log(
+      '🛠 LOG: 🚀 --> -----------------------------------------------------------------🛠 LOG: 🚀 -->',
+    );
+    console.log(
+      '🛠 LOG: 🚀 --> -----------------------------------------------------------------🛠 LOG: 🚀 -->',
+    );
+    console.log(
+      '🛠 LOG: 🚀 --> ~ LessonStore ~ changeListAppSystem= ~ apps:',
+      apps,
+    );
+    console.log(
+      '🛠 LOG: 🚀 --> -----------------------------------------------------------------🛠 LOG: 🚀 -->',
+    );
 
-    this.listAppsSystem = [...apps];
+    runInAction(() => {
+      this.listAppsSystem = [...apps];
+    });
   };
 }

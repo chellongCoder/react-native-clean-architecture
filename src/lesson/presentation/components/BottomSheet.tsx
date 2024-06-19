@@ -4,6 +4,7 @@ import BottomSheet, {
   BottomSheetBackdrop,
   BottomSheetBackdropProps,
   BottomSheetProps,
+  BottomSheetScrollView,
   BottomSheetView,
 } from '@gorhom/bottom-sheet';
 import useGlobalStyle from 'src/core/presentation/hooks/useGlobalStyle';
@@ -65,7 +66,7 @@ const BottomSheetCustom = forwardRef<BottomSheet, Props>(
         handleIndicatorStyle={styles.handleIndicatorStyle}
         backdropComponent={renderBackdrop}
         {...other}>
-        <BottomSheetView style={[styles.contentContainer]}>
+        <BottomSheetScrollView style={[styles.contentContainer]}>
           {title && (
             <View style={[styles.pb8]}>
               <Text style={[globalStyle.txtLabel, styles.txtTitle]}>
@@ -74,7 +75,7 @@ const BottomSheetCustom = forwardRef<BottomSheet, Props>(
             </View>
           )}
           {children}
-        </BottomSheetView>
+        </BottomSheetScrollView>
       </BottomSheet>
     );
   },
@@ -83,7 +84,7 @@ const BottomSheetCustom = forwardRef<BottomSheet, Props>(
 const styles = StyleSheet.create({
   contentContainer: {
     // flex: 1,
-    alignItems: 'center',
+    // alignItems: 'center',
   },
   txtTitle: {
     color: 'white',

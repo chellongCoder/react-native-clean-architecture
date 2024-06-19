@@ -1,4 +1,7 @@
-import {createStackNavigator} from '@react-navigation/stack';
+import {
+  CardStyleInterpolators,
+  createStackNavigator,
+} from '@react-navigation/stack';
 import React, {FC} from 'react';
 import AppNavigator from './AppNavigator';
 import {STACK_NAVIGATOR} from './ConstantNavigator';
@@ -11,8 +14,9 @@ const RootNavigator: FC = () => {
   return (
     <AppStack.Navigator
       screenOptions={{
-        cardOverlayEnabled: false,
+        cardOverlayEnabled: true,
         headerShown: false,
+        cardStyleInterpolator: CardStyleInterpolators.forFadeFromBottomAndroid, // Add this line
       }}
       initialRouteName={STACK_NAVIGATOR.BOTTOM_TAB_SCREENS}>
       {AppNavigator()}
