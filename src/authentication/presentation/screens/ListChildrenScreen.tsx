@@ -94,7 +94,7 @@ const ListChildrenScreen = () => {
 
         <View>
           <Text style={styles.bottomTitle}>Children account</Text>
-          <ScrollView horizontal>
+          <ScrollView horizontal showsHorizontalScrollIndicator={false}>
             <View style={styles.wrapAddChildContainer}>
               {userProfile?.children.map((item: children) => {
                 return (

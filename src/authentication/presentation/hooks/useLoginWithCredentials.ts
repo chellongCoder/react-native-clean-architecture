@@ -8,10 +8,14 @@ import {CustomErrorType, StatusCode} from '../types/StatusCode';
 import {Messages} from '../constants/message';
 import useAuthenticationStore from '../stores/useAuthenticationStore';
 import {RegisterPayload} from 'src/authentication/application/types/RegisterPayload';
-import {navigateScreen} from 'src/core/presentation/navigation/actions/RootNavigationActions';
+import {
+  pushScreen,
+  resetNavigator,
+} from 'src/core/presentation/navigation/actions/RootNavigationActions';
 import Toast from 'react-native-toast-message';
 import {RegisterChildPayload} from 'src/authentication/application/types/RegisterChildPayload';
 import {STACK_NAVIGATOR} from 'src/core/presentation/navigation/ConstantNavigator';
+import * as Keychain from 'react-native-keychain';
 
 const DefaultFormData = {email: '', password: ''};
 
@@ -24,6 +28,7 @@ const useLoginWithCredentials = () => {
     registerChild,
     getListAllSubject,
     getUserProfile,
+    removeCurrentCredentials,
   } = useAuthenticationStore();
   const {handleNavigateAuthenticationSuccess} = useNavigateAuthSuccess();
 
@@ -105,6 +110,26 @@ const useLoginWithCredentials = () => {
     [setErrorMessage],
   );
 
+  const storeUsernamePasswordInKeychain = useCallback(
+    async (props: {email: string; password: string}) => {
+      const {email, password} = props;
+      try {
+        await Keychain.setGenericPassword(email, password);
+      } catch (error) {
+        console.log('storeUsernamePasswordInKeychain: ', error);
+      }
+    },
+    [],
+  );
+
+  const clearUsernamePasswordInKeychain = useCallback(async () => {
+    try {
+      await Keychain.resetGenericPassword();
+    } catch (error) {
+      console.log('clearUsernamePasswordInKeychain: ', error);
+    }
+  }, []);
+
   const handleLoginWithCredentials = useCallback(
     async (props: {email: string; password: string}) => {
       const {email, password} = props;
@@ -125,6 +150,10 @@ const useLoginWithCredentials = () => {
             type: 'success',
             text1: res.message,
           });
+          await storeUsernamePasswordInKeychain({
+            email: email,
+            password: password,
+          });
           handleNavigateAuthenticationSuccess();
         }
         resetForm();
@@ -143,8 +172,32 @@ const useLoginWithCredentials = () => {
       resetForm,
       setErrorMessage,
       setIsLoading,
+      storeUsernamePasswordInKeychain,
     ],
   );
+
+  const getUsernamePasswordInKeychain = useCallback(async () => {
+    try {
+      // Retrieve the credentials
+      const credentials = await Keychain.getGenericPassword();
+      if (credentials) {
+        console.log(
+          'Credentials successfully loaded for user ' + credentials.username,
+        );
+        await handleLoginWithCredentials({
+          email: credentials.username,
+          password: credentials.password,
+        });
+        return true;
+      } else {
+        console.log('No credentials stored');
+        return null;
+      }
+    } catch (error) {
+      console.log("Keychain couldn't be accessed!", error);
+      return null;
+    }
+  }, [handleLoginWithCredentials]);
 
   const handleRegister = useCallback(
     async (props: RegisterPayload) => {
@@ -179,7 +232,11 @@ const useLoginWithCredentials = () => {
             type: 'success',
             text1: res.message,
           });
-          navigateScreen(STACK_NAVIGATOR.AUTH.REGISTER_CHILD_SCREEN);
+          await storeUsernamePasswordInKeychain({
+            email: emailOrPhoneNumber,
+            password: password,
+          });
+          pushScreen(STACK_NAVIGATOR.AUTH.REGISTER_CHILD_SCREEN);
         }
       } catch (error) {
         if (isAxiosError(error)) {
@@ -189,7 +246,12 @@ const useLoginWithCredentials = () => {
         setIsLoading(false);
       }
     },
-    [handleErrorRegister, register, setIsLoading],
+    [
+      handleErrorRegister,
+      register,
+      setIsLoading,
+      storeUsernamePasswordInKeychain,
+    ],
   );
 
   const handleRegisterChild = useCallback(
@@ -212,7 +274,7 @@ const useLoginWithCredentials = () => {
             type: 'success',
             text1: res.message,
           });
-          navigateScreen(STACK_NAVIGATOR.AUTH.LIST_CHILDREN_SCREEN);
+          pushScreen(STACK_NAVIGATOR.AUTH.LIST_CHILDREN_SCREEN);
         }
       } catch (error) {
         if (isAxiosError(error)) {
@@ -273,6 +335,18 @@ const useLoginWithCredentials = () => {
     }
   }, [getUserProfile, handleErrorRegister, setIsLoading]);
 
+  const handleLogOut = useCallback(async () => {
+    try {
+      removeCurrentCredentials();
+      clearUsernamePasswordInKeychain();
+      resetNavigator(STACK_NAVIGATOR.AUTH_NAVIGATOR);
+    } catch (error) {
+      console.log('handleLogOutFailed: ', error);
+    } finally {
+      setIsLoading(false);
+    }
+  }, [clearUsernamePasswordInKeychain, removeCurrentCredentials, setIsLoading]);
+
   return {
     formData,
     setUsername,
@@ -284,6 +358,9 @@ const useLoginWithCredentials = () => {
     handleRegisterChild,
     handleGetListAllSubject,
     handleGetUserProfile,
+    getUsernamePasswordInKeychain,
+    clearUsernamePasswordInKeychain,
+    handleLogOut,
   };
 };
 export default useLoginWithCredentials;

@@ -6,7 +6,9 @@ import IHttpClient, {
 } from 'src/core/domain/specifications/IHttpClient';
 import {API_ENDPOINTS} from 'src/core/presentation/constants/apiEndpoints';
 import {IAuthenticationRepository} from 'src/authentication/domain/IAuthenRepository';
-import LoginResponse from 'src/authentication/application/types/LoginResponse';
+import LoginResponse, {
+  RefreshTokenResponse,
+} from 'src/authentication/application/types/LoginResponse';
 import {LoginUsernamePasswordPayload} from 'src/authentication/application/types/LoginPayload';
 import {RegisterPayload} from 'src/authentication/application/types/RegisterPayload';
 import RegisterResponse from 'src/authentication/application/types/RegisterResponse';
@@ -14,6 +16,8 @@ import {RegisterChildPayload} from 'src/authentication/application/types/Registe
 import RegisterChildResponse from 'src/authentication/application/types/RegisterChildResponse';
 import GetListSubjectResponse from 'src/authentication/application/types/GetListSubjectResponse';
 import GetUserProfileResponse from 'src/authentication/application/types/GetUserProfileResponse';
+import {resetNavigator} from 'src/core/presentation/navigation/actions/RootNavigationActions';
+import {STACK_NAVIGATOR} from 'src/core/presentation/navigation/ConstantNavigator';
 
 @injectable()
 class AuthenticationRepository implements IAuthenticationRepository {
@@ -78,5 +82,24 @@ class AuthenticationRepository implements IAuthenticationRepository {
     );
     return response;
   }
+
+  public async getRefreshToken(
+    refreshToken: string,
+  ): Promise<RefreshTokenResponse> {
+    const params = {
+      refreshToken: refreshToken,
+    };
+    const response: RefreshTokenResponse = await this.httpClient.post(
+      API_ENDPOINTS.AUTHENTICATION.REFRESH_TOKEN,
+      params,
+    );
+    return response;
+  }
+
+  public async logOut(): Promise<void> {
+    resetNavigator(STACK_NAVIGATOR.AUTH_NAVIGATOR);
+    return;
+  }
 }
+
 export default AuthenticationRepository;

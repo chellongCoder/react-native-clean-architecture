@@ -1,6 +1,7 @@
 import GetListSubjectResponse from '../application/types/GetListSubjectResponse';
 import GetUserProfileResponse from '../application/types/GetUserProfileResponse';
 import {LoginUsernamePasswordPayload} from '../application/types/LoginPayload';
+import {RefreshTokenResponse} from '../application/types/LoginResponse';
 import {RegisterChildPayload} from '../application/types/RegisterChildPayload';
 import RegisterChildResponse from '../application/types/RegisterChildResponse';
 import {RegisterPayload} from '../application/types/RegisterPayload';
@@ -23,4 +24,8 @@ export interface IAuthenticationRepository {
   getListAllSubject: () => Promise<GetListSubjectResponse>;
 
   getUserProfile: () => Promise<GetUserProfileResponse>;
+
+  getRefreshToken: (refreshToken: string) => Promise<RefreshTokenResponse>;
+
+  logOut: () => Promise<void>;
 }

@@ -13,6 +13,7 @@ import {STACK_NAVIGATOR} from 'src/core/presentation/navigation/ConstantNavigato
 import ICLogout from 'src/core/components/icons/ICLogout';
 import useAuthenticationStore from 'src/authentication/presentation/stores/useAuthenticationStore';
 import {useLoadingGlobal} from 'src/core/presentation/hooks/loading/useLoadingGlobal';
+import useLoginWithCredentials from 'src/authentication/presentation/hooks/useLoginWithCredentials';
 
 type TProps = {
   title?: string;
@@ -22,14 +23,14 @@ type TProps = {
 
 const AccountStatus = (props: TProps) => {
   const {title, subject, isShowLogout} = props;
-  const {removeCurrentCredentials, isLoading} = useAuthenticationStore();
+  const {isLoading} = useAuthenticationStore();
+  const {handleLogOut} = useLoginWithCredentials();
   useLoadingGlobal(isLoading);
 
   const [isEnabled, setIsEnabled] = useState(false);
 
   const onLogout = () => {
-    removeCurrentCredentials();
-    resetNavigator(STACK_NAVIGATOR.AUTH_NAVIGATOR);
+    handleLogOut();
   };
 
   return (

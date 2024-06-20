@@ -35,8 +35,9 @@ export const AuthStackScreens = (): React.ReactElement => {
         cardOverlayEnabled: false,
         headerShown: false,
       }}
-      initialRouteName={STACK_NAVIGATOR.ONBOARDING_NAVIGATOR}>
-      <AppStack.Screen
+      // initialRouteName={STACK_NAVIGATOR.ONBOARDING_NAVIGATOR}
+    >
+      {/* <AppStack.Screen
         name={STACK_NAVIGATOR.ONBOARDING_NAVIGATOR}
         key={STACK_NAVIGATOR.ONBOARDING_NAVIGATOR}
         component={OnBoardingScreen}
@@ -45,7 +46,7 @@ export const AuthStackScreens = (): React.ReactElement => {
             hideBottomTab(navBottom);
           },
         })}
-      />
+      /> */}
       <AuthStack.Screen
         name={STACK_NAVIGATOR.AUTH.LOGIN_SCREEN}
         key={STACK_NAVIGATOR.AUTH.LOGIN_SCREEN}

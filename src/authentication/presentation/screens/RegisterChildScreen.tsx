@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {
   View,
   Text,
@@ -13,7 +13,10 @@ import ICDropDown from 'src/core/components/icons/ICDropDown';
 import {COLORS} from 'src/core/presentation/constants/colors';
 import {CustomTextStyle} from 'src/core/presentation/constants/typography';
 import useStateCustom from 'src/hooks/useStateCommon';
-import CommonInput from 'src/post/presentation/components/CommonInput';
+import CommonInput, {
+  CommonDropDown,
+  ItemType,
+} from 'src/post/presentation/components/CommonInput';
 import useLoginWithCredentials from '../hooks/useLoginWithCredentials';
 import useAuthenticationStore from '../stores/useAuthenticationStore';
 import {useLoadingGlobal} from 'src/core/presentation/hooks/loading/useLoadingGlobal';
@@ -27,19 +30,33 @@ type TRegister = {
   listAllSubject?: Subject[];
 };
 
-const RegisterChildScreen = () => {
+const initialRegisterState: TRegister = {
+  name: '',
+  gender: 'male',
+  age: 5,
+  subjectIds: [],
+  listAllSubject: [],
+};
+
+const RegisterChildScreen: React.FC = () => {
   const {handleRegisterChild, handleGetListAllSubject} =
     useLoginWithCredentials();
   const {isLoading} = useAuthenticationStore();
   useLoadingGlobal(isLoading);
 
-  const [registerState, setRegisterState] = useStateCustom<TRegister>({
-    name: '',
-    gender: '',
-    age: '',
-    subjectIds: [],
-    listAllSubject: [],
-  });
+  const [genderOptions, setGenderOptions] = useState<ItemType[]>([
+    {label: 'Male', value: 'male'},
+    {label: 'Female', value: 'female'},
+  ]);
+  const [ageOptions, setAgeOptions] = useState<ItemType[]>(
+    Array.from({length: 15}, (_, i) => ({label: `${i + 5}`, value: i + 5})),
+  );
+
+  const [registerState, setRegisterState] =
+    useStateCustom<TRegister>(initialRegisterState);
+
+  const [genderOpen, setGenderOpen] = useState(false);
+  const [ageOpen, setAgeOpen] = useState(false);
 
   const onTextInputChange = (key: string, value: string) => {
     setRegisterState({
@@ -59,27 +76,22 @@ const RegisterChildScreen = () => {
   };
 
   const onCreateAccount = () => {
-    if (
-      registerState.name === '' ||
-      registerState.gender === '' ||
-      registerState.age === '' ||
-      registerState.subjectIds?.length === 0
-    ) {
+    const {name, gender, age, subjectIds} = registerState;
+    if (!name || !gender || !age || !subjectIds?.length) {
       return;
-    } else {
-      const params = {
-        age: Number(registerState.age) || '',
-        gender: registerState.gender?.toLowerCase() || '',
-        name: registerState.name || '',
-        subjectIds: registerState.subjectIds || [],
-      };
-      handleRegisterChild(params);
     }
+
+    const params = {
+      age: Number(age) || '',
+      gender: gender.toLowerCase() || '',
+      name: name || '',
+      subjectIds: subjectIds || [],
+    };
+    handleRegisterChild(params);
   };
 
   const renderSubjectItem = ({item}: {item: Subject}) => {
-    const isSelected =
-      registerState?.subjectIds && registerState?.subjectIds.includes(item._id);
+    const isSelected = registerState.subjectIds?.includes(item._id);
     return (
       <TouchableOpacity
         style={[
@@ -103,6 +115,14 @@ const RegisterChildScreen = () => {
     setRegisterState({listAllSubject: res});
   }, [handleGetListAllSubject, setRegisterState]);
 
+  const setGenderValue = (callback: any) => {
+    setRegisterState({gender: callback(registerState.gender)});
+  };
+
+  const setAgeValue = (callback: any) => {
+    setRegisterState({age: callback(registerState.age)});
+  };
+
   useEffect(() => {
     getListAllSubject();
   }, [getListAllSubject]);
@@ -122,36 +142,29 @@ const RegisterChildScreen = () => {
               textInputProp={{
                 placeholder: 'Thomas',
                 value: registerState.name,
-                onChangeText: (e: string) => {
-                  onTextInputChange('name', e);
-                },
+                onChangeText: (e: string) => onTextInputChange('name', e),
               }}
             />
 
             <View style={styles.genderAgeContainer}>
-              <CommonInput
-                label="Generality"
-                textInputProp={{
-                  placeholder: 'Male',
-                  value: registerState.gender,
-                  onChangeText: (e: string) => {
-                    onTextInputChange('gender', e);
-                  },
-                }}
-                contentContainerStyle={{flex: 0.4}}
+              <CommonDropDown
+                label="Gender"
+                open={genderOpen}
+                value={registerState.gender || genderOptions[0].value}
+                items={genderOptions}
+                setOpen={setGenderOpen}
+                setValue={setGenderValue}
+                setItems={setGenderOptions}
               />
 
-              <CommonInput
+              <CommonDropDown
                 label="Age"
-                textInputProp={{
-                  placeholder: '4 years old',
-                  value: registerState.age as string,
-                  onChangeText: (e: string) => {
-                    onTextInputChange('age', e);
-                  },
-                }}
-                contentContainerStyle={{flex: 0.4}}
-                inputMode={'numeric'}
+                open={ageOpen}
+                value={registerState.age || ageOptions[0].value.toString()}
+                items={ageOptions}
+                setOpen={setAgeOpen}
+                setValue={setAgeValue}
+                setItems={setAgeOptions}
               />
             </View>
 
@@ -159,7 +172,7 @@ const RegisterChildScreen = () => {
               <Text style={styles.subjectHeaderTitle}>Want to study</Text>
 
               <FlatList
-                data={registerState?.listAllSubject || []}
+                data={registerState.listAllSubject || []}
                 renderItem={renderSubjectItem}
                 numColumns={2}
                 columnWrapperStyle={{justifyContent: 'space-between'}}
@@ -210,6 +223,7 @@ const styles = StyleSheet.create({
   genderAgeContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
+    zIndex: 999,
   },
   wrapSubjectContainer: {},
   subjectHeaderTitle: {
