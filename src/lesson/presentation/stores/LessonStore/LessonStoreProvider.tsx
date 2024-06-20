@@ -30,6 +30,7 @@ import {
 import {useAsyncEffect} from 'src/core/presentation/hooks';
 import {AppEntity} from 'src/modules/react-native-alphadex-screentime/src/entities/AppEntity';
 import {Image} from 'react-native';
+import Button from '../../components/LessonModule/Button';
 
 type PropsItemApps = {
   preFixIcon?: React.ReactNode;
@@ -49,7 +50,14 @@ export const LessonStoreProvider = observer(({children}: PropsWithChildren) => {
 
   const transformAppEntityToListItem = (appEntity: AppEntity): AppItem => {
     return {
-      preFixIcon: <View />,
+      preFixIcon: (
+        <Image
+          source={{uri: `data:image/jpg;base64,${appEntity.app_icon}`}}
+          width={50}
+          height={50}
+        />
+      ),
+
       subTitle: appEntity.package_name,
       title: appEntity.app_name,
     };
@@ -148,7 +156,7 @@ const ItemPermission = ({lesson}) => {
     }
   }, [isOverlay, isPushNoti, isUsageStats, lesson]);
   return (
-    <View style={{height: verticalScale(150), width: '90%'}}>
+    <View style={{width: '90%', alignSelf: 'center'}}>
       <TouchableOpacity
         onPress={() => {
           askOverlayPermission();
@@ -186,18 +194,16 @@ const ItemPermission = ({lesson}) => {
         <Text>Push notification</Text>
         <Text>{isPushNoti ? 'checked' : 'unchecked'}</Text>
       </TouchableOpacity>
-      <TouchableOpacity
-        onPress={() => {
-          lesson.onCloseSheetPermission();
-        }}
-        style={[
-          globalStyle.rowCenter,
-          globalStyle.spaceBetween,
-          styles.permissionItem,
-        ]}>
-        <Text>Push notification</Text>
-        <Text>{'close'}</Text>
-      </TouchableOpacity>
+
+      <View style={{alignItems: 'center', paddingVertical: verticalScale(20)}}>
+        <Button
+          onPress={() => {
+            lesson.onCloseSheetPermission();
+          }}
+          title="confirm"
+          color={COLORS.YELLOW_E6960B}
+        />
+      </View>
     </View>
   );
 };

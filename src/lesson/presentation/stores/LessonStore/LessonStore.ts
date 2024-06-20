@@ -48,7 +48,7 @@ export class LessonStore {
 
   @action
   onShowSheetPermission = () => {
-    this.bottomSheetPermissionRef?.current?.snapToIndex(0);
+    this.bottomSheetPermissionRef?.current?.snapToIndex(1);
   };
 
   @action

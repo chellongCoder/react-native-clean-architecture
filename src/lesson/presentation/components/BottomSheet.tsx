@@ -11,6 +11,7 @@ import useGlobalStyle from 'src/core/presentation/hooks/useGlobalStyle';
 import {SharedValue} from 'react-native-reanimated';
 import {BottomSheetMethods} from '@gorhom/bottom-sheet/lib/typescript/types';
 import {COLORS} from 'src/core/presentation/constants/colors';
+import {scale, verticalScale} from 'react-native-size-matters';
 
 type Props = {
   title?: string;
@@ -66,14 +67,12 @@ const BottomSheetCustom = forwardRef<BottomSheet, Props>(
         handleIndicatorStyle={styles.handleIndicatorStyle}
         backdropComponent={renderBackdrop}
         {...other}>
+        {title && (
+          <View style={[styles.pb8]}>
+            <Text style={[globalStyle.txtLabel, styles.txtTitle]}>{title}</Text>
+          </View>
+        )}
         <BottomSheetScrollView style={[styles.contentContainer]}>
-          {title && (
-            <View style={[styles.pb8]}>
-              <Text style={[globalStyle.txtLabel, styles.txtTitle]}>
-                {title}
-              </Text>
-            </View>
-          )}
           {children}
         </BottomSheetScrollView>
       </BottomSheet>
@@ -84,13 +83,15 @@ const BottomSheetCustom = forwardRef<BottomSheet, Props>(
 const styles = StyleSheet.create({
   contentContainer: {
     // flex: 1,
-    // alignItems: 'center',
+    // alignItems: 'center'
+    // alignSelf: 'center',
   },
   txtTitle: {
     color: 'white',
   },
   pb8: {
-    paddingBottom: 12,
+    paddingVertical: verticalScale(12),
+    paddingLeft: scale(10),
   },
   handleStyle: {
     backgroundColor: 'transparent',
