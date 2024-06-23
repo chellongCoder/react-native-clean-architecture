@@ -26,6 +26,7 @@ import {
   startUsageStatsPermission,
   requestPushNotificationPermission,
   checkAndRequestNotificationPermission,
+  addToLockedApps,
 } from 'react-native-alphadex-screentime';
 import {useAsyncEffect} from 'src/core/presentation/hooks';
 import {AppEntity} from 'src/modules/react-native-alphadex-screentime/src/entities/AppEntity';
@@ -44,6 +45,7 @@ type AppItem = {
   title: string;
   subTitle: string;
   preFixIcon: any;
+  apkFilePath: string;
 };
 export const LessonStoreProvider = observer(({children}: PropsWithChildren) => {
   const value = lessonModuleContainer.getProvided(LessonStore);
@@ -60,6 +62,7 @@ export const LessonStoreProvider = observer(({children}: PropsWithChildren) => {
 
       subTitle: appEntity.package_name,
       title: appEntity.app_name,
+      apkFilePath: appEntity.apk_file_path,
     };
   };
 
@@ -103,7 +106,8 @@ const ItemApps = ({
   subTitle = '',
   active = false,
   onChange,
-}: PropsItemApps) => {
+  apkFilePath,
+}: PropsItemApps & AppItem) => {
   const globalStyle = useGlobalStyle();
 
   const [value, setValue] = useState(active);
@@ -128,7 +132,16 @@ const ItemApps = ({
       </View>
       <Switch
         value={value}
-        onChange={e => onChangeValue(e.nativeEvent.value)}
+        onChange={e => {
+          onChangeValue(e.nativeEvent.value);
+          addToLockedApps([
+            {
+              app_name: title,
+              package_name: subTitle,
+              file_path: apkFilePath,
+            },
+          ]);
+        }}
       />
     </View>
   );
