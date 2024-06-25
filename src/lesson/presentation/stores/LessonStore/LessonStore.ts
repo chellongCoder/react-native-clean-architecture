@@ -5,7 +5,6 @@ import {action, makeAutoObservable, runInAction} from 'mobx';
 import React, {RefObject} from 'react';
 import {AppEntity} from 'src/modules/react-native-alphadex-screentime/src/entities/AppEntity';
 import {getInstalledApps} from 'react-native-alphadex-screentime';
-import {InstalledApps} from 'react-native-launcher-kit';
 
 @injectable()
 export class LessonStore {
@@ -16,6 +15,8 @@ export class LessonStore {
 
   listAppsSystem: AppEntity[] = [];
 
+  blockedListAppsSystem: AppEntity[] = [];
+
   passwordParent?: string;
 
   constructor() {
@@ -23,7 +24,13 @@ export class LessonStore {
     this.bottomSheetAppsRef = React.createRef<BottomSheet>();
     this.bottomSheetPermissionRef = React.createRef<BottomSheet>();
     this.listAppsSystem = [];
+    this.blockedListAppsSystem = [];
   }
+
+  @action
+  setBottomSheetAppsRef = () => {
+    this.bottomSheetAppsRef = React.createRef<BottomSheet>();
+  };
 
   @action
   setPasswordParent = (password: string) => {
@@ -42,8 +49,13 @@ export class LessonStore {
 
   @action
   onShowSheetApps = () => {
-    this.bottomSheetPermissionRef?.current?.close();
+    this.onCloseSheetPermission();
     this.bottomSheetAppsRef?.current?.expand();
+  };
+
+  @action
+  onCloseSheetApps = () => {
+    this.bottomSheetAppsRef?.current?.close();
   };
 
   @action
@@ -58,22 +70,14 @@ export class LessonStore {
 
   changeListAppSystem = async () => {
     const apps = await getInstalledApps();
-    console.log(
-      '🛠 LOG: 🚀 --> -----------------------------------------------------------------🛠 LOG: 🚀 -->',
-    );
-    console.log(
-      '🛠 LOG: 🚀 --> -----------------------------------------------------------------🛠 LOG: 🚀 -->',
-    );
-    console.log(
-      '🛠 LOG: 🚀 --> ~ LessonStore ~ changeListAppSystem= ~ apps:',
-      apps,
-    );
-    console.log(
-      '🛠 LOG: 🚀 --> -----------------------------------------------------------------🛠 LOG: 🚀 -->',
-    );
 
     runInAction(() => {
       this.listAppsSystem = [...apps];
     });
+  };
+
+  @action
+  changeBlockedListAppSystem = async (arr: AppEntity[]) => {
+    this.blockedListAppsSystem = arr;
   };
 }

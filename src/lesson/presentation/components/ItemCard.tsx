@@ -1,10 +1,14 @@
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import React from 'react';
 import useGlobalStyle from 'src/core/presentation/hooks/useGlobalStyle';
+import IconBlock from 'assets/svg/IconBlock';
+import {Image} from 'react-native';
 
 export type ItemCardProps = {
   name?: string;
-  Icon: React.ComponentType<{color?: string; height?: number; width?: number}>;
+  Icon:
+    | string
+    | React.ComponentType<{color?: string; height?: number; width?: number}>;
   isFocus?: boolean;
   size?: number;
   onPress?: () => void;
@@ -45,7 +49,23 @@ const ItemCard = ({
             width: size,
           },
         ]}>
-        <Icon color={ic} height={size / 2} width={size / 2} />
+        {typeof Icon === 'string' && (
+          <>
+            <View style={{position: 'absolute'}}>
+              <Image
+                source={{uri: `data:image/jpg;base64,${Icon}`}}
+                width={50}
+                height={50}
+              />
+            </View>
+            <IconBlock color={ic} height={size / 2} width={size / 2} />
+          </>
+        )}
+        {typeof Icon !== 'string' && (
+          <>
+            <Icon color={ic} height={size / 2} width={size / 2} />
+          </>
+        )}
       </View>
       {name && (
         <Text style={[globalStyle.txtButton, styles.name, {paddingTop: space}]}>

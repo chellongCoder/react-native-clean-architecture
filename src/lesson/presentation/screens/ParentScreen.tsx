@@ -7,7 +7,6 @@ import {
 } from 'react-native';
 import React, {useCallback, useEffect, useMemo, useState} from 'react';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
-import IconLogout from 'assets/svg/IconLogout';
 import useGlobalStyle from 'src/core/presentation/hooks/useGlobalStyle';
 import IconUser from 'assets/svg/IconUser';
 import IconEdit from 'assets/svg/IconEdit';
@@ -19,22 +18,17 @@ import IconArrowDown from 'assets/svg/IconArrowDown';
 import IconArrowUp from 'assets/svg/IconArrowUp';
 import IconBlock from 'assets/svg/IconBlock';
 import IconArrowFill from 'assets/svg/IconArrowFill';
-import IconAddCircle from 'assets/svg/IconAddCircle';
 import ItemCard from '../components/ItemCard';
 import IconListen from 'assets/svg/IconListen';
 import IconBrightness from 'assets/svg/IconBrightness';
 import IconTheme from 'assets/svg/IconTheme';
 import IconDiamond from 'assets/svg/IconDiamond';
 import Volume from '../components/Volume';
-import Price from '../components/Price';
 import BookView from '../components/BookView';
 import {useLessonStore} from '../stores/LessonStore/useGetPostsStore';
 import {observer} from 'mobx-react';
 import {withProviders} from 'src/core/presentation/utils/withProviders';
-import {LessonStore} from '../stores/LessonStore/LessonStore';
 import {LessonStoreProvider} from '../stores/LessonStore/LessonStoreProvider';
-import {isAndroid} from 'src/core/presentation/utils';
-import useLoginWithCredentials from 'src/authentication/presentation/hooks/useLoginWithCredentials';
 import useAuthenticationStore from 'src/authentication/presentation/stores/useAuthenticationStore';
 import {
   children,
@@ -49,6 +43,8 @@ import {STACK_NAVIGATOR} from 'src/core/presentation/navigation/ConstantNavigato
 import {CustomTextStyle} from 'src/core/presentation/constants/typography';
 import AccountStatus from 'src/home/components/AccountStatus';
 import Username from '../components/Username';
+import {useLoadingGlobal} from 'src/core/presentation/hooks/loading/useLoadingGlobal';
+import {useAsyncEffect} from 'src/core/presentation/hooks';
 
 enum TabParentE {
   APP_BLOCK = 'App block',
@@ -82,16 +78,22 @@ const ParentScreen = observer(() => {
   const insets = useSafeAreaInsets();
   const globalStyle = useGlobalStyle();
   const lesson = useLessonStore();
+
   const {getUserProfile, selectedChild, setSelectedChild} =
     useAuthenticationStore();
+  const loading = useLoadingGlobal(false);
 
   const [tabParent, setTabparent] = useState(TabParentE.APP_BLOCK);
 
-  const tabsBlock = [
-    {id: '1', name: 'youtube', icon: IconBlock},
-    {id: '2', icon: IconBlock},
-    {id: '3', icon: IconBlock},
-  ];
+  const tabsBlock = useMemo(() => {
+    return lesson.blockedListAppsSystem.map(app => {
+      return {
+        id: app.package_name,
+        name: app.app_name,
+        icon: app.app_icon,
+      };
+    });
+  }, [lesson.blockedListAppsSystem]);
 
   const tabsPurchase = [
     {id: '4', name: '???.000 vnd', icon: IconDiamond},
@@ -99,7 +101,7 @@ const ParentScreen = observer(() => {
     {id: '6', name: '???.000 vnd', icon: IconDiamond},
   ];
 
-  const [tabBlock, setTabBlock] = useState<string>(tabsBlock[0]?.id ?? '');
+  const [tabBlock, setTabBlock] = useState<string>(tabsBlock?.[0]?.name ?? '');
 
   const [tabSetting, setTabSetting] = useState<string>(tabsSeting[0]?.id ?? '');
 
@@ -142,7 +144,7 @@ const ParentScreen = observer(() => {
         return tabsPurchase;
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [tabParent]);
+  }, [tabParent, tabsBlock]);
 
   const tabBody = useMemo(() => {
     switch (tabParent) {
@@ -172,6 +174,12 @@ const ParentScreen = observer(() => {
     [tabParent],
   );
 
+  useAsyncEffect(async () => {
+    loading.show();
+    await lesson.changeListAppSystem();
+    loading.hide();
+  }, []);
+
   const buildBodyContent = useMemo(() => {
     if (tabParent === TabParentE.APP_BLOCK) {
       return (
@@ -189,7 +197,7 @@ const ParentScreen = observer(() => {
                   }}
                   style={[styles.card]}>
                   <Text style={[globalStyle.txtButton, styles.textCard]}>
-                    Youtube
+                    {tabBody.trim() !== '' ? tabBody : 'select apps'}
                   </Text>
                   <IconArrowDown />
                 </TouchableOpacity>
@@ -287,6 +295,7 @@ const ParentScreen = observer(() => {
     globalStyle.txtLabel,
     globalStyle.txtNote,
     globalStyle.txtButton,
+    tabBody,
     lesson,
     tabSetting,
   ]);
@@ -323,21 +332,36 @@ const ParentScreen = observer(() => {
               <View style={[styles.arrowLeft]}>
                 <IconArrowFill />
               </View>
-              <View style={[styles.rowBetween, styles.fill]}>
-                {tabsBody.map(t => (
-                  <ItemCard
-                    key={t.id}
-                    Icon={t.icon}
-                    isFocus={tabBody === t.id}
-                    name={t.name}
-                    onPress={() => setTabBody(t.id)}
-                    iconFocusColor="#F2B559"
-                    backgroundFocusColor="#FBF8CC"
-                    borderWidth={3}
-                    space={4}
-                    size={85}
-                  />
-                ))}
+              <View style={[styles.rowHCenter, styles.fill]}>
+                {tabsBody.length ? (
+                  tabsBody.map(t => (
+                    <>
+                      <ItemCard
+                        key={t.id}
+                        Icon={t.icon}
+                        isFocus={tabBody === t.name}
+                        name={t.name}
+                        onPress={() => setTabBody(t.name)}
+                        iconFocusColor="#F2B559"
+                        backgroundFocusColor="#FBF8CC"
+                        borderWidth={3}
+                        space={4}
+                        size={85}
+                      />
+                      <View style={{width: scale(10)}} />
+                    </>
+                  ))
+                ) : (
+                  <View
+                    style={{
+                      width: '100%',
+                      alignItems: 'center',
+                    }}>
+                    <Text style={[globalStyle.txtNote, {color: COLORS.WHITE}]}>
+                      No blocked apps!
+                    </Text>
+                  </View>
+                )}
               </View>
               <View style={[styles.arrowRight]}>
                 <IconArrowFill type="right" />

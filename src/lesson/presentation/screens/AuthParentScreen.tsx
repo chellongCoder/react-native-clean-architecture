@@ -14,6 +14,7 @@ import {CustomTextStyle} from 'src/core/presentation/constants/typography';
 import {COLORS} from 'src/core/presentation/constants/colors';
 import {useAnimatedShake} from 'src/hooks/useAnimatedShake';
 import Animated from 'react-native-reanimated';
+import {usePermissionApplock} from 'src/hooks/usePermissionApplock';
 
 const AuthParentScreen = () => {
   const [password, setPassword] = useState('');
@@ -22,6 +23,8 @@ const AuthParentScreen = () => {
   const {handleComparePassword} = useLoginWithCredentials();
   const {shake, rStyle} = useAnimatedShake();
   const lessonStore = useLessonStore();
+
+  const permissionHook = usePermissionApplock();
 
   const onSubmit = async () => {
     const res = await handleComparePassword({password: password});
@@ -36,10 +39,18 @@ const AuthParentScreen = () => {
 
   useEffect(() => {
     setTimeout(() => {
-      isAndroid && lessonStore.onShowSheetPermission();
+      const {isOverlay, isUsageStats, isPushNoti} = permissionHook;
+      if (
+        isOverlay !== undefined &&
+        isUsageStats !== undefined &&
+        isPushNoti !== undefined
+      ) {
+        if (!isOverlay || !isUsageStats || !isPushNoti) {
+          isAndroid && lessonStore.onShowSheetPermission();
+        }
+      }
     }, 1000);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [lessonStore, permissionHook]);
   return (
     <View style={[styles.container]}>
       <ScrollView>

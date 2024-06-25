@@ -38,7 +38,7 @@ type PropsItemApps = {
   title?: string;
   subTitle?: string;
   active?: boolean;
-  onChange?: (a: boolean) => void;
+  onChange?: (id: string, status: boolean) => void;
 };
 
 type AppItem = {
@@ -49,7 +49,7 @@ type AppItem = {
 };
 export const LessonStoreProvider = observer(({children}: PropsWithChildren) => {
   const value = lessonModuleContainer.getProvided(LessonStore);
-
+  const [apps, setApps] = useState<AppEntity[]>([]);
   const transformAppEntityToListItem = (appEntity: AppEntity): AppItem => {
     return {
       preFixIcon: (
@@ -77,9 +77,38 @@ export const LessonStoreProvider = observer(({children}: PropsWithChildren) => {
           snapPoints={['50']}
           ref={value.bottomSheetAppsRef}
           title="List Apps"
-          backgroundColor={COLORS.BACKGROUND}>
+          backgroundColor={COLORS.BACKGROUND}
+          onDone={() => {
+            value.onCloseSheetApps();
+            value.changeBlockedListAppSystem(apps);
+            addToLockedApps(
+              apps.map(v => ({
+                app_name: v.app_name,
+                package_name: v.package_name,
+                file_path: v.apk_file_path,
+              })),
+            );
+          }}>
           {listItem.map((v, i) => (
-            <ItemApps key={i} {...v} />
+            <ItemApps
+              onChange={(id, s) => {
+                setApps(prev => {
+                  if (s) {
+                    const app = value.listAppsSystem.find(
+                      e => e.package_name === id,
+                    );
+                    return [...prev, app!];
+                  } else {
+                    const selectedApps = prev.filter(
+                      e => e.package_name !== id,
+                    );
+                    return selectedApps;
+                  }
+                });
+              }}
+              key={i}
+              {...v}
+            />
           ))}
         </BottomSheetCustom>
       }
@@ -117,7 +146,12 @@ const ItemApps = ({
   }, [active]);
 
   const onChangeValue = (v: boolean) => {
-    onChange ? onChange(v) : setValue(v);
+    setValue(v);
+    if (v) {
+      onChange?.(subTitle, v);
+    } else {
+      onChange?.(subTitle, v);
+    }
   };
 
   return (
@@ -134,13 +168,6 @@ const ItemApps = ({
         value={value}
         onChange={e => {
           onChangeValue(e.nativeEvent.value);
-          addToLockedApps([
-            {
-              app_name: title,
-              package_name: subTitle,
-              file_path: apkFilePath,
-            },
-          ]);
         }}
       />
     </View>
