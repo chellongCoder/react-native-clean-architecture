@@ -9,6 +9,8 @@ import GetListSubjectUseCase from './application/useCases/GetListSubjectUsecase'
 import GetUserProfileUseCase from './application/useCases/GetUserProfile';
 import RefreshTokenUseCase from './application/useCases/RefreshTokenUseCase';
 import LogOutUseCase from './application/useCases/LogoutUsecase';
+import ComparePasswordUseCase from './application/useCases/ComparePasswordUsecase';
+import ChangeParentNameUseCase from './application/useCases/ChangeParentNameUsecase';
 
 @module({
   providers: [
@@ -27,6 +29,8 @@ import LogOutUseCase from './application/useCases/LogoutUsecase';
     GetUserProfileUseCase,
     RefreshTokenUseCase,
     LogOutUseCase,
+    ComparePasswordUseCase,
+    ChangeParentNameUseCase,
   ],
 })
 export class AuthenticationModule {}

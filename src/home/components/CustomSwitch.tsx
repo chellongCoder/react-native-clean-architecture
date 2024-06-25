@@ -94,6 +94,7 @@ const styles = StyleSheet.create({
     ...CustomTextStyle.smallBold,
     color: COLORS.BLUE_1C6349,
     marginRight: scale(4),
+    textTransform: 'uppercase',
   },
 });
 

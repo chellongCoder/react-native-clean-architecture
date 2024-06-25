@@ -26,6 +26,8 @@ export const API_ENDPOINTS = {
     REGISTER: getUserEndPointServices('register'),
     REGISTER_CHILD: getUserEndPointServices('register-children'),
     PROFILE: getUserEndPointServices('profile'),
+    COMPARE_PASSWORD: getUserEndPointServices('compare-password'),
+    CHANGE_PARENT_NAME: getUserEndPointServices('change-parent-name'),
   },
   SUBJECT: {
     LIST_ALL_SUBJECT: getSubjectEndPointServices('list-all-subject'),

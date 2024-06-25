@@ -137,6 +137,13 @@ export const CustomTextStyle = StyleSheet.create({
     color: COLORS.PRIMARY,
     fontWeight: '700',
   },
+  smallBoldSVNCherishMoment: {
+    fontSize: TYPOGRAPHY.SIZE.small,
+    fontFamily: TYPOGRAPHY.FAMILY.SVNCherishMoment,
+    lineHeight: 20,
+    color: COLORS.PRIMARY,
+    fontWeight: '700',
+  },
   smallNormal: {
     fontSize: TYPOGRAPHY.SIZE.small,
     fontFamily: TYPOGRAPHY.FAMILY.Eina01Regular,

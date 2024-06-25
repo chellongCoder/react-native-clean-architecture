@@ -20,6 +20,11 @@ import GetUserProfileUseCase from 'src/authentication/application/useCases/GetUs
 import RefreshTokenUseCase from 'src/authentication/application/useCases/RefreshTokenUseCase';
 import LogOutUseCase from 'src/authentication/application/useCases/LogoutUsecase';
 import * as Keychain from 'react-native-keychain';
+import ComparePasswordUseCase from 'src/authentication/application/useCases/ComparePasswordUsecase';
+import {ComparePasswordPayload} from 'src/authentication/application/types/ComparePasswordPayload';
+import {children} from 'src/authentication/application/types/GetUserProfileResponse';
+import ChangeParentNameUseCase from 'src/authentication/application/useCases/ChangeParentNameUsecase';
+import {ChangeParentNamePayload} from 'src/authentication/application/types/ChangeParentNamePayload';
 
 @injectable()
 export class AuthenticationStore implements AuthenticationStoreState {
@@ -29,6 +34,7 @@ export class AuthenticationStore implements AuthenticationStoreState {
   @persist loginMethod = '';
   error = '';
   isHydrated = false;
+  selectedChild: children | undefined = undefined;
 
   constructor(
     @provided(LoginUsernamePasswordUseCase)
@@ -51,6 +57,12 @@ export class AuthenticationStore implements AuthenticationStoreState {
 
     @provided(LogOutUseCase)
     private postLogOutUseCase: LogOutUseCase,
+
+    @provided(ComparePasswordUseCase)
+    private comparePasswordUseCase: ComparePasswordUseCase,
+
+    @provided(ChangeParentNameUseCase)
+    private changeParentNameUseCase: ChangeParentNameUseCase,
 
     @provided(IHttpClientToken) private readonly httpClient: IHttpClient, // @provided(CoreStore) private coreStore: CoreStore,
   ) {
@@ -183,6 +195,29 @@ export class AuthenticationStore implements AuthenticationStoreState {
     this.postLogOutUseCase.execute();
   }
 
+  @action
+  public async comparePassword(data: ComparePasswordPayload) {
+    this.setIsLoading(true);
+    const response = await this.comparePasswordUseCase.execute(data);
+    if (response.code) {
+      return response;
+    }
+    this.setIsLoading(false);
+    return response;
+  }
+
+  @action
+  public setSelectedChild(child: children) {
+    this.selectedChild = child;
+  }
+
+  @action
+  public async changeParentName(data: ChangeParentNamePayload) {
+    this.setIsLoading(true);
+    const response = await this.changeParentNameUseCase.execute(data);
+    this.setIsLoading(false);
+    return response;
+  }
   // @action
   // public async loginWithGoogle(args: LoginWithGooglePayload) {
   //   this.setIsLoading(true);

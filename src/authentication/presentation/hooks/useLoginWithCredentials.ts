@@ -16,6 +16,8 @@ import Toast from 'react-native-toast-message';
 import {RegisterChildPayload} from 'src/authentication/application/types/RegisterChildPayload';
 import {STACK_NAVIGATOR} from 'src/core/presentation/navigation/ConstantNavigator';
 import * as Keychain from 'react-native-keychain';
+import {ComparePasswordPayload} from 'src/authentication/application/types/ComparePasswordPayload';
+import {ChangeParentNamePayload} from 'src/authentication/application/types/ChangeParentNamePayload';
 
 const DefaultFormData = {email: '', password: ''};
 
@@ -29,6 +31,8 @@ const useLoginWithCredentials = () => {
     getListAllSubject,
     getUserProfile,
     removeCurrentCredentials,
+    comparePassword,
+    changeParentName,
   } = useAuthenticationStore();
   const {handleNavigateAuthenticationSuccess} = useNavigateAuthSuccess();
 
@@ -347,6 +351,47 @@ const useLoginWithCredentials = () => {
     }
   }, [clearUsernamePasswordInKeychain, removeCurrentCredentials, setIsLoading]);
 
+  const handleComparePassword = useCallback(
+    async (props: ComparePasswordPayload) => {
+      try {
+        const res = await comparePassword(props);
+        if (res.code === 200) {
+          return res.code;
+        } else {
+          return false;
+        }
+      } catch (error) {
+        if (isAxiosError(error)) {
+          setErrorMessage('Password not match!');
+        }
+      } finally {
+        setIsLoading(false);
+      }
+    },
+    [comparePassword, setErrorMessage, setIsLoading],
+  );
+
+  const handleChangeParentName = useCallback(
+    async (props: ChangeParentNamePayload) => {
+      try {
+        const res = await changeParentName(props);
+        if (res.data.code === 200) {
+          return res.data;
+        } else {
+          return false;
+        }
+      } catch (error) {
+        if (isAxiosError(error)) {
+          setErrorMessage('Password not match!');
+        }
+        return false;
+      } finally {
+        setIsLoading(false);
+      }
+    },
+    [changeParentName, setErrorMessage, setIsLoading],
+  );
+
   return {
     formData,
     setUsername,
@@ -361,6 +406,8 @@ const useLoginWithCredentials = () => {
     getUsernamePasswordInKeychain,
     clearUsernamePasswordInKeychain,
     handleLogOut,
+    handleComparePassword,
+    handleChangeParentName,
   };
 };
 export default useLoginWithCredentials;

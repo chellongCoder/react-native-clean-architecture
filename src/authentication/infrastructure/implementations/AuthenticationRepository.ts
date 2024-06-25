@@ -18,6 +18,10 @@ import GetListSubjectResponse from 'src/authentication/application/types/GetList
 import GetUserProfileResponse from 'src/authentication/application/types/GetUserProfileResponse';
 import {resetNavigator} from 'src/core/presentation/navigation/actions/RootNavigationActions';
 import {STACK_NAVIGATOR} from 'src/core/presentation/navigation/ConstantNavigator';
+import {ComparePasswordPayload} from 'src/authentication/application/types/ComparePasswordPayload';
+import {ComparePasswordResponse} from 'src/authentication/application/types/ComparePasswordResponse';
+import {ChangeParentNamePayload} from 'src/authentication/application/types/ChangeParentNamePayload';
+import {ChangeParentNameResponse} from 'src/authentication/application/types/ChangeParentNameResponse';
 
 @injectable()
 class AuthenticationRepository implements IAuthenticationRepository {
@@ -99,6 +103,26 @@ class AuthenticationRepository implements IAuthenticationRepository {
   public async logOut(): Promise<void> {
     resetNavigator(STACK_NAVIGATOR.AUTH_NAVIGATOR);
     return;
+  }
+
+  public async comparePassword(
+    data: ComparePasswordPayload,
+  ): Promise<ComparePasswordResponse> {
+    const response: ComparePasswordResponse = await this.httpClient.post(
+      API_ENDPOINTS.USER.COMPARE_PASSWORD,
+      data,
+    );
+    return response;
+  }
+
+  public async changeParentName(
+    data: ChangeParentNamePayload,
+  ): Promise<ChangeParentNameResponse> {
+    const response: ChangeParentNameResponse = await this.httpClient.patch(
+      API_ENDPOINTS.USER.CHANGE_PARENT_NAME,
+      data,
+    );
+    return response;
   }
 }
 
