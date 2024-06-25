@@ -34,6 +34,21 @@ import {withProviders} from 'src/core/presentation/utils/withProviders';
 import {LessonStore} from '../stores/LessonStore/LessonStore';
 import {LessonStoreProvider} from '../stores/LessonStore/LessonStoreProvider';
 import {isAndroid} from 'src/core/presentation/utils';
+import useLoginWithCredentials from 'src/authentication/presentation/hooks/useLoginWithCredentials';
+import useAuthenticationStore from 'src/authentication/presentation/stores/useAuthenticationStore';
+import {
+  children,
+  data,
+} from 'src/authentication/application/types/GetUserProfileResponse';
+import ICAddChild from 'src/core/components/icons/ICAddChild';
+import {COLORS} from 'src/core/presentation/constants/colors';
+import ICManIconMedium from 'src/core/components/icons/ICManIconMedium';
+import {scale} from 'react-native-size-matters';
+import {resetNavigator} from 'src/core/presentation/navigation/actions/RootNavigationActions';
+import {STACK_NAVIGATOR} from 'src/core/presentation/navigation/ConstantNavigator';
+import {CustomTextStyle} from 'src/core/presentation/constants/typography';
+import AccountStatus from 'src/home/components/AccountStatus';
+import Username from '../components/Username';
 
 enum TabParentE {
   APP_BLOCK = 'App block',
@@ -67,6 +82,9 @@ const ParentScreen = observer(() => {
   const insets = useSafeAreaInsets();
   const globalStyle = useGlobalStyle();
   const lesson = useLessonStore();
+  const {getUserProfile, selectedChild, setSelectedChild} =
+    useAuthenticationStore();
+
   const [tabParent, setTabparent] = useState(TabParentE.APP_BLOCK);
 
   const tabsBlock = [
@@ -88,6 +106,31 @@ const ParentScreen = observer(() => {
   const [tabPurchase, setTabPurchase] = useState<string>(
     tabsPurchase[0]?.id ?? '',
   );
+  const [userProfile, setUserProfile] = useState<data>();
+  const [isChooseChildren, setIsChooseChildren] = useState<string>(
+    selectedChild?._id || '',
+  );
+
+  const onAddChild = () => {
+    resetNavigator(STACK_NAVIGATOR.AUTH.REGISTER_CHILD_SCREEN);
+  };
+
+  const onSelectChild = (item: children) => {
+    setIsChooseChildren(item._id);
+    setSelectedChild(item);
+    resetNavigator(STACK_NAVIGATOR.BOTTOM_TAB_SCREENS);
+  };
+
+  const handleGetUserProfile = useCallback(async () => {
+    const res = await getUserProfile();
+    if (res.data) {
+      setUserProfile(res.data);
+    }
+  }, [getUserProfile]);
+
+  useEffect(() => {
+    handleGetUserProfile();
+  }, [handleGetUserProfile]);
 
   const tabsBody = useMemo(() => {
     switch (tabParent) {
@@ -146,7 +189,7 @@ const ParentScreen = observer(() => {
                   }}
                   style={[styles.card]}>
                   <Text style={[globalStyle.txtButton, styles.textCard]}>
-                    Youtobe
+                    Youtube
                   </Text>
                   <IconArrowDown />
                 </TouchableOpacity>
@@ -252,27 +295,12 @@ const ParentScreen = observer(() => {
     <View style={[styles.fill, styles.bg, {paddingTop: insets.top}]}>
       <View style={[styles.head]}>
         <View style={[styles.rowBetween]}>
-          <TouchableOpacity style={[styles.btnLogout, styles.rowHCenter]}>
-            <IconLogout />
-            <Text style={[globalStyle.txtButton, styles.txtLogout]}>
-              Log out
-            </Text>
-          </TouchableOpacity>
-
-          <Price price="FREE" />
+          <AccountStatus isShowLogout={true} />
         </View>
         <View style={[styles.profile]}>
           <IconUser width={70} height={70} />
         </View>
-        <TouchableOpacity style={[styles.pt16, styles.rowHCenter]}>
-          <Text style={[globalStyle.txtLabel, styles.txtParentName]}>
-            Parent's Name
-          </Text>
-          <IconEdit />
-        </TouchableOpacity>
-        <Text style={[globalStyle.txtNote, styles.textColor]}>
-          Parent’s email
-        </Text>
+        <Username />
       </View>
       <BookView style={[styles.mt16, styles.fill]}>
         <ScrollView contentContainerStyle={[styles.bookContent]}>
@@ -323,29 +351,47 @@ const ParentScreen = observer(() => {
             <Text style={[globalStyle.txtLabel, styles.txtTitleBookTwo]}>
               Children accounts list
             </Text>
-            <View style={[styles.rowBetween, styles.rowHCenter]}>
-              <View style={[styles.arrowLeft]}>
-                <IconArrowFill />
+            <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+              <View style={styles.wrapAddChildContainer}>
+                {userProfile?.children.map((item: children) => {
+                  return (
+                    <View style={{alignItems: 'center', marginRight: scale(8)}}>
+                      <TouchableOpacity
+                        style={styles.addChildContainer}
+                        onPress={() => onSelectChild(item)}>
+                        <View
+                          style={[
+                            styles.addChildContent,
+                            isChooseChildren === item._id
+                              ? {backgroundColor: COLORS.GREEN_66C270}
+                              : {},
+                          ]}>
+                          <ICManIconMedium
+                            color={
+                              isChooseChildren === item._id
+                                ? COLORS.WHITE
+                                : COLORS.BLUE_1C6349
+                            }
+                          />
+                        </View>
+                      </TouchableOpacity>
+                      <Text style={styles.childrenName}>{item.name}</Text>
+                    </View>
+                  );
+                })}
               </View>
-              <View style={[styles.rowBetween, styles.fill]}>
-                {Array.from({length: 3}, (_, i) => i).map(i => (
-                  <ItemCard
-                    key={i}
-                    Icon={IconAddCircle}
-                    isFocus={i === 0}
-                    iconFocusColor="#F2B559"
-                    backgroundFocusColor="#FBF8CC"
-                    backgroundColor="#F2B559"
-                    borderWidth={3}
-                    space={4}
-                    size={85}
-                  />
-                ))}
-              </View>
-              <View style={[styles.arrowRight]}>
-                <IconArrowFill type="right" />
-              </View>
-            </View>
+              {userProfile?.children && userProfile?.children.length < 5 && (
+                <View style={styles.wrapAddChildContainer}>
+                  <View style={{alignItems: 'center'}}>
+                    <TouchableOpacity
+                      style={styles.addChildContainer}
+                      onPress={onAddChild}>
+                      <ICAddChild />
+                    </TouchableOpacity>
+                  </View>
+                </View>
+              )}
+            </ScrollView>
           </View>
           <View style={[styles.bodyContent, styles.rowBetween]}>
             <View style={[styles.fill, styles.mr16]}>
@@ -515,5 +561,30 @@ const styles = StyleSheet.create({
   textCard: {
     color: '#1C6349',
     marginRight: 4,
+  },
+  wrapAddChildContainer: {
+    flexDirection: 'row',
+    marginTop: scale(16),
+  },
+  addChildContainer: {
+    height: scale(88),
+    width: scale(88),
+    backgroundColor: COLORS.YELLOW_F2B559,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: scale(8),
+  },
+  addChildContent: {
+    height: scale(80),
+    width: scale(80),
+    backgroundColor: COLORS.WHITE_FBF8CC,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: scale(8),
+  },
+  childrenName: {
+    ...CustomTextStyle.caption,
+    color: COLORS.BLUE_1C6349,
+    marginTop: scale(4),
   },
 });

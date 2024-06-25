@@ -12,7 +12,7 @@ const HomeScreen = observer(() => {
     <Fragment>
       <SafeAreaView style={styles.container} edges={['top']}>
         <View style={styles.wrapContentContainer}>
-          <AccountStatus isShowLogout={true} />
+          <AccountStatus />
           <ListSubject />
         </View>
       </SafeAreaView>

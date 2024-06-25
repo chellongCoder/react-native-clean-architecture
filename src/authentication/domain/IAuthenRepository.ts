@@ -1,3 +1,7 @@
+import {ChangeParentNamePayload} from '../application/types/ChangeParentNamePayload';
+import {ChangeParentNameResponse} from '../application/types/ChangeParentNameResponse';
+import {ComparePasswordPayload} from '../application/types/ComparePasswordPayload';
+import {ComparePasswordResponse} from '../application/types/ComparePasswordResponse';
 import GetListSubjectResponse from '../application/types/GetListSubjectResponse';
 import GetUserProfileResponse from '../application/types/GetUserProfileResponse';
 import {LoginUsernamePasswordPayload} from '../application/types/LoginPayload';
@@ -28,4 +32,12 @@ export interface IAuthenticationRepository {
   getRefreshToken: (refreshToken: string) => Promise<RefreshTokenResponse>;
 
   logOut: () => Promise<void>;
+
+  comparePassword: (
+    data: ComparePasswordPayload,
+  ) => Promise<ComparePasswordResponse>;
+
+  changeParentName: (
+    data: ChangeParentNamePayload,
+  ) => Promise<ChangeParentNameResponse>;
 }

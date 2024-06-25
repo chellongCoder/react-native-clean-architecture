@@ -2,6 +2,7 @@ import {
   StyleProp,
   StyleSheet,
   Text,
+  TextStyle,
   TouchableOpacity,
   ViewStyle,
 } from 'react-native';
@@ -13,6 +14,7 @@ type Props = {
   style?: StyleProp<ViewStyle>;
   wrapContent?: boolean;
   onPress?: () => void;
+  textStyle?: StyleProp<TextStyle>;
 };
 
 const PrimaryButton = (props: Props) => {
@@ -24,7 +26,9 @@ const PrimaryButton = (props: Props) => {
     <TouchableOpacity
       style={[styles.button, {alignSelf: alignSelf}, props.style]}
       onPress={props.onPress}>
-      <Text style={[styles.text, commonStyle.txtButton]}>{props.text}</Text>
+      <Text style={[styles.text, commonStyle.txtButton, props.textStyle]}>
+        {props.text}
+      </Text>
     </TouchableOpacity>
   );
 };
