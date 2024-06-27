@@ -5,14 +5,16 @@ import IconBookBg from 'assets/svg/IconBookBg';
 const BookView = ({
   style,
   children,
+  colorBg,
 }: {
   style?: StyleProp<ViewStyle>;
   children: React.ReactNode;
+  colorBg?: string;
 }) => {
   return (
     <View style={[style]}>
       <View style={[styles.view]}>
-        <IconBookBg height={3000} />
+        <IconBookBg height={3000} color={colorBg} />
       </View>
       <View style={[styles.content]}>{children}</View>
     </View>
