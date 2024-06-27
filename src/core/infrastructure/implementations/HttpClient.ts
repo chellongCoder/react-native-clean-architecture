@@ -3,10 +3,14 @@ import {provided, injectable} from 'inversify-sugar';
 import IHttpClient from '../../domain/specifications/IHttpClient';
 import Env, {EnvToken} from 'src/core/domain/entities/Env';
 import {Credentials} from '../models/Crendentials';
+import {authenticationModuleContainer} from 'src/authentication/AuthenticationModule';
+import {AuthenticationStore} from 'src/authentication/presentation/stores/AuthenticationStore';
 
 @injectable()
 class HttpClient implements IHttpClient {
   private axios: typeof axios;
+  private isRefreshing = false;
+  private requestQueue: ((config: AxiosRequestConfig) => Promise<any>)[] = [];
 
   constructor(@provided(EnvToken) private readonly env: Env) {
     this.axios = axios;
@@ -28,14 +32,44 @@ class HttpClient implements IHttpClient {
 
     this.axios.interceptors.response.use(
       response => response,
-      err => {
-        if (err.response) {
-          if (err.response.status === 401 || err.response.status === 403) {
-            // TODO: logout
+      async error => {
+        const originalRequest = error.config;
+        const store =
+          authenticationModuleContainer.getProvided(AuthenticationStore);
+        const {getRefreshToken, handleUserLogOut, refreshToken} = store;
+
+        const isExpiredStatus =
+          error.response.status === 401 || error.response.status === 403;
+        if (error.response && !originalRequest._retry && isExpiredStatus) {
+          if (!this.isRefreshing) {
+            this.isRefreshing = true;
+            originalRequest._retry = true;
+
+            try {
+              const response = await getRefreshToken(refreshToken);
+              this.requestQueue.forEach(callback =>
+                callback({
+                  ...originalRequest,
+                  headers: {
+                    Authorization: `Bearer ${response.data.accessToken}`,
+                  },
+                }),
+              );
+              this.requestQueue = [];
+            } catch (err) {
+              handleUserLogOut();
+              return Promise.reject(err);
+            } finally {
+              this.isRefreshing = false;
+            }
           }
+
+          return this.requestQueue.push((config: AxiosRequestConfig) => {
+            return this.axios({...config});
+          });
         }
 
-        return Promise.reject(err);
+        return Promise.reject(error);
       },
     );
   }

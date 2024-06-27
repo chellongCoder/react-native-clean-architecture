@@ -4,6 +4,7 @@ import android.app.AppOpsManager
 import android.app.NotificationManager
 import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.content.pm.ApplicationInfo
 import android.content.pm.PackageInfo
 import android.content.pm.PackageManager
@@ -15,18 +16,27 @@ import com.facebook.react.bridge.Promise
 import com.facebook.react.bridge.ReactApplicationContext
 import com.facebook.react.bridge.ReactContextBaseJavaModule
 import com.facebook.react.bridge.ReactMethod
+import com.facebook.react.bridge.ReadableArray
+import com.facebook.react.bridge.ReadableType
 import com.facebook.react.bridge.WritableArray
-import java.io.File
 
 
 class AlphadexScreentimeModule(reactContext: ReactApplicationContext) : ReactContextBaseJavaModule(reactContext) {
   val SYSTEM_APP_MASK = ApplicationInfo.FLAG_SYSTEM or ApplicationInfo.FLAG_UPDATED_SYSTEM_APP
 
+  private var lockedAppList: List<ApplicationInfo> = emptyList()
+  private var saveAppData: SharedPreferences? = null
+  private var appInfo: List<ApplicationInfo>? = null
 
   override fun getName(): String {
 
     return NAME
   }
+
+  init {
+    saveAppData = reactContext.getSharedPreferences("save_app_data", Context.MODE_PRIVATE)
+  }
+
 
   // Example method
   // See https://reactnative.dev/docs/native-modules-android
@@ -115,7 +125,77 @@ class AlphadexScreentimeModule(reactContext: ReactApplicationContext) : ReactCon
     }
     promise.resolve(true)
   }
- 
+
+  @ReactMethod
+  fun addToLockedApps(array: ReadableArray, promise : Promise) {
+    lockedAppList = emptyList()
+//        val mContentView = RemoteViews(packageName, R.layout.list_view)
+    val applicationContext = reactApplicationContext.applicationContext
+    val packageManager = applicationContext.getPackageManager()
+    appInfo  = packageManager.getInstalledApplications(PackageManager.GET_META_DATA)
+
+    val arrayList = ArrayList<Map<String, *>>()
+
+    for (i in 0 until array.size()) {
+      when (array.getType(i)) {
+        ReadableType.Map -> {
+          val readableMap = array.getMap(i)
+          val map = readableMap.toHashMap()
+          arrayList.add(map)
+        }
+        else -> {
+          // Handle other types if necessary
+        }
+      }
+    }
+    val arr : ArrayList<Map<String,*>> = arrayList  as ArrayList<Map<String,*>>
+
+    for (element in arr){
+      run breaking@{
+        for (i in appInfo!!.indices){
+          if(appInfo!![i].packageName.toString() == element["package_name"].toString()){
+            val ogList = lockedAppList
+            lockedAppList = ogList + appInfo!![i]
+            return@breaking
+          }
+        }
+      }
+    }
+
+
+    var packageData:List<String> = emptyList()
+
+    for(element in lockedAppList){
+      val ogList = packageData
+      packageData = ogList + element.packageName
+    }
+
+    val editor: SharedPreferences.Editor =  saveAppData!!.edit()
+    editor.remove("app_data")
+    editor.putString("app_data", "$packageData")
+    editor.apply()
+
+    startForegroundService()
+  }
+
+  private fun setIfServiceClosed(data:String){
+    val editor: SharedPreferences.Editor =  saveAppData!!.edit()
+    editor.putString("is_stopped",data)
+    editor.apply()
+  }
+
+  private fun startForegroundService() {
+    if (Settings.canDrawOverlays(reactApplicationContext)) {
+      setIfServiceClosed("1")
+      val serviceIntent = Intent(reactApplicationContext, ForegroundService::class.java)
+      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+        reactApplicationContext.startForegroundService(serviceIntent)
+      } else {
+        reactApplicationContext.startService(serviceIntent)
+      }
+    }
+  }
+
   @ReactMethod
   fun getInstalledApps(includeSystemApps: Boolean, includeAppIcons: Boolean, onlyAppsWithLaunchIntent: Boolean, promise: Promise) {
     val applicationContext = reactApplicationContext.applicationContext

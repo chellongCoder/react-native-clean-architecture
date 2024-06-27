@@ -13,8 +13,9 @@ import {
   ViewStyle,
   InputModeOptions,
 } from 'react-native';
-import React, {useEffect, useRef, useState} from 'react';
+import React, {Dispatch, useEffect, useRef, useState} from 'react';
 import useGlobalStyle from 'src/core/presentation/hooks/useGlobalStyle';
+import Dropdown from 'react-native-dropdown-picker';
 
 type Props = {
   textInputProp?: TextInputProps;
@@ -23,6 +24,24 @@ type Props = {
   suffiex?: React.ReactNode;
   contentContainerStyle?: StyleProp<ViewStyle>;
   inputMode?: InputModeOptions;
+};
+
+export type ItemType = {
+  label: string | number;
+  value: string | number;
+};
+
+type SetStateValue<S> = (prevState: S) => S;
+type SetStateCallback<S> = (prevState: S) => S;
+
+type DropDownProps = {
+  label: string;
+  open: boolean;
+  items: ItemType[];
+  value: string | number;
+  setOpen: Dispatch<SetStateValue<boolean>>;
+  setValue: Dispatch<SetStateCallback<any>>;
+  setItems: Dispatch<SetStateCallback<any[]>>;
 };
 
 const CommonInput = (props: Props) => {
@@ -125,6 +144,29 @@ export const CommonInputPassword = (props: Props) => {
   );
 };
 
+export const CommonDropDown = (props: DropDownProps) => {
+  const {label, open, value, items, setOpen, setValue, setItems} = props;
+  const commonStyle = useGlobalStyle();
+
+  return (
+    <View style={{flex: 0.4, marginBottom: 32}}>
+      <Text style={[commonStyle.txtLabel, styles.txtLabel]}>{label}</Text>
+      <Dropdown
+        open={open}
+        value={value}
+        items={items}
+        setOpen={setOpen}
+        setValue={setValue}
+        setItems={setItems}
+        style={[styles.boxInput, {borderWidth: 0}]}
+        dropDownContainerStyle={styles.dropDownContainerStyle}
+        zIndex={3000}
+        zIndexInverse={1000}
+      />
+    </View>
+  );
+};
+
 export default CommonInput;
 
 const styles = StyleSheet.create({
@@ -170,5 +212,9 @@ const styles = StyleSheet.create({
   rowAround: {
     flexDirection: 'row',
     justifyContent: 'space-around',
+  },
+  dropDownContainerStyle: {
+    backgroundColor: '#DDF598',
+    borderWidth: 0,
   },
 });

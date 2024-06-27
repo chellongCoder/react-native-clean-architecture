@@ -1,3 +1,4 @@
+import React, {useCallback} from 'react';
 import {
   KeyboardAvoidingView,
   Platform,
@@ -6,26 +7,26 @@ import {
   Text,
   View,
 } from 'react-native';
-import React from 'react';
+import {observer} from 'mobx-react';
 import useGlobalStyle from 'src/core/presentation/hooks/useGlobalStyle';
 import CommonInput, {CommonInputPassword} from '../components/CommonInput';
 import PrimaryButton from '../components/PrimaryButton';
-import {observer} from 'mobx-react';
 import {goBack} from 'src/core/presentation/navigation/actions/RootNavigationActions';
 import useLoginWithCredentials from '../hooks/useLoginWithCredentials';
 import useAuthenticationStore from '../stores/useAuthenticationStore';
 import {useLoadingGlobal} from 'src/core/presentation/hooks/loading/useLoadingGlobal';
-import {RegisterPayload} from 'src/authentication/application/types/RegisterPayload';
 import useStateCustom from 'src/hooks/useStateCommon';
 import {CustomTextStyle} from 'src/core/presentation/constants/typography';
 import {COLORS} from 'src/core/presentation/constants/colors';
+import {RegisterPayload} from 'src/authentication/application/types/RegisterPayload';
 
-type TRegisterError = {
+interface TRegisterError {
   emailOrPhoneError?: string;
   userNameError?: string;
   passwordError?: string;
   confirmPasswordError?: string;
-};
+}
+
 interface TRegister {
   emailOrPhone?: string;
   userName?: string;
@@ -35,42 +36,44 @@ interface TRegister {
   isFormFilled?: boolean;
 }
 
-const RegisterScreen = observer(() => {
+const initialRegisterState: TRegister = {
+  emailOrPhone: '',
+  userName: '',
+  password: '',
+  confirmPassword: '',
+  error: undefined,
+  isFormFilled: false,
+};
+
+const RegisterScreen: React.FC = observer(() => {
   const commonStyle = useGlobalStyle();
   const {handleRegister} = useLoginWithCredentials();
   const {isLoading} = useAuthenticationStore();
   useLoadingGlobal(isLoading);
 
-  const [registerState, setRegisterState] = useStateCustom<TRegister>({
-    emailOrPhone: '',
-    userName: '',
-    password: '',
-    confirmPassword: '',
-    error: undefined,
-    isFormFilled: false,
-  });
+  const [registerState, setRegisterState] =
+    useStateCustom<TRegister>(initialRegisterState);
 
-  const validateFields = (key: string, value: string) => {
-    const updatedState = {
-      ...registerState,
-      [key]: value,
-    };
+  const validateEmailOrPhone = (value: string): string | undefined => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const phoneRegex = /^\d+$/;
 
-    const {emailOrPhone, userName, password, confirmPassword} = updatedState;
+    if (value[0] >= '0' && value[0] <= '9') {
+      return phoneRegex.test(value) ? undefined : 'Invalid phone number format';
+    } else {
+      return emailRegex.test(value) ? undefined : 'Invalid email format';
+    }
+  };
+
+  const validateFields = useCallback(async (): Promise<boolean> => {
+    const {emailOrPhone, userName, password, confirmPassword} = registerState;
     const errors: TRegisterError = {};
 
-    if (!emailOrPhone) {
-      errors.emailOrPhoneError = 'Email or phone number is required';
-    } else {
-      errors.emailOrPhoneError = '';
-    }
+    errors.emailOrPhoneError = emailOrPhone
+      ? validateEmailOrPhone(emailOrPhone)
+      : 'Email or phone number is required';
 
-    if (!userName) {
-      errors.userNameError = 'User Name is required';
-    } else {
-      errors.userNameError = '';
-    }
-
+    errors.userNameError = userName ? '' : 'User Name is required';
     if (!password) {
       errors.passwordError = 'Password is required';
     } else if (!confirmPassword) {
@@ -84,22 +87,23 @@ const RegisterScreen = observer(() => {
       errors.confirmPasswordError = '';
     }
 
-    const isFilled = Object.values(updatedState).every(val => val !== '');
+    const isFormFilled = [
+      emailOrPhone,
+      userName,
+      password,
+      confirmPassword,
+    ].every(Boolean);
     setRegisterState({
-      ...updatedState,
-      error: Object.keys(errors).length > 0 ? errors : undefined,
-      isFormFilled: isFilled,
+      error: Object.keys(errors).length ? errors : undefined,
+      isFormFilled,
     });
 
     return Object.values(errors).every(error => !error);
-  };
+  }, [registerState, setRegisterState]);
 
-  const onRegister = () => {
-    if (
-      registerState.error &&
-      registerState.isFormFilled &&
-      Object.values(registerState.error).every(error => error === '')
-    ) {
+  const onRegister = useCallback(async (): Promise<void> => {
+    const isValid = await validateFields();
+    if (isValid) {
       const params: RegisterPayload = {
         emailOrPhoneNumber: registerState.emailOrPhone?.toLowerCase() || '',
         username: registerState.userName?.toLowerCase() || '',
@@ -112,23 +116,35 @@ const RegisterScreen = observer(() => {
       };
       handleRegister(params);
     }
-  };
+  }, [
+    validateFields,
+    registerState.emailOrPhone,
+    registerState.userName,
+    registerState.password,
+    registerState.confirmPassword,
+    handleRegister,
+  ]);
 
-  const onTextInputChange = (key: string, value: string) => {
-    setRegisterState({
-      [key]: value,
-    });
-    validateFields(key, value);
-  };
+  const onTextInputChange = useCallback(
+    (key: string, value: string): void => {
+      setRegisterState({
+        [key]: value,
+        error: {
+          ...registerState.error,
+          [`${key}Error`]: undefined,
+        },
+      });
+    },
+    [registerState.error, setRegisterState],
+  );
 
   return (
-    <View style={[styles.container]}>
-      <ScrollView contentContainerStyle={[styles.fill]}>
-        <View style={[styles.boxLang]}>
+    <View style={styles.container}>
+      <ScrollView contentContainerStyle={styles.fill}>
+        <View style={styles.boxLang}>
           <Text style={[commonStyle.txtLabel, styles.ph16]}>Eng</Text>
-          <View style={[styles.arrowIcon]} />
+          <View style={styles.arrowIcon} />
         </View>
-
         <KeyboardAvoidingView
           style={[styles.fill, styles.justifyCenter]}
           behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
@@ -137,39 +153,31 @@ const RegisterScreen = observer(() => {
             textInputProp={{
               placeholder: 'Enter email or phone number',
               value: registerState.emailOrPhone,
-              onChangeText: (e: string) => {
-                onTextInputChange('emailOrPhone', e);
-              },
+              onChangeText: (e: string) => onTextInputChange('emailOrPhone', e),
             }}
             suffiex={
-              registerState.error &&
-              registerState.error.emailOrPhoneError && (
+              registerState.error?.emailOrPhoneError && (
                 <Text style={styles.errorMsg}>
-                  *{registerState.error?.emailOrPhoneError}
+                  *{registerState.error.emailOrPhoneError}
                 </Text>
               )
             }
           />
-
           <CommonInput
             label="User Name"
             textInputProp={{
               placeholder: 'Enter name',
               value: registerState.userName,
-              onChangeText: (e: string) => {
-                onTextInputChange('userName', e);
-              },
+              onChangeText: (e: string) => onTextInputChange('userName', e),
             }}
             suffiex={
-              registerState.error &&
-              registerState.error.userNameError && (
+              registerState.error?.userNameError && (
                 <Text style={styles.errorMsg}>
-                  *{registerState.error?.userNameError}
+                  *{registerState.error.userNameError}
                 </Text>
               )
             }
           />
-
           <CommonInputPassword
             label="Enter password"
             textInputProp={{
@@ -177,15 +185,13 @@ const RegisterScreen = observer(() => {
               onChangeText: (e: string) => onTextInputChange('password', e),
             }}
             suffiex={
-              registerState.error &&
-              registerState.error.passwordError && (
+              registerState.error?.passwordError && (
                 <Text style={styles.errorMsg}>
-                  *{registerState.error?.passwordError}
+                  *{registerState.error.passwordError}
                 </Text>
               )
             }
           />
-
           <CommonInputPassword
             label="Confirm password"
             textInputProp={{
@@ -194,35 +200,22 @@ const RegisterScreen = observer(() => {
                 onTextInputChange('confirmPassword', e),
             }}
             suffiex={
-              registerState.error &&
-              registerState.error.confirmPasswordError && (
+              registerState.error?.confirmPasswordError && (
                 <Text style={styles.errorMsg}>
-                  *{registerState.error?.confirmPasswordError}
+                  *{registerState.error.confirmPasswordError}
                 </Text>
               )
             }
           />
         </KeyboardAvoidingView>
-
-        <View style={[styles.rowAround]}>
+        <View style={styles.rowAround}>
           <PrimaryButton text="Log in" onPress={goBack} />
-          <PrimaryButton
-            text="Next"
-            onPress={onRegister}
-            disabled={
-              registerState.error &&
-              Object.values(registerState.error).some(
-                error => !!error && error.length > 0,
-              )
-            }
-          />
+          <PrimaryButton text="Next" onPress={onRegister} />
         </View>
       </ScrollView>
     </View>
   );
 });
-
-export default RegisterScreen;
 
 const styles = StyleSheet.create({
   fill: {
@@ -263,3 +256,5 @@ const styles = StyleSheet.create({
     color: COLORS.ERROR,
   },
 });
+
+export default RegisterScreen;

@@ -112,3 +112,13 @@ export function requestPushNotificationPermission(): Promise<boolean> {
 export function checkAndRequestNotificationPermission(): Promise<boolean> {
   return AlphadexScreentime.checkAndRequestNotificationPermission();
 }
+
+export function addToLockedApps(
+  arr: {
+    app_name: string;
+    package_name: string;
+    file_path: string;
+  }[]
+): Promise<boolean> {
+  return AlphadexScreentime.addToLockedApps(arr);
+}

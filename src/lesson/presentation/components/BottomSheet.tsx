@@ -1,5 +1,5 @@
 import React, {forwardRef, useCallback} from 'react';
-import {Text, StyleSheet, View} from 'react-native';
+import {Text, StyleSheet, View, TouchableOpacity} from 'react-native';
 import BottomSheet, {
   BottomSheetBackdrop,
   BottomSheetBackdropProps,
@@ -23,6 +23,7 @@ type Props = {
     | undefined;
   backgroundColor?: string;
   onBackdropPress?: () => void;
+  onDone?: () => void;
 } & BottomSheetProps;
 
 const BottomSheetCustom = forwardRef<BottomSheet, Props>(
@@ -70,6 +71,13 @@ const BottomSheetCustom = forwardRef<BottomSheet, Props>(
         {title && (
           <View style={[styles.pb8]}>
             <Text style={[globalStyle.txtLabel, styles.txtTitle]}>{title}</Text>
+            {other.onDone && (
+              <TouchableOpacity onPress={other.onDone}>
+                <Text style={[globalStyle.txtLabel, styles.txtTitle]}>
+                  {'Done'}
+                </Text>
+              </TouchableOpacity>
+            )}
           </View>
         )}
         <BottomSheetScrollView style={[styles.contentContainer]}>
@@ -91,7 +99,9 @@ const styles = StyleSheet.create({
   },
   pb8: {
     paddingVertical: verticalScale(12),
-    paddingLeft: scale(10),
+    paddingHorizontal: scale(10),
+    flexDirection: 'row',
+    justifyContent: 'space-between',
   },
   handleStyle: {
     backgroundColor: 'transparent',

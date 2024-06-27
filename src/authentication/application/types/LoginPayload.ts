@@ -15,3 +15,7 @@ export interface LoginWithGooglePayload {
   accessToken: string | null;
   provider: SocialName;
 }
+
+export interface RefreshTokenPayload {
+  refreshToken: string;
+}

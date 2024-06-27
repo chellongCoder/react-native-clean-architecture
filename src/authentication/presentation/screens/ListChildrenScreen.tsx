@@ -29,8 +29,12 @@ import {
 const screenWidth = Dimensions.get('screen').width;
 
 const ListChildrenScreen = () => {
-  const {removeCurrentCredentials, isLoading, getUserProfile} =
-    useAuthenticationStore();
+  const {
+    removeCurrentCredentials,
+    isLoading,
+    getUserProfile,
+    setSelectedChild,
+  } = useAuthenticationStore();
   useLoadingGlobal(isLoading);
 
   const [userProfile, setUserProfile] = useState<data>();
@@ -47,6 +51,7 @@ const ListChildrenScreen = () => {
 
   const onSelectChild = (item: children) => {
     setIsChooseChildren(item._id);
+    setSelectedChild(item);
   };
 
   const onEnter = () => {
@@ -94,7 +99,7 @@ const ListChildrenScreen = () => {
 
         <View>
           <Text style={styles.bottomTitle}>Children account</Text>
-          <ScrollView horizontal>
+          <ScrollView horizontal showsHorizontalScrollIndicator={false}>
             <View style={styles.wrapAddChildContainer}>
               {userProfile?.children.map((item: children) => {
                 return (

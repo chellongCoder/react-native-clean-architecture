@@ -6,7 +6,9 @@ import IHttpClient, {
 } from 'src/core/domain/specifications/IHttpClient';
 import {API_ENDPOINTS} from 'src/core/presentation/constants/apiEndpoints';
 import {IAuthenticationRepository} from 'src/authentication/domain/IAuthenRepository';
-import LoginResponse from 'src/authentication/application/types/LoginResponse';
+import LoginResponse, {
+  RefreshTokenResponse,
+} from 'src/authentication/application/types/LoginResponse';
 import {LoginUsernamePasswordPayload} from 'src/authentication/application/types/LoginPayload';
 import {RegisterPayload} from 'src/authentication/application/types/RegisterPayload';
 import RegisterResponse from 'src/authentication/application/types/RegisterResponse';
@@ -14,6 +16,12 @@ import {RegisterChildPayload} from 'src/authentication/application/types/Registe
 import RegisterChildResponse from 'src/authentication/application/types/RegisterChildResponse';
 import GetListSubjectResponse from 'src/authentication/application/types/GetListSubjectResponse';
 import GetUserProfileResponse from 'src/authentication/application/types/GetUserProfileResponse';
+import {resetNavigator} from 'src/core/presentation/navigation/actions/RootNavigationActions';
+import {STACK_NAVIGATOR} from 'src/core/presentation/navigation/ConstantNavigator';
+import {ComparePasswordPayload} from 'src/authentication/application/types/ComparePasswordPayload';
+import {ComparePasswordResponse} from 'src/authentication/application/types/ComparePasswordResponse';
+import {ChangeParentNamePayload} from 'src/authentication/application/types/ChangeParentNamePayload';
+import {ChangeParentNameResponse} from 'src/authentication/application/types/ChangeParentNameResponse';
 
 @injectable()
 class AuthenticationRepository implements IAuthenticationRepository {
@@ -78,5 +86,44 @@ class AuthenticationRepository implements IAuthenticationRepository {
     );
     return response;
   }
+
+  public async getRefreshToken(
+    refreshToken: string,
+  ): Promise<RefreshTokenResponse> {
+    const params = {
+      refreshToken: refreshToken,
+    };
+    const response: RefreshTokenResponse = await this.httpClient.post(
+      API_ENDPOINTS.AUTHENTICATION.REFRESH_TOKEN,
+      params,
+    );
+    return response;
+  }
+
+  public async logOut(): Promise<void> {
+    resetNavigator(STACK_NAVIGATOR.AUTH_NAVIGATOR);
+    return;
+  }
+
+  public async comparePassword(
+    data: ComparePasswordPayload,
+  ): Promise<ComparePasswordResponse> {
+    const response: ComparePasswordResponse = await this.httpClient.post(
+      API_ENDPOINTS.USER.COMPARE_PASSWORD,
+      data,
+    );
+    return response;
+  }
+
+  public async changeParentName(
+    data: ChangeParentNamePayload,
+  ): Promise<ChangeParentNameResponse> {
+    const response: ChangeParentNameResponse = await this.httpClient.patch(
+      API_ENDPOINTS.USER.CHANGE_PARENT_NAME,
+      data,
+    );
+    return response;
+  }
 }
+
 export default AuthenticationRepository;

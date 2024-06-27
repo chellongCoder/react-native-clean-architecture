@@ -3,6 +3,7 @@ export default interface AuthenticationEntity {
   code: number;
   data: {
     accessToken: string;
+    refreshToken: string;
   };
   error?: {
     code: number;

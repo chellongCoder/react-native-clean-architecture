@@ -7,7 +7,6 @@ import BottomTabBar from './BottomTabBar';
 import {STACK_NAVIGATOR} from '../ConstantNavigator';
 import {
   HomeStackScreens,
-  TargetStackScreens,
   ParentStackScreens,
   ChildStackScreens,
   AchievementStackScreens,
