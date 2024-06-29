@@ -23,14 +23,10 @@ export default function TabNavigator(): React.ReactElement {
   return (
     <BottomTab.Navigator
       tabBar={customTabBar}
+      initialRouteName={STACK_NAVIGATOR.BOTTOM_TAB.HOME_TAB}
       screenOptions={{
         headerShown: false,
       }}>
-      <BottomTab.Screen
-        name={STACK_NAVIGATOR.BOTTOM_TAB.HOME_TAB}
-        key={STACK_NAVIGATOR.BOTTOM_TAB.HOME_TAB}
-        component={HomeStackScreens}
-      />
       <BottomTab.Screen
         name={STACK_NAVIGATOR.BOTTOM_TAB.TARGET_TAB}
         key={STACK_NAVIGATOR.BOTTOM_TAB.TARGET_TAB}
@@ -40,6 +36,11 @@ export default function TabNavigator(): React.ReactElement {
         name={STACK_NAVIGATOR.BOTTOM_TAB.PARENT_TAB}
         key={STACK_NAVIGATOR.BOTTOM_TAB.PARENT_TAB}
         component={ParentStackScreens}
+      />
+      <BottomTab.Screen
+        name={STACK_NAVIGATOR.BOTTOM_TAB.HOME_TAB}
+        key={STACK_NAVIGATOR.BOTTOM_TAB.HOME_TAB}
+        component={HomeStackScreens}
       />
       <BottomTab.Screen
         name={STACK_NAVIGATOR.BOTTOM_TAB.CHILD_TAB}
