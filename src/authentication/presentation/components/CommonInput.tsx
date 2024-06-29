@@ -19,6 +19,7 @@ type Props = {
   inputStyle?: StyleProp<TextStyle>;
   label?: string;
   suffiex?: React.ReactNode;
+  autofocus?: boolean;
 };
 
 const CommonInput = (props: Props) => {
@@ -120,6 +121,8 @@ export const CommonInputPassword = (props: Props) => {
                   maxLength={1}
                   onKeyPress={e => handleKeyPress(e, i)}
                   secureTextEntry
+                  autoFocus={props.autofocus && i === 0}
+                  keyboardType={'number-pad'}
                 />
               </View>
             );

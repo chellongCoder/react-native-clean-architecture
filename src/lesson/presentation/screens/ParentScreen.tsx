@@ -37,7 +37,7 @@ import {
 import ICAddChild from 'src/core/components/icons/ICAddChild';
 import {COLORS} from 'src/core/presentation/constants/colors';
 import ICManIconMedium from 'src/core/components/icons/ICManIconMedium';
-import {scale} from 'react-native-size-matters';
+import {scale, verticalScale} from 'react-native-size-matters';
 import {resetNavigator} from 'src/core/presentation/navigation/actions/RootNavigationActions';
 import {STACK_NAVIGATOR} from 'src/core/presentation/navigation/ConstantNavigator';
 import {CustomTextStyle} from 'src/core/presentation/constants/typography';
@@ -45,6 +45,7 @@ import AccountStatus from 'src/home/components/AccountStatus';
 import Username from '../components/Username';
 import {useLoadingGlobal} from 'src/core/presentation/hooks/loading/useLoadingGlobal';
 import {useAsyncEffect} from 'src/core/presentation/hooks';
+import SelectApp from '../components/LessonModule/SelectApp';
 
 enum TabParentE {
   APP_BLOCK = 'App block',
@@ -190,17 +191,10 @@ const ParentScreen = observer(() => {
                 <Text style={[globalStyle.txtButton, styles.textColor]}>
                   App to lock
                 </Text>
-                <TouchableOpacity
-                  onPress={async () => {
-                    await lesson.changeListAppSystem();
-                    lesson.onShowSheetApps();
-                  }}
-                  style={[styles.card]}>
-                  <Text style={[globalStyle.txtButton, styles.textCard]}>
-                    {tabBody.trim() !== '' ? tabBody : 'select apps'}
-                  </Text>
-                  <IconArrowDown />
-                </TouchableOpacity>
+
+                <SelectApp
+                  appName={tabBody.trim() !== '' ? tabBody : 'select apps'}
+                />
               </View>
               <View style={[]}>
                 <Text style={[globalStyle.txtButton, styles.textColor]}>
@@ -296,7 +290,6 @@ const ParentScreen = observer(() => {
     globalStyle.txtNote,
     globalStyle.txtButton,
     tabBody,
-    lesson,
     tabSetting,
   ]);
 
@@ -571,16 +564,16 @@ const styles = StyleSheet.create({
     backgroundColor: '#F28759',
   },
   card: {
-    paddingVertical: 8,
-    borderRadius: 20,
-    paddingHorizontal: 8,
+    paddingVertical: verticalScale(8),
+    borderRadius: scale(20),
+    paddingHorizontal: scale(8),
     flexDirection: 'row',
     alignItems: 'center',
     backgroundColor: '#FFE699',
     alignSelf: 'flex-start',
-    marginRight: 8,
-    marginTop: 6,
-    marginBottom: 12,
+    marginRight: scale(8),
+    marginTop: verticalScale(6),
+    marginBottom: verticalScale(12),
   },
   textCard: {
     color: '#1C6349',

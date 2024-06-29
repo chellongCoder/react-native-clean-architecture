@@ -61,6 +61,7 @@ const AuthParentScreen = () => {
               value: password,
               onChangeText: setPassword,
             }}
+            autofocus
             suffiex={error && <Text style={styles.errorMsg}>*{error}</Text>}
           />
 

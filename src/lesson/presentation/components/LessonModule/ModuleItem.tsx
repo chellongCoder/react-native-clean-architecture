@@ -6,7 +6,7 @@ import {COLORS} from 'src/core/presentation/constants/colors';
 import Button from './Button';
 import {scale, verticalScale} from 'react-native-size-matters';
 import {
-  ScreenTimeComponent,
+  // ScreenTimeComponent,
   requestScreenTime,
   selectedAppsData,
   unBlockApps,
@@ -57,25 +57,25 @@ const ModuleItem = (props: Props) => {
       <View style={styles.buttonContainer}>
         <TouchableOpacity
           onPress={async () => {
-            // selectedAppsData().then(apps => {
-            //   console.log(
-            //     '🛠 LOG: 🚀 --> -------------------------------------------🛠 LOG: 🚀 -->',
-            //   );
-            //   console.log('🛠 LOG: 🚀 --> ~ onDoHomework ~ apps:', apps);
-            //   console.log(
-            //     '🛠 LOG: 🚀 --> -------------------------------------------🛠 LOG: 🚀 -->',
-            //   );
-            // });
-            console.log('isloading true');
-            await unBlockApps();
-            console.log('isloading false');
+            selectedAppsData().then(apps => {
+              console.log(
+                '🛠 LOG: 🚀 --> -------------------------------------------🛠 LOG: 🚀 -->',
+              );
+              console.log('🛠 LOG: 🚀 --> ~ onDoHomework ~ apps:', apps);
+              console.log(
+                '🛠 LOG: 🚀 --> -------------------------------------------🛠 LOG: 🚀 -->',
+              );
+            });
+            // console.log('isloading true');
+            // await unBlockApps();
+            // console.log('isloading false');
           }}>
           <Text style={[styles.title, globalStyle.txtLabel]}>10/10</Text>
         </TouchableOpacity>
         <View style={{height: verticalScale(14)}} />
         {/* <Button color={COLORS.GREEN_66C270} title="Study" /> */}
         <View>
-          <ScreenTimeComponent
+          {/* <ScreenTimeComponent
             onChangeBlock={e => {
               console.log(
                 '🛠 LOG: 🚀 --> -----------------------------------🛠 LOG: 🚀 -->',
@@ -90,7 +90,7 @@ const ModuleItem = (props: Props) => {
             <Text style={[globalStyle.txtButton, {color: COLORS.WHITE}]}>
               {'study'}
             </Text>
-          </ScreenTimeComponent>
+          </ScreenTimeComponent> */}
         </View>
       </View>
     </View>
