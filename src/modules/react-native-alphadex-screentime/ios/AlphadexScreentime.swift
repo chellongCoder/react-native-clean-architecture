@@ -159,10 +159,10 @@ class ScreenTimeSelectAppsModel: RCTEventEmitter, ObservableObject {
         store.shield.applicationCategories = ShieldSettings.ActivityCategoryPolicy.specific(unwrapped.categoryTokens)
         store.shield.applications = unwrapped.applicationTokens
         userDefaults.set(true, forKey:"blocked")
-        onChangeBlock?(["isBlocked": true])
+
         if #available(iOS 16.2, *) {
           do {
-            let activity = try Activity.request(
+            _ = try Activity.request(
                 attributes: screentimewidgetAttributes(name: "Text1"),
                 content: .init(state: screentimewidgetAttributes.ContentState(emoji: "Blocked"), staleDate: nil),
                 pushType: .token

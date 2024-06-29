@@ -1,10 +1,13 @@
 import BottomSheet from '@gorhom/bottom-sheet/lib/typescript/components/bottomSheet/BottomSheet';
 import {BottomSheetMethods} from '@gorhom/bottom-sheet/lib/typescript/types';
 import {injectable, provided} from 'inversify-sugar';
-import {action, makeAutoObservable, runInAction} from 'mobx';
+import {action, makeAutoObservable, observable, runInAction} from 'mobx';
 import React, {RefObject} from 'react';
 import {AppEntity} from 'src/modules/react-native-alphadex-screentime/src/entities/AppEntity';
-import {getInstalledApps} from 'react-native-alphadex-screentime';
+import {
+  FamilyActivitySelection,
+  getInstalledApps,
+} from 'react-native-alphadex-screentime';
 
 @injectable()
 export class LessonStore {
@@ -16,6 +19,8 @@ export class LessonStore {
   listAppsSystem: AppEntity[] = [];
 
   blockedListAppsSystem: AppEntity[] = [];
+
+  @observable blockedAnonymousListAppsSystem?: FamilyActivitySelection;
 
   passwordParent?: string;
 
@@ -79,5 +84,12 @@ export class LessonStore {
   @action
   changeBlockedListAppSystem = async (arr: AppEntity[]) => {
     this.blockedListAppsSystem = arr;
+  };
+
+  @action
+  changeBlockedAnonymousListAppSystem = async (
+    arr: FamilyActivitySelection,
+  ) => {
+    this.blockedAnonymousListAppsSystem = arr;
   };
 }

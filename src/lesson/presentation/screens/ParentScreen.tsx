@@ -46,6 +46,8 @@ import Username from '../components/Username';
 import {useLoadingGlobal} from 'src/core/presentation/hooks/loading/useLoadingGlobal';
 import {useAsyncEffect} from 'src/core/presentation/hooks';
 import SelectApp from '../components/LessonModule/SelectApp';
+import {isAndroid} from 'src/core/presentation/utils';
+import ListBlockedApps from '../components/LessonModule/ListBlockedApps';
 
 enum TabParentE {
   APP_BLOCK = 'App block',
@@ -87,14 +89,31 @@ const ParentScreen = observer(() => {
   const [tabParent, setTabparent] = useState(TabParentE.APP_BLOCK);
 
   const tabsBlock = useMemo(() => {
-    return lesson.blockedListAppsSystem.map(app => {
-      return {
-        id: app.package_name,
-        name: app.app_name,
-        icon: app.app_icon,
-      };
-    });
-  }, [lesson.blockedListAppsSystem]);
+    if (isAndroid) {
+      return lesson.blockedListAppsSystem.map(app => {
+        return {
+          id: app.package_name,
+          name: app.app_name,
+          icon: app.app_icon,
+        };
+      });
+    } else {
+      return (
+        lesson.blockedAnonymousListAppsSystem?.applicationTokens?.map(
+          (app, i) => {
+            return {
+              id: 'app.package_name',
+              name: `A ${i + 1}`,
+              icon: 'no_icon',
+            };
+          },
+        ) ?? []
+      );
+    }
+  }, [
+    lesson.blockedAnonymousListAppsSystem?.applicationTokens,
+    lesson.blockedListAppsSystem,
+  ]);
 
   const tabsPurchase = [
     {id: '4', name: '???.000 vnd', icon: IconDiamond},
@@ -321,45 +340,12 @@ const ParentScreen = observer(() => {
             <Text style={[globalStyle.txtLabel, styles.txtTitleBook]}>
               {tabParent}
             </Text>
-            <View style={[styles.rowBetween, styles.rowHCenter]}>
-              <View style={[styles.arrowLeft]}>
-                <IconArrowFill />
-              </View>
-              <View style={[styles.rowHCenter, styles.fill]}>
-                {tabsBody.length ? (
-                  tabsBody.map(t => (
-                    <>
-                      <ItemCard
-                        key={t.id}
-                        Icon={t.icon}
-                        isFocus={tabBody === t.name}
-                        name={t.name}
-                        onPress={() => setTabBody(t.name)}
-                        iconFocusColor="#F2B559"
-                        backgroundFocusColor="#FBF8CC"
-                        borderWidth={3}
-                        space={4}
-                        size={85}
-                      />
-                      <View style={{width: scale(10)}} />
-                    </>
-                  ))
-                ) : (
-                  <View
-                    style={{
-                      width: '100%',
-                      alignItems: 'center',
-                    }}>
-                    <Text style={[globalStyle.txtNote, {color: COLORS.WHITE}]}>
-                      No blocked apps!
-                    </Text>
-                  </View>
-                )}
-              </View>
-              <View style={[styles.arrowRight]}>
-                <IconArrowFill type="right" />
-              </View>
-            </View>
+
+            <ListBlockedApps
+              setTabBody={setTabBody}
+              setSelectedApp={tabBody}
+              listApp={tabsBody}
+            />
           </View>
           <View style={[styles.bodyContent, styles.rowBetween]}>
             {buildBodyContent}

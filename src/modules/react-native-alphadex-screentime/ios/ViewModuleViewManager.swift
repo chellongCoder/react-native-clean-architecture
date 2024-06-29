@@ -36,12 +36,18 @@ class ViewModuleView : UIView {
   func saveSelection(selection: FamilyActivitySelection) {
     let defaults = UserDefaults.init(suiteName: "group.com.hisoft.tbd.app")!
 
-    defaults.set(
-        try? encoder.encode(selection),
-        forKey: userDefaultsKey
-    )
-    self.onChangeBlock?(["isBlocked": true])
+    do {
+        let jsonData = try encoder.encode(selection)
+        defaults.set(
+            jsonData,
+            forKey: userDefaultsKey
+        )
+        let json = String(data: jsonData, encoding: String.Encoding.utf8)
 
+      onChangeBlock?(["isBlocked": true, "blockedApps": json ?? "[]"])
+    } catch {
+      onChangeBlock?(["isBlocked": true])
+    }
   }
 
   func savedSelection() -> FamilyActivitySelection? {

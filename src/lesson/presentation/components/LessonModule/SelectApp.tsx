@@ -1,30 +1,29 @@
 import {StyleSheet, Text} from 'react-native';
 import React from 'react';
 import useGlobalStyle from 'src/core/presentation/hooks/useGlobalStyle';
-import {useLessonStore} from '../../stores/LessonStore/useGetPostsStore';
 import IconArrowDown from 'assets/svg/IconArrowDown';
 import {scale, verticalScale} from 'react-native-size-matters';
-import {ScreenTimeComponent} from 'src/modules/react-native-alphadex-screentime/src';
-import {COLORS} from 'src/core/presentation/utils/colors';
+import {
+  FamilyActivitySelection,
+  ScreenTimeComponent,
+} from 'react-native-alphadex-screentime';
+import {lessonModuleContainer} from 'src/lesson/LessonModule';
+import {LessonStore} from '../../stores/LessonStore/LessonStore';
 type Props = {
   appName: string;
 };
 const SelectApp = ({appName}: Props) => {
-  const lesson = useLessonStore();
+  const lesson = lessonModuleContainer.getProvided(LessonStore);
   const globalStyle = useGlobalStyle();
 
   return (
     <>
       <ScreenTimeComponent
         onChangeBlock={e => {
-          console.log(
-            '🛠 LOG: 🚀 --> -----------------------------------🛠 LOG: 🚀 -->',
+          const blockedApps: FamilyActivitySelection = JSON.parse(
+            e.nativeEvent.blockedApps,
           );
-          console.log('🛠 LOG: 🚀 --> ~ ModuleItem ~ e:', e);
-          console.log(
-            '🛠 LOG: 🚀 --> -----------------------------------🛠 LOG: 🚀 -->',
-          );
-          //   navigateScreen(STACK_NAVIGATOR.HOME.LESSON);
+          lesson.changeBlockedAnonymousListAppSystem(blockedApps);
         }}
         style={styles.container}>
         <Text style={[globalStyle.txtButton, styles.textCard]}>
@@ -55,12 +54,13 @@ const styles = StyleSheet.create({
     width: scale(95.29),
     height: verticalScale(30.8),
     alignItems: 'center',
-    justifyContent: 'center',
+    justifyContent: 'space-between',
     flexDirection: 'row',
     borderRadius: scale(20),
     backgroundColor: '#FFE699',
     marginTop: verticalScale(6),
     marginBottom: verticalScale(12),
+    paddingHorizontal: scale(10),
   },
   textCard: {
     color: '#1C6349',

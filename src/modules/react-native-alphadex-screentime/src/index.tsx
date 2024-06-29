@@ -7,6 +7,7 @@ import {
   type ViewStyle,
 } from 'react-native';
 import type { AppEntity } from './entities/AppEntity';
+import type { BaseSyntheticEvent } from 'react';
 
 const LINKING_ERROR =
   `The package 'react-native-alphadex-screentime' doesn't seem to be linked. Make sure: \n\n` +
@@ -27,10 +28,24 @@ const AlphadexScreentime = NativeModules.AlphadexScreentime
 
 export default AlphadexScreentime;
 
+export type FamilyActivitySelection = {
+  applicationTokens: { data: string }[];
+  categoryTokens: string[];
+  includeEntireCategory: boolean;
+  untokenizedApplicationIdentifiers: any[];
+  untokenizedCategoryIdentifiers: any[];
+  untokenizedWebDomainIdentifiers: any[];
+  webDomainTokens: any[];
+};
 type ViewModuleProps = {
   style: ViewStyle;
   children: React.ReactNode;
-  onChangeBlock: (e: any) => void;
+  onChangeBlock: (
+    e: BaseSyntheticEvent<{
+      isBlocked: boolean;
+      blockedApps: string;
+    }>
+  ) => void;
 };
 
 const ComponentName = 'ViewModuleView';

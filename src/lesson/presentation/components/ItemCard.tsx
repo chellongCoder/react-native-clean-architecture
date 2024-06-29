@@ -3,6 +3,7 @@ import React from 'react';
 import useGlobalStyle from 'src/core/presentation/hooks/useGlobalStyle';
 import IconBlock from 'assets/svg/IconBlock';
 import {Image} from 'react-native';
+import {COLORS} from 'src/core/presentation/utils/colors';
 
 export type ItemCardProps = {
   name?: string;
@@ -52,11 +53,17 @@ const ItemCard = ({
         {typeof Icon === 'string' && (
           <>
             <View style={{position: 'absolute'}}>
-              <Image
-                source={{uri: `data:image/jpg;base64,${Icon}`}}
-                width={50}
-                height={50}
-              />
+              {Icon === 'no_icon' ? (
+                <Text style={[globalStyle.txtWord, {color: COLORS.WHITE}]}>
+                  {name}
+                </Text>
+              ) : (
+                <Image
+                  source={{uri: `data:image/jpg;base64,${Icon}`}}
+                  width={50}
+                  height={50}
+                />
+              )}
             </View>
             <IconBlock color={ic} height={size / 2} width={size / 2} />
           </>
