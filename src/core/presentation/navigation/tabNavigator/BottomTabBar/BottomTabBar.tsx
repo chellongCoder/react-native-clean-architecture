@@ -1,4 +1,4 @@
-import React, {FC, Fragment} from 'react';
+import React, {FC, Fragment, useRef} from 'react';
 import {Platform, View, StatusBar} from 'react-native';
 import styles from '../styles';
 import {BottomTabBarProps} from '@react-navigation/bottom-tabs';
@@ -33,6 +33,10 @@ function BottomTabBar({
   navigation,
 }: BottomTabBarProps): React.ReactElement | null {
   const focusedOptions = descriptors[state.routes[state.index].key].options;
+  const routesView = useRef(
+    Array.from({length: state.routes.length}, (_, i) => i),
+  );
+
   if (focusedOptions.tabBarVisible === false) {
     return null;
   }
@@ -55,7 +59,10 @@ function BottomTabBar({
             });
 
             if (!isFocused && !event.defaultPrevented) {
-              // console.log('route', route);
+              const temp = routesView.current[2];
+              const viewIndex = routesView.current.findIndex(i => i === index);
+              routesView.current[2] = routesView.current[viewIndex];
+              routesView.current[viewIndex] = temp;
               navigation.navigate(route.name);
             }
           };
@@ -68,6 +75,7 @@ function BottomTabBar({
               route={route}
               isFocused={isFocused}
               numberOfTab={state?.routes}
+              viewIndex={routesView.current.findIndex(i => i === index)}
             />
           );
         })}

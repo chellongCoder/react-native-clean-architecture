@@ -22,7 +22,9 @@ export default StyleSheet.create({
   },
   blockRoutes: {
     flexDirection: 'row',
-    backgroundColor: COLORS.WHITE_FFFBE3,
+    backgroundColor: COLORS.BLUE_258F78,
+    borderTopLeftRadius: scale(32),
+    borderTopRightRadius: scale(32),
   },
   containerIconWrapper: {
     alignContent: 'center',
@@ -31,7 +33,6 @@ export default StyleSheet.create({
   bottomMenuContainer: {
     flex: 1,
     alignItems: 'center',
-    backgroundColor: COLORS.BLUE_258F78,
   },
   cartBadge: {
     position: 'absolute',
