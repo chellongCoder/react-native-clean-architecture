@@ -13,6 +13,7 @@ import {STACK_NAVIGATOR} from 'src/core/presentation/navigation/ConstantNavigato
 import {withProviders} from 'src/core/presentation/utils/withProviders';
 import {LessonStoreProvider} from '../stores/LessonStore/LessonStoreProvider';
 import {observer} from 'mobx-react';
+import {useLessonStore} from '../stores/LessonStore/useGetPostsStore';
 
 enum LessonTypeE {
   ACHIEVEMENT,
@@ -38,6 +39,7 @@ const LessonScreen = observer(() => {
     {lessonType: LessonTypeE.GEOMETRY},
     {lessonType: LessonTypeE.MATH},
   ];
+  const lessonStore = useLessonStore();
 
   const [lessonIndex, setLessonIndex] = useState(0);
 
@@ -49,6 +51,7 @@ const LessonScreen = observer(() => {
       );
       resetNavigator(STACK_NAVIGATOR.HOME.DONE_LESSON_SCREEN);
     }
+    lessonStore.setIsShow(true);
     setLessonIndex((lessonIndex + 1) % lessons.length);
   };
 

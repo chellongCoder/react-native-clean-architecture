@@ -1,65 +1,73 @@
-import React from 'react';
+import React, {useContext} from 'react';
 import {View, Text, TouchableOpacity, FlatList, StyleSheet} from 'react-native';
 import {scale} from 'react-native-size-matters';
 import {COLORS} from 'src/core/presentation/constants/colors';
 import {CustomTextStyle} from 'src/core/presentation/constants/typography';
 import {STACK_NAVIGATOR} from 'src/core/presentation/navigation/ConstantNavigator';
 import {navigateScreen} from 'src/core/presentation/navigation/actions/RootNavigationActions';
+import {HomeContext} from '../stores/HomeContext';
+import {FieldData} from 'src/home/application/types/GetFieldResponse';
 
-export type TDataItem = {
+export interface TDataItem {
   id: number | string;
   position: 'left' | 'right';
-  subject: string;
   bgc: string;
   textColor: string;
-};
+}
 
 type TData = TDataItem[];
 
+export interface IMergedData extends TDataItem, FieldData {}
+
 const ListSubject = () => {
+  const {homeState, onSelectField} = useContext(HomeContext);
+
   const data: TData = [
     {
       id: 1,
       position: 'left',
-      subject: 'Science',
       bgc: COLORS.BLUE_3AB89C,
       textColor: COLORS.YELLOW_FFBF60,
     },
     {
       id: 2,
       position: 'right',
-      subject: 'Language',
       bgc: COLORS.YELLOW_F2B559,
       textColor: COLORS.WHITE_FBF8CC,
     },
     {
       id: 3,
       position: 'left',
-      subject: 'Story',
       bgc: COLORS.PINK_FFB29F,
       textColor: COLORS.WHITE_FBF8CC,
     },
     {
       id: 4,
       position: 'right',
-      subject: 'Mathematics',
       bgc: COLORS.BLUE_258F78,
       textColor: COLORS.YELLOW_FFBF60,
     },
-    {
-      id: 5,
-      position: 'left',
-      subject: 'Health',
-      bgc: COLORS.GREEN_66C270,
-      textColor: COLORS.WHITE_FBF8CC,
-    },
   ];
 
-  const onSelectSubject = (subject: string) => {
-    navigateScreen(STACK_NAVIGATOR.HOME.SUBJECT_SCREEN, {subject});
+  const mergedData: IMergedData[] = homeState?.listField.map(
+    (field: IMergedData, index: number) => {
+      const dataIndex = index % data.length; // Cycle through data array
+      const dataItem = data[dataIndex];
+
+      return {
+        ...dataItem,
+        ...field,
+        bgc: dataItem.bgc,
+        textColor: dataItem.textColor,
+      };
+    },
+  );
+
+  const onSelectSubject = (e: IMergedData) => {
+    onSelectField(e);
   };
 
-  const renderItem = ({item, index}: {item: TDataItem; index: number}) => {
+  const renderItem = ({item, index}: {item: IMergedData; index: number}) => {
     return (
       <View key={index} style={[styles.contentContainer]}>
         {item.position === 'right' && (
@@ -72,9 +80,9 @@ const ListSubject = () => {
               : styles.leftContentContainer,
             {backgroundColor: item.bgc},
           ]}
-          onPress={() => onSelectSubject(item.subject)}>
+          onPress={() => onSelectSubject(item)}>
           <Text style={[styles.itemTitle, {color: item.textColor}]}>
-            {item.subject}
+            {item.name}
           </Text>
         </TouchableOpacity>
       </View>
@@ -84,7 +92,7 @@ const ListSubject = () => {
   return (
     <View style={styles.container}>
       <FlatList
-        data={data}
+        data={mergedData}
         renderItem={renderItem}
         keyExtractor={item => item.id.toString()}
         showsVerticalScrollIndicator={false}

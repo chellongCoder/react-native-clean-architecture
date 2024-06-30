@@ -21,7 +21,7 @@ const ListModule = () => {
 
       <ScrollView style={styles.f1} showsVerticalScrollIndicator={false}>
         <View style={styles.wrapModuleContainer}>
-          <ModuleItem isFinished />
+          <ModuleItem isFinished={false} />
         </View>
         <View style={styles.wrapModuleContainer}>
           <ModuleItem isFinished />

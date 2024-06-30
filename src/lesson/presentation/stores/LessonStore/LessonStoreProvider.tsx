@@ -32,6 +32,7 @@ import {useAsyncEffect} from 'src/core/presentation/hooks';
 import {AppEntity} from 'src/modules/react-native-alphadex-screentime/src/entities/AppEntity';
 import {Image} from 'react-native';
 import Button from '../../components/LessonModule/Button';
+import {useNavigation, useRoute} from '@react-navigation/native';
 
 type PropsItemApps = {
   preFixIcon?: React.ReactNode;
@@ -50,6 +51,10 @@ type AppItem = {
 export const LessonStoreProvider = observer(({children}: PropsWithChildren) => {
   const value = lessonModuleContainer.getProvided(LessonStore);
   const [apps, setApps] = useState<AppEntity[]>([]);
+  const [isShowBottomSheet, setIsShowBottomSheet] = useState(true);
+  const navigation = useNavigation();
+  const route = useRoute();
+
   const transformAppEntityToListItem = (appEntity: AppEntity): AppItem => {
     return {
       preFixIcon: (
@@ -68,63 +73,79 @@ export const LessonStoreProvider = observer(({children}: PropsWithChildren) => {
 
   const listItem = value.listAppsSystem.map(transformAppEntityToListItem);
 
+  useEffect(() => {
+    if (route.name === 'LESSON_SCREEN') {
+      setIsShowBottomSheet(false);
+    } else {
+      setIsShowBottomSheet(true);
+    }
+  }, [route.name]);
+
+  const renderBottomSheet = useCallback(() => {
+    return (
+      <>
+        {value.bottomSheetAppsRef && (
+          <BottomSheetCustom
+            snapPoints={['50']}
+            ref={value.bottomSheetAppsRef}
+            title="List Apps"
+            backgroundColor={COLORS.BACKGROUND}
+            onDone={() => {
+              value.onCloseSheetApps();
+              value.changeBlockedListAppSystem(apps);
+              addToLockedApps(
+                apps.map(v => ({
+                  app_name: v.app_name,
+                  package_name: v.package_name,
+                  file_path: v.apk_file_path,
+                })),
+              );
+            }}>
+            {listItem.map((v, i) => (
+              <ItemApps
+                onChange={(id, s) => {
+                  setApps(prev => {
+                    if (s) {
+                      const app = value.listAppsSystem.find(
+                        e => e.package_name === id,
+                      );
+                      return [...prev, app!];
+                    } else {
+                      const selectedApps = prev.filter(
+                        e => e.package_name !== id,
+                      );
+                      return selectedApps;
+                    }
+                  });
+                }}
+                key={i}
+                {...v}
+              />
+            ))}
+          </BottomSheetCustom>
+        )}
+
+        {value.bottomSheetPermissionRef && (
+          <BottomSheetCustom
+            snapPoints={['50']}
+            index={-1}
+            ref={value.bottomSheetPermissionRef}
+            title="ABC needs system permissions to work with:"
+            enablePanDownToClose={false}
+            backgroundColor={COLORS.GREEN_66C270}
+            enableOverDrag={false}
+            onBackdropPress={() => {}}>
+            <ItemPermission lesson={value} />
+          </BottomSheetCustom>
+        )}
+      </>
+    );
+  }, [apps, listItem, value]);
   return (
     <LessonStoreContext.Provider value={{...value}}>
       {children}
       {value.point.isShow && <Scoring onClose={() => value.setIsShow(false)} />}
-      {
-        <BottomSheetCustom
-          snapPoints={['50']}
-          ref={value.bottomSheetAppsRef}
-          title="List Apps"
-          backgroundColor={COLORS.BACKGROUND}
-          onDone={() => {
-            value.onCloseSheetApps();
-            value.changeBlockedListAppSystem(apps);
-            addToLockedApps(
-              apps.map(v => ({
-                app_name: v.app_name,
-                package_name: v.package_name,
-                file_path: v.apk_file_path,
-              })),
-            );
-          }}>
-          {listItem.map((v, i) => (
-            <ItemApps
-              onChange={(id, s) => {
-                setApps(prev => {
-                  if (s) {
-                    const app = value.listAppsSystem.find(
-                      e => e.package_name === id,
-                    );
-                    return [...prev, app!];
-                  } else {
-                    const selectedApps = prev.filter(
-                      e => e.package_name !== id,
-                    );
-                    return selectedApps;
-                  }
-                });
-              }}
-              key={i}
-              {...v}
-            />
-          ))}
-        </BottomSheetCustom>
-      }
-
-      {value.bottomSheetPermissionRef && (
-        <BottomSheetCustom
-          snapPoints={['50']}
-          ref={value.bottomSheetPermissionRef}
-          title="ABC needs system permissions to work with:"
-          enablePanDownToClose={false}
-          backgroundColor={COLORS.GREEN_66C270}
-          enableOverDrag={false}
-          onBackdropPress={() => {}}>
-          <ItemPermission lesson={value} />
-        </BottomSheetCustom>
-      )}
+      {isShowBottomSheet && renderBottomSheet()}
     </LessonStoreContext.Provider>
   );
 });

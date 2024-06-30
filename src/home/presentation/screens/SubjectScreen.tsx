@@ -7,6 +7,8 @@ import {scale} from 'react-native-size-matters';
 import ListLesson from '../components/ListLesson';
 import ListModule from '../components/ListModule';
 import {observer} from 'mobx-react';
+import {withProviders} from 'src/core/presentation/utils/withProviders';
+import {HomeProvider} from '../stores/HomeProvider';
 
 const SubjectScreen = observer((props: any) => {
   const {route} = props;
@@ -15,9 +17,13 @@ const SubjectScreen = observer((props: any) => {
     <Fragment>
       <SafeAreaView style={styles.container} edges={['top']}>
         <View style={styles.wrapContentContainer}>
-          <AccountStatus title={'Lessons'} subject={route?.params?.subject} />
+          <View style={{paddingHorizontal: scale(16)}}>
+            <AccountStatus title={'Lessons'} subject={route?.params?.subject} />
+          </View>
           <ListLesson />
-          <ListModule />
+          <View style={{paddingHorizontal: scale(16), flex: 1}}>
+            <ListModule />
+          </View>
         </View>
       </SafeAreaView>
     </Fragment>
@@ -31,8 +37,7 @@ const styles = StyleSheet.create({
   },
   wrapContentContainer: {
     flex: 1,
-    paddingHorizontal: scale(16),
   },
 });
 
-export default SubjectScreen;
+export default withProviders(HomeProvider)(SubjectScreen);
