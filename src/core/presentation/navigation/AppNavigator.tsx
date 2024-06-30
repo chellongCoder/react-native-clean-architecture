@@ -6,8 +6,6 @@ import TabNavigator from './tabNavigator/TabNavigator';
 import {hideBottomTab, showBottomTab} from './actions/RootNavigationActions';
 import PostsScreen from 'src/post/presentation/screens/PostsScreen';
 import LessonScreen from 'src/lesson/presentation/screens/LessonScreen';
-import HomeScreen from 'src/home/presentation/HomeScreen';
-import SubjectScreen from 'src/home/presentation/SubjectScreen';
 import AchievementScreen from 'src/achievement/presentation/AchievementScreen';
 import RankScreen from 'src/rank/presentation/RankScreen';
 import LoginScreen from 'src/authentication/presentation/screens/LoginScreen';
@@ -19,6 +17,8 @@ import ListChildrenScreen from 'src/authentication/presentation/screens/ListChil
 import ProfileScreen from '../screens/ProfileScreen';
 import ParentScreen from 'src/lesson/presentation/screens/ParentScreen';
 import AuthParentScreen from 'src/lesson/presentation/screens/AuthParentScreen';
+import HomeScreen from 'src/home/presentation/screens/HomeScreen';
+import SubjectScreen from 'src/home/presentation/screens/SubjectScreen';
 
 const AuthStack = createStackNavigator();
 const HomeStack = createStackNavigator();

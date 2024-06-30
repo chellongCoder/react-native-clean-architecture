@@ -3,7 +3,7 @@ import {StyleSheet, Text, View} from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {scale} from 'react-native-size-matters';
 import {COLORS} from 'src/core/presentation/constants/colors';
-import AccountStatus from 'src/home/components/AccountStatus';
+import AccountStatus from 'src/home/presentation/components/AccountStatus';
 
 const AchievementScreen = () => {
   return (

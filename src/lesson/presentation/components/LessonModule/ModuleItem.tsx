@@ -30,6 +30,11 @@ const ModuleItem = (props: Props) => {
       '🛠 LOG: 🚀 --> -------------------------------------------🛠 LOG: 🚀 -->',
     );
   }, []);
+
+  const onRevision = useCallback(() => {
+    navigateScreen(STACK_NAVIGATOR.HOME.LESSON);
+  }, []);
+
   return props.isFinished ? (
     <View style={[styles.container, {backgroundColor: COLORS.WHITE_FBF8CC}]}>
       <View style={[globalStyle.rowCenter]}>
@@ -55,43 +60,11 @@ const ModuleItem = (props: Props) => {
         </View>
       </View>
       <View style={styles.buttonContainer}>
-        <TouchableOpacity
-          onPress={async () => {
-            selectedAppsData().then(apps => {
-              console.log(
-                '🛠 LOG: 🚀 --> -------------------------------------------🛠 LOG: 🚀 -->',
-              );
-              console.log('🛠 LOG: 🚀 --> ~ onDoHomework ~ apps:', apps);
-              console.log(
-                '🛠 LOG: 🚀 --> -------------------------------------------🛠 LOG: 🚀 -->',
-              );
-            });
-            // console.log('isloading true');
-            // await unBlockApps();
-            // console.log('isloading false');
-          }}>
+        <TouchableOpacity onPress={async () => {}}>
           <Text style={[styles.title, globalStyle.txtLabel]}>10/10</Text>
         </TouchableOpacity>
         <View style={{height: verticalScale(14)}} />
-        {/* <Button color={COLORS.GREEN_66C270} title="Study" /> */}
-        <View>
-          {/* <ScreenTimeComponent
-            onChangeBlock={e => {
-              console.log(
-                '🛠 LOG: 🚀 --> -----------------------------------🛠 LOG: 🚀 -->',
-              );
-              console.log('🛠 LOG: 🚀 --> ~ ModuleItem ~ e:', e);
-              console.log(
-                '🛠 LOG: 🚀 --> -----------------------------------🛠 LOG: 🚀 -->',
-              );
-              navigateScreen(STACK_NAVIGATOR.HOME.LESSON);
-            }}
-            style={styles.buttonBlockApp}>
-            <Text style={[globalStyle.txtButton, {color: COLORS.WHITE}]}>
-              {'study'}
-            </Text>
-          </ScreenTimeComponent> */}
-        </View>
+        <Button color={COLORS.GREEN_66C270} title="Study" />
       </View>
     </View>
   ) : (
@@ -115,12 +88,16 @@ const ModuleItem = (props: Props) => {
       </View>
       <View style={styles.buttonContainer}>
         <Button
-          onPress={onDoHomework}
+          onPress={onRevision}
           color={COLORS.YELLOW_F2B559}
           title="Revision"
         />
         <View style={{height: verticalScale(10)}} />
-        <Button color={COLORS.YELLOW_F2B559} title="Done" />
+        <Button
+          onPress={onDoHomework}
+          color={COLORS.YELLOW_F2B559}
+          title="Done"
+        />
       </View>
     </View>
   );

@@ -5,10 +5,7 @@ import ICStar from 'src/core/components/icons/ICStar';
 import {COLORS} from 'src/core/presentation/constants/colors';
 import {CustomTextStyle} from 'src/core/presentation/constants/typography';
 import CustomSwitch from './CustomSwitch';
-import {
-  navigateScreen,
-  resetNavigator,
-} from 'src/core/presentation/navigation/actions/RootNavigationActions';
+import {navigateScreen} from 'src/core/presentation/navigation/actions/RootNavigationActions';
 import {STACK_NAVIGATOR} from 'src/core/presentation/navigation/ConstantNavigator';
 import ICLogout from 'src/core/components/icons/ICLogout';
 import useAuthenticationStore from 'src/authentication/presentation/stores/useAuthenticationStore';

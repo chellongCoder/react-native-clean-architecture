@@ -6,6 +6,8 @@ import ListSubject from '../components/ListSubject';
 import AccountStatus from '../components/AccountStatus';
 import {scale} from 'react-native-size-matters';
 import {observer} from 'mobx-react';
+import {withProviders} from 'src/core/presentation/utils/withProviders';
+import {HomeProvider} from '../stores/HomeProvider';
 
 const HomeScreen = observer(() => {
   return (
@@ -31,4 +33,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default HomeScreen;
+export default withProviders(HomeProvider)(HomeScreen);

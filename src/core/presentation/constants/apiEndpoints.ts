@@ -3,6 +3,7 @@ const SERVICES = {
   AUTH: '/auth',
   USER: '/user',
   SUBJECT: '/subject',
+  FIELD: '/field',
 };
 
 const getAuthEndPointServices = (path: string) => {
@@ -15,6 +16,10 @@ const getUserEndPointServices = (path: string) => {
 
 const getSubjectEndPointServices = (path: string) => {
   return `/api${API_VERSION}${SERVICES.SUBJECT}/${path}`;
+};
+
+const getFieldEndPointServices = () => {
+  return `/api${API_VERSION}${SERVICES.FIELD}`;
 };
 
 export const API_ENDPOINTS = {
@@ -31,5 +36,7 @@ export const API_ENDPOINTS = {
   },
   SUBJECT: {
     LIST_ALL_SUBJECT: getSubjectEndPointServices('list-all-subject'),
+    LIST_SUBJECT_OF_FIELD: getSubjectEndPointServices('list-subject-of-field'),
   },
+  FIELD: getFieldEndPointServices(),
 };

@@ -1,4 +1,4 @@
-import {StyleSheet, Text} from 'react-native';
+import {StyleSheet, Text, TouchableOpacity} from 'react-native';
 import React from 'react';
 import useGlobalStyle from 'src/core/presentation/hooks/useGlobalStyle';
 import IconArrowDown from 'assets/svg/IconArrowDown';
@@ -9,13 +9,28 @@ import {
 } from 'react-native-alphadex-screentime';
 import {lessonModuleContainer} from 'src/lesson/LessonModule';
 import {LessonStore} from '../../stores/LessonStore/LessonStore';
+import {isAndroid} from 'src/core/presentation/utils';
 type Props = {
   appName: string;
 };
 const SelectApp = ({appName}: Props) => {
   const lesson = lessonModuleContainer.getProvided(LessonStore);
   const globalStyle = useGlobalStyle();
-
+  if (isAndroid) {
+    return (
+      <TouchableOpacity
+        onPress={async () => {
+          await lesson.changeListAppSystem();
+          lesson.onShowSheetApps();
+        }}
+        style={[styles.card]}>
+        <Text style={[globalStyle.txtButton, styles.textCard]}>
+          {appName.trim() !== '' ? appName : 'select apps'}
+        </Text>
+        <IconArrowDown />
+      </TouchableOpacity>
+    );
+  }
   return (
     <>
       <ScreenTimeComponent
