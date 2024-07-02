@@ -26,6 +26,7 @@ export class HomeStore implements HomeStoreState {
   };
   listSubject: Subject[] = [];
   listModule: Module[] = [];
+  subjectId = '';
 
   constructor(
     @provided(GetFieldUseCase)
@@ -51,6 +52,11 @@ export class HomeStore implements HomeStoreState {
   }
 
   @action
+  public async setSubjectId(index: string) {
+    this.subjectId = index;
+  }
+
+  @action
   public async getField() {
     this.setIsLoading(true);
     const response = await this.getFieldUseCase.execute();
@@ -66,6 +72,7 @@ export class HomeStore implements HomeStoreState {
     });
     if (response.data) {
       this.listSubject = response.data;
+      this.subjectId = response.data[0]._id;
     }
     this.setIsLoading(false);
     return response;

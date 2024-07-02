@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {
   View,
   Text,
@@ -9,8 +9,6 @@ import {
 import {scale} from 'react-native-size-matters';
 import {COLORS} from 'src/core/presentation/constants/colors';
 import {CustomTextStyle} from 'src/core/presentation/constants/typography';
-import {STACK_NAVIGATOR} from 'src/core/presentation/navigation/ConstantNavigator';
-import {navigateScreen} from 'src/core/presentation/navigation/actions/RootNavigationActions';
 import useHomeStore from '../stores/useHomeStore';
 import Carousel from 'react-native-snap-carousel';
 
@@ -21,12 +19,10 @@ interface FieldData {
   name: string;
   description: string;
 }
+const ListLesson = () => {
+  const {listSubject, setSubjectId} = useHomeStore();
+  const [subjectIndex, setSubjectIndex] = useState<number>(0);
 
-interface CarouselProps {
-  data: FieldData[];
-}
-
-const CarouselComponent: React.FC<CarouselProps> = ({data}: {data: FieldData[]}) => {
   const renderItem = ({item}: {item: FieldData}) => {
     return (
       <TouchableOpacity style={styles.wrapLessonContainer}>
@@ -36,31 +32,24 @@ const CarouselComponent: React.FC<CarouselProps> = ({data}: {data: FieldData[]})
   };
 
   return (
-    <Carousel
-      data={data}
-      renderItem={renderItem}
-      sliderWidth={screenWidth}
-      itemWidth={screenWidth * 0.5}
-      layout={'default'}
-      loop={true}
-      centerContent={true}
-      removeClippedSubviews={false}
-      apparitionDelay={0}
-      windowSize={1}
-      horizontal={true}
-    />
-  );
-};
-
-const ListLesson = () => {
-  const {listSubject} = useHomeStore();
-  const onLeanLesson = () => {
-    navigateScreen(STACK_NAVIGATOR.HOME.LESSON);
-  };
-
-  return (
     <View style={styles.container}>
-      <CarouselComponent data={listSubject} />
+      <Carousel
+        data={listSubject}
+        renderItem={renderItem}
+        sliderWidth={screenWidth}
+        itemWidth={screenWidth * 0.5}
+        layout={'default'}
+        loop={true}
+        centerContent={true}
+        removeClippedSubviews={false}
+        apparitionDelay={0}
+        windowSize={1}
+        horizontal={true}
+        onSnapToItem={(slideIndex: number) => {
+          setSubjectIndex(slideIndex);
+          setSubjectId(listSubject[slideIndex]?._id);
+        }}
+      />
     </View>
   );
 };
