@@ -1,13 +1,16 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {View, Text, StyleSheet, Dimensions, ScrollView} from 'react-native';
 import {scale} from 'react-native-size-matters';
 import {COLORS} from 'src/core/presentation/constants/colors';
 import {CustomTextStyle} from 'src/core/presentation/constants/typography';
 import ModuleItem from 'src/lesson/presentation/components/LessonModule/ModuleItem';
+import {useListModule} from 'src/hooks/useListModule';
 
 const screenWidth = Dimensions.get('screen').width;
 
 const ListModule = () => {
+  const {modules} = useListModule();
+
   return (
     <View style={styles.container}>
       <View style={styles.square} />
@@ -20,18 +23,19 @@ const ListModule = () => {
       </View>
 
       <ScrollView style={styles.f1} showsVerticalScrollIndicator={false}>
-        <View style={styles.wrapModuleContainer}>
-          <ModuleItem isFinished={false} />
-        </View>
-        <View style={styles.wrapModuleContainer}>
-          <ModuleItem isFinished />
-        </View>
-        <View style={styles.wrapModuleContainer}>
-          <ModuleItem isFinished />
-        </View>
-        <View style={styles.wrapModuleContainer}>
-          <ModuleItem isFinished />
-        </View>
+        {modules.map(module => {
+          return (
+            <View style={styles.wrapModuleContainer}>
+              <ModuleItem
+                progress={module.progressOfChildren}
+                totalQuestion={module.totalQuestion}
+                isFinished={module.progressOfChildren === module.totalQuestion}
+                title={module.name}
+                subTitle={module.description}
+              />
+            </View>
+          );
+        })}
       </ScrollView>
     </View>
   );

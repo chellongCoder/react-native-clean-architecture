@@ -16,7 +16,13 @@ import {TouchableOpacity} from 'react-native-gesture-handler';
 import {navigateScreen} from 'src/core/presentation/navigation/actions/RootNavigationActions';
 import {STACK_NAVIGATOR} from 'src/core/presentation/navigation/ConstantNavigator';
 
-type Props = {isFinished: boolean};
+type Props = {
+  isFinished: boolean;
+  title: string;
+  subTitle: string;
+  progress: number;
+  totalQuestion: number;
+};
 const ModuleItem = (props: Props) => {
   const globalStyle = useGlobalStyle();
 
@@ -35,7 +41,7 @@ const ModuleItem = (props: Props) => {
     navigateScreen(STACK_NAVIGATOR.HOME.LESSON);
   }, []);
 
-  return props.isFinished ? (
+  return !props.isFinished ? (
     <View style={[styles.container, {backgroundColor: COLORS.WHITE_FBF8CC}]}>
       <View style={[globalStyle.rowCenter]}>
         <View
@@ -51,17 +57,23 @@ const ModuleItem = (props: Props) => {
             onPress={() => {
               sentEvent();
             }}>
-            <Text style={[styles.title, globalStyle.txtLabel]}>{'title'}</Text>
+            <Text
+              numberOfLines={2}
+              style={[styles.title, globalStyle.txtLabel]}>
+              {props.title}
+            </Text>
           </TouchableOpacity>
           <View style={{height: verticalScale(4)}} />
           <Text style={[styles.subtitle, globalStyle.txtNote]}>
-            {'subtitle'}
+            {props.subTitle}
           </Text>
         </View>
       </View>
       <View style={styles.buttonContainer}>
         <TouchableOpacity onPress={async () => {}}>
-          <Text style={[styles.title, globalStyle.txtLabel]}>10/10</Text>
+          <Text style={[styles.title, globalStyle.txtLabel]}>
+            {props.progress}/{props.totalQuestion}
+          </Text>
         </TouchableOpacity>
         <View style={{height: verticalScale(14)}} />
         <Button color={COLORS.GREEN_66C270} title="Study" />
@@ -79,10 +91,12 @@ const ModuleItem = (props: Props) => {
         </View>
         <View style={{width: scale(22)}} />
         <View style={styles.textContainer}>
-          <Text style={[styles.title, globalStyle.txtLabel]}>{'title'}</Text>
+          <Text numberOfLines={2} style={[styles.title, globalStyle.txtLabel]}>
+            {props.title}
+          </Text>
           <View style={{height: verticalScale(4)}} />
           <Text style={[styles.subtitle, globalStyle.txtNote]}>
-            {'subtitle'}
+            {props.subTitle}
           </Text>
         </View>
       </View>
@@ -127,6 +141,7 @@ const styles = StyleSheet.create({
   },
   title: {
     color: COLORS.GREEN_1C6349,
+    maxWidth: 100,
   },
   subtitle: {
     color: COLORS.GREEN_1C6349,

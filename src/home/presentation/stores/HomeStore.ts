@@ -8,6 +8,9 @@ import GetFieldUseCase from 'src/home/application/useCases/GetFieldUseCase';
 import GetListSubjectUseCase from 'src/home/application/useCases/GetListSubjectUseCase';
 import {GetListSubjectPayload} from 'src/home/application/types/GetListSubjectPayload';
 import {Subject} from 'src/home/application/types/GetListSubjectResponse';
+import {GetListLessonPayload} from 'src/home/application/types/GetListLessonPayload';
+import GetListLessonUseCase from 'src/home/application/useCases/GetListLessonUseCase';
+import {Module} from 'src/home/application/types/GetListLessonResponse';
 
 @injectable()
 export class HomeStore implements HomeStoreState {
@@ -22,6 +25,7 @@ export class HomeStore implements HomeStoreState {
     updatedAt: '',
   };
   listSubject: Subject[] = [];
+  listModule: Module[] = [];
 
   constructor(
     @provided(GetFieldUseCase)
@@ -29,6 +33,9 @@ export class HomeStore implements HomeStoreState {
 
     @provided(GetListSubjectUseCase)
     private getListSubjectUseCase: GetListSubjectUseCase,
+
+    @provided(GetListLessonUseCase)
+    private getListLessonUseCase: GetListLessonUseCase,
   ) {
     this.initializePersistence();
     this.getField = this.getField.bind(this);
@@ -60,6 +67,19 @@ export class HomeStore implements HomeStoreState {
     if (response.data) {
       this.listSubject = response.data;
     }
+    this.setIsLoading(false);
+    return response;
+  }
+
+  @action
+  public async getListModules({childrenId, subjectId}: GetListLessonPayload) {
+    this.setIsLoading(true);
+    const response = await this.getListLessonUseCase.execute({
+      childrenId,
+      subjectId,
+    });
+
+    this.listModule = response.data;
     this.setIsLoading(false);
     return response;
   }

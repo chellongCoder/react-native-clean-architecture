@@ -148,6 +148,7 @@ class ScreenTimeSelectAppsModel: RCTEventEmitter, ObservableObject {
 
   func startAppRestrictions() async -> Void {
     let store = ManagedSettingsStore()
+    store.application.denyAppRemoval = true
     let userDefaults = UserDefaults.init(suiteName: "group.com.hisoft.tbd.app")!
     let data = userDefaults.data(forKey: AlphadexScreentime.userDefaultsKey)
     if data != nil {

@@ -49,7 +49,7 @@ const ListSubject = () => {
     },
   ];
 
-  const mergedData: IMergedData[] = homeState?.listField.map(
+  const mergedData: IMergedData[] = homeState?.listField?.map(
     (field: IMergedData, index: number) => {
       const dataIndex = index % data.length; // Cycle through data array
       const dataItem = data[dataIndex];

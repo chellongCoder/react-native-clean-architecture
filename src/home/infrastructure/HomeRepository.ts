@@ -7,6 +7,8 @@ import {IHomeRepository} from '../domain/IHomeRepository';
 import GetFieldResponse from '../application/types/GetFieldResponse';
 import {GetListSubjectPayload} from '../application/types/GetListSubjectPayload';
 import GetListSubjectResponse from '../application/types/GetListSubjectResponse';
+import {GetListLessonPayload} from '../application/types/GetListLessonPayload';
+import GetListLessonResponse from '../application/types/GetListLessonResponse';
 
 @injectable()
 class HomeRepository implements IHomeRepository {
@@ -21,11 +23,22 @@ class HomeRepository implements IHomeRepository {
     return response;
   }
 
-  public async getListSubject(
-    fieldId: GetListSubjectPayload,
-  ): Promise<GetListSubjectResponse> {
+  public async getListSubject({
+    fieldId,
+  }: GetListSubjectPayload): Promise<GetListSubjectResponse> {
     const response: GetListSubjectResponse = await this.httpClient.get(
-      `${API_ENDPOINTS.SUBJECT.LIST_SUBJECT_OF_FIELD}/${fieldId.fieldId}`,
+      `${API_ENDPOINTS.SUBJECT.LIST_SUBJECT_OF_FIELD}/${fieldId}`,
+    );
+    return response;
+  }
+
+  public async getListLesson({
+    childrenId,
+    subjectId,
+  }: GetListLessonPayload): Promise<GetListLessonResponse> {
+    const response: GetListLessonResponse = await this.httpClient.post(
+      `${API_ENDPOINTS.LESSON.LISTLESSONOFSUBJECT}`,
+      {childrenId, subjectId},
     );
     return response;
   }

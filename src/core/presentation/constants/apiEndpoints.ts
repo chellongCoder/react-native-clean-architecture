@@ -4,6 +4,7 @@ const SERVICES = {
   USER: '/user',
   SUBJECT: '/subject',
   FIELD: '/field',
+  LESSON: '/lesson',
 };
 
 const getAuthEndPointServices = (path: string) => {
@@ -22,6 +23,10 @@ const getFieldEndPointServices = () => {
   return `/api${API_VERSION}${SERVICES.FIELD}`;
 };
 
+const getLessonEndPointServices = (path: string) => {
+  return `/api${API_VERSION}${SERVICES.LESSON}/${path}`;
+};
+
 export const API_ENDPOINTS = {
   AUTHENTICATION: {
     LOGIN_WITH_CREDENTIALS: getAuthEndPointServices('login'),
@@ -37,6 +42,9 @@ export const API_ENDPOINTS = {
   SUBJECT: {
     LIST_ALL_SUBJECT: getSubjectEndPointServices('list-all-subject'),
     LIST_SUBJECT_OF_FIELD: getSubjectEndPointServices('list-subject-of-field'),
+  },
+  LESSON: {
+    LISTLESSONOFSUBJECT: getLessonEndPointServices('list-lesson-of-subject'),
   },
   FIELD: getFieldEndPointServices(),
 };

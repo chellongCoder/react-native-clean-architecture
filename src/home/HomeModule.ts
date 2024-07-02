@@ -4,6 +4,7 @@ import {IHomeRepository} from './domain/IHomeRepository';
 import GetFieldUseCase from './application/useCases/GetFieldUseCase';
 import {HomeStore} from './presentation/stores/HomeStore';
 import GetListSubjectUseCase from './application/useCases/GetListSubjectUseCase';
+import GetListLessonUseCase from './application/useCases/GetListLessonUseCase';
 
 @module({
   providers: [
@@ -17,6 +18,7 @@ import GetListSubjectUseCase from './application/useCases/GetListSubjectUseCase'
     },
     GetFieldUseCase,
     GetListSubjectUseCase,
+    GetListLessonUseCase,
   ],
 })
 export class HomeModule {}

@@ -46,6 +46,7 @@ import {useAsyncEffect} from 'src/core/presentation/hooks';
 import SelectApp from '../components/LessonModule/SelectApp';
 import {isAndroid} from 'src/core/presentation/utils';
 import ListBlockedApps from '../components/LessonModule/ListBlockedApps';
+import {unBlockApps} from 'react-native-alphadex-screentime';
 
 enum TabParentE {
   APP_BLOCK = 'App block',
@@ -255,6 +256,7 @@ const ParentScreen = observer(() => {
             <PrimaryButton
               text="Unlock"
               style={[styles.btnCommon, styles.btnRed]}
+              onPress={unBlockApps}
             />
             <PrimaryButton text="Save" style={[styles.btnCommon]} />
           </View>

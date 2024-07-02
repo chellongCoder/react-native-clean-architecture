@@ -1,4 +1,6 @@
 import GetFieldResponse from '../application/types/GetFieldResponse';
+import {GetListLessonPayload} from '../application/types/GetListLessonPayload';
+import GetListLessonResponse from '../application/types/GetListLessonResponse';
 import {GetListSubjectPayload} from '../application/types/GetListSubjectPayload';
 import GetListSubjectResponse from '../application/types/GetListSubjectResponse';
 
@@ -9,4 +11,7 @@ export interface IHomeRepository {
   getListSubject: (
     fieldId: GetListSubjectPayload,
   ) => Promise<GetListSubjectResponse>;
+  getListLesson: (
+    fieldId: GetListLessonPayload,
+  ) => Promise<GetListLessonResponse>;
 }
