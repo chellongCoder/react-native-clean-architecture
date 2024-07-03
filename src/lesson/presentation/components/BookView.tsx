@@ -4,10 +4,12 @@ import IconBookBg from 'assets/svg/IconBookBg';
 
 const BookView = ({
   style,
+  contentStyle,
   children,
   colorBg,
 }: {
   style?: StyleProp<ViewStyle>;
+  contentStyle?: StyleProp<ViewStyle>;
   children: React.ReactNode;
   colorBg?: string;
 }) => {
@@ -16,7 +18,7 @@ const BookView = ({
       <View style={[styles.view]}>
         <IconBookBg height={3000} color={colorBg} />
       </View>
-      <View style={[styles.content]}>{children}</View>
+      <View style={[styles.content, contentStyle]}>{children}</View>
     </View>
   );
 };
