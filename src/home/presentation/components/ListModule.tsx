@@ -5,10 +5,11 @@ import {COLORS} from 'src/core/presentation/constants/colors';
 import {CustomTextStyle} from 'src/core/presentation/constants/typography';
 import ModuleItem from 'src/lesson/presentation/components/LessonModule/ModuleItem';
 import {useListModule} from 'src/hooks/useListModule';
+import {observer} from 'mobx-react';
 
 const screenWidth = Dimensions.get('screen').width;
 
-const ListModule = () => {
+const ListModule = observer(() => {
   const {modules} = useListModule();
 
   return (
@@ -39,7 +40,7 @@ const ListModule = () => {
       </ScrollView>
     </View>
   );
-};
+});
 
 const styles = StyleSheet.create({
   f1: {

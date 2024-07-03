@@ -46,6 +46,13 @@ const ListLesson = () => {
         windowSize={1}
         horizontal={true}
         onSnapToItem={(slideIndex: number) => {
+          console.log(
+            '🛠 LOG: 🚀 --> -----------------------------------------------------🛠 LOG: 🚀 -->',
+          );
+          console.log('🛠 LOG: 🚀 --> ~ ListLesson ~ slideIndex:', slideIndex);
+          console.log(
+            '🛠 LOG: 🚀 --> -----------------------------------------------------🛠 LOG: 🚀 -->',
+          );
           setSubjectIndex(slideIndex);
           setSubjectId(listSubject[slideIndex]?._id);
         }}

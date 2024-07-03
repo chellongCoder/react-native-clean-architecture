@@ -41,6 +41,10 @@ const ModuleItem = (props: Props) => {
     navigateScreen(STACK_NAVIGATOR.HOME.LESSON);
   }, []);
 
+  const onStudy = useCallback(() => {
+    navigateScreen(STACK_NAVIGATOR.HOME.LESSON);
+  }, []);
+
   return !props.isFinished ? (
     <View style={[styles.container, {backgroundColor: COLORS.WHITE_FBF8CC}]}>
       <View style={[globalStyle.rowCenter]}>
@@ -76,7 +80,7 @@ const ModuleItem = (props: Props) => {
           </Text>
         </TouchableOpacity>
         <View style={{height: verticalScale(14)}} />
-        <Button color={COLORS.GREEN_66C270} title="Study" />
+        <Button onPress={onStudy} color={COLORS.GREEN_66C270} title="Study" />
       </View>
     </View>
   ) : (
