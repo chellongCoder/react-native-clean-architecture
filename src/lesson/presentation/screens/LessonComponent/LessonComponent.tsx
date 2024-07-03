@@ -7,6 +7,7 @@ import IconStar from 'assets/svg/iconStar';
 import BookView from '../../components/BookView';
 
 type Props = {
+  lessonName?: string;
   module?: string;
   backgroundColor?: string;
   backgroundAnswerColor: string;
@@ -19,6 +20,7 @@ type Props = {
 };
 
 const LessonComponent = ({
+  lessonName = '',
   module = '',
   backgroundColor = '#66c270',
   backgroundAnswerColor = '#FFD75A',
@@ -41,7 +43,7 @@ const LessonComponent = ({
         <View style={[styles.rowBetween]}>
           <View>
             <Text style={[styles.fonts_SVN_Cherish, styles.textTitle]}>
-              VIETNAMESE
+              {lessonName}
             </Text>
             <Text style={[styles.fonts_SVN_Cherish, styles.textModule]}>
               {module}
@@ -105,6 +107,7 @@ const styles = StyleSheet.create({
   rowAlignCenter: {
     flexDirection: 'row',
     alignItems: 'center',
+    marginTop: 8,
   },
   rowBetween: {
     flexDirection: 'row',
@@ -167,18 +170,18 @@ const styles = StyleSheet.create({
     color: '#258F78',
   },
   boxPrice: {
-    marginTop: 8,
     flexDirection: 'row',
-    justifyContent: 'flex-end',
+    justifyContent: 'space-between',
+    paddingVertical: 6,
+    paddingHorizontal: 10,
+    alignItems: 'center',
     borderRadius: 100,
-    padding: 6,
     width: 90,
     backgroundColor: '#FFE699',
   },
   textPrice: {
     fontSize: 18,
     color: '#1C6349',
-    paddingHorizontal: 16,
   },
   boxQuestion: {
     flex: 1,

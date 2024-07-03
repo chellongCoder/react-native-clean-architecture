@@ -11,6 +11,7 @@ import {Subject} from 'src/home/application/types/GetListSubjectResponse';
 import {GetListLessonPayload} from 'src/home/application/types/GetListLessonPayload';
 import GetListLessonUseCase from 'src/home/application/useCases/GetListLessonUseCase';
 import {Module} from 'src/home/application/types/GetListLessonResponse';
+import GetListQuestionUseCase from 'src/home/application/useCases/GetListQuestionUseCase';
 
 @injectable()
 export class HomeStore implements HomeStoreState {
@@ -37,6 +38,9 @@ export class HomeStore implements HomeStoreState {
 
     @provided(GetListLessonUseCase)
     private getListLessonUseCase: GetListLessonUseCase,
+
+    @provided(GetListQuestionUseCase)
+    private getListQuestionUseCase: GetListQuestionUseCase,
   ) {
     this.initializePersistence();
     this.getField = this.getField.bind(this);
@@ -87,6 +91,27 @@ export class HomeStore implements HomeStoreState {
     });
 
     this.listModule = response.data;
+    this.setIsLoading(false);
+    return response;
+  }
+
+  @action
+  public async getListQuestions({subjectId}: Partial<GetListLessonPayload>) {
+    this.setIsLoading(true);
+    const response = await this.getListQuestionUseCase.execute({
+      subjectId,
+    });
+    console.log(
+      '🛠 LOG: 🚀 --> -------------------------------------------------------------------🛠 LOG: 🚀 -->',
+    );
+    console.log(
+      '🛠 LOG: 🚀 --> ~ HomeStore ~ getListQuestions ~ response:',
+      response,
+    );
+    console.log(
+      '🛠 LOG: 🚀 --> -------------------------------------------------------------------🛠 LOG: 🚀 -->',
+    );
+
     this.setIsLoading(false);
     return response;
   }

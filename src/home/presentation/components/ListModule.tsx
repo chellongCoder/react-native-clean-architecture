@@ -10,7 +10,7 @@ import {observer} from 'mobx-react';
 const screenWidth = Dimensions.get('screen').width;
 
 const ListModule = observer(() => {
-  const {modules} = useListModule();
+  const {modules, selectedSubject} = useListModule();
 
   return (
     <View style={styles.container}>
@@ -33,6 +33,8 @@ const ListModule = observer(() => {
                 isFinished={module.progressOfChildren === module.totalQuestion}
                 title={module.name}
                 subTitle={module.description}
+                id={module._id}
+                lessonName={selectedSubject?.name}
               />
             </View>
           );

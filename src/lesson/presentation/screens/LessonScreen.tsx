@@ -15,16 +15,18 @@ import {LessonStoreProvider} from '../stores/LessonStore/LessonStoreProvider';
 import {observer} from 'mobx-react';
 import {useLessonStore} from '../stores/LessonStore/useGetPostsStore';
 import VowelsLesson from './LessonComponent/VowelsLesson';
+import {useListQuestions} from 'src/hooks/useListQuestion';
+import {ParamListBase, RouteProp, useRoute} from '@react-navigation/native';
 
 enum LessonTypeE {
   ACHIEVEMENT,
-  VOWEL,
   WRITE,
   VOCABULARY_LISTEN,
   VOCABULARY_FILL_BLANK,
   VOCABULARY_TRANSLATE,
   GEOMETRY,
   MATH,
+  VOWEL = 'fill_in_blank',
 }
 
 type LessonType = {
@@ -33,7 +35,7 @@ type LessonType = {
 
 const LessonScreen = observer(() => {
   const lessons: LessonType[] = [
-    {lessonType: LessonTypeE.ACHIEVEMENT},
+    // {lessonType: LessonTypeE.ACHIEVEMENT},
     {lessonType: LessonTypeE.VOWEL},
     {lessonType: LessonTypeE.WRITE},
     {lessonType: LessonTypeE.VOCABULARY_LISTEN},
@@ -42,12 +44,27 @@ const LessonScreen = observer(() => {
     {lessonType: LessonTypeE.GEOMETRY},
     {lessonType: LessonTypeE.MATH},
   ];
+  const route =
+    useRoute<
+      RouteProp<
+        {Detail: {lessonId: string; lessonName: string; moduleName: string}},
+        'Detail'
+      >
+    >().params;
   const lessonStore = useLessonStore();
-
+  const {tasks} = useListQuestions(route?.lessonId);
+  console.log(
+    '🛠 LOG: 🚀 --> -----------------------------------------------------🛠 LOG: 🚀 -->',
+  );
+  console.log('🛠 LOG: 🚀 --> ~ LessonScreen ~ questions:', tasks);
+  console.log(
+    '🛠 LOG: 🚀 --> -----------------------------------------------------🛠 LOG: 🚀 -->',
+  );
   const [lessonIndex, setLessonIndex] = useState(0);
+  const firstMiniTestTask = tasks.find(task => task.type === 'mini_test');
 
   const nextModule = () => {
-    if (lessonIndex >= lessons.length - 1) {
+    if (lessonIndex >= (firstMiniTestTask?.question.length ?? 1) - 1) {
       alertMessage(
         'Important message',
         'You reached 75 point so that you archived 30minutes free time to use another apps',
@@ -55,11 +72,13 @@ const LessonScreen = observer(() => {
       resetNavigator(STACK_NAVIGATOR.HOME.DONE_LESSON_SCREEN);
     }
     lessonStore.setIsShow(true);
-    setLessonIndex((lessonIndex + 1) % lessons.length);
+    setLessonIndex(
+      (lessonIndex + 1) % (firstMiniTestTask?.question.length ?? 1),
+    );
   };
 
   const buildLesson = () => {
-    switch (lessons[lessonIndex]?.lessonType) {
+    switch (firstMiniTestTask?.question?.[lessonIndex]?.type as LessonTypeE) {
       case LessonTypeE.ACHIEVEMENT:
         return (
           <AchievementLesson
@@ -73,7 +92,10 @@ const LessonScreen = observer(() => {
           <VowelsLesson
             moduleIndex={lessonIndex}
             nextModule={nextModule}
-            totalModule={lessons.length}
+            totalModule={firstMiniTestTask?.question.length ?? 0}
+            lessonName={route.lessonName}
+            moduleName={route.moduleName}
+            firstMiniTestTask={firstMiniTestTask}
           />
         );
       case LessonTypeE.WRITE:

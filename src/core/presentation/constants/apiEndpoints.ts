@@ -23,8 +23,12 @@ const getFieldEndPointServices = () => {
   return `/api${API_VERSION}${SERVICES.FIELD}`;
 };
 
-const getLessonEndPointServices = (path: string) => {
+const getLessonSubjectEndPointServices = (path: string) => {
   return `/api${API_VERSION}${SERVICES.LESSON}/${path}`;
+};
+
+const getLessonEndPointServices = () => {
+  return `/api${API_VERSION}${SERVICES.LESSON}`;
 };
 
 export const API_ENDPOINTS = {
@@ -44,7 +48,10 @@ export const API_ENDPOINTS = {
     LIST_SUBJECT_OF_FIELD: getSubjectEndPointServices('list-subject-of-field'),
   },
   LESSON: {
-    LISTLESSONOFSUBJECT: getLessonEndPointServices('list-lesson-of-subject'),
+    LISTLESSONOFSUBJECT: getLessonSubjectEndPointServices(
+      'list-lesson-of-subject',
+    ),
+    QUESTIONS: getLessonEndPointServices(),
   },
   FIELD: getFieldEndPointServices(),
 };

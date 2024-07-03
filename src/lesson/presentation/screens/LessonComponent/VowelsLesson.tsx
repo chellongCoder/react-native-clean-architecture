@@ -4,30 +4,43 @@ import LessonComponent from './LessonComponent';
 import PrimaryButton from '../../components/PrimaryButton';
 import {FontFamily} from 'src/core/presentation/hooks/useFonts';
 import useGlobalStyle from 'src/core/presentation/hooks/useGlobalStyle';
+import {Task} from 'src/home/application/types/GetListQuestionResponse';
 
 type Props = {
   moduleIndex: number;
   totalModule: number;
   nextModule: () => void;
+  lessonName: string;
+  moduleName: string;
+  firstMiniTestTask?: Task;
 };
 
-const VowelsLesson = ({moduleIndex, nextModule, totalModule}: Props) => {
+const VowelsLesson = ({
+  moduleIndex,
+  nextModule,
+  totalModule,
+  lessonName,
+  moduleName,
+  firstMiniTestTask,
+}: Props) => {
   const globalStyle = useGlobalStyle();
 
   const [answerSelected, setAnswerSelected] = useState('');
 
-  const listAnswer = ['A', 'E', 'I', 'O', 'U'];
-
   return (
     <LessonComponent
-      module="Module 1"
+      lessonName={lessonName}
+      module={moduleName}
       backgroundColor="#66c270"
       backgroundAnswerColor="#DDF598"
+      price="Free"
       buildQuestion={
         <View>
-          <Text style={[styles.fonts_SVN_Cherish, styles.textLarge]}>Á</Text>
+          <Text style={[styles.fonts_SVN_Cherish, styles.textLarge]}>
+            {firstMiniTestTask?.question?.[moduleIndex]?.correctAnswer}
+          </Text>
           <Text style={[styles.fonts_SVN_Cherish, styles.textQuestion]}>
-            CAT
+            {firstMiniTestTask?.question?.[moduleIndex]?.content}
           </Text>
         </View>
       }
@@ -44,25 +57,27 @@ const VowelsLesson = ({moduleIndex, nextModule, totalModule}: Props) => {
                 styles.textGreen,
                 styles.mt16,
               ]}>
-              H_T
+              {firstMiniTestTask?.question?.[moduleIndex]?.content}
             </Text>
             <View style={[styles.wapper, styles.fill]}>
-              {listAnswer.map((e, i) => {
-                const bg = e === answerSelected ? '#66C270' : '#F2B559';
-                return (
-                  <TouchableOpacity
-                    key={i}
-                    onPress={() => setAnswerSelected(e)}
-                    style={[
-                      styles.boxVowel,
-                      {
-                        backgroundColor: bg,
-                      },
-                    ]}>
-                    <Text style={[styles.textVowel]}>{e}</Text>
-                  </TouchableOpacity>
-                );
-              })}
+              {firstMiniTestTask?.question?.[moduleIndex]?.answers?.map(
+                (e, i) => {
+                  const bg = e === answerSelected ? '#66C270' : '#F2B559';
+                  return (
+                    <TouchableOpacity
+                      key={i}
+                      onPress={() => setAnswerSelected(e)}
+                      style={[
+                        styles.boxVowel,
+                        {
+                          backgroundColor: bg,
+                        },
+                      ]}>
+                      <Text style={[styles.textVowel]}>{e}</Text>
+                    </TouchableOpacity>
+                  );
+                },
+              )}
             </View>
           </View>
           <PrimaryButton

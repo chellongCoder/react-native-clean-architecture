@@ -9,6 +9,7 @@ import {GetListSubjectPayload} from '../application/types/GetListSubjectPayload'
 import GetListSubjectResponse from '../application/types/GetListSubjectResponse';
 import {GetListLessonPayload} from '../application/types/GetListLessonPayload';
 import GetListLessonResponse from '../application/types/GetListLessonResponse';
+import GetListQuestionResponse from '../application/types/GetListQuestionResponse';
 
 @injectable()
 class HomeRepository implements IHomeRepository {
@@ -39,6 +40,15 @@ class HomeRepository implements IHomeRepository {
     const response: GetListLessonResponse = await this.httpClient.post(
       `${API_ENDPOINTS.LESSON.LISTLESSONOFSUBJECT}`,
       {childrenId, subjectId},
+    );
+    return response;
+  }
+
+  public async getListLessonQuestions({
+    subjectId,
+  }: Partial<GetListLessonPayload>): Promise<GetListQuestionResponse> {
+    const response: GetListQuestionResponse = await this.httpClient.get(
+      `${API_ENDPOINTS.LESSON.QUESTIONS}/${subjectId}`,
     );
     return response;
   }

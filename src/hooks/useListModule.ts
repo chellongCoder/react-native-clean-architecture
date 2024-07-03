@@ -22,5 +22,8 @@ export const useListModule = () => {
 
   return {
     modules,
+    selectedSubject: homeStore.listSubject.find(
+      subject => subject._id === homeStore.subjectId,
+    ),
   };
 };

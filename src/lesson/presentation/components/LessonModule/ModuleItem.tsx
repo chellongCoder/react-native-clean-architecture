@@ -22,6 +22,8 @@ type Props = {
   subTitle: string;
   progress: number;
   totalQuestion: number;
+  id: string;
+  lessonName?: string;
 };
 const ModuleItem = (props: Props) => {
   const globalStyle = useGlobalStyle();
@@ -42,8 +44,12 @@ const ModuleItem = (props: Props) => {
   }, []);
 
   const onStudy = useCallback(() => {
-    navigateScreen(STACK_NAVIGATOR.HOME.LESSON);
-  }, []);
+    navigateScreen(STACK_NAVIGATOR.HOME.LESSON, {
+      lessonId: props.id,
+      lessonName: props.lessonName,
+      moduleName: props.title,
+    });
+  }, [props.id, props.lessonName, props.title]);
 
   return !props.isFinished ? (
     <View style={[styles.container, {backgroundColor: COLORS.WHITE_FBF8CC}]}>
