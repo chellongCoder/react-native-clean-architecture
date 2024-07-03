@@ -4,6 +4,7 @@ import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {FontFamily} from 'src/core/presentation/hooks/useFonts';
 import IconDiamond from 'assets/svg/IconDiamond';
 import IconStar from 'assets/svg/iconStar';
+import BookView from '../../components/BookView';
 
 type Props = {
   module?: string;
@@ -36,7 +37,7 @@ const LessonComponent = ({
         styles.screen,
         {paddingTop: insets.top, backgroundColor: backgroundColor},
       ]}>
-      <View style={[styles.ph24, styles.container]}>
+      <View style={[styles.ph24, styles.fill]}>
         <View style={[styles.rowBetween]}>
           <View>
             <Text style={[styles.fonts_SVN_Cherish, styles.textTitle]}>
@@ -75,21 +76,12 @@ const LessonComponent = ({
         </View>
       </View>
       <View style={[styles.h450]}>
-        <View style={styles.backgroundAnswer}>
-          <View
-            style={[
-              styles.backgroundLeft,
-              {backgroundColor: backgroundAnswerColor},
-            ]}
-          />
-          <View
-            style={[
-              styles.backgroundRight,
-              {backgroundColor: backgroundAnswerColor},
-            ]}
-          />
-        </View>
-        <View style={[styles.boxAnswer]}>{buildAnswer}</View>
+        <BookView
+          style={[styles.bookView]}
+          contentStyle={[styles.content]}
+          colorBg={backgroundAnswerColor}>
+          <View style={[styles.boxAnswer]}>{buildAnswer}</View>
+        </BookView>
       </View>
     </View>
   );
@@ -102,7 +94,7 @@ const Dotline = ({bg}: {bg: string}) => {
 export default LessonComponent;
 
 const styles = StyleSheet.create({
-  container: {
+  fill: {
     flex: 1,
   },
   screen: {
@@ -128,6 +120,16 @@ const styles = StyleSheet.create({
   },
   h450: {
     height: 450,
+  },
+  bookView: {
+    height: 450,
+    paddingTop: 0,
+    paddingBottom: 0,
+  },
+  content: {
+    flex: 1,
+    marginTop: 0,
+    marginBottom: 0,
   },
   p16: {
     padding: 16,
@@ -196,26 +198,6 @@ const styles = StyleSheet.create({
   boxAnswer: {
     flex: 1,
     padding: 32,
-  },
-  backgroundAnswer: {
-    position: 'absolute',
-    flexDirection: 'row',
-    top: 0,
-    bottom: 0,
-    right: 0,
-    left: 0,
-  },
-  backgroundLeft: {
-    backgroundColor: '#DDF598',
-    flex: 1,
-    borderTopRightRadius: 16,
-    borderTopLeftRadius: 40,
-  },
-  backgroundRight: {
-    backgroundColor: '#DDF598',
-    flex: 1,
-    borderTopRightRadius: 40,
-    borderTopLeftRadius: 16,
   },
   textW500s16White: {
     fontWeight: '500',

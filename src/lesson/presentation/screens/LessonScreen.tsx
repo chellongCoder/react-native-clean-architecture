@@ -14,9 +14,11 @@ import {withProviders} from 'src/core/presentation/utils/withProviders';
 import {LessonStoreProvider} from '../stores/LessonStore/LessonStoreProvider';
 import {observer} from 'mobx-react';
 import {useLessonStore} from '../stores/LessonStore/useGetPostsStore';
+import VowelsLesson from './LessonComponent/VowelsLesson';
 
 enum LessonTypeE {
   ACHIEVEMENT,
+  VOWEL,
   WRITE,
   VOCABULARY_LISTEN,
   VOCABULARY_FILL_BLANK,
@@ -32,6 +34,7 @@ type LessonType = {
 const LessonScreen = observer(() => {
   const lessons: LessonType[] = [
     {lessonType: LessonTypeE.ACHIEVEMENT},
+    {lessonType: LessonTypeE.VOWEL},
     {lessonType: LessonTypeE.WRITE},
     {lessonType: LessonTypeE.VOCABULARY_LISTEN},
     {lessonType: LessonTypeE.VOCABULARY_FILL_BLANK},
@@ -60,6 +63,14 @@ const LessonScreen = observer(() => {
       case LessonTypeE.ACHIEVEMENT:
         return (
           <AchievementLesson
+            moduleIndex={lessonIndex}
+            nextModule={nextModule}
+            totalModule={lessons.length}
+          />
+        );
+      case LessonTypeE.VOWEL:
+        return (
+          <VowelsLesson
             moduleIndex={lessonIndex}
             nextModule={nextModule}
             totalModule={lessons.length}
