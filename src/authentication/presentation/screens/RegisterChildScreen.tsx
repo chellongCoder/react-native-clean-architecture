@@ -148,6 +148,7 @@ const RegisterChildScreen: React.FC = () => {
                 value: registerState.name,
                 onChangeText: (e: string) => onTextInputChange('name', e),
               }}
+              autoFocus={true}
             />
 
             <View style={styles.genderAgeContainer}>

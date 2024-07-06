@@ -133,7 +133,9 @@ const ParentScreen = observer(() => {
   );
 
   const onAddChild = () => {
-    resetNavigator(STACK_NAVIGATOR.AUTH.REGISTER_CHILD_SCREEN);
+    resetNavigator(STACK_NAVIGATOR.AUTH_NAVIGATOR, {
+      screen: STACK_NAVIGATOR.AUTH.REGISTER_CHILD_SCREEN,
+    });
   };
 
   const onSelectChild = (item: children) => {

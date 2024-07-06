@@ -24,6 +24,7 @@ type Props = {
   suffiex?: React.ReactNode;
   contentContainerStyle?: StyleProp<ViewStyle>;
   inputMode?: InputModeOptions;
+  autoFocus?: boolean;
 };
 
 export type ItemType = {
@@ -55,6 +56,7 @@ const CommonInput = (props: Props) => {
           style={[styles.input]}
           {...props.textInputProp}
           inputMode={props.inputMode ?? 'none'}
+          autoFocus={props.autoFocus ?? false}
         />
       </View>
       {props.suffiex}
