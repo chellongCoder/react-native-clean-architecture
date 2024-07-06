@@ -82,13 +82,18 @@ export class LessonStore {
   };
 
   @action
+  resetListAppSystem = async () => {
+    this.blockedListAppsSystem = [];
+  };
+
+  @action
   changeBlockedListAppSystem = async (arr: AppEntity[]) => {
     this.blockedListAppsSystem = arr;
   };
 
   @action
   changeBlockedAnonymousListAppSystem = async (
-    arr: FamilyActivitySelection,
+    arr?: FamilyActivitySelection,
   ) => {
     this.blockedAnonymousListAppsSystem = arr;
   };

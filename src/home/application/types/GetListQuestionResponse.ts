@@ -12,6 +12,7 @@ export interface Question {
   updatedAt: string;
   _id: string;
   answers: Answer[];
+  fullAnswer: string;
 }
 
 export interface Task {

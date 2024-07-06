@@ -7,9 +7,7 @@ import Button from './Button';
 import {scale, verticalScale} from 'react-native-size-matters';
 import {
   // ScreenTimeComponent,
-  requestScreenTime,
   selectedAppsData,
-  unBlockApps,
   sentEvent,
 } from 'react-native-alphadex-screentime';
 import {TouchableOpacity} from 'react-native-gesture-handler';

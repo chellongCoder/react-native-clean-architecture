@@ -258,7 +258,15 @@ const ParentScreen = observer(() => {
             <PrimaryButton
               text="Unlock"
               style={[styles.btnCommon, styles.btnRed]}
-              onPress={unBlockApps}
+              onPress={async () => {
+                try {
+                  await unBlockApps();
+                } catch (error) {
+                } finally {
+                  lesson.changeBlockedAnonymousListAppSystem(undefined);
+                  lesson.resetListAppSystem();
+                }
+              }}
             />
             <PrimaryButton text="Save" style={[styles.btnCommon]} />
           </View>
@@ -311,6 +319,7 @@ const ParentScreen = observer(() => {
     globalStyle.txtNote,
     globalStyle.txtButton,
     tabBody,
+    lesson,
     tabSetting,
   ]);
 

@@ -1,13 +1,15 @@
 import React, {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
-import {RootStackScreenProps} from '../navigation/types';
 import useGlobalStyle from '../hooks/useGlobalStyle';
 import ICStar from 'src/core/components/icons/ICStar';
 import {STACK_NAVIGATOR} from '../navigation/ConstantNavigator';
 import {resetNavigator} from '../navigation/actions/RootNavigationActions';
 import {unBlockApps} from 'react-native-alphadex-screentime';
+import {lessonModuleContainer} from 'src/lesson/LessonModule';
+import {LessonStore} from 'src/lesson/presentation/stores/LessonStore/LessonStore';
 
 const DoneLessonScreen = ({navigation}) => {
   const styleHook = useGlobalStyle();
+  const lessonStore = lessonModuleContainer.getProvided(LessonStore);
 
   return (
     <View style={styles.container}>
@@ -54,6 +56,8 @@ const DoneLessonScreen = ({navigation}) => {
               resetNavigator(STACK_NAVIGATOR.HOME.HOME_SCREEN);
               console.log('isloading true');
               await unBlockApps();
+              lessonStore.changeBlockedAnonymousListAppSystem(undefined);
+              lessonStore.resetListAppSystem();
               console.log('isloading false');
             }}
             style={styles.button}>

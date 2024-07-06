@@ -67,7 +67,7 @@ const LessonScreen = observer(() => {
     if (lessonIndex >= (firstMiniTestTask?.question.length ?? 1) - 1) {
       alertMessage(
         'Important message',
-        'You reached 75 point so that you archived 30minutes free time to use another apps',
+        "You reached 100% of the minitest's question",
       );
       resetNavigator(STACK_NAVIGATOR.HOME.DONE_LESSON_SCREEN);
     }

@@ -40,7 +40,7 @@ const VowelsLesson = ({
             {firstMiniTestTask?.question?.[moduleIndex]?.correctAnswer}
           </Text>
           <Text style={[styles.fonts_SVN_Cherish, styles.textQuestion]}>
-            {firstMiniTestTask?.question?.[moduleIndex]?.content}
+            {firstMiniTestTask?.question?.[moduleIndex]?.fullAnswer}
           </Text>
         </View>
       }
@@ -84,6 +84,7 @@ const VowelsLesson = ({
             text="Submit"
             style={[styles.mt32]}
             onPress={() => {
+              setAnswerSelected('');
               nextModule();
             }}
           />

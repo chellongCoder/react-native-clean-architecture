@@ -127,6 +127,11 @@ class AlphadexScreentimeModule(reactContext: ReactApplicationContext) : ReactCon
   }
 
   @ReactMethod
+  fun unLockedApps(promise : Promise) {
+    setIfServiceClosed("0")
+    reactApplicationContext.stopService(Intent(reactApplicationContext, ForegroundService::class.java))
+  }
+  @ReactMethod
   fun addToLockedApps(array: ReadableArray, promise : Promise) {
     lockedAppList = emptyList()
 //        val mContentView = RemoteViews(packageName, R.layout.list_view)

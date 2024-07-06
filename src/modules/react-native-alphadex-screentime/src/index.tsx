@@ -85,7 +85,11 @@ export function selectedAppsData(): Promise<any> {
 }
 
 export function unBlockApps(): Promise<boolean> {
-  return ScreenTimeSelectApps.unBlockApps();
+  if (Platform.OS === 'android') {
+    return AlphadexScreentime.unLockedApps();
+  } else {
+    return ScreenTimeSelectApps.unBlockApps();
+  }
 }
 
 export function sentEvent(): Promise<boolean> {
