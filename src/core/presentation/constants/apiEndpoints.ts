@@ -5,6 +5,7 @@ const SERVICES = {
   SUBJECT: '/subject',
   FIELD: '/field',
   LESSON: '/lesson',
+  USER_SETTING: '/user-setting',
 };
 
 const getAuthEndPointServices = (path: string) => {
@@ -31,6 +32,10 @@ const getLessonEndPointServices = () => {
   return `/api${API_VERSION}${SERVICES.LESSON}`;
 };
 
+const getUserSettingEndPointServices = (path: string) => {
+  return `/api${API_VERSION}${SERVICES.USER_SETTING}/${path}`;
+};
+
 export const API_ENDPOINTS = {
   AUTHENTICATION: {
     LOGIN_WITH_CREDENTIALS: getAuthEndPointServices('login'),
@@ -54,4 +59,7 @@ export const API_ENDPOINTS = {
     QUESTIONS: getLessonEndPointServices(),
   },
   FIELD: getFieldEndPointServices(),
+  USER_SETTING: {
+    ASSIGN_CHILDREN: getUserSettingEndPointServices('assign-children'),
+  },
 };

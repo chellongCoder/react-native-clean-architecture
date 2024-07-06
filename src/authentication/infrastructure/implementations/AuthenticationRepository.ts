@@ -22,6 +22,8 @@ import {ComparePasswordPayload} from 'src/authentication/application/types/Compa
 import {ComparePasswordResponse} from 'src/authentication/application/types/ComparePasswordResponse';
 import {ChangeParentNamePayload} from 'src/authentication/application/types/ChangeParentNamePayload';
 import {ChangeParentNameResponse} from 'src/authentication/application/types/ChangeParentNameResponse';
+import {AssignChildrenPayload} from 'src/authentication/application/types/AssignChildrenPayload';
+import {AssignChildrenResponse} from 'src/authentication/application/types/AssignChildrenResponse';
 
 @injectable()
 class AuthenticationRepository implements IAuthenticationRepository {
@@ -120,6 +122,16 @@ class AuthenticationRepository implements IAuthenticationRepository {
   ): Promise<ChangeParentNameResponse> {
     const response: ChangeParentNameResponse = await this.httpClient.patch(
       API_ENDPOINTS.USER.CHANGE_PARENT_NAME,
+      data,
+    );
+    return response;
+  }
+
+  public async assignChildren(
+    data: AssignChildrenPayload,
+  ): Promise<AssignChildrenResponse> {
+    const response: AssignChildrenResponse = await this.httpClient.post(
+      API_ENDPOINTS.USER_SETTING.ASSIGN_CHILDREN,
       data,
     );
     return response;

@@ -11,6 +11,7 @@ import RefreshTokenUseCase from './application/useCases/RefreshTokenUseCase';
 import LogOutUseCase from './application/useCases/LogoutUsecase';
 import ComparePasswordUseCase from './application/useCases/ComparePasswordUsecase';
 import ChangeParentNameUseCase from './application/useCases/ChangeParentNameUsecase';
+import AssignChildrenUseCase from './application/useCases/AssignChildrenUsecase';
 
 @module({
   providers: [
@@ -31,6 +32,7 @@ import ChangeParentNameUseCase from './application/useCases/ChangeParentNameUsec
     LogOutUseCase,
     ComparePasswordUseCase,
     ChangeParentNameUseCase,
+    AssignChildrenUseCase,
   ],
 })
 export class AuthenticationModule {}
