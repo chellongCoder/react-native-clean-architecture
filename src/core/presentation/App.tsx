@@ -13,6 +13,7 @@ import {LoadingGlobalProvider} from './hooks/loading/LoadingGlobalProvider';
 import Toast from 'react-native-toast-message';
 import {requestScreenTime} from 'react-native-alphadex-screentime';
 import {isAndroid} from './utils';
+import {GestureHandlerRootView} from 'react-native-gesture-handler';
 const App = () => {
   const routeNameRef = useRef<string>();
 
@@ -44,12 +45,14 @@ const App = () => {
       onReady={onNavigationReady}
       onStateChange={changeRouteName}>
       <SafeAreaProvider initialMetrics={initialWindowMetrics}>
-        <AuthenticationProvider>
-          <LoadingGlobalProvider>
-            <RootNavigator />
-            <Toast />
-          </LoadingGlobalProvider>
-        </AuthenticationProvider>
+        <GestureHandlerRootView style={{flex: 1}}>
+          <AuthenticationProvider>
+            <LoadingGlobalProvider>
+              <RootNavigator />
+              <Toast />
+            </LoadingGlobalProvider>
+          </AuthenticationProvider>
+        </GestureHandlerRootView>
       </SafeAreaProvider>
     </NavigationContainer>
   );

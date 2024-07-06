@@ -1,3 +1,5 @@
+import {AssignChildrenPayload} from '../application/types/AssignChildrenPayload';
+import {AssignChildrenResponse} from '../application/types/AssignChildrenResponse';
 import {ChangeParentNamePayload} from '../application/types/ChangeParentNamePayload';
 import {ChangeParentNameResponse} from '../application/types/ChangeParentNameResponse';
 import {ComparePasswordPayload} from '../application/types/ComparePasswordPayload';
@@ -40,4 +42,8 @@ export interface IAuthenticationRepository {
   changeParentName: (
     data: ChangeParentNamePayload,
   ) => Promise<ChangeParentNameResponse>;
+
+  assignChildren: (
+    data: AssignChildrenPayload,
+  ) => Promise<AssignChildrenResponse>;
 }

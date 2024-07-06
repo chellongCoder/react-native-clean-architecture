@@ -25,7 +25,9 @@ import {ComparePasswordPayload} from 'src/authentication/application/types/Compa
 import {children} from 'src/authentication/application/types/GetUserProfileResponse';
 import ChangeParentNameUseCase from 'src/authentication/application/useCases/ChangeParentNameUsecase';
 import {ChangeParentNamePayload} from 'src/authentication/application/types/ChangeParentNamePayload';
-
+import {getAndroidId, getDeviceToken} from 'react-native-device-info';
+import AssignChildrenUseCase from 'src/authentication/application/useCases/AssignChildrenUsecase';
+import {isAndroid} from 'src/core/presentation/utils';
 @injectable()
 export class AuthenticationStore implements AuthenticationStoreState {
   isLoading = false;
@@ -63,6 +65,9 @@ export class AuthenticationStore implements AuthenticationStoreState {
 
     @provided(ChangeParentNameUseCase)
     private changeParentNameUseCase: ChangeParentNameUseCase,
+
+    @provided(AssignChildrenUseCase)
+    private assignChildrenUseCase: AssignChildrenUseCase,
 
     @provided(IHttpClientToken) private readonly httpClient: IHttpClient, // @provided(CoreStore) private coreStore: CoreStore,
   ) {
@@ -120,7 +125,6 @@ export class AuthenticationStore implements AuthenticationStoreState {
   public async loginUsernamePassword(args: LoginUsernamePasswordPayload) {
     this.setIsLoading(true);
     const response = await this.loginUsernamePasswordUseCase.execute(args);
-    console.log('response: ', response);
     if (response.error) {
       return response;
     }
@@ -207,8 +211,23 @@ export class AuthenticationStore implements AuthenticationStoreState {
   }
 
   @action
-  public setSelectedChild(child: children) {
+  public async setSelectedChild(child: children) {
     this.selectedChild = child;
+    let deviceToken;
+    if (isAndroid) {
+      await getAndroidId().then((androidId: string) => {
+        deviceToken = androidId;
+      });
+    } else {
+      await getDeviceToken().then((iosId: string) => {
+        deviceToken = iosId;
+      });
+    }
+    const response = await this.assignChildrenUseCase.execute({
+      deviceToken: deviceToken || '',
+      childrenId: child._id,
+    });
+    console.log('response: ', response);
   }
 
   @action

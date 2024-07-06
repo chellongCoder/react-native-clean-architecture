@@ -4,8 +4,9 @@ import {
   Text,
   TouchableOpacity,
   StyleSheet,
-  ScrollView,
   FlatList,
+  Platform,
+  KeyboardAvoidingView,
 } from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {scale} from 'react-native-size-matters';
@@ -135,7 +136,10 @@ const RegisterChildScreen: React.FC = () => {
           <ICDropDown />
         </TouchableOpacity>
 
-        <ScrollView contentContainerStyle={{flex: 1}}>
+        {/* <ScrollView contentContainerStyle={{flex: 1}}> */}
+        <KeyboardAvoidingView
+          style={[styles.fill]}
+          behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
           <View style={styles.wrapBodyContainer}>
             <CommonInput
               label="Child's name"
@@ -144,6 +148,7 @@ const RegisterChildScreen: React.FC = () => {
                 value: registerState.name,
                 onChangeText: (e: string) => onTextInputChange('name', e),
               }}
+              autoFocus={true}
             />
 
             <View style={styles.genderAgeContainer}>
@@ -179,7 +184,8 @@ const RegisterChildScreen: React.FC = () => {
               />
             </View>
           </View>
-        </ScrollView>
+        </KeyboardAvoidingView>
+        {/* </ScrollView> */}
       </View>
       <View style={styles.buttonContainer}>
         <TouchableOpacity
@@ -193,6 +199,9 @@ const RegisterChildScreen: React.FC = () => {
 };
 
 const styles = StyleSheet.create({
+  fill: {
+    flex: 1,
+  },
   container: {
     flex: 1,
     backgroundColor: COLORS.WHITE_FBF8CC,
@@ -234,6 +243,7 @@ const styles = StyleSheet.create({
   buttonContainer: {
     alignItems: 'center',
     marginTop: scale(32),
+    paddingBottom: scale(32),
   },
   wrapButtonContainer: {
     paddingVertical: scale(8),
