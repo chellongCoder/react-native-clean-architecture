@@ -1,5 +1,8 @@
 package com.alphadexscreentime
 
+import android.Manifest
+import android.app.Activity
+import android.app.AlertDialog
 import android.app.AppOpsManager
 import android.app.NotificationManager
 import android.content.Context
@@ -11,6 +14,8 @@ import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.os.Build
 import android.provider.Settings
+import androidx.core.app.ActivityCompat
+import com.facebook.react.bridge.ActivityEventListener
 import com.facebook.react.bridge.Arguments
 import com.facebook.react.bridge.Promise
 import com.facebook.react.bridge.ReactApplicationContext
@@ -19,14 +24,16 @@ import com.facebook.react.bridge.ReactMethod
 import com.facebook.react.bridge.ReadableArray
 import com.facebook.react.bridge.ReadableType
 import com.facebook.react.bridge.WritableArray
+import com.facebook.react.modules.core.PermissionListener
 
 
-class AlphadexScreentimeModule(reactContext: ReactApplicationContext) : ReactContextBaseJavaModule(reactContext) {
+class AlphadexScreentimeModule(reactContext: ReactApplicationContext) : ReactContextBaseJavaModule(reactContext), ActivityEventListener, PermissionListener {
   val SYSTEM_APP_MASK = ApplicationInfo.FLAG_SYSTEM or ApplicationInfo.FLAG_UPDATED_SYSTEM_APP
 
   private var lockedAppList: List<ApplicationInfo> = emptyList()
   private var saveAppData: SharedPreferences? = null
   private var appInfo: List<ApplicationInfo>? = null
+
 
   override fun getName(): String {
 
@@ -34,6 +41,7 @@ class AlphadexScreentimeModule(reactContext: ReactApplicationContext) : ReactCon
   }
 
   init {
+    reactContext.addActivityEventListener(this)
     saveAppData = reactContext.getSharedPreferences("save_app_data", Context.MODE_PRIVATE)
   }
 
@@ -45,12 +53,15 @@ class AlphadexScreentimeModule(reactContext: ReactApplicationContext) : ReactCon
     promise.resolve(a * b)
   }
 
+  // code to post/handler request for permission
+  val REQUEST_CODE: Int = -1010101
+
   @ReactMethod
   private fun askOverlayPermission(promise: Promise) {
     if (!Settings.canDrawOverlays(reactApplicationContext)) {
       val myIntent = Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION)
       myIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-      reactApplicationContext.startActivity(myIntent)
+      ActivityCompat.startActivityForResult(reactApplicationContext.currentActivity!!, myIntent, REQUEST_CODE, null)
     }
     promise.resolve(Settings.canDrawOverlays(reactApplicationContext))
   }
@@ -89,7 +100,7 @@ class AlphadexScreentimeModule(reactContext: ReactApplicationContext) : ReactCon
   @ReactMethod
   fun checkAndRequestNotificationPermission(promise : Promise) {
     val notificationManager = reactApplicationContext.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-
+    ActivityCompat.requestPermissions(reactApplicationContext.currentActivity!!, arrayOf(Manifest.permission.POST_NOTIFICATIONS), 1)
     if (if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
         !notificationManager.areNotificationsEnabled()
       } else {
@@ -104,27 +115,72 @@ class AlphadexScreentimeModule(reactContext: ReactApplicationContext) : ReactCon
     }
   }
 
-  @ReactMethod
+   @ReactMethod
   fun requestPushNotificationPermission(promise : Promise) {
-    val notificationManager = reactApplicationContext.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+     // Permission was denied
+     val builder = AlertDialog.Builder(reactApplicationContext.currentActivity)
+     builder.setTitle("Enable Notifications")
+     builder.setMessage("Please enable notifications for better app experience.")
+     builder.setPositiveButton("Enable") { dialog, _ ->
+       dialog.dismiss()
+       val intent = Intent()
+       intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
 
-    if (if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-        !notificationManager.areNotificationsEnabled()
-      } else {
-        // For versions below N, you can't check notification permission programmatically
-        // so we assume it's true
-        true
-      }
-    ) {
-      // Notifications are not enabled. Open the settings screen where the user can enable them.
-      val intent = Intent(Settings.ACTION_APP_NOTIFICATION_SETTINGS).apply {
-        this.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-        putExtra(Settings.EXTRA_APP_PACKAGE, reactApplicationContext.packageName)
-      }
-      reactApplicationContext.startActivity(intent)
-    }
-    promise.resolve(true)
+       intent.action = "android.settings.APP_NOTIFICATION_SETTINGS"
+
+       //for Android 5-7
+       intent.putExtra("app_package", reactApplicationContext.packageName)
+       intent.putExtra("app_uid", reactApplicationContext.applicationInfo.uid)
+
+       // for Android 8 and above
+       intent.putExtra("android.provider.extra.APP_PACKAGE", reactApplicationContext.packageName)
+
+       reactApplicationContext.startActivity(intent)
+     }
+     builder.setNegativeButton("Cancel") { dialog, _ -> dialog.dismiss() }
+     builder.show()
+     promise.resolve(true)
   }
+
+  override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray): Boolean {
+    when (requestCode) {
+      REQUEST_CODE -> {
+        if ((grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
+          // Permission was granted
+        } else {
+          // Permission was denied
+          val builder = AlertDialog.Builder(reactApplicationContext.currentActivity)
+          builder.setTitle("Enable Notifications")
+          builder.setMessage("Please enable notifications for better app experience.")
+          builder.setPositiveButton("Enable") { dialog, _ ->
+            dialog.dismiss()
+            val intent = Intent()
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+
+            intent.action = "android.settings.APP_NOTIFICATION_SETTINGS"
+
+            //for Android 5-7
+            intent.putExtra("app_package", reactApplicationContext.packageName)
+            intent.putExtra("app_uid", reactApplicationContext.applicationInfo.uid)
+
+            // for Android 8 and above
+            intent.putExtra("android.provider.extra.APP_PACKAGE", reactApplicationContext.packageName)
+
+            reactApplicationContext.startActivity(intent)
+          }
+          builder.setNegativeButton("Cancel") { dialog, _ -> dialog.dismiss() }
+          builder.show()
+        }
+        return true
+      }
+
+      else -> {
+        // Ignore all other requests
+        return false
+      }
+    }
+  }
+
 
   @ReactMethod
   fun unLockedApps(promise : Promise) {
@@ -279,5 +335,16 @@ class AlphadexScreentimeModule(reactContext: ReactApplicationContext) : ReactCon
 
   companion object {
     const val NAME = "AlphadexScreentime"
+  }
+
+
+  override fun onActivityResult(activity: Activity, requestCode: Int, resultCode: Int, data: Intent?) {
+    if (requestCode == REQUEST_CODE) {
+      // Handle the result here
+    }
+  }
+
+  override fun onNewIntent(p0: Intent?) {
+
   }
 }

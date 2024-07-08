@@ -21,11 +21,8 @@ import {Switch} from 'react-native';
 import {COLORS} from 'src/core/presentation/constants/colors';
 import {
   askOverlayPermission,
-  checkOverlayPermission,
-  hasUsageStatsPermission,
   startUsageStatsPermission,
   requestPushNotificationPermission,
-  checkAndRequestNotificationPermission,
   addToLockedApps,
 } from 'react-native-alphadex-screentime';
 import {useAsyncEffect} from 'src/core/presentation/hooks';
@@ -33,6 +30,7 @@ import {AppEntity} from 'src/modules/react-native-alphadex-screentime/src/entiti
 import {Image} from 'react-native';
 import Button from '../../components/LessonModule/Button';
 import {useNavigation, useRoute} from '@react-navigation/native';
+import {usePermissionApplock} from 'src/hooks/usePermissionApplock';
 
 type PropsItemApps = {
   preFixIcon?: React.ReactNode;
@@ -128,7 +126,6 @@ export const LessonStoreProvider = observer(({children}: PropsWithChildren) => {
         {value.bottomSheetPermissionRef && (
           <BottomSheetCustom
             snapPoints={['50']}
-            index={-1}
             ref={value.bottomSheetPermissionRef}
             title="ABC needs system permissions to work with:"
             enablePanDownToClose={false}
@@ -197,17 +194,8 @@ const ItemApps = ({
 
 const ItemPermission = ({lesson}) => {
   const globalStyle = useGlobalStyle();
-  const [isOverlay, setIsOverlay] = useState(false);
-  const [isUsageStats, setIsUsageStats] = useState(false);
-  const [isPushNoti, setIsPushNoti] = useState(false);
 
-  useAsyncEffect(async () => {
-    setIsOverlay(await checkOverlayPermission());
-
-    setIsUsageStats(await hasUsageStatsPermission());
-
-    setIsPushNoti(await checkAndRequestNotificationPermission());
-  }, []);
+  const {isOverlay, isPushNoti, isUsageStats} = usePermissionApplock();
 
   useEffect(() => {
     if (isOverlay && isUsageStats && isPushNoti) {
