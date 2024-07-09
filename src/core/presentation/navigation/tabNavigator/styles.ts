@@ -25,6 +25,15 @@ export default StyleSheet.create({
     backgroundColor: COLORS.BLUE_258F78,
     borderTopLeftRadius: scale(32),
     borderTopRightRadius: scale(32),
+    justifyContent: 'center',
+  },
+  midBackground: {
+    height: scale(64),
+    width: scale(64),
+    backgroundColor: '#258f78',
+    borderRadius: 999,
+    position: 'absolute',
+    top: scale(-32),
   },
   containerIconWrapper: {
     alignContent: 'center',
@@ -75,5 +84,10 @@ export default StyleSheet.create({
     height: scale(24),
     width: scale(24),
     borderRadius: 999,
+    padding: scale(2),
+  },
+  icon: {
+    height: '100%',
+    width: '100%',
   },
 });

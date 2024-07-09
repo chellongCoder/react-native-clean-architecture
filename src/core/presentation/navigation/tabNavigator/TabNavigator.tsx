@@ -27,25 +27,25 @@ export default function TabNavigator(): React.ReactElement {
       screenOptions={{
         headerShown: false,
       }}>
-      <BottomTab.Screen
+      {/* <BottomTab.Screen
         name={STACK_NAVIGATOR.BOTTOM_TAB.TARGET_TAB}
         key={STACK_NAVIGATOR.BOTTOM_TAB.TARGET_TAB}
         component={StudyRoadmapScreen}
-      />
+      /> */}
       <BottomTab.Screen
         name={STACK_NAVIGATOR.BOTTOM_TAB.PARENT_TAB}
         key={STACK_NAVIGATOR.BOTTOM_TAB.PARENT_TAB}
         component={ParentStackScreens}
       />
       <BottomTab.Screen
-        name={STACK_NAVIGATOR.BOTTOM_TAB.HOME_TAB}
-        key={STACK_NAVIGATOR.BOTTOM_TAB.HOME_TAB}
-        component={HomeStackScreens}
-      />
-      <BottomTab.Screen
         name={STACK_NAVIGATOR.BOTTOM_TAB.CHILD_TAB}
         key={STACK_NAVIGATOR.BOTTOM_TAB.CHILD_TAB}
         component={ChildStackScreens}
+      />
+      <BottomTab.Screen
+        name={STACK_NAVIGATOR.BOTTOM_TAB.HOME_TAB}
+        key={STACK_NAVIGATOR.BOTTOM_TAB.HOME_TAB}
+        component={HomeStackScreens}
       />
       <BottomTab.Screen
         name={STACK_NAVIGATOR.BOTTOM_TAB.ACHIEVEMENT_TAB}
