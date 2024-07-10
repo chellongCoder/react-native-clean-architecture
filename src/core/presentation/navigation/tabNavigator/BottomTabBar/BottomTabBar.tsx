@@ -47,6 +47,7 @@ function BottomTabBar({
         {Platform.OS === 'android' && (
           <View style={styles.blockRoutesContainer} />
         )}
+        <View style={[styles.midBackground]} />
         {state?.routes.map((route: any, index: number) => {
           const {options} = descriptors[route.key];
 
@@ -59,7 +60,8 @@ function BottomTabBar({
             });
 
             if (!isFocused && !event.defaultPrevented) {
-              const temp = routesView.current[2];
+              const temp =
+                routesView.current[Math.floor(state?.routes.length / 2 ?? 1)];
               const viewIndex = routesView.current.findIndex(i => i === index);
               routesView.current[2] = routesView.current[viewIndex];
               routesView.current[viewIndex] = temp;
