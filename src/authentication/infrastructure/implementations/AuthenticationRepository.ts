@@ -24,6 +24,7 @@ import {ChangeParentNamePayload} from 'src/authentication/application/types/Chan
 import {ChangeParentNameResponse} from 'src/authentication/application/types/ChangeParentNameResponse';
 import {AssignChildrenPayload} from 'src/authentication/application/types/AssignChildrenPayload';
 import {AssignChildrenResponse} from 'src/authentication/application/types/AssignChildrenResponse';
+import DeleteChildrenResponse from 'src/authentication/application/types/DeleteChildrenResponse';
 
 @injectable()
 class AuthenticationRepository implements IAuthenticationRepository {
@@ -135,6 +136,21 @@ class AuthenticationRepository implements IAuthenticationRepository {
       data,
     );
     return response;
+  }
+
+  public async deleteChildren(
+    childrenId: string,
+  ): Promise<DeleteChildrenResponse> {
+    const config: AxiosRequestConfig = {
+      data: {
+        childrenId: childrenId,
+      },
+    };
+    const response: AssignChildrenResponse = await this.httpClient.delete(
+      API_ENDPOINTS.USER.DELETE_CHILDREN,
+      config,
+    );
+    return response.data;
   }
 }
 

@@ -82,8 +82,13 @@ const ParentScreen = observer(() => {
   const globalStyle = useGlobalStyle();
   const lesson = useLessonStore();
 
-  const {getUserProfile, selectedChild, setSelectedChild, deviceToken} =
-    useAuthenticationStore();
+  const {
+    getUserProfile,
+    selectedChild,
+    setSelectedChild,
+    deviceToken,
+    deleteChildren,
+  } = useAuthenticationStore();
   const loading = useLoadingGlobal(false);
 
   const [tabParent, setTabparent] = useState(TabParentE.APP_BLOCK);
@@ -158,8 +163,16 @@ const ParentScreen = observer(() => {
 
   const onSelectChild = (item: children) => {
     setIsChooseChildren(item._id);
-    setSelectedChild(item);
-    resetNavigator(STACK_NAVIGATOR.BOTTOM_TAB_SCREENS);
+  };
+
+  const onUseChild = () => {
+    const selectedChildrenProfile = userProfile?.children.filter(
+      (item: children) => item._id === isChooseChildren,
+    )[0];
+    if (selectedChildrenProfile) {
+      setSelectedChild(selectedChildrenProfile);
+      resetNavigator(STACK_NAVIGATOR.BOTTOM_TAB_SCREENS);
+    }
   };
 
   const handleGetUserProfile = useCallback(async () => {
@@ -167,7 +180,23 @@ const ParentScreen = observer(() => {
     if (res.data) {
       setUserProfile(res.data);
     }
+    return res.data;
   }, [getUserProfile]);
+
+  const onDeleteChild = useCallback(async () => {
+    await deleteChildren(isChooseChildren);
+    const res = await handleGetUserProfile();
+    const updateSelectedChildrenProfile = res.children[0];
+    if (updateSelectedChildrenProfile) {
+      setSelectedChild(updateSelectedChildrenProfile);
+      onSelectChild(updateSelectedChildrenProfile);
+    }
+  }, [
+    deleteChildren,
+    handleGetUserProfile,
+    isChooseChildren,
+    setSelectedChild,
+  ]);
 
   useEffect(() => {
     handleGetUserProfile();
@@ -470,10 +499,16 @@ const ParentScreen = observer(() => {
             </View>
             <View>
               <View style={[styles.fill]} />
-              <PrimaryButton text="Use" style={[styles.btnCommon]} />
+              <PrimaryButton
+                text="Use"
+                style={[styles.btnCommon]}
+                onPress={onUseChild}
+              />
               <PrimaryButton
                 text="Delete"
                 style={[styles.btnCommon, styles.btnRed]}
+                onPress={onDeleteChild}
+                disable={(userProfile?.children.length || 0) < 2}
               />
             </View>
           </View>

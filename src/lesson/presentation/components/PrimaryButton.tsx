@@ -20,6 +20,7 @@ type Props = {
   onPress?: () => void;
   textStyle?: StyleProp<TextStyle>;
   isLoading?: boolean;
+  disable?: boolean;
 };
 
 const PrimaryButton = ({isLoading = false, ...props}: Props) => {
@@ -30,7 +31,8 @@ const PrimaryButton = ({isLoading = false, ...props}: Props) => {
   return (
     <TouchableOpacity
       style={[styles.button, {alignSelf: alignSelf}, props.style]}
-      onPress={props.onPress}>
+      onPress={props.onPress}
+      disabled={props.disable}>
       <Text style={[styles.text, commonStyle.txtButton, props.textStyle]}>
         {props.text}
       </Text>
