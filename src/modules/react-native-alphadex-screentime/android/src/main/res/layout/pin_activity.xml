@@ -4,9 +4,14 @@
   xmlns:tools="http://schemas.android.com/tools"
   android:layout_width="match_parent"
   android:layout_height="match_parent"
-  android:background="#0A0A0A"
+  android:background="#FFFFFF"
   >
 
+  <com.github.mmin18.widget.RealtimeBlurView
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:realtimeBlurRadius="10dp"
+    app:realtimeOverlayColor="#0A0A0A" />
 
   <ImageView
     android:id="@+id/profile_image"
@@ -14,24 +19,26 @@
     android:layout_height="wrap_content"
     android:layout_alignParentTop="true"
     android:layout_marginTop="140dp"
-    android:background="#0A0A0A"
     android:scaleType="center"
     android:src="@mipmap/ic_launcher"/>
 
 
   <TextView
-    android:id="@+id/profile_name"
+    android:id="@+id/sub_name"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_below="@+id/profile_image"
     android:layout_marginTop="21dp"
-    android:fontFamily="sans-serif-thin"
+    android:fontFamily="sans-serif-black"
     android:gravity="center"
     android:maxLines="1"
-    android:text="AppLock"
-    android:textColor="#FFFFFF"
-    android:textSize="34sp"
+    android:text="Be Restricted"
+    android:textColor="#000000"
+    android:textSize="60sp"
     tools:ignore="HardcodedText" />
+
+  <!--        android:layout_marginBottom="395dp"-->
+
 
   <TextView
     android:id="@+id/alertError"
@@ -40,13 +47,25 @@
     android:layout_marginTop="280dp"
     android:fontFamily="sans-serif-thin"
     android:gravity="center"
-    android:visibility="invisible"
     android:text="Wrong Password"
     android:textColor="#FFFFFF"
     android:textSize="14sp"
-    tools:ignore="HardcodedText"/>
-  <!--        android:layout_marginBottom="395dp"-->
+    android:visibility="invisible"
+    tools:ignore="HardcodedText" />
 
+  <TextView
+    android:id="@+id/profile_name"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_below="@+id/profile_image"
+    android:layout_marginTop="123dp"
+    android:fontFamily="sans-serif"
+    android:gravity="center"
+    android:maxLines="1"
+    android:text="You cannot use app cause it was restricted"
+    android:textColor="#000000"
+    android:textSize="20sp"
+    tools:ignore="HardcodedText" />
 
   <com.andrognito.pinlockview.IndicatorDots
     android:id="@+id/indicator_dots"
@@ -54,7 +73,8 @@
     android:layout_height="wrap_content"
     android:layout_below="@id/profile_name"
     android:layout_centerHorizontal="true"
-    android:layout_marginTop="36dp" />
+    android:layout_marginTop="100dp"
+    android:visibility="invisible" />
 
   <!--        android:outlineSpotShadowColor="#000000"-->
 
@@ -66,22 +86,26 @@
     android:layout_centerHorizontal="true"
     android:layout_marginTop="16dp"
     android:textSize="34sp"
-    app:keypadButtonSize="72dp"
+    android:visibility="invisible"
     app:keypadButtonBackgroundDrawable="@drawable/shape"
+    app:keypadButtonSize="72dp"
     app:keypadShowDeleteButton="true"
     app:keypadTextColor="#FFFFFF"
-    app:keypadTextSize="18dp"
-    />
+    app:keypadTextSize="18dp" />
 
   <Button
     android:id="@+id/btn_close"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:layout_alignParentEnd="true"
-    android:layout_alignParentRight="true"
-    android:backgroundTint="#52FFFFFF"
+    android:layout_width="150dp"
+    android:layout_height="70dp"
+    android:layout_alignParentEnd="false"
+    android:layout_alignParentBottom="true"
+    android:layout_centerHorizontal="true"
+    android:backgroundTint="#66C270"
     android:clickable="true"
     android:text="Close"
-    android:textColor="#FBF8F8" />
+    android:shadowRadius="10"
+    android:textColor="#ffffff"
+    android:background="@drawable/button_bg"
+    />
 
 </RelativeLayout>
