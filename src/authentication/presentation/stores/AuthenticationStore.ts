@@ -37,6 +37,7 @@ export class AuthenticationStore implements AuthenticationStoreState {
   error = '';
   isHydrated = false;
   selectedChild: children | undefined = undefined;
+  @persist deviceToken = '';
 
   constructor(
     @provided(LoginUsernamePasswordUseCase)
@@ -213,7 +214,9 @@ export class AuthenticationStore implements AuthenticationStoreState {
   @action
   public async setSelectedChild(child: children) {
     this.selectedChild = child;
+
     let deviceToken;
+
     if (isAndroid) {
       await getAndroidId().then((androidId: string) => {
         deviceToken = androidId;
@@ -227,7 +230,11 @@ export class AuthenticationStore implements AuthenticationStoreState {
       deviceToken: deviceToken || '',
       childrenId: child._id,
     });
-    console.log('response: ', response);
+    console.log('response: ', response, deviceToken);
+
+    if (deviceToken) {
+      this.deviceToken = deviceToken;
+    }
   }
 
   @action

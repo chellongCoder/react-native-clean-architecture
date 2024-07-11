@@ -97,6 +97,19 @@ const ParentScreen = observer(() => {
         };
       });
     } else {
+      if (lesson.blockedAnonymousListAppsSystem?.categoryTokens?.length) {
+        return (
+          lesson.blockedAnonymousListAppsSystem?.categoryTokens?.map(
+            (app, i) => {
+              return {
+                id: 'app.package_name',
+                name: `C ${i + 1}`,
+                icon: 'no_icon',
+              };
+            },
+          ) ?? []
+        );
+      }
       return (
         lesson.blockedAnonymousListAppsSystem?.applicationTokens?.map(
           (app, i) => {
@@ -111,6 +124,7 @@ const ParentScreen = observer(() => {
     }
   }, [
     lesson.blockedAnonymousListAppsSystem?.applicationTokens,
+    lesson.blockedAnonymousListAppsSystem?.categoryTokens,
     lesson.blockedListAppsSystem,
   ]);
 
@@ -244,7 +258,7 @@ const ParentScreen = observer(() => {
                 <Text style={[globalStyle.txtButton, styles.textColor]}>
                   Your unlock score
                 </Text>
-                <View style={[styles.card]}>
+                <View style={[styles.card, {opacity: 0.6}]}>
                   <Text style={[globalStyle.txtButton, styles.textCard]}>
                     100
                   </Text>

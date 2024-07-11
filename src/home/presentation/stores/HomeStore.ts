@@ -101,17 +101,6 @@ export class HomeStore implements HomeStoreState {
     const response = await this.getListQuestionUseCase.execute({
       subjectId,
     });
-    console.log(
-      '🛠 LOG: 🚀 --> -------------------------------------------------------------------🛠 LOG: 🚀 -->',
-    );
-    console.log(
-      '🛠 LOG: 🚀 --> ~ HomeStore ~ getListQuestions ~ response:',
-      response,
-    );
-    console.log(
-      '🛠 LOG: 🚀 --> -------------------------------------------------------------------🛠 LOG: 🚀 -->',
-    );
-
     this.setIsLoading(false);
     return response;
   }

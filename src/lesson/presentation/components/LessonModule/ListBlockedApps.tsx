@@ -5,6 +5,7 @@ import useGlobalStyle from 'src/core/presentation/hooks/useGlobalStyle';
 import ItemCard from '../ItemCard';
 import {scale} from 'react-native-size-matters';
 import {COLORS} from 'src/core/presentation/utils/colors';
+import {ScrollView} from 'react-native-gesture-handler';
 
 const ListBlockedApps = ({
   listApp,
@@ -25,7 +26,7 @@ const ListBlockedApps = ({
       <View style={[styles.arrowLeft]}>
         <IconArrowFill />
       </View>
-      <View style={[styles.rowHCenter, styles.fill]}>
+      <ScrollView horizontal style={[styles.fill]}>
         {listApp.length ? (
           listApp.map(t => (
             <>
@@ -55,7 +56,7 @@ const ListBlockedApps = ({
             </Text>
           </View>
         )}
-      </View>
+      </ScrollView>
       <View style={[styles.arrowRight]}>
         <IconArrowFill type="right" />
       </View>
