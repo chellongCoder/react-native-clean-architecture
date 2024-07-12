@@ -61,5 +61,6 @@ export const API_ENDPOINTS = {
   FIELD: getFieldEndPointServices(),
   USER_SETTING: {
     ASSIGN_CHILDREN: getUserSettingEndPointServices('assign-children'),
+    USER_SETTING: getUserSettingEndPointServices(''),
   },
 };

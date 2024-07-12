@@ -47,6 +47,7 @@ import SelectApp from '../components/LessonModule/SelectApp';
 import {isAndroid} from 'src/core/presentation/utils';
 import ListBlockedApps from '../components/LessonModule/ListBlockedApps';
 import {unBlockApps} from 'react-native-alphadex-screentime';
+import {AppCategoryE} from 'src/core/domain/enums/AppCategoryE';
 
 enum TabParentE {
   APP_BLOCK = 'App block',
@@ -81,7 +82,7 @@ const ParentScreen = observer(() => {
   const globalStyle = useGlobalStyle();
   const lesson = useLessonStore();
 
-  const {getUserProfile, selectedChild, setSelectedChild} =
+  const {getUserProfile, selectedChild, setSelectedChild, deviceToken} =
     useAuthenticationStore();
   const loading = useLoadingGlobal(false);
 
@@ -94,6 +95,7 @@ const ParentScreen = observer(() => {
           id: app.package_name,
           name: app.app_name,
           icon: app.app_icon,
+          token: app.package_name,
         };
       });
     } else {
@@ -105,6 +107,7 @@ const ParentScreen = observer(() => {
                 id: 'app.package_name',
                 name: `C ${i + 1}`,
                 icon: 'no_icon',
+                token: app,
               };
             },
           ) ?? []
@@ -117,6 +120,7 @@ const ParentScreen = observer(() => {
               id: 'app.package_name',
               name: `A ${i + 1}`,
               icon: 'no_icon',
+              token: app.data,
             };
           },
         ) ?? []
@@ -282,7 +286,32 @@ const ParentScreen = observer(() => {
                 }
               }}
             />
-            <PrimaryButton text="Save" style={[styles.btnCommon]} />
+            <PrimaryButton
+              onPress={() => {
+                lesson.updateAppBlock({
+                  childrenId: selectedChild?._id ?? '',
+                  deviceToken,
+                  point: 50,
+                  appBlocked: {
+                    android: tabsBlock.map(t => {
+                      return {
+                        category: AppCategoryE.APP,
+                        token: t.token,
+                      };
+                    }),
+                    ios: tabsBlock.map(t => {
+                      return {
+                        category: AppCategoryE.APP,
+                        token: t.token,
+                      };
+                    }),
+                  },
+                });
+              }}
+              text="Save"
+              style={[styles.btnCommon]}
+              isLoading={lesson.isLoadingUserSetting}
+            />
           </View>
         </View>
       );
@@ -334,6 +363,9 @@ const ParentScreen = observer(() => {
     globalStyle.txtButton,
     tabBody,
     lesson,
+    selectedChild?._id,
+    deviceToken,
+    tabsBlock,
     tabSetting,
   ]);
 

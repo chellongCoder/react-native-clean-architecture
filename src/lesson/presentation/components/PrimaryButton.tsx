@@ -1,13 +1,17 @@
 import {
+  ActivityIndicator,
   StyleProp,
   StyleSheet,
   Text,
   TextStyle,
   TouchableOpacity,
+  View,
   ViewStyle,
 } from 'react-native';
 import React from 'react';
 import useGlobalStyle from 'src/core/presentation/hooks/useGlobalStyle';
+import {scale, verticalScale} from 'react-native-size-matters';
+import {COLORS} from 'src/core/presentation/utils/colors';
 
 type Props = {
   text: string;
@@ -15,9 +19,10 @@ type Props = {
   wrapContent?: boolean;
   onPress?: () => void;
   textStyle?: StyleProp<TextStyle>;
+  isLoading?: boolean;
 };
 
-const PrimaryButton = (props: Props) => {
+const PrimaryButton = ({isLoading = false, ...props}: Props) => {
   const commonStyle = useGlobalStyle();
 
   const alignSelf = props.wrapContent ?? true ? 'center' : 'auto';
@@ -29,6 +34,11 @@ const PrimaryButton = (props: Props) => {
       <Text style={[styles.text, commonStyle.txtButton, props.textStyle]}>
         {props.text}
       </Text>
+      {isLoading && (
+        <View style={{paddingLeft: 10}}>
+          <ActivityIndicator color={COLORS.PRIMARY} />
+        </View>
+      )}
     </TouchableOpacity>
   );
 };
@@ -38,9 +48,11 @@ export default PrimaryButton;
 const styles = StyleSheet.create({
   button: {
     backgroundColor: '#66C270',
-    paddingVertical: 8,
-    paddingHorizontal: 32,
+    paddingVertical: verticalScale(8),
+    paddingHorizontal: scale(32),
     borderRadius: 10,
+    flexDirection: 'row',
+    justifyContent: 'center',
     alignItems: 'center',
   },
   text: {

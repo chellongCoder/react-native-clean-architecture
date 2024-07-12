@@ -8,6 +8,9 @@ import {
   FamilyActivitySelection,
   getInstalledApps,
 } from 'react-native-alphadex-screentime';
+import UserSettingPayload from 'src/lesson/application/types/UserSettingPayload';
+import UpdateUserSettingUseCase from 'src/lesson/application/useCases/UpdateUserSettingUseCase';
+import Toast from 'react-native-toast-message';
 
 @injectable()
 export class LessonStore {
@@ -24,12 +27,19 @@ export class LessonStore {
 
   passwordParent?: string;
 
-  constructor() {
+  @observable isLoadingUserSetting = false;
+
+  constructor(
+    @provided(UpdateUserSettingUseCase)
+    private userSettingUserCase: UpdateUserSettingUseCase,
+  ) {
     makeAutoObservable(this);
     this.bottomSheetAppsRef = React.createRef<BottomSheet>();
     this.bottomSheetPermissionRef = React.createRef<BottomSheet>();
     this.listAppsSystem = [];
     this.blockedListAppsSystem = [];
+
+    this.updateAppBlock = this.updateAppBlock.bind(this);
   }
 
   @action
@@ -96,5 +106,44 @@ export class LessonStore {
     arr?: FamilyActivitySelection,
   ) => {
     this.blockedAnonymousListAppsSystem = arr;
+  };
+
+  @action
+  updateAppBlock = async (setting: UserSettingPayload) => {
+    console.log(
+      '🛠 LOG: 🚀 --> ------------------------------------------------------------------🛠 LOG: 🚀 -->',
+    );
+    console.log(
+      '🛠 LOG: 🚀 --> ~ LessonStore ~ updateAppBlock= ~ setting:',
+      setting,
+    );
+    console.log(
+      '🛠 LOG: 🚀 --> ------------------------------------------------------------------🛠 LOG: 🚀 -->',
+    );
+    try {
+      this.isLoadingUserSetting = true;
+      const response = await this.userSettingUserCase.execute(setting);
+      Toast.show({
+        type: 'success',
+        text1: response.message,
+      });
+    } catch (error) {
+      console.log(
+        '🛠 LOG: 🚀 --> --------------------------------------------------------------🛠 LOG: 🚀 -->',
+      );
+      console.log(
+        '🛠 LOG: 🚀 --> ~ LessonStore ~ updateAppBlock= ~ error:',
+        error,
+      );
+      console.log(
+        '🛠 LOG: 🚀 --> --------------------------------------------------------------🛠 LOG: 🚀 -->',
+      );
+      Toast.show({
+        type: 'error',
+        text1: error?.message,
+      });
+    } finally {
+      this.isLoadingUserSetting = false;
+    }
   };
 }

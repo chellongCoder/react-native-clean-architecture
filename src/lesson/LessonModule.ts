@@ -6,6 +6,9 @@ import PostRepository from './infrastructure/implementations/PostRepository';
 import FindPostUseCase from './application/useCases/FindPostUseCase';
 import GetPostsUseCase from './application/useCases/GetPostsUseCase';
 import {LessonStore} from './presentation/stores/LessonStore/LessonStore';
+import {ILessonRepositoryToken} from './domain/specifications/ILessonRepository';
+import LessonRepository from './infrastructure/implementations/LessonRepository';
+import UpdateUserSettingUseCase from './application/useCases/UpdateUserSettingUseCase';
 
 @module({
   providers: [
@@ -13,8 +16,13 @@ import {LessonStore} from './presentation/stores/LessonStore/LessonStore';
       provide: IPostRepositoryToken,
       useClass: PostRepository,
     },
+    {
+      provide: ILessonRepositoryToken,
+      useClass: LessonRepository,
+    },
     FindPostUseCase,
     GetPostsUseCase,
+    UpdateUserSettingUseCase,
     {
       useClass: GetPostsStore,
       scope: 'Transient',
