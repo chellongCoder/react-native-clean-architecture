@@ -28,6 +28,7 @@ import {ChangeParentNamePayload} from 'src/authentication/application/types/Chan
 import {getAndroidId, getDeviceToken} from 'react-native-device-info';
 import AssignChildrenUseCase from 'src/authentication/application/useCases/AssignChildrenUsecase';
 import {isAndroid} from 'src/core/presentation/utils';
+import DeleteChildrenUseCase from 'src/authentication/application/useCases/DeleteChildrenUsecase';
 @injectable()
 export class AuthenticationStore implements AuthenticationStoreState {
   isLoading = false;
@@ -69,6 +70,9 @@ export class AuthenticationStore implements AuthenticationStoreState {
 
     @provided(AssignChildrenUseCase)
     private assignChildrenUseCase: AssignChildrenUseCase,
+
+    @provided(DeleteChildrenUseCase)
+    private deleteChildrenUseCase: DeleteChildrenUseCase,
 
     @provided(IHttpClientToken) private readonly httpClient: IHttpClient, // @provided(CoreStore) private coreStore: CoreStore,
   ) {
@@ -241,6 +245,14 @@ export class AuthenticationStore implements AuthenticationStoreState {
   public async changeParentName(data: ChangeParentNamePayload) {
     this.setIsLoading(true);
     const response = await this.changeParentNameUseCase.execute(data);
+    this.setIsLoading(false);
+    return response;
+  }
+
+  @action
+  public async deleteChildren(childrenId: string) {
+    this.setIsLoading(true);
+    const response = await this.deleteChildrenUseCase.execute(childrenId);
     this.setIsLoading(false);
     return response;
   }
