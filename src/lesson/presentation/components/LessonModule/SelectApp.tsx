@@ -1,4 +1,4 @@
-import {StyleSheet, Text, TouchableOpacity} from 'react-native';
+import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import React from 'react';
 import useGlobalStyle from 'src/core/presentation/hooks/useGlobalStyle';
 import IconArrowDown from 'assets/svg/IconArrowDown';
@@ -10,42 +10,42 @@ import {
 import {lessonModuleContainer} from 'src/lesson/LessonModule';
 import {LessonStore} from '../../stores/LessonStore/LessonStore';
 import {isAndroid} from 'src/core/presentation/utils';
+import {COLORS} from 'src/core/presentation/constants/colors';
 type Props = {
   appName: string;
 };
 const SelectApp = ({appName}: Props) => {
   const lesson = lessonModuleContainer.getProvided(LessonStore);
   const globalStyle = useGlobalStyle();
-  if (isAndroid) {
-    return (
-      <TouchableOpacity
-        onPress={async () => {
-          await lesson.changeListAppSystem();
-          lesson.onShowSheetApps();
-        }}
-        style={[styles.card]}>
-        <Text style={[globalStyle.txtButton, styles.textCard]}>
-          {appName.trim() !== '' ? appName : 'select apps'}
-        </Text>
-        <IconArrowDown />
-      </TouchableOpacity>
-    );
-  }
   return (
     <>
-      <ScreenTimeComponent
-        onChangeBlock={e => {
-          const blockedApps: FamilyActivitySelection = JSON.parse(
-            e.nativeEvent.blockedApps,
-          );
-          lesson.changeBlockedAnonymousListAppSystem(blockedApps);
-        }}
-        style={styles.container}>
-        <Text style={[globalStyle.txtButton, styles.textCard]}>
-          {appName.trim() !== '' ? appName : 'select apps'}
-        </Text>
-        <IconArrowDown />
-      </ScreenTimeComponent>
+      {isAndroid ? (
+        <TouchableOpacity
+          onPress={async () => {
+            await lesson.changeListAppSystem();
+            lesson.onShowSheetApps();
+          }}
+          style={[styles.card]}>
+          <Text style={[globalStyle.txtButton, styles.textCard]}>
+            {appName.trim() !== '' ? appName : 'select apps'}
+          </Text>
+          <IconArrowDown />
+        </TouchableOpacity>
+      ) : (
+        <ScreenTimeComponent
+          onChangeBlock={e => {
+            const blockedApps: FamilyActivitySelection = JSON.parse(
+              e.nativeEvent.blockedApps,
+            );
+            lesson.changeBlockedAnonymousListAppSystem(blockedApps);
+          }}
+          style={styles.container}>
+          <Text style={[globalStyle.txtButton, styles.textCard]}>
+            {appName.trim() !== '' ? appName : 'select apps'}
+          </Text>
+          <IconArrowDown />
+        </ScreenTimeComponent>
+      )}
     </>
   );
 };

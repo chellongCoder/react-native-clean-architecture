@@ -154,6 +154,9 @@ const ParentScreen = observer(() => {
   const [isChooseChildren, setIsChooseChildren] = useState<string>(
     selectedChild?._id || '',
   );
+  const [isShowLimitOption, setIsShowLimitOption] = useState(false);
+  const points = [100, 70, 50];
+  const [point, setPoint] = useState(100);
 
   const onAddChild = () => {
     resetNavigator(STACK_NAVIGATOR.AUTH_NAVIGATOR, {
@@ -197,6 +200,28 @@ const ParentScreen = observer(() => {
     isChooseChildren,
     setSelectedChild,
   ]);
+
+  const onConfigUserSetting = useCallback(() => {
+    lesson.updateAppBlock({
+      childrenId: selectedChild?._id ?? '',
+      deviceToken,
+      point,
+      appBlocked: {
+        android: tabsBlock.map(t => {
+          return {
+            category: AppCategoryE.APP,
+            token: t.token,
+          };
+        }),
+        ios: tabsBlock.map(t => {
+          return {
+            category: AppCategoryE.APP,
+            token: t.token,
+          };
+        }),
+      },
+    });
+  }, [deviceToken, lesson, point, selectedChild?._id, tabsBlock]);
 
   useEffect(() => {
     handleGetUserProfile();
@@ -253,15 +278,17 @@ const ParentScreen = observer(() => {
       return (
         <View style={[styles.rowBetween]}>
           <View style={[styles.fill, styles.rowBetween]}>
-            <View style={[styles.fill]}>
-              <View style={[]}>
+            <View style={[styles.fill, {zIndex: 999}]}>
+              <View style={[{zIndex: 999}]}>
                 <Text style={[globalStyle.txtButton, styles.textColor]}>
                   App to lock
                 </Text>
 
-                <SelectApp
-                  appName={tabBody.trim() !== '' ? tabBody : 'select apps'}
-                />
+                <>
+                  <SelectApp
+                    appName={tabBody.trim() !== '' ? tabBody : 'select apps'}
+                  />
+                </>
               </View>
               <View style={[]}>
                 <Text style={[globalStyle.txtButton, styles.textColor]}>
@@ -276,18 +303,65 @@ const ParentScreen = observer(() => {
               </View>
             </View>
             <View style={[styles.fill]}>
-              <View style={[]}>
+              <TouchableOpacity
+                onPress={() => {
+                  setIsShowLimitOption(v => !v);
+                }}
+                activeOpacity={1}
+                style={[]}>
                 <Text style={[globalStyle.txtButton, styles.textColor]}>
                   Score to unlock
                 </Text>
-                <View style={[styles.card]}>
+                <View style={[styles.card, {zIndex: 999}]}>
                   <Text style={[globalStyle.txtButton, styles.textCard]}>
-                    100
+                    {point}%
                   </Text>
                   <IconArrowUp />
                 </View>
-              </View>
-              <View style={[]}>
+              </TouchableOpacity>
+              {isShowLimitOption && (
+                <View style={styles.dropdown}>
+                  {points
+                    .filter(e => e !== point)
+                    .map((p, i) => {
+                      return (
+                        <TouchableOpacity
+                          activeOpacity={1}
+                          onPress={() => {
+                            setPoint(p);
+                            setIsShowLimitOption(false);
+                          }}
+                          style={
+                            i !== points.length - 1
+                              ? {
+                                  borderBottomWidth: 0.5,
+                                  borderColor: COLORS.GREEN_1C6A59,
+                                }
+                              : {}
+                          }>
+                          <Text style={[globalStyle.txtNote, styles.option]}>
+                            {p}%
+                          </Text>
+                        </TouchableOpacity>
+                      );
+                    })}
+                  {/* <View
+                    style={{
+                      borderBottomWidth: 0.5,
+                      borderColor: COLORS.GREEN_1C6A59,
+                    }}>
+                    <Text style={[globalStyle.txtNote, styles.option]}>
+                      70%
+                    </Text>
+                  </View>
+                  <View>
+                    <Text style={[globalStyle.txtNote, styles.option]}>
+                      50%
+                    </Text>
+                  </View> */}
+                </View>
+              )}
+              <View style={[{zIndex: -2}]}>
                 <Text style={[globalStyle.txtButton, styles.textColor]}>
                   Your unlock score
                 </Text>
@@ -316,27 +390,7 @@ const ParentScreen = observer(() => {
               }}
             />
             <PrimaryButton
-              onPress={() => {
-                lesson.updateAppBlock({
-                  childrenId: selectedChild?._id ?? '',
-                  deviceToken,
-                  point: 50,
-                  appBlocked: {
-                    android: tabsBlock.map(t => {
-                      return {
-                        category: AppCategoryE.APP,
-                        token: t.token,
-                      };
-                    }),
-                    ios: tabsBlock.map(t => {
-                      return {
-                        category: AppCategoryE.APP,
-                        token: t.token,
-                      };
-                    }),
-                  },
-                });
-              }}
+              onPress={onConfigUserSetting}
               text="Save"
               style={[styles.btnCommon]}
               isLoading={lesson.isLoadingUserSetting}
@@ -391,10 +445,11 @@ const ParentScreen = observer(() => {
     globalStyle.txtNote,
     globalStyle.txtButton,
     tabBody,
+    point,
+    isShowLimitOption,
+    points,
+    onConfigUserSetting,
     lesson,
-    selectedChild?._id,
-    deviceToken,
-    tabsBlock,
     tabSetting,
   ]);
 
@@ -681,5 +736,25 @@ const styles = StyleSheet.create({
     ...CustomTextStyle.caption,
     color: COLORS.BLUE_1C6349,
     marginTop: scale(4),
+  },
+  dropdown: {
+    backgroundColor: COLORS.WHITE_FBF8CC,
+    shadowColor: '#000',
+    shadowOffset: {width: 2, height: 0},
+    shadowOpacity: 0.3,
+    shadowRadius: 12,
+    paddingBottom: 10,
+    paddingTop: 20,
+    paddingHorizontal: 10,
+    top: 40,
+    position: 'absolute',
+    zIndex: -1,
+    width: 70,
+    borderBottomRightRadius: 20,
+    borderBottomLeftRadius: 20,
+  },
+  option: {
+    paddingVertical: verticalScale(6),
+    color: COLORS.GREEN_1C6349,
   },
 });
