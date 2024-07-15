@@ -10,7 +10,7 @@ import useGlobalStyle from 'src/core/presentation/hooks/useGlobalStyle';
 type Props = {
   moduleIndex: number;
   totalModule: number;
-  nextModule: () => void;
+nextModule: (e: string) => void;
 };
 
 const AchievementLesson = ({moduleIndex, nextModule, totalModule}: Props) => {

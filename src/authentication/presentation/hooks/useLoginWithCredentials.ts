@@ -18,6 +18,7 @@ import {STACK_NAVIGATOR} from 'src/core/presentation/navigation/ConstantNavigato
 import * as Keychain from 'react-native-keychain';
 import {ComparePasswordPayload} from 'src/authentication/application/types/ComparePasswordPayload';
 import {ChangeParentNamePayload} from 'src/authentication/application/types/ChangeParentNamePayload';
+import {ChangeChildDescriptionPayload} from 'src/authentication/application/types/ChangeChildDescriptionPayload';
 
 const DefaultFormData = {email: '', password: ''};
 
@@ -33,6 +34,7 @@ const useLoginWithCredentials = () => {
     removeCurrentCredentials,
     comparePassword,
     changeParentName,
+    changeChildrenDescription,
   } = useAuthenticationStore();
   const {handleNavigateAuthenticationSuccess} = useNavigateAuthSuccess();
 
@@ -393,6 +395,27 @@ const useLoginWithCredentials = () => {
     [changeParentName, setErrorMessage, setIsLoading],
   );
 
+  const handleChangeChildDescription = useCallback(
+    async (props: ChangeChildDescriptionPayload) => {
+      try {
+        const res = await changeChildrenDescription(props);
+        if (res.data.code === 200) {
+          return res.data;
+        } else {
+          return false;
+        }
+      } catch (error) {
+        if (isAxiosError(error)) {
+          setErrorMessage('Password not match!');
+        }
+        return false;
+      } finally {
+        setIsLoading(false);
+      }
+    },
+    [changeChildrenDescription, setErrorMessage, setIsLoading],
+  );
+
   return {
     formData,
     setUsername,
@@ -409,6 +432,7 @@ const useLoginWithCredentials = () => {
     handleLogOut,
     handleComparePassword,
     handleChangeParentName,
+    handleChangeChildDescription,
   };
 };
 export default useLoginWithCredentials;

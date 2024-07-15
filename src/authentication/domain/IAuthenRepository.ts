@@ -1,5 +1,7 @@
 import {AssignChildrenPayload} from '../application/types/AssignChildrenPayload';
 import {AssignChildrenResponse} from '../application/types/AssignChildrenResponse';
+import {ChangeChildDescriptionPayload} from '../application/types/ChangeChildDescriptionPayload';
+import {ChangeChildDescriptionResponse} from '../application/types/ChangeChildDescriptionResponse';
 import {ChangeParentNamePayload} from '../application/types/ChangeParentNamePayload';
 import {ChangeParentNameResponse} from '../application/types/ChangeParentNameResponse';
 import {ComparePasswordPayload} from '../application/types/ComparePasswordPayload';
@@ -49,4 +51,8 @@ export interface IAuthenticationRepository {
   ) => Promise<AssignChildrenResponse>;
 
   deleteChildren: (childrenId: string) => Promise<DeleteChildrenResponse>;
+
+  changeChildDescription: (
+    data: ChangeChildDescriptionPayload,
+  ) => Promise<ChangeChildDescriptionResponse>;
 }

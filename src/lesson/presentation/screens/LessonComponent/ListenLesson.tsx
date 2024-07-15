@@ -11,7 +11,7 @@ import IconListen from 'assets/svg/IconListen';
 type Props = {
   moduleIndex: number;
   totalModule: number;
-  nextModule: () => void;
+nextModule: (e: string) => void;
 };
 
 const ListenLesson = ({moduleIndex, nextModule, totalModule}: Props) => {
