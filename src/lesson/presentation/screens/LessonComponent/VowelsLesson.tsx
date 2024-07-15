@@ -9,7 +9,7 @@ import {Task} from 'src/home/application/types/GetListQuestionResponse';
 type Props = {
   moduleIndex: number;
   totalModule: number;
-  nextModule: () => void;
+  nextModule: (e: string) => void;
   lessonName: string;
   moduleName: string;
   firstMiniTestTask?: Task;
@@ -85,7 +85,7 @@ const VowelsLesson = ({
             style={[styles.mt32]}
             onPress={() => {
               setAnswerSelected('');
-              nextModule();
+              nextModule(answerSelected);
             }}
           />
         </View>

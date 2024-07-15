@@ -11,6 +11,8 @@ import {
 import UserSettingPayload from 'src/lesson/application/types/UserSettingPayload';
 import UpdateUserSettingUseCase from 'src/lesson/application/useCases/UpdateUserSettingUseCase';
 import Toast from 'react-native-toast-message';
+import PostUserProgressUseCase from 'src/lesson/application/useCases/PostUserProgressUseCase';
+import {TResult} from '../../screens/LessonScreen';
 
 @injectable()
 export class LessonStore {
@@ -32,6 +34,8 @@ export class LessonStore {
   constructor(
     @provided(UpdateUserSettingUseCase)
     private userSettingUserCase: UpdateUserSettingUseCase,
+    @provided(PostUserProgressUseCase)
+    private postUserProgressUseCase: PostUserProgressUseCase,
   ) {
     makeAutoObservable(this);
     this.bottomSheetAppsRef = React.createRef<BottomSheet>();
@@ -40,6 +44,7 @@ export class LessonStore {
     this.blockedListAppsSystem = [];
 
     this.updateAppBlock = this.updateAppBlock.bind(this);
+    this.handlePostUserProgress = this.handlePostUserProgress.bind(this);
   }
 
   @action
@@ -146,4 +151,12 @@ export class LessonStore {
       this.isLoadingUserSetting = false;
     }
   };
+
+  @action
+  public async handlePostUserProgress(data: TResult[]) {
+    console.log('handlePostUserProgress: ', data);
+    const response = await this.postUserProgressUseCase.execute(data);
+    console.log('handlePostUserProgressResponse: ', response);
+    return response;
+  }
 }

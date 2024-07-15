@@ -6,8 +6,18 @@ import {resetNavigator} from '../navigation/actions/RootNavigationActions';
 import {unBlockApps} from 'react-native-alphadex-screentime';
 import {lessonModuleContainer} from 'src/lesson/LessonModule';
 import {LessonStore} from 'src/lesson/presentation/stores/LessonStore/LessonStore';
+import {RouteProp, useRoute} from '@react-navigation/native';
+import {TResult} from 'src/lesson/presentation/screens/LessonScreen';
 
-const DoneLessonScreen = ({navigation}) => {
+type RouteParams = {
+  totalResult: TResult[];
+};
+
+const DoneLessonScreen = () => {
+  const route = useRoute<RouteProp<{param: RouteParams}>>().params;
+  const totalCorrectAnswer =
+    route.totalResult.filter((item: TResult) => item.status === 'completed')
+      .length || 0;
   const styleHook = useGlobalStyle();
   const lessonStore = lessonModuleContainer.getProvided(LessonStore);
 
@@ -18,7 +28,8 @@ const DoneLessonScreen = ({navigation}) => {
           EXCELLENT !!{'\n'} YOU DID GREAT WORK !
         </Text>
         <Text style={[styleHook.txtLabel, styles.subText]}>
-          Your score {'\n'}10/10
+          Your score {'\n'}
+          {totalCorrectAnswer}/{route.totalResult.length || 0}
         </Text>
       </View>
       <View style={styles.achievementContainer}>
@@ -54,11 +65,9 @@ const DoneLessonScreen = ({navigation}) => {
           <TouchableOpacity
             onPress={async () => {
               resetNavigator(STACK_NAVIGATOR.HOME.HOME_SCREEN);
-              console.log('isloading true');
               await unBlockApps();
               lessonStore.changeBlockedAnonymousListAppSystem(undefined);
               lessonStore.resetListAppSystem();
-              console.log('isloading false');
             }}
             style={styles.button}>
             <Text style={[styleHook.txtButton, styles.textBtn]}>Continue</Text>

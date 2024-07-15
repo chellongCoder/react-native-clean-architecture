@@ -9,7 +9,7 @@ import CanvasWrite, {CanvasWriteRef} from '../../components/CanvasWrite';
 type Props = {
   moduleIndex: number;
   totalModule: number;
-  nextModule: () => void;
+nextModule: (e: string) => void;
 };
 
 const WriteLesson = ({moduleIndex, nextModule, totalModule}: Props) => {

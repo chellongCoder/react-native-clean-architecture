@@ -9,6 +9,7 @@ import {LessonStore} from './presentation/stores/LessonStore/LessonStore';
 import {ILessonRepositoryToken} from './domain/specifications/ILessonRepository';
 import LessonRepository from './infrastructure/implementations/LessonRepository';
 import UpdateUserSettingUseCase from './application/useCases/UpdateUserSettingUseCase';
+import PostUserProgressUseCase from './application/useCases/PostUserProgressUseCase';
 
 @module({
   providers: [
@@ -35,6 +36,7 @@ import UpdateUserSettingUseCase from './application/useCases/UpdateUserSettingUs
       useClass: LessonStore,
       scope: 'Singleton',
     },
+    PostUserProgressUseCase,
   ],
 })
 export class LessonModule {}

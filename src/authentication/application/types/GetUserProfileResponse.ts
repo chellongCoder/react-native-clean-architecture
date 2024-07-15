@@ -11,6 +11,7 @@ export interface children {
   updatedAt: string;
   userType: 'child' | 'parent';
   username: string;
+  description: string;
 }
 
 export interface data {

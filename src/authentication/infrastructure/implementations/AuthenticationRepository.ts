@@ -25,6 +25,8 @@ import {ChangeParentNameResponse} from 'src/authentication/application/types/Cha
 import {AssignChildrenPayload} from 'src/authentication/application/types/AssignChildrenPayload';
 import {AssignChildrenResponse} from 'src/authentication/application/types/AssignChildrenResponse';
 import DeleteChildrenResponse from 'src/authentication/application/types/DeleteChildrenResponse';
+import {ChangeChildDescriptionPayload} from 'src/authentication/application/types/ChangeChildDescriptionPayload';
+import {ChangeChildDescriptionResponse} from 'src/authentication/application/types/ChangeChildDescriptionResponse';
 
 @injectable()
 class AuthenticationRepository implements IAuthenticationRepository {
@@ -151,6 +153,16 @@ class AuthenticationRepository implements IAuthenticationRepository {
       config,
     );
     return response.data;
+  }
+
+  public async changeChildDescription(
+    data: ChangeChildDescriptionPayload,
+  ): Promise<ChangeChildDescriptionResponse> {
+    const response: ChangeChildDescriptionResponse = await this.httpClient.post(
+      API_ENDPOINTS.USER.UPDATE_CHILDREN_DESCRIPTION,
+      data,
+    );
+    return response;
   }
 }
 

@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React from 'react';
 import {View, Text, StyleSheet, Dimensions, ScrollView} from 'react-native';
 import {scale} from 'react-native-size-matters';
 import {COLORS} from 'src/core/presentation/constants/colors';
@@ -6,20 +6,37 @@ import {CustomTextStyle} from 'src/core/presentation/constants/typography';
 import ModuleItem from 'src/lesson/presentation/components/LessonModule/ModuleItem';
 import {useListModule} from 'src/hooks/useListModule';
 import {observer} from 'mobx-react';
+import useHomeStore from '../stores/useHomeStore';
 
 const screenWidth = Dimensions.get('screen').width;
 
 const ListModule = observer(() => {
   const {modules, selectedSubject} = useListModule();
+  const {listSubject, subjectId} = useHomeStore();
+
+  const totalQuestions = modules.reduce(
+    (acc, item) => acc + item.totalQuestion,
+    0,
+  );
+
+  const totalProgressQuestions = modules.reduce(
+    (acc, item) => acc + item.progressOfChildren,
+    0,
+  );
 
   return (
     <View style={styles.container}>
       <View style={styles.square} />
 
       <View style={styles.wrapHeaderContainer}>
-        <Text style={styles.headerTitle}>Vietnamese</Text>
+        <Text style={styles.headerTitle}>
+          {listSubject?.filter(item => item?._id === subjectId)[0]?.name}
+        </Text>
         <View style={styles.wrapHeaderScore}>
-          <Text style={styles.headerScore}>?/??</Text>
+          <Text
+            style={
+              styles.headerScore
+            }>{`${totalProgressQuestions}/${totalQuestions}`}</Text>
         </View>
       </View>
 

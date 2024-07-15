@@ -6,6 +6,7 @@ const SERVICES = {
   FIELD: '/field',
   LESSON: '/lesson',
   USER_SETTING: '/user-setting',
+  USER_PROGRESS: '/user-progress',
 };
 
 const getAuthEndPointServices = (path: string) => {
@@ -36,6 +37,14 @@ const getUserSettingEndPointServices = (path: string) => {
   return `/api${API_VERSION}${SERVICES.USER_SETTING}/${path}`;
 };
 
+const getUserProgressEndPointServices = (path?: string) => {
+  if (path) {
+    return `/api${API_VERSION}${SERVICES.USER_PROGRESS}/${path}`;
+  } else {
+    return `/api${API_VERSION}${SERVICES.USER_PROGRESS}`;
+  }
+};
+
 export const API_ENDPOINTS = {
   AUTHENTICATION: {
     LOGIN_WITH_CREDENTIALS: getAuthEndPointServices('login'),
@@ -48,6 +57,9 @@ export const API_ENDPOINTS = {
     COMPARE_PASSWORD: getUserEndPointServices('compare-password'),
     CHANGE_PARENT_NAME: getUserEndPointServices('change-parent-name'),
     DELETE_CHILDREN: getUserEndPointServices('delete-children'),
+    UPDATE_CHILDREN_DESCRIPTION: getUserEndPointServices(
+      'update-children-description',
+    ),
   },
   SUBJECT: {
     LIST_ALL_SUBJECT: getSubjectEndPointServices('list-all-subject'),
@@ -63,5 +75,8 @@ export const API_ENDPOINTS = {
   USER_SETTING: {
     ASSIGN_CHILDREN: getUserSettingEndPointServices('assign-children'),
     USER_SETTING: getUserSettingEndPointServices(''),
+  },
+  USER_PROGRESS: {
+    USER_PROGRESS: getUserProgressEndPointServices(),
   },
 };

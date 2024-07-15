@@ -11,6 +11,8 @@ import {ILessonRepository} from 'src/lesson/domain/specifications/ILessonReposit
 import UserSettingPayload from 'src/lesson/application/types/UserSettingPayload';
 import {API_ENDPOINTS} from 'src/core/presentation/constants/apiEndpoints';
 import UserSettingResponse from 'src/lesson/application/types/UserSettingResponse';
+import PostUserProgressResponse from 'src/lesson/application/types/PostUserProgressResponse';
+import {TResult} from 'src/lesson/presentation/screens/LessonScreen';
 
 @injectable()
 class LessonRepository implements ILessonRepository {
@@ -45,6 +47,19 @@ class LessonRepository implements ILessonRepository {
       count: posts.length,
     };
 
+    return response;
+  }
+
+  public async postUserProgress(
+    data: TResult[],
+  ): Promise<PostUserProgressResponse> {
+    const payload = {
+      listUserProgress: data,
+    };
+    const response: PostUserProgressResponse = await this.httpClient.post(
+      `${API_ENDPOINTS.USER_PROGRESS.USER_PROGRESS}`,
+      payload,
+    );
     return response;
   }
 }

@@ -1,4 +1,6 @@
 import {
+  KeyboardAvoidingView,
+  Platform,
   ScrollView,
   StyleSheet,
   Text,
@@ -9,7 +11,6 @@ import React, {useCallback, useEffect, useMemo, useState} from 'react';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import useGlobalStyle from 'src/core/presentation/hooks/useGlobalStyle';
 import IconUser from 'assets/svg/IconUser';
-import IconEdit from 'assets/svg/IconEdit';
 import IconLock from 'assets/svg/IconLock';
 import IconSetting from 'assets/svg/IconSetting';
 import IconPurchase from 'assets/svg/IconPurchase';
@@ -48,6 +49,7 @@ import {isAndroid} from 'src/core/presentation/utils';
 import ListBlockedApps from '../components/LessonModule/ListBlockedApps';
 import {unBlockApps} from 'react-native-alphadex-screentime';
 import {AppCategoryE} from 'src/core/domain/enums/AppCategoryE';
+import ChildrenDescription from '../components/ChildrenDescription';
 
 enum TabParentE {
   APP_BLOCK = 'App block',
@@ -464,111 +466,104 @@ const ParentScreen = observer(() => {
         </View>
         <Username />
       </View>
-      <BookView style={[styles.mt16, styles.fill]}>
-        <ScrollView contentContainerStyle={[styles.bookContent]}>
-          <View style={[styles.rowBetween, styles.ph16]}>
-            {tabsData.map(t => (
-              <ItemCard
-                key={t.id}
-                name={t.name}
-                Icon={t.icon}
-                isFocus={tabParent === t.id}
-                onPress={() => setTabparent(t.id)}
-              />
-            ))}
-          </View>
-          <View style={[styles.bodyBook]}>
-            <Text style={[globalStyle.txtLabel, styles.txtTitleBook]}>
-              {tabParent}
-            </Text>
+      <KeyboardAvoidingView
+        behavior={Platform.OS === 'ios' ? 'position' : undefined}
+        style={styles.fill}
+        contentContainerStyle={styles.fill}>
+        <BookView style={[styles.mt16, styles.fill]}>
+          <ScrollView contentContainerStyle={[styles.bookContent]}>
+            <View style={[styles.rowBetween, styles.ph16]}>
+              {tabsData.map(t => (
+                <ItemCard
+                  key={t.id}
+                  name={t.name}
+                  Icon={t.icon}
+                  isFocus={tabParent === t.id}
+                  onPress={() => setTabparent(t.id)}
+                />
+              ))}
+            </View>
+            <View style={[styles.bodyBook]}>
+              <Text style={[globalStyle.txtLabel, styles.txtTitleBook]}>
+                {tabParent}
+              </Text>
 
-            <ListBlockedApps
-              setTabBody={setTabBody}
-              setSelectedApp={tabBody}
-              listApp={tabsBody}
-            />
-          </View>
-          <View style={[styles.bodyContent, styles.rowBetween]}>
-            {buildBodyContent}
-          </View>
-          <View style={[styles.bodyBookTwo]}>
-            <Text style={[globalStyle.txtLabel, styles.txtTitleBookTwo]}>
-              Children accounts list
-            </Text>
-            <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-              <View style={styles.wrapAddChildContainer}>
-                {userProfile?.children.map((item: children) => {
-                  return (
-                    <View style={{alignItems: 'center', marginRight: scale(8)}}>
+              <ListBlockedApps
+                setTabBody={setTabBody}
+                setSelectedApp={tabBody}
+                listApp={tabsBody}
+              />
+            </View>
+            <View style={[styles.bodyContent, styles.rowBetween]}>
+              {buildBodyContent}
+            </View>
+            <View style={[styles.bodyBookTwo]}>
+              <Text style={[globalStyle.txtLabel, styles.txtTitleBookTwo]}>
+                Children accounts list
+              </Text>
+              <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+                <View style={styles.wrapAddChildContainer}>
+                  {userProfile?.children.map((item: children) => {
+                    return (
+                      <View
+                        style={{alignItems: 'center', marginRight: scale(8)}}>
+                        <TouchableOpacity
+                          style={styles.addChildContainer}
+                          onPress={() => onSelectChild(item)}>
+                          <View
+                            style={[
+                              styles.addChildContent,
+                              isChooseChildren === item._id
+                                ? {backgroundColor: COLORS.GREEN_66C270}
+                                : {},
+                            ]}>
+                            <ICManIconMedium
+                              color={
+                                isChooseChildren === item._id
+                                  ? COLORS.WHITE
+                                  : COLORS.BLUE_1C6349
+                              }
+                            />
+                          </View>
+                        </TouchableOpacity>
+                        <Text style={styles.childrenName}>{item.name}</Text>
+                      </View>
+                    );
+                  })}
+                </View>
+                {userProfile?.children && userProfile?.children.length < 5 && (
+                  <View style={styles.wrapAddChildContainer}>
+                    <View style={{alignItems: 'center'}}>
                       <TouchableOpacity
                         style={styles.addChildContainer}
-                        onPress={() => onSelectChild(item)}>
-                        <View
-                          style={[
-                            styles.addChildContent,
-                            isChooseChildren === item._id
-                              ? {backgroundColor: COLORS.GREEN_66C270}
-                              : {},
-                          ]}>
-                          <ICManIconMedium
-                            color={
-                              isChooseChildren === item._id
-                                ? COLORS.WHITE
-                                : COLORS.BLUE_1C6349
-                            }
-                          />
-                        </View>
+                        onPress={onAddChild}>
+                        <ICAddChild />
                       </TouchableOpacity>
-                      <Text style={styles.childrenName}>{item.name}</Text>
                     </View>
-                  );
-                })}
-              </View>
-              {userProfile?.children && userProfile?.children.length < 5 && (
-                <View style={styles.wrapAddChildContainer}>
-                  <View style={{alignItems: 'center'}}>
-                    <TouchableOpacity
-                      style={styles.addChildContainer}
-                      onPress={onAddChild}>
-                      <ICAddChild />
-                    </TouchableOpacity>
                   </View>
-                </View>
-              )}
-            </ScrollView>
-          </View>
-          <View style={[styles.bodyContent, styles.rowBetween]}>
-            <View style={[styles.fill, styles.mr16]}>
-              <TouchableOpacity
-                style={[styles.rowHCenter, styles.fill, styles.rowBetween]}>
-                <Text style={[globalStyle.txtLabel, styles.txtParentName]}>
-                  Child’s Name - age
-                </Text>
-                <IconEdit />
-              </TouchableOpacity>
-              <Text style={[globalStyle.txtNote, styles.mb12]}>
-                Lorem Ipsum is simply dummy text of the printing and typesetting
-                industry. Lorem Ipsum has been the industry's standard dummy
-                text Lorem Ipsum has been....
-              </Text>
+                )}
+              </ScrollView>
             </View>
-            <View>
-              <View style={[styles.fill]} />
-              <PrimaryButton
-                text="Use"
-                style={[styles.btnCommon]}
-                onPress={onUseChild}
-              />
-              <PrimaryButton
-                text="Delete"
-                style={[styles.btnCommon, styles.btnRed]}
-                onPress={onDeleteChild}
-                disable={(userProfile?.children.length || 0) < 2}
-              />
+            <View style={[styles.bodyContent, styles.rowBetween]}>
+              <ChildrenDescription />
+              <View>
+                <View style={[styles.fill]} />
+                <PrimaryButton
+                  text="Use"
+                  style={[styles.btnCommon]}
+                  onPress={onUseChild}
+                />
+                <PrimaryButton
+                  text="Delete"
+                  style={[styles.btnCommon, styles.btnRed]}
+                  onPress={onDeleteChild}
+                  disable={(userProfile?.children.length || 0) < 2}
+                />
+              </View>
             </View>
-          </View>
-        </ScrollView>
-      </BookView>
+          </ScrollView>
+        </BookView>
+      </KeyboardAvoidingView>
     </View>
   );
 });
