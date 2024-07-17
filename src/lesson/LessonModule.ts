@@ -10,6 +10,7 @@ import {ILessonRepositoryToken} from './domain/specifications/ILessonRepository'
 import LessonRepository from './infrastructure/implementations/LessonRepository';
 import UpdateUserSettingUseCase from './application/useCases/UpdateUserSettingUseCase';
 import PostUserProgressUseCase from './application/useCases/PostUserProgressUseCase';
+import GetUserSettingUseCase from './application/useCases/GetUserSettingUseCase';
 
 @module({
   providers: [
@@ -24,6 +25,7 @@ import PostUserProgressUseCase from './application/useCases/PostUserProgressUseC
     FindPostUseCase,
     GetPostsUseCase,
     UpdateUserSettingUseCase,
+    GetUserSettingUseCase,
     {
       useClass: GetPostsStore,
       scope: 'Transient',

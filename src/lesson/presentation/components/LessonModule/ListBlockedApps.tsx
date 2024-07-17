@@ -10,7 +10,7 @@ import {ScrollView} from 'react-native-gesture-handler';
 const ListBlockedApps = ({
   listApp,
   setTabBody,
-  setSelectedApp,
+  selectedApp,
 }: {
   listApp: {
     id: string;
@@ -18,7 +18,7 @@ const ListBlockedApps = ({
     icon: any;
   }[];
   setTabBody: (id: string) => void;
-  setSelectedApp: string;
+  selectedApp: string;
 }) => {
   const globalStyle = useGlobalStyle();
   return (
@@ -33,7 +33,7 @@ const ListBlockedApps = ({
               <ItemCard
                 key={t.id}
                 Icon={t.icon}
-                isFocus={setSelectedApp === t.name}
+                isFocus={selectedApp === t.name}
                 name={t.name}
                 onPress={() => setTabBody(t.name)}
                 iconFocusColor="#F2B559"

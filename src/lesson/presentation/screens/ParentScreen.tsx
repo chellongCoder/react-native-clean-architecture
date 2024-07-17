@@ -50,6 +50,7 @@ import ListBlockedApps from '../components/LessonModule/ListBlockedApps';
 import {unBlockApps} from 'react-native-alphadex-screentime';
 import {AppCategoryE} from 'src/core/domain/enums/AppCategoryE';
 import ChildrenDescription from '../components/ChildrenDescription';
+import {useGetUserSetting} from 'src/hooks/useGetUserSetting';
 
 enum TabParentE {
   APP_BLOCK = 'App block',
@@ -91,8 +92,9 @@ const ParentScreen = observer(() => {
     deviceToken,
     deleteChildren,
   } = useAuthenticationStore();
+  console.log('🛠 LOG: 🚀 --> ~ ParentScreen ~ deviceToken:', deviceToken);
   const loading = useLoadingGlobal(false);
-
+  useGetUserSetting(deviceToken, lesson);
   const [tabParent, setTabparent] = useState(TabParentE.APP_BLOCK);
 
   const tabsBlock = useMemo(() => {
@@ -157,7 +159,7 @@ const ParentScreen = observer(() => {
     selectedChild?._id || '',
   );
   const [isShowLimitOption, setIsShowLimitOption] = useState(false);
-  const points = [100, 70, 50];
+  const points = useMemo(() => [100, 70, 50], []);
   const [point, setPoint] = useState(100);
 
   const onAddChild = () => {
@@ -209,18 +211,25 @@ const ParentScreen = observer(() => {
       deviceToken,
       point,
       appBlocked: {
-        android: tabsBlock.map(t => {
-          return {
-            category: AppCategoryE.APP,
-            token: t.token,
-          };
-        }),
-        ios: tabsBlock.map(t => {
-          return {
-            category: AppCategoryE.APP,
-            token: t.token,
-          };
-        }),
+        android: isAndroid
+          ? tabsBlock.map(t => {
+              return {
+                category: AppCategoryE.APP,
+                icon: t.icon ?? '',
+                id: t.id ?? '',
+                name: t.name ?? '',
+                token: t.token ?? '',
+              };
+            })
+          : [],
+        ios: !isAndroid
+          ? tabsBlock.map(t => {
+              return {
+                category: AppCategoryE.APP,
+                token: t.token ?? '',
+              };
+            })
+          : [],
       },
     });
   }, [deviceToken, lesson, point, selectedChild?._id, tabsBlock]);
@@ -275,6 +284,10 @@ const ParentScreen = observer(() => {
     loading.hide();
   }, []);
 
+  useEffect(() => {
+    setTabBody(tabsBody?.[0]?.name ?? '');
+  }, [setTabBody, tabsBody]);
+
   const buildBodyContent = useMemo(() => {
     if (tabParent === TabParentE.APP_BLOCK) {
       return (
@@ -297,7 +310,9 @@ const ParentScreen = observer(() => {
                   Lessons to unlock
                 </Text>
                 <View style={[styles.card]}>
-                  <Text style={[globalStyle.txtButton, styles.textCard]}>
+                  <Text
+                    allowFontScaling
+                    style={[globalStyle.txtButton, styles.textCard]}>
                     Vietnamese
                   </Text>
                   <IconArrowDown />
@@ -309,16 +324,34 @@ const ParentScreen = observer(() => {
                 onPress={() => {
                   setIsShowLimitOption(v => !v);
                 }}
-                activeOpacity={1}
-                style={[]}>
+                activeOpacity={1}>
                 <Text style={[globalStyle.txtButton, styles.textColor]}>
                   Score to unlock
                 </Text>
-                <View style={[styles.card, {zIndex: 999}]}>
-                  <Text style={[globalStyle.txtButton, styles.textCard]}>
+                <View
+                  style={[
+                    styles.card,
+                    {
+                      zIndex: 999,
+                      backgroundColor: !isShowLimitOption
+                        ? styles.card.backgroundColor
+                        : COLORS.GREEN_1C6349,
+                      width: scale(70),
+                    },
+                  ]}>
+                  <Text
+                    style={[
+                      globalStyle.txtButton,
+                      styles.textCard,
+                      {
+                        color: isShowLimitOption
+                          ? styles.card.backgroundColor
+                          : COLORS.GREEN_1C6349,
+                      },
+                    ]}>
                     {point}%
                   </Text>
-                  <IconArrowUp />
+                  {isShowLimitOption ? <IconArrowUp /> : <IconArrowDown />}
                 </View>
               </TouchableOpacity>
               {isShowLimitOption && (
@@ -333,34 +366,20 @@ const ParentScreen = observer(() => {
                             setPoint(p);
                             setIsShowLimitOption(false);
                           }}
-                          style={
+                          style={[
                             i !== points.length - 1
                               ? {
                                   borderBottomWidth: 0.5,
                                   borderColor: COLORS.GREEN_1C6A59,
                                 }
-                              : {}
-                          }>
+                              : {},
+                          ]}>
                           <Text style={[globalStyle.txtNote, styles.option]}>
                             {p}%
                           </Text>
                         </TouchableOpacity>
                       );
                     })}
-                  {/* <View
-                    style={{
-                      borderBottomWidth: 0.5,
-                      borderColor: COLORS.GREEN_1C6A59,
-                    }}>
-                    <Text style={[globalStyle.txtNote, styles.option]}>
-                      70%
-                    </Text>
-                  </View>
-                  <View>
-                    <Text style={[globalStyle.txtNote, styles.option]}>
-                      50%
-                    </Text>
-                  </View> */}
                 </View>
               )}
               <View style={[{zIndex: -2}]}>
@@ -371,7 +390,7 @@ const ParentScreen = observer(() => {
                   <Text style={[globalStyle.txtButton, styles.textCard]}>
                     100
                   </Text>
-                  <IconArrowUp />
+                  {isShowLimitOption ? <IconArrowUp /> : <IconArrowDown />}
                 </View>
               </View>
             </View>
@@ -490,7 +509,7 @@ const ParentScreen = observer(() => {
 
               <ListBlockedApps
                 setTabBody={setTabBody}
-                setSelectedApp={tabBody}
+                selectedApp={tabBody}
                 listApp={tabsBody}
               />
             </View>
@@ -693,15 +712,15 @@ const styles = StyleSheet.create({
   },
   card: {
     paddingVertical: verticalScale(8),
+    paddingHorizontal: verticalScale(8),
     borderRadius: scale(20),
-    paddingHorizontal: scale(8),
     flexDirection: 'row',
     alignItems: 'center',
+    justifyContent: 'space-between',
     backgroundColor: '#FFE699',
-    alignSelf: 'flex-start',
-    marginRight: scale(8),
     marginTop: verticalScale(6),
     marginBottom: verticalScale(12),
+    marginRight: scale(8),
   },
   textCard: {
     color: '#1C6349',
@@ -744,7 +763,7 @@ const styles = StyleSheet.create({
     top: 40,
     position: 'absolute',
     zIndex: -1,
-    width: 70,
+    width: scale(70),
     borderBottomRightRadius: 20,
     borderBottomLeftRadius: 20,
   },

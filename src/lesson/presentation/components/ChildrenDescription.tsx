@@ -87,10 +87,10 @@ const ChildrenDescription = () => {
           {userProfile &&
           userProfile?.children.filter(
             (item: children) => item._id === selectedChild?._id,
-          )[0].description.length > 0
+          )[0]?.description?.length > 0
             ? userProfile?.children.filter(
                 (item: children) => item._id === selectedChild?._id,
-              )[0].description
+              )[0]?.description
             : `Lorem Ipsum is simply dummy text of the printing and typesetting
         industry. Lorem Ipsum has been the industry's standard dummy text Lorem
         Ipsum has been....`}

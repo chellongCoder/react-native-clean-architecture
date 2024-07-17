@@ -27,16 +27,7 @@ class LessonRepository implements ILessonRepository {
       `${API_ENDPOINTS.USER_SETTING.USER_SETTING}`,
       payload,
     );
-    console.log(
-      '🛠 LOG: 🚀 --> --------------------------------------------------------------------------🛠 LOG: 🚀 -->',
-    );
-    console.log(
-      '🛠 LOG: 🚀 --> ~ LessonRepository ~ updateBlockedApp ~ response:',
-      response,
-    );
-    console.log(
-      '🛠 LOG: 🚀 --> --------------------------------------------------------------------------🛠 LOG: 🚀 -->',
-    );
+
     return response;
   }
 
@@ -59,6 +50,18 @@ class LessonRepository implements ILessonRepository {
     const response: PostUserProgressResponse = await this.httpClient.post(
       `${API_ENDPOINTS.USER_PROGRESS.USER_PROGRESS}`,
       payload,
+    );
+    return response;
+  }
+
+  public async getSettingDevice(
+    deviceToken: string,
+  ): Promise<UserSettingResponse> {
+    const response: UserSettingResponse = await this.httpClient.post(
+      `${API_ENDPOINTS.USER_SETTING.GET_SETTING_DEVICE}`,
+      {
+        deviceToken: deviceToken,
+      },
     );
     return response;
   }

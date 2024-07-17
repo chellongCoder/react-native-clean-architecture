@@ -75,6 +75,7 @@ export const API_ENDPOINTS = {
   USER_SETTING: {
     ASSIGN_CHILDREN: getUserSettingEndPointServices('assign-children'),
     USER_SETTING: getUserSettingEndPointServices(''),
+    GET_SETTING_DEVICE: getUserSettingEndPointServices('get-setting-device'),
   },
   USER_PROGRESS: {
     USER_PROGRESS: getUserProgressEndPointServices(),

@@ -13,6 +13,9 @@ import UpdateUserSettingUseCase from 'src/lesson/application/useCases/UpdateUser
 import Toast from 'react-native-toast-message';
 import PostUserProgressUseCase from 'src/lesson/application/useCases/PostUserProgressUseCase';
 import {TResult} from '../../screens/LessonScreen';
+import GetUserSettingUseCase from 'src/lesson/application/useCases/GetUserSettingUseCase';
+import {isAndroid} from 'src/core/presentation/utils';
+import {AppCategoryE} from 'src/core/domain/enums/AppCategoryE';
 
 @injectable()
 export class LessonStore {
@@ -23,9 +26,9 @@ export class LessonStore {
 
   listAppsSystem: AppEntity[] = [];
 
-  blockedListAppsSystem: AppEntity[] = [];
+  blockedListAppsSystem: Partial<AppEntity>[] = [];
 
-  @observable blockedAnonymousListAppsSystem?: FamilyActivitySelection;
+  @observable blockedAnonymousListAppsSystem?: Partial<FamilyActivitySelection>;
 
   passwordParent?: string;
 
@@ -36,6 +39,8 @@ export class LessonStore {
     private userSettingUserCase: UpdateUserSettingUseCase,
     @provided(PostUserProgressUseCase)
     private postUserProgressUseCase: PostUserProgressUseCase,
+    @provided(GetUserSettingUseCase)
+    private getUserSettingUserCase: GetUserSettingUseCase,
   ) {
     makeAutoObservable(this);
     this.bottomSheetAppsRef = React.createRef<BottomSheet>();
@@ -45,6 +50,7 @@ export class LessonStore {
 
     this.updateAppBlock = this.updateAppBlock.bind(this);
     this.handlePostUserProgress = this.handlePostUserProgress.bind(this);
+    this.handleGetSettingUser = this.handleGetSettingUser.bind(this);
   }
 
   @action
@@ -115,16 +121,6 @@ export class LessonStore {
 
   @action
   updateAppBlock = async (setting: UserSettingPayload) => {
-    console.log(
-      '🛠 LOG: 🚀 --> ------------------------------------------------------------------🛠 LOG: 🚀 -->',
-    );
-    console.log(
-      '🛠 LOG: 🚀 --> ~ LessonStore ~ updateAppBlock= ~ setting:',
-      setting,
-    );
-    console.log(
-      '🛠 LOG: 🚀 --> ------------------------------------------------------------------🛠 LOG: 🚀 -->',
-    );
     try {
       this.isLoadingUserSetting = true;
       const response = await this.userSettingUserCase.execute(setting);
@@ -132,17 +128,7 @@ export class LessonStore {
         type: 'success',
         text1: response.message,
       });
-    } catch (error) {
-      console.log(
-        '🛠 LOG: 🚀 --> --------------------------------------------------------------🛠 LOG: 🚀 -->',
-      );
-      console.log(
-        '🛠 LOG: 🚀 --> ~ LessonStore ~ updateAppBlock= ~ error:',
-        error,
-      );
-      console.log(
-        '🛠 LOG: 🚀 --> --------------------------------------------------------------🛠 LOG: 🚀 -->',
-      );
+    } catch (error: any) {
       Toast.show({
         type: 'error',
         text1: error?.message,
@@ -158,5 +144,53 @@ export class LessonStore {
     const response = await this.postUserProgressUseCase.execute(data);
     console.log('handlePostUserProgressResponse: ', response);
     return response;
+  }
+
+  @action
+  public async handleGetSettingUser(deviceToken: string) {
+    try {
+      const response = await this.getUserSettingUserCase.execute(deviceToken);
+      console.log('handlePostUserProgressResponse: ', response);
+      if (!isAndroid) {
+        this.blockedAnonymousListAppsSystem = {
+          categoryTokens: response.data.appBlocked.ios
+            .filter(v => v.category === AppCategoryE.CATEGORY)
+            .map(token => {
+              return token.token;
+            }),
+          applicationTokens: response.data.appBlocked.ios
+            .filter(v => v.category === AppCategoryE.APP)
+            .map(token => {
+              return {
+                data: token.token,
+              };
+            }),
+          includeEntireCategory: true,
+        };
+      } else {
+        this.blockedListAppsSystem = response?.data?.appBlocked?.android?.map(
+          a => {
+            return {
+              package_name: a.token,
+              app_icon: a.icon,
+              app_name: a.name,
+              category: 1,
+            };
+          },
+        );
+      }
+      return response;
+    } catch (error) {
+      console.log(
+        '🛠 LOG: 🚀 --> -------------------------------------------------------------------🛠 LOG: 🚀 -->',
+      );
+      console.log(
+        '🛠 LOG: 🚀 --> ~ LessonStore ~ handleGetSettingUser ~ error:',
+        error,
+      );
+      console.log(
+        '🛠 LOG: 🚀 --> -------------------------------------------------------------------🛠 LOG: 🚀 -->',
+      );
+    }
   }
 }

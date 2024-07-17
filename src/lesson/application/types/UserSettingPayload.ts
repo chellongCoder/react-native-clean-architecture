@@ -4,8 +4,17 @@ export type TokenAppT = {
   token: string;
   category: AppCategoryE;
 };
+
+export type TokenAppAndroidT = {
+  token: string;
+  category: AppCategoryE;
+  id: string;
+  name: string;
+  icon: string;
+};
+
 export type AppBlockT = {
-  android: TokenAppT[];
+  android: TokenAppAndroidT[];
   ios: TokenAppT[];
 };
 export default interface UserSettingPayload {
