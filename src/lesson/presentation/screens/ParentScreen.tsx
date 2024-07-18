@@ -92,7 +92,7 @@ const ParentScreen = observer(() => {
     deviceToken,
     deleteChildren,
   } = useAuthenticationStore();
-  console.log('🛠 LOG: 🚀 --> ~ ParentScreen ~ deviceToken:', deviceToken);
+
   const loading = useLoadingGlobal(false);
   useGetUserSetting(deviceToken, lesson);
   const [tabParent, setTabparent] = useState(TabParentE.APP_BLOCK);

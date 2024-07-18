@@ -33,6 +33,7 @@ export class LessonStore {
   passwordParent?: string;
 
   @observable isLoadingUserSetting = false;
+  unlockPercent = 0;
 
   constructor(
     @provided(UpdateUserSettingUseCase)
@@ -71,6 +72,11 @@ export class LessonStore {
   @action
   setPoint = (score: number) => {
     this.point.value = score;
+  };
+
+  @action
+  setUnlockPercent = (percent: number) => {
+    this.unlockPercent = percent;
   };
 
   @action
@@ -140,9 +146,7 @@ export class LessonStore {
 
   @action
   public async handlePostUserProgress(data: TResult[]) {
-    console.log('handlePostUserProgress: ', data);
     const response = await this.postUserProgressUseCase.execute(data);
-    console.log('handlePostUserProgressResponse: ', response);
     return response;
   }
 
@@ -150,7 +154,6 @@ export class LessonStore {
   public async handleGetSettingUser(deviceToken: string) {
     try {
       const response = await this.getUserSettingUserCase.execute(deviceToken);
-      console.log('handlePostUserProgressResponse: ', response);
       if (!isAndroid) {
         this.blockedAnonymousListAppsSystem = {
           categoryTokens: response.data.appBlocked.ios
@@ -179,6 +182,7 @@ export class LessonStore {
           },
         );
       }
+      this.setUnlockPercent(response.data.point);
       return response;
     } catch (error) {
       console.log(

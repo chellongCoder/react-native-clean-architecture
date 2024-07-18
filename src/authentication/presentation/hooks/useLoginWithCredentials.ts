@@ -399,8 +399,8 @@ const useLoginWithCredentials = () => {
     async (props: ChangeChildDescriptionPayload) => {
       try {
         const res = await changeChildrenDescription(props);
-        if (res.data.code === 200) {
-          return res.data;
+        if (res.message === 'Update children success') {
+          return true;
         } else {
           return false;
         }
