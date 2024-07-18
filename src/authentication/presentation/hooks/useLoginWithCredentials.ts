@@ -10,6 +10,7 @@ import useAuthenticationStore from '../stores/useAuthenticationStore';
 import {RegisterPayload} from 'src/authentication/application/types/RegisterPayload';
 import {
   pushScreen,
+  replaceScreen,
   resetNavigator,
 } from 'src/core/presentation/navigation/actions/RootNavigationActions';
 import Toast from 'react-native-toast-message';
@@ -77,6 +78,10 @@ const useLoginWithCredentials = () => {
         }
         case StatusCode.BadGateway: {
           setErrorMessage(Messages.BAD_GATEWAY);
+          return;
+        }
+        case StatusCode.UnprocessableEntity: {
+          replaceScreen(STACK_NAVIGATOR.AUTH.LOGIN_SCREEN);
           return;
         }
         case StatusCode.BadRequest:
@@ -197,6 +202,7 @@ const useLoginWithCredentials = () => {
         return true;
       } else {
         console.log('No credentials stored');
+        replaceScreen(STACK_NAVIGATOR.AUTH.LOGIN_SCREEN);
         return null;
       }
     } catch (error) {
@@ -345,7 +351,9 @@ const useLoginWithCredentials = () => {
     try {
       removeCurrentCredentials();
       clearUsernamePasswordInKeychain();
-      resetNavigator(STACK_NAVIGATOR.AUTH_NAVIGATOR);
+      resetNavigator(STACK_NAVIGATOR.AUTH_NAVIGATOR, {
+        screen: STACK_NAVIGATOR.AUTH.LOGIN_SCREEN,
+      });
     } catch (error) {
       console.log('handleLogOutFailed: ', error);
     } finally {

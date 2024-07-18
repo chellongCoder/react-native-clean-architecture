@@ -1,22 +1,23 @@
-import React, {View, Text, StyleSheet} from 'react-native';
+import React, {View, Text, StyleSheet, Image} from 'react-native';
 import {RootStackScreenProps} from '../navigation/types';
 import useGlobalStyle from '../hooks/useGlobalStyle';
 import {useEffect} from 'react';
 import {navigateScreen} from '../navigation/actions/RootNavigationActions';
 import {STACK_NAVIGATOR} from '../navigation/ConstantNavigator';
+import {assets} from '../utils';
 
 const OnBoardingScreen = ({navigation}) => {
   const styleHook = useGlobalStyle();
 
-  useEffect(() => {
-    setTimeout(() => {
-      navigateScreen(STACK_NAVIGATOR.AUTH.LOGIN_SCREEN);
-    }, 2000);
-  }, []);
+  useEffect(() => {}, []);
 
   return (
     <View style={styles.container}>
-      <Text style={[styles.text, styleHook.txtWord]}>Loading ...</Text>
+      <Image
+        source={assets.onboarding}
+        style={{height: '100%', width: '100%'}}
+        resizeMode="cover"
+      />
     </View>
   );
 };
@@ -24,7 +25,6 @@ const OnBoardingScreen = ({navigation}) => {
 export default OnBoardingScreen;
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: '#66C270',
     justifyContent: 'center',
     alignItems: 'center',
     flex: 1,
