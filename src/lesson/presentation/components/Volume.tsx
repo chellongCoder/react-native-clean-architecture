@@ -1,12 +1,13 @@
 import IconSoundFill from 'assets/svg/IconSoundFill';
 import React, {useEffect} from 'react';
-import {View, StyleSheet} from 'react-native';
+import {View, StyleSheet, Image} from 'react-native';
 import {Gesture, GestureDetector} from 'react-native-gesture-handler';
 import Animated, {
   useSharedValue,
   useAnimatedStyle,
   withTiming,
 } from 'react-native-reanimated';
+import {assets} from 'src/core/presentation/utils';
 
 type Props = {
   value?: number;
@@ -48,7 +49,11 @@ const Volume = ({maxValue = 100, value = 0, onChangValue}: Props) => {
 
   return (
     <View style={styles.container}>
-      <IconSoundFill />
+      <Image
+        source={assets.sound_icon}
+        style={styles.sound}
+        resizeMode="contain"
+      />
       <View
         style={styles.sliderContainer}
         onLayout={e => (widthSlider.value = e.nativeEvent.layout.width)}>
@@ -72,7 +77,7 @@ const styles = StyleSheet.create({
   sliderContainer: {
     flex: 1,
     justifyContent: 'center',
-    marginLeft: 12,
+    marginLeft: 6,
   },
   track: {
     width: '100%',
@@ -98,6 +103,10 @@ const styles = StyleSheet.create({
     height: 30,
     width: 30,
     position: 'absolute',
+  },
+  sound: {
+    height: 32,
+    width: 32,
   },
 });
 

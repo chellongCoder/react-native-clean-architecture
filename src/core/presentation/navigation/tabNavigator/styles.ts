@@ -84,7 +84,6 @@ export default StyleSheet.create({
     height: scale(24),
     width: scale(24),
     borderRadius: 999,
-    padding: scale(2),
   },
   icon: {
     height: '100%',

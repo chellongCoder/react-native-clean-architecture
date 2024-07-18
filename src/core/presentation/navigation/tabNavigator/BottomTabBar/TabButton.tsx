@@ -50,12 +50,12 @@ const TitleTabBar = (name: string, isFocused: boolean) => {
 
 const BottomTabIcon = (name: string) => {
   const icons = {
-    [BOTTOM_TAB.HOME_TAB]: assets.home_icon,
-    [BOTTOM_TAB.TARGET_TAB]: assets.home_icon,
-    [BOTTOM_TAB.PARENT_TAB]: assets.parent_icon,
-    [BOTTOM_TAB.CHILD_TAB]: assets.child_icon,
-    [BOTTOM_TAB.ACHIEVEMENT_TAB]: assets.achievement_icon,
-    [BOTTOM_TAB.RANK_TAB]: assets.rank_icon,
+    [BOTTOM_TAB.HOME_TAB]: assets.home_icon_new,
+    [BOTTOM_TAB.TARGET_TAB]: assets.home_icon_new,
+    [BOTTOM_TAB.PARENT_TAB]: assets.parent_icon_new,
+    [BOTTOM_TAB.CHILD_TAB]: assets.child_icon_new,
+    [BOTTOM_TAB.ACHIEVEMENT_TAB]: assets.achievement_icon_new,
+    [BOTTOM_TAB.RANK_TAB]: assets.rank_icon_new,
   };
   const icon = icons[name];
   if (!icon) {
