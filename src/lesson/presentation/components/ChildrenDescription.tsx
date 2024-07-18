@@ -44,7 +44,7 @@ const ChildrenDescription = () => {
         childrenId: selectedChild?._id || '',
         description: e.nativeEvent.text,
       });
-      if (res && res?.code === 200) {
+      if (res) {
         setChangeDescriptionSuccess(true);
       }
       setIsChangeChildDescription(false);

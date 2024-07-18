@@ -5,4 +5,5 @@ export default interface UserSettingEntity {
   childrenId: string;
   deviceToken: string;
   appBlocked: AppBlockT;
+  point: number;
 }

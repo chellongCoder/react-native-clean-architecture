@@ -1,4 +1,10 @@
-import React, {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
+import React, {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  Alert,
+} from 'react-native';
 import useGlobalStyle from '../hooks/useGlobalStyle';
 import ICStar from 'src/core/components/icons/ICStar';
 import {STACK_NAVIGATOR} from '../navigation/ConstantNavigator';
@@ -8,18 +14,42 @@ import {lessonModuleContainer} from 'src/lesson/LessonModule';
 import {LessonStore} from 'src/lesson/presentation/stores/LessonStore/LessonStore';
 import {RouteProp, useRoute} from '@react-navigation/native';
 import {TResult} from 'src/lesson/presentation/screens/LessonScreen';
+import {useGetUserSetting} from 'src/hooks/useGetUserSetting';
+import useAuthenticationStore from 'src/authentication/presentation/stores/useAuthenticationStore';
 
 type RouteParams = {
   totalResult: TResult[];
 };
 
 const DoneLessonScreen = () => {
-  const route = useRoute<RouteProp<{param: RouteParams}>>().params;
+  const route = useRoute<RouteProp<{param: RouteParams}>>()?.params;
+  const totalResultLength = route.totalResult?.length || 0;
   const totalCorrectAnswer =
     route.totalResult.filter((item: TResult) => item.status === 'completed')
-      .length || 0;
+      ?.length || 0;
   const styleHook = useGlobalStyle();
   const lessonStore = lessonModuleContainer.getProvided(LessonStore);
+  const {deviceToken} = useAuthenticationStore();
+  useGetUserSetting(deviceToken, lessonStore);
+
+  const onUnlockAppSetting = async () => {
+    if (
+      lessonStore.unlockPercent <=
+      (totalCorrectAnswer / totalResultLength) * 100
+    ) {
+      resetNavigator(STACK_NAVIGATOR.HOME.HOME_SCREEN);
+      await unBlockApps();
+      lessonStore.changeBlockedAnonymousListAppSystem(undefined);
+      lessonStore.resetListAppSystem();
+    } else {
+      Alert.alert('Your result is not enough to open app lock', '', [
+        {
+          text: 'Ok',
+          onPress: () => resetNavigator(STACK_NAVIGATOR.HOME.HOME_SCREEN),
+        },
+      ]);
+    }
+  };
 
   return (
     <View style={styles.container}>
@@ -59,17 +89,10 @@ const DoneLessonScreen = () => {
         <View style={styles.wrapperButton}>
           <TouchableOpacity style={styles.button}>
             <Text style={[styleHook.txtButton, styles.textBtn]}>
-              Recieve award
+              Receive award
             </Text>
           </TouchableOpacity>
-          <TouchableOpacity
-            onPress={async () => {
-              resetNavigator(STACK_NAVIGATOR.HOME.HOME_SCREEN);
-              await unBlockApps();
-              lessonStore.changeBlockedAnonymousListAppSystem(undefined);
-              lessonStore.resetListAppSystem();
-            }}
-            style={styles.button}>
+          <TouchableOpacity onPress={onUnlockAppSetting} style={styles.button}>
             <Text style={[styleHook.txtButton, styles.textBtn]}>Continue</Text>
           </TouchableOpacity>
         </View>
