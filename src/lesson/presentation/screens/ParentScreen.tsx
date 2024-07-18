@@ -11,9 +11,6 @@ import React, {useCallback, useEffect, useMemo, useState} from 'react';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import useGlobalStyle from 'src/core/presentation/hooks/useGlobalStyle';
 import IconUser from 'assets/svg/IconUser';
-import IconLock from 'assets/svg/IconLock';
-import IconSetting from 'assets/svg/IconSetting';
-import IconPurchase from 'assets/svg/IconPurchase';
 import PrimaryButton from '../components/PrimaryButton';
 import IconArrowDown from 'assets/svg/IconArrowDown';
 import IconArrowUp from 'assets/svg/IconArrowUp';
@@ -51,6 +48,7 @@ import {unBlockApps} from 'react-native-alphadex-screentime';
 import {AppCategoryE} from 'src/core/domain/enums/AppCategoryE';
 import ChildrenDescription from '../components/ChildrenDescription';
 import {useGetUserSetting} from 'src/hooks/useGetUserSetting';
+import {IClock, ICpurchase, ICsetting} from '../components/icons';
 
 enum TabParentE {
   APP_BLOCK = 'App block',
@@ -65,9 +63,9 @@ enum TabSettingE {
 }
 
 const tabsData = [
-  {id: TabParentE.APP_BLOCK, name: TabParentE.APP_BLOCK, icon: IconLock},
-  {id: TabParentE.SETTING, name: TabParentE.SETTING, icon: IconSetting},
-  {id: TabParentE.PURCHASE, name: TabParentE.PURCHASE, icon: IconPurchase},
+  {id: TabParentE.APP_BLOCK, name: TabParentE.APP_BLOCK, icon: IClock},
+  {id: TabParentE.SETTING, name: TabParentE.SETTING, icon: ICsetting},
+  {id: TabParentE.PURCHASE, name: TabParentE.PURCHASE, icon: ICpurchase},
 ];
 
 const tabsSeting = [
@@ -361,6 +359,7 @@ const ParentScreen = observer(() => {
                     .map((p, i) => {
                       return (
                         <TouchableOpacity
+                          key={i}
                           activeOpacity={1}
                           onPress={() => {
                             setPoint(p);
@@ -480,8 +479,10 @@ const ParentScreen = observer(() => {
         <View style={[styles.rowBetween]}>
           <AccountStatus isShowLogout={true} />
         </View>
-        <View style={[styles.profile]}>
-          <IconUser width={70} height={70} />
+        <View style={[styles.profile_border]}>
+          <View style={[styles.profile]}>
+            <IconUser width={70} height={70} />
+          </View>
         </View>
         <Username />
       </View>
@@ -497,6 +498,9 @@ const ParentScreen = observer(() => {
                   key={t.id}
                   name={t.name}
                   Icon={t.icon}
+                  isHexagon={true}
+                  backgroundColor="#f9cc2d"
+                  backgroundFocusColor="#66c270"
                   isFocus={tabParent === t.id}
                   onPress={() => setTabparent(t.id)}
                 />
@@ -612,13 +616,22 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
   },
-  profile: {
+  profile_border: {
     height: 120,
     width: 120,
+    backgroundColor: '#F2B559',
+    borderTopLeftRadius: 60,
+    borderTopRightRadius: 60,
+    borderBottomLeftRadius: 60,
+    padding: 6,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  profile: {
+    height: '100%',
+    width: '100%',
     backgroundColor: '#FFE699',
     borderRadius: 60,
-    borderWidth: 6,
-    borderColor: '#F2B559',
     alignItems: 'center',
     justifyContent: 'center',
   },

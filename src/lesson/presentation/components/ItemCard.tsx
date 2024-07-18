@@ -1,9 +1,16 @@
-import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+  ImageBackground,
+} from 'react-native';
 import React from 'react';
 import useGlobalStyle from 'src/core/presentation/hooks/useGlobalStyle';
 import IconBlock from 'assets/svg/IconBlock';
 import {Image} from 'react-native';
 import {COLORS} from 'src/core/presentation/utils/colors';
+import {assets} from 'src/core/presentation/utils';
 
 export type ItemCardProps = {
   name?: string;
@@ -18,6 +25,7 @@ export type ItemCardProps = {
   iconFocusColor?: string;
   borderWidth?: number;
   space?: number;
+  isHexagon?: boolean;
 };
 
 const ItemCard = ({
@@ -31,6 +39,7 @@ const ItemCard = ({
   iconFocusColor = '#FBF8CC',
   borderWidth = 0,
   space = 8,
+  isHexagon = false,
 }: ItemCardProps) => {
   const globalStyle = useGlobalStyle();
 
@@ -39,41 +48,52 @@ const ItemCard = ({
   const bc = backgroundColor;
   return (
     <TouchableOpacity onPress={onPress} activeOpacity={0.6}>
-      <View
-        style={[
-          styles.card,
-          {
-            backgroundColor: bg,
-            borderColor: bc,
-            borderWidth: borderWidth,
-            height: size,
-            width: size,
-          },
-        ]}>
-        {typeof Icon === 'string' && (
-          <>
-            <View style={{position: 'absolute'}}>
-              {Icon === 'no_icon' ? (
-                <Text style={[globalStyle.txtWord, {color: COLORS.WHITE}]}>
-                  {name}
-                </Text>
-              ) : (
-                <Image
-                  source={{uri: `data:image/jpg;base64,${Icon}`}}
-                  width={50}
-                  height={50}
-                />
-              )}
-            </View>
-            <IconBlock color={ic} height={size / 2} width={size / 2} />
-          </>
-        )}
-        {typeof Icon !== 'string' && (
-          <>
-            <Icon color={ic} height={size / 2} width={size / 2} />
-          </>
-        )}
-      </View>
+      {isHexagon && (
+        <ImageBackground
+          source={assets.hexagon_frame}
+          tintColor={bg}
+          style={{padding: size / 12}}
+          resizeMode="contain">
+          <Icon height={size - size / 6} width={size - size / 6} />
+        </ImageBackground>
+      )}
+      {!isHexagon && (
+        <View
+          style={[
+            styles.card,
+            {
+              backgroundColor: bg,
+              borderColor: bc,
+              borderWidth: borderWidth,
+              height: size,
+              width: size,
+            },
+          ]}>
+          {typeof Icon === 'string' && (
+            <>
+              <View style={{position: 'absolute'}}>
+                {Icon === 'no_icon' ? (
+                  <Text style={[globalStyle.txtWord, {color: COLORS.WHITE}]}>
+                    {name}
+                  </Text>
+                ) : (
+                  <Image
+                    source={{uri: `data:image/jpg;base64,${Icon}`}}
+                    width={50}
+                    height={50}
+                  />
+                )}
+              </View>
+              <IconBlock color={ic} height={size / 2} width={size / 2} />
+            </>
+          )}
+          {typeof Icon !== 'string' && (
+            <>
+              <Icon color={ic} height={size / 2} width={size / 2} />
+            </>
+          )}
+        </View>
+      )}
       {name && (
         <Text style={[globalStyle.txtButton, styles.name, {paddingTop: space}]}>
           {name}
