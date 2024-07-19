@@ -97,14 +97,16 @@ const ParentScreen = observer(() => {
 
   const tabsBlock = useMemo(() => {
     if (isAndroid) {
-      return lesson.blockedListAppsSystem.map(app => {
-        return {
-          id: app.package_name,
-          name: app.app_name,
-          icon: app.app_icon,
-          token: app.package_name,
-        };
-      });
+      return (
+        lesson.blockedListAppsSystem?.map(app => {
+          return {
+            id: app.package_name,
+            name: app.app_name,
+            icon: app.app_icon,
+            token: app.package_name,
+          };
+        }) ?? []
+      );
     } else {
       if (lesson.blockedAnonymousListAppsSystem?.categoryTokens?.length) {
         return (
