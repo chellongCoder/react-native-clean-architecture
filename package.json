@@ -13,7 +13,9 @@
     "reactNativeStart": "react-native start",
     "reactNativeIos": "react-native run-ios",
     "postinstall": "patch-package",
-    "create:native-module": "npx create-react-native-library@latest"
+    "create:native-module": "npx create-react-native-library@latest",
+    "icon": "rn-toolbox icons ./assets/images/icon.png",
+    "splash": "rn-toolbox splash .assets/images/splash.png"
   },
   "dependencies": {
     "@expo/webpack-config": "~19.0.1",
@@ -69,6 +71,7 @@
     "@babel/runtime": "^7.20.0",
     "@carlossalasamper/eslint-config": "^0.1.4",
     "@commitlint/config-conventional": "^17.7.0",
+    "@forward-software/react-native-toolbox": "^3.0.0",
     "@jest/globals": "^29.7.0",
     "@react-native/babel-preset": "0.73.21",
     "@react-native/eslint-config": "0.73.2",
