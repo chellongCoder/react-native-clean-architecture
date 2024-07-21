@@ -49,6 +49,7 @@ import {AppCategoryE} from 'src/core/domain/enums/AppCategoryE';
 import ChildrenDescription from '../components/ChildrenDescription';
 import {useGetUserSetting} from 'src/hooks/useGetUserSetting';
 import {IClock, ICpurchase, ICsetting} from '../components/icons';
+import Dropdown from 'src/core/components/dropdown/Dropdown';
 
 enum TabParentE {
   APP_BLOCK = 'App block',
@@ -328,61 +329,14 @@ const ParentScreen = observer(() => {
                 <Text style={[globalStyle.txtButton, styles.textColor]}>
                   Score to unlock
                 </Text>
-                <View
-                  style={[
-                    styles.card,
-                    {
-                      zIndex: 999,
-                      backgroundColor: !isShowLimitOption
-                        ? styles.card.backgroundColor
-                        : COLORS.GREEN_1C6349,
-                      width: scale(70),
-                    },
-                  ]}>
-                  <Text
-                    style={[
-                      globalStyle.txtButton,
-                      styles.textCard,
-                      {
-                        color: isShowLimitOption
-                          ? styles.card.backgroundColor
-                          : COLORS.GREEN_1C6349,
-                      },
-                    ]}>
-                    {point}%
-                  </Text>
-                  {isShowLimitOption ? <IconArrowUp /> : <IconArrowDown />}
-                </View>
               </TouchableOpacity>
-              {isShowLimitOption && (
-                <View style={styles.dropdown}>
-                  {points
-                    .filter(e => e !== point)
-                    .map((p, i) => {
-                      return (
-                        <TouchableOpacity
-                          key={i}
-                          activeOpacity={1}
-                          onPress={() => {
-                            setPoint(p);
-                            setIsShowLimitOption(false);
-                          }}
-                          style={[
-                            i !== points.length - 1
-                              ? {
-                                  borderBottomWidth: 0.5,
-                                  borderColor: COLORS.GREEN_1C6A59,
-                                }
-                              : {},
-                          ]}>
-                          <Text style={[globalStyle.txtNote, styles.option]}>
-                            {p}%
-                          </Text>
-                        </TouchableOpacity>
-                      );
-                    })}
-                </View>
-              )}
+              <Dropdown
+                data={points}
+                title={point.toString()}
+                onSelectItem={item => setPoint(+item)}
+                prefix="%"
+              />
+
               <View style={[{zIndex: -2}]}>
                 <Text style={[globalStyle.txtButton, styles.textColor]}>
                   Your unlock score

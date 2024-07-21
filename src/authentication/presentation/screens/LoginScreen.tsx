@@ -10,9 +10,9 @@ import {useLoadingGlobal} from 'src/core/presentation/hooks/loading/useLoadingGl
 import useAuthenticationStore from '../stores/useAuthenticationStore';
 import {navigateScreen} from 'src/core/presentation/navigation/actions/RootNavigationActions';
 import {STACK_NAVIGATOR} from 'src/core/presentation/navigation/ConstantNavigator';
-// import {getInstalledApps} from 'react-native-alphadex-screentime';
-// import * as ExpoSettings from 'expo-settings';
-// import {addChangeListener} from 'expo-settings';
+import {scale} from 'react-native-size-matters';
+import Dropdown from 'src/core/components/dropdown/Dropdown';
+
 const LoginScreen = observer(() => {
   const commonStyle = useGlobalStyle();
   const {handleLoginWithCredentials} = useLoginWithCredentials();
@@ -21,7 +21,7 @@ const LoginScreen = observer(() => {
 
   const [emailOrPhone, setEmailOrPhone] = useState('');
   const [password, setPassword] = useState('');
-
+  const [lang, setLang] = useState('Eng');
   const onLogin = () => {
     const params = {
       email: emailOrPhone.toLowerCase(),
@@ -34,25 +34,15 @@ const LoginScreen = observer(() => {
     navigateScreen(STACK_NAVIGATOR.AUTH.REGISTER_SCREEN);
   };
 
-  // useEffect(() => {
-  //   addChangeListener(e => {
-  //     console.log(
-  //       '🛠 LOG: 🚀 --> --------------------------------------🛠 LOG: 🚀 -->',
-  //     );
-  //     console.log('🛠 LOG: 🚀 --> ~ useEffect ~ e:', e);
-  //     console.log(
-  //       '🛠 LOG: 🚀 --> --------------------------------------🛠 LOG: 🚀 -->',
-  //     );
-  //   });
-  // }, []);
-
   return (
     <View style={[styles.container]}>
       <ScrollView contentContainerStyle={[styles.fill]}>
-        <View style={[styles.boxLang]}>
-          <Text style={[commonStyle.txtLabel, styles.ph16]}>Eng</Text>
-          <View style={[styles.arrowIcon]} />
-        </View>
+        <Dropdown
+          title={lang}
+          width={scale(100)}
+          onSelectItem={item => setLang(item)}
+          data={['Eng', 'Vie']}
+        />
 
         <View style={[styles.fill, styles.justifyCenter]}>
           <CommonInput
@@ -96,30 +86,7 @@ const LoginScreen = observer(() => {
           <Text style={[styles.txtLink, styles.mv8, styles.textCenter]}>
             Or log in with
           </Text>
-          <PrimaryButton
-            // onPress={async () => {
-            //   // const apps = await getInstalledApps();
-            //   // console.log(
-            //   //   '🛠 LOG: 🚀 --> ----------------------------------------🛠 LOG: 🚀 -->',
-            //   // );
-            //   // console.log('🛠 LOG: 🚀 --> ~ onPress={ ~ apps:', apps);
-            //   // console.log(
-            //   //   '🛠 LOG: 🚀 --> ----------------------------------------🛠 LOG: 🚀 -->',
-            //   // );
-            //   const str = ExpoSettings.hello();
-            //   ExpoSettings.setValueAsync('longnn');
-            //   console.log(
-            //     '🛠 LOG: 🚀 --> --------------------------------------🛠 LOG: 🚀 -->',
-            //   );
-            //   console.log('🛠 LOG: 🚀 --> ~ onPress={ ~ str:', str);
-            //   console.log(
-            //     '🛠 LOG: 🚀 --> --------------------------------------🛠 LOG: 🚀 -->',
-            //   );
-            // }}
-            text="Google"
-            wrapContent={false}
-            style={styles.mv8}
-          />
+          <PrimaryButton text="Google" wrapContent={false} style={styles.mv8} />
           <PrimaryButton text="Facebook" wrapContent={false} />
         </View>
       </ScrollView>
@@ -148,16 +115,17 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     alignSelf: 'flex-start',
     height: 40,
-    padding: 5,
+    // padding: 5,
     borderRadius: 30,
   },
   arrowIcon: {
-    width: 22,
-    height: 22,
-    borderRadius: 11,
+    // width: 22,
+    // height: 22,
+    // borderRadius: 11,
+    marginLeft: scale(5),
   },
   ph16: {
-    paddingHorizontal: 16,
+    paddingHorizontal: scale(16),
   },
   mh12: {
     marginHorizontal: 12,
