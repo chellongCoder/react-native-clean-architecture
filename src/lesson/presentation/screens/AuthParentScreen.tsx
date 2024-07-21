@@ -1,5 +1,5 @@
-import {ScrollView, StyleSheet, View, Text} from 'react-native';
-import React, {useEffect, useState} from 'react';
+import {ScrollView, StyleSheet, View, Text, Keyboard} from 'react-native';
+import React, {useEffect, useRef, useState} from 'react';
 import {CommonInputPassword} from 'src/authentication/presentation/components/CommonInput';
 import PrimaryButton from '../components/PrimaryButton';
 import {replaceScreen} from 'src/core/presentation/navigation/actions/RootNavigationActions';
@@ -15,31 +15,37 @@ import {COLORS} from 'src/core/presentation/constants/colors';
 import {useAnimatedShake} from 'src/hooks/useAnimatedShake';
 import Animated from 'react-native-reanimated';
 import {usePermissionApplock} from 'src/hooks/usePermissionApplock';
+import {useLoadingGlobal} from 'src/core/presentation/hooks/loading/useLoadingGlobal';
 
 const AuthParentScreen = () => {
-  const [password, setPassword] = useState('');
+  // const [password, setPassword] = useState('');
+  const passwordRef = useRef('');
   const [error, setError] = useState('');
 
   const {handleComparePassword} = useLoginWithCredentials();
   const {shake, rStyle} = useAnimatedShake();
   const lessonStore = useLessonStore();
-
+  const loadingGlobal = useLoadingGlobal();
   const permissionHook = usePermissionApplock();
 
   const onSubmit = async () => {
-    const res = await handleComparePassword({password: password});
+    loadingGlobal.show?.();
+    const res = await handleComparePassword({password: passwordRef.current});
     if (res === 200) {
-      lessonStore.setPasswordParent(password);
+      lessonStore.setPasswordParent(passwordRef.current);
       replaceScreen(STACK_NAVIGATOR.PARENT.PARENT_SCREEN);
     } else {
       shake();
       setError('Password not match!');
     }
+    loadingGlobal.hide?.();
   };
 
   useEffect(() => {
+    const {isOverlay, isUsageStats, isPushNoti} = permissionHook;
+    Keyboard.dismiss();
+
     setTimeout(() => {
-      const {isOverlay, isUsageStats, isPushNoti} = permissionHook;
       if (
         isOverlay !== undefined &&
         isUsageStats !== undefined &&
@@ -50,7 +56,9 @@ const AuthParentScreen = () => {
         }
       }
     }, 1000);
-  }, [lessonStore, permissionHook]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [permissionHook]);
+
   return (
     <View style={[styles.container]}>
       <ScrollView>
@@ -58,8 +66,7 @@ const AuthParentScreen = () => {
           <CommonInputPassword
             label="Enter password"
             textInputProp={{
-              value: password,
-              onChangeText: setPassword,
+              onChangeText: p => (passwordRef.current = p),
             }}
             autofocus
             suffiex={error && <Text style={styles.errorMsg}>*{error}</Text>}

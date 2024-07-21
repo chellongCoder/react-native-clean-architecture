@@ -35,8 +35,8 @@ const BottomSheetCustom = forwardRef<BottomSheet, Props>(
         <BottomSheetBackdrop
           {...props}
           pressBehavior={other?.onBackdropPress ? 'collapse' : 'close'}
-          // disappearsOnIndex={-1}
-          // appearsOnIndex={0}
+          disappearsOnIndex={-1}
+          appearsOnIndex={0}
           onPress={
             other?.onBackdropPress
               ? other.onBackdropPress

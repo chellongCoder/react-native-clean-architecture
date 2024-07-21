@@ -207,6 +207,7 @@ const useLoginWithCredentials = () => {
       }
     } catch (error) {
       console.log("Keychain couldn't be accessed!", error);
+      replaceScreen(STACK_NAVIGATOR.AUTH.LOGIN_SCREEN);
       return null;
     }
   }, [handleLoginWithCredentials]);

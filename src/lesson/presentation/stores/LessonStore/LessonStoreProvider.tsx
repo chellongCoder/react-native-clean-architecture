@@ -139,7 +139,7 @@ export const LessonStoreProvider = observer(({children}: PropsWithChildren) => {
     );
   }, [apps, listItem, value]);
   return (
-    <LessonStoreContext.Provider value={{...value}}>
+    <LessonStoreContext.Provider value={value}>
       {children}
       {value.point.isShow && <Scoring onClose={() => value.setIsShow(false)} />}
       {isShowBottomSheet && renderBottomSheet()}

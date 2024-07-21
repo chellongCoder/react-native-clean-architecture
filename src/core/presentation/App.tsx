@@ -46,12 +46,12 @@ const App = () => {
       onStateChange={changeRouteName}>
       <SafeAreaProvider initialMetrics={initialWindowMetrics}>
         <GestureHandlerRootView style={{flex: 1}}>
-          <AuthenticationProvider>
-            <LoadingGlobalProvider>
+          <LoadingGlobalProvider>
+            <AuthenticationProvider>
               <RootNavigator />
               <Toast />
-            </LoadingGlobalProvider>
-          </AuthenticationProvider>
+            </AuthenticationProvider>
+          </LoadingGlobalProvider>
         </GestureHandlerRootView>
       </SafeAreaProvider>
     </NavigationContainer>
