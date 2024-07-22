@@ -50,6 +50,7 @@ import ChildrenDescription from '../components/ChildrenDescription';
 import {useGetUserSetting} from 'src/hooks/useGetUserSetting';
 import {IClock, ICpurchase, ICsetting} from '../components/icons';
 import Dropdown from 'src/core/components/dropdown/Dropdown';
+import Toast from 'react-native-toast-message';
 
 enum TabParentE {
   APP_BLOCK = 'App block',
@@ -358,6 +359,10 @@ const ParentScreen = observer(() => {
               onPress={async () => {
                 try {
                   await unBlockApps();
+                  Toast.show({
+                    type: 'success',
+                    text1: 'Your apps have been unlocked',
+                  });
                 } catch (error) {
                 } finally {
                   lesson.changeBlockedAnonymousListAppSystem(undefined);

@@ -14,6 +14,7 @@ import Toast from 'react-native-toast-message';
 import {requestScreenTime} from 'react-native-alphadex-screentime';
 import {isAndroid} from './utils';
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
+import {SoundGlobalProvider} from './hooks/sound/SoundGlobalProvider';
 const App = () => {
   const routeNameRef = useRef<string>();
 
@@ -47,10 +48,12 @@ const App = () => {
       <SafeAreaProvider initialMetrics={initialWindowMetrics}>
         <GestureHandlerRootView style={{flex: 1}}>
           <LoadingGlobalProvider>
-            <AuthenticationProvider>
-              <RootNavigator />
-              <Toast />
-            </AuthenticationProvider>
+            <SoundGlobalProvider>
+              <AuthenticationProvider>
+                <RootNavigator />
+                <Toast />
+              </AuthenticationProvider>
+            </SoundGlobalProvider>
           </LoadingGlobalProvider>
         </GestureHandlerRootView>
       </SafeAreaProvider>
