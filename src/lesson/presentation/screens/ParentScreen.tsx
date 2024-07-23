@@ -636,6 +636,7 @@ const styles = StyleSheet.create({
   },
   bookContent: {
     paddingHorizontal: 16,
+    paddingBottom: scale(54),
   },
   bodyBook: {
     borderRadius: 30,

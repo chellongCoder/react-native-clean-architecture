@@ -15,7 +15,7 @@ import ICStarOutLine from 'src/core/components/icons/ICStarOutLine';
 import IconPlaySlider from 'assets/svg/IconPlaySlider';
 import {observer} from 'mobx-react';
 import ChartProfile from 'src/lesson/presentation/components/ChartProfile';
-import {verticalScale} from 'react-native-size-matters';
+import {scale, verticalScale} from 'react-native-size-matters';
 const {width} = Dimensions.get('window');
 
 const ProfileScreen = observer(({route, navigation}) => {
@@ -203,6 +203,7 @@ const styles = StyleSheet.create({
     alignContent: 'center',
     justifyContent: 'center',
     flexDirection: 'column',
+    paddingBottom: scale(54),
   },
   avatarContainer: {
     marginTop: 50,

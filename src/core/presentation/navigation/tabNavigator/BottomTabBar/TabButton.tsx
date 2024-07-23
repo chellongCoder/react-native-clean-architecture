@@ -1,11 +1,10 @@
-import React, {useCallback, useEffect, useRef} from 'react';
+import React, {useCallback, useEffect} from 'react';
 import {View, Text, TouchableOpacity, Dimensions, Image} from 'react-native';
 import Animated, {
   useSharedValue,
   useAnimatedStyle,
   withTiming,
   interpolate,
-  runOnJS,
   interpolateColor,
 } from 'react-native-reanimated';
 import styles from '../styles';
@@ -81,24 +80,18 @@ const TabButton = ({
   const translate = useSharedValue(0);
   const scales = useSharedValue(scale(24));
   const translateX = useSharedValue(0);
-  const positionX = useRef((viewIndex * widthScreen) / lengthTab);
-
-  const onTranslateXEnd = useCallback(() => {
-    positionX.current =
-      (viewIndex * widthScreen) / lengthTab - positionX.current;
-  }, [viewIndex, lengthTab]);
 
   const handleAnimated = useCallback(() => {
     translate.value = withTiming(isFocused ? 1 : 0, {duration: 400});
     scales.value = withTiming(isFocused ? scale(48) : scale(24), {
       duration: 250,
     });
-    translateX.value = withTiming(viewIndex, {duration: 400}, finished => {
-      if (finished) {
-        runOnJS(onTranslateXEnd)();
-      }
-    });
-  }, [isFocused, scales, translate, translateX, viewIndex, onTranslateXEnd]);
+    const bulge = viewIndex > 0 && viewIndex < 4 ? (viewIndex - 2) * 0.08 : 0;
+    translateX.value = withTiming(
+      (widthScreen * (viewIndex - index + bulge)) / lengthTab,
+      {duration: 400},
+    );
+  }, [index, isFocused, lengthTab, scales, translate, translateX, viewIndex]);
 
   useEffect(() => {
     handleAnimated();
@@ -138,15 +131,7 @@ const TabButton = ({
     return {
       transform: [
         {
-          translateX: interpolate(
-            translateX.value,
-            Array.from({length: lengthTab}, (_, i) => i),
-            Array.from(
-              {length: lengthTab},
-              (_, i) => (widthScreen * i) / lengthTab - positionX.current,
-            ),
-            'clamp',
-          ),
+          translateX: translateX.value,
         },
       ],
     };
@@ -157,6 +142,16 @@ const TabButton = ({
       opacity: interpolate(scales.value, [0.5, 1], [0.5, 1], 'clamp'),
       width: scales.value,
       height: scales.value,
+    };
+  });
+
+  const scaleTextStyles = useAnimatedStyle(() => {
+    return {
+      transform: [
+        {
+          scale: interpolate(translate.value, [0, 1], [1, 1.2], 'clamp'),
+        },
+      ],
     };
   });
 
@@ -196,9 +191,9 @@ const TabButton = ({
             />
           </Animated.View>
         </Animated.View>
-        <View style={styles.wrapTitleContainer}>
+        <Animated.View style={[styles.wrapTitleContainer, scaleTextStyles]}>
           {TitleTabBar(route.name, isFocused)}
-        </View>
+        </Animated.View>
       </TouchableOpacity>
     </Animated.View>
   );
