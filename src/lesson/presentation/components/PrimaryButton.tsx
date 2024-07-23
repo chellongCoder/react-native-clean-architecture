@@ -59,5 +59,7 @@ const styles = StyleSheet.create({
   },
   text: {
     color: 'white',
+    alignSelf: 'stretch',
+    textAlign: 'center',
   },
 });
