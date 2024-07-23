@@ -28,7 +28,7 @@ type Props = {
 };
 
 export type ItemType = {
-  label: string | number;
+  label: string;
   value: string | number;
 };
 

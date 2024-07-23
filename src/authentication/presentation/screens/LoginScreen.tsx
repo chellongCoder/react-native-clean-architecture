@@ -1,23 +1,19 @@
 import {ScrollView, StyleSheet, Text, View} from 'react-native';
-import React, {useEffect, useState} from 'react';
-import useGlobalStyle from 'src/core/presentation/hooks/useGlobalStyle';
+import React, {useState} from 'react';
 import PrimaryButton from '../components/PrimaryButton';
 import CommonInput, {CommonInputPassword} from '../components/CommonInput';
 import {FontFamily} from 'src/core/presentation/hooks/useFonts';
 import useLoginWithCredentials from 'src/authentication/presentation/hooks/useLoginWithCredentials';
 import {observer} from 'mobx-react';
 import {useLoadingGlobal} from 'src/core/presentation/hooks/loading/useLoadingGlobal';
-import useAuthenticationStore from '../stores/useAuthenticationStore';
 import {navigateScreen} from 'src/core/presentation/navigation/actions/RootNavigationActions';
 import {STACK_NAVIGATOR} from 'src/core/presentation/navigation/ConstantNavigator';
 import {scale} from 'react-native-size-matters';
 import Dropdown from 'src/core/components/dropdown/Dropdown';
 
 const LoginScreen = observer(() => {
-  const commonStyle = useGlobalStyle();
   const {handleLoginWithCredentials} = useLoginWithCredentials();
-  const {isLoading} = useAuthenticationStore();
-  useLoadingGlobal(isLoading);
+  useLoadingGlobal();
 
   const [emailOrPhone, setEmailOrPhone] = useState('');
   const [password, setPassword] = useState('');

@@ -13,7 +13,6 @@ import CommonInput, {CommonInputPassword} from '../components/CommonInput';
 import PrimaryButton from '../components/PrimaryButton';
 import {goBack} from 'src/core/presentation/navigation/actions/RootNavigationActions';
 import useLoginWithCredentials from '../hooks/useLoginWithCredentials';
-import useAuthenticationStore from '../stores/useAuthenticationStore';
 import {useLoadingGlobal} from 'src/core/presentation/hooks/loading/useLoadingGlobal';
 import useStateCustom from 'src/hooks/useStateCommon';
 import {CustomTextStyle} from 'src/core/presentation/constants/typography';
@@ -48,8 +47,7 @@ const initialRegisterState: TRegister = {
 const RegisterScreen: React.FC = observer(() => {
   const commonStyle = useGlobalStyle();
   const {handleRegister} = useLoginWithCredentials();
-  const {isLoading} = useAuthenticationStore();
-  useLoadingGlobal(isLoading);
+  useLoadingGlobal();
 
   const [registerState, setRegisterState] =
     useStateCustom<TRegister>(initialRegisterState);

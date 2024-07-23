@@ -7,6 +7,7 @@ import {
   FlatList,
   Platform,
   KeyboardAvoidingView,
+  TextInput,
 } from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {scale} from 'react-native-size-matters';
@@ -19,9 +20,9 @@ import CommonInput, {
   ItemType,
 } from 'src/post/presentation/components/CommonInput';
 import useLoginWithCredentials from '../hooks/useLoginWithCredentials';
-import useAuthenticationStore from '../stores/useAuthenticationStore';
 import {useLoadingGlobal} from 'src/core/presentation/hooks/loading/useLoadingGlobal';
 import {Subject} from 'src/authentication/application/types/GetListSubjectResponse';
+import useGlobalStyle from 'src/core/presentation/hooks/useGlobalStyle';
 
 type TRegister = {
   name?: string;
@@ -42,8 +43,8 @@ const initialRegisterState: TRegister = {
 const RegisterChildScreen: React.FC = () => {
   const {handleRegisterChild, handleGetListAllSubject} =
     useLoginWithCredentials();
-  const {isLoading} = useAuthenticationStore();
-  useLoadingGlobal(isLoading);
+  useLoadingGlobal();
+  const commonStyle = useGlobalStyle();
 
   const [genderOptions, setGenderOptions] = useState<ItemType[]>([
     {label: 'Male', value: 'male'},
@@ -141,15 +142,20 @@ const RegisterChildScreen: React.FC = () => {
           style={[styles.fill]}
           behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
           <View style={styles.wrapBodyContainer}>
-            <CommonInput
-              label="Child's name"
-              textInputProp={{
-                placeholder: 'Thomas',
-                value: registerState.name,
-                onChangeText: (e: string) => onTextInputChange('name', e),
-              }}
-              autoFocus={true}
-            />
+            <View style={[styles.pb32]}>
+              <Text style={[commonStyle.txtLabel, styles.txtLabel]}>
+                Child's name
+              </Text>
+              <View style={styles.boxInput}>
+                <TextInput
+                  style={[styles.input]}
+                  placeholder="Thomas"
+                  value={registerState.name}
+                  onChangeText={(e: string) => onTextInputChange('name', e)}
+                  autoFocus={true}
+                />
+              </View>
+            </View>
 
             <View style={styles.genderAgeContainer}>
               <CommonDropDown
@@ -270,6 +276,22 @@ const styles = StyleSheet.create({
   subjectTitle: {
     ...CustomTextStyle.body1_bold,
     color: COLORS.BLUE_1C6349,
+  },
+  pb32: {
+    paddingBottom: 32,
+  },
+  txtLabel: {
+    color: '#1C6349',
+    paddingBottom: 8,
+  },
+  boxInput: {
+    backgroundColor: '#DDF598',
+    height: 64,
+    borderRadius: 15,
+    flexDirection: 'row',
+  },
+  input: {
+    padding: 22,
   },
 });
 
