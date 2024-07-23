@@ -30,7 +30,7 @@ export default AlphadexScreentime;
 
 export type FamilyActivitySelection = {
   applicationTokens: { data: string }[];
-  categoryTokens: string[];
+  categoryTokens: { data: string }[];
   includeEntireCategory: boolean;
   untokenizedApplicationIdentifiers: any[];
   untokenizedCategoryIdentifiers: any[];

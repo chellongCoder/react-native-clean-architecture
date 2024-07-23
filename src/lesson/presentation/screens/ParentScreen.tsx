@@ -93,7 +93,7 @@ const ParentScreen = observer(() => {
     deleteChildren,
   } = useAuthenticationStore();
 
-  const loading = useLoadingGlobal(false);
+  const loading = useLoadingGlobal();
   useGetUserSetting(deviceToken, lesson);
   const [tabParent, setTabparent] = useState(TabParentE.APP_BLOCK);
 
@@ -118,7 +118,7 @@ const ParentScreen = observer(() => {
                 id: 'app.package_name',
                 name: `C ${i + 1}`,
                 icon: 'no_icon',
-                token: app,
+                token: app.data,
               };
             },
           ) ?? []
@@ -142,6 +142,14 @@ const ParentScreen = observer(() => {
     lesson.blockedAnonymousListAppsSystem?.categoryTokens,
     lesson.blockedListAppsSystem,
   ]);
+
+  console.log(
+    '🛠 LOG: 🚀 --> --------------------------------------------------🛠 LOG: 🚀 -->',
+  );
+  console.log('🛠 LOG: 🚀 --> ~ tabsBlock ~ tabsBlock:', tabsBlock);
+  console.log(
+    '🛠 LOG: 🚀 --> --------------------------------------------------🛠 LOG: 🚀 -->',
+  );
 
   const tabsPurchase = [
     {id: '4', name: '???.000 vnd', icon: IconDiamond},

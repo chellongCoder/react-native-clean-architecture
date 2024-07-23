@@ -40,7 +40,7 @@ export class AuthenticationStore implements AuthenticationStoreState {
   error = '';
   isHydrated = false;
   selectedChild: children | undefined = undefined;
-  @persist deviceToken = '';
+  @persist deviceToken = '1234567891011';
 
   constructor(
     @provided(LoginUsernamePasswordUseCase)
