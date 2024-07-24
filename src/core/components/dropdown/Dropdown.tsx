@@ -35,6 +35,7 @@ const Dropdown = ({data, title, width, prefix, onSelectItem}: Props) => {
           style={[
             globalStyle.txtButton,
             {
+              flex: 1,
               color: isShowLimitOption
                 ? styles.card.backgroundColor
                 : COLORS.GREEN_1C6349,
