@@ -10,5 +10,8 @@ export interface ILessonRepository {
     payload: UserSettingPayload,
   ) => Promise<UserSettingResponse>;
   postUserProgress: (payload: TResult[]) => Promise<PostUserProgressResponse>;
-  getSettingDevice: (deviceToken: string) => Promise<UserSettingResponse>;
+  getSettingDevice: (
+    deviceToken: string,
+    childrenId: string,
+  ) => Promise<UserSettingResponse>;
 }

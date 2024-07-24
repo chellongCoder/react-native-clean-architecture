@@ -56,11 +56,13 @@ class LessonRepository implements ILessonRepository {
 
   public async getSettingDevice(
     deviceToken: string,
+    childrenId: string,
   ): Promise<UserSettingResponse> {
     const response: UserSettingResponse = await this.httpClient.post(
       `${API_ENDPOINTS.USER_SETTING.GET_SETTING_DEVICE}`,
       {
         deviceToken: deviceToken,
+        childrenId,
       },
     );
     return response;

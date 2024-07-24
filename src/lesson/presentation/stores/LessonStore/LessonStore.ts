@@ -151,9 +151,15 @@ export class LessonStore {
   }
 
   @action
-  public async handleGetSettingUser(deviceToken: string) {
+  public async handleGetSettingUser({
+    deviceToken,
+    childrenId,
+  }: UserSettingPayload) {
     try {
-      const response = await this.getUserSettingUserCase.execute(deviceToken);
+      const response = await this.getUserSettingUserCase.execute({
+        deviceToken,
+        childrenId,
+      });
       if (!isAndroid) {
         this.blockedAnonymousListAppsSystem = {
           categoryTokens: response.data.appBlocked.ios

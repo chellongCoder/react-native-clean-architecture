@@ -18,8 +18,8 @@ export type AppBlockT = {
   ios: TokenAppT[];
 };
 export default interface UserSettingPayload {
-  appBlocked: AppBlockT;
+  appBlocked?: AppBlockT;
   deviceToken: string;
-  point: number;
+  point?: number;
   childrenId: string;
 }

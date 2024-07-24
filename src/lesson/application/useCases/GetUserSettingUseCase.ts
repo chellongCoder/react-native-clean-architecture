@@ -5,17 +5,21 @@ import {
   ILessonRepository,
   ILessonRepositoryToken,
 } from 'src/lesson/domain/specifications/ILessonRepository';
+import UserSettingPayload from '../types/UserSettingPayload';
 
 @injectable()
 export default class GetUserSettingUseCase
-  implements UseCase<string, Promise<UserSettingResponse>>
+  implements UseCase<UserSettingPayload, Promise<UserSettingResponse>>
 {
   constructor(
     @provided(ILessonRepositoryToken)
     private readonly postRepository: ILessonRepository,
   ) {}
 
-  public execute(deviceToken: string) {
-    return this.postRepository.getSettingDevice(deviceToken);
+  public execute(payload: {deviceToken: string; childrenId: string}) {
+    return this.postRepository.getSettingDevice(
+      payload.deviceToken,
+      payload.childrenId,
+    );
   }
 }

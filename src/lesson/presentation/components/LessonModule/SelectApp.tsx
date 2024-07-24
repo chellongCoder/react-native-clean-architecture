@@ -1,5 +1,5 @@
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import React from 'react';
+import React, {useEffect} from 'react';
 import useGlobalStyle from 'src/core/presentation/hooks/useGlobalStyle';
 import IconArrowDown from 'assets/svg/IconArrowDown';
 import {scale, verticalScale} from 'react-native-size-matters';
@@ -11,42 +11,68 @@ import {lessonModuleContainer} from 'src/lesson/LessonModule';
 import {LessonStore} from '../../stores/LessonStore/LessonStore';
 import {isAndroid} from 'src/core/presentation/utils';
 import {COLORS} from 'src/core/presentation/constants/colors';
+import {useAnimatedShake} from 'src/hooks/useAnimatedShake';
+import Animated from 'react-native-reanimated';
 type Props = {
   appName: string;
 };
 const SelectApp = ({appName}: Props) => {
   const lesson = lessonModuleContainer.getProvided(LessonStore);
   const globalStyle = useGlobalStyle();
+  const {shake, rStyle} = useAnimatedShake();
+
+  useEffect(() => {
+    shake();
+  }, [shake]);
+
   return (
-    <>
+    <Animated.View style={[rStyle]}>
       {isAndroid ? (
         <TouchableOpacity
           onPress={async () => {
             await lesson.changeListAppSystem();
             lesson.onShowSheetApps();
           }}
-          style={[styles.card]}>
+          style={[styles.card, {borderColor: 'red', borderWidth: 1}]}>
           <Text style={[globalStyle.txtButton, styles.textCard]}>
             {appName.trim() !== '' ? appName : 'select apps'}
           </Text>
           <IconArrowDown />
         </TouchableOpacity>
       ) : (
-        <ScreenTimeComponent
-          onChangeBlock={e => {
-            const blockedApps: FamilyActivitySelection = JSON.parse(
-              e.nativeEvent.blockedApps,
-            );
-            lesson.changeBlockedAnonymousListAppSystem(blockedApps);
-          }}
-          style={styles.container}>
-          <Text style={[globalStyle.txtButton, styles.textCard]}>
-            {appName.trim() !== '' ? appName : 'select apps'}
-          </Text>
-          <IconArrowDown />
-        </ScreenTimeComponent>
+        <>
+          <ScreenTimeComponent
+            onChangeBlock={e => {
+              const blockedApps: FamilyActivitySelection = JSON.parse(
+                e.nativeEvent.blockedApps,
+              );
+              lesson.changeBlockedAnonymousListAppSystem(blockedApps);
+            }}
+            style={[
+              styles.container,
+              {borderColor: COLORS.ERROR, borderWidth: 1},
+            ]}>
+            <Text style={[globalStyle.txtButton, styles.textCard]}>
+              {appName.trim() !== '' ? appName : 'select apps'}
+            </Text>
+            <IconArrowDown />
+          </ScreenTimeComponent>
+          <View style={{marginRight: 20, marginVertical: 5}}>
+            <Text
+              style={[
+                globalStyle.txtNote,
+                {
+                  textAlign: 'left',
+                  color: COLORS.ERROR,
+                  lineHeight: verticalScale(10),
+                },
+              ]}>
+              You need to reselect apps after changing the list of apps
+            </Text>
+          </View>
+        </>
       )}
-    </>
+    </Animated.View>
   );
 };
 
@@ -74,7 +100,7 @@ const styles = StyleSheet.create({
     borderRadius: scale(20),
     backgroundColor: '#FFE699',
     marginTop: verticalScale(6),
-    marginBottom: verticalScale(12),
+    // marginBottom: verticalScale(12),
     paddingHorizontal: scale(10),
   },
   textCard: {

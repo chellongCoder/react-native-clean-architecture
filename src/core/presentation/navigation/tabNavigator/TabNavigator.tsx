@@ -13,12 +13,18 @@ import {
   RankStackScreens,
 } from '../AppNavigator';
 import StudyRoadmapScreen from 'src/lesson/presentation/screens/StudyRoadmap';
+import {View} from 'react-native';
+import {StyleSheet} from 'react-native';
 
 const BottomTab = createBottomTabNavigator();
 
 export default function TabNavigator(): React.ReactElement {
   function customTabBar(props: BottomTabBarProps) {
-    return <BottomTabBar {...props} />;
+    return (
+      <View style={styles.tabBarBackground}>
+        <BottomTabBar {...props} />
+      </View>
+    );
   }
   return (
     <BottomTab.Navigator
@@ -60,3 +66,15 @@ export default function TabNavigator(): React.ReactElement {
     </BottomTab.Navigator>
   );
 }
+// Styles for the custom tabBar and tabBarBackground
+const styles = StyleSheet.create({
+  tabBarBackground: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    backgroundColor: 'transparent',
+    borderTopRightRadius: 20,
+    borderTopLeftRadius: 20,
+  },
+});

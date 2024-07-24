@@ -94,7 +94,7 @@ const ParentScreen = observer(() => {
   } = useAuthenticationStore();
 
   const loading = useLoadingGlobal();
-  useGetUserSetting(deviceToken, lesson);
+  useGetUserSetting(deviceToken, selectedChild?._id ?? '', lesson);
   const [tabParent, setTabparent] = useState(TabParentE.APP_BLOCK);
 
   const tabsBlock = useMemo(() => {
