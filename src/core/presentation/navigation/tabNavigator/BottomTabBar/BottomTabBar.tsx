@@ -33,6 +33,8 @@ function BottomTabBar({
   navigation,
 }: BottomTabBarProps): React.ReactElement | null {
   const focusedOptions = descriptors[state.routes[state.index].key].options;
+  const insets = useSafeAreaInsets();
+
   const routesView = useRef(
     Array.from({length: state.routes.length}, (_, i) => i),
   );
@@ -43,7 +45,7 @@ function BottomTabBar({
 
   return (
     <Fragment>
-      <View style={styles.blockRoutes}>
+      <View style={[styles.blockRoutes, {paddingBottom: insets.bottom}]}>
         {Platform.OS === 'android' && (
           <View style={styles.blockRoutesContainer} />
         )}

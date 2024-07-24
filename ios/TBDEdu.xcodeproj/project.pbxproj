@@ -25,6 +25,7 @@
 		18B49EEF2C064A37004B87A0 /* ManagedSettingsUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 18B49EEE2C064A37004B87A0 /* ManagedSettingsUI.framework */; };
 		18B49EF22C064A37004B87A0 /* ShieldConfigurationExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18B49EF12C064A37004B87A0 /* ShieldConfigurationExtension.swift */; };
 		18B49EF72C064A37004B87A0 /* ScreenTimeShield.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 18B49EEB2C064A37004B87A0 /* ScreenTimeShield.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		18E18DDA2C51730700495AFF /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		2487DFDE52B54DB59FFF430D /* eina-03-regular.eot in Resources */ = {isa = PBXBuildFile; fileRef = 567A11D4C3804455A4EF370D /* eina-03-regular.eot */; };
 		25C8BE1F3EE54D4FB7A7E211 /* eina-04-regular.woff2 in Resources */ = {isa = PBXBuildFile; fileRef = 28F62B8243CE430FBF80AE68 /* eina-04-regular.woff2 */; };
 		2716D284BCBF459297BB7225 /* eina-01-semibold.woff2 in Resources */ = {isa = PBXBuildFile; fileRef = F5CA4C3C8BA44666AAC3121D /* eina-01-semibold.woff2 */; };
@@ -580,6 +581,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				180097432C15B81300D9DA1D /* Assets.xcassets in Resources */,
+				18E18DDA2C51730700495AFF /* Images.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1214,10 +1216,7 @@
 					"-DFOLLY_CFG_NO_COROUTINES=1",
 					"-DFOLLY_HAVE_CLOCK_GETTIME=1",
 				);
-				OTHER_LDFLAGS = (
-					"$(inherited)",
-					" ",
-				);
+				OTHER_LDFLAGS = "$(inherited)  ";
 				REACT_NATIVE_PATH = "${PODS_ROOT}/../../node_modules/react-native";
 				SDKROOT = iphoneos;
 				USE_HERMES = true;
@@ -1290,10 +1289,7 @@
 					"-DFOLLY_CFG_NO_COROUTINES=1",
 					"-DFOLLY_HAVE_CLOCK_GETTIME=1",
 				);
-				OTHER_LDFLAGS = (
-					"$(inherited)",
-					" ",
-				);
+				OTHER_LDFLAGS = "$(inherited)  ";
 				REACT_NATIVE_PATH = "${PODS_ROOT}/../../node_modules/react-native";
 				SDKROOT = iphoneos;
 				USE_HERMES = true;

@@ -1,5 +1,5 @@
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import React, {useEffect} from 'react';
+import React, {useEffect, useRef} from 'react';
 import useGlobalStyle from 'src/core/presentation/hooks/useGlobalStyle';
 import IconArrowDown from 'assets/svg/IconArrowDown';
 import {scale, verticalScale} from 'react-native-size-matters';
@@ -15,15 +15,24 @@ import {useAnimatedShake} from 'src/hooks/useAnimatedShake';
 import Animated from 'react-native-reanimated';
 type Props = {
   appName: string;
+  error?: string;
 };
-const SelectApp = ({appName}: Props) => {
+const SelectApp = ({appName, error}: Props) => {
   const lesson = lessonModuleContainer.getProvided(LessonStore);
   const globalStyle = useGlobalStyle();
   const {shake, rStyle} = useAnimatedShake();
-
+  const shakeRef = useRef<NodeJS.Timeout>(null);
   useEffect(() => {
-    shake();
-  }, [shake]);
+    if (error !== '') {
+      shakeRef.current = setInterval(() => {
+        shake();
+      }, 1500);
+
+      return () => {
+        clearInterval(shakeRef.current);
+      };
+    }
+  }, [error, shake]);
 
   return (
     <Animated.View style={[rStyle]}>
@@ -50,26 +59,28 @@ const SelectApp = ({appName}: Props) => {
             }}
             style={[
               styles.container,
-              {borderColor: COLORS.ERROR, borderWidth: 1},
+              !!error && {borderColor: COLORS.ERROR, borderWidth: 1},
             ]}>
             <Text style={[globalStyle.txtButton, styles.textCard]}>
               {appName.trim() !== '' ? appName : 'select apps'}
             </Text>
             <IconArrowDown />
           </ScreenTimeComponent>
-          <View style={{marginRight: 20, marginVertical: 5}}>
-            <Text
-              style={[
-                globalStyle.txtNote,
-                {
-                  textAlign: 'left',
-                  color: COLORS.ERROR,
-                  lineHeight: verticalScale(10),
-                },
-              ]}>
-              You need to reselect apps after changing the list of apps
-            </Text>
-          </View>
+          {!!error && (
+            <View style={{marginRight: 20, marginVertical: 5}}>
+              <Text
+                style={[
+                  globalStyle.txtNote,
+                  {
+                    textAlign: 'left',
+                    color: COLORS.ERROR,
+                    lineHeight: verticalScale(10),
+                  },
+                ]}>
+                {error}
+              </Text>
+            </View>
+          )}
         </>
       )}
     </Animated.View>

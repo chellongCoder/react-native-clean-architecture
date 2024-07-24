@@ -24,23 +24,23 @@ struct screentimewidgetLiveActivity: Widget {
         ActivityConfiguration(for: screentimewidgetAttributes.self) { context in
             // Lock screen/banner UI goes here
             VStack {
-                Text("Hello \(context.state.emoji)")
+                Text("Being session \(context.state.emoji)")
             }
-            .activityBackgroundTint(Color.cyan)
-            .activitySystemActionForegroundColor(Color.black)
+            .activityBackgroundTint(Color.black)
+            .activitySystemActionForegroundColor(Color.white)
 
         } dynamicIsland: { context in
             DynamicIsland {
                 // Expanded UI goes here.  Compose the expanded UI through
                 // various regions, like leading/trailing/center/bottom
                 DynamicIslandExpandedRegion(.leading) {
-                    Text("Leading")
+                    Image("IconSet")
                 }
                 DynamicIslandExpandedRegion(.trailing) {
-                    Text("Trailing")
+                    Text("🎯")
                 }
                 DynamicIslandExpandedRegion(.bottom) {
-                    Text("Bottom \(context.state.emoji)")
+                    Text("\(context.state.emoji)")
                     // more content
                 }
             } compactLeading: {
@@ -48,7 +48,7 @@ struct screentimewidgetLiveActivity: Widget {
             } compactTrailing: {
                 Text("\(context.state.emoji)")
             } minimal: {
-                Text(context.state.emoji)
+                Text("🎯")
             }
             .widgetURL(URL(string: "http://www.apple.com"))
             .keylineTint(Color.red)

@@ -80,7 +80,7 @@ export function requestScreenTime(): Promise<boolean> {
   return ScreenTimeSelectApps.requestScreenTime();
 }
 
-export function selectedAppsData(): Promise<any> {
+export function selectedAppsData(): Promise<string> {
   return ScreenTimeSelectApps.selectedAppsData();
 }
 

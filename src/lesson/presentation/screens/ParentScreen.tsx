@@ -51,6 +51,7 @@ import {useGetUserSetting} from 'src/hooks/useGetUserSetting';
 import {IClock, ICpurchase, ICsetting} from '../components/icons';
 import Dropdown from 'src/core/components/dropdown/Dropdown';
 import Toast from 'react-native-toast-message';
+import {useSaveSetting} from 'src/hooks/useSaveSetting';
 
 enum TabParentE {
   APP_BLOCK = 'App block',
@@ -95,6 +96,7 @@ const ParentScreen = observer(() => {
 
   const loading = useLoadingGlobal();
   useGetUserSetting(deviceToken, selectedChild?._id ?? '', lesson);
+  const {errorMessage} = useSaveSetting();
   const [tabParent, setTabparent] = useState(TabParentE.APP_BLOCK);
 
   const tabsBlock = useMemo(() => {
@@ -106,6 +108,7 @@ const ParentScreen = observer(() => {
             name: app.app_name,
             icon: app.app_icon,
             token: app.package_name,
+            category: AppCategoryE.APP,
           };
         }) ?? []
       );
@@ -119,6 +122,7 @@ const ParentScreen = observer(() => {
                 name: `C ${i + 1}`,
                 icon: 'no_icon',
                 token: app.data,
+                category: AppCategoryE.CATEGORY,
               };
             },
           ) ?? []
@@ -132,6 +136,7 @@ const ParentScreen = observer(() => {
               name: `A ${i + 1}`,
               icon: 'no_icon',
               token: app.data,
+              category: AppCategoryE.APP,
             };
           },
         ) ?? []
@@ -224,7 +229,7 @@ const ParentScreen = observer(() => {
         android: isAndroid
           ? tabsBlock.map(t => {
               return {
-                category: AppCategoryE.APP,
+                category: t.category,
                 icon: t.icon ?? '',
                 id: t.id ?? '',
                 name: t.name ?? '',
@@ -235,7 +240,7 @@ const ParentScreen = observer(() => {
         ios: !isAndroid
           ? tabsBlock.map(t => {
               return {
-                category: AppCategoryE.APP,
+                category: t.category,
                 token: t.token ?? '',
               };
             })
@@ -289,10 +294,12 @@ const ParentScreen = observer(() => {
   );
 
   useAsyncEffect(async () => {
-    loading.show();
-    await lesson.changeListAppSystem();
-    loading.hide();
-  }, []);
+    if (isAndroid) {
+      loading.show();
+      await lesson.changeListAppSystem();
+      loading.hide();
+    }
+  }, [lesson, loading]);
 
   useEffect(() => {
     setTabBody(tabsBody?.[0]?.name ?? '');
@@ -312,6 +319,7 @@ const ParentScreen = observer(() => {
                 <>
                   <SelectApp
                     appName={tabBody.trim() !== '' ? tabBody : 'select apps'}
+                    error={errorMessage}
                   />
                 </>
               </View>
@@ -352,7 +360,7 @@ const ParentScreen = observer(() => {
                 </Text>
                 <View style={[styles.card, {opacity: 0.6}]}>
                   <Text style={[globalStyle.txtButton, styles.textCard]}>
-                    100
+                    {point}%
                   </Text>
                   {isShowLimitOption ? <IconArrowUp /> : <IconArrowDown />}
                 </View>
@@ -434,9 +442,10 @@ const ParentScreen = observer(() => {
     globalStyle.txtNote,
     globalStyle.txtButton,
     tabBody,
+    errorMessage,
+    points,
     point,
     isShowLimitOption,
-    points,
     onConfigUserSetting,
     lesson,
     tabSetting,
@@ -460,7 +469,9 @@ const ParentScreen = observer(() => {
         style={styles.fill}
         contentContainerStyle={styles.fill}>
         <BookView style={[styles.mt16, styles.fill]}>
-          <ScrollView contentContainerStyle={[styles.bookContent]}>
+          <ScrollView
+            showsVerticalScrollIndicator={false}
+            contentContainerStyle={[styles.bookContent]}>
             <View style={[styles.rowBetween, styles.ph16]}>
               {tabsData.map(t => (
                 <ItemCard
