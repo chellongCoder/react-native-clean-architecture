@@ -27,7 +27,6 @@ const ListModule = observer(() => {
   return (
     <View style={styles.container}>
       <View style={styles.square} />
-
       <View style={styles.wrapHeaderContainer}>
         <Text style={styles.headerTitle}>
           {listSubject?.filter(item => item?._id === subjectId)[0]?.name}
@@ -39,8 +38,10 @@ const ListModule = observer(() => {
             }>{`${totalProgressQuestions}/${totalQuestions}`}</Text>
         </View>
       </View>
-
-      <ScrollView style={styles.f1} showsVerticalScrollIndicator={false}>
+      <ScrollView
+        style={styles.f1}
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={{paddingBottom: scale(54)}}>
         {modules.map(module => {
           return (
             <View style={styles.wrapModuleContainer}>

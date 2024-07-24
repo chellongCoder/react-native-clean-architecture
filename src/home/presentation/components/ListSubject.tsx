@@ -96,6 +96,7 @@ const ListSubject = () => {
         renderItem={renderItem}
         keyExtractor={item => item.id.toString()}
         showsVerticalScrollIndicator={false}
+        contentContainerStyle={{paddingBottom: scale(54)}}
       />
     </View>
   );

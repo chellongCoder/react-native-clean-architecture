@@ -21,6 +21,10 @@ export default StyleSheet.create({
     right: scale(15),
   },
   blockRoutes: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
     flexDirection: 'row',
     backgroundColor: COLORS.BLUE_258F78,
     borderTopLeftRadius: scale(32),
@@ -58,7 +62,7 @@ export default StyleSheet.create({
     color: COLORS.WHITE_FBF8CC,
   },
   tabTextActive: {
-    ...CustomTextStyle.captionBold,
+    ...CustomTextStyle.smallBold,
     color: COLORS.WHITE_FBF8CC,
     textTransform: 'uppercase',
   },

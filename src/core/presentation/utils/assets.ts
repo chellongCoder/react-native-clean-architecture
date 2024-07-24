@@ -15,4 +15,7 @@ export const assets = {
   sound_icon: require('assets/images/sound_icon.png'),
   hexagon_frame: require('assets/images/hexagon_frame.png'),
   onboarding: require('assets/images/ONBOARDINGSCREEN.png'),
+  book: require('assets/images/book.png'),
+  star: require('assets/images/star.png'),
+  untitled_artwork: require('assets/images/untitled_artwork.png'),
 };

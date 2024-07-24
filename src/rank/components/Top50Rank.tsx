@@ -92,6 +92,7 @@ const styles = StyleSheet.create({
     borderTopRightRadius: scale(40),
     paddingTop: scale(32),
     paddingHorizontal: scale(16),
+    paddingBottom: scale(54),
   },
   wrapTop3Container: {
     flex: 1,

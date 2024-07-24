@@ -1,12 +1,13 @@
 import React from 'react';
-import {View, Text, StyleSheet, ScrollView} from 'react-native';
+import {View, Text, StyleSheet, ScrollView, Image} from 'react-native';
 import {scale} from 'react-native-size-matters';
 import {TInformationBoardData} from './Top50Rank';
 import {COLORS} from 'src/core/presentation/constants/colors';
 import ICManIconMedium from 'src/core/components/icons/ICManIconMedium';
 import ICStarSmall from 'src/core/components/icons/ICStarSmall';
 import {CustomTextStyle} from 'src/core/presentation/constants/typography';
-import ICStarMedium from 'src/core/components/icons/ICStarMedium';
+// import ICStarMedium from 'src/core/components/icons/ICStarMedium';
+import {assets} from 'src/core/presentation/utils';
 
 const Top3Rank = ({data}: {data: TInformationBoardData[]}) => {
   const sortOrder = [2, 1, 3];
@@ -16,7 +17,8 @@ const Top3Rank = ({data}: {data: TInformationBoardData[]}) => {
   return (
     <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
       <View style={styles.wrapHeaderContainer}>
-        <ICStarMedium />
+        {/* <ICStarMedium /> */}
+        <Image source={assets.star} style={styles.star} resizeMode="contain" />
       </View>
 
       <View style={styles.wrapItemContainer}>
@@ -84,6 +86,10 @@ const styles = StyleSheet.create({
     color: COLORS.BLUE_1C6349,
     textAlign: 'center',
     marginBottom: scale(4),
+  },
+  star: {
+    width: 28,
+    height: 26,
   },
   wrapAvatarContainer: {
     height: 91,
