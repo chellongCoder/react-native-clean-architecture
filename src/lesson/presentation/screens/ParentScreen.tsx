@@ -96,7 +96,18 @@ const ParentScreen = observer(() => {
 
   const loading = useLoadingGlobal();
   useGetUserSetting(deviceToken, selectedChild?._id ?? '', lesson);
-  const {errorMessage} = useSaveSetting();
+  const hasDataServer = useMemo(
+    () =>
+      !!lesson.blockedListAppsSystem.length ||
+      !!lesson.blockedAnonymousListAppsSystem?.applicationTokens?.length ||
+      !!lesson.blockedAnonymousListAppsSystem?.categoryTokens?.length,
+    [
+      lesson.blockedAnonymousListAppsSystem?.applicationTokens?.length,
+      lesson.blockedAnonymousListAppsSystem?.categoryTokens?.length,
+      lesson.blockedListAppsSystem.length,
+    ],
+  );
+  const {errorMessage} = useSaveSetting(hasDataServer);
   const [tabParent, setTabparent] = useState(TabParentE.APP_BLOCK);
 
   const tabsBlock = useMemo(() => {

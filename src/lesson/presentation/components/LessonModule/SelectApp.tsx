@@ -66,7 +66,7 @@ const SelectApp = ({appName, error}: Props) => {
             </Text>
             <IconArrowDown />
           </ScreenTimeComponent>
-          {!!error && (
+          {error ? (
             <View style={{marginRight: 20, marginVertical: 5}}>
               <Text
                 style={[
@@ -80,6 +80,8 @@ const SelectApp = ({appName, error}: Props) => {
                 {error}
               </Text>
             </View>
+          ) : (
+            <View style={{height: verticalScale(12)}} />
           )}
         </>
       )}
