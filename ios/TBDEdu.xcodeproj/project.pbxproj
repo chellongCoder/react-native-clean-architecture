@@ -32,6 +32,12 @@
 		36910A1C0045476EA7405F95 /* eina-01-bold.woff2 in Resources */ = {isa = PBXBuildFile; fileRef = 5352AB7566A74471A0F0C10C /* eina-01-bold.woff2 */; };
 		38F6AE26F856404C986F121E /* eina-03-bold.eot in Resources */ = {isa = PBXBuildFile; fileRef = 15D64A52477B4BC3B0F64EE2 /* eina-03-bold.eot */; };
 		3AF4C14F1DBC43A7ABE0F8BF /* eina-01-regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 31CD49FB78F54EC59B6AC250 /* eina-01-regular.ttf */; };
+		3DD8AF372C516CF6004F09A9 /* menu_selection_sound.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 3DD8AF302C516CF6004F09A9 /* menu_selection_sound.mp3 */; };
+		3DD8AF382C516CF6004F09A9 /* bell_ding_sound.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 3DD8AF312C516CF6004F09A9 /* bell_ding_sound.mp3 */; };
+		3DD8AF392C516CF6004F09A9 /* big_bell_sound.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 3DD8AF322C516CF6004F09A9 /* big_bell_sound.mp3 */; };
+		3DD8AF3A2C516CF6004F09A9 /* login_splash_screen_sound.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 3DD8AF332C516CF6004F09A9 /* login_splash_screen_sound.mp3 */; };
+		3DD8AF3B2C516CF6004F09A9 /* good_result.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 3DD8AF342C516CF6004F09A9 /* good_result.mp3 */; };
+		3DD8AF3D2C516CF6004F09A9 /* oh_no_sound.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 3DD8AF362C516CF6004F09A9 /* oh_no_sound.mp3 */; };
 		4230CEF4675A420B91EA01B7 /* eina-03-semibold.woff2 in Resources */ = {isa = PBXBuildFile; fileRef = EFAEDC7BAD9144F8821EFF9A /* eina-03-semibold.woff2 */; };
 		49C91914235B4487AE9330A2 /* eina-01-bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 7C4B2642B54A47D3B9983934 /* eina-01-bold.ttf */; };
 		4F23BDE032EC4ABB9C9E8903 /* eina-01-regular.woff2 in Resources */ = {isa = PBXBuildFile; fileRef = D8BEB0368E874F1083E3451F /* eina-01-regular.woff2 */; };
@@ -143,6 +149,12 @@
 		31CD49FB78F54EC59B6AC250 /* eina-01-regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "eina-01-regular.ttf"; path = "../assets/fonts/eina-01-regular.ttf"; sourceTree = "<group>"; };
 		34C1DAF331CC46669408A6F2 /* SVN-Cherish Moment.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "SVN-Cherish Moment.ttf"; path = "../assets/fonts/SVN-Cherish Moment.ttf"; sourceTree = "<group>"; };
 		37C277E7762A4CC489AEBF8A /* eina-03-regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "eina-03-regular.ttf"; path = "../assets/fonts/eina-03-regular.ttf"; sourceTree = "<group>"; };
+		3DD8AF302C516CF6004F09A9 /* menu_selection_sound.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = menu_selection_sound.mp3; path = ../assets/sounds/menu_selection_sound.mp3; sourceTree = "<group>"; };
+		3DD8AF312C516CF6004F09A9 /* bell_ding_sound.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = bell_ding_sound.mp3; path = ../assets/sounds/bell_ding_sound.mp3; sourceTree = "<group>"; };
+		3DD8AF322C516CF6004F09A9 /* big_bell_sound.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = big_bell_sound.mp3; path = ../assets/sounds/big_bell_sound.mp3; sourceTree = "<group>"; };
+		3DD8AF332C516CF6004F09A9 /* login_splash_screen_sound.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = login_splash_screen_sound.mp3; path = ../assets/sounds/login_splash_screen_sound.mp3; sourceTree = "<group>"; };
+		3DD8AF342C516CF6004F09A9 /* good_result.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = good_result.mp3; path = ../assets/sounds/good_result.mp3; sourceTree = "<group>"; };
+		3DD8AF362C516CF6004F09A9 /* oh_no_sound.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = oh_no_sound.mp3; path = ../assets/sounds/oh_no_sound.mp3; sourceTree = "<group>"; };
 		4033DA54B0C140EC91752DA5 /* eina-01-semibold.eot */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "eina-01-semibold.eot"; path = "../assets/fonts/eina-01-semibold.eot"; sourceTree = "<group>"; };
 		416C6E9D04FDCD10E13D775C /* libPods-TBDEdu-TBDEduTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-TBDEdu-TBDEduTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		41B612AAAB274F88B8C06903 /* eina-01-semibold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "eina-01-semibold.ttf"; path = "../assets/fonts/eina-01-semibold.ttf"; sourceTree = "<group>"; };
@@ -272,6 +284,12 @@
 		212BA0D309D64B05840AEDE4 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				3DD8AF312C516CF6004F09A9 /* bell_ding_sound.mp3 */,
+				3DD8AF322C516CF6004F09A9 /* big_bell_sound.mp3 */,
+				3DD8AF342C516CF6004F09A9 /* good_result.mp3 */,
+				3DD8AF332C516CF6004F09A9 /* login_splash_screen_sound.mp3 */,
+				3DD8AF302C516CF6004F09A9 /* menu_selection_sound.mp3 */,
+				3DD8AF362C516CF6004F09A9 /* oh_no_sound.mp3 */,
 				7C4B2642B54A47D3B9983934 /* eina-01-bold.ttf */,
 				C1C0F4D8C18A43EABCB23725 /* eina-01-light.ttf */,
 				31CD49FB78F54EC59B6AC250 /* eina-01-regular.ttf */,
@@ -538,6 +556,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3DD8AF392C516CF6004F09A9 /* big_bell_sound.mp3 in Resources */,
 				81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 				49C91914235B4487AE9330A2 /* eina-01-bold.ttf in Resources */,
@@ -562,8 +581,11 @@
 				2716D284BCBF459297BB7225 /* eina-01-semibold.woff2 in Resources */,
 				38F6AE26F856404C986F121E /* eina-03-bold.eot in Resources */,
 				DC8D151D21544E469ECDC6DE /* eina-03-bold.woff in Resources */,
+				3DD8AF372C516CF6004F09A9 /* menu_selection_sound.mp3 in Resources */,
 				52C9676916B24BD897B48BB1 /* eina-03-bold.woff2 in Resources */,
+				3DD8AF3D2C516CF6004F09A9 /* oh_no_sound.mp3 in Resources */,
 				2487DFDE52B54DB59FFF430D /* eina-03-regular.eot in Resources */,
+				3DD8AF3B2C516CF6004F09A9 /* good_result.mp3 in Resources */,
 				C1E37E0E1A394F3FABB62771 /* eina-03-regular.woff in Resources */,
 				9470A8E955C7413392A8FC6E /* eina-03-regular.woff2 in Resources */,
 				9376DC5A94234FB58DC1FAE4 /* eina-03-semibold.eot in Resources */,
@@ -573,6 +595,8 @@
 				D09C99B2C24B47AC93FD3013 /* eina-04-regular.woff in Resources */,
 				25C8BE1F3EE54D4FB7A7E211 /* eina-04-regular.woff2 in Resources */,
 				C471862CED844E529ACD4D8A /* SVN-Cherish Moment.ttf in Resources */,
+				3DD8AF382C516CF6004F09A9 /* bell_ding_sound.mp3 in Resources */,
+				3DD8AF3A2C516CF6004F09A9 /* login_splash_screen_sound.mp3 in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -897,7 +921,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = VDXKAYGU93;
+				DEVELOPMENT_TEAM = 5C95X2UY67;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = TBDEdu/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "TBD-Edu";
@@ -934,7 +958,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = VDXKAYGU93;
+				DEVELOPMENT_TEAM = 5C95X2UY67;
 				INFOPLIST_FILE = TBDEdu/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "TBD-Edu";
 				INFOPLIST_KEY_NSSupportsLiveActivities = YES;

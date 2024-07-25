@@ -7,10 +7,9 @@ import {CustomTextStyle} from 'src/core/presentation/constants/typography';
 import CustomSwitch from './CustomSwitch';
 import {navigateScreen} from 'src/core/presentation/navigation/actions/RootNavigationActions';
 import {STACK_NAVIGATOR} from 'src/core/presentation/navigation/ConstantNavigator';
-import ICLogout from 'src/core/components/icons/ICLogout';
-import useAuthenticationStore from 'src/authentication/presentation/stores/useAuthenticationStore';
 import {useLoadingGlobal} from 'src/core/presentation/hooks/loading/useLoadingGlobal';
 import useLoginWithCredentials from 'src/authentication/presentation/hooks/useLoginWithCredentials';
+import ICLogout from 'src/core/components/icons/ICLogout';
 
 type TProps = {
   title?: string;
@@ -20,9 +19,8 @@ type TProps = {
 
 const AccountStatus = (props: TProps) => {
   const {title, subject, isShowLogout} = props;
-  const {isLoading} = useAuthenticationStore();
   const {handleLogOut} = useLoginWithCredentials();
-  useLoadingGlobal(isLoading);
+  useLoadingGlobal();
 
   const [isEnabled, setIsEnabled] = useState(false);
 
@@ -76,6 +74,7 @@ const styles = StyleSheet.create({
   container: {
     justifyContent: 'flex-end',
     width: '100%',
+    paddingTop: scale(16),
   },
   iconContainer: {
     flexDirection: 'row',
