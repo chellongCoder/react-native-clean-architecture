@@ -15,6 +15,10 @@ import {requestScreenTime} from 'react-native-alphadex-screentime';
 import {isAndroid} from './utils';
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
 import {SoundGlobalProvider} from './hooks/sound/SoundGlobalProvider';
+import {LogBox} from 'react-native';
+LogBox.ignoreLogs(['Warning: ...']); // Ignore log notification by message
+LogBox.ignoreAllLogs(); //Ignore all log notifications
+
 const App = () => {
   const routeNameRef = useRef<string>();
 

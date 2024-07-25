@@ -42,7 +42,10 @@ const SelectApp = ({appName, error}: Props) => {
             await lesson.changeListAppSystem();
             lesson.onShowSheetApps();
           }}
-          style={[styles.card, {borderColor: 'red', borderWidth: 1}]}>
+          style={[
+            styles.card,
+            error ? {borderColor: 'red', borderWidth: 1} : {},
+          ]}>
           <Text style={[globalStyle.txtButton, styles.textCard]}>
             {appName.trim() !== '' ? appName : 'select apps'}
           </Text>
@@ -59,7 +62,7 @@ const SelectApp = ({appName, error}: Props) => {
             }}
             style={[
               styles.container,
-              !!error && {borderColor: COLORS.ERROR, borderWidth: 1},
+              error ? {borderColor: COLORS.ERROR, borderWidth: 1} : {},
             ]}>
             <Text style={[globalStyle.txtButton, styles.textCard]}>
               {appName.trim() !== '' ? appName : 'select apps'}

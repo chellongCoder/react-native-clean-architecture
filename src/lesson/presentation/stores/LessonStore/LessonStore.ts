@@ -162,14 +162,14 @@ export class LessonStore {
       });
       if (!isAndroid) {
         this.blockedAnonymousListAppsSystem = {
-          categoryTokens: response.data.appBlocked.ios
-            .filter(v => v.category === AppCategoryE.CATEGORY)
-            .map(token => {
-              return token.token;
+          categoryTokens: response?.data?.appBlocked?.ios
+            ?.filter(v => v.category === AppCategoryE.CATEGORY)
+            ?.map(token => {
+              return {data: token.token};
             }),
-          applicationTokens: response.data.appBlocked.ios
-            .filter(v => v.category === AppCategoryE.APP)
-            .map(token => {
+          applicationTokens: response.data?.appBlocked?.ios
+            ?.filter(v => v.category === AppCategoryE.APP)
+            ?.map(token => {
               return {
                 data: token.token,
               };
@@ -177,18 +177,20 @@ export class LessonStore {
           includeEntireCategory: true,
         };
       } else {
-        this.blockedListAppsSystem = response?.data?.appBlocked?.android?.map(
-          a => {
+        this.blockedListAppsSystem =
+          response?.data?.appBlocked?.android?.map(a => {
+            const icon =
+              this.listAppsSystem.find(e => e.package_name === a.id)
+                ?.app_icon ?? '';
             return {
               package_name: a.token,
-              app_icon: a.icon,
+              app_icon: icon,
               app_name: a.name,
               category: 1,
             };
-          },
-        );
+          }) ?? [];
       }
-      this.setUnlockPercent(response.data.point);
+      this.setUnlockPercent(response?.data?.point ?? 0);
       return response;
     } catch (error) {
       console.log(

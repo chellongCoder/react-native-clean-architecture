@@ -10,6 +10,8 @@ import {STACK_NAVIGATOR} from 'src/core/presentation/navigation/ConstantNavigato
 import {useLoadingGlobal} from 'src/core/presentation/hooks/loading/useLoadingGlobal';
 import useLoginWithCredentials from 'src/authentication/presentation/hooks/useLoginWithCredentials';
 import ICLogout from 'src/core/components/icons/ICLogout';
+import ICStarMedium from 'src/core/components/icons/ICStarMedium';
+import ICStarSmall from 'src/core/components/icons/ICStarSmall';
 
 type TProps = {
   title?: string;
@@ -62,7 +64,7 @@ const AccountStatus = (props: TProps) => {
             onPress={() => {
               navigateScreen(STACK_NAVIGATOR.BOTTOM_TAB.ACHIEVEMENT_TAB, {});
             }}>
-            <ICStar width={20} height={20} />
+            <ICStarSmall />
           </TouchableOpacity>
         </View>
       </View>
@@ -83,7 +85,8 @@ const styles = StyleSheet.create({
   },
   wrapIconContainer: {
     flexDirection: 'row',
-    justifyContent: 'flex-end',
+    justifyContent: 'center',
+    alignItems: 'center',
     marginRight: scale(8),
   },
   wrapLogoutContainer: {

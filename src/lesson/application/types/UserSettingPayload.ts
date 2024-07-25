@@ -10,7 +10,7 @@ export type TokenAppAndroidT = {
   category: AppCategoryE;
   id: string;
   name: string;
-  icon: string;
+  icon?: string;
 };
 
 export type AppBlockT = {

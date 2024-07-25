@@ -14,7 +14,9 @@ const HomeScreen = observer(() => {
     <Fragment>
       <SafeAreaView style={styles.container} edges={['top']}>
         <View style={styles.wrapContentContainer}>
-          <AccountStatus />
+          <View style={{position: 'absolute', right: scale(10), zIndex: 999}}>
+            <AccountStatus />
+          </View>
           <ListSubject />
         </View>
       </SafeAreaView>

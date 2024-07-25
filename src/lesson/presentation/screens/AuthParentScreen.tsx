@@ -16,17 +16,22 @@ import {useAnimatedShake} from 'src/hooks/useAnimatedShake';
 import Animated from 'react-native-reanimated';
 import {usePermissionApplock} from 'src/hooks/usePermissionApplock';
 import {useLoadingGlobal} from 'src/core/presentation/hooks/loading/useLoadingGlobal';
+import {AppState, AppStateStatus} from 'react-native';
 
 const AuthParentScreen = () => {
   // const [password, setPassword] = useState('');
   const passwordRef = useRef('');
   const [error, setError] = useState('');
+  const [appState, setAppState] = useState<AppStateStatus>(
+    AppState.currentState,
+  );
+  const appStateRef = useRef<AppStateStatus>('unknown');
 
   const {handleComparePassword} = useLoginWithCredentials();
   const {shake, rStyle} = useAnimatedShake();
   const lessonStore = useLessonStore();
   const loadingGlobal = useLoadingGlobal();
-  const permissionHook = usePermissionApplock();
+  const permissionHook = usePermissionApplock(appState === 'active');
 
   const onSubmit = async () => {
     loadingGlobal.show?.();
@@ -58,6 +63,29 @@ const AuthParentScreen = () => {
     }, 1000);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [permissionHook]);
+
+  useEffect(() => {
+    const handleAppStateChange = (nextAppState: AppStateStatus) => {
+      if (
+        appStateRef.current.match(/inactive|background/) &&
+        nextAppState === 'active'
+      ) {
+        console.log('App has come to the foreground!');
+        // Perform any actions needed when the app comes to the foreground
+        setAppState(nextAppState);
+      }
+      appStateRef.current = nextAppState;
+    };
+
+    const subscription = AppState.addEventListener(
+      'change',
+      handleAppStateChange,
+    );
+
+    return () => {
+      subscription.remove();
+    };
+  }, []);
 
   return (
     <View style={[styles.container]}>

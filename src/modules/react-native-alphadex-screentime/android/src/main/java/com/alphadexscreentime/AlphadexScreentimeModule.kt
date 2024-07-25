@@ -186,6 +186,7 @@ class AlphadexScreentimeModule(reactContext: ReactApplicationContext) : ReactCon
   fun unLockedApps(promise : Promise) {
     setIfServiceClosed("0")
     reactApplicationContext.stopService(Intent(reactApplicationContext, ForegroundService::class.java))
+    promise.resolve(true)
   }
   @ReactMethod
   fun addToLockedApps(array: ReadableArray, promise : Promise) {

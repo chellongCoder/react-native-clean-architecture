@@ -94,7 +94,6 @@ const ParentScreen = observer(() => {
     deleteChildren,
   } = useAuthenticationStore();
 
-  const loading = useLoadingGlobal();
   useGetUserSetting(deviceToken, selectedChild?._id ?? '', lesson);
   const hasDataServer = useMemo(
     () =>
@@ -107,6 +106,7 @@ const ParentScreen = observer(() => {
       lesson.blockedListAppsSystem.length,
     ],
   );
+
   const {errorMessage} = useSaveSetting(hasDataServer);
   const [tabParent, setTabparent] = useState(TabParentE.APP_BLOCK);
 
@@ -241,7 +241,6 @@ const ParentScreen = observer(() => {
           ? tabsBlock.map(t => {
               return {
                 category: t.category,
-                icon: t.icon ?? '',
                 id: t.id ?? '',
                 name: t.name ?? '',
                 token: t.token ?? '',
@@ -259,10 +258,6 @@ const ParentScreen = observer(() => {
       },
     });
   }, [deviceToken, lesson, point, selectedChild?._id, tabsBlock]);
-
-  useEffect(() => {
-    handleGetUserProfile();
-  }, [handleGetUserProfile]);
 
   const tabsBody = useMemo(() => {
     switch (tabParent) {
@@ -304,17 +299,29 @@ const ParentScreen = observer(() => {
     [tabParent],
   );
 
+  useEffect(() => {
+    handleGetUserProfile();
+  }, [handleGetUserProfile]);
+
   useAsyncEffect(async () => {
     if (isAndroid) {
-      loading.show();
-      await lesson.changeListAppSystem();
-      loading.hide();
+      try {
+        await lesson.changeListAppSystem();
+      } catch (error) {
+      } finally {
+      }
     }
-  }, [lesson, loading]);
+  }, []);
 
   useEffect(() => {
     setTabBody(tabsBody?.[0]?.name ?? '');
   }, [setTabBody, tabsBody]);
+
+  useEffect(() => {
+    if (lesson.unlockPercent > 0) {
+      setPoint(lesson.unlockPercent);
+    }
+  }, [lesson.unlockPercent]);
 
   const buildBodyContent = useMemo(() => {
     if (tabParent === TabParentE.APP_BLOCK) {
@@ -391,6 +398,7 @@ const ParentScreen = observer(() => {
                     text1: 'Your apps have been unlocked',
                   });
                 } catch (error) {
+                  console.log('🛠 LOG: 🚀 --> ~ onPress={ ~ error:', error);
                 } finally {
                   lesson.changeBlockedAnonymousListAppSystem(undefined);
                   lesson.resetListAppSystem();
