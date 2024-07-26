@@ -29,13 +29,9 @@ import {
 const screenWidth = Dimensions.get('screen').width;
 
 const ListChildrenScreen = () => {
-  const {
-    removeCurrentCredentials,
-    isLoading,
-    getUserProfile,
-    setSelectedChild,
-  } = useAuthenticationStore();
-  useLoadingGlobal(isLoading);
+  const {removeCurrentCredentials, getUserProfile, setSelectedChild} =
+    useAuthenticationStore();
+  useLoadingGlobal();
 
   const [userProfile, setUserProfile] = useState<data>();
   const [isChooseChildren, setIsChooseChildren] = useState<string>();

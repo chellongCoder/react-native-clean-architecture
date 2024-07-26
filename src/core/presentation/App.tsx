@@ -16,6 +16,8 @@ import {isAndroid} from './utils';
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
 import {SoundGlobalProvider} from './hooks/sound/SoundGlobalProvider';
 import {LogBox} from 'react-native';
+import {SoundBackgroundGlobalProvider} from './hooks/sound/SoundBackgroundGlobalProvider';
+
 LogBox.ignoreLogs(['Warning: ...']); // Ignore log notification by message
 LogBox.ignoreAllLogs(); //Ignore all log notifications
 
@@ -53,10 +55,12 @@ const App = () => {
         <GestureHandlerRootView style={{flex: 1}}>
           <LoadingGlobalProvider>
             <SoundGlobalProvider>
-              <AuthenticationProvider>
-                <RootNavigator />
-                <Toast />
-              </AuthenticationProvider>
+              <SoundBackgroundGlobalProvider>
+                <AuthenticationProvider>
+                  <RootNavigator />
+                  <Toast />
+                </AuthenticationProvider>
+              </SoundBackgroundGlobalProvider>
             </SoundGlobalProvider>
           </LoadingGlobalProvider>
         </GestureHandlerRootView>

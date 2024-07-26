@@ -1,5 +1,5 @@
 import {View, StyleSheet} from 'react-native';
-import React, {useCallback, useState} from 'react';
+import React, {useCallback, useContext, useEffect, useState} from 'react';
 import AchievementLesson from './LessonComponent/AchievementLesson';
 import WriteLesson from './LessonComponent/WriteLesson';
 import ListenLesson from './LessonComponent/ListenLesson';
@@ -18,6 +18,8 @@ import {useListQuestions} from 'src/hooks/useListQuestion';
 import {RouteProp, useRoute} from '@react-navigation/native';
 import useStateCustom from 'src/hooks/useStateCommon';
 import useAuthenticationStore from 'src/authentication/presentation/stores/useAuthenticationStore';
+import {SoundGlobalContext} from 'src/core/presentation/hooks/sound/SoundGlobalContext';
+import {soundTrack} from 'src/core/presentation/hooks/sound/SoundGlobalProvider';
 
 enum LessonTypeE {
   ACHIEVEMENT,
@@ -67,6 +69,8 @@ const LessonScreen = observer(() => {
   const {handlePostUserProgress} = useLessonStore();
   const {tasks} = useListQuestions(route?.lessonId);
   const {selectedChild} = useAuthenticationStore();
+  const {playSound, pauseSound} = useContext(SoundGlobalContext);
+
   const [lessonIndex, setLessonIndex] = useState(0);
   const [lessonState, setLessonState] = useStateCustom<TLessonState>({
     result: [],
@@ -75,6 +79,7 @@ const LessonScreen = observer(() => {
 
   const submitModule = useCallback(
     async (item: TResult) => {
+      playSound(soundTrack.good_result);
       if (lessonState.result) {
         const totalResult = [...lessonState.result];
         totalResult.push(item);
@@ -86,11 +91,12 @@ const LessonScreen = observer(() => {
         }
       }
     },
-    [handlePostUserProgress, lessonState.result],
+    [handlePostUserProgress, lessonState.result, playSound],
   );
 
   const nextModule = useCallback(
     (answerSelected: string) => {
+      playSound(soundTrack.menu_selection_sound);
       const resultByAnswer: TResult = {
         userId: selectedChild?._id,
         taskId: firstMiniTestTask?.question?.[lessonIndex].taskId,
@@ -102,10 +108,17 @@ const LessonScreen = observer(() => {
             : 'failed',
         point: firstMiniTestTask?.question?.[lessonIndex].point,
       };
+      if (
+        answerSelected ===
+        firstMiniTestTask?.question?.[lessonIndex].correctAnswer
+      ) {
+        playSound(soundTrack.bell_ding_sound);
+      } else {
+        playSound(soundTrack.oh_no_sound);
+      }
       setLessonState({
         result: [...(lessonState.result || []), resultByAnswer],
       });
-
       if (lessonIndex >= (firstMiniTestTask?.question.length ?? 1) - 1) {
         submitModule(resultByAnswer);
       }
@@ -118,11 +131,24 @@ const LessonScreen = observer(() => {
       firstMiniTestTask?.question,
       lessonIndex,
       lessonState.result,
+      playSound,
       selectedChild?._id,
       setLessonState,
       submitModule,
     ],
   );
+
+  useEffect(() => {
+    const enterMiniTest = () => {
+      pauseSound();
+      playSound(soundTrack.big_bell_sound);
+    };
+
+    const cleanUp = enterMiniTest();
+
+    return cleanUp;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const buildLesson = () => {
     switch (firstMiniTestTask?.question?.[lessonIndex]?.type as LessonTypeE) {

@@ -32,6 +32,7 @@
 		36910A1C0045476EA7405F95 /* eina-01-bold.woff2 in Resources */ = {isa = PBXBuildFile; fileRef = 5352AB7566A74471A0F0C10C /* eina-01-bold.woff2 */; };
 		38F6AE26F856404C986F121E /* eina-03-bold.eot in Resources */ = {isa = PBXBuildFile; fileRef = 15D64A52477B4BC3B0F64EE2 /* eina-03-bold.eot */; };
 		3AF4C14F1DBC43A7ABE0F8BF /* eina-01-regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 31CD49FB78F54EC59B6AC250 /* eina-01-regular.ttf */; };
+		3D06F9462C52962B00B54D25 /* ukulele_music.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 3D06F9452C52962B00B54D25 /* ukulele_music.mp3 */; };
 		3DD8AF372C516CF6004F09A9 /* menu_selection_sound.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 3DD8AF302C516CF6004F09A9 /* menu_selection_sound.mp3 */; };
 		3DD8AF382C516CF6004F09A9 /* bell_ding_sound.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 3DD8AF312C516CF6004F09A9 /* bell_ding_sound.mp3 */; };
 		3DD8AF392C516CF6004F09A9 /* big_bell_sound.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 3DD8AF322C516CF6004F09A9 /* big_bell_sound.mp3 */; };
@@ -149,6 +150,7 @@
 		31CD49FB78F54EC59B6AC250 /* eina-01-regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "eina-01-regular.ttf"; path = "../assets/fonts/eina-01-regular.ttf"; sourceTree = "<group>"; };
 		34C1DAF331CC46669408A6F2 /* SVN-Cherish Moment.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "SVN-Cherish Moment.ttf"; path = "../assets/fonts/SVN-Cherish Moment.ttf"; sourceTree = "<group>"; };
 		37C277E7762A4CC489AEBF8A /* eina-03-regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "eina-03-regular.ttf"; path = "../assets/fonts/eina-03-regular.ttf"; sourceTree = "<group>"; };
+		3D06F9452C52962B00B54D25 /* ukulele_music.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = ukulele_music.mp3; path = ../assets/sounds/ukulele_music.mp3; sourceTree = "<group>"; };
 		3DD8AF302C516CF6004F09A9 /* menu_selection_sound.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = menu_selection_sound.mp3; path = ../assets/sounds/menu_selection_sound.mp3; sourceTree = "<group>"; };
 		3DD8AF312C516CF6004F09A9 /* bell_ding_sound.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = bell_ding_sound.mp3; path = ../assets/sounds/bell_ding_sound.mp3; sourceTree = "<group>"; };
 		3DD8AF322C516CF6004F09A9 /* big_bell_sound.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = big_bell_sound.mp3; path = ../assets/sounds/big_bell_sound.mp3; sourceTree = "<group>"; };
@@ -287,6 +289,7 @@
 				3DD8AF312C516CF6004F09A9 /* bell_ding_sound.mp3 */,
 				3DD8AF322C516CF6004F09A9 /* big_bell_sound.mp3 */,
 				3DD8AF342C516CF6004F09A9 /* good_result.mp3 */,
+				3D06F9452C52962B00B54D25 /* ukulele_music.mp3 */,
 				3DD8AF332C516CF6004F09A9 /* login_splash_screen_sound.mp3 */,
 				3DD8AF302C516CF6004F09A9 /* menu_selection_sound.mp3 */,
 				3DD8AF362C516CF6004F09A9 /* oh_no_sound.mp3 */,
@@ -594,6 +597,7 @@
 				785B557C06744EC9A3E945A8 /* eina-04-regular.eot in Resources */,
 				D09C99B2C24B47AC93FD3013 /* eina-04-regular.woff in Resources */,
 				25C8BE1F3EE54D4FB7A7E211 /* eina-04-regular.woff2 in Resources */,
+				3D06F9462C52962B00B54D25 /* ukulele_music.mp3 in Resources */,
 				C471862CED844E529ACD4D8A /* SVN-Cherish Moment.ttf in Resources */,
 				3DD8AF382C516CF6004F09A9 /* bell_ding_sound.mp3 in Resources */,
 				3DD8AF3A2C516CF6004F09A9 /* login_splash_screen_sound.mp3 in Resources */,

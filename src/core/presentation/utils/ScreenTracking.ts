@@ -7,7 +7,7 @@ export const screenTracking = (
   previousRouteName: string | undefined,
   currentRouteName: string,
 ): void => {
-  console.log(currentRouteName);
+  console.log('screenTracking: ', currentRouteName);
   if (previousRouteName !== currentRouteName) {
     // track something
   }

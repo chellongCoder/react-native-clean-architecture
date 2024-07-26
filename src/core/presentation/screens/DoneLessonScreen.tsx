@@ -29,8 +29,8 @@ const DoneLessonScreen = () => {
       ?.length || 0;
   const styleHook = useGlobalStyle();
   const lessonStore = lessonModuleContainer.getProvided(LessonStore);
-  const {deviceToken} = useAuthenticationStore();
-  useGetUserSetting(deviceToken, lessonStore);
+  const {deviceToken, selectedChild} = useAuthenticationStore();
+  useGetUserSetting(deviceToken, selectedChild?._id ?? '', lessonStore);
 
   const onUnlockAppSetting = async () => {
     if (
