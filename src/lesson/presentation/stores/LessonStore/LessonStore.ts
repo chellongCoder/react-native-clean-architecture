@@ -35,6 +35,10 @@ export class LessonStore {
   @observable isLoadingUserSetting = false;
   unlockPercent = 0;
 
+  @observable isOverlay?: boolean;
+  @observable isUsageStats?: boolean;
+  @observable isPushNoti?: boolean;
+
   constructor(
     @provided(UpdateUserSettingUseCase)
     private userSettingUserCase: UpdateUserSettingUseCase,
@@ -53,6 +57,21 @@ export class LessonStore {
     this.handlePostUserProgress = this.handlePostUserProgress.bind(this);
     this.handleGetSettingUser = this.handleGetSettingUser.bind(this);
   }
+
+  @action
+  setIsOverlay = (bool: boolean) => {
+    this.isOverlay = bool;
+  };
+
+  @action
+  setIsUsageStats = (bool: boolean) => {
+    this.isUsageStats = bool;
+  };
+
+  @action
+  setIsPushNoti = (bool: boolean) => {
+    this.isPushNoti = bool;
+  };
 
   @action
   setBottomSheetAppsRef = () => {

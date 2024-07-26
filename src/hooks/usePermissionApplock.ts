@@ -6,43 +6,35 @@ import {
   hasUsageStatsPermission,
   checkAndRequestNotificationPermission,
 } from 'react-native-alphadex-screentime';
-import {AppState, AppStateStatus} from 'react-native';
+import {AppState, AppStateStatus, Keyboard} from 'react-native';
+import {lessonModuleContainer} from 'src/lesson/LessonModule';
+import {LessonStore} from 'src/lesson/presentation/stores/LessonStore/LessonStore';
 
-export const usePermissionApplock = (isInterval = false) => {
-  const [isOverlay, setIsOverlay] = useState<boolean | undefined>();
-  const [isUsageStats, setIsUsageStats] = useState<boolean | undefined>();
-  const [isPushNoti, setIsPushNoti] = useState<boolean | undefined>();
-  const timeRef = useRef<NodeJS.Timeout>(null);
+export const usePermissionApplock = () => {
+  const lessonStore = lessonModuleContainer.getProvided(LessonStore);
 
   useAsyncEffect(async () => {
     if (isAndroid) {
-      if (isInterval) {
-        timeRef.current = setInterval(async () => {
-          setIsOverlay(await checkOverlayPermission());
-          setIsUsageStats(await hasUsageStatsPermission());
-          setIsPushNoti(await checkAndRequestNotificationPermission());
-        }, 1000);
-      } else {
-        setIsOverlay(await checkOverlayPermission());
-        setIsUsageStats(await hasUsageStatsPermission());
-        setIsPushNoti(await checkAndRequestNotificationPermission());
-      }
+      lessonStore.setIsOverlay(await checkOverlayPermission());
+      lessonStore.setIsUsageStats(await hasUsageStatsPermission());
+      lessonStore.setIsPushNoti(await checkAndRequestNotificationPermission());
+
+      Keyboard.dismiss();
+      setTimeout(() => {
+        lessonStore.onShowSheetPermission();
+      }, 1000);
     } else {
-      setIsOverlay(true);
+      lessonStore.setIsOverlay(true);
 
-      setIsUsageStats(true);
+      lessonStore.setIsUsageStats(true);
 
-      setIsPushNoti(true);
+      lessonStore.setIsPushNoti(true);
     }
-
-    return () => {
-      clearInterval(timeRef.current);
-    };
-  }, []);
+  }, [lessonStore]);
 
   return {
-    isOverlay,
-    isUsageStats,
-    isPushNoti,
+    isOverlay: lessonStore.isOverlay,
+    isUsageStats: lessonStore.isUsageStats,
+    isPushNoti: lessonStore.isPushNoti,
   };
 };

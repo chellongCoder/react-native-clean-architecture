@@ -24,6 +24,9 @@ import {
   startUsageStatsPermission,
   requestPushNotificationPermission,
   addToLockedApps,
+  checkOverlayPermission,
+  hasUsageStatsPermission,
+  checkAndRequestNotificationPermission,
 } from 'react-native-alphadex-screentime';
 import {useAsyncEffect} from 'src/core/presentation/hooks';
 import {AppEntity} from 'src/modules/react-native-alphadex-screentime/src/entities/AppEntity';
@@ -48,6 +51,7 @@ type AppItem = {
 };
 export const LessonStoreProvider = observer(({children}: PropsWithChildren) => {
   const value = lessonModuleContainer.getProvided(LessonStore);
+
   const [apps, setApps] = useState<AppEntity[]>([]);
   const [isShowBottomSheet, setIsShowBottomSheet] = useState(true);
   const navigation = useNavigation();
@@ -192,15 +196,24 @@ const ItemApps = ({
   );
 };
 
-const ItemPermission = ({lesson}) => {
+const ItemPermission = observer(({lesson}: {lesson: LessonStore}) => {
   const globalStyle = useGlobalStyle();
+  const timeRef = useRef<NodeJS.Timeout>();
+  const {isOverlay, isPushNoti, isUsageStats} = lesson;
 
-  const {isOverlay, isPushNoti, isUsageStats} = usePermissionApplock();
+  useEffect(() => {
+    timeRef.current = setInterval(async () => {
+      lesson.setIsOverlay(await checkOverlayPermission());
+      lesson.setIsUsageStats(await hasUsageStatsPermission());
+      lesson.setIsPushNoti(await checkAndRequestNotificationPermission());
+    }, 1000);
+  }, []);
 
   useEffect(() => {
     if (isOverlay && isUsageStats && isPushNoti) {
       setTimeout(() => {
         lesson.onCloseSheetPermission();
+        clearInterval(timeRef.current);
       }, 2000);
     }
   }, [isOverlay, isPushNoti, isUsageStats, lesson]);
@@ -255,7 +268,7 @@ const ItemPermission = ({lesson}) => {
       </View>
     </View>
   );
-};
+});
 
 const styles = StyleSheet.create({
   fill: {

@@ -25,13 +25,14 @@ const AuthParentScreen = () => {
   const [appState, setAppState] = useState<AppStateStatus>(
     AppState.currentState,
   );
+
   const appStateRef = useRef<AppStateStatus>('unknown');
 
   const {handleComparePassword} = useLoginWithCredentials();
   const {shake, rStyle} = useAnimatedShake();
   const lessonStore = useLessonStore();
   const loadingGlobal = useLoadingGlobal();
-  const permissionHook = usePermissionApplock(appState === 'active');
+  const permissionHook = usePermissionApplock();
 
   const onSubmit = async () => {
     loadingGlobal.show?.();
@@ -47,24 +48,6 @@ const AuthParentScreen = () => {
   };
 
   useEffect(() => {
-    const {isOverlay, isUsageStats, isPushNoti} = permissionHook;
-    Keyboard.dismiss();
-
-    setTimeout(() => {
-      if (
-        isOverlay !== undefined &&
-        isUsageStats !== undefined &&
-        isPushNoti !== undefined
-      ) {
-        if (!isOverlay || !isUsageStats || !isPushNoti) {
-          isAndroid && lessonStore.onShowSheetPermission();
-        }
-      }
-    }, 1000);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [permissionHook]);
-
-  useEffect(() => {
     const handleAppStateChange = (nextAppState: AppStateStatus) => {
       if (
         appStateRef.current.match(/inactive|background/) &&
@@ -72,7 +55,9 @@ const AuthParentScreen = () => {
       ) {
         console.log('App has come to the foreground!');
         // Perform any actions needed when the app comes to the foreground
-        setAppState(nextAppState);
+        // setAppState(nextAppState);
+      } else {
+        // setAppState(nextAppState);
       }
       appStateRef.current = nextAppState;
     };
