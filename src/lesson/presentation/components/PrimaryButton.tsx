@@ -38,7 +38,7 @@ const PrimaryButton = ({isLoading = false, ...props}: Props) => {
       </Text>
       {isLoading && (
         <View style={{paddingLeft: 10}}>
-          <ActivityIndicator color={COLORS.PRIMARY} />
+          <ActivityIndicator color={COLORS.WHITE} />
         </View>
       )}
     </TouchableOpacity>

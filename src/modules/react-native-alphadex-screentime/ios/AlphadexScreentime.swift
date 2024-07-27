@@ -119,8 +119,8 @@ class ScreenTimeSelectAppsModel: RCTEventEmitter, ObservableObject {
                     if #available(iOS 16.2, *) {
                       do {
                         let activity = try Activity.request(
-                            attributes: screentimewidgetAttributes(name: "Text1"),
-                            content: .init(state: screentimewidgetAttributes.ContentState(emoji: "Blocked"), staleDate: nil),
+                            attributes: screentimewidgetAttributes(name: "ABeeCi"),
+                            content: .init(state: screentimewidgetAttributes.ContentState(emoji: "12/20"), staleDate: nil),
                             pushType: .token
                         )
                       } catch {
@@ -164,8 +164,8 @@ class ScreenTimeSelectAppsModel: RCTEventEmitter, ObservableObject {
         if #available(iOS 16.2, *) {
           do {
             _ = try Activity.request(
-                attributes: screentimewidgetAttributes(name: "Text1"),
-                content: .init(state: screentimewidgetAttributes.ContentState(emoji: "Blocked"), staleDate: nil),
+                attributes: screentimewidgetAttributes(name: "ABeeCi"),
+                content: .init(state: screentimewidgetAttributes.ContentState(emoji: "12/20"), staleDate: nil),
                 pushType: .token
             )
           } catch {

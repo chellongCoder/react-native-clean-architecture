@@ -1,6 +1,6 @@
 import Color from 'color';
 export const COLORS = {
-  PRIMARY: '#01F7F7',
+  PRIMARY: '#66C270',
 
   WHITE: '#FFFFFF',
   BLACK: '#000000',
