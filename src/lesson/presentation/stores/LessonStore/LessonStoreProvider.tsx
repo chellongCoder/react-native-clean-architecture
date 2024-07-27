@@ -2,6 +2,7 @@ import {
   PropsWithChildren,
   useCallback,
   useEffect,
+  useMemo,
   useRef,
   useState,
 } from 'react';
@@ -28,12 +29,11 @@ import {
   hasUsageStatsPermission,
   checkAndRequestNotificationPermission,
 } from 'react-native-alphadex-screentime';
-import {useAsyncEffect} from 'src/core/presentation/hooks';
 import {AppEntity} from 'src/modules/react-native-alphadex-screentime/src/entities/AppEntity';
 import {Image} from 'react-native';
 import Button from '../../components/LessonModule/Button';
 import {useNavigation, useRoute} from '@react-navigation/native';
-import {usePermissionApplock} from 'src/hooks/usePermissionApplock';
+import ICCheckbox from 'src/core/components/icons/ICCheckbox';
 
 type PropsItemApps = {
   preFixIcon?: React.ReactNode;
@@ -129,7 +129,7 @@ export const LessonStoreProvider = observer(({children}: PropsWithChildren) => {
 
         {value.bottomSheetPermissionRef && (
           <BottomSheetCustom
-            snapPoints={['50']}
+            snapPoints={['60']}
             ref={value.bottomSheetPermissionRef}
             title="ABC needs system permissions to work with:"
             enablePanDownToClose={false}
@@ -200,8 +200,16 @@ const ItemPermission = observer(({lesson}: {lesson: LessonStore}) => {
   const globalStyle = useGlobalStyle();
   const timeRef = useRef<NodeJS.Timeout>();
   const {isOverlay, isPushNoti, isUsageStats} = lesson;
-
+  const [errors, setErrors] = useState({isOverlay, isPushNoti, isUsageStats});
+  const isConfirm = useMemo(
+    () => errors.isOverlay && errors.isPushNoti && errors.isUsageStats,
+    [errors.isOverlay, errors.isPushNoti, errors.isUsageStats],
+  );
   useEffect(() => {
+    if (timeRef.current) {
+      clearInterval(timeRef.current);
+      timeRef.current = undefined;
+    }
     timeRef.current = setInterval(async () => {
       lesson.setIsOverlay(await checkOverlayPermission());
       lesson.setIsUsageStats(await hasUsageStatsPermission());
@@ -210,52 +218,82 @@ const ItemPermission = observer(({lesson}: {lesson: LessonStore}) => {
   }, []);
 
   useEffect(() => {
-    if (isOverlay && isUsageStats && isPushNoti) {
-      setTimeout(() => {
-        lesson.onCloseSheetPermission();
-        clearInterval(timeRef.current);
-      }, 2000);
-    }
-  }, [isOverlay, isPushNoti, isUsageStats, lesson]);
+    setErrors({isOverlay, isPushNoti, isUsageStats});
+  }, [isOverlay, isPushNoti, isUsageStats]);
+
   return (
     <View style={{width: '90%', alignSelf: 'center'}}>
-      <TouchableOpacity
-        onPress={() => {
-          askOverlayPermission();
-        }}
-        style={[
-          globalStyle.rowCenter,
-          globalStyle.spaceBetween,
-          styles.permissionItem,
-        ]}>
-        <Text>System overlay</Text>
-        <Text>{isOverlay ? 'checked' : 'unchecked'}</Text>
-      </TouchableOpacity>
-      <TouchableOpacity
-        onPress={() => {
-          startUsageStatsPermission();
-        }}
-        style={[
-          globalStyle.rowCenter,
-          globalStyle.spaceBetween,
-          styles.permissionItem,
-        ]}>
-        <Text>Usage access</Text>
-        <Text>{isUsageStats ? 'checked' : 'unchecked'}</Text>
-      </TouchableOpacity>
-      <TouchableOpacity
-        onPress={() => {
-          console.log('Push notification');
-          requestPushNotificationPermission();
-        }}
-        style={[
-          globalStyle.rowCenter,
-          globalStyle.spaceBetween,
-          styles.permissionItem,
-        ]}>
-        <Text>Push notification</Text>
-        <Text>{isPushNoti ? 'checked' : 'unchecked'}</Text>
-      </TouchableOpacity>
+      <>
+        <TouchableOpacity
+          onPress={() => {
+            askOverlayPermission();
+          }}
+          style={[
+            globalStyle.rowCenter,
+            globalStyle.spaceBetween,
+            styles.permissionItem,
+          ]}>
+          <Text>System overlay</Text>
+          <View>
+            <ICCheckbox
+              color={isOverlay ? COLORS.GREEN_66C270 : COLORS.DISABLED}
+              width={scale(20)}
+              height={scale(20)}
+            />
+          </View>
+        </TouchableOpacity>
+        <Text style={[globalStyle.txtNote, {marginVertical: verticalScale(5)}]}>
+          This permission allows an app to lock other apps you're using. This
+          may interfere with your use of other apps
+        </Text>
+      </>
+      <>
+        <TouchableOpacity
+          onPress={() => {
+            startUsageStatsPermission();
+          }}
+          style={[
+            globalStyle.rowCenter,
+            globalStyle.spaceBetween,
+            styles.permissionItem,
+            {borderColor: COLORS.ERROR},
+          ]}>
+          <Text>Usage access</Text>
+          <View>
+            <ICCheckbox
+              color={isUsageStats ? COLORS.GREEN_66C270 : COLORS.DISABLED}
+              width={scale(20)}
+              height={scale(20)}
+            />
+          </View>
+        </TouchableOpacity>
+        <Text style={[globalStyle.txtNote, {marginVertical: verticalScale(5)}]}>
+          Allow app to monitor which other apps you use and how often and
+          identify your service provider, language settings, and other usage
+          data.
+        </Text>
+      </>
+      <>
+        <TouchableOpacity
+          onPress={() => {
+            console.log('Push notification');
+            requestPushNotificationPermission();
+          }}
+          style={[
+            globalStyle.rowCenter,
+            globalStyle.spaceBetween,
+            styles.permissionItem,
+          ]}>
+          <Text>Push notification</Text>
+          <View>
+            <ICCheckbox
+              color={isPushNoti ? COLORS.GREEN_66C270 : COLORS.DISABLED}
+              width={scale(20)}
+              height={scale(20)}
+            />
+          </View>
+        </TouchableOpacity>
+      </>
 
       <View style={{alignItems: 'center', paddingVertical: verticalScale(20)}}>
         <Button
@@ -263,7 +301,7 @@ const ItemPermission = observer(({lesson}: {lesson: LessonStore}) => {
             lesson.onCloseSheetPermission();
           }}
           title="confirm"
-          color={COLORS.YELLOW_E6960B}
+          color={isConfirm ? COLORS.YELLOW_E6960B : COLORS.DISABLED}
         />
       </View>
     </View>
@@ -311,5 +349,7 @@ const styles = StyleSheet.create({
     borderRadius: scale(5),
     padding: scale(8),
     marginBottom: verticalScale(5),
+    borderColor: COLORS.WHITE,
+    backgroundColor: COLORS.WHITE,
   },
 });

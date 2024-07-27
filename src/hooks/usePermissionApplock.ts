@@ -15,6 +15,19 @@ export const usePermissionApplock = () => {
 
   useAsyncEffect(async () => {
     if (isAndroid) {
+      const isOverlayPermission = await checkOverlayPermission();
+      const isUsageStatsPermission = await hasUsageStatsPermission();
+      const isPushNotiPermission =
+        await checkAndRequestNotificationPermission();
+
+      if (
+        isOverlayPermission &&
+        isPushNotiPermission &&
+        isUsageStatsPermission
+      ) {
+        return;
+      }
+
       lessonStore.setIsOverlay(await checkOverlayPermission());
       lessonStore.setIsUsageStats(await hasUsageStatsPermission());
       lessonStore.setIsPushNoti(await checkAndRequestNotificationPermission());
