@@ -13,6 +13,8 @@ import {API_ENDPOINTS} from 'src/core/presentation/constants/apiEndpoints';
 import UserSettingResponse from 'src/lesson/application/types/UserSettingResponse';
 import PostUserProgressResponse from 'src/lesson/application/types/PostUserProgressResponse';
 import {TResult} from 'src/lesson/presentation/screens/LessonScreen';
+import ReportProgressChildrenResponse from 'src/lesson/application/types/ReportProgressChildrenResponse';
+import ReportProgressChildrenPayload from 'src/lesson/application/types/ReportProgressChildrenPayload';
 
 @injectable()
 class LessonRepository implements ILessonRepository {
@@ -38,6 +40,16 @@ class LessonRepository implements ILessonRepository {
       count: posts.length,
     };
 
+    return response;
+  }
+
+  public async getReportProgressChildren(
+    payload: ReportProgressChildrenPayload,
+  ): Promise<ReportProgressChildrenResponse> {
+    const response: ReportProgressChildrenResponse = await this.httpClient.post(
+      `${API_ENDPOINTS.USER_PROGRESS.REPORT_PROGRESS_CHILDREN}`,
+      payload,
+    );
     return response;
   }
 

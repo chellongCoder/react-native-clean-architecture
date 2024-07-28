@@ -16,22 +16,57 @@ import IconPlaySlider from 'assets/svg/IconPlaySlider';
 import {observer} from 'mobx-react';
 import ChartProfile from 'src/lesson/presentation/components/ChartProfile';
 import {scale, verticalScale} from 'react-native-size-matters';
+import useAuthenticationStore from 'src/authentication/presentation/stores/useAuthenticationStore';
+import {useLessonStore} from 'src/lesson/presentation/stores/LessonStore/useGetPostsStore';
+import {useCallback, useEffect, useState} from 'react';
+import {LessonStoreProvider} from 'src/lesson/presentation/stores/LessonStore/LessonStoreProvider';
+import {withProviders} from '../utils/withProviders';
+import useReportProgressChildren from 'src/lesson/presentation/hooks/useReportProgressChildren';
+import Dropdown from 'src/core/components/dropdown/Dropdown';
 const {width} = Dimensions.get('window');
 
+const dataMonth = [
+  'Jan',
+  'Feb',
+  'Mar',
+  'Apr',
+  'May',
+  'Jun',
+  'Jul',
+  'Aug',
+  'Sep',
+  'Oct',
+  'Nov',
+  'Dec',
+];
+
 const ProfileScreen = observer(({route, navigation}) => {
-  const type = 'BOY';
+  const {selectedChild} = useAuthenticationStore();
+  const {statisticsByMonth, totalPoint, getReportByMonth} =
+    useReportProgressChildren();
+  const [month, setMonth] = useState(new Date().getMonth() + 1);
 
   const styleHook = useGlobalStyle();
 
+  const isMale = selectedChild?.gender === 'male';
+
   const checkType = () => {
-    return {backgroundColor: type == 'BOY' ? '##5EC7EA' : '#FFB29F'};
+    return {backgroundColor: isMale ? '#5dc7ea' : '#FFB29F'};
   };
+
+  useEffect(() => {
+    getReportByMonth({
+      childrenId: selectedChild?._id ?? '',
+      typeReport: 'daily',
+      month: month,
+    });
+  }, [getReportByMonth, month, selectedChild?._id]);
 
   return (
     <View
       style={[
         styles.container,
-        {backgroundColor: type == 'BOY' ? '#C2F0FF' : '#FFDFE4'},
+        {backgroundColor: isMale ? '#C2F0FF' : '#FFDFE4'},
       ]}>
       <View style={[styles.avatarContainer]}>
         <View style={styles.wrapperAvatar}>
@@ -68,7 +103,7 @@ const ProfileScreen = observer(({route, navigation}) => {
         <View style={styles.WrapperContent}>
           <View style={{maxWidth: 210, transform: [{translateY: 8}]}}>
             <Text style={[styleHook.txtLabel, styles.contentTitle]}>
-              Child’s Name - age
+              {selectedChild?.name ?? ''}
             </Text>
             <Text style={[styleHook.txtNote, styles.contentDescription]}>
               Lorem Ipsum is simply dummy text of the printing and typesetting
@@ -90,13 +125,51 @@ const ProfileScreen = observer(({route, navigation}) => {
             width: '100%',
             justifyContent: 'center',
             alignItems: 'center',
-            paddingTop: 40,
+            paddingTop: 24,
           }}>
-          <View style={[{width: '90%', paddingBottom: verticalScale(50)}]}>
-            <ChartProfile
-              valuesAxitX={['M', 'T', 'W', 'Th', 'F', 'Sa', 'Su']}
-              valueY={[80, 60, 5, 15, 30, 44, 333]}
-            />
+          <View
+            style={[
+              {
+                width: '90%',
+                paddingBottom: verticalScale(50),
+              },
+            ]}>
+            <View
+              style={{backgroundColor: '#fbf8cc', borderRadius: 50, zIndex: 1}}>
+              <View
+                style={{
+                  backgroundColor: '#78C5B4',
+                  padding: scale(16),
+                  borderRadius: scale(24),
+                  flexDirection: 'row',
+                  zIndex: 100,
+                }}>
+                <View style={{flex: 1}}>
+                  <Text style={[styleHook.txtLabel, {color: '#fbf8cc'}]}>
+                    Your weekly XP
+                  </Text>
+                  <Text style={[styleHook.txtButton, {color: '#1C6349'}]}>
+                    Total: {totalPoint}
+                  </Text>
+                </View>
+                <View>
+                  <Dropdown
+                    title={dataMonth[month - 1] ?? ''}
+                    width={scale(70)}
+                    onSelectItem={item =>
+                      setMonth(dataMonth.findIndex(e => e === item) + 1)
+                    }
+                    data={dataMonth}
+                  />
+                </View>
+              </View>
+              <View style={{zIndex: 10}}>
+                <ChartProfile
+                  valuesAxitX={['M', 'T', 'W', 'Th', 'F', 'Sa', 'Su']}
+                  valueY={statisticsByMonth.map(v => v.totalPoint)}
+                />
+              </View>
+            </View>
           </View>
           <View style={styles.achievementContainer}>
             <View style={styles.achievementTitle}>
@@ -196,7 +269,7 @@ const ProfileScreen = observer(({route, navigation}) => {
     </View>
   );
 });
-export default ProfileScreen;
+export default withProviders(LessonStoreProvider)(ProfileScreen);
 const styles = StyleSheet.create({
   container: {
     flex: 1,

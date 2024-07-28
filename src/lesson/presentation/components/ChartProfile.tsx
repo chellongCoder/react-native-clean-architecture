@@ -16,7 +16,7 @@ type Props = {
   rowCount?: number;
 };
 
-const ChartProfile = ({rowCount = 5, ...props}: Props) => {
+const ChartProfile = ({rowCount = 6, ...props}: Props) => {
   const paddingH = 16;
   const paddingV = 32;
   const fontSize = 10;
@@ -88,13 +88,13 @@ const ChartProfile = ({rowCount = 5, ...props}: Props) => {
             key={i}
             path={createLine(yEndChart - i * hRow)}
             strokeWidth={2}
-            color={'#1C6A59'}
+            color={'#e5eac1'}
             style={'stroke'}
           />
         ))}
         {props.valuesAxitX.map(
           (e, i) =>
-            props.valueY[i] && (
+            !!props.valueY[i] && (
               <Circle
                 key={i}
                 cx={xPointByIndex(i)}

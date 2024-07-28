@@ -79,5 +79,8 @@ export const API_ENDPOINTS = {
   },
   USER_PROGRESS: {
     USER_PROGRESS: getUserProgressEndPointServices(),
+    REPORT_PROGRESS_CHILDREN: getUserProgressEndPointServices(
+      'report-progress-children',
+    ),
   },
 };

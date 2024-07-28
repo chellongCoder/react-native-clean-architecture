@@ -6,14 +6,16 @@ import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {COLORS} from 'src/core/presentation/constants/colors';
 import TabButton from './TabButton';
 
-interface CustomStatusBarProps {
+export interface CustomStatusBarProps {
   backgroundColor: string;
   barStyle?: 'default' | 'light-content' | 'dark-content';
+  translucent?: boolean;
 }
 
 const CustomStatusBar: FC<CustomStatusBarProps> = ({
   backgroundColor,
   barStyle,
+  translucent,
 }) => {
   const insets = useSafeAreaInsets();
   return (
@@ -22,6 +24,7 @@ const CustomStatusBar: FC<CustomStatusBarProps> = ({
         animated={true}
         barStyle={barStyle}
         backgroundColor={backgroundColor}
+        translucent={translucent}
       />
     </View>
   );
@@ -85,8 +88,9 @@ function BottomTabBar({
         })}
       </View>
       <CustomStatusBar
-        backgroundColor={COLORS.BLUE_258F78}
-        barStyle="light-content"
+        backgroundColor={'transparent'}
+        barStyle="dark-content"
+        translucent={true}
       />
     </Fragment>
   );
