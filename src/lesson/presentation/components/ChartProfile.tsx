@@ -1,14 +1,25 @@
 import {StyleSheet, View} from 'react-native';
-import React, {useCallback, useMemo, useState} from 'react';
+import React, {useCallback, useEffect, useMemo, useState} from 'react';
 import {
   Canvas,
   Circle,
+  CircleProps,
   Path,
   Skia,
+  SkiaProps,
   Text,
   matchFont,
   useFonts,
 } from '@shopify/react-native-skia';
+import {Easing, useSharedValue, withTiming} from 'react-native-reanimated';
+
+const CustomCircle = (props: SkiaProps<CircleProps> & {cy: number}) => {
+  const cy = useSharedValue(props.cy);
+  useEffect(() => {
+    cy.value = withTiming(props.cy, {duration: 200, easing: Easing.linear});
+  }, [cy, props.cy]);
+  return <Circle {...props} cy={cy} />;
+};
 
 type Props = {
   valuesAxitX: string[];
@@ -95,7 +106,7 @@ const ChartProfile = ({rowCount = 6, ...props}: Props) => {
         {props.valuesAxitX.map(
           (e, i) =>
             !!props.valueY[i] && (
-              <Circle
+              <CustomCircle
                 key={i}
                 cx={xPointByIndex(i)}
                 cy={yPointByIndex(i)}
