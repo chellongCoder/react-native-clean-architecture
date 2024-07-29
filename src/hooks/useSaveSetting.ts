@@ -3,16 +3,17 @@ import {
   FamilyActivitySelection,
   selectedAppsData,
 } from 'react-native-alphadex-screentime';
+import {StatusCode} from 'src/authentication/presentation/types/StatusCode';
 import {useAsyncEffect} from 'src/core/presentation/hooks';
 
-export const useSaveSetting = (hasDataServer: boolean) => {
+export const useSaveSetting = (hasDataServer: boolean, childrenId: string) => {
   const [isLoading, setisLoading] = useState();
   const [errorMessage, setErrorMessage] = useState('');
 
   useAsyncEffect(async () => {
     if (hasDataServer) {
       try {
-        const apps = await selectedAppsData();
+        const apps = await selectedAppsData(childrenId);
         const parsedApp: FamilyActivitySelection = JSON.parse(apps);
         console.log(
           '🛠 LOG: 🚀 --> ---------------------------------------------🛠 LOG: 🚀 -->',
@@ -32,7 +33,7 @@ export const useSaveSetting = (hasDataServer: boolean) => {
           parsedApp.categoryTokens.length === 0
         ) {
           setErrorMessage(
-            'You need to reselect apps after changing the list of apps',
+            'You need to reselect apps to synchronize with system.',
           );
         } else if (
           parsedApp.applicationTokens.length > 0 ||
@@ -44,7 +45,7 @@ export const useSaveSetting = (hasDataServer: boolean) => {
         } else {
           setErrorMessage('');
         }
-      } catch (error) {
+      } catch (error: any) {
         console.log(
           '🛠 LOG: 🚀 --> -----------------------------------------------🛠 LOG: 🚀 -->',
         );
@@ -52,6 +53,11 @@ export const useSaveSetting = (hasDataServer: boolean) => {
         console.log(
           '🛠 LOG: 🚀 --> -----------------------------------------------🛠 LOG: 🚀 -->',
         );
+        if (error?.code === StatusCode.ERROR_UserDefaults_Empty) {
+          setErrorMessage(
+            'You need to reselect apps to synchronize with system.',
+          );
+        }
       }
     }
   }, [hasDataServer]);

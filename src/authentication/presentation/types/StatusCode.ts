@@ -12,6 +12,7 @@ export enum StatusCode {
   BadGateway = 502,
   ServiceUnavailable = 503,
   UnprocessableEntity = 422,
+  ERROR_UserDefaults_Empty = 'ERROR_UserDefaults_Empty',
 }
 
 export type CustomErrorType = {

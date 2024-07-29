@@ -1,16 +1,28 @@
-import {useEffect} from 'react';
+import {useEffect, useMemo} from 'react';
 import {LessonStore} from 'src/lesson/presentation/stores/LessonStore/LessonStore';
-import {addToLockedApps} from 'react-native-alphadex-screentime';
+import {
+  addToLockedApps,
+  getStateBlocking,
+} from 'react-native-alphadex-screentime';
 
 export const useGetUserSetting = (
   token: string,
   childrenId: string,
   lesson: LessonStore,
 ) => {
+  // const hasLocalData = useMemo(() => {
+  //   if(lesson.blockedListAppsSystem.length > 0) {
+  //     return true;
+  //   } else if(lesson.blockedAnonymousListAppsSystem?.applicationTokens?.length > 0 || lesson.)
+  // }, [])
   useEffect(() => {
     lesson.handleGetSettingUser({deviceToken: token, childrenId});
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [token, childrenId]);
+
+  useEffect(() => {
+    getStateBlocking();
+  }, []);
 
   useEffect(() => {
     if (lesson.blockedListAppsSystem.length > 0) {
@@ -23,4 +35,6 @@ export const useGetUserSetting = (
       );
     }
   }, [lesson.blockedListAppsSystem]);
+
+  return {};
 };

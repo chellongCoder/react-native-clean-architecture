@@ -26,7 +26,7 @@ export class LessonStore {
 
   listAppsSystem: AppEntity[] = [];
 
-  blockedListAppsSystem: Partial<AppEntity>[] = [];
+  @observable blockedListAppsSystem: Partial<AppEntity>[] = [];
 
   @observable blockedAnonymousListAppsSystem?: Partial<FamilyActivitySelection>;
 

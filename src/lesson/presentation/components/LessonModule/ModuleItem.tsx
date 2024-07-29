@@ -27,14 +27,14 @@ const ModuleItem = (props: Props) => {
   const globalStyle = useGlobalStyle();
 
   const onDoHomework = useCallback(async () => {
-    const apps = await selectedAppsData();
-    console.log(
-      '🛠 LOG: 🚀 --> -------------------------------------------🛠 LOG: 🚀 -->',
-    );
-    console.log('🛠 LOG: 🚀 --> ~ onDoHomework ~ apps:', apps);
-    console.log(
-      '🛠 LOG: 🚀 --> -------------------------------------------🛠 LOG: 🚀 -->',
-    );
+    // const apps = await selectedAppsData();
+    // console.log(
+    //   '🛠 LOG: 🚀 --> -------------------------------------------🛠 LOG: 🚀 -->',
+    // );
+    // console.log('🛠 LOG: 🚀 --> ~ onDoHomework ~ apps:', apps);
+    // console.log(
+    //   '🛠 LOG: 🚀 --> -------------------------------------------🛠 LOG: 🚀 -->',
+    // );
   }, []);
 
   const onRevision = useCallback(() => {

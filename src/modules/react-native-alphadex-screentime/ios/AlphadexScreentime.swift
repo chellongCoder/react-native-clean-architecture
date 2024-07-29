@@ -83,9 +83,9 @@ class ScreenTimeSelectAppsModel: RCTEventEmitter, ObservableObject {
     resolve(true)
   }
 
-  @objc(selectedAppsData:withRejecter:)
-  func selectedAppsData(resolve:RCTPromiseResolveBlock,reject:RCTPromiseRejectBlock) -> Void {
-    let userDefaults = UserDefaults.init(suiteName: "group.com.hisoft.tbd.app")!
+  @objc(selectedAppsData:withResolver:withRejecter:)
+  func selectedAppsData(childrenId:String, resolve:RCTPromiseResolveBlock,reject:RCTPromiseRejectBlock) -> Void {
+    let userDefaults = UserDefaults.init(suiteName: childrenId)!
     let data = userDefaults.data(forKey: AlphadexScreentime.userDefaultsKey)
     if let data = data {
         do {
@@ -96,14 +96,40 @@ class ScreenTimeSelectAppsModel: RCTEventEmitter, ObservableObject {
         } catch {
             reject("Error", "Failed to decode or encode data", error)
         }
+    } else {
+      reject("ERROR_UserDefaults_Empty", "Failed to decode or encode data", data as? Error)
     }
   }
 
-  @objc(blockApps:withRejecter:)
-  func blockApps(resolve:RCTPromiseResolveBlock,reject:RCTPromiseRejectBlock) -> Void {
+  @objc(getStateBlocking:withRejecter:)
+  func getStateBlocking(resolve:RCTPromiseResolveBlock,reject:RCTPromiseRejectBlock) -> Bool {
+    let userDefaults = UserDefaults.init(suiteName: "group.com.hisoft.tbd.app")!
+
+    let blocked = userDefaults.data(forKey:"blocked")
+    if(blocked != nil) {
+      let decodedData = try? decoder.decode(
+        Bool.self,
+        from: blocked!
+      )
+      if(decodedData != nil) {
+        resolve(decodedData)
+        return decodedData!
+      }
+      reject("ERROR_DECODE", "Cannot decode data", decodedData as? Error)
+      return false
+    } else {
+      reject("ERROR_UserDefaults", "Cannot find data", blocked as? Error)
+      return false
+    }
+  }
+
+  @objc(blockApps:withResolve:withRejecter:)
+  func blockApps(childrenId: String, resolve:RCTPromiseResolveBlock,reject:RCTPromiseRejectBlock) -> Void {
     let store = ManagedSettingsStore()
     let userDefaults = UserDefaults.init(suiteName: "group.com.hisoft.tbd.app")!
-    let data = userDefaults.data(forKey: AlphadexScreentime.userDefaultsKey)
+    let userDefaultsByChild = UserDefaults.init(suiteName: childrenId)!
+
+    let data = userDefaultsByChild.data(forKey: AlphadexScreentime.userDefaultsKey)
     if data != nil {
       let decodedData = try? decoder.decode(
         FamilyActivitySelection.self,
@@ -113,24 +139,20 @@ class ScreenTimeSelectAppsModel: RCTEventEmitter, ObservableObject {
         store.shield.applicationCategories = ShieldSettings.ActivityCategoryPolicy.specific(unwrapped.categoryTokens)
         store.shield.applications = unwrapped.applicationTokens
         userDefaults.set(true, forKey:"blocked")
-        //            sendEvent("onChangeBlocked", [
-        //              "isBlocked": true
-        //            ]);
-                    if #available(iOS 16.2, *) {
-                      do {
-                        let activity = try Activity.request(
-                            attributes: screentimewidgetAttributes(name: "ABeeCi"),
-                            content: .init(state: screentimewidgetAttributes.ContentState(emoji: "12/20"), staleDate: nil),
-                            pushType: .token
-                        )
-                      } catch {
-                          //handle error
-                          print(error)
-                      }
-                    }
-                    if #available(iOS 14.0, *) {
-                      WidgetCenter.shared.reloadAllTimelines()
-                    }
+
+          if #available(iOS 16.2, *) {
+            do {
+              _ = try Activity.request(
+                  attributes: screentimewidgetAttributes(name: "ABeeCi"),
+                  content: .init(state: screentimewidgetAttributes.ContentState(emoji: "12/20"), staleDate: nil),
+                  pushType: .token
+              )
+            } catch {
+                //handle error
+              reject("ERROR_Activity_request", "cannot start activity dynamic island", error)
+            }
+          }
+        WidgetCenter.shared.reloadAllTimelines()
       }
     }
   }
@@ -146,11 +168,13 @@ class ScreenTimeSelectAppsModel: RCTEventEmitter, ObservableObject {
     EventEmitter.sharedInstance.dispatch(name: "Test", body: "Hello")
   }
 
-  func startAppRestrictions() async -> Void {
+  func startAppRestrictions(childrenId: String?) async -> Void {
     let store = ManagedSettingsStore()
     store.application.denyAppRemoval = true
     let userDefaults = UserDefaults.init(suiteName: "group.com.hisoft.tbd.app")!
-    let data = userDefaults.data(forKey: AlphadexScreentime.userDefaultsKey)
+    let userDefaultsByChild = UserDefaults.init(suiteName: childrenId)!
+
+    let data = userDefaultsByChild.data(forKey: AlphadexScreentime.userDefaultsKey)
     if data != nil {
       let decodedData = try? decoder.decode(
         FamilyActivitySelection.self,
@@ -173,22 +197,22 @@ class ScreenTimeSelectAppsModel: RCTEventEmitter, ObservableObject {
               print(error)
           }
         }
-        if #available(iOS 14.0, *) {
-          WidgetCenter.shared.reloadAllTimelines()
-        }
+        WidgetCenter.shared.reloadAllTimelines()
       }
     }
   }
 
-  @objc(unBlockApps:withRejecter:)
-  func unBlockApps(resolve:RCTPromiseResolveBlock,reject:@escaping RCTPromiseRejectBlock) -> Void {
+  @objc(unBlockApps:withResolver:withRejecter:)
+  func unBlockApps(childrenId: String, resolve:@escaping RCTPromiseResolveBlock,reject:@escaping RCTPromiseRejectBlock) -> Void {
     let store = ManagedSettingsStore()
+    store.application.denyAppRemoval = false
     let userDefaults = UserDefaults.init(suiteName: "group.com.hisoft.tbd.app")!
+    let userDefaultsByChild = UserDefaults.init(suiteName: childrenId)!
     store.shield.applicationCategories = ShieldSettings.ActivityCategoryPolicy.none
     store.shield.applications = Set()
     userDefaults.set(false, forKey:"blocked")
     // Clear the data for the key "ScreenTimeSelection"
-    userDefaults.removeObject(forKey: AlphadexScreentime.userDefaultsKey)
+    userDefaultsByChild.removeObject(forKey: AlphadexScreentime.userDefaultsKey)
     do {
       let deselectedFamilyActivitySelection = FamilyActivitySelection(includeEntireCategory: true) // adjust this line as needed
 

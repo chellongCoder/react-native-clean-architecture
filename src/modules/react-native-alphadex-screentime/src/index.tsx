@@ -80,8 +80,12 @@ export function requestScreenTime(): Promise<boolean> {
   return ScreenTimeSelectApps.requestScreenTime();
 }
 
-export function selectedAppsData(): Promise<string> {
-  return ScreenTimeSelectApps.selectedAppsData();
+export function selectedAppsData(childrenId: string): Promise<string> {
+  return ScreenTimeSelectApps.selectedAppsData(childrenId);
+}
+
+export function getStateBlocking(): Promise<boolean> {
+  return ScreenTimeSelectApps.getStateBlocking();
 }
 
 export function unBlockApps(): Promise<boolean> {

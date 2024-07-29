@@ -21,6 +21,7 @@ class ViewModuleViewManager: RCTViewManager {
 @available(iOS 16.0, *)
 class ViewModuleView : UIView {
   @objc var onChangeBlock: RCTDirectEventBlock? = nil
+  @objc var childrenId: String? = nil
   private var cancellables = Set<AnyCancellable>()
   private let userDefaultsKey = AlphadexScreentime.userDefaultsKey
   private let encoder = JSONEncoder()
@@ -34,11 +35,11 @@ class ViewModuleView : UIView {
   var view: UIView?
 
   func saveSelection(selection: FamilyActivitySelection) {
-    let defaults = UserDefaults.init(suiteName: "group.com.hisoft.tbd.app")!
+    let defaults = UserDefaults.init(suiteName: childrenId)
 
     do {
         let jsonData = try encoder.encode(selection)
-        defaults.set(
+        defaults?.set(
             jsonData,
             forKey: userDefaultsKey
         )
@@ -46,12 +47,12 @@ class ViewModuleView : UIView {
 
       onChangeBlock?(["isBlocked": true, "blockedApps": json ?? "[]"])
     } catch {
-      onChangeBlock?(["isBlocked": true])
+      onChangeBlock?(["isBlocked": false])
     }
   }
 
   func savedSelection() -> FamilyActivitySelection? {
-      let defaults = UserDefaults.init(suiteName: "group.com.hisoft.tbd.app")!
+    let defaults = UserDefaults.init(suiteName: self.childrenId)!
 
       guard let data = defaults.data(forKey: userDefaultsKey) else {
           return nil
@@ -83,7 +84,7 @@ class ViewModuleView : UIView {
     }
 
   private func setupView(model: ScreenTimeSelectAppsModel) {
-    let view = ScreenTimeSelectAppsContentView(model: model)
+    let view = ScreenTimeSelectAppsContentView(model: model, childrenId: childrenId)
       let vc = UIHostingController(rootView: view)
       vc.view.frame = bounds
       vc.view.backgroundColor = UIColor(white: 1, alpha: 0.0)
@@ -104,6 +105,7 @@ class ViewModuleView : UIView {
 struct ScreenTimeSelectAppsContentView: View {
     @State private var pickerIsPresented = false
     @ObservedObject var model: ScreenTimeSelectAppsModel
+    var childrenId: String?
     @State private var showAlert = false
 
     var body: some View {
@@ -126,7 +128,7 @@ struct ScreenTimeSelectAppsContentView: View {
               if !newValue {
                   // Picker has been dismissed
                 Task {
-                  await model.startAppRestrictions()
+                  await model.startAppRestrictions(childrenId: childrenId)
                 }
                 showAlert = false
               }

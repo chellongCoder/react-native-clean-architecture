@@ -24,6 +24,7 @@ RCT_EXTERN_METHOD(multiply:(float)a withB:(float)b
 //  [self sendEventWithName:eventName body:body];
 //}
 RCT_EXPORT_VIEW_PROPERTY(onChangeBlock, RCTDirectEventBlock)
+RCT_EXPORT_VIEW_PROPERTY(childrendId, NSString)
 
 RCT_EXTERN_METHOD(multiply:(float)a withB:(float)b
                  withResolver:(RCTPromiseResolveBlock)resolve
@@ -35,10 +36,17 @@ RCT_EXTERN_METHOD(sentEvent:(RCTPromiseResolveBlock)resolve
 RCT_EXTERN_METHOD(requestScreenTime:(RCTPromiseResolveBlock)resolve
                  withRejecter:(RCTPromiseRejectBlock)reject)
 
-RCT_EXTERN_METHOD(selectedAppsData:(RCTPromiseResolveBlock)resolve
+RCT_EXTERN_METHOD(selectedAppsData:(NSString)childrenId
+                  withResolver:(RCTPromiseResolveBlock)resolve
+                  withRejecter:(RCTPromiseRejectBlock)reject)
+
+RCT_EXTERN_METHOD(getStateBlocking:(RCTPromiseResolveBlock)resolve
+                  withRejecter:(RCTPromiseRejectBlock)reject)
+
+RCT_EXTERN_METHOD(blockApps:(NSString)childrenId (RCTPromiseResolveBlock)resolve
                  withRejecter:(RCTPromiseRejectBlock)reject)
 
-RCT_EXTERN_METHOD(unBlockApps:(RCTPromiseResolveBlock)resolve
+RCT_EXTERN_METHOD(unBlockApps:(NSString)childrenId (RCTPromiseResolveBlock)resolve
                  withRejecter:(RCTPromiseRejectBlock)reject)
 
 + (BOOL)requiresMainQueueSetup

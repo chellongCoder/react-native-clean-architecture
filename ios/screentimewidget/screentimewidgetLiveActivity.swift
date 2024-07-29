@@ -60,8 +60,8 @@ struct ProgressBar : View {
                 .stroke(
                         style: StrokeStyle(lineWidth: 10.0, lineCap: .round, lineJoin: .round))
                 .foregroundColor(Color(hex: "#66C270"))
-                .rotationEffect(Angle(degrees: 270))
-                .animation(.easeInOut(duration: 2.0), value: 1.0)
+                .rotationEffect(Angle(degrees: -90))
+                .animation(.easeInOut(duration: 2.0), value: self.progress)
         }.background(Color.black)
     }
 }

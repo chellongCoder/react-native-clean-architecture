@@ -107,7 +107,10 @@ const ParentScreen = observer(() => {
     ],
   );
 
-  const {errorMessage} = useSaveSetting(hasDataServer);
+  const {errorMessage} = useSaveSetting(
+    hasDataServer,
+    selectedChild?._id ?? '',
+  );
   const [tabParent, setTabparent] = useState(TabParentE.APP_BLOCK);
 
   const tabsBlock = useMemo(() => {
