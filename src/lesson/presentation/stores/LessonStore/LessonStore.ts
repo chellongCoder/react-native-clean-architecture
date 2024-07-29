@@ -16,6 +16,8 @@ import {TResult} from '../../screens/LessonScreen';
 import GetUserSettingUseCase from 'src/lesson/application/useCases/GetUserSettingUseCase';
 import {isAndroid} from 'src/core/presentation/utils';
 import {AppCategoryE} from 'src/core/domain/enums/AppCategoryE';
+import GetReportProgressChildrenUseCase from 'src/lesson/application/useCases/GetReportProgressChildrenUsecase';
+import ReportProgressChildrenPayload from 'src/lesson/application/types/ReportProgressChildrenPayload';
 
 @injectable()
 export class LessonStore {
@@ -42,6 +44,8 @@ export class LessonStore {
   constructor(
     @provided(UpdateUserSettingUseCase)
     private userSettingUserCase: UpdateUserSettingUseCase,
+    @provided(GetReportProgressChildrenUseCase)
+    private getReportProgressChildrenUseCase: GetReportProgressChildrenUseCase,
     @provided(PostUserProgressUseCase)
     private postUserProgressUseCase: PostUserProgressUseCase,
     @provided(GetUserSettingUseCase)
@@ -54,6 +58,8 @@ export class LessonStore {
     this.blockedListAppsSystem = [];
 
     this.updateAppBlock = this.updateAppBlock.bind(this);
+    this.handleGetReportProgressChildren =
+      this.handleGetReportProgressChildren.bind(this);
     this.handlePostUserProgress = this.handlePostUserProgress.bind(this);
     this.handleGetSettingUser = this.handleGetSettingUser.bind(this);
   }
@@ -162,6 +168,14 @@ export class LessonStore {
       this.isLoadingUserSetting = false;
     }
   };
+
+  @action
+  public async handleGetReportProgressChildren(
+    data: ReportProgressChildrenPayload,
+  ) {
+    const response = await this.getReportProgressChildrenUseCase.execute(data);
+    return response;
+  }
 
   @action
   public async handlePostUserProgress(data: TResult[]) {

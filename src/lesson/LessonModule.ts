@@ -11,6 +11,7 @@ import LessonRepository from './infrastructure/implementations/LessonRepository'
 import UpdateUserSettingUseCase from './application/useCases/UpdateUserSettingUseCase';
 import PostUserProgressUseCase from './application/useCases/PostUserProgressUseCase';
 import GetUserSettingUseCase from './application/useCases/GetUserSettingUseCase';
+import GetReportProgressChildrenUseCase from './application/useCases/GetReportProgressChildrenUsecase';
 
 @module({
   providers: [
@@ -38,6 +39,7 @@ import GetUserSettingUseCase from './application/useCases/GetUserSettingUseCase'
       useClass: LessonStore,
       scope: 'Singleton',
     },
+    GetReportProgressChildrenUseCase,
     PostUserProgressUseCase,
   ],
 })

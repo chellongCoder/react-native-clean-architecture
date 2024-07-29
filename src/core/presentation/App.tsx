@@ -15,7 +15,7 @@ import {requestScreenTime} from 'react-native-alphadex-screentime';
 import {isAndroid} from './utils';
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
 import {SoundGlobalProvider} from './hooks/sound/SoundGlobalProvider';
-import {LogBox} from 'react-native';
+import {LogBox, StatusBar} from 'react-native';
 import {SoundBackgroundGlobalProvider} from './hooks/sound/SoundBackgroundGlobalProvider';
 
 LogBox.ignoreLogs(['Warning: ...']); // Ignore log notification by message
@@ -51,6 +51,7 @@ const App = () => {
       ref={RootNavigation}
       onReady={onNavigationReady}
       onStateChange={changeRouteName}>
+      <StatusBar backgroundColor="transparent" translucent={true} />
       <SafeAreaProvider initialMetrics={initialWindowMetrics}>
         <GestureHandlerRootView style={{flex: 1}}>
           <LoadingGlobalProvider>
