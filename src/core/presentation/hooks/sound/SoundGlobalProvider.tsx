@@ -29,87 +29,119 @@ export const soundTrack = {
   ukulele_music: 'ukulele_music',
 };
 
+interface ExtendedSound extends Sound {
+  _isPlaying?: boolean;
+}
+
 export const SoundGlobalProvider = ({children}: PropsWithChildren) => {
-  const [isPlaying, setIsPlaying] = useState<boolean>(false);
-  const [sounds, setSounds] = useState<{[key: string]: Sound | null}>({});
-  const [currentSoundKey, setCurrentSoundKey] = useState<string | null>(null);
+  const [sounds, setSounds] = useState<{[key: string]: ExtendedSound[]}>({});
+  const [loopingSoundKey, setLoopingSoundKey] = useState<string | null>(null);
+  const [currentPlayingSound, setCurrentPlayingSound] =
+    useState<ExtendedSound | null>(null);
   const [isInitSoundDone, setIsInitSoundDone] = useState<boolean>(false);
 
-  const playSound = useCallback(
-    (key: string) => {
-      const sound = sounds[key];
-      if (sound) {
+  const playSound = useCallback((key: string) => {
+    const soundFile = soundResource[key as keyof typeof soundResource];
+    if (soundFile) {
+      // Create a new sound instance each time
+      const sound = new Sound(soundFile, Sound.MAIN_BUNDLE, error => {
+        if (error) {
+          console.log(`Failed to load sound ${key}`, error);
+          return;
+        }
         sound.setNumberOfLoops(0);
         sound.play(success => {
           if (!success) {
-            console.log(`failed to play the sound ${key}`);
+            console.log(`Failed to play sound ${key}`);
           }
-          setIsPlaying(false);
-          setCurrentSoundKey(null);
+          // After playback, the sound instance is released, so no need to manually reset `_isPlaying`
+          console.log(`Sound ${key} finished playing`);
         });
-        setIsPlaying(true);
-        setCurrentSoundKey(key);
-      }
-    },
-    [sounds],
-  );
+        // Track the playing status
+        setCurrentPlayingSound(sound);
+      });
+    }
+  }, []);
 
   const pauseSound = useCallback(() => {
-    if (currentSoundKey) {
-      const sound = sounds[currentSoundKey];
-      if (sound && isPlaying) {
-        sound.pause();
-        setIsPlaying(false);
-      }
+    if (currentPlayingSound) {
+      console.log('Pausing current playing sound');
+      currentPlayingSound.pause();
+      console.log('currentPlayingSound: ', currentPlayingSound);
+      setCurrentPlayingSound(null); // Clear reference to the sound
+    } else {
+      console.log('No sound is currently playing');
     }
-  }, [currentSoundKey, isPlaying, sounds]);
+  }, [currentPlayingSound]);
 
-  const loopSound = useCallback(
-    (key: string) => {
-      const sound = sounds[key];
-      if (sound) {
+  const loopSound = useCallback((key: string) => {
+    const soundFile = soundResource[key as keyof typeof soundResource];
+    if (soundFile) {
+      // Create a new sound instance each time
+      const sound = new Sound(soundFile, Sound.MAIN_BUNDLE, error => {
+        if (error) {
+          console.log(`Failed to load sound ${key}`, error);
+          return;
+        }
         sound.setNumberOfLoops(-1);
         sound.play(success => {
           if (!success) {
-            console.log(`failed to play the sound ${key}`);
+            console.log(`Failed to play sound ${key}`);
           }
-          setIsPlaying(false);
-          setCurrentSoundKey(null);
+          // Log status when finished looping, if needed
+          console.log(`Sound ${key} started looping`);
         });
-        setIsPlaying(true);
-        setCurrentSoundKey(key);
-      }
-    },
-    [sounds],
-  );
+        // Track the playing status
+        setCurrentPlayingSound(sound);
+        setLoopingSoundKey(key);
+      });
+    }
+  }, []);
 
   const setVolume = useCallback(
     (volume: number) => {
-      Object.values(sounds).forEach(sound => {
-        if (sound) {
-          sound.setVolume(volume); // Set the volume for all sounds
-        }
-      });
+      Object.values(sounds)
+        .flat()
+        .forEach(sound => {
+          if (sound) {
+            sound.setVolume(volume);
+          }
+        });
     },
     [sounds],
   );
 
   useEffect(() => {
+    return () => {
+      // Ensure to release any sound that might still be playing
+      if (currentPlayingSound) {
+        currentPlayingSound.release();
+      }
+    };
+  }, [currentPlayingSound]);
+
+  useEffect(() => {
     const initializeSounds = () => {
-      const loadedSounds: {[key: string]: Sound} = {};
+      const loadedSounds: {[key: string]: ExtendedSound[]} = {};
 
       Object.entries(soundResource).forEach(([key, resource]) => {
-        loadedSounds[key] = new Sound(resource, Sound.MAIN_BUNDLE, error => {
-          if (error) {
-            console.log(`failed to load the sound ${resource}`, error);
-          }
-        });
+        loadedSounds[key] = [];
+        for (let i = 0; i < 2; i++) {
+          const sound = new Sound(resource, Sound.MAIN_BUNDLE, error => {
+            if (error) {
+              console.log(`Failed to load sound ${key}`, error);
+            }
+          }) as ExtendedSound;
+          loadedSounds[key].push(sound);
+        }
       });
 
       setSounds(loadedSounds);
 
       return () => {
-        Object.values(loadedSounds).forEach(sound => sound.release());
+        Object.values(loadedSounds).forEach(pool => {
+          pool.forEach(sound => sound.release());
+        });
       };
     };
 
@@ -133,7 +165,6 @@ export const SoundGlobalProvider = ({children}: PropsWithChildren) => {
   return (
     <SoundGlobalContext.Provider
       value={{
-        isPlaying,
         playSound,
         pauseSound,
         loopSound,

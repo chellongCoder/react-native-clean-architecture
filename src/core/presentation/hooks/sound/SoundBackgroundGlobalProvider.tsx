@@ -2,13 +2,33 @@ import React, {PropsWithChildren, useContext, useEffect, useState} from 'react';
 import {SoundBackgroundGlobalContext} from './SoundBackgroundGlobalContext';
 import {SoundGlobalContext} from './SoundGlobalContext';
 import {soundTrack} from './SoundGlobalProvider';
+import {AppLifecycle} from 'react-native-applifecycle';
+import {AppStateStatus} from 'react-native';
 
 export const SoundBackgroundGlobalProvider = ({
   children,
 }: PropsWithChildren) => {
-  const {loopSound, isInitSoundDone} = useContext(SoundGlobalContext);
+  const {loopSound, isInitSoundDone, pauseSound} =
+    useContext(SoundGlobalContext);
 
   const [isPlaying, setIsPlaying] = useState(false);
+
+  useEffect(() => {
+    const listener = AppLifecycle.addEventListener(
+      'change',
+      (state: AppStateStatus) => {
+        // do something
+
+        if (state === 'background') {
+          pauseSound();
+        } else {
+          loopSound(soundTrack.ukulele_music);
+        }
+      },
+    );
+
+    return () => listener.remove();
+  }, [loopSound, pauseSound]);
 
   useEffect(() => {
     if (isInitSoundDone) {

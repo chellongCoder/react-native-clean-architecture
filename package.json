@@ -49,6 +49,7 @@
     "react-dom": "18.2.0",
     "react-native": "0.73.6",
     "react-native-alphadex-screentime": "link:./src/modules/react-native-alphadex-screentime",
+    "react-native-applifecycle": "^1.0.0",
     "react-native-device-info": "^11.1.0",
     "react-native-dropdown-picker": "^5.4.6",
     "react-native-gesture-handler": "~2.14.0",

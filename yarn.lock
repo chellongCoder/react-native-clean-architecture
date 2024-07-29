@@ -10347,6 +10347,11 @@ react-native-animatable@1.3.3:
   dependencies:
     prop-types "^15.7.2"
 
+react-native-applifecycle@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/react-native-applifecycle/-/react-native-applifecycle-1.0.0.tgz#dddd6e7142f8ae74e71480c19d4e3e0106b17cd6"
+  integrity sha512-YevP9swEj2UvTBBE7lhQ1JDfl6PPwkKLK1tzquaPUCPzoDj1bMXfPkXTHMj23MNgnCML/DurT+ZfHizJutRgGg==
+
 react-native-device-info@^11.1.0:
   version "11.1.0"
   resolved "https://registry.yarnpkg.com/react-native-device-info/-/react-native-device-info-11.1.0.tgz#7db5c4e5a179dce761efac155a493aa0956a40ab"

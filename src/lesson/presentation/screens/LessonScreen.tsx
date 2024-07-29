@@ -140,13 +140,18 @@ const LessonScreen = observer(() => {
 
   useEffect(() => {
     const enterMiniTest = () => {
+      console.log('Attempting to pause current sound');
       pauseSound();
+      console.log('Attempting to play big bell sound');
       playSound(soundTrack.big_bell_sound);
     };
 
-    const cleanUp = enterMiniTest();
+    enterMiniTest();
 
-    return cleanUp;
+    return () => {
+      console.log('Cleanup: attempting to pause current sound');
+      pauseSound();
+    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
