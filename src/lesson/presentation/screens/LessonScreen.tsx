@@ -88,10 +88,10 @@ const LessonScreen = observer(() => {
   const [lessonState, setLessonState] = useStateCustom<TLessonState>({
     result: [],
   });
-  const firstMiniTestTask = tasks.find(task => task.type === 'mini-test');
+  const firstMiniTestTask = tasks.find(task => task.type === 'mini_test');
 
   const testTask = useMemo(() => {
-    if (tasks[activeTaskIndex]?.type === 'mini-test') {
+    if (tasks[activeTaskIndex]?.type === 'mini_test') {
       return firstMiniTestTask;
     } else {
       return tasks[activeTaskIndex];
@@ -117,7 +117,7 @@ const LessonScreen = observer(() => {
 
   const nextModule = useCallback(
     (answerSelected: string) => {
-      if (testTask?.name === firstMiniTestTask?.name) {
+      if (testTask?.type === firstMiniTestTask?.type) {
         playSound(soundTrack.menu_selection_sound);
         const resultByAnswer: TResult = {
           userId: selectedChild?._id,
@@ -130,6 +130,7 @@ const LessonScreen = observer(() => {
               : 'failed',
           point: firstMiniTestTask?.question?.[lessonIndex].point,
         };
+
         if (
           answerSelected ===
           firstMiniTestTask?.question?.[lessonIndex].correctAnswer
@@ -180,16 +181,16 @@ const LessonScreen = observer(() => {
       }
     },
     [
-      firstMiniTestTask?.name,
       firstMiniTestTask?.question,
+      firstMiniTestTask?.type,
       lessonIndex,
       lessonState.result,
       playSound,
       selectedChild?._id,
       setLessonState,
       submitModule,
-      testTask?.name,
       testTask?.question,
+      testTask?.type,
     ],
   );
 

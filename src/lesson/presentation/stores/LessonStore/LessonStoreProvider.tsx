@@ -232,6 +232,7 @@ const ItemPermission = observer(({lesson}: {lesson: LessonStore}) => {
             globalStyle.rowCenter,
             globalStyle.spaceBetween,
             styles.permissionItem,
+            !errors.isOverlay && {borderColor: COLORS.ERROR},
           ]}>
           <Text>System overlay</Text>
           <View>
@@ -256,7 +257,7 @@ const ItemPermission = observer(({lesson}: {lesson: LessonStore}) => {
             globalStyle.rowCenter,
             globalStyle.spaceBetween,
             styles.permissionItem,
-            {borderColor: COLORS.ERROR},
+            !errors.isUsageStats && {borderColor: COLORS.ERROR},
           ]}>
           <Text>Usage access</Text>
           <View>
@@ -283,6 +284,7 @@ const ItemPermission = observer(({lesson}: {lesson: LessonStore}) => {
             globalStyle.rowCenter,
             globalStyle.spaceBetween,
             styles.permissionItem,
+            !errors.isPushNoti && {borderColor: COLORS.ERROR},
           ]}>
           <Text>Push notification</Text>
           <View>
