@@ -9,8 +9,6 @@ import {assets} from '../utils';
 const OnBoardingScreen = ({navigation}) => {
   const styleHook = useGlobalStyle();
 
-  useEffect(() => {}, []);
-
   return (
     <View style={styles.container}>
       <Image

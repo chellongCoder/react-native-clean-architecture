@@ -1,5 +1,11 @@
 import {View, StyleSheet} from 'react-native';
-import React, {useCallback, useContext, useEffect, useState} from 'react';
+import React, {
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+} from 'react';
 import AchievementLesson from './LessonComponent/AchievementLesson';
 import WriteLesson from './LessonComponent/WriteLesson';
 import ListenLesson from './LessonComponent/ListenLesson';
@@ -7,7 +13,12 @@ import FillBlankLesson from './LessonComponent/FillBlankLesson';
 import TranslateLesson from './LessonComponent/TranslateLesson';
 import GeometryLesson from './LessonComponent/GeometryLesson';
 import MathLesson from './LessonComponent/MathLesson';
-import {resetNavigator} from 'src/core/presentation/navigation/actions/RootNavigationActions';
+import {
+  goBack,
+  navigateScreen,
+  pushScreen,
+  resetNavigator,
+} from 'src/core/presentation/navigation/actions/RootNavigationActions';
 import {STACK_NAVIGATOR} from 'src/core/presentation/navigation/ConstantNavigator';
 import {withProviders} from 'src/core/presentation/utils/withProviders';
 import {LessonStoreProvider} from '../stores/LessonStore/LessonStoreProvider';
@@ -68,14 +79,24 @@ const LessonScreen = observer(() => {
     >().params;
   const {handlePostUserProgress} = useLessonStore();
   const {tasks} = useListQuestions(route?.lessonId);
+  const [activeTaskIndex, setActiveTaskIndex] = useState(0);
   const {selectedChild} = useAuthenticationStore();
   const {playSound, pauseSound} = useContext(SoundGlobalContext);
 
   const [lessonIndex, setLessonIndex] = useState(0);
+
   const [lessonState, setLessonState] = useStateCustom<TLessonState>({
     result: [],
   });
-  const firstMiniTestTask = tasks.find(task => task.type === 'mini_test');
+  const firstMiniTestTask = tasks.find(task => task.type === 'mini-test');
+
+  const testTask = useMemo(() => {
+    if (tasks[activeTaskIndex]?.type === 'mini-test') {
+      return firstMiniTestTask;
+    } else {
+      return tasks[activeTaskIndex];
+    }
+  }, [activeTaskIndex, firstMiniTestTask, tasks]);
 
   const submitModule = useCallback(
     async (item: TResult) => {
@@ -96,38 +117,70 @@ const LessonScreen = observer(() => {
 
   const nextModule = useCallback(
     (answerSelected: string) => {
-      playSound(soundTrack.menu_selection_sound);
-      const resultByAnswer: TResult = {
-        userId: selectedChild?._id,
-        taskId: firstMiniTestTask?.question?.[lessonIndex].taskId,
-        questionId: firstMiniTestTask?.question?.[lessonIndex]._id,
-        status:
+      if (testTask?.name === firstMiniTestTask?.name) {
+        playSound(soundTrack.menu_selection_sound);
+        const resultByAnswer: TResult = {
+          userId: selectedChild?._id,
+          taskId: firstMiniTestTask?.question?.[lessonIndex].taskId,
+          questionId: firstMiniTestTask?.question?.[lessonIndex]._id,
+          status:
+            answerSelected ===
+            firstMiniTestTask?.question?.[lessonIndex].correctAnswer
+              ? 'completed'
+              : 'failed',
+          point: firstMiniTestTask?.question?.[lessonIndex].point,
+        };
+        if (
           answerSelected ===
           firstMiniTestTask?.question?.[lessonIndex].correctAnswer
-            ? 'completed'
-            : 'failed',
-        point: firstMiniTestTask?.question?.[lessonIndex].point,
-      };
-      if (
-        answerSelected ===
-        firstMiniTestTask?.question?.[lessonIndex].correctAnswer
-      ) {
-        playSound(soundTrack.bell_ding_sound);
+        ) {
+          playSound(soundTrack.bell_ding_sound);
+        } else {
+          playSound(soundTrack.oh_no_sound);
+        }
+        setLessonState({
+          result: [...(lessonState.result || []), resultByAnswer],
+        });
+        /**
+         * The lessonIndex >= (firstMiniTestTask?.question.length ?? 1) - 1 condition checks if the lessonIndex is greater than or equal to the index of the last question in the question array. If it is, the condition evaluates to true; otherwise, it evaluates to false.
+         * If the condition evaluates to true, the code inside the if statement block will be executed. In this case, it calls the submitModule function and passes resultByAnswer as an argument.
+         */
+        if (lessonIndex >= (firstMiniTestTask?.question.length ?? 1) - 1) {
+          submitModule(resultByAnswer);
+          // return;
+        }
+        setLessonIndex(
+          (lessonIndex + 1) % (firstMiniTestTask?.question.length ?? 1),
+        );
       } else {
-        playSound(soundTrack.oh_no_sound);
+        playSound(soundTrack.menu_selection_sound);
+
+        if (
+          answerSelected === testTask?.question?.[lessonIndex].correctAnswer
+        ) {
+          playSound(soundTrack.bell_ding_sound);
+        } else {
+          playSound(soundTrack.oh_no_sound);
+        }
+
+        /**
+         * The lessonIndex >= (firstMiniTestTask?.question.length ?? 1) - 1 condition checks if the lessonIndex is greater than or equal to the index of the last question in the question array. If it is, the condition evaluates to true; otherwise, it evaluates to false.
+         * If the condition evaluates to true, the code inside the if statement block will be executed. In this case, it calls the submitModule function and passes resultByAnswer as an argument.
+         */
+        if (lessonIndex >= (testTask?.question.length ?? 1) - 1) {
+          pushScreen(STACK_NAVIGATOR.HOME.ONBOARDING_SCREEN);
+          setActiveTaskIndex(v => v + 1);
+          setLessonIndex(0);
+          setTimeout(() => {
+            goBack();
+          }, 2000);
+          return;
+        }
+        setLessonIndex((lessonIndex + 1) % (testTask?.question.length ?? 1));
       }
-      setLessonState({
-        result: [...(lessonState.result || []), resultByAnswer],
-      });
-      if (lessonIndex >= (firstMiniTestTask?.question.length ?? 1) - 1) {
-        submitModule(resultByAnswer);
-      }
-      // lessonStore.setIsShow(true);
-      setLessonIndex(
-        (lessonIndex + 1) % (firstMiniTestTask?.question.length ?? 1),
-      );
     },
     [
+      firstMiniTestTask?.name,
       firstMiniTestTask?.question,
       lessonIndex,
       lessonState.result,
@@ -135,6 +188,8 @@ const LessonScreen = observer(() => {
       selectedChild?._id,
       setLessonState,
       submitModule,
+      testTask?.name,
+      testTask?.question,
     ],
   );
 
@@ -156,7 +211,7 @@ const LessonScreen = observer(() => {
   }, []);
 
   const buildLesson = () => {
-    switch (firstMiniTestTask?.question?.[lessonIndex]?.type as LessonTypeE) {
+    switch (testTask?.question?.[lessonIndex]?.type as LessonTypeE) {
       case LessonTypeE.ACHIEVEMENT:
         return (
           <AchievementLesson
@@ -170,10 +225,10 @@ const LessonScreen = observer(() => {
           <VowelsLesson
             moduleIndex={lessonIndex}
             nextModule={nextModule}
-            totalModule={firstMiniTestTask?.question.length ?? 0}
+            totalModule={testTask?.question.length ?? 0}
             lessonName={route.lessonName}
             moduleName={route.moduleName}
-            firstMiniTestTask={firstMiniTestTask}
+            firstMiniTestTask={testTask}
           />
         );
       case LessonTypeE.WRITE:

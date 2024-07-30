@@ -1,14 +1,19 @@
-import {View, Text, StyleSheet} from 'react-native';
+import {View, Text, StyleSheet, ImageBackground} from 'react-native';
 import React from 'react';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {FontFamily} from 'src/core/presentation/hooks/useFonts';
 import IconDiamond from 'assets/svg/IconDiamond';
 import IconStar from 'assets/svg/iconStar';
 import BookView from '../../components/BookView';
+import {assets, WIDTH_SCREEN} from 'src/core/presentation/utils';
+import {COLORS} from 'src/core/presentation/constants/colors';
+import {scale, verticalScale} from 'react-native-size-matters';
+import useGlobalStyle from 'src/core/presentation/hooks/useGlobalStyle';
 
 type Props = {
   lessonName?: string;
   module?: string;
+  part?: string;
   backgroundColor?: string;
   backgroundAnswerColor: string;
   buildQuestion: React.ReactNode;
@@ -22,6 +27,7 @@ type Props = {
 const LessonComponent = ({
   lessonName = '',
   module = '',
+  part = '',
   backgroundColor = '#66c270',
   backgroundAnswerColor = '#FFD75A',
   buildAnswer,
@@ -32,22 +38,44 @@ const LessonComponent = ({
   score = 0,
 }: Props) => {
   const insets = useSafeAreaInsets();
-
+  const globalStyle = useGlobalStyle();
   return (
     <View
       style={[
         styles.screen,
-        {paddingTop: insets.top, backgroundColor: backgroundColor},
+        {paddingTop: 0, backgroundColor: backgroundColor},
       ]}>
-      <View style={[styles.ph24, styles.fill]}>
-        <View style={[styles.rowBetween]}>
-          <View>
+      <ImageBackground
+        source={assets.background_vowels}
+        width={WIDTH_SCREEN}
+        imageStyle={{marginBottom: -30}}
+        resizeMode="cover"
+        style={[styles.ph24, styles.fill]}>
+        <View style={{height: insets.top}} />
+        <View style={[styles.rowBetween, {alignItems: 'flex-start'}]}>
+          <View
+            style={[
+              styles.rowBetween,
+              {alignItems: 'center', maxWidth: scale(200)},
+            ]}>
             <Text style={[styles.fonts_SVN_Cherish, styles.textTitle]}>
               {lessonName}
             </Text>
-            <Text style={[styles.fonts_SVN_Cherish, styles.textModule]}>
-              {module}
-            </Text>
+            <View
+              style={{
+                height: verticalScale(20),
+                width: scale(3),
+                backgroundColor: COLORS.GREEN_1C6349,
+                borderRadius: scale(10),
+                marginHorizontal: scale(8),
+              }}
+            />
+            <View>
+              <Text style={[globalStyle.txtButton, styles.textModule]}>
+                {module}
+              </Text>
+              <Text style={[globalStyle.txtNote, styles.textPart]}>{part}</Text>
+            </View>
           </View>
           <View style={styles.alightEnd}>
             <View style={[styles.boxPrice]}>
@@ -66,7 +94,7 @@ const LessonComponent = ({
         </View>
         <View style={[styles.boxQuestion, styles.pb32]}>{buildQuestion}</View>
         <View style={[styles.tabs]}>
-          {Array.from({length: totalModule}, (_, i) => {
+          {Array.from({length: totalModule > 30 ? 30 : totalModule}, (_, i) => {
             const bg =
               i < moduleIndex
                 ? 'white'
@@ -75,8 +103,13 @@ const LessonComponent = ({
                 : '#258F78';
             return <Dotline key={i} bg={bg} />;
           })}
+          {totalModule > 30 && (
+            <Text style={[styles.fonts_SVN_Cherish, {color: COLORS.WHITE}]}>
+              +{totalModule - 30}
+            </Text>
+          )}
         </View>
-      </View>
+      </ImageBackground>
       <View style={[styles.h450]}>
         <BookView
           style={[styles.bookView]}
@@ -159,15 +192,20 @@ const styles = StyleSheet.create({
     fontFamily: FontFamily.SVNCherishMoment,
   },
   textTitle: {
-    fontSize: 40,
-    color: 'white',
+    fontSize: 30,
+    color: COLORS.GREEN_1C6349,
   },
   alightEnd: {
     alignItems: 'flex-end',
   },
   textModule: {
-    fontSize: 20,
-    color: '#258F78',
+    fontSize: 10,
+    color: COLORS.BLUE_258F78,
+  },
+  textPart: {
+    fontSize: 10,
+    color: COLORS.BLUE_258F78,
+    fontWeight: '300',
   },
   boxPrice: {
     flexDirection: 'row',

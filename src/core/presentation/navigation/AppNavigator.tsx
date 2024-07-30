@@ -118,6 +118,16 @@ export const HomeStackScreens = (): React.ReactElement => {
         })}
       />
       <HomeStack.Screen
+        name={STACK_NAVIGATOR.HOME.ONBOARDING_SCREEN}
+        key={STACK_NAVIGATOR.HOME.ONBOARDING_SCREEN}
+        component={OnBoardingScreen}
+        listeners={({navigation: navBottom}) => ({
+          focus: () => {
+            hideBottomTab(navBottom);
+          },
+        })}
+      />
+      <HomeStack.Screen
         name={STACK_NAVIGATOR.HOME.SUBJECT_SCREEN}
         key={STACK_NAVIGATOR.HOME.SUBJECT_SCREEN}
         component={SubjectScreen}

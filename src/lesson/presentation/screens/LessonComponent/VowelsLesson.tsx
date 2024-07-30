@@ -31,6 +31,7 @@ const VowelsLesson = ({
     <LessonComponent
       lessonName={lessonName}
       module={moduleName}
+      part={firstMiniTestTask?.name}
       backgroundColor="#66c270"
       backgroundAnswerColor="#DDF598"
       price="Free"
