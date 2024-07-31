@@ -186,6 +186,8 @@ class AlphadexScreentimeModule(reactContext: ReactApplicationContext) : ReactCon
   fun unLockedApps(promise : Promise) {
     setIfServiceClosed("0")
     reactApplicationContext.stopService(Intent(reactApplicationContext, ForegroundService::class.java))
+    val editor: SharedPreferences.Editor =  saveAppData!!.edit()
+    editor.putBoolean("blocked", false)
     promise.resolve(true)
   }
   @ReactMethod
@@ -235,6 +237,7 @@ class AlphadexScreentimeModule(reactContext: ReactApplicationContext) : ReactCon
     val editor: SharedPreferences.Editor =  saveAppData!!.edit()
     editor.remove("app_data")
     editor.putString("app_data", "$packageData")
+    editor.putBoolean("blocked", true)
     editor.apply()
 
     startForegroundService()
@@ -332,6 +335,13 @@ class AlphadexScreentimeModule(reactContext: ReactApplicationContext) : ReactCon
             }
         }
     }
+  }
+
+  @ReactMethod
+  fun getStateBlocking(promise: Promise) {
+    val editor: SharedPreferences.Editor =  saveAppData!!.edit()
+    val blocked = saveAppData!!.getBoolean("blocked", false)
+    promise.resolve(blocked)
   }
 
   companion object {

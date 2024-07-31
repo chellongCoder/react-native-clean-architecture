@@ -85,7 +85,11 @@ export function selectedAppsData(childrenId: string): Promise<string> {
 }
 
 export function getStateBlocking(): Promise<boolean> {
-  return ScreenTimeSelectApps.getStateBlocking();
+  if (Platform.OS === 'android') {
+    return AlphadexScreentime.getStateBlocking();
+  } else {
+    return ScreenTimeSelectApps.getStateBlocking();
+  }
 }
 
 export function unBlockApps(): Promise<boolean> {

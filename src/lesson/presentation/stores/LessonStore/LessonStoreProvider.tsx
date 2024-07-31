@@ -205,15 +205,27 @@ const ItemPermission = observer(({lesson}: {lesson: LessonStore}) => {
     () => errors.isOverlay && errors.isPushNoti && errors.isUsageStats,
     [errors.isOverlay, errors.isPushNoti, errors.isUsageStats],
   );
+
   useEffect(() => {
     if (timeRef.current) {
       clearInterval(timeRef.current);
       timeRef.current = undefined;
     }
     timeRef.current = setInterval(async () => {
-      lesson.setIsOverlay(await checkOverlayPermission());
-      lesson.setIsUsageStats(await hasUsageStatsPermission());
-      lesson.setIsPushNoti(await checkAndRequestNotificationPermission());
+      const overlay = await checkOverlayPermission();
+      const usageState = await hasUsageStatsPermission();
+      const pushNoti = await checkAndRequestNotificationPermission();
+
+      if (overlay && usageState && pushNoti) {
+        lesson.setIsOverlay(overlay);
+        lesson.setIsUsageStats(usageState);
+        lesson.setIsPushNoti(pushNoti);
+        clearInterval(timeRef.current);
+        return;
+      }
+      lesson.setIsOverlay(overlay);
+      lesson.setIsUsageStats(usageState);
+      lesson.setIsPushNoti(pushNoti);
     }, 1000);
   }, []);
 
