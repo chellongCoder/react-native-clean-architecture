@@ -19,6 +19,7 @@ const SubjectScreen = observer((props: any) => {
       <ImageBackground
         style={styles.imageBg}
         source={assets.bee_bg}
+        imageStyle={styles.image} // Apply styles to the image
         resizeMode="cover">
         <SafeAreaView style={styles.container} edges={['top']}>
           <View style={styles.wrapContentContainer}>
@@ -43,9 +44,11 @@ const styles = StyleSheet.create({
   imageBg: {
     flex: 1,
   },
+  image: {
+    opacity: 0.3, // Set the opacity here
+  },
   container: {
     flex: 1,
-    backgroundColor: COLORS.WHITE_FFFBE3,
   },
   wrapContentContainer: {
     flex: 1,

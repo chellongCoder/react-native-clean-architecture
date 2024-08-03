@@ -48,7 +48,7 @@ const ListModule = observer(() => {
               <ModuleItem
                 progress={module.progressOfChildren}
                 totalQuestion={module.totalQuestion}
-                isFinished={module.progressOfChildren === module.totalQuestion}
+                isFinished={module.progressOfChildren > 0}
                 title={module.name}
                 subTitle={module.description}
                 id={module._id}

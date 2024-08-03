@@ -1,9 +1,6 @@
 import React, {View, Text, StyleSheet, Image} from 'react-native';
 import {RootStackScreenProps} from '../navigation/types';
 import useGlobalStyle from '../hooks/useGlobalStyle';
-import {useEffect} from 'react';
-import {navigateScreen} from '../navigation/actions/RootNavigationActions';
-import {STACK_NAVIGATOR} from '../navigation/ConstantNavigator';
 import {assets} from '../utils';
 
 const OnBoardingScreen = ({navigation}) => {
