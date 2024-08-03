@@ -1,22 +1,66 @@
 diff --git a/node_modules/react-native-snap-carousel/src/carousel/Carousel.js b/node_modules/react-native-snap-carousel/src/carousel/Carousel.js
-index dae71a3..863578b 100644
+index dae71a3..84459fc 100644
 --- a/node_modules/react-native-snap-carousel/src/carousel/Carousel.js
 +++ b/node_modules/react-native-snap-carousel/src/carousel/Carousel.js
-@@ -1,5 +1,5 @@
+@@ -1,16 +1,19 @@
  import React, { Component } from 'react';
 -import { Animated, Easing, FlatList, I18nManager, Platform, ScrollView, View, ViewPropTypes } from 'react-native';
 +import { Animated, Easing, FlatList, I18nManager, Platform, ScrollView, View } from 'react-native';
  import PropTypes from 'prop-types';
  import shallowCompare from 'react-addons-shallow-compare';
  import {
-@@ -11,6 +11,7 @@ import {
+     defaultScrollInterpolator,
+     stackScrollInterpolator,
++    abeeciScrollInterpolator,
+     tinderScrollInterpolator,
+     defaultAnimatedStyles,
+     shiftAnimatedStyles,
      stackAnimatedStyles,
++    abeeciAnimatedStyles,
      tinderAnimatedStyles
  } from '../utils/animations';
 +import { ViewPropTypes } from 'deprecated-react-native-prop-types'
  
  const IS_IOS = Platform.OS === 'ios';
  
+@@ -323,7 +326,7 @@ export default class Carousel extends Component {
+ 
+     _needsScrollView () {
+         const { useScrollView } = this.props;
+-        return useScrollView || !AnimatedFlatList || this._shouldUseStackLayout() || this._shouldUseTinderLayout();
++        return useScrollView || !AnimatedFlatList || this._shouldUseStackLayout() || this._shouldUseAbeeciLayout() || this._shouldUseTinderLayout();
+     }
+ 
+     _needsRTLAdaptations () {
+@@ -366,6 +369,10 @@ export default class Carousel extends Component {
+         return this.props.layout === 'stack';
+     }
+ 
++    _shouldUseAbeeciLayout () {
++        return this.props.layout === 'abeeci';
++    }
++
+     _shouldUseTinderLayout () {
+         return this.props.layout === 'tinder';
+     }
+@@ -602,6 +609,8 @@ export default class Carousel extends Component {
+                     interpolator = scrollInterpolator(_index, props);
+                 } else if (this._shouldUseStackLayout()) {
+                     interpolator = stackScrollInterpolator(_index, props);
++                } else if (this._shouldUseAbeeciLayout()) {
++                    interpolator = abeeciScrollInterpolator(_index, props);
+                 } else if (this._shouldUseTinderLayout()) {
+                     interpolator = tinderScrollInterpolator(_index, props);
+                 }
+@@ -1187,6 +1196,8 @@ export default class Carousel extends Component {
+             return tinderAnimatedStyles(index, animatedValue, this.props, layoutCardOffset);
+         } else if (this._shouldUseStackLayout()) {
+             return stackAnimatedStyles(index, animatedValue, this.props, layoutCardOffset);
++        } else if (this._shouldUseAbeeciLayout()) {
++            return abeeciAnimatedStyles(index, animatedValue, this.props, layoutCardOffset);
+         } else if (this._shouldUseShiftLayout()) {
+             return shiftAnimatedStyles(index, animatedValue, this.props);
+         } else {
 diff --git a/node_modules/react-native-snap-carousel/src/pagination/Pagination.js b/node_modules/react-native-snap-carousel/src/pagination/Pagination.js
 index 5c021cf..0aafa88 100644
 --- a/node_modules/react-native-snap-carousel/src/pagination/Pagination.js
@@ -62,3 +106,100 @@ index 8bc774a..adaa688 100644
  
  export default class ParallaxImage extends Component {
  
+diff --git a/node_modules/react-native-snap-carousel/src/utils/animations.js b/node_modules/react-native-snap-carousel/src/utils/animations.js
+index bdb58b6..98a782f 100644
+--- a/node_modules/react-native-snap-carousel/src/utils/animations.js
++++ b/node_modules/react-native-snap-carousel/src/utils/animations.js
+@@ -199,6 +199,92 @@ export function stackAnimatedStyles (index, animatedValue, carouselProps, cardOf
+     };
+ }
+ 
++export function abeeciScrollInterpolator (index, carouselProps) {
++    const range = [3, 2, 1, 0, -1, -2, -3];
++    const inputRange = getInputRangeFromIndexes(range, index, carouselProps);
++    const outputRange = range;
++
++    return { inputRange, outputRange };
++}
++
++export function abeeciAnimatedStyles (index, animatedValue, carouselProps, cardOffset) {
++    const sizeRef = carouselProps.vertical ? carouselProps.itemHeight : carouselProps.itemWidth;
++    const translateProp = carouselProps.vertical ? 'translateY' : 'translateX';
++
++    const card1Scale = 0.9;
++    const card2Scale = 0.8;
++    const card3Scale = 0.7;
++
++    cardOffset = !cardOffset && cardOffset !== 0 ? 18 : cardOffset;
++
++    const getTranslateFromScale = (cardIndex, scale) => {
++        const centerFactor = 1 / scale * cardIndex;
++        const centeredPosition = -Math.round(sizeRef * centerFactor);
++        const edgeAlignment = Math.round((sizeRef - (sizeRef * scale)) / 2);
++        const offset = Math.round(cardOffset * Math.abs(cardIndex) / scale);
++
++        return centeredPosition - edgeAlignment - offset;
++    };
++
++    const getTranslateYScale = (scale) => (1 - scale) * 0.5 * carouselProps.itemHeight;
++
++    return {
++        borderRadius: 30,
++        zIndex: animatedValue.interpolate({
++            inputRange: [-3, -2, -1, 0, 1, 2, 3],
++            outputRange: [1, 2, 3, 4, 3, 2, 1],
++            extrapolate: 'clamp'
++        }),
++        opacity: animatedValue.interpolate({
++            inputRange: [-3, -2, -1, 0, 1, 2, 3],
++            outputRange: [0, 1, 1, 1, 1, 1, 0],
++            extrapolate: 'clamp'
++        }),
++        backgroundColor: animatedValue.interpolate({
++            inputRange: [-3, -2, -1, 0, 1, 2, 3],
++            outputRange: ['#7dcf86', '#7dcf86', '#3ab89c', '#258f78', '#3ab89c', '#7dcf86', '#7dcf86'],
++            extrapolate: 'clamp'
++        }),
++        transform: [{
++            scale: animatedValue.interpolate({
++                inputRange: [-3, -2, -1, 0, 1, 2, 3],
++                outputRange: [card3Scale, card2Scale, card1Scale, 1, card1Scale, card2Scale, card3Scale],
++                extrapolate: 'clamp'
++            })
++        },
++        carouselProps.itemHeight ? {
++            translateY: animatedValue.interpolate({
++                inputRange: [-3, -2, -1, 0, 1, 2, 3],
++                outputRange: [
++                    getTranslateYScale(card3Scale),
++                    getTranslateYScale(card2Scale),
++                    getTranslateYScale(card1Scale),
++                    0,
++                    getTranslateYScale(card1Scale),
++                    getTranslateYScale(card2Scale),
++                    getTranslateYScale(card3Scale)
++                ],
++                extrapolate: 'clamp'
++            })
++        } : {},
++        {
++            [translateProp]: animatedValue.interpolate({
++                inputRange: [-3, -2, -1, 0, 1, 2, 3],
++                outputRange: [
++                    getTranslateFromScale(-3, card3Scale),
++                    getTranslateFromScale(-2, card2Scale),
++                    getTranslateFromScale(-1, card1Scale),
++                    0,
++                    -getTranslateFromScale(-1, card1Scale),
++                    -getTranslateFromScale(-2, card2Scale),
++                    -getTranslateFromScale(-3, card3Scale),
++                ],
++                extrapolate: 'clamp'
++            })
++        }]
++    };
++}
++
+ // Tinder animation
+ // Imitate the popular Tinder layout
+ // WARNING: The effect had to be visually inverted on Android because this OS doesn't honor the `zIndex`property

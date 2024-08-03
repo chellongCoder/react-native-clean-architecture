@@ -12,6 +12,7 @@ import useLoginWithCredentials from 'src/authentication/presentation/hooks/useLo
 import ICLogout from 'src/core/components/icons/ICLogout';
 import ICStarMedium from 'src/core/components/icons/ICStarMedium';
 import ICStarSmall from 'src/core/components/icons/ICStarSmall';
+import CustomSwitchNew from './CustomSwitchNew';
 
 type TProps = {
   title?: string;
@@ -48,7 +49,7 @@ const AccountStatus = (props: TProps) => {
         ) : (
           <View style={{flex: 1}} />
         )}
-        <CustomSwitch value={isEnabled} onValueChange={setIsEnabled} />
+        <CustomSwitchNew value={isEnabled} onValueChange={setIsEnabled} />
       </View>
       <View style={styles.iconContainer}>
         {subject ? (

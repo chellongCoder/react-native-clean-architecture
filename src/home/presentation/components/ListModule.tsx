@@ -7,6 +7,7 @@ import ModuleItem from 'src/lesson/presentation/components/LessonModule/ModuleIt
 import {useListModule} from 'src/hooks/useListModule';
 import {observer} from 'mobx-react';
 import useHomeStore from '../stores/useHomeStore';
+import BookView from 'src/lesson/presentation/components/BookView';
 
 const screenWidth = Dimensions.get('screen').width;
 
@@ -25,8 +26,7 @@ const ListModule = observer(() => {
   );
 
   return (
-    <View style={styles.container}>
-      <View style={styles.square} />
+    <BookView style={styles.container} contentStyle={styles.contentBg}>
       <View style={styles.wrapHeaderContainer}>
         <Text style={styles.headerTitle}>
           {listSubject?.filter(item => item?._id === subjectId)[0]?.name}
@@ -58,7 +58,7 @@ const ListModule = observer(() => {
           );
         })}
       </ScrollView>
-    </View>
+    </BookView>
   );
 });
 
@@ -70,12 +70,17 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     marginTop: scale(32),
-    backgroundColor: COLORS.GREEN_DDF598,
+    // backgroundColor: COLORS.GREEN_DDF598,
     marginHorizontal: scale(-16),
     paddingHorizontal: scale(16),
     paddingTop: scale(24),
-    borderTopRightRadius: scale(32),
-    borderTopLeftRadius: scale(32),
+    // borderTopRightRadius: scale(32),
+    // borderTopLeftRadius: scale(32),
+  },
+  contentBg: {
+    flex: 1,
+    marginTop: 0,
+    marginBottom: 0,
   },
   square: {
     height: scale(24),

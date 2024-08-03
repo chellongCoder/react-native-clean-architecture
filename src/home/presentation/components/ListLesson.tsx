@@ -25,7 +25,7 @@ const ListLesson = () => {
 
   const renderItem = ({item}: {item: FieldData}) => {
     return (
-      <TouchableOpacity style={styles.wrapLessonContainer}>
+      <TouchableOpacity style={styles.wrapLessonContainer} activeOpacity={0.9}>
         <Text style={styles.lessonTitle}>{item.name}</Text>
       </TouchableOpacity>
     );
@@ -38,7 +38,8 @@ const ListLesson = () => {
         renderItem={renderItem}
         sliderWidth={screenWidth}
         itemWidth={screenWidth * 0.5}
-        layout={'default'}
+        itemHeight={scale(232)}
+        layout={'abeeci'}
         loop={true}
         centerContent={true}
         removeClippedSubviews={false}
@@ -68,7 +69,7 @@ const styles = StyleSheet.create({
   wrapLessonContainer: {
     height: scale(232),
     borderRadius: scale(30),
-    backgroundColor: COLORS.BLUE_258F78,
+    // backgroundColor: COLORS.BLUE_258F78,
     alignItems: 'center',
     alignContent: 'center',
   },

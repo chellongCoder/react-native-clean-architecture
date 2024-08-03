@@ -19,4 +19,5 @@ export const assets = {
   book: require('assets/images/book.png'),
   star: require('assets/images/star.png'),
   untitled_artwork: require('assets/images/untitled_artwork.png'),
+  bee_bg: require('assets/images/bee_bg.png'),
 };
