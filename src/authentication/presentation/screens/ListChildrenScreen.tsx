@@ -25,12 +25,15 @@ import {
   data,
   children,
 } from 'src/authentication/application/types/GetUserProfileResponse';
+import {useOfflineMode} from 'src/core/presentation/hooks/offline/useOfflineMode';
+import {OfflineEnum} from 'src/core/presentation/hooks/offline/OfflineEnum';
 
 const screenWidth = Dimensions.get('screen').width;
 
 const ListChildrenScreen = () => {
   const {removeCurrentCredentials, getUserProfile, setSelectedChild} =
     useAuthenticationStore();
+  const {storeData, getData, isConnected} = useOfflineMode();
   useLoadingGlobal();
 
   const [userProfile, setUserProfile] = useState<data>();
@@ -59,13 +62,25 @@ const ListChildrenScreen = () => {
   const handleGetUserProfile = useCallback(async () => {
     const res = await getUserProfile();
     if (res.data) {
+      storeData(OfflineEnum.USER_PROFILE, res.data);
       setUserProfile(res.data);
     }
-  }, [getUserProfile]);
+  }, [getUserProfile, storeData]);
 
   useEffect(() => {
     handleGetUserProfile();
   }, [handleGetUserProfile]);
+
+  useEffect(() => {
+    const getDataFromStore = async () => {
+      if (!isConnected) {
+        const res = await getData(OfflineEnum.USER_PROFILE);
+        setUserProfile(res);
+      }
+    };
+
+    getDataFromStore();
+  }, [getData, isConnected]);
 
   return (
     <SafeAreaView style={styles.container} edges={['top']}>

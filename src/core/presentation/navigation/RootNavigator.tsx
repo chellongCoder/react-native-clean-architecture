@@ -7,16 +7,23 @@ import AppNavigator from './AppNavigator';
 import {STACK_NAVIGATOR} from './ConstantNavigator';
 import {useFonts} from '../hooks/useFonts';
 import useLoginWithCredentials from 'src/authentication/presentation/hooks/useLoginWithCredentials';
+import {useOfflineMode} from '../hooks/offline/useOfflineMode';
+import {replaceScreen} from './actions/RootNavigationActions';
 
 export const AppStack = createStackNavigator();
 
 const RootNavigator: FC = () => {
   const {getUsernamePasswordInKeychain} = useLoginWithCredentials();
+  const {isConnected} = useOfflineMode();
   useFonts();
 
   useEffect(() => {
-    getUsernamePasswordInKeychain();
-  }, [getUsernamePasswordInKeychain]);
+    if (isConnected) {
+      getUsernamePasswordInKeychain();
+    } else {
+      replaceScreen(STACK_NAVIGATOR.AUTH.LIST_CHILDREN_SCREEN);
+    }
+  }, [getUsernamePasswordInKeychain, isConnected]);
 
   return (
     <AppStack.Navigator
