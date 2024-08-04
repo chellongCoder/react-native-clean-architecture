@@ -16,8 +16,10 @@ import Animated from 'react-native-reanimated';
 type Props = {
   appName: string;
   error?: string;
+  childrenId: string;
+  onBlocked?: () => void;
 };
-const SelectApp = ({appName, error}: Props) => {
+const SelectApp = ({appName, error, childrenId, onBlocked}: Props) => {
   const lesson = lessonModuleContainer.getProvided(LessonStore);
   const globalStyle = useGlobalStyle();
   const {shake, rStyle} = useAnimatedShake();
@@ -58,8 +60,11 @@ const SelectApp = ({appName, error}: Props) => {
               const blockedApps: FamilyActivitySelection = JSON.parse(
                 e.nativeEvent.blockedApps,
               );
+
               lesson.changeBlockedAnonymousListAppSystem(blockedApps);
+              onBlocked?.();
             }}
+            childrenId={childrenId}
             style={[
               styles.container,
               error ? {borderColor: COLORS.ERROR, borderWidth: 1} : {},

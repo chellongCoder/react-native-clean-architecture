@@ -46,6 +46,7 @@ type ViewModuleProps = {
       blockedApps: string;
     }>
   ) => void;
+  childrenId: string;
 };
 
 const ComponentName = 'ViewModuleView';
@@ -92,12 +93,16 @@ export function getStateBlocking(): Promise<boolean> {
   }
 }
 
-export function unBlockApps(): Promise<boolean> {
+export function unBlockApps(childrenId: string): Promise<boolean> {
   if (Platform.OS === 'android') {
     return AlphadexScreentime.unLockedApps();
   } else {
-    return ScreenTimeSelectApps.unBlockApps();
+    return ScreenTimeSelectApps.unBlockApps(childrenId);
   }
+}
+
+export function blockApps(childrenId: string): Promise<boolean> {
+  return ScreenTimeSelectApps.blockApps(childrenId);
 }
 
 export function sentEvent(): Promise<boolean> {

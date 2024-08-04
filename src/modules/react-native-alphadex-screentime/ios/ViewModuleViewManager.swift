@@ -35,16 +35,23 @@ class ViewModuleView : UIView {
   var view: UIView?
 
   func saveSelection(selection: FamilyActivitySelection) {
-    let defaults = UserDefaults.init(suiteName: childrenId)
+    let childDefaults = UserDefaults.init(suiteName: childrenId)
+    let userDefaults = UserDefaults.init(suiteName: "group.com.hisoft.tbd.app")!
 
     do {
         let jsonData = try encoder.encode(selection)
-        defaults?.set(
+        childDefaults?.set(
             jsonData,
             forKey: userDefaultsKey
         )
-        let json = String(data: jsonData, encoding: String.Encoding.utf8)
+        userDefaults.set(
+            childrenId,
+            forKey: "childrenId"
+        )
+        userDefaults.synchronize()
 
+        let json = String(data: jsonData, encoding: String.Encoding.utf8)
+      
       onChangeBlock?(["isBlocked": true, "blockedApps": json ?? "[]"])
     } catch {
       onChangeBlock?(["isBlocked": false])
@@ -67,7 +74,7 @@ class ViewModuleView : UIView {
 
     override init(frame: CGRect) {
       super.init(frame: frame)
-      let model = ScreenTimeSelectAppsModel()
+      let model = ScreenTimeSelectAppsModel.shared
 
       model.activitySelection = savedSelection() ?? FamilyActivitySelection(includeEntireCategory: true)
 
@@ -84,16 +91,14 @@ class ViewModuleView : UIView {
     }
 
   private func setupView(model: ScreenTimeSelectAppsModel) {
-    let view = ScreenTimeSelectAppsContentView(model: model, childrenId: childrenId)
-      let vc = UIHostingController(rootView: view)
-      vc.view.frame = bounds
-      vc.view.backgroundColor = UIColor(white: 1, alpha: 0.0)
-      self.addSubview(vc.view)
-      self.view = vc.view
+    let view = ScreenTimeSelectAppsContentView(model: model, childrenId: self.childrenId)
+    let vc = UIHostingController(rootView: view)
+    vc.view.frame = bounds
+    vc.view.backgroundColor = UIColor(white: 1, alpha: 0.0)
+    self.addSubview(vc.view)
+    self.view = vc.view
 
-
-
-    }
+  }
 
     override func layoutSubviews() {
       super.layoutSubviews()
@@ -128,7 +133,7 @@ struct ScreenTimeSelectAppsContentView: View {
               if !newValue {
                   // Picker has been dismissed
                 Task {
-                  await model.startAppRestrictions(childrenId: childrenId)
+                  await model.startAppRestrictions()
                 }
                 showAlert = false
               }

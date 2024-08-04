@@ -105,25 +105,28 @@ class ScreenTimeSelectAppsModel: RCTEventEmitter, ObservableObject {
   func getStateBlocking(resolve:RCTPromiseResolveBlock,reject:RCTPromiseRejectBlock) -> Bool {
     let userDefaults = UserDefaults.init(suiteName: "group.com.hisoft.tbd.app")!
 
-    let blocked = userDefaults.data(forKey:"blocked")
-    if(blocked != nil) {
-      let decodedData = try? decoder.decode(
-        Bool.self,
-        from: blocked!
-      )
-      if(decodedData != nil) {
-        resolve(decodedData)
-        return decodedData!
-      }
-      reject("ERROR_DECODE", "Cannot decode data", decodedData as? Error)
-      return false
-    } else {
-      reject("ERROR_UserDefaults", "Cannot find data", blocked as? Error)
-      return false
-    }
+    let blocked = userDefaults.bool(forKey:"blocked")
+
+    resolve(blocked)
+//    if(blocked != nil) {
+//      let decodedData = try? decoder.decode(
+//        Bool.self,
+//        from: blocked!
+//      )
+//      if(decodedData != nil) {
+//        resolve(decodedData)
+//        return decodedData!
+//      }
+//      reject("ERROR_DECODE", "Cannot decode data", decodedData as? Error)
+//      return false
+//    } else {
+//      reject("ERROR_UserDefaults", "Cannot find data", blocked as? Error)
+//      return false
+//    }
+    return blocked
   }
 
-  @objc(blockApps:withResolve:withRejecter:)
+  @objc(blockApps:withResolver:withRejecter:)
   func blockApps(childrenId: String, resolve:RCTPromiseResolveBlock,reject:RCTPromiseRejectBlock) -> Void {
     let store = ManagedSettingsStore()
     let userDefaults = UserDefaults.init(suiteName: "group.com.hisoft.tbd.app")!
@@ -168,10 +171,15 @@ class ScreenTimeSelectAppsModel: RCTEventEmitter, ObservableObject {
     EventEmitter.sharedInstance.dispatch(name: "Test", body: "Hello")
   }
 
-  func startAppRestrictions(childrenId: String?) async -> Void {
+  func startAppRestrictions() async -> Void {
     let store = ManagedSettingsStore()
+
     store.application.denyAppRemoval = true
+
+
     let userDefaults = UserDefaults.init(suiteName: "group.com.hisoft.tbd.app")!
+    let childrenId = userDefaults.string(forKey: "childrenId")
+
     let userDefaultsByChild = UserDefaults.init(suiteName: childrenId)!
 
     let data = userDefaultsByChild.data(forKey: AlphadexScreentime.userDefaultsKey)
@@ -212,15 +220,15 @@ class ScreenTimeSelectAppsModel: RCTEventEmitter, ObservableObject {
     store.shield.applications = Set()
     userDefaults.set(false, forKey:"blocked")
     // Clear the data for the key "ScreenTimeSelection"
-    userDefaultsByChild.removeObject(forKey: AlphadexScreentime.userDefaultsKey)
-    do {
-      let deselectedFamilyActivitySelection = FamilyActivitySelection(includeEntireCategory: true) // adjust this line as needed
-
-        // Save the decoded data back to the UserDefaults
-        userDefaults.set(try encoder.encode(deselectedFamilyActivitySelection), forKey: AlphadexScreentime.userDefaultsKey)
-    } catch {
-        print("Failed to decode or encode data: \(error)")
-    }
+//    userDefaultsByChild.removeObject(forKey: AlphadexScreentime.userDefaultsKey)
+//    do {
+//      let deselectedFamilyActivitySelection = FamilyActivitySelection(includeEntireCategory: true) // adjust this line as needed
+//
+//        // Save the decoded data back to the UserDefaults
+//      userDefaultsByChild.set(try encoder.encode(deselectedFamilyActivitySelection), forKey: AlphadexScreentime.userDefaultsKey)
+//    } catch {
+//        print("Failed to decode or encode data: \(error)")
+//    }
 
 //    sendEvent("onChangeBlocked", [
 //      "isBlocked": false
@@ -229,7 +237,7 @@ class ScreenTimeSelectAppsModel: RCTEventEmitter, ObservableObject {
       do {
         if #available(iOS 16.2, *) {
           if let activity = Activity<screentimewidgetAttributes>.activities.first {
-            await activity.end(ActivityContent(state: screentimewidgetAttributes.ContentState(emoji: "closing"), staleDate: nil), dismissalPolicy: .immediate)
+            await activity.end(ActivityContent(state: screentimewidgetAttributes.ContentState(emoji: "12/20"), staleDate: nil), dismissalPolicy: .immediate)
           }
         }
       } catch {

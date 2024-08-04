@@ -10,11 +10,6 @@ export const useGetUserSetting = (
   childrenId: string,
   lesson: LessonStore,
 ) => {
-  // const hasLocalData = useMemo(() => {
-  //   if(lesson.blockedListAppsSystem.length > 0) {
-  //     return true;
-  //   } else if(lesson.blockedAnonymousListAppsSystem?.applicationTokens?.length > 0 || lesson.)
-  // }, [])
   useEffect(() => {
     lesson.handleGetSettingUser({deviceToken: token, childrenId});
     // eslint-disable-next-line react-hooks/exhaustive-deps

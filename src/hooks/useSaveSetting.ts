@@ -1,33 +1,40 @@
 import {useEffect, useState} from 'react';
 import {
+  blockApps,
   FamilyActivitySelection,
   selectedAppsData,
 } from 'react-native-alphadex-screentime';
 import {StatusCode} from 'src/authentication/presentation/types/StatusCode';
 import {useAsyncEffect} from 'src/core/presentation/hooks';
+import {useBlockState} from './useBlockState';
 
 export const useSaveSetting = (hasDataServer: boolean, childrenId: string) => {
   const [isLoading, setisLoading] = useState();
   const [errorMessage, setErrorMessage] = useState('');
+  const {blocked, setBlocked} = useBlockState();
 
   useAsyncEffect(async () => {
-    if (hasDataServer) {
+    if (blocked === false) {
       try {
         const apps = await selectedAppsData(childrenId);
-        const parsedApp: FamilyActivitySelection = JSON.parse(apps);
         console.log(
           '🛠 LOG: 🚀 --> ---------------------------------------------🛠 LOG: 🚀 -->',
         );
         console.log(
           '🛠 LOG: 🚀 --> ~ useAsyncEffect ~ apps:',
           apps,
-          apps.length,
           JSON.parse(apps),
         );
         console.log(
           '🛠 LOG: 🚀 --> ---------------------------------------------🛠 LOG: 🚀 -->',
         );
+        const parsedApp: FamilyActivitySelection = JSON.parse(apps);
         if (
+          parsedApp.applicationTokens.length > 0 ||
+          parsedApp.categoryTokens.length > 0
+        ) {
+          setErrorMessage('');
+        } else if (
           apps.length === 0 ||
           parsedApp.applicationTokens.length === 0 ||
           parsedApp.categoryTokens.length === 0
@@ -35,15 +42,6 @@ export const useSaveSetting = (hasDataServer: boolean, childrenId: string) => {
           setErrorMessage(
             'You need to reselect apps to synchronize with system.',
           );
-        } else if (
-          parsedApp.applicationTokens.length > 0 ||
-          parsedApp.categoryTokens.length > 0
-        ) {
-          setErrorMessage(
-            'You need to reselect apps after changing children profile',
-          );
-        } else {
-          setErrorMessage('');
         }
       } catch (error: any) {
         console.log(
@@ -60,10 +58,13 @@ export const useSaveSetting = (hasDataServer: boolean, childrenId: string) => {
         }
       }
     }
-  }, [hasDataServer]);
+  }, [blocked, childrenId]);
 
   return {
     isLoading,
     errorMessage,
+    setErrorMessage,
+    blocked,
+    setBlocked,
   };
 };

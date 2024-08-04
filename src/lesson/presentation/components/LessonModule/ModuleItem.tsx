@@ -39,8 +39,12 @@ const ModuleItem = (props: Props) => {
   }, []);
 
   const onRevision = useCallback(() => {
-    navigateScreen(STACK_NAVIGATOR.HOME.LESSON);
-  }, []);
+    navigateScreen(STACK_NAVIGATOR.HOME.LESSON, {
+      lessonId: props.id,
+      lessonName: props.lessonName,
+      moduleName: props.title,
+    });
+  }, [props.id, props.lessonName, props.title]);
 
   const onStudy = useCallback(() => {
     navigateScreen(STACK_NAVIGATOR.HOME.LESSON, {
@@ -121,16 +125,17 @@ const ModuleItem = (props: Props) => {
         </View>
       </View>
       <View style={styles.buttonContainer}>
+        <TouchableOpacity onPress={async () => {}}>
+          <Text style={[styles.title, globalStyle.txtLabel]}>
+            {props.progress}/{props.totalQuestion}
+          </Text>
+        </TouchableOpacity>
+        <View style={{height: verticalScale(10)}} />
+
         <Button
           onPress={onRevision}
           color={COLORS.YELLOW_F2B559}
           title="Revision"
-        />
-        <View style={{height: verticalScale(10)}} />
-        <Button
-          onPress={onDoHomework}
-          color={COLORS.YELLOW_F2B559}
-          title="Done"
         />
       </View>
     </View>

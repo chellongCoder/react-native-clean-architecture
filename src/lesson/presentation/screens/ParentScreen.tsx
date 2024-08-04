@@ -44,7 +44,7 @@ import {useAsyncEffect} from 'src/core/presentation/hooks';
 import SelectApp from '../components/LessonModule/SelectApp';
 import {isAndroid} from 'src/core/presentation/utils';
 import ListBlockedApps from '../components/LessonModule/ListBlockedApps';
-import {unBlockApps} from 'react-native-alphadex-screentime';
+import {blockApps, unBlockApps} from 'react-native-alphadex-screentime';
 import {AppCategoryE} from 'src/core/domain/enums/AppCategoryE';
 import ChildrenDescription from '../components/ChildrenDescription';
 import {useGetUserSetting} from 'src/hooks/useGetUserSetting';
@@ -107,10 +107,14 @@ const ParentScreen = observer(() => {
     ],
   );
 
-  const {errorMessage} = useSaveSetting(
+  const {errorMessage, setErrorMessage, blocked, setBlocked} = useSaveSetting(
     hasDataServer,
     selectedChild?._id ?? '',
   );
+  const hasSaving = useMemo(() => {
+    return blocked && errorMessage === '';
+  }, [blocked, errorMessage]);
+
   const [tabParent, setTabparent] = useState(TabParentE.APP_BLOCK);
 
   const tabsBlock = useMemo(() => {
@@ -188,8 +192,8 @@ const ParentScreen = observer(() => {
     selectedChild?._id || '',
   );
   const [isShowLimitOption, setIsShowLimitOption] = useState(false);
-  const points = useMemo(() => [100, 70, 50], []);
-  const [point, setPoint] = useState(100);
+  const points = useMemo(() => [100, 75, 50], []);
+  const [point, setPoint] = useState(75);
 
   const onAddChild = () => {
     resetNavigator(STACK_NAVIGATOR.AUTH_NAVIGATOR, {
@@ -208,6 +212,9 @@ const ParentScreen = observer(() => {
     if (selectedChildrenProfile) {
       setSelectedChild(selectedChildrenProfile);
       resetNavigator(STACK_NAVIGATOR.BOTTOM_TAB_SCREENS);
+      setTimeout(() => {
+        unBlockApps(selectedChildrenProfile._id);
+      }, 1000);
     }
   };
 
@@ -261,6 +268,10 @@ const ParentScreen = observer(() => {
       },
     });
   }, [deviceToken, lesson, point, selectedChild?._id, tabsBlock]);
+
+  const blockAppsSystem = useCallback(async () => {
+    await blockApps(selectedChild?._id ?? '');
+  }, [selectedChild?._id]);
 
   const tabsBody = useMemo(() => {
     switch (tabParent) {
@@ -337,12 +348,17 @@ const ParentScreen = observer(() => {
                   App to lock
                 </Text>
 
-                <>
+                {selectedChild && (
                   <SelectApp
                     appName={tabBody.trim() !== '' ? tabBody : 'select apps'}
                     error={errorMessage}
+                    childrenId={selectedChild?._id}
+                    onBlocked={() => {
+                      setErrorMessage('');
+                      setBlocked(true);
+                    }}
                   />
-                </>
+                )}
               </View>
               <View style={[]}>
                 <Text style={[globalStyle.txtButton, styles.textColor]}>
@@ -395,11 +411,18 @@ const ParentScreen = observer(() => {
               style={[styles.btnCommon, styles.btnRed]}
               onPress={async () => {
                 try {
-                  await unBlockApps();
-                  Toast.show({
-                    type: 'success',
-                    text1: 'Your apps have been unlocked',
-                  });
+                  if (selectedChild) {
+                    await unBlockApps(selectedChild?._id);
+                    Toast.show({
+                      type: 'success',
+                      text1: 'Your apps have been unlocked',
+                    });
+                  } else {
+                    Toast.show({
+                      type: 'error',
+                      text1: 'Please select a child',
+                    });
+                  }
                 } catch (error) {
                   console.log('🛠 LOG: 🚀 --> ~ onPress={ ~ error:', error);
                 } finally {
@@ -409,10 +432,11 @@ const ParentScreen = observer(() => {
               }}
             />
             <PrimaryButton
-              onPress={onConfigUserSetting}
-              text="Save"
+              onPress={hasSaving ? onConfigUserSetting : blockAppsSystem}
+              text={hasSaving ? 'Save' : 'Lock apps'}
               style={[styles.btnCommon]}
               isLoading={lesson.isLoadingUserSetting}
+              disable={!!errorMessage}
             />
           </View>
         </View>
@@ -463,13 +487,18 @@ const ParentScreen = observer(() => {
     globalStyle.txtLabel,
     globalStyle.txtNote,
     globalStyle.txtButton,
+    selectedChild,
     tabBody,
     errorMessage,
     points,
     point,
     isShowLimitOption,
+    hasSaving,
     onConfigUserSetting,
+    blockAppsSystem,
     lesson,
+    setErrorMessage,
+    setBlocked,
     tabSetting,
   ]);
 

@@ -43,10 +43,10 @@ RCT_EXTERN_METHOD(selectedAppsData:(NSString)childrenId
 RCT_EXTERN_METHOD(getStateBlocking:(RCTPromiseResolveBlock)resolve
                   withRejecter:(RCTPromiseRejectBlock)reject)
 
-RCT_EXTERN_METHOD(blockApps:(NSString)childrenId (RCTPromiseResolveBlock)resolve
+RCT_EXTERN_METHOD(blockApps:(NSString)childrenId withResolver:(RCTPromiseResolveBlock)resolve
                  withRejecter:(RCTPromiseRejectBlock)reject)
 
-RCT_EXTERN_METHOD(unBlockApps:(NSString)childrenId (RCTPromiseResolveBlock)resolve
+RCT_EXTERN_METHOD(unBlockApps:(NSString)childrenId withResolver:(RCTPromiseResolveBlock)resolve
                  withRejecter:(RCTPromiseRejectBlock)reject)
 
 + (BOOL)requiresMainQueueSetup
@@ -60,5 +60,6 @@ RCT_EXTERN_METHOD(unBlockApps:(NSString)childrenId (RCTPromiseResolveBlock)resol
 
 RCT_EXPORT_VIEW_PROPERTY(color, NSString)
 RCT_EXPORT_VIEW_PROPERTY(onChangeBlock, RCTDirectEventBlock)
+RCT_EXPORT_VIEW_PROPERTY(childrenId, NSString)
 
 @end
