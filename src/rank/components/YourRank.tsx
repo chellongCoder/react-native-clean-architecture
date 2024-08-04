@@ -1,17 +1,22 @@
 import React from 'react';
-import {View, Text, StyleSheet} from 'react-native';
+import {View, Text, StyleSheet, Image} from 'react-native';
 import {scale} from 'react-native-size-matters';
-import ICStarRank from 'src/core/components/icons/ICStarRank';
+// import ICStarRank from 'src/core/components/icons/ICStarRank';
 import {COLORS} from 'src/core/presentation/constants/colors';
 import {CustomTextStyle} from 'src/core/presentation/constants/typography';
+import {assets} from 'src/core/presentation/utils';
+import useRanking from 'src/lesson/presentation/hooks/useRanking';
 
 const YourRank = () => {
+  const {rankingOfChild} = useRanking();
+
   return (
     <View style={styles.container}>
       <View style={styles.wrapContainer}>
-        <ICStarRank />
+        {/* <ICStarRank /> */}
+        <Image source={assets.star} style={styles.icon} resizeMode="contain" />
         <View style={styles.wrapTitleRank}>
-          <Text style={styles.titleRank}>1</Text>
+          <Text style={styles.titleRank}>{rankingOfChild ?? ''}</Text>
         </View>
       </View>
       <Text style={styles.yourRank}>Your Rank</Text>
@@ -27,24 +32,26 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   wrapContainer: {
-    width: 106,
-    height: 106,
-    backgroundColor: COLORS.GREEN_66C270,
+    width: 120,
+    height: 120,
     borderRadius: 999,
     justifyContent: 'center',
     alignItems: 'center',
-    marginBottom: scale(4),
+  },
+  icon: {
+    width: '100%',
+    height: '100%',
   },
   wrapTitleRank: {
     position: 'absolute',
     top: 40,
   },
   titleRank: {
-    ...CustomTextStyle.h2,
-    color: COLORS.BLUE_1C6349,
+    ...CustomTextStyle.h1_SVNCherishMoment,
+    color: '#AF3A1B',
   },
   yourRank: {
-    ...CustomTextStyle.caption,
+    ...CustomTextStyle.body1_bold,
     color: COLORS.BLUE_258F78,
   },
 });

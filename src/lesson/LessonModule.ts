@@ -12,6 +12,8 @@ import UpdateUserSettingUseCase from './application/useCases/UpdateUserSettingUs
 import PostUserProgressUseCase from './application/useCases/PostUserProgressUseCase';
 import GetUserSettingUseCase from './application/useCases/GetUserSettingUseCase';
 import GetReportProgressChildrenUseCase from './application/useCases/GetReportProgressChildrenUsecase';
+import GetRankingOfChildUseCase from './application/useCases/GetRankingOfChildUseCase';
+import GetTopRankingUseCase from './application/useCases/GetTopRankingUseCase';
 
 @module({
   providers: [
@@ -41,6 +43,8 @@ import GetReportProgressChildrenUseCase from './application/useCases/GetReportPr
     },
     GetReportProgressChildrenUseCase,
     PostUserProgressUseCase,
+    GetRankingOfChildUseCase,
+    GetTopRankingUseCase,
   ],
 })
 export class LessonModule {}

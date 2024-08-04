@@ -82,5 +82,7 @@ export const API_ENDPOINTS = {
     REPORT_PROGRESS_CHILDREN: getUserProgressEndPointServices(
       'report-progress-children',
     ),
+    RANKING_OF_CHILD: getUserProgressEndPointServices('ranking-of-child'),
+    TOP_RANKING: getUserProgressEndPointServices('top-ranking'),
   },
 };

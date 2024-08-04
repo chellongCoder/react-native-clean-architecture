@@ -1,4 +1,4 @@
-import {StyleSheet, Text, View} from 'react-native';
+import {StyleSheet, Text, View, Image} from 'react-native';
 import React, {useCallback} from 'react';
 import ICBook from 'src/core/components/icons/ICBook';
 import useGlobalStyle from 'src/core/presentation/hooks/useGlobalStyle';
@@ -22,6 +22,7 @@ type Props = {
   totalQuestion: number;
   id: string;
   lessonName?: string;
+  image?: string;
 };
 const ModuleItem = (props: Props) => {
   const globalStyle = useGlobalStyle();
@@ -49,6 +50,17 @@ const ModuleItem = (props: Props) => {
     });
   }, [props.id, props.lessonName, props.title]);
 
+  const renderIcon = () =>
+    props?.image ? (
+      <Image
+        source={{uri: props?.image}}
+        style={styles.icon}
+        resizeMode="contain"
+      />
+    ) : (
+      <ICBook width={32} height={25} color={COLORS.WHITE} />
+    );
+
   return !props.isFinished ? (
     <View style={[styles.container, {backgroundColor: COLORS.WHITE_FBF8CC}]}>
       <View style={[globalStyle.rowCenter]}>
@@ -57,7 +69,7 @@ const ModuleItem = (props: Props) => {
             styles.iconContainer,
             {backgroundColor: COLORS.YELLOW_F2B559},
           ]}>
-          <ICBook width={32} height={25} color={COLORS.WHITE} />
+          {renderIcon()}
         </View>
         <View style={{width: scale(22)}} />
         <View style={styles.textContainer}>
@@ -95,7 +107,7 @@ const ModuleItem = (props: Props) => {
             styles.iconContainer,
             {backgroundColor: COLORS.WHITE_FBF8CC},
           ]}>
-          <ICBook width={32} height={25} color={COLORS.YELLOW_F2B559} />
+          {renderIcon()}
         </View>
         <View style={{width: scale(22)}} />
         <View style={styles.textContainer}>
@@ -136,6 +148,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
+  icon: {height: '80%', width: '80%'},
   container: {
     backgroundColor: 'red',
     flexDirection: 'row',

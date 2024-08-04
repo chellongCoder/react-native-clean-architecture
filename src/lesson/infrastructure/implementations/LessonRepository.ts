@@ -15,6 +15,10 @@ import PostUserProgressResponse from 'src/lesson/application/types/PostUserProgr
 import {TResult} from 'src/lesson/presentation/screens/LessonScreen';
 import ReportProgressChildrenResponse from 'src/lesson/application/types/ReportProgressChildrenResponse';
 import ReportProgressChildrenPayload from 'src/lesson/application/types/ReportProgressChildrenPayload';
+import RankingOfChildPayload from 'src/lesson/application/types/RankingOfChildPayload';
+import RankingOfChildResponse from 'src/lesson/application/types/RankingOfChildResponse';
+import TopRankingPayload from 'src/lesson/application/types/TopRankingPayload';
+import TopRankingResponse from 'src/lesson/application/types/TopRankingResponse';
 
 @injectable()
 class LessonRepository implements ILessonRepository {
@@ -48,6 +52,26 @@ class LessonRepository implements ILessonRepository {
   ): Promise<ReportProgressChildrenResponse> {
     const response: ReportProgressChildrenResponse = await this.httpClient.post(
       `${API_ENDPOINTS.USER_PROGRESS.REPORT_PROGRESS_CHILDREN}`,
+      payload,
+    );
+    return response;
+  }
+
+  public async getRankingOfChild(
+    payload: RankingOfChildPayload,
+  ): Promise<RankingOfChildResponse> {
+    const response: RankingOfChildResponse = await this.httpClient.post(
+      `${API_ENDPOINTS.USER_PROGRESS.RANKING_OF_CHILD}`,
+      payload,
+    );
+    return response;
+  }
+
+  public async getTopRanking(
+    payload: TopRankingPayload,
+  ): Promise<TopRankingResponse> {
+    const response: TopRankingResponse = await this.httpClient.post(
+      `${API_ENDPOINTS.USER_PROGRESS.TOP_RANKING}`,
       payload,
     );
     return response;

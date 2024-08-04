@@ -1,18 +1,17 @@
 import React from 'react';
 import {View, Text, StyleSheet, ScrollView, Image} from 'react-native';
 import {scale} from 'react-native-size-matters';
-import {TInformationBoardData} from './Top50Rank';
 import {COLORS} from 'src/core/presentation/constants/colors';
 import ICManIconMedium from 'src/core/components/icons/ICManIconMedium';
-import ICStarSmall from 'src/core/components/icons/ICStarSmall';
 import {CustomTextStyle} from 'src/core/presentation/constants/typography';
 // import ICStarMedium from 'src/core/components/icons/ICStarMedium';
 import {assets} from 'src/core/presentation/utils';
+import TopRankingEntity from 'src/lesson/domain/entities/TopRankingEntity';
 
-const Top3Rank = ({data}: {data: TInformationBoardData[]}) => {
+const Top3Rank = ({data}: {data: TopRankingEntity[]}) => {
   const sortOrder = [2, 1, 3];
-  const sortedData = [...data].sort((a, b) => b.star - a.star);
-  const finalArray = sortOrder.map(index => sortedData[index - 1]);
+  // const sortedData = [...data].sort((a, b) => b?.totalPoint - a?.totalPoint);
+  const finalArray = sortOrder.map(index => data[index - 1]);
 
   return (
     <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
@@ -22,10 +21,10 @@ const Top3Rank = ({data}: {data: TInformationBoardData[]}) => {
       </View>
 
       <View style={styles.wrapItemContainer}>
-        {finalArray.map((item: TInformationBoardData, index: number) => {
+        {finalArray.map((item: TopRankingEntity, index: number) => {
           return (
             <View style={{justifyContent: 'flex-end'}}>
-              <Text style={styles.title}>Top 1</Text>
+              <Text style={styles.title}>Top {sortOrder[index]}</Text>
               {index === 1 ? (
                 <View
                   style={[
@@ -49,10 +48,14 @@ const Top3Rank = ({data}: {data: TInformationBoardData[]}) => {
                   <ICManIconMedium />
                 </View>
               )}
-              <Text style={styles.username}>{item.username}</Text>
+              <Text style={styles.username}>{item?.user?.name ?? ''}</Text>
               <View style={styles.wrapStarContainer}>
-                <Text style={styles.starText}>{item.star}</Text>
-                <ICStarSmall />
+                <Image
+                  source={assets.untitled_artwork}
+                  style={styles.flower}
+                  resizeMode="contain"
+                />
+                <Text style={styles.starText}>{item?.totalPoint}</Text>
               </View>
             </View>
           );
@@ -69,12 +72,10 @@ const styles = StyleSheet.create({
     borderRadius: scale(16),
     backgroundColor: COLORS.BLUE_78C5B4,
     paddingTop: scale(8),
-    paddingBottom: scale(48),
   },
   wrapHeaderContainer: {
     width: '100%',
     alignItems: 'center',
-    marginTop: 8,
     marginBottom: 4,
   },
   wrapItemContainer: {
@@ -83,13 +84,17 @@ const styles = StyleSheet.create({
   },
   title: {
     ...CustomTextStyle.body1_bold,
-    color: COLORS.BLUE_1C6349,
+    color: '#fbf8cc',
     textAlign: 'center',
     marginBottom: scale(4),
   },
   star: {
-    width: 28,
-    height: 26,
+    width: 48,
+    height: 40,
+  },
+  flower: {
+    width: 24,
+    height: 24,
   },
   wrapAvatarContainer: {
     height: 91,
@@ -100,19 +105,26 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   username: {
-    ...CustomTextStyle.caption,
+    ...CustomTextStyle.captionBold,
     color: COLORS.BLUE_1C6349,
     textAlign: 'center',
+    marginVertical: scale(2),
+    marginTop: scale(4),
   },
   wrapStarContainer: {
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
+    borderColor: '#fbf8cc',
+    borderWidth: 2,
+    borderRadius: 100,
+    alignSelf: 'center',
+    paddingHorizontal: scale(4),
   },
   starText: {
     marginRight: scale(2),
     ...CustomTextStyle.smallBold,
-    color: COLORS.BLUE_1C6349,
+    color: '#fbf8cc',
   },
 });
 

@@ -7,6 +7,7 @@ export interface Module {
   stt: number;
   totalQuestion: number;
   progressOfChildren: number;
+  image: string;
 }
 
 export default interface GetListLessonResponse {

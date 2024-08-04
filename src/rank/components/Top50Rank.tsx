@@ -1,12 +1,23 @@
 import React from 'react';
-import {View, Text, StyleSheet, Dimensions, FlatList} from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  Dimensions,
+  FlatList,
+  Image,
+  ScrollView,
+} from 'react-native';
 import {scale} from 'react-native-size-matters';
 import ICManIcon from 'src/core/components/icons/ICManIcon';
 import ICStarInformation from 'src/core/components/icons/ICStarInformation';
-import ICStarSmall from 'src/core/components/icons/ICStarSmall';
 import {COLORS} from 'src/core/presentation/constants/colors';
 import {CustomTextStyle} from 'src/core/presentation/constants/typography';
 import Top3Rank from './Top3Rank';
+import BookView from 'src/lesson/presentation/components/BookView';
+import useRanking from 'src/lesson/presentation/hooks/useRanking';
+import TopRankingEntity from 'src/lesson/domain/entities/TopRankingEntity';
+import {assets} from 'src/core/presentation/utils';
 
 const screenWidth = Dimensions.get('screen').width;
 
@@ -17,25 +28,18 @@ export type TInformationBoardData = {
 };
 
 const Top50Rank = () => {
-  const data: TInformationBoardData[] = [
-    {id: 1, star: 150, username: 'username1'},
-    {id: 2, star: 125, username: 'username2'},
-    {id: 3, star: 136, username: 'username3'},
-    {id: 4, star: 147, username: 'username4'},
-    {id: 5, star: 122, username: 'username5'},
-    {id: 6, star: 141, username: 'username6'},
-  ];
+  const {topRanking} = useRanking();
 
-  const sortedData = [...data].sort((a, b) => b.star - a.star);
+  const top3 = topRanking.slice(0, 3);
 
-  const top3 = sortedData.slice(0, 3);
-
-  const remainingData = sortedData.slice(3);
+  const remainingData = topRanking.slice(3);
 
   const renderInformationBoardItem = ({
     item,
+    index,
   }: {
-    item: TInformationBoardData;
+    item: TopRankingEntity;
+    index: number;
   }) => {
     return (
       <View style={styles.wrapContentContainer}>
@@ -44,19 +48,23 @@ const Top50Rank = () => {
             <View style={styles.IDContainer}>
               <ICStarInformation />
               <View style={styles.wrapIDContainer}>
-                <Text style={styles.title}>1</Text>
+                <Text style={styles.title}>{index + 4}</Text>
               </View>
             </View>
             <View style={styles.wrapUseContainer}>
               <View style={styles.wrapAvatarContainer}>
                 <ICManIcon />
               </View>
-              <Text style={styles.username}>{item.username}</Text>
+              <Text style={styles.username}>{item?.user?.name ?? ''}</Text>
             </View>
           </View>
           <View style={styles.wrapStarContainer}>
-            <Text style={styles.starText}>{item.star}</Text>
-            <ICStarSmall />
+            <Image
+              source={assets.untitled_artwork}
+              style={styles.star}
+              resizeMode="contain"
+            />
+            <Text style={styles.starText}>{item.totalPoint}</Text>
           </View>
         </View>
       </View>
@@ -64,38 +72,44 @@ const Top50Rank = () => {
   };
 
   return (
-    <View style={styles.container}>
-      <View style={styles.square} />
+    <BookView style={styles.container} contentStyle={styles.content}>
+      {/* <View style={styles.square} /> */}
       <View style={styles.wrapTitleContainer}>
         <Text style={styles.title}>Top 50 Rank</Text>
       </View>
-      <View style={styles.wrapInformationBoardContainer}>
-        <View style={styles.wrapTop3Container}>
-          <Top3Rank data={top3} />
+      <ScrollView>
+        <View style={styles.wrapInformationBoardContainer}>
+          <View style={styles.wrapTop3Container}>
+            <Top3Rank data={top3} />
+          </View>
+          <View>
+            <FlatList
+              data={remainingData}
+              renderItem={renderInformationBoardItem}
+            />
+          </View>
         </View>
-        <View>
-          <FlatList
-            data={remainingData}
-            renderItem={renderInformationBoardItem}
-          />
-        </View>
-      </View>
-    </View>
+      </ScrollView>
+    </BookView>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: COLORS.GREEN_DDF598,
     flex: 1,
     borderTopLeftRadius: scale(40),
     borderTopRightRadius: scale(40),
     paddingTop: scale(32),
     paddingHorizontal: scale(16),
+  },
+  content: {
+    marginTop: 0,
+    marginRight: 0,
+    flex: 1,
     paddingBottom: scale(54),
   },
   wrapTop3Container: {
-    flex: 1,
+    // flex: 1,
   },
   square: {
     height: scale(24),
@@ -162,16 +176,20 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-    paddingHorizontal: scale(10),
-    paddingVertical: scale(4),
+    paddingHorizontal: scale(8),
     borderWidth: 2,
-    borderRadius: scale(8),
+    borderRadius: scale(20),
     borderColor: COLORS.GREEN_66C270,
   },
+  star: {
+    width: 24,
+    height: 24,
+    marginLeft: -4,
+  },
   starText: {
-    marginRight: scale(2),
+    marginLeft: scale(2),
     ...CustomTextStyle.smallBold,
-    color: COLORS.BLUE_1C6349,
+    color: COLORS.GREEN_66C270,
   },
 });
 
