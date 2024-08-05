@@ -4,6 +4,10 @@ import PostUserProgressResponse from 'src/lesson/application/types/PostUserProgr
 import {TResult} from 'src/lesson/presentation/screens/LessonScreen';
 import ReportProgressChildrenResponse from 'src/lesson/application/types/ReportProgressChildrenResponse';
 import ReportProgressChildrenPayload from 'src/lesson/application/types/ReportProgressChildrenPayload';
+import RankingOfChildPayload from 'src/lesson/application/types/RankingOfChildPayload';
+import RankingOfChildResponse from 'src/lesson/application/types/RankingOfChildResponse';
+import TopRankingPayload from 'src/lesson/application/types/TopRankingPayload';
+import TopRankingResponse from 'src/lesson/application/types/TopRankingResponse';
 
 export const ILessonRepositoryToken = Symbol('ILessonRepository');
 
@@ -14,6 +18,10 @@ export interface ILessonRepository {
   getReportProgressChildren: (
     payload: ReportProgressChildrenPayload,
   ) => Promise<ReportProgressChildrenResponse>;
+  getRankingOfChild: (
+    payload: RankingOfChildPayload,
+  ) => Promise<RankingOfChildResponse>;
+  getTopRanking: (payload: TopRankingPayload) => Promise<TopRankingResponse>;
   postUserProgress: (payload: TResult[]) => Promise<PostUserProgressResponse>;
   getSettingDevice: (
     deviceToken: string,

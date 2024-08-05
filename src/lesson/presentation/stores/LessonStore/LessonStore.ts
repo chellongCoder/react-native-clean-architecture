@@ -18,6 +18,10 @@ import {isAndroid} from 'src/core/presentation/utils';
 import {AppCategoryE} from 'src/core/domain/enums/AppCategoryE';
 import GetReportProgressChildrenUseCase from 'src/lesson/application/useCases/GetReportProgressChildrenUsecase';
 import ReportProgressChildrenPayload from 'src/lesson/application/types/ReportProgressChildrenPayload';
+import RankingOfChildPayload from 'src/lesson/application/types/RankingOfChildPayload';
+import TopRankingPayload from 'src/lesson/application/types/TopRankingPayload';
+import GetRankingOfChildUseCase from 'src/lesson/application/useCases/GetRankingOfChildUseCase';
+import GetTopRankingUseCase from 'src/lesson/application/useCases/GetTopRankingUseCase';
 
 @injectable()
 export class LessonStore {
@@ -46,6 +50,10 @@ export class LessonStore {
     private userSettingUserCase: UpdateUserSettingUseCase,
     @provided(GetReportProgressChildrenUseCase)
     private getReportProgressChildrenUseCase: GetReportProgressChildrenUseCase,
+    @provided(GetRankingOfChildUseCase)
+    private getRankingOfChild: GetRankingOfChildUseCase,
+    @provided(GetTopRankingUseCase)
+    private getTopRanking: GetTopRankingUseCase,
     @provided(PostUserProgressUseCase)
     private postUserProgressUseCase: PostUserProgressUseCase,
     @provided(GetUserSettingUseCase)
@@ -60,6 +68,8 @@ export class LessonStore {
     this.updateAppBlock = this.updateAppBlock.bind(this);
     this.handleGetReportProgressChildren =
       this.handleGetReportProgressChildren.bind(this);
+    this.handleGetRankingOfChild = this.handleGetRankingOfChild.bind(this);
+    this.handleGetTopRanking = this.handleGetTopRanking.bind(this);
     this.handlePostUserProgress = this.handlePostUserProgress.bind(this);
     this.handleGetSettingUser = this.handleGetSettingUser.bind(this);
   }
@@ -174,6 +184,18 @@ export class LessonStore {
     data: ReportProgressChildrenPayload,
   ) {
     const response = await this.getReportProgressChildrenUseCase.execute(data);
+    return response;
+  }
+
+  @action
+  public async handleGetRankingOfChild(data: RankingOfChildPayload) {
+    const response = await this.getRankingOfChild.execute(data);
+    return response;
+  }
+
+  @action
+  public async handleGetTopRanking(data: TopRankingPayload) {
+    const response = await this.getTopRanking.execute(data);
     return response;
   }
 

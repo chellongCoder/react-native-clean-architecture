@@ -53,6 +53,7 @@ const ListModule = observer(() => {
                 subTitle={module.description}
                 id={module._id}
                 lessonName={selectedSubject?.name}
+                image={module.image}
               />
             </View>
           );

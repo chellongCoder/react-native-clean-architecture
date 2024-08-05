@@ -6,6 +6,8 @@ import {COLORS} from 'src/core/presentation/constants/colors';
 import AccountStatus from 'src/home/presentation/components/AccountStatus';
 import YourRank from '../components/YourRank';
 import Top50Rank from '../components/Top50Rank';
+import {LessonStoreProvider} from 'src/lesson/presentation/stores/LessonStore/LessonStoreProvider';
+import {withProviders} from 'src/core/presentation/utils/withProviders';
 
 const RankScreen = () => {
   return (
@@ -36,4 +38,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default RankScreen;
+export default withProviders(LessonStoreProvider)(RankScreen);
