@@ -44,7 +44,11 @@ import {useAsyncEffect} from 'src/core/presentation/hooks';
 import SelectApp from '../components/LessonModule/SelectApp';
 import {isAndroid} from 'src/core/presentation/utils';
 import ListBlockedApps from '../components/LessonModule/ListBlockedApps';
-import {blockApps, unBlockApps} from 'react-native-alphadex-screentime';
+import {
+  addToLockedApps,
+  blockApps,
+  unBlockApps,
+} from 'react-native-alphadex-screentime';
 import {AppCategoryE} from 'src/core/domain/enums/AppCategoryE';
 import ChildrenDescription from '../components/ChildrenDescription';
 import {useGetUserSetting} from 'src/hooks/useGetUserSetting';
@@ -269,9 +273,26 @@ const ParentScreen = observer(() => {
     });
   }, [deviceToken, lesson, point, selectedChild?._id, tabsBlock]);
 
+  /**-----------------------
+   * todo      TODO
+   *  In the provided code, the blockApps function is being called inside the blockAppsSystem function using the await keyword. The blockAppsSystem function is defined using the useCallback hook, which is commonly used in React to memoize functions and optimize performance.
+
+The blockAppsSystem function is an asynchronous function that awaits the result of the blockApps function call. It uses optional chaining (?.) and nullish coalescing (??) operators to handle the case where selectedChild?._id is null or undefined. If selectedChild?._id is truthy, it will be passed as an argument to the blockApps function. Otherwise, an empty string will be passed.
+   *
+   *------------------------**/
   const blockAppsSystem = useCallback(async () => {
-    await blockApps(selectedChild?._id ?? '');
-  }, [selectedChild?._id]);
+    if (isAndroid) {
+      addToLockedApps(
+        lesson.blockedListAppsSystem.map(v => ({
+          app_name: v.app_name ?? '',
+          package_name: v.package_name ?? '',
+          file_path: v.apk_file_path ?? '',
+        })),
+      );
+    } else {
+      await blockApps(selectedChild?._id ?? '');
+    }
+  }, [lesson.blockedListAppsSystem, selectedChild?._id]);
 
   const tabsBody = useMemo(() => {
     switch (tabParent) {

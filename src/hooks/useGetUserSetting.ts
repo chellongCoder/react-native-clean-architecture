@@ -19,17 +19,5 @@ export const useGetUserSetting = (
     getStateBlocking();
   }, []);
 
-  useEffect(() => {
-    if (lesson.blockedListAppsSystem.length > 0) {
-      addToLockedApps(
-        lesson.blockedListAppsSystem.map(v => ({
-          app_name: v.app_name ?? '',
-          package_name: v.package_name ?? '',
-          file_path: v.apk_file_path ?? '',
-        })),
-      );
-    }
-  }, [lesson.blockedListAppsSystem]);
-
   return {};
 };

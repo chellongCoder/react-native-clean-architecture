@@ -47,31 +47,6 @@ const AuthParentScreen = () => {
     loadingGlobal.hide?.();
   };
 
-  // useEffect(() => {
-  //   const handleAppStateChange = (nextAppState: AppStateStatus) => {
-  //     if (
-  //       appStateRef.current.match(/inactive|background/) &&
-  //       nextAppState === 'active'
-  //     ) {
-  //       console.log('App has come to the foreground!');
-  //       // Perform any actions needed when the app comes to the foreground
-  //       // setAppState(nextAppState);
-  //     } else {
-  //       // setAppState(nextAppState);
-  //     }
-  //     appStateRef.current = nextAppState;
-  //   };
-
-  //   const subscription = AppState.addEventListener(
-  //     'change',
-  //     handleAppStateChange,
-  //   );
-
-  //   return () => {
-  //     subscription.remove();
-  //   };
-  // }, []);
-
   return (
     <View style={[styles.container]}>
       <ScrollView>

@@ -75,11 +75,14 @@ export const LessonStoreProvider = observer(({children}: PropsWithChildren) => {
 
   const listItem = value.listAppsSystem.map(transformAppEntityToListItem);
 
+  /**
+   * Inside the callback function, there is an if statement that checks if route.name is equal to 'LESSON_SCREEN'. If it is, the isShowBottomSheet state variable is set to false using the setIsShowBottomSheet function. Otherwise, if route.name is not equal to 'LESSON_SCREEN', isShowBottomSheet is set to true.
+
+This code snippet suggests that the isShowBottomSheet state variable is used to control the visibility of a bottom sheet component based on the current route name. When the route name is 'LESSON_SCREEN', the bottom sheet is hidden (isShowBottomSheet is set to false), and when the route name is different, the bottom sheet is shown (isShowBottomSheet is set to true).
+   */
   useEffect(() => {
     if (route.name === 'LESSON_SCREEN') {
       setIsShowBottomSheet(false);
-    } else {
-      setIsShowBottomSheet(true);
     }
   }, [route.name]);
 
@@ -95,35 +98,35 @@ export const LessonStoreProvider = observer(({children}: PropsWithChildren) => {
             onDone={() => {
               value.onCloseSheetApps();
               value.changeBlockedListAppSystem(apps);
-              addToLockedApps(
-                apps.map(v => ({
-                  app_name: v.app_name,
-                  package_name: v.package_name,
-                  file_path: v.apk_file_path,
-                })),
-              );
             }}>
-            {listItem.map((v, i) => (
-              <ItemApps
-                onChange={(id, s) => {
-                  setApps(prev => {
-                    if (s) {
-                      const app = value.listAppsSystem.find(
-                        e => e.package_name === id,
-                      );
-                      return [...prev, app!];
-                    } else {
-                      const selectedApps = prev.filter(
-                        e => e.package_name !== id,
-                      );
-                      return selectedApps;
-                    }
-                  });
-                }}
-                key={i}
-                {...v}
-              />
-            ))}
+            {listItem.map((v, i) => {
+              const blockedApps = value.blockedListAppsSystem;
+              const blockedApp = blockedApps.find(
+                app => app.package_name === v.subTitle,
+              );
+              return (
+                <ItemApps
+                  onChange={(id, s) => {
+                    setApps(prev => {
+                      if (s) {
+                        const app = value.listAppsSystem.find(
+                          e => e.package_name === id,
+                        );
+                        return [...prev, app!];
+                      } else {
+                        const selectedApps = prev.filter(
+                          e => e.package_name !== id,
+                        );
+                        return selectedApps;
+                      }
+                    });
+                  }}
+                  key={i}
+                  {...v}
+                  active={!!blockedApp}
+                />
+              );
+            })}
           </BottomSheetCustom>
         )}
 
