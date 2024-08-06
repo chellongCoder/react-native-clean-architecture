@@ -21,6 +21,11 @@
 		180097412C15B81000D9DA1D /* AppIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 180097402C15B81000D9DA1D /* AppIntent.swift */; };
 		180097432C15B81300D9DA1D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 180097422C15B81300D9DA1D /* Assets.xcassets */; };
 		180097472C15B81300D9DA1D /* screentimewidgetExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 180097342C15B81000D9DA1D /* screentimewidgetExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		182F69332C629B500048803B /* SharedUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 182F69322C629B500048803B /* SharedUtils.swift */; };
+		182F69342C629B930048803B /* SharedUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 182F69322C629B500048803B /* SharedUtils.swift */; };
+		182F69352C629B940048803B /* SharedUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 182F69322C629B500048803B /* SharedUtils.swift */; };
+		183064902C6292CF00246FF4 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1830648F2C6292CF00246FF4 /* Images.xcassets */; };
+		183064912C6296CD00246FF4 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		18B49EED2C064A37004B87A0 /* ManagedSettings.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 18B49EEC2C064A37004B87A0 /* ManagedSettings.framework */; };
 		18B49EEF2C064A37004B87A0 /* ManagedSettingsUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 18B49EEE2C064A37004B87A0 /* ManagedSettingsUI.framework */; };
 		18B49EF22C064A37004B87A0 /* ShieldConfigurationExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18B49EF12C064A37004B87A0 /* ShieldConfigurationExtension.swift */; };
@@ -134,6 +139,8 @@
 		180097422C15B81300D9DA1D /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		180097442C15B81300D9DA1D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		1800974B2C15BC4D00D9DA1D /* screentimewidgetExtension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = screentimewidgetExtension.entitlements; sourceTree = "<group>"; };
+		182F69322C629B500048803B /* SharedUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharedUtils.swift; sourceTree = "<group>"; };
+		1830648F2C6292CF00246FF4 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		18B49EE52C04A4F3004B87A0 /* TBDEdu.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = TBDEdu.entitlements; path = TBDEdu/TBDEdu.entitlements; sourceTree = "<group>"; };
 		18B49EEB2C064A37004B87A0 /* ScreenTimeShield.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = ScreenTimeShield.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		18B49EEC2C064A37004B87A0 /* ManagedSettings.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ManagedSettings.framework; path = System/Library/Frameworks/ManagedSettings.framework; sourceTree = SDKROOT; };
@@ -256,6 +263,7 @@
 				81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */,
 				13B07FB71A68108700A75B9A /* main.m */,
 				13B07FB81A68108700A75B9A /* PrivacyInfo.xcprivacy */,
+				182F69322C629B500048803B /* SharedUtils.swift */,
 			);
 			name = TBDEdu;
 			sourceTree = "<group>";
@@ -279,6 +287,7 @@
 				18B49EF12C064A37004B87A0 /* ShieldConfigurationExtension.swift */,
 				18B49EF32C064A37004B87A0 /* Info.plist */,
 				18B49EF42C064A37004B87A0 /* ScreenTimeShield.entitlements */,
+				1830648F2C6292CF00246FF4 /* Images.xcassets */,
 			);
 			path = ScreenTimeShield;
 			sourceTree = "<group>";
@@ -617,6 +626,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				183064902C6292CF00246FF4 /* Images.xcassets in Resources */,
+				183064912C6296CD00246FF4 /* Images.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -806,6 +817,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				13B07FBC1A68108700A75B9A /* AppDelegate.mm in Sources */,
+				182F69332C629B500048803B /* SharedUtils.swift in Sources */,
 				13B07FC11A68108700A75B9A /* main.m in Sources */,
 				4FCB67C8425E01E44C954846 /* ExpoModulesProvider.swift in Sources */,
 			);
@@ -819,6 +831,7 @@
 				180097412C15B81000D9DA1D /* AppIntent.swift in Sources */,
 				1800973F2C15B81000D9DA1D /* screentimewidget.swift in Sources */,
 				1800973D2C15B81000D9DA1D /* screentimewidgetLiveActivity.swift in Sources */,
+				182F69352C629B940048803B /* SharedUtils.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -826,6 +839,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				182F69342C629B930048803B /* SharedUtils.swift in Sources */,
 				18B49EF22C064A37004B87A0 /* ShieldConfigurationExtension.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -925,7 +939,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 5C95X2UY67;
+				DEVELOPMENT_TEAM = VDXKAYGU93;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = TBDEdu/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "TBD-Edu";
@@ -962,7 +976,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 5C95X2UY67;
+				DEVELOPMENT_TEAM = VDXKAYGU93;
 				INFOPLIST_FILE = TBDEdu/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "TBD-Edu";
 				INFOPLIST_KEY_NSSupportsLiveActivities = YES;
@@ -1244,10 +1258,7 @@
 					"-DFOLLY_CFG_NO_COROUTINES=1",
 					"-DFOLLY_HAVE_CLOCK_GETTIME=1",
 				);
-				OTHER_LDFLAGS = (
-					"$(inherited)",
-					" ",
-				);
+				OTHER_LDFLAGS = "$(inherited)  ";
 				REACT_NATIVE_PATH = "${PODS_ROOT}/../../node_modules/react-native";
 				SDKROOT = iphoneos;
 				USE_HERMES = true;
@@ -1320,10 +1331,7 @@
 					"-DFOLLY_CFG_NO_COROUTINES=1",
 					"-DFOLLY_HAVE_CLOCK_GETTIME=1",
 				);
-				OTHER_LDFLAGS = (
-					"$(inherited)",
-					" ",
-				);
+				OTHER_LDFLAGS = "$(inherited)  ";
 				REACT_NATIVE_PATH = "${PODS_ROOT}/../../node_modules/react-native";
 				SDKROOT = iphoneos;
 				USE_HERMES = true;

@@ -8,13 +8,16 @@
 import ManagedSettings
 import ManagedSettingsUI
 import UIKit
+import SwiftUI
+import Intents
+
 let defaultShieldConfiguration = ShieldConfiguration(
-  backgroundColor: UIColor.systemBackground,
-  icon: UIImage(systemName: "moon.circle.fill",
-                variableValue: 1,
-                configuration: UIImage.SymbolConfiguration(hierarchicalColor: .systemIndigo)),
-  title: ShieldConfiguration.Label(text: "Screentime disabled by the app", color: .label),
-  subtitle: ShieldConfiguration.Label(text: "Press unblock in the apps to enable", color: .label)
+  backgroundBlurStyle: .light,
+//  backgroundColor: SharedAssets.uistepperBGPurple1.withAlphaComponent(0.1),
+  backgroundColor: UIColor.red.withAlphaComponent(0.1),
+  icon: UIImage(named: "AppLock"),
+  title: ShieldConfiguration.Label(text: "Screentime disabled by the app", color: Color(hex: "#FBF8CC").toUIColor()),
+  subtitle: ShieldConfiguration.Label(text: "Press unblock in the apps to enable", color: Color(hex: "#FBF8CC").toUIColor())
 )
 
 // Override the functions below to customize the shields used in various situations.
