@@ -191,7 +191,7 @@ const useLoginWithCredentials = () => {
     try {
       // Retrieve the credentials
       const credentials = await Keychain.getGenericPassword();
-      if (credentials) {
+      if (credentials && credentials.username && credentials.password) {
         console.log(
           'Credentials successfully loaded for user ' + credentials.username,
         );

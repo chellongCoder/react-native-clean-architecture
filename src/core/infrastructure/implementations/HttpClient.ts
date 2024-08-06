@@ -1,4 +1,4 @@
-import axios, {AxiosRequestConfig} from 'axios';
+import axios, {AxiosError, AxiosRequestConfig} from 'axios';
 import {provided, injectable} from 'inversify-sugar';
 import IHttpClient from '../../domain/specifications/IHttpClient';
 import Env, {EnvToken} from 'src/core/domain/entities/Env';
@@ -53,16 +53,22 @@ class HttpClient implements IHttpClient {
             originalRequest._retry = true;
 
             try {
-              const response = await getRefreshToken(refreshToken);
-              this.requestQueue.forEach(callback =>
-                callback({
-                  ...originalRequest,
-                  headers: {
-                    Authorization: `Bearer ${response.data.accessToken}`,
-                  },
-                }),
-              );
-              this.requestQueue = [];
+              getRefreshToken(refreshToken)
+                .then(response => {
+                  this.requestQueue.forEach(callback =>
+                    callback({
+                      ...originalRequest,
+                      headers: {
+                        Authorization: `Bearer ${response.data.accessToken}`,
+                      },
+                    }),
+                  );
+                  this.requestQueue = [];
+                })
+                .catch((err: AxiosError) => {
+                  console.log('RefresshToken failed: ', err);
+                  handleUserLogOut();
+                });
             } catch (err) {
               handleUserLogOut();
               return Promise.reject(err);

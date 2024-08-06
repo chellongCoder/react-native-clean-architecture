@@ -30,7 +30,7 @@ import {OfflineEnum} from 'src/core/presentation/hooks/offline/OfflineEnum';
 
 const screenWidth = Dimensions.get('screen').width;
 
-const ListChildrenScreen = () => {
+const ListChildrenScreen = React.memo(() => {
   const {removeCurrentCredentials, getUserProfile, setSelectedChild} =
     useAuthenticationStore();
   const {storeData, getData, isConnected} = useOfflineMode();
@@ -163,7 +163,7 @@ const ListChildrenScreen = () => {
       </View>
     </SafeAreaView>
   );
-};
+});
 
 const styles = StyleSheet.create({
   container: {
