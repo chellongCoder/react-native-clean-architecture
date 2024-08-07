@@ -1,4 +1,11 @@
-import {ScrollView, StyleSheet, View, Text, Keyboard} from 'react-native';
+import {
+  ScrollView,
+  StyleSheet,
+  View,
+  Text,
+  Keyboard,
+  ImageBackground,
+} from 'react-native';
 import React, {useEffect, useRef, useState} from 'react';
 import {CommonInputPassword} from 'src/authentication/presentation/components/CommonInput';
 import PrimaryButton from '../components/PrimaryButton';
@@ -7,7 +14,7 @@ import {STACK_NAVIGATOR} from 'src/core/presentation/navigation/ConstantNavigato
 import {withProviders} from 'src/core/presentation/utils/withProviders';
 import {LessonStoreProvider} from '../stores/LessonStore/LessonStoreProvider';
 import {useLessonStore} from '../stores/LessonStore/useGetPostsStore';
-import {isAndroid} from 'src/core/presentation/utils';
+import {assets, isAndroid} from 'src/core/presentation/utils';
 import {scale} from 'react-native-size-matters';
 import useLoginWithCredentials from 'src/authentication/presentation/hooks/useLoginWithCredentials';
 import {CustomTextStyle} from 'src/core/presentation/constants/typography';
@@ -48,7 +55,11 @@ const AuthParentScreen = () => {
   };
 
   return (
-    <View style={[styles.container]}>
+    <ImageBackground
+      style={[styles.container]}
+      source={assets.bee_bg}
+      imageStyle={styles.imageStyle}
+      resizeMode="cover">
       <ScrollView>
         <Animated.View style={[rStyle]}>
           <CommonInputPassword
@@ -68,7 +79,7 @@ const AuthParentScreen = () => {
           />
         </Animated.View>
       </ScrollView>
-    </View>
+    </ImageBackground>
   );
 };
 
@@ -82,6 +93,7 @@ const styles = StyleSheet.create({
     paddingVertical: 40,
     paddingTop: 200,
   },
+  imageStyle: {opacity: 0.3},
   btnEnter: {
     marginTop: 70,
     paddingVertical: scale(12),

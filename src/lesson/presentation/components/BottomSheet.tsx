@@ -12,6 +12,7 @@ import {SharedValue} from 'react-native-reanimated';
 import {BottomSheetMethods} from '@gorhom/bottom-sheet/lib/typescript/types';
 import {COLORS} from 'src/core/presentation/constants/colors';
 import {scale, verticalScale} from 'react-native-size-matters';
+import BookView from './BookView';
 
 type Props = {
   title?: string;
@@ -63,32 +64,47 @@ const BottomSheetCustom = forwardRef<BottomSheet, Props>(
         handleStyle={styles.handleStyle}
         backgroundStyle={[
           styles.backgroundStyle,
-          {backgroundColor: other.backgroundColor},
+          // {backgroundColor: other.backgroundColor},
         ]}
         handleIndicatorStyle={styles.handleIndicatorStyle}
         backdropComponent={renderBackdrop}
         {...other}>
-        {title && (
-          <View style={[styles.pb8]}>
-            <Text style={[globalStyle.txtLabel, styles.txtTitle]}>{title}</Text>
-            {other.onDone && (
-              <TouchableOpacity onPress={other.onDone}>
-                <Text style={[globalStyle.txtLabel, styles.txtTitle]}>
-                  {'Done'}
-                </Text>
-              </TouchableOpacity>
-            )}
-          </View>
-        )}
-        <BottomSheetScrollView style={[styles.contentContainer]}>
-          {children}
-        </BottomSheetScrollView>
+        <BookView
+          style={styles.fill}
+          contentStyle={styles.contentStyle}
+          colorBg={other.backgroundColor ?? COLORS.GREEN_66C270}>
+          {title && (
+            <View style={[styles.pb8]}>
+              <Text style={[globalStyle.txtLabel, styles.txtTitle]}>
+                {title}
+              </Text>
+              {other.onDone && (
+                <TouchableOpacity onPress={other.onDone}>
+                  <Text style={[globalStyle.txtLabel, styles.txtTitle]}>
+                    {'Done'}
+                  </Text>
+                </TouchableOpacity>
+              )}
+            </View>
+          )}
+          <BottomSheetScrollView style={[styles.contentContainer]}>
+            {children}
+          </BottomSheetScrollView>
+        </BookView>
       </BottomSheet>
     );
   },
 );
 
 const styles = StyleSheet.create({
+  fill: {
+    flex: 1,
+  },
+  contentStyle: {
+    flex: 1,
+    marginTop: 16,
+    marginBottom: 0,
+  },
   contentContainer: {
     height: 10,
     // flex: 1,
@@ -108,7 +124,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'transparent',
   },
   backgroundStyle: {
-    backgroundColor: COLORS.GREEN_66C270,
+    backgroundColor: 'transparent',
     borderTopLeftRadius: 24,
     borderTopRightRadius: 24,
     marginTop: 14,
