@@ -99,9 +99,11 @@ const ListChildrenScreen = React.memo(() => {
           <View style={styles.bodyContainer}>
             <Text style={styles.title}>Hi, Welcome back</Text>
             <Text style={styles.titleBold}>{userProfile?.username}</Text>
-            <TouchableOpacity onPress={onLogout}>
-              <Text style={styles.logoutTitle}>Another account?</Text>
-            </TouchableOpacity>
+            {isConnected && (
+              <TouchableOpacity onPress={onLogout}>
+                <Text style={styles.logoutTitle}>Another account?</Text>
+              </TouchableOpacity>
+            )}
           </View>
         </View>
       </View>
@@ -139,17 +141,19 @@ const ListChildrenScreen = React.memo(() => {
                 );
               })}
             </View>
-            {userProfile?.children && userProfile?.children.length < 5 && (
-              <View style={styles.wrapAddChildContainer}>
-                <View style={{alignItems: 'center'}}>
-                  <TouchableOpacity
-                    style={styles.addChildContainer}
-                    onPress={onAddChild}>
-                    <ICAddChild />
-                  </TouchableOpacity>
+            {userProfile?.children &&
+              userProfile?.children.length < 5 &&
+              isConnected && (
+                <View style={styles.wrapAddChildContainer}>
+                  <View style={{alignItems: 'center'}}>
+                    <TouchableOpacity
+                      style={styles.addChildContainer}
+                      onPress={onAddChild}>
+                      <ICAddChild />
+                    </TouchableOpacity>
+                  </View>
                 </View>
-              </View>
-            )}
+              )}
           </ScrollView>
         </View>
 

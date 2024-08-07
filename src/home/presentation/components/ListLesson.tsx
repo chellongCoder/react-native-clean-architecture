@@ -1,4 +1,4 @@
-import React, {useRef, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {
   View,
   Text,
@@ -11,6 +11,9 @@ import {COLORS} from 'src/core/presentation/constants/colors';
 import {CustomTextStyle} from 'src/core/presentation/constants/typography';
 import useHomeStore from '../stores/useHomeStore';
 import Carousel from 'react-native-snap-carousel';
+import {useOfflineMode} from 'src/core/presentation/hooks/offline/useOfflineMode';
+import {OfflineEnum} from 'src/core/presentation/hooks/offline/OfflineEnum';
+import {Subject} from 'src/authentication/application/types/GetListSubjectResponse';
 
 const {width: screenWidth} = Dimensions.get('window');
 
@@ -21,8 +24,22 @@ interface FieldData {
 }
 const ListLesson = () => {
   const {listSubject, setSubjectId} = useHomeStore();
+  const {getData, isConnected} = useOfflineMode();
   const [subjectIndex, setSubjectIndex] = useState<number>(0);
+  const [subjects, setSubjects] = useState<Subject[]>([]);
+
   const carouselRef = useRef<Carousel>();
+
+  useEffect(() => {
+    const getDataFromStore = async () => {
+      if (!isConnected) {
+        const res = await getData(OfflineEnum.LIST_SUBJECT);
+        setSubjects(res);
+      }
+    };
+
+    getDataFromStore();
+  }, [getData, isConnected]);
 
   const renderItem = ({item}: {item: FieldData}) => {
     return (
@@ -44,7 +61,7 @@ const ListLesson = () => {
     <View style={styles.container}>
       <Carousel
         ref={carouselRef}
-        data={listSubject}
+        data={listSubject?.length !== 0 ? listSubject : subjects}
         renderItem={renderItem}
         sliderWidth={screenWidth}
         itemWidth={screenWidth * 0.5}

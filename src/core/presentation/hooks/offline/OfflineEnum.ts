@@ -1,3 +1,5 @@
 export enum OfflineEnum {
   USER_PROFILE = 'USER_PROFILE',
+  LIST_FIELD = 'LIST_FIELD',
+  LIST_SUBJECT = 'LIST_SUBJECT',
 }
