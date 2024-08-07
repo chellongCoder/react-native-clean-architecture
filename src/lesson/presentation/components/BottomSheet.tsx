@@ -112,7 +112,7 @@ const styles = StyleSheet.create({
     // alignSelf: 'center',
   },
   txtTitle: {
-    color: 'white',
+    color: '#FBF8CC',
   },
   pb8: {
     paddingVertical: verticalScale(12),
