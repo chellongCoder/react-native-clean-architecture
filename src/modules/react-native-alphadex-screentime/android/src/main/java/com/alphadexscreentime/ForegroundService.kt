@@ -11,7 +11,6 @@ import android.content.SharedPreferences
 import android.os.Handler
 import android.os.IBinder
 import android.os.Looper
-import android.view.View
 import androidx.core.app.NotificationCompat
 import java.util.Timer
 import java.util.TimerTask
@@ -107,7 +106,6 @@ class ForegroundService : Service() {
                         if(event.eventType == UsageEvents.Event.ACTIVITY_RESUMED && currentAppActivityList.isEmpty())  {
                             currentAppActivityList.add(event.className)
                             println("$currentAppActivityList-----List--added")
-                            window.txtView!!.visibility = View.INVISIBLE
                             Handler(Looper.getMainLooper()).post {
                                 window.open()
                             }

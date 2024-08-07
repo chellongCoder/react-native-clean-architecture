@@ -95,6 +95,9 @@ dependencies {
   implementation 'com.andrognito.pinlockview:pinlockview:2.1.0'
   implementation 'com.github.mmin18:realtimeblurview:1.2.1'
 
+  implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
+
+
 
 }
 

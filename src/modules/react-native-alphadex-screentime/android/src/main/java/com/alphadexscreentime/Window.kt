@@ -15,7 +15,6 @@ import android.view.View
 import android.view.WindowManager
 import android.widget.Button
 import android.widget.TextView
-import androidx.core.content.ContextCompat
 import com.andrognito.pinlockview.IndicatorDots
 import com.andrognito.pinlockview.PinLockListener
 import com.andrognito.pinlockview.PinLockView
@@ -107,23 +106,21 @@ class Window(
       PixelFormat.TRANSLUCENT
     )
     layoutInflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
-    mView = layoutInflater.inflate(R.layout.pin_activity, null)
+    mView = layoutInflater.inflate(R.layout.activity_main, null)
 
     mParams!!.gravity = Gravity.CENTER
     mWindowManager = context.getSystemService(Context.WINDOW_SERVICE) as WindowManager
 
-    mPinLockView = mView.findViewById(R.id.pin_lock_view)
-    mIndicatorDots = mView.findViewById(R.id.indicator_dots)
-    txtView = mView.findViewById(R.id.alertError) as TextView
-//		btnUnlock = mView.findViewById(R.id.btnUnLock) as Button
+//    mPinLockView = mView.findViewById(R.id.pin_lock_view)
+//    mIndicatorDots = mView.findViewById(R.id.indicator_dots)
 		btnClose = mView.findViewById(R.id.btn_close) as Button
 
 
-    mPinLockView!!.attachIndicatorDots(mIndicatorDots)
-    mPinLockView!!.setPinLockListener(mPinLockListener)
-    mPinLockView!!.pinLength = 6
-    mPinLockView!!.textColor = ContextCompat.getColor(context, R.color.ic_launcher_background)
-    mIndicatorDots!!.indicatorType = IndicatorDots.IndicatorType.FILL_WITH_ANIMATION
+//    mPinLockView!!.attachIndicatorDots(mIndicatorDots)
+//    mPinLockView!!.setPinLockListener(mPinLockListener)
+//    mPinLockView!!.pinLength = 6
+//    mPinLockView!!.textColor = ContextCompat.getColor(context, R.color.ic_launcher_background)
+//    mIndicatorDots!!.indicatorType = IndicatorDots.IndicatorType.FILL_WITH_ANIMATION
 //		btnUnlock!!.setOnClickListener {
 //			 doneButton()
 //		}
