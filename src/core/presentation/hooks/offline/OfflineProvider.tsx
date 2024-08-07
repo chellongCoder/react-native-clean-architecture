@@ -1,15 +1,17 @@
-import React, {PropsWithChildren} from 'react';
+import React, {PropsWithChildren, useEffect} from 'react';
 import {OfflineContext} from './OfflineContext';
-import {useNetInfo} from '@react-native-community/netinfo';
+import {fetch} from '@react-native-community/netinfo';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import useStateCustom from 'src/hooks/useStateCommon';
+
+type TOfflineState = {
+  offlineMode: boolean | null;
+};
 
 export const OfflineProvider = ({children}: PropsWithChildren) => {
-  const {isConnected} = useNetInfo();
-  console.log('isConnected: ', isConnected);
-
-  // const [offlineState, setOfflineState] = useStateCustom({
-  //   offlineMode: false,
-  // });
+  const [offlineState, setOfflineState] = useStateCustom<TOfflineState>({
+    offlineMode: null,
+  });
 
   const storeData = async (key: string, value: any) => {
     try {
@@ -50,9 +52,21 @@ export const OfflineProvider = ({children}: PropsWithChildren) => {
     console.log('ClearAll Done.');
   };
 
+  useEffect(() => {
+    fetch().then(state => {
+      setOfflineState({offlineMode: state.isConnected});
+    });
+  }, [setOfflineState]);
+
   return (
     <OfflineContext.Provider
-      value={{isConnected, storeData, getData, removeValue, clearAll}}>
+      value={{
+        isConnected: offlineState.offlineMode,
+        storeData,
+        getData,
+        removeValue,
+        clearAll,
+      }}>
       {children}
     </OfflineContext.Provider>
   );

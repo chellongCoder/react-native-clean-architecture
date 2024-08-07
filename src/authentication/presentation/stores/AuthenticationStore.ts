@@ -31,6 +31,8 @@ import {isAndroid} from 'src/core/presentation/utils';
 import DeleteChildrenUseCase from 'src/authentication/application/useCases/DeleteChildrenUsecase';
 import ChangeChildDescriptionUseCase from 'src/authentication/application/useCases/ChangeChildDescriptionUsecase';
 import {ChangeChildDescriptionPayload} from 'src/authentication/application/types/ChangeChildDescriptionPayload';
+import {resetNavigator} from 'src/core/presentation/navigation/actions/RootNavigationActions';
+import {STACK_NAVIGATOR} from 'src/core/presentation/navigation/ConstantNavigator';
 @injectable()
 export class AuthenticationStore implements AuthenticationStoreState {
   isLoading = false;
@@ -207,6 +209,9 @@ export class AuthenticationStore implements AuthenticationStoreState {
       console.log('clearUsernamePasswordInKeychain: ', error);
     }
     this.postLogOutUseCase.execute();
+    resetNavigator(STACK_NAVIGATOR.AUTH_NAVIGATOR, {
+      screen: STACK_NAVIGATOR.AUTH.LOGIN_SCREEN,
+    });
   }
 
   @action
