@@ -43,6 +43,7 @@ const SubjectScreen = observer((props: any) => {
 const styles = StyleSheet.create({
   imageBg: {
     flex: 1,
+    backgroundColor: '#FBF8CC',
   },
   image: {
     opacity: 0.3, // Set the opacity here

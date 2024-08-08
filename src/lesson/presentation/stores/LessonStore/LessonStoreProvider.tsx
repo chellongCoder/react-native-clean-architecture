@@ -34,6 +34,8 @@ import {Image} from 'react-native';
 import Button from '../../components/LessonModule/Button';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import ICCheckbox from 'src/core/components/icons/ICCheckbox';
+import PrimaryButton from '../../components/PrimaryButton';
+import IconTickCircle from 'assets/svg/IconTickCircle';
 
 type PropsItemApps = {
   preFixIcon?: React.ReactNode;
@@ -132,9 +134,9 @@ This code snippet suggests that the isShowBottomSheet state variable is used to 
 
         {value.bottomSheetPermissionRef && (
           <BottomSheetCustom
-            snapPoints={['60']}
+            snapPoints={['62']}
             ref={value.bottomSheetPermissionRef}
-            title="ABC needs system permissions to work with:"
+            title="ABeeCi needs system permissions to work with:"
             enablePanDownToClose={false}
             backgroundColor={COLORS.GREEN_66C270}
             enableOverDrag={false}
@@ -248,11 +250,12 @@ const ItemPermission = observer(({lesson}: {lesson: LessonStore}) => {
             globalStyle.spaceBetween,
             styles.permissionItem,
             !errors.isOverlay && {borderColor: COLORS.ERROR},
+            !errors.isOverlay && {backgroundColor: COLORS.WHITE_FBF8CC},
           ]}>
           <Text>System overlay</Text>
           <View>
-            <ICCheckbox
-              color={isOverlay ? COLORS.GREEN_66C270 : COLORS.DISABLED}
+            <IconTickCircle
+              isTick={isOverlay}
               width={scale(20)}
               height={scale(20)}
             />
@@ -273,11 +276,12 @@ const ItemPermission = observer(({lesson}: {lesson: LessonStore}) => {
             globalStyle.spaceBetween,
             styles.permissionItem,
             !errors.isUsageStats && {borderColor: COLORS.ERROR},
+            !errors.isUsageStats && {backgroundColor: COLORS.WHITE_FBF8CC},
           ]}>
           <Text>Usage access</Text>
           <View>
-            <ICCheckbox
-              color={isUsageStats ? COLORS.GREEN_66C270 : COLORS.DISABLED}
+            <IconTickCircle
+              isTick={isUsageStats}
               width={scale(20)}
               height={scale(20)}
             />
@@ -300,11 +304,12 @@ const ItemPermission = observer(({lesson}: {lesson: LessonStore}) => {
             globalStyle.spaceBetween,
             styles.permissionItem,
             !errors.isPushNoti && {borderColor: COLORS.ERROR},
+            !errors.isPushNoti && {backgroundColor: COLORS.WHITE_FBF8CC},
           ]}>
           <Text>Push notification</Text>
           <View>
-            <ICCheckbox
-              color={isPushNoti ? COLORS.GREEN_66C270 : COLORS.DISABLED}
+            <IconTickCircle
+              isTick={isPushNoti}
               width={scale(20)}
               height={scale(20)}
             />
@@ -313,12 +318,20 @@ const ItemPermission = observer(({lesson}: {lesson: LessonStore}) => {
       </>
 
       <View style={{alignItems: 'center', paddingVertical: verticalScale(20)}}>
-        <Button
+        <PrimaryButton
           onPress={() => {
             lesson.onCloseSheetPermission();
           }}
-          title="confirm"
-          color={isConfirm ? COLORS.YELLOW_E6960B : COLORS.DISABLED}
+          text="Confirm"
+          style={{
+            borderRadius: scale(24),
+            paddingVertical: verticalScale(12),
+            marginTop: verticalScale(8),
+            backgroundColor: isConfirm
+              ? COLORS.GREEN_DDF598
+              : COLORS.WHITE_FBF8CC,
+          }}
+          textStyle={{color: COLORS.GREEN_1C6349}}
         />
       </View>
     </View>
@@ -362,11 +375,10 @@ const styles = StyleSheet.create({
     backgroundColor: '#AEAEAE',
   },
   permissionItem: {
-    borderWidth: 1,
-    borderRadius: scale(5),
-    padding: scale(8),
-    marginBottom: verticalScale(5),
-    borderColor: COLORS.WHITE,
-    backgroundColor: COLORS.WHITE,
+    borderRadius: scale(12),
+    paddingHorizontal: scale(16),
+    paddingVertical: verticalScale(12),
+    marginTop: verticalScale(5),
+    backgroundColor: COLORS.GREEN_DDF598,
   },
 });

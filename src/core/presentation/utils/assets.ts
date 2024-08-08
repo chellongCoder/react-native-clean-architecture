@@ -20,4 +20,6 @@ export const assets = {
   star: require('assets/images/star.png'),
   untitled_artwork: require('assets/images/untitled_artwork.png'),
   bee_bg: require('assets/images/bee_bg.png'),
+  andie_1: require('assets/images/andie_1.png'),
+  background_andie_1: require('assets/images/BACKGROUND_ANDIE_1.png'),
 };
