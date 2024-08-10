@@ -70,29 +70,12 @@ const ProfileScreen = observer(({route, navigation}) => {
       ]}>
       <View style={[styles.avatarContainer]}>
         <View style={styles.wrapperAvatar}>
-          <View style={styles.wrapperFree}>
-            <View style={styles.free}>
-              <Text style={[styleHook.txtButton, styles.textFree]}>FREE</Text>
-              <IconDiamond width={24} height={24} />
-            </View>
-            <View style={{...styles.free, backgroundColor: '#C2F0FF'}}>
-              <Text
-                style={[styleHook.txtButton, styles.textFree, {paddingTop: 5}]}>
-                150
-              </Text>
-              <ICStar width={10} height={10} />
-            </View>
-          </View>
           <View style={[styles.circle, checkType()]}>
             <View style={styles.avatar}>
               <IconUser width={82} height={87} />
             </View>
           </View>
-          <View style={[styles.square, checkType()]}>
-            <TouchableOpacity style={styles.button}>
-              <Text style={[styleHook.txtButton, styles.textBtn]}>Follow</Text>
-            </TouchableOpacity>
-          </View>
+          <View style={[styles.square, checkType()]} />
         </View>
       </View>
       <View style={styles.contentContainer}>

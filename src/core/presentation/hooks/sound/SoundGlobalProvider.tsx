@@ -104,11 +104,12 @@ export const SoundGlobalProvider = ({children}: PropsWithChildren) => {
         .flat()
         .forEach(sound => {
           if (sound) {
-            sound.setVolume(volume);
+            currentPlayingSound?.setVolume(volume);
+            sound.setVolume(0);
           }
         });
     },
-    [sounds],
+    [currentPlayingSound, sounds],
   );
 
   useEffect(() => {

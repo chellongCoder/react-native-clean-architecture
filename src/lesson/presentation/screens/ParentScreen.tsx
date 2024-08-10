@@ -56,6 +56,7 @@ import {IClock, ICpurchase, ICsetting} from '../components/icons';
 import Dropdown from 'src/core/components/dropdown/Dropdown';
 import Toast from 'react-native-toast-message';
 import {useSaveSetting} from 'src/hooks/useSaveSetting';
+import {useSoundBackgroundGlobal} from 'src/core/presentation/hooks/sound/useSoundBackgroundGlobal';
 
 enum TabParentE {
   APP_BLOCK = 'App block',
@@ -89,6 +90,7 @@ const ParentScreen = observer(() => {
   const insets = useSafeAreaInsets();
   const globalStyle = useGlobalStyle();
   const lesson = useLessonStore();
+  const soundHook = useSoundBackgroundGlobal();
 
   const {
     getUserProfile,
@@ -472,7 +474,13 @@ The blockAppsSystem function is an asynchronous function that awaits the result 
                   Background sound
                 </Text>
                 <View style={[styles.mb12, styles.mt4]}>
-                  <Volume value={80} onChangValue={v => console.log(v)} />
+                  <Volume
+                    value={80}
+                    onChangValue={v => {
+                      const newVolume = (v / 100).toFixed(1);
+                      soundHook.setVolume(+newVolume);
+                    }}
+                  />
                 </View>
 
                 <Text style={[globalStyle.txtButton, styles.textColor]}>
@@ -521,6 +529,7 @@ The blockAppsSystem function is an asynchronous function that awaits the result 
     setErrorMessage,
     setBlocked,
     tabSetting,
+    soundHook,
   ]);
 
   return (

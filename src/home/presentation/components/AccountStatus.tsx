@@ -59,15 +59,6 @@ const AccountStatus = (props: TProps) => {
         ) : (
           <View style={{flex: 1}} />
         )}
-        <View style={styles.wrapIconContainer}>
-          <Text style={styles.text}>150</Text>
-          <TouchableOpacity
-            onPress={() => {
-              navigateScreen(STACK_NAVIGATOR.BOTTOM_TAB.ACHIEVEMENT_TAB, {});
-            }}>
-            <ICStarSmall />
-          </TouchableOpacity>
-        </View>
       </View>
     </View>
   );

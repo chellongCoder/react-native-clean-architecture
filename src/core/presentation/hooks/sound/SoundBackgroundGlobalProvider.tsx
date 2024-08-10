@@ -8,7 +8,7 @@ import {AppStateStatus} from 'react-native';
 export const SoundBackgroundGlobalProvider = ({
   children,
 }: PropsWithChildren) => {
-  const {loopSound, isInitSoundDone, pauseSound} =
+  const {loopSound, isInitSoundDone, pauseSound, setVolume} =
     useContext(SoundGlobalContext);
 
   const [isPlaying, setIsPlaying] = useState(false);
@@ -42,7 +42,7 @@ export const SoundBackgroundGlobalProvider = ({
   }, [loopSound, isInitSoundDone]);
 
   return (
-    <SoundBackgroundGlobalContext.Provider value={{isPlaying}}>
+    <SoundBackgroundGlobalContext.Provider value={{isPlaying, setVolume}}>
       {children}
     </SoundBackgroundGlobalContext.Provider>
   );
