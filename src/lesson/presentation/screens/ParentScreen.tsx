@@ -42,7 +42,11 @@ import Username from '../components/Username';
 import {useLoadingGlobal} from 'src/core/presentation/hooks/loading/useLoadingGlobal';
 import {useAsyncEffect} from 'src/core/presentation/hooks';
 import SelectApp from '../components/LessonModule/SelectApp';
-import {isAndroid} from 'src/core/presentation/utils';
+import {
+  HEIGHT_SCREEN,
+  isAndroid,
+  WIDTH_SCREEN,
+} from 'src/core/presentation/utils';
 import ListBlockedApps from '../components/LessonModule/ListBlockedApps';
 import {
   addToLockedApps,
@@ -57,6 +61,8 @@ import Dropdown from 'src/core/components/dropdown/Dropdown';
 import Toast from 'react-native-toast-message';
 import {useSaveSetting} from 'src/hooks/useSaveSetting';
 import {useSoundBackgroundGlobal} from 'src/core/presentation/hooks/sound/useSoundBackgroundGlobal';
+import {useAuthParent} from 'src/hooks/useAuthParent';
+import AuthParentScreen from './AuthParentScreen';
 
 enum TabParentE {
   APP_BLOCK = 'App block',
@@ -101,6 +107,14 @@ const ParentScreen = observer(() => {
   } = useAuthenticationStore();
 
   useGetUserSetting(deviceToken, selectedChild?._id ?? '', lesson);
+  const {isShowAuth, changeIsShowAuth} = useAuthParent();
+  console.log(
+    '🛠 LOG: 🚀 --> ----------------------------------------🛠 LOG: 🚀 -->',
+  );
+  console.log('🛠 LOG: 🚀 --> ~ isShowAuth:', isShowAuth);
+  console.log(
+    '🛠 LOG: 🚀 --> ----------------------------------------🛠 LOG: 🚀 -->',
+  );
   const hasDataServer = useMemo(
     () =>
       !!lesson.blockedListAppsSystem.length ||
@@ -648,6 +662,19 @@ The blockAppsSystem function is an asynchronous function that awaits the result 
           </ScrollView>
         </BookView>
       </KeyboardAvoidingView>
+      {isShowAuth && (
+        <View
+          style={{
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            zIndex: 999,
+            width: WIDTH_SCREEN,
+            height: HEIGHT_SCREEN,
+          }}>
+          <AuthParentScreen changeIsShowAuth={changeIsShowAuth} />
+        </View>
+      )}
     </View>
   );
 });

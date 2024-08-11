@@ -20,33 +20,33 @@ import useLoginWithCredentials from 'src/authentication/presentation/hooks/useLo
 import {CustomTextStyle} from 'src/core/presentation/constants/typography';
 import {COLORS} from 'src/core/presentation/constants/colors';
 import {useAnimatedShake} from 'src/hooks/useAnimatedShake';
-import Animated from 'react-native-reanimated';
+import Animated, {
+  useAnimatedStyle,
+  useSharedValue,
+  withSpring,
+  withTiming,
+} from 'react-native-reanimated';
 import {usePermissionApplock} from 'src/hooks/usePermissionApplock';
 import {useLoadingGlobal} from 'src/core/presentation/hooks/loading/useLoadingGlobal';
-import {AppState, AppStateStatus} from 'react-native';
 
-const AuthParentScreen = () => {
+const AuthParentScreen = ({changeIsShowAuth}) => {
   // const [password, setPassword] = useState('');
   const passwordRef = useRef('');
   const [error, setError] = useState('');
-  const [appState, setAppState] = useState<AppStateStatus>(
-    AppState.currentState,
-  );
-
-  const appStateRef = useRef<AppStateStatus>('unknown');
 
   const {handleComparePassword} = useLoginWithCredentials();
   const {shake, rStyle} = useAnimatedShake();
   const lessonStore = useLessonStore();
   const loadingGlobal = useLoadingGlobal();
-  const permissionHook = usePermissionApplock();
+  const opacity = useSharedValue(0);
+  const translateY = useSharedValue(50);
 
   const onSubmit = async () => {
     loadingGlobal.show?.();
     const res = await handleComparePassword({password: passwordRef.current});
     if (res === 200) {
       lessonStore.setPasswordParent(passwordRef.current);
-      replaceScreen(STACK_NAVIGATOR.PARENT.PARENT_SCREEN);
+      changeIsShowAuth?.();
     } else {
       shake();
       setError('Password not match!');
@@ -54,6 +54,17 @@ const AuthParentScreen = () => {
     loadingGlobal.hide?.();
   };
 
+  useEffect(() => {
+    opacity.value = withTiming(1, {duration: 500});
+    translateY.value = withSpring(0, {damping: 10, stiffness: 100});
+  }, [opacity, translateY]);
+
+  const animatedStyle = useAnimatedStyle(() => {
+    return {
+      opacity: opacity.value,
+      transform: [{translateY: translateY.value}],
+    };
+  });
   return (
     <ImageBackground
       style={[styles.container]}
@@ -61,7 +72,7 @@ const AuthParentScreen = () => {
       imageStyle={styles.imageStyle}
       resizeMode="cover">
       <ScrollView>
-        <Animated.View style={[rStyle]}>
+        <Animated.View style={[rStyle, animatedStyle]}>
           <CommonInputPassword
             label="Enter password"
             textInputProp={{
@@ -83,7 +94,7 @@ const AuthParentScreen = () => {
   );
 };
 
-export default withProviders(LessonStoreProvider)(AuthParentScreen);
+export default AuthParentScreen;
 
 const styles = StyleSheet.create({
   container: {
