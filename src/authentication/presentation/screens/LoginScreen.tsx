@@ -1,4 +1,11 @@
-import {ScrollView, StyleSheet, Text, View} from 'react-native';
+import {
+  ImageBackground,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import React, {useState} from 'react';
 import PrimaryButton from '../components/PrimaryButton';
 import CommonInput, {CommonInputPassword} from '../components/CommonInput';
@@ -31,11 +38,15 @@ const LoginScreen = observer(() => {
   };
 
   return (
-    <View style={[styles.container]}>
-      <ScrollView contentContainerStyle={[styles.fill]}>
+    <ImageBackground
+      style={[styles.container]}
+      source={require('../../../../assets/images/authBackground.png')}>
+      <View style={styles.overlay} />
+
+      <ScrollView contentContainerStyle={[styles.wrapContentContainer]}>
         <Dropdown
           title={lang}
-          width={scale(100)}
+          width={scale(76)}
           onSelectItem={item => setLang(item)}
           data={['Eng', 'Vie']}
         />
@@ -58,17 +69,17 @@ const LoginScreen = observer(() => {
             }}
           />
 
-          <Text style={[styles.txtLink]}>Forget password</Text>
+          {/* <Text style={[styles.txtLink]}>Forget password</Text> */}
 
           <View style={[styles.mt48]}>
-            <Text style={[styles.txtLink, styles.mv8]}>Another account?</Text>
-            <View style={[styles.rowAround]}>
-              <PrimaryButton
+            {/* <Text style={[styles.txtLink, styles.mv8]}>Another account?</Text> */}
+            <View style={[styles.rowAround, {paddingHorizontal: scale(16)}]}>
+              {/* <PrimaryButton
                 text="Register"
                 style={styles.fill}
                 onPress={onRegister}
-              />
-              <View style={styles.mh12} />
+              /> */}
+              {/* <View style={styles.mh12} /> */}
               <PrimaryButton
                 text="Login"
                 style={styles.fill}
@@ -78,15 +89,46 @@ const LoginScreen = observer(() => {
           </View>
         </View>
 
-        <View style={[]}>
+        <View style={[{paddingHorizontal: scale(16)}]}>
           <Text style={[styles.txtLink, styles.mv8, styles.textCenter]}>
             Or log in with
           </Text>
-          <PrimaryButton text="Google" wrapContent={false} style={styles.mv8} />
-          <PrimaryButton text="Facebook" wrapContent={false} />
+          <PrimaryButton
+            text="Google"
+            wrapContent={false}
+            style={[
+              styles.mv8,
+              {
+                backgroundColor: '#F2B559',
+              },
+            ]}
+          />
+          <PrimaryButton
+            text="Facebook"
+            wrapContent={false}
+            style={[
+              {
+                backgroundColor: '#F2B559',
+              },
+            ]}
+          />
+          <TouchableOpacity
+            onPress={onRegister}
+            style={{marginVertical: scale(32)}}>
+            <Text style={[styles.txtLink, styles.mv8, styles.textCenter]}>
+              Don't have account?{' '}
+              <Text
+                style={{
+                  textDecorationLine: 'underline',
+                  fontFamily: FontFamily.Eina01Bold,
+                }}>
+                Sign up now
+              </Text>
+            </Text>
+          </TouchableOpacity>
         </View>
       </ScrollView>
-    </View>
+    </ImageBackground>
   );
 });
 
@@ -96,14 +138,21 @@ const styles = StyleSheet.create({
   fill: {
     flex: 1,
   },
+  overlay: {
+    ...StyleSheet.absoluteFillObject, // This makes the overlay fill the entire ImageBackground
+    backgroundColor: '#fbf8cc', // Adjust the color and opacity as needed
+    opacity: 0.9,
+  },
+  wrapContentContainer: {
+    flex: 1,
+    paddingVertical: 30,
+    paddingHorizontal: 40,
+  },
   justifyCenter: {
-    justifyContent: 'center',
+    justifyContent: 'flex-end',
   },
   container: {
     flex: 1,
-    backgroundColor: '#fbf8cc',
-    paddingHorizontal: 30,
-    paddingVertical: 40,
   },
   boxLang: {
     backgroundColor: '#FFE699',
@@ -130,12 +179,12 @@ const styles = StyleSheet.create({
     marginVertical: 8,
   },
   mt48: {
-    marginTop: 48,
+    marginTop: scale(24),
+    marginBottom: scale(48),
   },
   txtLink: {
     fontFamily: FontFamily.Eina01Regular,
     fontSize: 10,
-    textDecorationLine: 'underline',
     color: '#1C6349',
   },
   textCenter: {
@@ -143,6 +192,5 @@ const styles = StyleSheet.create({
   },
   rowAround: {
     flexDirection: 'row',
-    justifyContent: 'space-around',
   },
 });

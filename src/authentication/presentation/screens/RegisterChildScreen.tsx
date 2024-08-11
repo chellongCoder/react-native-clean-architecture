@@ -8,6 +8,7 @@ import {
   Platform,
   KeyboardAvoidingView,
   TextInput,
+  ImageBackground,
 } from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {scale} from 'react-native-size-matters';
@@ -23,6 +24,7 @@ import useLoginWithCredentials from '../hooks/useLoginWithCredentials';
 import {useLoadingGlobal} from 'src/core/presentation/hooks/loading/useLoadingGlobal';
 import {Subject} from 'src/authentication/application/types/GetListSubjectResponse';
 import useGlobalStyle from 'src/core/presentation/hooks/useGlobalStyle';
+import Dropdown from 'src/core/components/dropdown/Dropdown';
 
 type TRegister = {
   name?: string;
@@ -53,6 +55,8 @@ const RegisterChildScreen: React.FC = () => {
   const [ageOptions, setAgeOptions] = useState<ItemType[]>(
     Array.from({length: 15}, (_, i) => ({label: `${i + 5}`, value: i + 5})),
   );
+
+  const [lang, setLang] = useState('Eng');
 
   const [registerState, setRegisterState] =
     useStateCustom<TRegister>(initialRegisterState);
@@ -130,77 +134,84 @@ const RegisterChildScreen: React.FC = () => {
   }, [getListAllSubject]);
 
   return (
-    <SafeAreaView style={styles.container}>
-      <View style={styles.wrapContainer}>
-        <TouchableOpacity style={styles.wrapHeaderContainer}>
-          <Text style={styles.headerTitle}>Eng</Text>
-          <ICDropDown />
-        </TouchableOpacity>
+    <ImageBackground
+      style={[styles.container]}
+      source={require('../../../../assets/images/authBackground.png')}>
+      <View style={styles.overlay} />
+      <SafeAreaView style={styles.container}>
+        <View style={styles.wrapContainer}>
+          <Dropdown
+            title={lang}
+            width={scale(76)}
+            onSelectItem={item => setLang(item)}
+            data={['Eng', 'Vie']}
+          />
 
-        {/* <ScrollView contentContainerStyle={{flex: 1}}> */}
-        <KeyboardAvoidingView
-          style={[styles.fill]}
-          behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
-          <View style={styles.wrapBodyContainer}>
-            <View style={[styles.pb32]}>
-              <Text style={[commonStyle.txtLabel, styles.txtLabel]}>
-                Child's name
-              </Text>
-              <View style={styles.boxInput}>
-                <TextInput
-                  style={[styles.input]}
-                  placeholder="Thomas"
-                  value={registerState.name}
-                  onChangeText={(e: string) => onTextInputChange('name', e)}
-                  autoFocus={true}
+          {/* <ScrollView contentContainerStyle={{flex: 1}}> */}
+          <KeyboardAvoidingView
+            style={[styles.fill]}
+            behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
+            <View style={styles.wrapBodyContainer}>
+              <View style={[styles.pb32]}>
+                <Text style={[commonStyle.txtLabel, styles.txtLabel]}>
+                  Child's name
+                </Text>
+                <View style={styles.boxInput}>
+                  <TextInput
+                    style={[styles.input]}
+                    placeholder="Thomas"
+                    value={registerState.name}
+                    onChangeText={(e: string) => onTextInputChange('name', e)}
+                    autoFocus={true}
+                  />
+                </View>
+              </View>
+
+              <View style={styles.genderAgeContainer}>
+                <CommonDropDown
+                  label="Gender"
+                  open={genderOpen}
+                  value={registerState.gender || genderOptions[0].value}
+                  items={genderOptions}
+                  setOpen={setGenderOpen}
+                  setValue={setGenderValue}
+                  setItems={setGenderOptions}
+                />
+
+                <CommonDropDown
+                  label="Age"
+                  open={ageOpen}
+                  value={registerState.age || ageOptions[0].value.toString()}
+                  items={ageOptions}
+                  setOpen={setAgeOpen}
+                  setValue={setAgeValue}
+                  setItems={setAgeOptions}
+                />
+              </View>
+
+              <View style={styles.wrapSubjectContainer}>
+                <Text style={styles.subjectHeaderTitle}>Want to study</Text>
+
+                <FlatList
+                  data={registerState.listAllSubject || []}
+                  renderItem={renderSubjectItem}
+                  numColumns={2}
+                  columnWrapperStyle={{justifyContent: 'space-between'}}
                 />
               </View>
             </View>
-
-            <View style={styles.genderAgeContainer}>
-              <CommonDropDown
-                label="Gender"
-                open={genderOpen}
-                value={registerState.gender || genderOptions[0].value}
-                items={genderOptions}
-                setOpen={setGenderOpen}
-                setValue={setGenderValue}
-                setItems={setGenderOptions}
-              />
-
-              <CommonDropDown
-                label="Age"
-                open={ageOpen}
-                value={registerState.age || ageOptions[0].value.toString()}
-                items={ageOptions}
-                setOpen={setAgeOpen}
-                setValue={setAgeValue}
-                setItems={setAgeOptions}
-              />
-            </View>
-
-            <View style={styles.wrapSubjectContainer}>
-              <Text style={styles.subjectHeaderTitle}>Want to study</Text>
-
-              <FlatList
-                data={registerState.listAllSubject || []}
-                renderItem={renderSubjectItem}
-                numColumns={2}
-                columnWrapperStyle={{justifyContent: 'space-between'}}
-              />
-            </View>
-          </View>
-        </KeyboardAvoidingView>
-        {/* </ScrollView> */}
-      </View>
-      <View style={styles.buttonContainer}>
-        <TouchableOpacity
-          style={styles.wrapButtonContainer}
-          onPress={onCreateAccount}>
-          <Text style={styles.buttonTitle}>Create an account</Text>
-        </TouchableOpacity>
-      </View>
-    </SafeAreaView>
+          </KeyboardAvoidingView>
+          {/* </ScrollView> */}
+        </View>
+        <View style={styles.buttonContainer}>
+          <TouchableOpacity
+            style={styles.wrapButtonContainer}
+            onPress={onCreateAccount}>
+            <Text style={styles.buttonTitle}>Create an account</Text>
+          </TouchableOpacity>
+        </View>
+      </SafeAreaView>
+    </ImageBackground>
   );
 };
 
@@ -210,7 +221,11 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
-    backgroundColor: COLORS.WHITE_FBF8CC,
+  },
+  overlay: {
+    ...StyleSheet.absoluteFillObject, // This makes the overlay fill the entire ImageBackground
+    backgroundColor: '#fbf8cc', // Adjust the color and opacity as needed
+    opacity: 0.9,
   },
   wrapContainer: {
     flex: 1,
@@ -256,7 +271,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: scale(12),
     backgroundColor: COLORS.GREEN_66C270,
     width: '50%',
-    borderRadius: scale(10),
+    borderRadius: scale(87),
     justifyContent: 'center',
     alignItems: 'center',
   },

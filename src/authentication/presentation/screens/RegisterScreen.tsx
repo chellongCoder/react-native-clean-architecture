@@ -1,5 +1,6 @@
-import React, {useCallback} from 'react';
+import React, {useCallback, useState} from 'react';
 import {
+  ImageBackground,
   KeyboardAvoidingView,
   Platform,
   ScrollView,
@@ -8,7 +9,6 @@ import {
   View,
 } from 'react-native';
 import {observer} from 'mobx-react';
-import useGlobalStyle from 'src/core/presentation/hooks/useGlobalStyle';
 import CommonInput, {CommonInputPassword} from '../components/CommonInput';
 import PrimaryButton from '../components/PrimaryButton';
 import {goBack} from 'src/core/presentation/navigation/actions/RootNavigationActions';
@@ -18,6 +18,9 @@ import useStateCustom from 'src/hooks/useStateCommon';
 import {CustomTextStyle} from 'src/core/presentation/constants/typography';
 import {COLORS} from 'src/core/presentation/constants/colors';
 import {RegisterPayload} from 'src/authentication/application/types/RegisterPayload';
+import {FontFamily} from 'src/core/presentation/hooks/useFonts';
+import Dropdown from 'src/core/components/dropdown/Dropdown';
+import {scale} from 'react-native-size-matters';
 
 interface TRegisterError {
   emailOrPhoneError?: string;
@@ -45,12 +48,12 @@ const initialRegisterState: TRegister = {
 };
 
 const RegisterScreen: React.FC = observer(() => {
-  const commonStyle = useGlobalStyle();
   const {handleRegister} = useLoginWithCredentials();
   useLoadingGlobal();
 
   const [registerState, setRegisterState] =
     useStateCustom<TRegister>(initialRegisterState);
+  const [lang, setLang] = useState('Eng');
 
   const validateEmailOrPhone = (value: string): string | undefined => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -137,12 +140,17 @@ const RegisterScreen: React.FC = observer(() => {
   );
 
   return (
-    <View style={styles.container}>
+    <ImageBackground
+      style={[styles.container]}
+      source={require('../../../../assets/images/authBackground.png')}>
+      <View style={styles.overlay} />
       <ScrollView contentContainerStyle={styles.fill}>
-        <View style={styles.boxLang}>
-          <Text style={[commonStyle.txtLabel, styles.ph16]}>Eng</Text>
-          <View style={styles.arrowIcon} />
-        </View>
+        <Dropdown
+          title={lang}
+          width={scale(76)}
+          onSelectItem={item => setLang(item)}
+          data={['Eng', 'Vie']}
+        />
         <KeyboardAvoidingView
           style={[styles.fill, styles.justifyCenter]}
           behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
@@ -207,17 +215,30 @@ const RegisterScreen: React.FC = observer(() => {
           />
         </KeyboardAvoidingView>
         <View style={styles.rowAround}>
-          <PrimaryButton text="Log in" onPress={goBack} />
+          <View style={{justifyContent: 'center', alignItems: 'center'}}>
+            <PrimaryButton
+              text="Log in"
+              onPress={goBack}
+              style={{backgroundColor: '#F2B559'}}
+            />
+            <Text style={styles.subTitle}>Already have account?</Text>
+          </View>
+
           <PrimaryButton text="Next" onPress={onRegister} />
         </View>
       </ScrollView>
-    </View>
+    </ImageBackground>
   );
 });
 
 const styles = StyleSheet.create({
   fill: {
     flex: 1,
+  },
+  overlay: {
+    ...StyleSheet.absoluteFillObject, // This makes the overlay fill the entire ImageBackground
+    backgroundColor: '#fbf8cc', // Adjust the color and opacity as needed
+    opacity: 0.9,
   },
   justifyCenter: {
     justifyContent: 'center',
@@ -252,6 +273,11 @@ const styles = StyleSheet.create({
   errorMsg: {
     ...CustomTextStyle.body2,
     color: COLORS.ERROR,
+  },
+  subTitle: {
+    color: '#1C6349',
+    fontFamily: FontFamily.Eina01Regular,
+    fontSize: 10,
   },
 });
 

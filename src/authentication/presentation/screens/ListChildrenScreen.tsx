@@ -6,6 +6,7 @@ import {
   StyleSheet,
   Dimensions,
   ScrollView,
+  ImageBackground,
 } from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {scale} from 'react-native-size-matters';
@@ -83,96 +84,105 @@ const ListChildrenScreen = React.memo(() => {
   }, [getData, isConnected]);
 
   return (
-    <SafeAreaView style={styles.container} edges={['top']}>
-      <View style={styles.wrapContainer}>
-        <TouchableOpacity style={styles.wrapHeaderContainer}>
-          <Text style={styles.headerTitle}>Eng</Text>
-          <ICDropDown />
-        </TouchableOpacity>
-
-        <View style={styles.wrapBodyContainer}>
-          <View style={styles.bigCircle}>
-            <View style={styles.mediumCircle}>
-              <ICManIconMedium />
-            </View>
-          </View>
-          <View style={styles.bodyContainer}>
-            <Text style={styles.title}>Hi, Welcome back</Text>
-            <Text style={styles.titleBold}>{userProfile?.username}</Text>
-            {isConnected && (
-              <TouchableOpacity onPress={onLogout}>
-                <Text style={styles.logoutTitle}>Another account?</Text>
-              </TouchableOpacity>
-            )}
-          </View>
-        </View>
-      </View>
-      <View style={styles.wrapBottomContainer}>
-        <View style={styles.square} />
-
-        <View>
-          <Text style={styles.bottomTitle}>Children account</Text>
-          <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-            <View style={styles.wrapAddChildContainer}>
-              {userProfile?.children.map((item: children) => {
-                return (
-                  <View style={{alignItems: 'center', marginRight: scale(8)}}>
-                    <TouchableOpacity
-                      style={styles.addChildContainer}
-                      onPress={() => onSelectChild(item)}>
-                      <View
-                        style={[
-                          styles.addChildContent,
-                          isChooseChildren === item._id
-                            ? {backgroundColor: COLORS.GREEN_66C270}
-                            : {},
-                        ]}>
-                        <ICManIconMedium
-                          color={
-                            isChooseChildren === item._id
-                              ? COLORS.WHITE
-                              : COLORS.BLUE_1C6349
-                          }
-                        />
-                      </View>
-                    </TouchableOpacity>
-                    <Text style={styles.childrenName}>{item.name}</Text>
-                  </View>
-                );
-              })}
-            </View>
-            {userProfile?.children &&
-              userProfile?.children.length < 5 &&
-              isConnected && (
-                <View style={styles.wrapAddChildContainer}>
-                  <View style={{alignItems: 'center'}}>
-                    <TouchableOpacity
-                      style={styles.addChildContainer}
-                      onPress={onAddChild}>
-                      <ICAddChild />
-                    </TouchableOpacity>
-                  </View>
-                </View>
-              )}
-          </ScrollView>
-        </View>
-
-        <View style={{justifyContent: 'center', alignItems: 'center'}}>
-          <TouchableOpacity
-            style={styles.wrapBottomButtonContainer}
-            onPress={onEnter}>
-            <Text style={styles.bottomButtonTitle}>Enter</Text>
+    <ImageBackground
+      style={[styles.container]}
+      source={require('../../../../assets/images/authBackground.png')}>
+      <View style={styles.overlay} />
+      <SafeAreaView style={styles.container} edges={['top']}>
+        <View style={styles.wrapContainer}>
+          <TouchableOpacity style={styles.wrapHeaderContainer}>
+            <Text style={styles.headerTitle}>Eng</Text>
+            <ICDropDown />
           </TouchableOpacity>
+
+          <View style={styles.wrapBodyContainer}>
+            <View style={styles.bigCircle}>
+              <View style={styles.mediumCircle}>
+                <ICManIconMedium />
+              </View>
+            </View>
+            <View style={styles.bodyContainer}>
+              <Text style={styles.title}>Hi, Welcome back</Text>
+              <Text style={styles.titleBold}>{userProfile?.username}</Text>
+              {isConnected && (
+                <TouchableOpacity onPress={onLogout}>
+                  <Text style={styles.logoutTitle}>Another account?</Text>
+                </TouchableOpacity>
+              )}
+            </View>
+          </View>
         </View>
-      </View>
-    </SafeAreaView>
+        <View style={styles.wrapBottomContainer}>
+          <View style={styles.square} />
+
+          <View>
+            <Text style={styles.bottomTitle}>Children account</Text>
+            <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+              <View style={styles.wrapAddChildContainer}>
+                {userProfile?.children.map((item: children) => {
+                  return (
+                    <View style={{alignItems: 'center', marginRight: scale(8)}}>
+                      <TouchableOpacity
+                        style={styles.addChildContainer}
+                        onPress={() => onSelectChild(item)}>
+                        <View
+                          style={[
+                            styles.addChildContent,
+                            isChooseChildren === item._id
+                              ? {backgroundColor: COLORS.GREEN_66C270}
+                              : {},
+                          ]}>
+                          <ICManIconMedium
+                            color={
+                              isChooseChildren === item._id
+                                ? COLORS.WHITE
+                                : COLORS.BLUE_1C6349
+                            }
+                          />
+                        </View>
+                      </TouchableOpacity>
+                      <Text style={styles.childrenName}>{item.name}</Text>
+                    </View>
+                  );
+                })}
+              </View>
+              {userProfile?.children &&
+                userProfile?.children.length < 5 &&
+                isConnected && (
+                  <View style={styles.wrapAddChildContainer}>
+                    <View style={{alignItems: 'center'}}>
+                      <TouchableOpacity
+                        style={styles.addChildContainer}
+                        onPress={onAddChild}>
+                        <ICAddChild />
+                      </TouchableOpacity>
+                    </View>
+                  </View>
+                )}
+            </ScrollView>
+          </View>
+
+          <View style={{justifyContent: 'center', alignItems: 'center'}}>
+            <TouchableOpacity
+              style={styles.wrapBottomButtonContainer}
+              onPress={onEnter}>
+              <Text style={styles.bottomButtonTitle}>Enter</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </SafeAreaView>
+    </ImageBackground>
   );
 });
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: COLORS.WHITE_FBF8CC,
+  },
+  overlay: {
+    ...StyleSheet.absoluteFillObject, // This makes the overlay fill the entire ImageBackground
+    backgroundColor: '#fbf8cc', // Adjust the color and opacity as needed
+    opacity: 0.9,
   },
   wrapContainer: {
     flex: 1,
@@ -256,10 +266,10 @@ const styles = StyleSheet.create({
   wrapBottomButtonContainer: {
     marginTop: scale(56),
     alignItems: 'center',
-    paddingVertical: scale(6),
-    width: '25%',
+    paddingVertical: scale(8),
+    width: '30%',
     backgroundColor: COLORS.GREEN_66C270,
-    borderRadius: scale(4),
+    borderRadius: scale(87),
   },
   wrapAddChildContainer: {
     flexDirection: 'row',
