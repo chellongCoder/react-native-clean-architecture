@@ -16,6 +16,7 @@ export type ItemCardProps = {
   name?: string;
   Icon:
     | string
+    | React.ReactElement
     | React.ComponentType<{color?: string; height?: number; width?: number}>;
   isFocus?: boolean;
   size?: number;
@@ -48,7 +49,7 @@ const ItemCard = ({
   const bc = backgroundColor;
   return (
     <TouchableOpacity onPress={onPress} activeOpacity={0.6}>
-      {isHexagon && (
+      {isHexagon && typeof Icon === 'function' && (
         <ImageBackground
           source={assets.hexagon_frame}
           tintColor={bg}
@@ -87,7 +88,8 @@ const ItemCard = ({
               <IconBlock color={ic} height={size / 2} width={size / 2} />
             </>
           )}
-          {typeof Icon !== 'string' && (
+          {typeof Icon === 'object' && Icon}
+          {typeof Icon === 'function' && (
             <>
               <Icon color={ic} height={size / 2} width={size / 2} />
             </>

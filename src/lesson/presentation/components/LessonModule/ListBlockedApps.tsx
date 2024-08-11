@@ -2,7 +2,7 @@ import {StyleSheet, Text, View} from 'react-native';
 import React from 'react';
 import IconArrowFill from 'assets/svg/IconArrowFill';
 import useGlobalStyle from 'src/core/presentation/hooks/useGlobalStyle';
-import ItemCard from '../ItemCard';
+import ItemCard, {ItemCardProps} from '../ItemCard';
 import {scale} from 'react-native-size-matters';
 import {COLORS} from 'src/core/presentation/utils/colors';
 import {ScrollView} from 'react-native-gesture-handler';
@@ -16,6 +16,7 @@ const ListBlockedApps = ({
     id: string;
     name: string;
     icon: any;
+    itemCardProps: Omit<ItemCardProps, 'Icon'>;
   }[];
   setTabBody: (id: string) => void;
   selectedApp: string;
@@ -41,6 +42,7 @@ const ListBlockedApps = ({
                 borderWidth={3}
                 space={4}
                 size={85}
+                {...t?.itemCardProps}
               />
               <View style={{width: scale(10)}} />
             </>
