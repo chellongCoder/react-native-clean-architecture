@@ -228,9 +228,15 @@ const ItemPermission = observer(({lesson}: {lesson: LessonStore}) => {
         clearInterval(timeRef.current);
         return;
       }
-      lesson.setIsOverlay(overlay);
-      lesson.setIsUsageStats(usageState);
-      lesson.setIsPushNoti(pushNoti);
+      if (lesson.isOverlay !== overlay) {
+        lesson.setIsOverlay(overlay);
+      }
+      if (lesson.isUsageStats !== overlay) {
+        lesson.setIsUsageStats(usageState);
+      }
+      if (lesson.isPushNoti !== overlay) {
+        lesson.setIsPushNoti(pushNoti);
+      }
     }, 1000);
   }, []);
 
@@ -320,6 +326,7 @@ const ItemPermission = observer(({lesson}: {lesson: LessonStore}) => {
       <View style={{alignItems: 'center', paddingVertical: verticalScale(20)}}>
         <PrimaryButton
           onPress={() => {
+            clearInterval(timeRef.current);
             lesson.onCloseSheetPermission();
           }}
           text="Confirm"

@@ -9,10 +9,6 @@ import {
 import React, {useEffect, useRef, useState} from 'react';
 import {CommonInputPassword} from 'src/authentication/presentation/components/CommonInput';
 import PrimaryButton from '../components/PrimaryButton';
-import {replaceScreen} from 'src/core/presentation/navigation/actions/RootNavigationActions';
-import {STACK_NAVIGATOR} from 'src/core/presentation/navigation/ConstantNavigator';
-import {withProviders} from 'src/core/presentation/utils/withProviders';
-import {LessonStoreProvider} from '../stores/LessonStore/LessonStoreProvider';
 import {useLessonStore} from '../stores/LessonStore/useGetPostsStore';
 import {assets, isAndroid} from 'src/core/presentation/utils';
 import {scale} from 'react-native-size-matters';
@@ -33,7 +29,7 @@ const AuthParentScreen = ({changeIsShowAuth}) => {
   // const [password, setPassword] = useState('');
   const passwordRef = useRef('');
   const [error, setError] = useState('');
-
+  usePermissionApplock();
   const {handleComparePassword} = useLoginWithCredentials();
   const {shake, rStyle} = useAnimatedShake();
   const lessonStore = useLessonStore();
@@ -55,8 +51,10 @@ const AuthParentScreen = ({changeIsShowAuth}) => {
   };
 
   useEffect(() => {
-    opacity.value = withTiming(1, {duration: 500});
-    translateY.value = withSpring(0, {damping: 10, stiffness: 100});
+    setTimeout(() => {
+      opacity.value = withTiming(1, {duration: 500});
+      translateY.value = withSpring(0, {damping: 10, stiffness: 100});
+    }, 300);
   }, [opacity, translateY]);
 
   const animatedStyle = useAnimatedStyle(() => {

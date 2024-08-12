@@ -444,6 +444,13 @@ The blockAppsSystem function is an asynchronous function that awaits the result 
           <View>
             <View style={[styles.fill]} />
             <PrimaryButton
+              onPress={onConfigUserSetting}
+              text={'Save'}
+              style={[styles.btnCommon]}
+              isLoading={lesson.isLoadingUserSetting}
+              disable={!!errorMessage}
+            />
+            <PrimaryButton
               text="Unlock"
               style={[styles.btnCommon, styles.btnRed]}
               onPress={async () => {
@@ -671,6 +678,7 @@ The blockAppsSystem function is an asynchronous function that awaits the result 
             zIndex: 999,
             width: WIDTH_SCREEN,
             height: HEIGHT_SCREEN,
+            backgroundColor: 'red',
           }}>
           <AuthParentScreen changeIsShowAuth={changeIsShowAuth} />
         </View>
