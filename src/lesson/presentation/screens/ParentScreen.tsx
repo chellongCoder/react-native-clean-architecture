@@ -33,7 +33,7 @@ import {
 import ICAddChild from 'src/core/components/icons/ICAddChild';
 import {COLORS} from 'src/core/presentation/constants/colors';
 import ICManIconMedium from 'src/core/components/icons/ICManIconMedium';
-import {scale, verticalScale} from 'react-native-size-matters';
+import {s, scale, verticalScale} from 'react-native-size-matters';
 import {resetNavigator} from 'src/core/presentation/navigation/actions/RootNavigationActions';
 import {STACK_NAVIGATOR} from 'src/core/presentation/navigation/ConstantNavigator';
 import {CustomTextStyle} from 'src/core/presentation/constants/typography';
@@ -47,6 +47,7 @@ import {
   isAndroid,
   WIDTH_SCREEN,
 } from 'src/core/presentation/utils';
+import {assets} from 'src/core/presentation/utils';
 import ListBlockedApps from '../components/LessonModule/ListBlockedApps';
 import {
   addToLockedApps,
@@ -56,13 +57,14 @@ import {
 import {AppCategoryE} from 'src/core/domain/enums/AppCategoryE';
 import ChildrenDescription from '../components/ChildrenDescription';
 import {useGetUserSetting} from 'src/hooks/useGetUserSetting';
-import {IClock, ICpurchase, ICsetting} from '../components/icons';
+import {ICabcBook, IClock, ICpurchase, ICsetting} from '../components/icons';
 import Dropdown from 'src/core/components/dropdown/Dropdown';
 import Toast from 'react-native-toast-message';
 import {useSaveSetting} from 'src/hooks/useSaveSetting';
 import {useSoundBackgroundGlobal} from 'src/core/presentation/hooks/sound/useSoundBackgroundGlobal';
 import {useAuthParent} from 'src/hooks/useAuthParent';
 import AuthParentScreen from './AuthParentScreen';
+import PurchaseItem from '../components/LessonModule/PurchaseItem';
 
 enum TabParentE {
   APP_BLOCK = 'App block',
@@ -195,10 +197,33 @@ const ParentScreen = observer(() => {
   );
 
   const tabsPurchase = [
-    {id: '4', name: '???.000 vnd', icon: IconDiamond},
-    {id: '5', name: '???.000 vnd', icon: IconDiamond},
-    {id: '6', name: '???.000 vnd', icon: IconDiamond},
+    {
+      id: '4',
+      name: 'Language',
+      icon: <ICabcBook />,
+      itemCardProps: {backgroundColor: '#EFC73A'},
+    },
+    {
+      id: '5',
+      name: 'Science',
+      icon: <ICabcBook />,
+      itemCardProps: {backgroundColor: '#EF9D23'},
+    },
+    {
+      id: '6',
+      name: 'Mathematics',
+      icon: <ICabcBook />,
+      itemCardProps: {backgroundColor: '#E3643C'},
+    },
   ];
+
+  const dataPurchase = useMemo(
+    () => [
+      {title: 'Vietnamese', description: '10 more modules'},
+      {title: 'English', description: '10 more modules'},
+    ],
+    [],
+  );
 
   const [tabBlock, setTabBlock] = useState<string>(tabsBlock?.[0]?.name ?? '');
 
@@ -521,21 +546,21 @@ The blockAppsSystem function is an asynchronous function that awaits the result 
     } else if (tabParent === TabParentE.PURCHASE) {
     }
     return (
-      <View>
-        <Text style={[globalStyle.txtLabel, styles.textColor, styles.mb12]}>
-          Coming soon
-        </Text>
-        <Text style={[globalStyle.txtNote, styles.textColor, styles.mb12]}>
-          Lorem Ipsum is simply dummy text of the printing and typesetting
-          industry. Lorem Ipsum has been the industry's standard dummy text
-          Lorem Ipsum has been....
-        </Text>
+      <View style={[styles.fill]}>
+        {dataPurchase.map((item, i) => (
+          <PurchaseItem
+            key={i}
+            isBorderTop={i !== 0}
+            title={item.title}
+            description={item.description}
+            icon={assets.book}
+          />
+        ))}
       </View>
     );
   }, [
     tabParent,
-    globalStyle.txtLabel,
-    globalStyle.txtNote,
+    dataPurchase,
     globalStyle.txtButton,
     selectedChild,
     tabBody,

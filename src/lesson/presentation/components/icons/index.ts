@@ -7,3 +7,4 @@ export type ICprops = {
 export * from './IClock';
 export * from './ICsetting';
 export * from './ICpurchase';
+export * from './ICabcBook';
