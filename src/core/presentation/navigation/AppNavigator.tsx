@@ -141,6 +141,11 @@ export const HomeStackScreens = (): React.ReactElement => {
         name={STACK_NAVIGATOR.HOME.DONE_LESSON_SCREEN}
         key={STACK_NAVIGATOR.HOME.DONE_LESSON_SCREEN}
         component={DoneLessonScreen}
+        listeners={({navigation: navBottom}) => ({
+          focus: () => {
+            hideBottomTab(navBottom);
+          },
+        })}
       />
     </HomeStack.Navigator>
   );

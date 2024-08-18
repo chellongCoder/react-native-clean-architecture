@@ -22,5 +22,11 @@ export const assets = {
   untitled_artwork: require('assets/images/untitled_artwork.png'),
   bee_bg: require('assets/images/bee_bg.png'),
   andie_1: require('assets/images/andie_1.png'),
-  background_andie_1: require('assets/images/BACKGROUND_ANDIE_1.png'),
+  andie_2: require('assets/images/andie_2.png'),
+  andie_3: require('assets/images/andie_3.png'),
+  andie_4: require('assets/images/andie_4.png'),
+  background_andie: require('assets/images/BACKGROUND_ANDIE.png'),
+  background_barry: require('assets/images/BACKGROUND_BARRY.png'),
+  background_colin: require('assets/images/BACKGROUND_COLIN.png'),
+  background_dixie: require('assets/images/BACKGROUND_DIXIE.png'),
 };

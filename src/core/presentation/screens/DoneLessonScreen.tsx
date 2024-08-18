@@ -10,7 +10,10 @@ import React, {
 import useGlobalStyle from '../hooks/useGlobalStyle';
 import ICStar from 'src/core/components/icons/ICStar';
 import {STACK_NAVIGATOR} from '../navigation/ConstantNavigator';
-import {resetNavigator} from '../navigation/actions/RootNavigationActions';
+import {
+  goBack,
+  resetNavigator,
+} from '../navigation/actions/RootNavigationActions';
 import {unBlockApps} from 'react-native-alphadex-screentime';
 import {lessonModuleContainer} from 'src/lesson/LessonModule';
 import {LessonStore} from 'src/lesson/presentation/stores/LessonStore/LessonStore';
@@ -24,13 +27,21 @@ import {scale} from 'react-native-size-matters';
 import {COLORS} from '../constants/colors';
 import {CustomTextStyle} from '../constants/typography';
 import HeaderLesson from 'src/lesson/presentation/components/HeaderLesson';
+import {FontFamily} from '../hooks/useFonts';
 
-type RouteParams = {
+export type RouteParamsDone = {
   totalResult: TResult[];
+  colorBgBookView?: string;
+  backgroundAndie: React.ImageSourcePropType | string;
+  andieImage: React.ImageSourcePropType | string;
+  title: string;
+  note: string;
+  isMiniTest?: boolean;
 };
 
 const DoneLessonScreen = () => {
-  const route = useRoute<RouteProp<{param: RouteParams}>>()?.params;
+  const route = useRoute<RouteProp<{param: RouteParamsDone}>>()?.params;
+
   const totalResultLength = route.totalResult?.length || 0;
   const totalCorrectAnswer =
     route.totalResult.filter((item: TResult) => item.status === 'completed')
@@ -63,7 +74,11 @@ const DoneLessonScreen = () => {
     <View style={styles.container}>
       <ImageBackground
         style={styles.titleContainer}
-        source={assets.background_andie_1}
+        source={
+          typeof route.backgroundAndie === 'string'
+            ? {uri: route.backgroundAndie}
+            : route.backgroundAndie
+        }
         resizeMode="cover">
         <HeaderLesson
           lessonName="ENGLISH"
@@ -72,7 +87,11 @@ const DoneLessonScreen = () => {
         />
         <Text style={[styleHook.txtWord, styles.text]}>YAYYY !!!</Text>
         <Image
-          source={assets.andie_1}
+          source={
+            typeof route.andieImage === 'string'
+              ? {uri: route.andieImage}
+              : route.andieImage
+          }
           style={{height: scale(200), width: scale(200)}}
           resizeMode="contain"
         />
@@ -80,7 +99,7 @@ const DoneLessonScreen = () => {
       <BookView
         style={styles.achievementContainer}
         contentStyle={styles.content}
-        colorBg="#E5592C"
+        colorBg={route.colorBgBookView}
         imageBackground={assets.bee_bg}>
         <View style={styles.achievementContent}>
           <View style={styles.backgroundStar}>
@@ -92,17 +111,17 @@ const DoneLessonScreen = () => {
           </View>
           <View style={styles.wrapperContent}>
             <Text style={[styleHook.txtModule, styles.contentTitle]}>
-              AMAZING !!!
+              {route.title} !!!
             </Text>
             <Text
               style={[styleHook.txtNote, styles.contentDescription]}
               textBreakStrategy="balanced">
               Good job!!! You have{' '}
-              <Text style={[{fontWeight: 'bold'}]}>
+              <Text style={[{fontFamily: FontFamily.Eina01Bold}]}>
                 {totalCorrectAnswer}/{route.totalResult.length || 0} correct
                 answers
               </Text>
-              , now let’s practice again 2 more times
+              {route.note}
             </Text>
           </View>
           <View style={styles.wrapStarContainer}>
@@ -115,12 +134,9 @@ const DoneLessonScreen = () => {
           </View>
         </View>
         <View style={styles.wrapperButton}>
-          {/* <TouchableOpacity style={styles.button}>
-            <Text style={[styleHook.txtButton, styles.textBtn]}>
-              Receive award
-            </Text>
-          </TouchableOpacity> */}
-          <TouchableOpacity onPress={onUnlockAppSetting} style={styles.button}>
+          <TouchableOpacity
+            onPress={route.isMiniTest ? onUnlockAppSetting : () => goBack()}
+            style={styles.button}>
             <Text style={[styleHook.txtButton, styles.textBtn]}>Next</Text>
           </TouchableOpacity>
         </View>

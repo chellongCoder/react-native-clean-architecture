@@ -93,7 +93,7 @@ export function getStateBlocking(): Promise<boolean> {
   }
 }
 
-export function unBlockApps(childrenId: string): Promise<boolean> {
+export function unBlockApps(childrenId?: string): Promise<boolean> {
   if (Platform.OS === 'android') {
     return AlphadexScreentime.unLockedApps();
   } else {

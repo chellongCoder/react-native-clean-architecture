@@ -4,14 +4,9 @@ import {scale} from 'react-native-size-matters';
 import ICStar from 'src/core/components/icons/ICStar';
 import {COLORS} from 'src/core/presentation/constants/colors';
 import {CustomTextStyle} from 'src/core/presentation/constants/typography';
-import CustomSwitch from './CustomSwitch';
-import {navigateScreen} from 'src/core/presentation/navigation/actions/RootNavigationActions';
-import {STACK_NAVIGATOR} from 'src/core/presentation/navigation/ConstantNavigator';
 import {useLoadingGlobal} from 'src/core/presentation/hooks/loading/useLoadingGlobal';
 import useLoginWithCredentials from 'src/authentication/presentation/hooks/useLoginWithCredentials';
 import ICLogout from 'src/core/components/icons/ICLogout';
-import ICStarMedium from 'src/core/components/icons/ICStarMedium';
-import ICStarSmall from 'src/core/components/icons/ICStarSmall';
 import CustomSwitchNew from './CustomSwitchNew';
 
 type TProps = {

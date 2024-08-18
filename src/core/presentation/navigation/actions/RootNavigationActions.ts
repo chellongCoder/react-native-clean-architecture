@@ -12,38 +12,29 @@ import {STACK_NAVIGATOR} from '../ConstantNavigator';
 const navigationRef =
   createRef<NavigationContainerRef<typeof STACK_NAVIGATOR>>();
 
-export const navigateScreen = (
-  screen: string,
-  params: Record<string, unknown> | undefined = undefined,
-): void => {
+export const navigateScreen = <T>(screen: string, params: T): void => {
   try {
-    navigationRef.current?.navigate(screen, params);
+    navigationRef.current?.navigate(screen, params as any);
   } catch (error) {
     console.log('RootNavigation - function navigateScreen crash');
   }
 };
-export const pushScreen = (
-  screen: string,
-  params: Record<string, unknown> | undefined = undefined,
-): void => {
+export const pushScreen = <T>(screen: string, params: T): void => {
   try {
-    navigationRef.current?.dispatch(StackActions.push(screen, params));
+    navigationRef.current?.dispatch(StackActions.push(screen, params as any));
   } catch (error) {
     console.log('RootNavigation - function navigateScreen crash');
   }
 };
 
-export const replaceScreen = (
-  screen: string,
-  params: Record<string, unknown> | undefined = undefined,
-): void => {
-  navigationRef.current?.dispatch(StackActions.replace(screen, params));
+export const replaceScreen = <T>(screen: string, params: T): void => {
+  navigationRef.current?.dispatch(StackActions.replace(screen, params as any));
 };
 export const goBack = (): void => {
   navigationRef.current?.canGoBack() && navigationRef.current?.goBack();
 };
 
-export const resetNavigator = (screen: string, params = {}): void =>
+export const resetNavigator = <T>(screen: string, params?: T): void =>
   navigationRef.current?.reset({
     index: 0,
     routes: [{name: screen, params}],

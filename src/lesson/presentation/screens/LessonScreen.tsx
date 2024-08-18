@@ -31,6 +31,9 @@ import useStateCustom from 'src/hooks/useStateCommon';
 import useAuthenticationStore from 'src/authentication/presentation/stores/useAuthenticationStore';
 import {SoundGlobalContext} from 'src/core/presentation/hooks/sound/SoundGlobalContext';
 import {soundTrack} from 'src/core/presentation/hooks/sound/SoundGlobalProvider';
+import {RouteParamsDone} from 'src/core/presentation/screens/DoneLessonScreen';
+import {assets} from 'src/core/presentation/utils';
+import {COLORS} from 'src/core/presentation/constants/colors';
 
 enum LessonTypeE {
   ACHIEVEMENT,
@@ -57,6 +60,7 @@ export type TResult = {
 
 export type TLessonState = {
   result?: TResult[];
+  trainingResult?: TResult[];
 };
 
 const LessonScreen = observer(() => {
@@ -106,17 +110,42 @@ const LessonScreen = observer(() => {
         totalResult.push(item);
         const res = await handlePostUserProgress(totalResult);
         if (res.message) {
-          resetNavigator(STACK_NAVIGATOR.HOME.DONE_LESSON_SCREEN, {
-            totalResult,
-          });
+          resetNavigator<RouteParamsDone>(
+            STACK_NAVIGATOR.HOME.DONE_LESSON_SCREEN,
+            {
+              totalResult,
+              andieImage: assets.andie_2,
+              backgroundAndie: assets.background_barry,
+              colorBgBookView: COLORS.GREEN_009C6F,
+              title: 'you did great',
+              note: 'Now it’s time for MINITEST. Try your best !',
+              isMiniTest: true,
+            },
+          );
         }
       }
     },
     [handlePostUserProgress, lessonState.result, playSound],
   );
 
+  const nextPart = useCallback(() => {
+    navigateScreen<RouteParamsDone>(STACK_NAVIGATOR.HOME.DONE_LESSON_SCREEN, {
+      totalResult: lessonState.trainingResult || [],
+      andieImage: assets.andie_2,
+      backgroundAndie: assets.background_barry,
+      colorBgBookView: COLORS.GREEN_009C6F,
+      title: 'you did great',
+      note: `Now let’s practice again ${
+        tasks.length - 1 - (activeTaskIndex + 1)
+      } more times`,
+    });
+    setActiveTaskIndex(v => v + 1);
+    setLessonIndex(0);
+  }, [activeTaskIndex, lessonState.trainingResult, tasks.length]);
+
   const nextModule = useCallback(
     (answerSelected: string) => {
+      // * check điều kiện là đang đến part mini test
       if (testTask?.type === firstMiniTestTask?.type) {
         playSound(soundTrack.menu_selection_sound);
         const resultByAnswer: TResult = {
@@ -154,7 +183,19 @@ const LessonScreen = observer(() => {
           (lessonIndex + 1) % (firstMiniTestTask?.question.length ?? 1),
         );
       } else {
+        // * check điều kiện là đang làm training
         playSound(soundTrack.menu_selection_sound);
+
+        const resultByAnswer: TResult = {
+          userId: selectedChild?._id,
+          taskId: testTask?.question?.[lessonIndex].taskId,
+          questionId: testTask?.question?.[lessonIndex]._id,
+          status:
+            answerSelected === testTask?.question?.[lessonIndex].correctAnswer
+              ? 'completed'
+              : 'failed',
+          point: testTask?.question?.[lessonIndex].point,
+        };
 
         if (
           answerSelected === testTask?.question?.[lessonIndex].correctAnswer
@@ -164,17 +205,19 @@ const LessonScreen = observer(() => {
           playSound(soundTrack.oh_no_sound);
         }
 
+        setLessonState({
+          trainingResult: [
+            ...(lessonState.trainingResult || []),
+            resultByAnswer,
+          ],
+        });
+
         /**
          * The lessonIndex >= (firstMiniTestTask?.question.length ?? 1) - 1 condition checks if the lessonIndex is greater than or equal to the index of the last question in the question array. If it is, the condition evaluates to true; otherwise, it evaluates to false.
          * If the condition evaluates to true, the code inside the if statement block will be executed. In this case, it calls the submitModule function and passes resultByAnswer as an argument.
          */
         if (lessonIndex >= (testTask?.question.length ?? 1) - 1) {
-          pushScreen(STACK_NAVIGATOR.HOME.ONBOARDING_SCREEN);
-          setActiveTaskIndex(v => v + 1);
-          setLessonIndex(0);
-          setTimeout(() => {
-            goBack();
-          }, 2000);
+          nextPart();
           return;
         }
         setLessonIndex((lessonIndex + 1) % (testTask?.question.length ?? 1));
@@ -185,6 +228,8 @@ const LessonScreen = observer(() => {
       firstMiniTestTask?.type,
       lessonIndex,
       lessonState.result,
+      lessonState.trainingResult,
+      nextPart,
       playSound,
       selectedChild?._id,
       setLessonState,
