@@ -1,10 +1,15 @@
-import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import React, {useState} from 'react';
+import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 import LessonComponent from './LessonComponent';
 import PrimaryButton from '../../components/PrimaryButton';
 import {FontFamily} from 'src/core/presentation/hooks/useFonts';
 import useGlobalStyle from 'src/core/presentation/hooks/useGlobalStyle';
 import {Task} from 'src/home/application/types/GetListQuestionResponse';
+import {COLORS} from 'src/core/presentation/constants/colors';
+import {assets} from 'src/core/presentation/utils';
+import {useTimingQuestion} from '../../hooks/useTimingQuestion';
+import {scale, verticalScale} from 'react-native-size-matters';
+import {useCountDown} from '../../hooks/useCountDown';
 
 type Props = {
   moduleIndex: number;
@@ -26,6 +31,45 @@ const VowelsLesson = ({
   const globalStyle = useGlobalStyle();
 
   const [answerSelected, setAnswerSelected] = useState('');
+  const {
+    start,
+    stop,
+    reset: resetLearning,
+    time: learningTimer,
+  } = useCountDown(5);
+
+  const {time, reset: resetTesting} = useTimingQuestion(learningTimer === 0);
+
+  const intervalRef = useRef<NodeJS.Timeout>();
+
+  const word = useMemo(() => {
+    if (learningTimer === 0) {
+      if (time >= 0) {
+        return `0:${time < 10 ? '0' + time : time}`;
+      }
+    }
+    return firstMiniTestTask?.question?.[moduleIndex]?.fullAnswer;
+  }, [firstMiniTestTask?.question, learningTimer, moduleIndex, time]);
+
+  const onSubmit = useCallback(() => {
+    setAnswerSelected('');
+    nextModule(answerSelected);
+    resetLearning();
+    resetTesting();
+  }, [answerSelected, nextModule, resetLearning, resetTesting]);
+
+  useEffect(() => {
+    intervalRef.current = start();
+    return () => {
+      stop(intervalRef.current!);
+    };
+  }, [start, stop]);
+
+  useEffect(() => {
+    if (learningTimer === 0) {
+      stop(intervalRef.current!);
+    }
+  }, [learningTimer, stop]);
 
   return (
     <LessonComponent
@@ -37,12 +81,10 @@ const VowelsLesson = ({
       price="Free"
       buildQuestion={
         <View>
-          <Text style={[styles.fonts_SVN_Cherish, styles.textLarge]}>
-            {firstMiniTestTask?.question?.[moduleIndex]?.correctAnswer}
-          </Text>
           <Text style={[styles.fonts_SVN_Cherish, styles.textQuestion]}>
-            {firstMiniTestTask?.question?.[moduleIndex]?.fullAnswer}
+            {word}
           </Text>
+          <Image source={assets.abcBook} />
         </View>
       }
       buildAnswer={
@@ -80,14 +122,25 @@ const VowelsLesson = ({
                 },
               )}
             </View>
+            {learningTimer !== 0 && (
+              <View
+                style={[
+                  styles.boxSelected,
+                  {
+                    position: 'absolute',
+                    zIndex: 999,
+                    width: '100%',
+                    opacity: 0.7,
+                  },
+                ]}
+              />
+            )}
           </View>
+
           <PrimaryButton
             text="Submit"
             style={[styles.mt32]}
-            onPress={() => {
-              setAnswerSelected('');
-              nextModule(answerSelected);
-            }}
+            onPress={onSubmit}
           />
         </View>
       }
@@ -117,7 +170,7 @@ const styles = StyleSheet.create({
   textQuestion: {
     fontSize: 40,
     textAlign: 'center',
-    color: 'white',
+    color: COLORS.BLUE_258F78,
   },
   textGreen: {
     color: '#258F78',
@@ -168,9 +221,9 @@ const styles = StyleSheet.create({
     borderRadius: 30,
   },
   boxSelected: {
-    backgroundColor: '#FBF8CC',
-    height: 260,
-    borderRadius: 30,
+    backgroundColor: COLORS.WHITE_FBF8CC,
+    height: verticalScale(220),
+    borderRadius: scale(30),
     justifyContent: 'center',
     alignItems: 'center',
   },

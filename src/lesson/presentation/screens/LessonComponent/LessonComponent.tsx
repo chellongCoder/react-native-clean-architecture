@@ -77,20 +77,6 @@ const LessonComponent = ({
               <Text style={[globalStyle.txtNote, styles.textPart]}>{part}</Text>
             </View>
           </View>
-          <View style={styles.alightEnd}>
-            <View style={[styles.boxPrice]}>
-              <Text style={[styles.fonts_SVN_Cherish, styles.textPrice]}>
-                {price}
-              </Text>
-              <IconDiamond />
-            </View>
-            <View style={styles.rowAlignCenter}>
-              <Text style={[styles.fonts_SVN_Cherish, styles.textPrice]}>
-                {score}
-              </Text>
-              <IconStar />
-            </View>
-          </View>
         </View>
         <View style={[styles.boxQuestion, styles.pb32]}>{buildQuestion}</View>
         <View style={[styles.tabs]}>
@@ -223,7 +209,7 @@ const styles = StyleSheet.create({
   },
   boxQuestion: {
     flex: 1,
-    padding: 16,
+    padding: scale(16),
     alignItems: 'center',
   },
   textLarge: {
