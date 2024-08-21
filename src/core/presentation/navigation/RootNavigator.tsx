@@ -13,12 +13,14 @@ import {replaceScreen} from './actions/RootNavigationActions';
 import {withProviders} from '../utils/withProviders';
 import {LessonStoreProvider} from 'src/lesson/presentation/stores/LessonStore/LessonStoreProvider';
 import {usePermissionApplock} from 'src/hooks/usePermissionApplock';
+import useHydration from 'src/hooks/useHydration';
 
 export const AppStack = createStackNavigator();
 
 const RootNavigator: FC = () => {
   const {getUsernamePasswordInKeychain} = useLoginWithCredentials();
   const {isConnected, getData} = useOfflineMode();
+  const isHydrated = useHydration();
   useFonts();
   usePermissionApplock();
 
@@ -36,7 +38,7 @@ const RootNavigator: FC = () => {
   }, [getData, isConnected]);
 
   useEffect(() => {
-    if (isConnected !== null) {
+    if (isConnected !== null && isHydrated) {
       if (isConnected) {
         getUsernamePasswordInKeychain();
       } else {
@@ -47,7 +49,7 @@ const RootNavigator: FC = () => {
         }
       }
     }
-  }, [getUsernamePasswordInKeychain, isConnected, userProfile]);
+  }, [getUsernamePasswordInKeychain, isConnected, isHydrated, userProfile]);
 
   return (
     <AppStack.Navigator

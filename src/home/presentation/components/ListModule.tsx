@@ -12,15 +12,15 @@ import BookView from 'src/lesson/presentation/components/BookView';
 const screenWidth = Dimensions.get('screen').width;
 
 const ListModule = observer(() => {
-  const {modules, selectedSubject} = useListModule();
-  const {listSubject, subjectId} = useHomeStore();
+  const {selectedSubject} = useListModule();
+  const {listSubject, subjectId, listModule} = useHomeStore();
 
-  const totalQuestions = modules.reduce(
+  const totalQuestions = listModule?.reduce(
     (acc, item) => acc + item.totalQuestion,
     0,
   );
 
-  const totalProgressQuestions = modules.reduce(
+  const totalProgressQuestions = listModule?.reduce(
     (acc, item) => acc + item.progressOfChildren,
     0,
   );
@@ -42,7 +42,7 @@ const ListModule = observer(() => {
         style={styles.f1}
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{paddingBottom: scale(54)}}>
-        {modules.map(module => {
+        {listModule?.map(module => {
           return (
             <View style={styles.wrapModuleContainer}>
               <ModuleItem

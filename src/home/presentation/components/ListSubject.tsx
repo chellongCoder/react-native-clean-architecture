@@ -3,8 +3,6 @@ import {View, Text, TouchableOpacity, FlatList, StyleSheet} from 'react-native';
 import {scale} from 'react-native-size-matters';
 import {COLORS} from 'src/core/presentation/constants/colors';
 import {CustomTextStyle} from 'src/core/presentation/constants/typography';
-import {STACK_NAVIGATOR} from 'src/core/presentation/navigation/ConstantNavigator';
-import {navigateScreen} from 'src/core/presentation/navigation/actions/RootNavigationActions';
 import {HomeContext} from '../stores/HomeContext';
 import {FieldData} from 'src/home/application/types/GetFieldResponse';
 

@@ -1,7 +1,7 @@
 import {injectable, provided} from 'inversify-sugar';
-import {action, makeAutoObservable} from 'mobx';
+import {action, makeAutoObservable, observable, runInAction} from 'mobx';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {create} from 'mobx-persist';
+import {create, persist} from 'mobx-persist';
 import HomeStoreState from './types/HomeStoreState';
 import {FieldData} from 'src/home/application/types/GetFieldResponse';
 import GetFieldUseCase from 'src/home/application/useCases/GetFieldUseCase';
@@ -17,7 +17,7 @@ import GetListQuestionUseCase from 'src/home/application/useCases/GetListQuestio
 export class HomeStore implements HomeStoreState {
   isLoading = false;
   error = '';
-  field: FieldData = {
+  @persist('object') @observable field: FieldData = {
     _id: '',
     name: '',
     description: '',
@@ -25,9 +25,9 @@ export class HomeStore implements HomeStoreState {
     createdAt: '',
     updatedAt: '',
   };
-  listSubject: Subject[] = [];
-  listModule: Module[] = [];
-  subjectId = '';
+  @persist('list') @observable listSubject: Subject[] = [];
+  @persist('list') @observable listModule: Module[] = [];
+  @persist subjectId = '';
 
   constructor(
     @provided(GetFieldUseCase)

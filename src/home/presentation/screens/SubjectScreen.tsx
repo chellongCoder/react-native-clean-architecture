@@ -2,7 +2,6 @@ import React, {Fragment} from 'react';
 import {View, StyleSheet, ImageBackground} from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import AccountStatus from '../components/AccountStatus';
-import {COLORS} from 'src/core/presentation/constants/colors';
 import {scale} from 'react-native-size-matters';
 import ListLesson from '../components/ListLesson';
 import ListModule from '../components/ListModule';
