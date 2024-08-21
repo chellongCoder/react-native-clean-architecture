@@ -34,6 +34,7 @@ import {soundTrack} from 'src/core/presentation/hooks/sound/SoundGlobalProvider'
 import {RouteParamsDone} from 'src/core/presentation/screens/DoneLessonScreen';
 import {assets} from 'src/core/presentation/utils';
 import {COLORS} from 'src/core/presentation/constants/colors';
+import EssayLesson from './LessonComponent/EssayLesson';
 
 enum LessonTypeE {
   ACHIEVEMENT,
@@ -43,6 +44,7 @@ enum LessonTypeE {
   VOCABULARY_TRANSLATE,
   GEOMETRY,
   MATH,
+  ESSAY = 'essay',
   VOWEL = 'fill_in_blank',
 }
 
@@ -67,6 +69,7 @@ const LessonScreen = observer(() => {
   const lessons: LessonType[] = [
     // {lessonType: LessonTypeE.ACHIEVEMENT},
     {lessonType: LessonTypeE.VOWEL},
+    {lessonType: LessonTypeE.ESSAY},
     {lessonType: LessonTypeE.WRITE},
     {lessonType: LessonTypeE.VOCABULARY_LISTEN},
     {lessonType: LessonTypeE.VOCABULARY_FILL_BLANK},
@@ -264,6 +267,17 @@ const LessonScreen = observer(() => {
             moduleIndex={lessonIndex}
             nextModule={nextModule}
             totalModule={lessons.length}
+          />
+        );
+      case LessonTypeE.ESSAY:
+        return (
+          <EssayLesson
+            moduleIndex={lessonIndex}
+            nextModule={nextModule}
+            totalModule={testTask?.question.length ?? 0}
+            lessonName={route.lessonName}
+            moduleName={route.moduleName}
+            firstMiniTestTask={testTask}
           />
         );
       case LessonTypeE.VOWEL:

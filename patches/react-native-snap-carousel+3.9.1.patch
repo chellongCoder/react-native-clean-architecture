@@ -147,7 +147,7 @@ index bdb58b6..98a782f 100644
 +        borderRadius: 30,
 +        zIndex: animatedValue.interpolate({
 +            inputRange: [-3, -2, -1, 0, 1, 2, 3],
-+            outputRange: [1, 2, 3, 4, 3, 2, 1],
++            outputRange: [10, 20, 30, 40, 30, 20, 10],
 +            extrapolate: 'clamp'
 +        }),
 +        opacity: animatedValue.interpolate({
