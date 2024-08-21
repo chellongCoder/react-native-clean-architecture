@@ -35,6 +35,8 @@ const appConfig: ExpoConfig = {
   extra: {
     EXPO_BASE_API_DOMAIN: 'https://google.tbd-alphadex.com',
     EXPO_BASE_API_URL: 'https://google.tbd-alphadex.com',
+    IMAGE_BASE_API_URL:
+      'https://storage.googleapis.com/alphadex-image/question-image/',
   },
 };
 

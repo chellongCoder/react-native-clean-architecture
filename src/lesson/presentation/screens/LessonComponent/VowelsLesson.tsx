@@ -10,6 +10,13 @@ import {assets} from 'src/core/presentation/utils';
 import {useTimingQuestion} from '../../hooks/useTimingQuestion';
 import {scale, verticalScale} from 'react-native-size-matters';
 import {useCountDown} from '../../hooks/useCountDown';
+import {coreModuleContainer} from 'src/core/CoreModule';
+import Env, {EnvToken} from 'src/core/domain/entities/Env';
+import Animated, {
+  useAnimatedStyle,
+  useSharedValue,
+  withTiming,
+} from 'react-native-reanimated';
 
 type Props = {
   moduleIndex: number;
@@ -37,6 +44,7 @@ const VowelsLesson = ({
     reset: resetLearning,
     time: learningTimer,
   } = useCountDown(5);
+  const env = coreModuleContainer.getProvided<Env>(EnvToken); // Instantiate CoreService
 
   const {time, reset: resetTesting} = useTimingQuestion(learningTimer === 0);
 
@@ -50,6 +58,13 @@ const VowelsLesson = ({
     }
     return firstMiniTestTask?.question?.[moduleIndex]?.fullAnswer;
   }, [firstMiniTestTask?.question, learningTimer, moduleIndex, time]);
+  console.log(
+    '🛠 LOG: 🚀 --> ------------------------------------------------------🛠 LOG: 🚀 -->',
+  );
+  console.log('🛠 LOG: 🚀 --> ~ firstMiniTestTask:', firstMiniTestTask);
+  console.log(
+    '🛠 LOG: 🚀 --> ------------------------------------------------------🛠 LOG: 🚀 -->',
+  );
 
   const onSubmit = useCallback(() => {
     setAnswerSelected('');
@@ -57,6 +72,20 @@ const VowelsLesson = ({
     resetLearning();
     resetTesting();
   }, [answerSelected, nextModule, resetLearning, resetTesting]);
+
+  const opacity = useSharedValue(0);
+
+  useEffect(() => {
+    opacity.value = withTiming(0, {duration: 500}, () => {
+      opacity.value = withTiming(1, {duration: 500});
+    });
+  }, [moduleIndex, opacity]);
+
+  const animatedStyle = useAnimatedStyle(() => {
+    return {
+      opacity: opacity.value,
+    };
+  });
 
   useEffect(() => {
     intervalRef.current = start();
@@ -84,7 +113,14 @@ const VowelsLesson = ({
           <Text style={[styles.fonts_SVN_Cherish, styles.textQuestion]}>
             {word}
           </Text>
-          <Image source={assets.abcBook} />
+          <Animated.Image
+            style={[{width: scale(200), height: scale(200)}, animatedStyle]}
+            source={{
+              uri:
+                env.IMAGE_BASE_API_URL +
+                firstMiniTestTask?.question?.[moduleIndex].image,
+            }}
+          />
         </View>
       }
       buildAnswer={

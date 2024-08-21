@@ -13,6 +13,7 @@ export interface Question {
   _id: string;
   answers: Answer[];
   fullAnswer: string;
+  image: string;
 }
 
 export interface Task {
