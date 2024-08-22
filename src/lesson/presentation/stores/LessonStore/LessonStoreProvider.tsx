@@ -138,7 +138,7 @@ export const LessonStoreProvider = observer(({children}: PropsWithChildren) => {
     <LessonStoreContext.Provider value={value}>
       {children}
       {value.point.isShow && <Scoring onClose={() => value.setIsShow(false)} />}
-      {!isAndroid && renderBottomSheet()}
+      {isAndroid && renderBottomSheet()}
     </LessonStoreContext.Provider>
   );
 });

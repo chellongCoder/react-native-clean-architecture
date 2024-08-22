@@ -53,7 +53,7 @@ const VowelsLesson = ({
     stop,
     reset: resetLearning,
     time: learningTimer,
-  } = useCountDown(5);
+  } = useCountDown(0);
   const env = coreModuleContainer.getProvided<Env>(EnvToken); // Instantiate CoreService
 
   const {time, reset: resetTesting} = useTimingQuestion(learningTimer === 0);
@@ -134,14 +134,10 @@ const VowelsLesson = ({
             {word}
           </Text>
           <Animated.Image
-            resizeMode={'cover'}
-            style={[
-              {
-                width: scale(200),
-                height: scale(150),
-              },
-              animatedStyle,
-            ]}
+            resizeMode={'contain'}
+            width={WIDTH_SCREEN}
+            height={scale(200)}
+            style={[{}, animatedStyle]}
             source={{
               uri:
                 env.IMAGE_QUESTION_BASE_API_URL +
