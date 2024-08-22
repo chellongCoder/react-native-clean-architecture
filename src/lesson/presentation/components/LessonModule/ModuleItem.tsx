@@ -13,6 +13,8 @@ import {
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import {navigateScreen} from 'src/core/presentation/navigation/actions/RootNavigationActions';
 import {STACK_NAVIGATOR} from 'src/core/presentation/navigation/ConstantNavigator';
+import {coreModuleContainer} from 'src/core/CoreModule';
+import Env, {EnvToken} from 'src/core/domain/entities/Env';
 
 type Props = {
   isFinished: boolean;
@@ -26,17 +28,7 @@ type Props = {
 };
 const ModuleItem = (props: Props) => {
   const globalStyle = useGlobalStyle();
-
-  const onDoHomework = useCallback(async () => {
-    // const apps = await selectedAppsData();
-    // console.log(
-    //   '🛠 LOG: 🚀 --> -------------------------------------------🛠 LOG: 🚀 -->',
-    // );
-    // console.log('🛠 LOG: 🚀 --> ~ onDoHomework ~ apps:', apps);
-    // console.log(
-    //   '🛠 LOG: 🚀 --> -------------------------------------------🛠 LOG: 🚀 -->',
-    // );
-  }, []);
+  const env = coreModuleContainer.getProvided<Env>(EnvToken); // Instantiate CoreService
 
   const onRevision = useCallback(() => {
     navigateScreen(STACK_NAVIGATOR.HOME.LESSON, {
@@ -57,7 +49,7 @@ const ModuleItem = (props: Props) => {
   const renderIcon = () =>
     props?.image ? (
       <Image
-        source={{uri: props?.image}}
+        source={{uri: env.IMAGE_MODULE_BASE_API_URL + props?.image}}
         style={styles.icon}
         resizeMode="contain"
       />

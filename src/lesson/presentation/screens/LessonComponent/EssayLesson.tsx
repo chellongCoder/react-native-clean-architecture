@@ -1,5 +1,12 @@
 import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
+import React, {
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import LessonComponent from './LessonComponent';
 import PrimaryButton from '../../components/PrimaryButton';
 import {FontFamily} from 'src/core/presentation/hooks/useFonts';
@@ -17,6 +24,8 @@ import Animated, {
 } from 'react-native-reanimated';
 import {coreModuleContainer} from 'src/core/CoreModule';
 import Env, {EnvToken} from 'src/core/domain/entities/Env';
+import {SoundGlobalContext} from 'src/core/presentation/hooks/sound/SoundGlobalContext';
+import {soundTrack} from 'src/core/presentation/hooks/sound/SoundGlobalProvider';
 
 type Props = {
   moduleIndex: number;
@@ -61,6 +70,8 @@ const EssayLesson = ({
     reset: resetLearning,
     time: learningTimer,
   } = useCountDown(5);
+  const {playSound, pauseSound} = useContext(SoundGlobalContext);
+
   const env = coreModuleContainer.getProvided<Env>(EnvToken); // Instantiate CoreService
 
   const {time, reset: resetTesting} = useTimingQuestion(learningTimer === 0);
@@ -68,6 +79,8 @@ const EssayLesson = ({
   const intervalRef = useRef<NodeJS.Timeout>();
 
   const opacity = useSharedValue(1);
+
+  const playSoundRef = useRef<boolean>(false);
 
   const word = useMemo(() => {
     if (learningTimer === 0) {
@@ -117,7 +130,7 @@ const EssayLesson = ({
     if (learningTimer === 0) {
       stop(intervalRef.current!);
     }
-  }, [learningTimer, stop]);
+  }, [learningTimer, playSound, stop]);
 
   useEffect(() => {
     const content = firstMiniTestTask?.question?.[moduleIndex]?.content;
@@ -131,6 +144,20 @@ const EssayLesson = ({
       opacity.value = withTiming(1, {duration: 500});
     });
   }, [moduleIndex, opacity]);
+
+  useEffect(() => {
+    if (time === 0) {
+      onSubmit();
+    }
+  }, [onSubmit, time]);
+
+  useEffect(() => {
+    if (!playSoundRef.current && learningTimer === 0) {
+      playSound(soundTrack.tiktak);
+      playSoundRef.current = true;
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [learningTimer]);
 
   const animatedStyle = useAnimatedStyle(() => {
     return {
@@ -161,7 +188,7 @@ const EssayLesson = ({
             ]}
             source={{
               uri:
-                env.IMAGE_BASE_API_URL +
+                env.IMAGE_QUESTION_BASE_API_URL +
                 firstMiniTestTask?.question?.[moduleIndex].image,
             }}
           />

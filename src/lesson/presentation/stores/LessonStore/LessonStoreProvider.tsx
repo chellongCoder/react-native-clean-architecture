@@ -36,6 +36,7 @@ import {useNavigation, useRoute} from '@react-navigation/native';
 import ICCheckbox from 'src/core/components/icons/ICCheckbox';
 import PrimaryButton from '../../components/PrimaryButton';
 import IconTickCircle from 'assets/svg/IconTickCircle';
+import {isAndroid} from 'src/core/presentation/utils';
 
 type PropsItemApps = {
   preFixIcon?: React.ReactNode;
@@ -55,9 +56,6 @@ export const LessonStoreProvider = observer(({children}: PropsWithChildren) => {
   const value = lessonModuleContainer.getProvided(LessonStore);
 
   const [apps, setApps] = useState<AppEntity[]>([]);
-  const [isShowBottomSheet, setIsShowBottomSheet] = useState(true);
-  const navigation = useNavigation();
-  const route = useRoute();
 
   const transformAppEntityToListItem = (appEntity: AppEntity): AppItem => {
     return {
@@ -76,17 +74,6 @@ export const LessonStoreProvider = observer(({children}: PropsWithChildren) => {
   };
 
   const listItem = value.listAppsSystem.map(transformAppEntityToListItem);
-
-  /**
-   * Inside the callback function, there is an if statement that checks if route.name is equal to 'LESSON_SCREEN'. If it is, the isShowBottomSheet state variable is set to false using the setIsShowBottomSheet function. Otherwise, if route.name is not equal to 'LESSON_SCREEN', isShowBottomSheet is set to true.
-
-This code snippet suggests that the isShowBottomSheet state variable is used to control the visibility of a bottom sheet component based on the current route name. When the route name is 'LESSON_SCREEN', the bottom sheet is hidden (isShowBottomSheet is set to false), and when the route name is different, the bottom sheet is shown (isShowBottomSheet is set to true).
-   */
-  useEffect(() => {
-    if (route.name === 'LESSON_SCREEN') {
-      setIsShowBottomSheet(false);
-    }
-  }, [route.name]);
 
   const renderBottomSheet = useCallback(() => {
     return (
@@ -151,7 +138,7 @@ This code snippet suggests that the isShowBottomSheet state variable is used to 
     <LessonStoreContext.Provider value={value}>
       {children}
       {value.point.isShow && <Scoring onClose={() => value.setIsShow(false)} />}
-      {isShowBottomSheet && renderBottomSheet()}
+      {!isAndroid && renderBottomSheet()}
     </LessonStoreContext.Provider>
   );
 });

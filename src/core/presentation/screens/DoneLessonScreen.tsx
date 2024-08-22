@@ -28,6 +28,7 @@ import {COLORS} from '../constants/colors';
 import {CustomTextStyle} from '../constants/typography';
 import HeaderLesson from 'src/lesson/presentation/components/HeaderLesson';
 import {FontFamily} from '../hooks/useFonts';
+import Toast from 'react-native-toast-message';
 
 export type RouteParamsDone = {
   totalResult: TResult[];
@@ -60,6 +61,10 @@ const DoneLessonScreen = () => {
       await unBlockApps();
       lessonStore.changeBlockedAnonymousListAppSystem(undefined);
       lessonStore.resetListAppSystem();
+      Toast.show({
+        type: 'success',
+        text1: 'Your apps have been unlocked',
+      });
     } else {
       Alert.alert('Your result is not enough to open app lock', '', [
         {

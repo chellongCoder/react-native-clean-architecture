@@ -9,16 +9,6 @@ import Sound from 'react-native-sound';
 
 Sound.setCategory('Playback');
 
-const soundResource = {
-  oh_no_sound: 'oh_no_sound.mp3',
-  menu_selection_sound: 'menu_selection_sound.mp3',
-  login_splash_screen_sound: 'login_splash_screen_sound.mp3',
-  good_result: 'good_result.mp3',
-  big_bell_sound: 'big_bell_sound.mp3',
-  bell_ding_sound: 'bell_ding_sound.mp3',
-  ukulele_music: 'ukulele_music.mp3',
-};
-
 export const soundTrack = {
   oh_no_sound: 'oh_no_sound',
   menu_selection_sound: 'menu_selection_sound',
@@ -27,6 +17,18 @@ export const soundTrack = {
   big_bell_sound: 'big_bell_sound',
   bell_ding_sound: 'bell_ding_sound',
   ukulele_music: 'ukulele_music',
+  tiktak: 'tiktak',
+};
+
+const soundResource = {
+  oh_no_sound: `${soundTrack.oh_no_sound}.mp3`,
+  menu_selection_sound: `${soundTrack.menu_selection_sound}.mp3`,
+  login_splash_screen_sound: `${soundTrack.login_splash_screen_sound}.mp3`,
+  good_result: `${soundTrack.good_result}.mp3`,
+  big_bell_sound: `${soundTrack.big_bell_sound}.mp3`,
+  bell_ding_sound: `${soundTrack.bell_ding_sound}.mp3`,
+  ukulele_music: `${soundTrack.ukulele_music}.mp3`,
+  tiktak: `${soundTrack.tiktak}.mp3`,
 };
 
 interface ExtendedSound extends Sound {

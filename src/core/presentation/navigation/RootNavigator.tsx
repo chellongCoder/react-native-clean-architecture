@@ -10,6 +10,9 @@ import useLoginWithCredentials from 'src/authentication/presentation/hooks/useLo
 import {useOfflineMode} from '../hooks/offline/useOfflineMode';
 import {OfflineEnum} from '../hooks/offline/OfflineEnum';
 import {replaceScreen} from './actions/RootNavigationActions';
+import {withProviders} from '../utils/withProviders';
+import {LessonStoreProvider} from 'src/lesson/presentation/stores/LessonStore/LessonStoreProvider';
+import {usePermissionApplock} from 'src/hooks/usePermissionApplock';
 
 export const AppStack = createStackNavigator();
 
@@ -17,6 +20,7 @@ const RootNavigator: FC = () => {
   const {getUsernamePasswordInKeychain} = useLoginWithCredentials();
   const {isConnected, getData} = useOfflineMode();
   useFonts();
+  usePermissionApplock();
 
   const [userProfile, setUserProfile] = useState();
 
@@ -58,4 +62,4 @@ const RootNavigator: FC = () => {
   );
 };
 
-export default RootNavigator;
+export default withProviders(LessonStoreProvider)(RootNavigator);

@@ -73,6 +73,7 @@
 		D28F88533F6A4A54B7C9A73C /* eina-01-bold.eot in Resources */ = {isa = PBXBuildFile; fileRef = 8DDC1D9395DA40F5986845A6 /* eina-01-bold.eot */; };
 		DAE202E99D524FC5927B6B09 /* eina-03-semibold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = DD926AA17DCA40D69153270F /* eina-03-semibold.ttf */; };
 		DC8D151D21544E469ECDC6DE /* eina-03-bold.woff in Resources */ = {isa = PBXBuildFile; fileRef = 6FB3C5107D844C4187339A15 /* eina-03-bold.woff */; };
+		DE4AE3B52C772EB300463FBE /* tiktak.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = DE4AE3B42C772EB300463FBE /* tiktak.mp3 */; };
 		E3E9C2E8914A45B188122DC5 /* eina-01-light.eot in Resources */ = {isa = PBXBuildFile; fileRef = 7E4A4228D67C40F89A608B88 /* eina-01-light.eot */; };
 /* End PBXBuildFile section */
 
@@ -190,6 +191,7 @@
 		D8BEB0368E874F1083E3451F /* eina-01-regular.woff2 */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "eina-01-regular.woff2"; path = "../assets/fonts/eina-01-regular.woff2"; sourceTree = "<group>"; };
 		DCC40FCFD83E4FDF8620E653 /* eina-03-bold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "eina-03-bold.ttf"; path = "../assets/fonts/eina-03-bold.ttf"; sourceTree = "<group>"; };
 		DD926AA17DCA40D69153270F /* eina-03-semibold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "eina-03-semibold.ttf"; path = "../assets/fonts/eina-03-semibold.ttf"; sourceTree = "<group>"; };
+		DE4AE3B42C772EB300463FBE /* tiktak.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = tiktak.mp3; path = ../assets/sounds/tiktak.mp3; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 		EE0A0B073F2E47F5B33C1FEB /* eina-03-semibold.eot */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "eina-03-semibold.eot"; path = "../assets/fonts/eina-03-semibold.eot"; sourceTree = "<group>"; };
 		EFAEDC7BAD9144F8821EFF9A /* eina-03-semibold.woff2 */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "eina-03-semibold.woff2"; path = "../assets/fonts/eina-03-semibold.woff2"; sourceTree = "<group>"; };
@@ -302,6 +304,7 @@
 				3DD8AF332C516CF6004F09A9 /* login_splash_screen_sound.mp3 */,
 				3DD8AF302C516CF6004F09A9 /* menu_selection_sound.mp3 */,
 				3DD8AF362C516CF6004F09A9 /* oh_no_sound.mp3 */,
+				DE4AE3B42C772EB300463FBE /* tiktak.mp3 */,
 				7C4B2642B54A47D3B9983934 /* eina-01-bold.ttf */,
 				C1C0F4D8C18A43EABCB23725 /* eina-01-light.ttf */,
 				31CD49FB78F54EC59B6AC250 /* eina-01-regular.ttf */,
@@ -576,6 +579,7 @@
 				3AF4C14F1DBC43A7ABE0F8BF /* eina-01-regular.ttf in Resources */,
 				8BB882827EC246198495E356 /* eina-01-semibold.ttf in Resources */,
 				BFCAFEC163414812A55FF22D /* eina-03-bold.ttf in Resources */,
+				DE4AE3B52C772EB300463FBE /* tiktak.mp3 in Resources */,
 				AAA64C62E9B84952A774E8D4 /* eina-03-regular.ttf in Resources */,
 				DAE202E99D524FC5927B6B09 /* eina-03-semibold.ttf in Resources */,
 				A863AED5B9724B31A77ED934 /* eina-04-regular.ttf in Resources */,

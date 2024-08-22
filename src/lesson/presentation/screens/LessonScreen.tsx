@@ -149,6 +149,7 @@ const LessonScreen = observer(() => {
   const nextModule = useCallback(
     (answerSelected: string) => {
       const finalAnswer = answerSelected.replaceAll(' ', '');
+
       // * check điều kiện là đang đến part mini test
       if (testTask?.type === firstMiniTestTask?.type) {
         playSound(soundTrack.menu_selection_sound);
@@ -198,7 +199,7 @@ const LessonScreen = observer(() => {
           point: testTask?.question?.[lessonIndex].point,
         };
 
-        if (finalAnswer) {
+        if (finalAnswer === testTask?.question?.[lessonIndex].correctAnswer) {
           playSound(soundTrack.bell_ding_sound);
         } else {
           playSound(soundTrack.oh_no_sound);

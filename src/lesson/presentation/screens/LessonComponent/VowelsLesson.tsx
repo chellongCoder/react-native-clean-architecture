@@ -1,5 +1,12 @@
 import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
+import React, {
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import LessonComponent from './LessonComponent';
 import PrimaryButton from '../../components/PrimaryButton';
 import {FontFamily} from 'src/core/presentation/hooks/useFonts';
@@ -17,6 +24,8 @@ import Animated, {
   useSharedValue,
   withTiming,
 } from 'react-native-reanimated';
+import {SoundGlobalContext} from 'src/core/presentation/hooks/sound/SoundGlobalContext';
+import {soundTrack} from 'src/core/presentation/hooks/sound/SoundGlobalProvider';
 
 type Props = {
   moduleIndex: number;
@@ -36,6 +45,7 @@ const VowelsLesson = ({
   firstMiniTestTask,
 }: Props) => {
   const globalStyle = useGlobalStyle();
+  const {playSound} = useContext(SoundGlobalContext);
 
   const [answerSelected, setAnswerSelected] = useState('');
   const {
@@ -49,6 +59,8 @@ const VowelsLesson = ({
   const {time, reset: resetTesting} = useTimingQuestion(learningTimer === 0);
 
   const intervalRef = useRef<NodeJS.Timeout>();
+
+  const playSoundRef = useRef<boolean>(false);
 
   const word = useMemo(() => {
     if (learningTimer === 0) {
@@ -64,6 +76,7 @@ const VowelsLesson = ({
     nextModule(answerSelected);
     resetLearning();
     resetTesting();
+    playSoundRef.current = false;
   }, [answerSelected, nextModule, resetLearning, resetTesting]);
 
   const opacity = useSharedValue(0);
@@ -99,6 +112,14 @@ const VowelsLesson = ({
     }
   }, [onSubmit, time]);
 
+  useEffect(() => {
+    if (!playSoundRef.current && learningTimer === 0) {
+      playSound(soundTrack.tiktak);
+      playSoundRef.current = true;
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [learningTimer]);
+
   return (
     <LessonComponent
       lessonName={lessonName}
@@ -123,7 +144,7 @@ const VowelsLesson = ({
             ]}
             source={{
               uri:
-                env.IMAGE_BASE_API_URL +
+                env.IMAGE_QUESTION_BASE_API_URL +
                 firstMiniTestTask?.question?.[moduleIndex].image,
             }}
           />

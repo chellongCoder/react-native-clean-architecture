@@ -27,7 +27,7 @@ export const pushScreen = <T>(screen: string, params: T): void => {
   }
 };
 
-export const replaceScreen = <T>(screen: string, params: T): void => {
+export const replaceScreen = <T>(screen: string, params?: T): void => {
   navigationRef.current?.dispatch(StackActions.replace(screen, params as any));
 };
 export const goBack = (): void => {
