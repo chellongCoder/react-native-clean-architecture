@@ -86,13 +86,6 @@ const LessonScreen = observer(() => {
     >().params;
   const {handlePostUserProgress, setTrainingCount, trainingCount} =
     useLessonStore();
-  console.log(
-    '🛠 LOG: 🚀 --> -------------------------------------------------------------🛠 LOG: 🚀 -->',
-  );
-  console.log('🛠 LOG: 🚀 --> ~ LessonScreen ~ trainingCount:', trainingCount);
-  console.log(
-    '🛠 LOG: 🚀 --> -------------------------------------------------------------🛠 LOG: 🚀 -->',
-  );
 
   const {tasks} = useListQuestions(route?.lessonId);
   const [activeTaskIndex, setActiveTaskIndex] = useState(0);
@@ -134,12 +127,22 @@ const LessonScreen = observer(() => {
               title: 'you did great',
               note: 'Good job!!! You pass the Minitest, \nnow app is unlocked !',
               isMiniTest: true,
+              moduleName: route.moduleName,
+              lessonName: route.lessonName,
+              partName: testTask?.name,
             },
           );
         }
       }
     },
-    [handlePostUserProgress, lessonState.result, playSound],
+    [
+      handlePostUserProgress,
+      lessonState.result,
+      playSound,
+      route.lessonName,
+      route.moduleName,
+      testTask?.name,
+    ],
   );
 
   const nextPart = useCallback(
@@ -155,6 +158,9 @@ const LessonScreen = observer(() => {
               colorBgBookView: COLORS.GREEN_009C6F,
               title: 'you did great',
               note: 'Good job!!! Now it’s time for MINITEST. \nTry your best !',
+              moduleName: route.moduleName,
+              lessonName: route.lessonName,
+              partName: testTask?.name,
             },
           );
           setActiveTaskIndex(v => v + 1);
@@ -183,6 +189,9 @@ const LessonScreen = observer(() => {
             title,
             countTime: `${trainingCount - 1} more time`,
             note,
+            moduleName: route.moduleName,
+            lessonName: route.lessonName,
+            partName: testTask?.name,
           },
         );
         setLessonState({trainingResult: []});
@@ -195,9 +204,12 @@ const LessonScreen = observer(() => {
     [
       activeTaskIndex,
       firstMiniTestTask?.type,
+      route.lessonName,
+      route.moduleName,
       setLessonState,
       setTrainingCount,
       tasks,
+      testTask?.name,
       trainingCount,
     ],
   );

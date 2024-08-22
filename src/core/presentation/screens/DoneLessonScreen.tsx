@@ -40,6 +40,9 @@ export type RouteParamsDone = {
   note: string;
   isMiniTest?: boolean;
   countTime?: string;
+  moduleName?: string;
+  lessonName?: string;
+  partName?: string;
 };
 
 const DoneLessonScreen = () => {
@@ -59,13 +62,6 @@ const DoneLessonScreen = () => {
       lessonStore.unlockPercent <=
       (totalCorrectAnswer / totalResultLength) * 100,
     [lessonStore.unlockPercent, totalCorrectAnswer, totalResultLength],
-  );
-  console.log(
-    '🛠 LOG: 🚀 --> ---------------------------------------------------------🛠 LOG: 🚀 -->',
-  );
-  console.log('🛠 LOG: 🚀 --> ~ DoneLessonScreen ~ isSuccess:', isSuccess);
-  console.log(
-    '🛠 LOG: 🚀 --> ---------------------------------------------------------🛠 LOG: 🚀 -->',
   );
 
   const onUnlockAppSetting = useCallback(async () => {
@@ -112,9 +108,9 @@ const DoneLessonScreen = () => {
           }
           resizeMode="cover">
           <HeaderLesson
-            lessonName="ENGLISH"
-            module="Module 1: vowels and Consonants"
-            part="Part 2: Consonants"
+            lessonName={route.lessonName}
+            module={route.moduleName}
+            part={route.partName}
           />
           <Text style={[styleHook.txtWord, styles.text]}>OH NOO !!!</Text>
           <Image
@@ -171,9 +167,9 @@ const DoneLessonScreen = () => {
         }
         resizeMode="cover">
         <HeaderLesson
-          lessonName="ENGLISH"
-          module="Module 1: vowels and Consonants"
-          part="Part 2: Consonants"
+          lessonName={route.lessonName}
+          module={route.moduleName}
+          part={route.partName}
         />
         <Text style={[styleHook.txtWord, styles.text]}>YAYYY !!!</Text>
         <Image

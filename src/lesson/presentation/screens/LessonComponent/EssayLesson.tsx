@@ -26,6 +26,7 @@ import {coreModuleContainer} from 'src/core/CoreModule';
 import Env, {EnvToken} from 'src/core/domain/entities/Env';
 import {SoundGlobalContext} from 'src/core/presentation/hooks/sound/SoundGlobalContext';
 import {soundTrack} from 'src/core/presentation/hooks/sound/SoundGlobalProvider';
+import {useIsFocused} from '@react-navigation/native';
 
 type Props = {
   moduleIndex: number;
@@ -44,13 +45,6 @@ const EssayLesson = ({
   moduleName,
   firstMiniTestTask,
 }: Props) => {
-  console.log(
-    '🛠 LOG: 🚀 --> ------------------------------------------------------🛠 LOG: 🚀 -->',
-  );
-  console.log('🛠 LOG: 🚀 --> ~ firstMiniTestTask:', firstMiniTestTask);
-  console.log(
-    '🛠 LOG: 🚀 --> ------------------------------------------------------🛠 LOG: 🚀 -->',
-  );
   const globalStyle = useGlobalStyle();
 
   const [answerSelectedChars, setAnswerSelectedChars] = useState<string[]>([]);
@@ -73,6 +67,8 @@ const EssayLesson = ({
   const {playSound, pauseSound} = useContext(SoundGlobalContext);
 
   const env = coreModuleContainer.getProvided<Env>(EnvToken); // Instantiate CoreService
+
+  const focus = useIsFocused();
 
   const {time, reset: resetTesting} = useTimingQuestion(learningTimer === 0);
 
@@ -120,11 +116,14 @@ const EssayLesson = ({
   }, [answerSelected, nextModule, resetLearning, resetTesting]);
 
   useEffect(() => {
-    intervalRef.current = start();
+    if (focus) {
+      intervalRef.current = start();
+    }
+
     return () => {
       stop(intervalRef.current!);
     };
-  }, [start, stop]);
+  }, [focus, start, stop]);
 
   useEffect(() => {
     if (learningTimer === 0) {
