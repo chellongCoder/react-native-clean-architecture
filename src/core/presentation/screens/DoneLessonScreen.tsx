@@ -29,6 +29,7 @@ import {CustomTextStyle} from '../constants/typography';
 import HeaderLesson from 'src/lesson/presentation/components/HeaderLesson';
 import {FontFamily} from '../hooks/useFonts';
 import Toast from 'react-native-toast-message';
+import {useCallback, useEffect, useMemo} from 'react';
 
 export type RouteParamsDone = {
   totalResult: TResult[];
@@ -38,6 +39,7 @@ export type RouteParamsDone = {
   title: string;
   note: string;
   isMiniTest?: boolean;
+  countTime?: string;
 };
 
 const DoneLessonScreen = () => {
@@ -52,12 +54,22 @@ const DoneLessonScreen = () => {
   const {deviceToken, selectedChild} = useAuthenticationStore();
   useGetUserSetting(deviceToken, selectedChild?._id ?? '', lessonStore);
 
-  const onUnlockAppSetting = async () => {
-    if (
+  const isSuccess = useMemo(
+    () =>
       lessonStore.unlockPercent <=
-      (totalCorrectAnswer / totalResultLength) * 100
-    ) {
-      resetNavigator(STACK_NAVIGATOR.HOME.HOME_SCREEN);
+      (totalCorrectAnswer / totalResultLength) * 100,
+    [lessonStore.unlockPercent, totalCorrectAnswer, totalResultLength],
+  );
+  console.log(
+    '🛠 LOG: 🚀 --> ---------------------------------------------------------🛠 LOG: 🚀 -->',
+  );
+  console.log('🛠 LOG: 🚀 --> ~ DoneLessonScreen ~ isSuccess:', isSuccess);
+  console.log(
+    '🛠 LOG: 🚀 --> ---------------------------------------------------------🛠 LOG: 🚀 -->',
+  );
+
+  const onUnlockAppSetting = useCallback(async () => {
+    if (isSuccess) {
       await unBlockApps();
       lessonStore.changeBlockedAnonymousListAppSystem(undefined);
       lessonStore.resetListAppSystem();
@@ -66,14 +78,87 @@ const DoneLessonScreen = () => {
         text1: 'Your apps have been unlocked',
       });
     } else {
-      Alert.alert('Your result is not enough to open app lock', '', [
-        {
-          text: 'Ok',
-          onPress: () => resetNavigator(STACK_NAVIGATOR.HOME.HOME_SCREEN),
-        },
-      ]);
+      Toast.show({
+        type: 'error',
+        text1: 'Your result is not enough to open app lock',
+      });
     }
-  };
+  }, [isSuccess, lessonStore]);
+
+  const onSubmit = useCallback(() => {
+    if (route.isMiniTest) {
+      resetNavigator(STACK_NAVIGATOR.HOME.HOME_SCREEN);
+      lessonStore.setTrainingCount(3);
+    } else {
+      goBack();
+    }
+  }, [lessonStore, route.isMiniTest]);
+
+  useEffect(() => {
+    if (route.isMiniTest) {
+      onUnlockAppSetting();
+    }
+  }, [onUnlockAppSetting, route.isMiniTest]);
+
+  if (!isSuccess) {
+    return (
+      <View style={styles.container}>
+        <ImageBackground
+          style={styles.titleContainer}
+          source={
+            typeof route.backgroundAndie === 'string'
+              ? {uri: route.backgroundAndie}
+              : route.backgroundAndie
+          }
+          resizeMode="cover">
+          <HeaderLesson
+            lessonName="ENGLISH"
+            module="Module 1: vowels and Consonants"
+            part="Part 2: Consonants"
+          />
+          <Text style={[styleHook.txtWord, styles.text]}>OH NOO !!!</Text>
+          <Image
+            source={
+              typeof route.andieImage === 'string'
+                ? {uri: route.andieImage}
+                : route.andieImage
+            }
+            style={{height: scale(200), width: scale(200)}}
+            resizeMode="contain"
+          />
+        </ImageBackground>
+        <BookView
+          style={styles.achievementContainer}
+          contentStyle={styles.content}
+          colorBg={COLORS.YELLOW_F2B559}
+          imageBackground={assets.bee_bg}>
+          <View style={styles.achievementContent}>
+            <View style={styles.wrapperContent}>
+              <Text style={[styleHook.txtModule, styles.contentTitle]}>
+                {'UNSUCCESSFUL'} !!!
+              </Text>
+              <Text
+                style={[styleHook.txtNote, styles.contentDescription]}
+                textBreakStrategy="balanced">
+                SORRY. You can not pass the test. You need to start all over
+                again. You can do it !
+              </Text>
+            </View>
+          </View>
+          <View style={styles.wrapperButton}>
+            <TouchableOpacity
+              onPress={onSubmit}
+              style={[
+                styles.button,
+                !isSuccess && {backgroundColor: COLORS.GREEN_66C270},
+              ]}>
+              <Text style={[styleHook.txtButton, styles.textBtn]}>Next</Text>
+            </TouchableOpacity>
+          </View>
+        </BookView>
+      </View>
+    );
+  }
 
   return (
     <View style={styles.container}>
@@ -121,27 +206,28 @@ const DoneLessonScreen = () => {
             <Text
               style={[styleHook.txtNote, styles.contentDescription]}
               textBreakStrategy="balanced">
-              Good job!!! You have{' '}
-              <Text style={[{fontFamily: FontFamily.Eina01Bold}]}>
-                {totalCorrectAnswer}/{route.totalResult.length || 0} correct
-                answers
-              </Text>
+              Good job!!! Now let’s practice again{' '}
+              {route.countTime && (
+                <Text style={[{fontFamily: FontFamily.Eina01Bold}]}>
+                  {route.countTime ?? ''} {'\n'}
+                </Text>
+              )}
               {route.note}
             </Text>
           </View>
-          <View style={styles.wrapStarContainer}>
-            <Image
-              source={assets.untitled_artwork}
-              style={styles.star}
-              resizeMode="contain"
-            />
-            <Text style={styles.starText}>{0}</Text>
-          </View>
+          {route.isMiniTest && (
+            <View style={styles.wrapStarContainer}>
+              <Image
+                source={assets.untitled_artwork}
+                style={styles.star}
+                resizeMode="contain"
+              />
+              <Text style={styles.starText}>{0}</Text>
+            </View>
+          )}
         </View>
         <View style={styles.wrapperButton}>
-          <TouchableOpacity
-            onPress={route.isMiniTest ? onUnlockAppSetting : () => goBack()}
-            style={styles.button}>
+          <TouchableOpacity onPress={onSubmit} style={styles.button}>
             <Text style={[styleHook.txtButton, styles.textBtn]}>Next</Text>
           </TouchableOpacity>
         </View>

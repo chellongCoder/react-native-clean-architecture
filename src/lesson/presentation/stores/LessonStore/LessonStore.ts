@@ -44,6 +44,7 @@ export class LessonStore {
   @observable isOverlay?: boolean;
   @observable isUsageStats?: boolean;
   @observable isPushNoti?: boolean;
+  @observable trainingCount = 3;
 
   constructor(
     @provided(UpdateUserSettingUseCase)
@@ -72,7 +73,13 @@ export class LessonStore {
     this.handleGetTopRanking = this.handleGetTopRanking.bind(this);
     this.handlePostUserProgress = this.handlePostUserProgress.bind(this);
     this.handleGetSettingUser = this.handleGetSettingUser.bind(this);
+    this.setTrainingCount = this.setTrainingCount.bind(this);
   }
+
+  @action
+  setTrainingCount = (count: number) => {
+    this.trainingCount = count;
+  };
 
   @action
   setIsOverlay = (bool: boolean) => {

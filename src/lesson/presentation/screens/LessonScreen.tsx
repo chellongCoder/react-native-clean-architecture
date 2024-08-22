@@ -84,7 +84,16 @@ const LessonScreen = observer(() => {
         'Detail'
       >
     >().params;
-  const {handlePostUserProgress} = useLessonStore();
+  const {handlePostUserProgress, setTrainingCount, trainingCount} =
+    useLessonStore();
+  console.log(
+    '🛠 LOG: 🚀 --> -------------------------------------------------------------🛠 LOG: 🚀 -->',
+  );
+  console.log('🛠 LOG: 🚀 --> ~ LessonScreen ~ trainingCount:', trainingCount);
+  console.log(
+    '🛠 LOG: 🚀 --> -------------------------------------------------------------🛠 LOG: 🚀 -->',
+  );
+
   const {tasks} = useListQuestions(route?.lessonId);
   const [activeTaskIndex, setActiveTaskIndex] = useState(0);
   const {selectedChild} = useAuthenticationStore();
@@ -94,7 +103,9 @@ const LessonScreen = observer(() => {
 
   const [lessonState, setLessonState] = useStateCustom<TLessonState>({
     result: [],
+    trainingResult: [],
   });
+
   const firstMiniTestTask = tasks.find(task => task.type === 'mini_test');
 
   const testTask = useMemo(() => {
@@ -121,7 +132,7 @@ const LessonScreen = observer(() => {
               backgroundAndie: assets.background_barry,
               colorBgBookView: COLORS.GREEN_009C6F,
               title: 'you did great',
-              note: 'Now it’s time for MINITEST. Try your best !',
+              note: 'Good job!!! You pass the Minitest, \nnow app is unlocked !',
               isMiniTest: true,
             },
           );
@@ -131,20 +142,65 @@ const LessonScreen = observer(() => {
     [handlePostUserProgress, lessonState.result, playSound],
   );
 
-  const nextPart = useCallback(() => {
-    navigateScreen<RouteParamsDone>(STACK_NAVIGATOR.HOME.DONE_LESSON_SCREEN, {
-      totalResult: lessonState.trainingResult || [],
-      andieImage: assets.andie_2,
-      backgroundAndie: assets.background_barry,
-      colorBgBookView: COLORS.GREEN_009C6F,
-      title: 'you did great',
-      note: `Now let’s practice again ${
-        tasks.length - 1 - (activeTaskIndex + 1)
-      } more times`,
-    });
-    setActiveTaskIndex(v => v + 1);
-    setLessonIndex(0);
-  }, [activeTaskIndex, lessonState.trainingResult, tasks.length]);
+  const nextPart = useCallback(
+    (trainingResult: TResult[]) => {
+      if (tasks?.[activeTaskIndex + 1].type === firstMiniTestTask?.type) {
+        if (trainingCount === 1) {
+          navigateScreen<RouteParamsDone>(
+            STACK_NAVIGATOR.HOME.DONE_LESSON_SCREEN,
+            {
+              totalResult: trainingResult || [],
+              andieImage: assets.andie_2,
+              backgroundAndie: assets.background_barry,
+              colorBgBookView: COLORS.GREEN_009C6F,
+              title: 'you did great',
+              note: 'Good job!!! Now it’s time for MINITEST. \nTry your best !',
+            },
+          );
+          setActiveTaskIndex(v => v + 1);
+          setLessonIndex(0);
+          return;
+        }
+
+        setTrainingCount(trainingCount - 1);
+
+        let title = '';
+        let note = '';
+        if (trainingCount === 3) {
+          title = 'amazing';
+          note = 'You’re doing great.';
+        } else if (trainingCount === 2) {
+          title = 'excellent';
+          note = 'You can do it !!';
+        }
+        navigateScreen<RouteParamsDone>(
+          STACK_NAVIGATOR.HOME.DONE_LESSON_SCREEN,
+          {
+            totalResult: trainingResult || [],
+            andieImage: assets.andie_2,
+            backgroundAndie: assets.background_barry,
+            colorBgBookView: COLORS.GREEN_009C6F,
+            title,
+            countTime: `${trainingCount - 1} more time`,
+            note,
+          },
+        );
+        setLessonState({trainingResult: []});
+        setActiveTaskIndex(0);
+      } else {
+        setActiveTaskIndex(v1 => v1 + 1);
+      }
+      setLessonIndex(0);
+    },
+    [
+      activeTaskIndex,
+      firstMiniTestTask?.type,
+      setLessonState,
+      setTrainingCount,
+      tasks,
+      trainingCount,
+    ],
+  );
 
   const nextModule = useCallback(
     (answerSelected: string) => {
@@ -184,9 +240,7 @@ const LessonScreen = observer(() => {
           submitModule(resultByAnswer);
           // return;
         }
-        setLessonIndex(
-          (lessonIndex + 1) % (firstMiniTestTask?.question.length ?? 1),
-        );
+        setLessonIndex(v => v + 1);
       } else {
         // * check điều kiện là đang làm training
         playSound(soundTrack.menu_selection_sound);
@@ -205,11 +259,12 @@ const LessonScreen = observer(() => {
           playSound(soundTrack.oh_no_sound);
         }
 
+        const _trainingResult = [
+          ...(lessonState.trainingResult || []),
+          resultByAnswer,
+        ];
         setLessonState({
-          trainingResult: [
-            ...(lessonState.trainingResult || []),
-            resultByAnswer,
-          ],
+          trainingResult: _trainingResult,
         });
 
         /**
@@ -217,10 +272,10 @@ const LessonScreen = observer(() => {
          * If the condition evaluates to true, the code inside the if statement block will be executed. In this case, it calls the submitModule function and passes resultByAnswer as an argument.
          */
         if (lessonIndex >= (testTask?.question.length ?? 1) - 1) {
-          nextPart();
+          nextPart(_trainingResult);
           return;
         }
-        setLessonIndex((lessonIndex + 1) % (testTask?.question.length ?? 1));
+        setLessonIndex(v => v + 1);
       }
     },
     [
@@ -252,6 +307,7 @@ const LessonScreen = observer(() => {
     return () => {
       console.log('Cleanup: attempting to pause current sound');
       pauseSound();
+      setTrainingCount(3);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
