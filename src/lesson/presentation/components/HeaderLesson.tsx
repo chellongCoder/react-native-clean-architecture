@@ -48,15 +48,6 @@ const HeaderLesson = ({lessonName, module, price, score, part}: Props) => {
             <Text style={[globalStyle.txtNote, styles.textPart]}>{part}</Text>
           </View>
         </View>
-        <View style={styles.alightEnd}>
-          <CustomSwitchNew value={false} onValueChange={() => {}} />
-          <View style={styles.rowAlignCenter}>
-            <Text style={[styles.fonts_SVN_Cherish, styles.textPrice]}>
-              {score}
-            </Text>
-            <IconStar />
-          </View>
-        </View>
       </View>
     </View>
   );

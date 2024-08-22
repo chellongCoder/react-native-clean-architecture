@@ -26,6 +26,7 @@ import Animated, {
 } from 'react-native-reanimated';
 import {SoundGlobalContext} from 'src/core/presentation/hooks/sound/SoundGlobalContext';
 import {soundTrack} from 'src/core/presentation/hooks/sound/SoundGlobalProvider';
+import {useIsFocused} from '@react-navigation/native';
 
 type Props = {
   moduleIndex: number;
@@ -53,8 +54,9 @@ const VowelsLesson = ({
     stop,
     reset: resetLearning,
     time: learningTimer,
-  } = useCountDown(0);
+  } = useCountDown(5);
   const env = coreModuleContainer.getProvided<Env>(EnvToken); // Instantiate CoreService
+  const focus = useIsFocused();
 
   const {time, reset: resetTesting} = useTimingQuestion(learningTimer === 0);
 
@@ -94,11 +96,14 @@ const VowelsLesson = ({
   });
 
   useEffect(() => {
-    intervalRef.current = start();
+    if (focus) {
+      intervalRef.current = start();
+    }
+
     return () => {
       stop(intervalRef.current!);
     };
-  }, [start, stop]);
+  }, [focus, start, stop]);
 
   useEffect(() => {
     if (learningTimer === 0) {
@@ -287,7 +292,7 @@ const styles = StyleSheet.create({
   },
   boxSelected: {
     backgroundColor: COLORS.WHITE_FBF8CC,
-    // height: verticalScale(220),
+    height: verticalScale(220),
     flex: 1,
     borderRadius: scale(30),
     justifyContent: 'center',

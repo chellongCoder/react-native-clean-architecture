@@ -91,7 +91,7 @@ const LessonComponent = ({
           })}
           {totalModule > 30 && (
             <Text style={[styles.fonts_SVN_Cherish, {color: COLORS.WHITE}]}>
-              +{totalModule - 30}
+              +{totalModule - (moduleIndex > 30 ? moduleIndex + 1 : 30)}
             </Text>
           )}
         </View>
