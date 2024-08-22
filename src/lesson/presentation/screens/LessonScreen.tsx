@@ -148,6 +148,7 @@ const LessonScreen = observer(() => {
 
   const nextModule = useCallback(
     (answerSelected: string) => {
+      const finalAnswer = answerSelected.replaceAll(' ', '');
       // * check điều kiện là đang đến part mini test
       if (testTask?.type === firstMiniTestTask?.type) {
         playSound(soundTrack.menu_selection_sound);
@@ -156,7 +157,7 @@ const LessonScreen = observer(() => {
           taskId: firstMiniTestTask?.question?.[lessonIndex].taskId,
           questionId: firstMiniTestTask?.question?.[lessonIndex]._id,
           status:
-            answerSelected ===
+            finalAnswer ===
             firstMiniTestTask?.question?.[lessonIndex].correctAnswer
               ? 'completed'
               : 'failed',
@@ -164,7 +165,7 @@ const LessonScreen = observer(() => {
         };
 
         if (
-          answerSelected ===
+          finalAnswer ===
           firstMiniTestTask?.question?.[lessonIndex].correctAnswer
         ) {
           playSound(soundTrack.bell_ding_sound);
@@ -193,16 +194,11 @@ const LessonScreen = observer(() => {
           userId: selectedChild?._id,
           taskId: testTask?.question?.[lessonIndex].taskId,
           questionId: testTask?.question?.[lessonIndex]._id,
-          status:
-            answerSelected === testTask?.question?.[lessonIndex].correctAnswer
-              ? 'completed'
-              : 'failed',
+          status: finalAnswer ? 'completed' : 'failed',
           point: testTask?.question?.[lessonIndex].point,
         };
 
-        if (
-          answerSelected === testTask?.question?.[lessonIndex].correctAnswer
-        ) {
+        if (finalAnswer) {
           playSound(soundTrack.bell_ding_sound);
         } else {
           playSound(soundTrack.oh_no_sound);

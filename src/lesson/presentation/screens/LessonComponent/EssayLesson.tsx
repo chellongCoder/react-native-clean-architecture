@@ -10,6 +10,13 @@ import {assets} from 'src/core/presentation/utils';
 import {useTimingQuestion} from '../../hooks/useTimingQuestion';
 import {scale, verticalScale} from 'react-native-size-matters';
 import {useCountDown} from '../../hooks/useCountDown';
+import Animated, {
+  useAnimatedStyle,
+  useSharedValue,
+  withTiming,
+} from 'react-native-reanimated';
+import {coreModuleContainer} from 'src/core/CoreModule';
+import Env, {EnvToken} from 'src/core/domain/entities/Env';
 
 type Props = {
   moduleIndex: number;
@@ -28,24 +35,39 @@ const EssayLesson = ({
   moduleName,
   firstMiniTestTask,
 }: Props) => {
+  console.log(
+    '🛠 LOG: 🚀 --> ------------------------------------------------------🛠 LOG: 🚀 -->',
+  );
+  console.log('🛠 LOG: 🚀 --> ~ firstMiniTestTask:', firstMiniTestTask);
+  console.log(
+    '🛠 LOG: 🚀 --> ------------------------------------------------------🛠 LOG: 🚀 -->',
+  );
   const globalStyle = useGlobalStyle();
 
   const [answerSelectedChars, setAnswerSelectedChars] = useState<string[]>([]);
 
-  const [selectedStack, setSelectedStack] = useState<{index: number; indexFill: number}[]>([]);
+  const [selectedStack, setSelectedStack] = useState<
+    {index: number; indexFill: number}[]
+  >([]);
 
-  const answerSelected = useMemo(() => answerSelectedChars.join(''), [answerSelectedChars])
-  // const [answerSelected, setAnswerSelected] = useState('');
+  const answerSelected = useMemo(
+    () => answerSelectedChars.join(''),
+    [answerSelectedChars],
+  );
+
   const {
     start,
     stop,
     reset: resetLearning,
     time: learningTimer,
   } = useCountDown(5);
+  const env = coreModuleContainer.getProvided<Env>(EnvToken); // Instantiate CoreService
 
   const {time, reset: resetTesting} = useTimingQuestion(learningTimer === 0);
 
   const intervalRef = useRef<NodeJS.Timeout>();
+
+  const opacity = useSharedValue(1);
 
   const word = useMemo(() => {
     if (learningTimer === 0) {
@@ -56,20 +78,25 @@ const EssayLesson = ({
     return firstMiniTestTask?.question?.[moduleIndex]?.fullAnswer;
   }, [firstMiniTestTask?.question, learningTimer, moduleIndex, time]);
 
-  const onPressItem = useCallback((char: string, index: number) => {
-    const stackItem = selectedStack.find((v) => v.index === index);
-    if(stackItem) {
-      answerSelectedChars[stackItem.indexFill] = '_'
-      setAnswerSelectedChars([...answerSelectedChars]);
-      setSelectedStack(selectedStack.filter(v => v.index !== stackItem.index))
-    }else {
-      const indexEmpty = answerSelectedChars.findIndex(v => v === '_')
-      answerSelectedChars[indexEmpty] = char;
-      setAnswerSelectedChars([...answerSelectedChars]);
-      selectedStack.push({index: index, indexFill: indexEmpty})
-      setSelectedStack([...selectedStack])
-    }
-  }, [selectedStack, answerSelectedChars])
+  const onPressItem = useCallback(
+    (char: string, index: number) => {
+      const stackItem = selectedStack.find(v => v.index === index);
+      if (stackItem) {
+        answerSelectedChars[stackItem.indexFill] = '_';
+        setAnswerSelectedChars([...answerSelectedChars]);
+        setSelectedStack(
+          selectedStack.filter(v => v.index !== stackItem.index),
+        );
+      } else {
+        const indexEmpty = answerSelectedChars.findIndex(v => v === '_');
+        answerSelectedChars[indexEmpty] = char;
+        setAnswerSelectedChars([...answerSelectedChars]);
+        selectedStack.push({index: index, indexFill: indexEmpty});
+        setSelectedStack([...selectedStack]);
+      }
+    },
+    [selectedStack, answerSelectedChars],
+  );
 
   const onSubmit = useCallback(() => {
     setSelectedStack([]);
@@ -93,12 +120,23 @@ const EssayLesson = ({
   }, [learningTimer, stop]);
 
   useEffect(() => {
-    const content = firstMiniTestTask?.question?.[moduleIndex]?.content
-    if(content){
-      setAnswerSelectedChars(content.split(''))
+    const content = firstMiniTestTask?.question?.[moduleIndex]?.content;
+    if (content) {
+      setAnswerSelectedChars(content.split(''));
     }
-  }, [moduleIndex, firstMiniTestTask?.question?.[moduleIndex]?.content])
+  }, [firstMiniTestTask?.question, moduleIndex]);
 
+  useEffect(() => {
+    opacity.value = withTiming(0, {duration: 500}, () => {
+      opacity.value = withTiming(1, {duration: 500});
+    });
+  }, [moduleIndex, opacity]);
+
+  const animatedStyle = useAnimatedStyle(() => {
+    return {
+      opacity: opacity.value,
+    };
+  });
   return (
     <LessonComponent
       lessonName={lessonName}
@@ -112,7 +150,21 @@ const EssayLesson = ({
           <Text style={[styles.fonts_SVN_Cherish, styles.textQuestion]}>
             {word}
           </Text>
-          <Image source={assets.abcBook} />
+          <Animated.Image
+            resizeMode={'contain'}
+            style={[
+              {
+                width: scale(200),
+                height: scale(150),
+              },
+              animatedStyle,
+            ]}
+            source={{
+              uri:
+                env.IMAGE_BASE_API_URL +
+                firstMiniTestTask?.question?.[moduleIndex].image,
+            }}
+          />
         </View>
       }
       buildAnswer={
@@ -133,7 +185,9 @@ const EssayLesson = ({
             <View style={[styles.wapper, styles.fill]}>
               {firstMiniTestTask?.question?.[moduleIndex]?.answers?.map(
                 (e, i) => {
-                  const bg = selectedStack.find(v => v.index === i) ? '#66C270' : '#F2B559';
+                  const bg = selectedStack.find(v => v.index === i)
+                    ? '#66C270'
+                    : '#F2B559';
                   return (
                     <TouchableOpacity
                       key={i}

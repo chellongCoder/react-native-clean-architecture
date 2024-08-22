@@ -58,13 +58,6 @@ const VowelsLesson = ({
     }
     return firstMiniTestTask?.question?.[moduleIndex]?.fullAnswer;
   }, [firstMiniTestTask?.question, learningTimer, moduleIndex, time]);
-  console.log(
-    '🛠 LOG: 🚀 --> ------------------------------------------------------🛠 LOG: 🚀 -->',
-  );
-  console.log('🛠 LOG: 🚀 --> ~ firstMiniTestTask:', firstMiniTestTask);
-  console.log(
-    '🛠 LOG: 🚀 --> ------------------------------------------------------🛠 LOG: 🚀 -->',
-  );
 
   const onSubmit = useCallback(() => {
     setAnswerSelected('');
@@ -100,6 +93,12 @@ const VowelsLesson = ({
     }
   }, [learningTimer, stop]);
 
+  useEffect(() => {
+    if (time === 0) {
+      onSubmit();
+    }
+  }, [onSubmit, time]);
+
   return (
     <LessonComponent
       lessonName={lessonName}
@@ -114,7 +113,14 @@ const VowelsLesson = ({
             {word}
           </Text>
           <Animated.Image
-            style={[{width: scale(200), height: scale(200)}, animatedStyle]}
+            resizeMode={'cover'}
+            style={[
+              {
+                width: scale(200),
+                height: scale(150),
+              },
+              animatedStyle,
+            ]}
             source={{
               uri:
                 env.IMAGE_BASE_API_URL +
