@@ -336,7 +336,7 @@ const styles = StyleSheet.create({
   },
   boxSelected: {
     backgroundColor: COLORS.WHITE_FBF8CC,
-    // height: verticalScale(220),
+    height: verticalScale(220),
     flex: 1,
     borderRadius: scale(30),
     justifyContent: 'center',
