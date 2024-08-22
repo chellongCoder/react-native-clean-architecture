@@ -141,10 +141,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   h450: {
-    height: 450,
+    height: '50%',
   },
   bookView: {
-    height: 450,
+    height: '100%',
     paddingTop: 0,
     paddingBottom: 0,
   },
