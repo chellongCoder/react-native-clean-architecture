@@ -504,7 +504,6 @@ The blockAppsSystem function is an asynchronous function that awaits the result 
               onPress={hasSaving ? onConfigUserSetting : blockAppsSystem}
               text={hasSaving ? 'Save' : 'Lock apps'}
               style={[styles.btnCommon]}
-              isLoading={lesson.isLoadingUserSetting}
               disable={!!errorMessage}
             />
           </View>

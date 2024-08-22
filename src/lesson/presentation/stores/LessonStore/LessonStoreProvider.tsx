@@ -74,7 +74,12 @@ export const LessonStoreProvider = observer(({children}: PropsWithChildren) => {
   };
 
   const listItem = value.listAppsSystem.map(transformAppEntityToListItem);
+  const {isOverlay, isPushNoti, isUsageStats} = value;
 
+  const isConfirm = useMemo(
+    () => isOverlay && isPushNoti && isUsageStats,
+    [isOverlay, isPushNoti, isUsageStats],
+  );
   const renderBottomSheet = useCallback(() => {
     return (
       <>
@@ -119,9 +124,9 @@ export const LessonStoreProvider = observer(({children}: PropsWithChildren) => {
           </BottomSheetCustom>
         )}
 
-        {value.bottomSheetPermissionRef && (
+        {!isConfirm && value.bottomSheetPermissionRef && (
           <BottomSheetCustom
-            snapPoints={['62']}
+            snapPoints={['70']}
             ref={value.bottomSheetPermissionRef}
             title="ABeeCi needs system permissions to work with:"
             enablePanDownToClose={false}
@@ -133,7 +138,8 @@ export const LessonStoreProvider = observer(({children}: PropsWithChildren) => {
         )}
       </>
     );
-  }, [apps, listItem, value]);
+  }, [apps, isConfirm, listItem, value]);
+
   return (
     <LessonStoreContext.Provider value={value}>
       {children}
@@ -192,6 +198,7 @@ const ItemPermission = observer(({lesson}: {lesson: LessonStore}) => {
   const globalStyle = useGlobalStyle();
   const timeRef = useRef<NodeJS.Timeout>();
   const {isOverlay, isPushNoti, isUsageStats} = lesson;
+
   const [errors, setErrors] = useState({isOverlay, isPushNoti, isUsageStats});
   const isConfirm = useMemo(
     () => errors.isOverlay && errors.isPushNoti && errors.isUsageStats,
