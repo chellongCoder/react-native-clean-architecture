@@ -13,7 +13,7 @@ import {FontFamily} from 'src/core/presentation/hooks/useFonts';
 import useGlobalStyle from 'src/core/presentation/hooks/useGlobalStyle';
 import {Task} from 'src/home/application/types/GetListQuestionResponse';
 import {COLORS} from 'src/core/presentation/constants/colors';
-import {assets} from 'src/core/presentation/utils';
+import {assets, WIDTH_SCREEN} from 'src/core/presentation/utils';
 import {useTimingQuestion} from '../../hooks/useTimingQuestion';
 import {scale, verticalScale} from 'react-native-size-matters';
 import {useCountDown} from '../../hooks/useCountDown';
@@ -215,6 +215,10 @@ const EssayLesson = ({
                   const bg = selectedStack.find(v => v.index === i)
                     ? '#66C270'
                     : '#F2B559';
+                  const length =
+                    firstMiniTestTask?.question?.[moduleIndex]?.answers
+                      ?.length ?? 2;
+                  const size = Math.min((WIDTH_SCREEN - 80) / (length / 2), 50);
                   return (
                     <TouchableOpacity
                       key={i}
@@ -223,6 +227,8 @@ const EssayLesson = ({
                         styles.boxVowel,
                         {
                           backgroundColor: bg,
+                          height: size,
+                          width: size,
                         },
                       ]}>
                       <Text style={[styles.textVowel]}>{e}</Text>
@@ -331,7 +337,8 @@ const styles = StyleSheet.create({
   },
   boxSelected: {
     backgroundColor: COLORS.WHITE_FBF8CC,
-    height: verticalScale(220),
+    // height: verticalScale(220),
+    flex: 1,
     borderRadius: scale(30),
     justifyContent: 'center',
     alignItems: 'center',
