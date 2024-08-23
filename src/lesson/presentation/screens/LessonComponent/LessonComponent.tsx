@@ -1,4 +1,4 @@
-import {View, Text, StyleSheet, ImageBackground} from 'react-native';
+import {View, Text, StyleSheet, ImageBackground, Image} from 'react-native';
 import React from 'react';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {FontFamily} from 'src/core/presentation/hooks/useFonts';
@@ -22,6 +22,8 @@ type Props = {
   totalModule: number;
   price?: string;
   score?: number;
+  isAnswerCorrect?: boolean;
+  isShowCorrectContainer?: boolean;
 };
 
 const LessonComponent = ({
@@ -36,6 +38,8 @@ const LessonComponent = ({
   totalModule,
   price = '',
   score = 0,
+  isShowCorrectContainer,
+  isAnswerCorrect,
 }: Props) => {
   const insets = useSafeAreaInsets();
   const globalStyle = useGlobalStyle();
@@ -79,21 +83,42 @@ const LessonComponent = ({
           </View>
         </View>
         <View style={[styles.boxQuestion, styles.pb32]}>{buildQuestion}</View>
-        <View style={[styles.tabs]}>
-          {Array.from({length: totalModule > 30 ? 30 : totalModule}, (_, i) => {
-            const bg =
-              i < moduleIndex
-                ? 'white'
-                : i === moduleIndex
-                ? '#F2B559'
-                : '#258F78';
-            return <Dotline key={i} bg={bg} />;
-          })}
-          {totalModule > 30 && (
-            <Text style={[styles.fonts_SVN_Cherish, {color: COLORS.WHITE}]}>
-              +{totalModule - (moduleIndex > 30 ? moduleIndex + 1 : 30)}
-            </Text>
-          )}
+        <View style={styles.wrapDescriptionContainer}>
+          <View style={styles.wrapImageContainer}>
+            <Image
+              source={require('../../../../../assets/images/barry_1.png')}
+              style={styles.imageContainer}
+            />
+          </View>
+
+          <View style={{flex: 1}}>
+            {isShowCorrectContainer && (
+              <View style={styles.wrapCorrectContainer}>
+                <Text style={styles.correctTitle}>
+                  {isAnswerCorrect ? 'Correct !!' : 'Incorrect !!'}
+                </Text>
+              </View>
+            )}
+            <View style={[styles.tabs]}>
+              {Array.from(
+                {length: totalModule > 30 ? 30 : totalModule},
+                (_, i) => {
+                  const bg =
+                    i < moduleIndex
+                      ? 'white'
+                      : i === moduleIndex
+                      ? '#F2B559'
+                      : '#258F78';
+                  return <Dotline key={i} bg={bg} />;
+                },
+              )}
+              {totalModule > 30 && (
+                <Text style={[styles.fonts_SVN_Cherish, {color: COLORS.WHITE}]}>
+                  +{totalModule - (moduleIndex > 30 ? moduleIndex + 1 : 30)}
+                </Text>
+              )}
+            </View>
+          </View>
         </View>
       </ImageBackground>
       <View style={[styles.h450]}>
@@ -245,5 +270,31 @@ const styles = StyleSheet.create({
   tabs: {
     flexDirection: 'row',
     paddingBottom: 14,
+  },
+  wrapCorrectContainer: {
+    backgroundColor: '#FBF8CC',
+    marginBottom: 8,
+    padding: 16,
+    borderTopLeftRadius: 36,
+    borderTopRightRadius: 36,
+    borderBottomRightRadius: 36,
+    alignItems: 'center',
+    alignSelf: 'flex-start',
+  },
+  correctTitle: {
+    color: '#1C6A59',
+    textTransform: 'uppercase',
+    fontWeight: 'bold',
+  },
+  wrapDescriptionContainer: {
+    flexDirection: 'row',
+    alignItems: 'flex-end',
+  },
+  wrapImageContainer: {height: 150, width: 100},
+  imageContainer: {
+    height: 200,
+    width: 200,
+    position: 'absolute',
+    left: -24,
   },
 });

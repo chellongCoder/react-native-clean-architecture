@@ -49,6 +49,10 @@ const VowelsLesson = ({
   const {playSound} = useContext(SoundGlobalContext);
 
   const [answerSelected, setAnswerSelected] = useState('');
+  const [isAnswerCorrect, setIsAnswerCorrect] = useState(false);
+  const [isShowCorrectContainer, setIsShowCorrectContainer] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
   const {
     start,
     stop,
@@ -73,13 +77,51 @@ const VowelsLesson = ({
     return firstMiniTestTask?.question?.[moduleIndex]?.fullAnswer;
   }, [firstMiniTestTask?.question, learningTimer, moduleIndex, time]);
 
-  const onSubmit = useCallback(() => {
-    setAnswerSelected('');
-    nextModule(answerSelected);
-    resetLearning();
-    resetTesting();
-    playSoundRef.current = false;
-  }, [answerSelected, nextModule, resetLearning, resetTesting]);
+  const onCheckAnswer = useCallback(() => {
+    return new Promise(resolve => {
+      setIsShowCorrectContainer(true);
+
+      if (
+        answerSelected ===
+        firstMiniTestTask?.question?.[moduleIndex]?.correctAnswer
+      ) {
+        setIsAnswerCorrect(true);
+      } else {
+        setIsAnswerCorrect(false);
+      }
+
+      setTimeout(() => {
+        setIsShowCorrectContainer(false);
+        resolve(true);
+      }, 1000);
+    });
+  }, [answerSelected, firstMiniTestTask?.question, moduleIndex]);
+
+  const onSubmit = useCallback(async () => {
+    if (isSubmitting) {
+      return;
+    }
+    setIsSubmitting(true);
+
+    try {
+      await onCheckAnswer();
+
+      setAnswerSelected('');
+      nextModule(answerSelected);
+      resetLearning();
+      resetTesting();
+      playSoundRef.current = false;
+    } finally {
+      setIsSubmitting(false);
+    }
+  }, [
+    answerSelected,
+    isSubmitting,
+    nextModule,
+    onCheckAnswer,
+    resetLearning,
+    resetTesting,
+  ]);
 
   const opacity = useSharedValue(0);
 
@@ -133,6 +175,8 @@ const VowelsLesson = ({
       backgroundColor="#66c270"
       backgroundAnswerColor="#DDF598"
       price="Free"
+      isAnswerCorrect={isAnswerCorrect}
+      isShowCorrectContainer={isShowCorrectContainer}
       buildQuestion={
         <View>
           <Text style={[styles.fonts_SVN_Cherish, styles.textQuestion]}>
@@ -157,19 +201,47 @@ const VowelsLesson = ({
             Choose the correct answer
           </Text>
           <View style={[styles.boxSelected]}>
-            <Text
-              style={[
-                styles.fonts_SVN_Cherish,
-                styles.textQuestion,
-                styles.textGreen,
-                styles.mt16,
-              ]}>
-              {firstMiniTestTask?.question?.[moduleIndex]?.content}
-            </Text>
+            <View style={styles.wrapCharContainer}>
+              {firstMiniTestTask?.question?.[moduleIndex]?.content
+                .split('')
+                .map(char => {
+                  if (char === '_' && answerSelected) {
+                    return (
+                      <Text
+                        style={[
+                          styles.fonts_SVN_Cherish,
+                          styles.textQuestion,
+                          styles.textGreen,
+                          styles.mt16,
+                          {textDecorationLine: 'underline'},
+                        ]}>
+                        {answerSelected}
+                      </Text>
+                    );
+                  }
+                  return (
+                    <Text
+                      style={[
+                        styles.fonts_SVN_Cherish,
+                        styles.textQuestion,
+                        styles.textGreen,
+                        styles.mt16,
+                      ]}>
+                      {char}
+                    </Text>
+                  );
+                })}
+            </View>
+
             <View style={[styles.wapper, styles.fill]}>
               {firstMiniTestTask?.question?.[moduleIndex]?.answers?.map(
                 (e, i) => {
-                  const bg = e === answerSelected ? '#66C270' : '#F2B559';
+                  const bg =
+                    e === answerSelected
+                      ? !isAnswerCorrect && isShowCorrectContainer
+                        ? '#F28759'
+                        : '#66C270'
+                      : '#F2B559';
                   const length =
                     firstMiniTestTask?.question?.[moduleIndex]?.answers
                       ?.length ?? 2;
@@ -318,5 +390,8 @@ const styles = StyleSheet.create({
     flexWrap: 'wrap',
     justifyContent: 'center',
     alignContent: 'center',
+  },
+  wrapCharContainer: {
+    flexDirection: 'row',
   },
 });
