@@ -137,6 +137,9 @@ const VowelsLesson = ({
     };
   });
 
+  /**
+   * bắt đầu start count down 5s
+   */
   useEffect(() => {
     if (focus) {
       intervalRef.current = start();
@@ -147,18 +150,27 @@ const VowelsLesson = ({
     };
   }, [focus, start, stop]);
 
+  /**
+   * nếu 5s đếm ngược đã kết thúc -> clear interval 5s
+   */
   useEffect(() => {
     if (learningTimer === 0) {
       stop(intervalRef.current!);
     }
   }, [learningTimer, stop]);
 
+  /**
+   * nếu 10s đếm ngược đã kết thúc -> submit câu trả lời
+   */
   useEffect(() => {
     if (time === 0) {
       onSubmit();
     }
   }, [onSubmit, time]);
 
+  /**
+   * nếu chưa play sound đếm ngược 10s & 5s đã kết thúc -> play sound
+   */
   useEffect(() => {
     if (!playSoundRef.current && learningTimer === 0) {
       playSound(soundTrack.tiktak);

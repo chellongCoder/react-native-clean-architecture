@@ -15,6 +15,7 @@ export const assets = {
   sound_icon: require('assets/images/sound_icon.png'),
   hexagon_frame: require('assets/images/hexagon_frame.png'),
   onboarding: require('assets/images/ONBOARDINGSCREEN.png'),
+  onboarding_minitest: require('assets/images/onboarding_minitest.png'),
   background_vowels: require('assets/images/BACKGROUND_VOWELS.png'),
   book: require('assets/images/book.png'),
   abcBook: require('assets/images/abc_book.png'),

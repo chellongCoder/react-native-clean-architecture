@@ -29,7 +29,9 @@ import {CustomTextStyle} from '../constants/typography';
 import HeaderLesson from 'src/lesson/presentation/components/HeaderLesson';
 import {FontFamily} from '../hooks/useFonts';
 import Toast from 'react-native-toast-message';
-import {useCallback, useEffect, useMemo} from 'react';
+import {useCallback, useEffect, useMemo, useState} from 'react';
+import OnBoardingMinitestScreen from './OnBoardingMinitestScreen';
+import Animated, {Easing, FadeIn} from 'react-native-reanimated';
 
 export type RouteParamsDone = {
   totalResult: TResult[];
@@ -54,7 +56,9 @@ const DoneLessonScreen = () => {
       ?.length || 0;
   const styleHook = useGlobalStyle();
   const lessonStore = lessonModuleContainer.getProvided(LessonStore);
+
   const {deviceToken, selectedChild} = useAuthenticationStore();
+  const [isShowOnBoard, setIsShowOnBoard] = useState(false);
   useGetUserSetting(deviceToken, selectedChild?._id ?? '', lessonStore);
 
   const isSuccess = useMemo(
@@ -86,7 +90,14 @@ const DoneLessonScreen = () => {
       resetNavigator(STACK_NAVIGATOR.HOME.HOME_SCREEN);
       lessonStore.setTrainingCount(3);
     } else {
-      goBack();
+      if (lessonStore.trainingCount === 0) {
+        setIsShowOnBoard(true);
+        setTimeout(() => {
+          goBack();
+        }, 2000);
+      } else {
+        goBack();
+      }
     }
   }, [lessonStore, route.isMiniTest]);
 
@@ -228,13 +239,24 @@ const DoneLessonScreen = () => {
           </TouchableOpacity>
         </View>
       </BookView>
+      {isShowOnBoard && (
+        <Animated.View
+          entering={FadeIn.duration(200).easing(Easing.ease)}
+          style={{
+            position: 'absolute',
+            zIndex: 999,
+            width: '100%',
+            height: '100%',
+          }}>
+          <OnBoardingMinitestScreen />
+        </Animated.View>
+      )}
     </View>
   );
 };
 export default DoneLessonScreen;
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: '#FBF8CC',
     flex: 1,
     alignContent: 'center',
     justifyContent: 'center',

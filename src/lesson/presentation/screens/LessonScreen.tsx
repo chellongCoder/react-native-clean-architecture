@@ -99,8 +99,14 @@ const LessonScreen = observer(() => {
     trainingResult: [],
   });
 
+  /**
+   * Lấy ra mini test trong task của module
+   */
   const firstMiniTestTask = tasks.find(task => task.type === 'mini_test');
 
+  /**
+   * Lấy ra task đang được làm
+   */
   const testTask = useMemo(() => {
     if (tasks[activeTaskIndex]?.type === 'mini_test') {
       return firstMiniTestTask;
@@ -148,6 +154,8 @@ const LessonScreen = observer(() => {
   const nextPart = useCallback(
     (trainingResult: TResult[]) => {
       if (tasks?.[activeTaskIndex + 1].type === firstMiniTestTask?.type) {
+        setTrainingCount(trainingCount - 1);
+
         if (trainingCount === 1) {
           navigateScreen<RouteParamsDone>(
             STACK_NAVIGATOR.HOME.DONE_LESSON_SCREEN,
@@ -167,8 +175,6 @@ const LessonScreen = observer(() => {
           setLessonIndex(0);
           return;
         }
-
-        setTrainingCount(trainingCount - 1);
 
         let title = '';
         let note = '';
@@ -306,6 +312,9 @@ const LessonScreen = observer(() => {
     ],
   );
 
+  /**
+   *
+   */
   useEffect(() => {
     const enterMiniTest = () => {
       console.log('Attempting to pause current sound');
