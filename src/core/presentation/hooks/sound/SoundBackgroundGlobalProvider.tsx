@@ -13,33 +13,33 @@ export const SoundBackgroundGlobalProvider = ({
 
   const [isPlaying, setIsPlaying] = useState(false);
 
-  // useEffect(() => {
-  //   const listener = AppLifecycle.addEventListener(
-  //     'change',
-  //     (state: AppStateStatus) => {
-  //       // do something
+  useEffect(() => {
+    const listener = AppLifecycle.addEventListener(
+      'change',
+      (state: AppStateStatus) => {
+        // do something
 
-  //       if (state === 'background') {
-  //         pauseSound();
-  //       } else {
-  //         loopSound(soundTrack.ukulele_music);
-  //       }
-  //     },
-  //   );
+        if (state === 'background') {
+          pauseSound();
+        } else {
+          loopSound(soundTrack.ukulele_music);
+        }
+      },
+    );
 
-  //   return () => listener.remove();
-  // }, [loopSound, pauseSound]);
+    return () => listener.remove();
+  }, [loopSound, pauseSound]);
 
-  // useEffect(() => {
-  //   if (isInitSoundDone) {
-  //     const timeoutId = setTimeout(() => {
-  //       setIsPlaying(true);
-  //       loopSound(soundTrack.ukulele_music);
-  //     }, 1000); // Delay of 500ms
+  useEffect(() => {
+    if (isInitSoundDone) {
+      const timeoutId = setTimeout(() => {
+        setIsPlaying(true);
+        loopSound(soundTrack.ukulele_music);
+      }, 1000); // Delay of 500ms
 
-  //     return () => clearTimeout(timeoutId);
-  //   }
-  // }, [loopSound, isInitSoundDone]);
+      return () => clearTimeout(timeoutId);
+    }
+  }, [loopSound, isInitSoundDone]);
 
   return (
     <SoundBackgroundGlobalContext.Provider value={{isPlaying, setVolume}}>
