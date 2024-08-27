@@ -27,6 +27,7 @@ import Animated, {
 import {SoundGlobalContext} from 'src/core/presentation/hooks/sound/SoundGlobalContext';
 import {soundTrack} from 'src/core/presentation/hooks/sound/SoundGlobalProvider';
 import {useIsFocused} from '@react-navigation/native';
+import {TextToSpeechContext} from 'src/core/presentation/hooks/textToSpeech/TextToSpeechContext';
 
 type Props = {
   moduleIndex: number;
@@ -47,6 +48,7 @@ const VowelsLesson = ({
 }: Props) => {
   const globalStyle = useGlobalStyle();
   const {playSound} = useContext(SoundGlobalContext);
+  const {ttsSpeak} = useContext(TextToSpeechContext);
 
   const [answerSelected, setAnswerSelected] = useState('');
   const [isAnswerCorrect, setIsAnswerCorrect] = useState(false);
@@ -102,10 +104,8 @@ const VowelsLesson = ({
       return;
     }
     setIsSubmitting(true);
-
     try {
       await onCheckAnswer();
-
       setAnswerSelected('');
       nextModule(answerSelected);
       resetLearning();
@@ -122,6 +122,10 @@ const VowelsLesson = ({
     resetLearning,
     resetTesting,
   ]);
+
+  const onSpeechText = useCallback(() => {
+    ttsSpeak(firstMiniTestTask?.question?.[moduleIndex].fullAnswer);
+  }, [firstMiniTestTask?.question, moduleIndex, ttsSpeak]);
 
   const opacity = useSharedValue(0);
 
@@ -209,9 +213,24 @@ const VowelsLesson = ({
       }
       buildAnswer={
         <View style={styles.fill}>
-          <Text style={[globalStyle.txtLabel, styles.pb32, styles.textColor]}>
-            Choose the correct answer
-          </Text>
+          <View style={styles.wrapHeaderContainer}>
+            <View
+              style={{
+                justifyContent: 'center',
+                flex: 1,
+              }}>
+              <Text style={[globalStyle.txtLabel, styles.textColor]}>
+                Choose the correct answer
+              </Text>
+            </View>
+
+            <TouchableOpacity onPress={onSpeechText}>
+              <Image
+                source={require('../../../../../assets/images/icon_speech.png')}
+                style={styles.iconImageContainer}
+              />
+            </TouchableOpacity>
+          </View>
           <View style={[styles.boxSelected]}>
             <View style={styles.wrapCharContainer}>
               {firstMiniTestTask?.question?.[moduleIndex]?.content
@@ -285,6 +304,7 @@ const VowelsLesson = ({
                     zIndex: 999,
                     width: '100%',
                     opacity: 0.7,
+                    height: '100%',
                   },
                 ]}
               />
@@ -406,4 +426,10 @@ const styles = StyleSheet.create({
   wrapCharContainer: {
     flexDirection: 'row',
   },
+  wrapHeaderContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginBottom: 8,
+  },
+  iconImageContainer: {height: 45, width: 40},
 });
