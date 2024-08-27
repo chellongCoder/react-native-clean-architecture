@@ -1,12 +1,22 @@
 
+#import <React/RCTEventEmitter.h>
+#import <AVFoundation/AVFoundation.h>
+
 #ifdef RCT_NEW_ARCH_ENABLED
 #import "RNTextToSpeechSpec.h"
 
-@interface TextToSpeech : NSObject <NativeTextToSpeechSpec>
+@interface TextToSpeech : RCTEventEmitter <NativeTextToSpeechSpec, AVSpeechSynthesizerDelegate>
+
 #else
 #import <React/RCTBridgeModule.h>
 
-@interface TextToSpeech : NSObject <RCTBridgeModule>
+@interface TextToSpeech : RCTEventEmitter <RCTBridgeModule, AVSpeechSynthesizerDelegate>
 #endif
+
+@property (nonatomic, strong) AVSpeechSynthesizer *synthesizer;
+@property (nonatomic, strong) AVSpeechSynthesisVoice *defaultVoice;
+@property (nonatomic) float defaultRate;
+@property (nonatomic) float defaultPitch;
+@property (nonatomic) bool ducking;
 
 @end
