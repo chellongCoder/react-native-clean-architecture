@@ -1,0 +1,14 @@
+{
+  "name": "react-native-text-to-speech",
+  "version": "0.0.0",
+  "description": "text-to-speech-module longnn alphadex",
+  "main": "src/index",
+  "author": " <> ()",
+  "license": "UNLICENSED",
+  "homepage": "#readme",
+  "create-react-native-library": {
+    "type": "module-legacy",
+    "languages": "kotlin-objc",
+    "version": "0.41.0"
+  }
+}
