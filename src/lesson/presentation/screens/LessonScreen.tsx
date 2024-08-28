@@ -153,9 +153,19 @@ const LessonScreen = observer(() => {
 
   const nextPart = useCallback(
     (trainingResult: TResult[]) => {
+      /**-----------------------
+       * todo      sang part tiếp theo
+       *  nếu check ra part tiếp theo là mini test
+       *  * trừ đi 1 lần làm
+       *------------------------**/
       if (tasks?.[activeTaskIndex + 1].type === firstMiniTestTask?.type) {
         setTrainingCount(trainingCount - 1);
 
+        /**-----------------------
+         * todo      check lần làm
+         *  nếu check lần làm chỉ còn  1 lần , tức là ở trên đã set training về 0
+         *  * đi sang làm mini test
+         *------------------------**/
         if (trainingCount === 1) {
           navigateScreen<RouteParamsDone>(
             STACK_NAVIGATOR.HOME.DONE_LESSON_SCREEN,
@@ -171,7 +181,9 @@ const LessonScreen = observer(() => {
               partName: testTask?.name,
             },
           );
+          // * sang lần làm tiếp theo
           setActiveTaskIndex(v => v + 1);
+          // * reset về câu đầu
           setLessonIndex(0);
           return;
         }
@@ -179,12 +191,15 @@ const LessonScreen = observer(() => {
         let title = '';
         let note = '';
         if (trainingCount === 3) {
-          title = 'amazing';
-          note = 'You’re doing great.';
+          // * nếu làm xong lần 1
+          title = 'amazing'; // * title của câu cảm xúc ở màn done screen
+          note = 'You’re doing great.'; // * câu note ở dưới
         } else if (trainingCount === 2) {
+          // * nếu làm xong lần 2
           title = 'excellent';
           note = 'You can do it !!';
         }
+
         navigateScreen<RouteParamsDone>(
           STACK_NAVIGATOR.HOME.DONE_LESSON_SCREEN,
           {
@@ -200,12 +215,15 @@ const LessonScreen = observer(() => {
             partName: testTask?.name,
           },
         );
+        // * set kết quả training về rỗng
         setLessonState({trainingResult: []});
+        // * làm lại từ part đầu
         setActiveTaskIndex(0);
       } else {
+        // * nếu task tiếp theo ko phải mini test thì tiến tới làm part tiếp theo
         setActiveTaskIndex(v1 => v1 + 1);
       }
-      setLessonIndex(0);
+      setLessonIndex(0); // * reset về câu 0
     },
     [
       activeTaskIndex,
@@ -222,6 +240,7 @@ const LessonScreen = observer(() => {
 
   const nextModule = useCallback(
     (answerSelected: string) => {
+      // * bỏ đi các khoảng trống ở câu trả lời
       const finalAnswer = answerSelected.replaceAll(' ', '');
 
       // * check điều kiện là đang đến part mini test
@@ -247,6 +266,7 @@ const LessonScreen = observer(() => {
         } else {
           playSound(soundTrack.oh_no_sound);
         }
+        // * set vào mảng kết quả đã trả lời
         setLessonState({
           result: [...(lessonState.result || []), resultByAnswer],
         });
@@ -256,8 +276,9 @@ const LessonScreen = observer(() => {
          */
         if (lessonIndex >= (firstMiniTestTask?.question.length ?? 1) - 1) {
           submitModule(resultByAnswer);
-          // return;
+          return;
         }
+        // * di tới câu tiếp theo
         setLessonIndex(v => v + 1);
       } else {
         // * check điều kiện là đang làm training
@@ -277,6 +298,7 @@ const LessonScreen = observer(() => {
           playSound(soundTrack.oh_no_sound);
         }
 
+        // * set câu trả lời vào mảng kết quả
         const _trainingResult = [
           ...(lessonState.trainingResult || []),
           resultByAnswer,

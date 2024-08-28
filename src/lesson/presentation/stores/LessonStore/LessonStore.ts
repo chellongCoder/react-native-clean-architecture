@@ -44,7 +44,7 @@ export class LessonStore {
   @observable isOverlay?: boolean;
   @observable isUsageStats?: boolean;
   @observable isPushNoti?: boolean;
-  @observable trainingCount = 3;
+  @observable trainingCount = 2;
 
   constructor(
     @provided(UpdateUserSettingUseCase)
