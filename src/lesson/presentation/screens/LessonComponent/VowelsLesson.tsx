@@ -28,6 +28,7 @@ import {SoundGlobalContext} from 'src/core/presentation/hooks/sound/SoundGlobalC
 import {soundTrack} from 'src/core/presentation/hooks/sound/SoundGlobalProvider';
 import {useIsFocused} from '@react-navigation/native';
 import {TextToSpeechContext} from 'src/core/presentation/hooks/textToSpeech/TextToSpeechContext';
+import {useLessonStore} from '../../stores/LessonStore/useGetPostsStore';
 
 type Props = {
   moduleIndex: number;
@@ -47,6 +48,8 @@ const VowelsLesson = ({
   firstMiniTestTask,
 }: Props) => {
   const globalStyle = useGlobalStyle();
+  const {trainingCount} = useLessonStore();
+
   const {playSound} = useContext(SoundGlobalContext);
   const {ttsSpeak} = useContext(TextToSpeechContext);
 
@@ -55,12 +58,17 @@ const VowelsLesson = ({
   const [isShowCorrectContainer, setIsShowCorrectContainer] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
+  /**----------------------
+   *todo    TODO hook đếm thời gian học
+   * đếm 5 giây, trả về hàm start, stop, reset
+   *------------------------**/
   const {
     start,
     stop,
     reset: resetLearning,
     time: learningTimer,
-  } = useCountDown(5);
+  } = useCountDown(trainingCount === 1 ? 0 : 5);
+  /*------------------------**/
   const env = coreModuleContainer.getProvided<Env>(EnvToken); // Instantiate CoreService
   const focus = useIsFocused();
 
@@ -72,10 +80,13 @@ const VowelsLesson = ({
 
   const word = useMemo(() => {
     if (learningTimer === 0) {
+      //* nếu đếm 5 giây xong
       if (time >= 0) {
+        // * thì countdown 10 giây để trl
         return `0:${time < 10 ? '0' + time : time}`;
       }
     }
+    // * nếu đang ở tgian học thì hiển thị câu trl
     return firstMiniTestTask?.question?.[moduleIndex]?.fullAnswer;
   }, [firstMiniTestTask?.question, learningTimer, moduleIndex, time]);
 
@@ -124,7 +135,7 @@ const VowelsLesson = ({
   ]);
 
   const onSpeechText = useCallback(() => {
-    ttsSpeak(firstMiniTestTask?.question?.[moduleIndex].fullAnswer);
+    ttsSpeak?.(firstMiniTestTask?.question?.[moduleIndex].fullAnswer ?? '');
   }, [firstMiniTestTask?.question, moduleIndex, ttsSpeak]);
 
   const opacity = useSharedValue(0);
