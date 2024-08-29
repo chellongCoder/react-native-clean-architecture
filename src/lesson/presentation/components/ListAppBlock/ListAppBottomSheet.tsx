@@ -5,7 +5,6 @@ import BottomSheetCustom from '../BottomSheet';
 import {AppEntity} from 'src/lesson/domain/entities/AppEntity';
 import {COLORS} from 'src/core/presentation/constants/colors';
 import ItemApps, {AppItem} from './ItemApps';
-import ItemPermission from './ItemPermission';
 
 const ListAppBottomSheet = () => {
   const lesson = useLessonStore();
@@ -28,13 +27,6 @@ const ListAppBottomSheet = () => {
   };
 
   const listItem = lesson.listAppsSystem.map(transformAppEntityToListItem);
-
-  const {isOverlay, isPushNoti, isUsageStats} = lesson;
-
-  const isConfirm = useMemo(
-    () => isOverlay && isPushNoti && isUsageStats,
-    [isOverlay, isPushNoti, isUsageStats],
-  );
   return (
     <>
       {lesson.bottomSheetAppsRef && (
@@ -75,21 +67,6 @@ const ListAppBottomSheet = () => {
               />
             );
           })}
-        </BottomSheetCustom>
-      )}
-
-      {!isConfirm && lesson.bottomSheetPermissionRef && (
-        <BottomSheetCustom
-          snapPoints={['70']}
-          ref={lesson.bottomSheetPermissionRef}
-          title="ABeeCi needs system permissions to work with:"
-          enablePanDownToClose={false}
-          backgroundColor={COLORS.GREEN_66C270}
-          enableOverDrag={false}
-          onBackdropPress={() => {
-            //
-          }}>
-          <ItemPermission lesson={lesson} />
         </BottomSheetCustom>
       )}
     </>
