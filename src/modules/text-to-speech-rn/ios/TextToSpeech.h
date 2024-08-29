@@ -5,12 +5,12 @@
 #ifdef RCT_NEW_ARCH_ENABLED
 #import "RNTextToSpeechSpec.h"
 
-@interface TextToSpeech : RCTEventEmitter <NativeTextToSpeechSpec, AVSpeechSynthesizerDelegate>
+@interface TextToSpeechAlphadex : RCTEventEmitter <NativeTextToSpeechSpec, AVSpeechSynthesizerDelegate>
 
 #else
 #import <React/RCTBridgeModule.h>
 
-@interface TextToSpeech : RCTEventEmitter <RCTBridgeModule, AVSpeechSynthesizerDelegate>
+@interface TextToSpeechAlphadex : RCTEventEmitter <RCTBridgeModule, AVSpeechSynthesizerDelegate>
 #endif
 
 @property (nonatomic, strong) AVSpeechSynthesizer *synthesizer;

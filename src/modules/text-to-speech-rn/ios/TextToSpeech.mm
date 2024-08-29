@@ -2,7 +2,7 @@
 #import <React/RCTEventDispatcher.h>
 #import <React/RCTLog.h>
 
-@implementation TextToSpeech {
+@implementation TextToSpeechAlphadex {
   NSString * _ignoreSilentSwitch;
 
 }
