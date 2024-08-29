@@ -65,6 +65,7 @@ import {useSoundBackgroundGlobal} from 'src/core/presentation/hooks/sound/useSou
 import {useAuthParent} from 'src/hooks/useAuthParent';
 import AuthParentScreen from './AuthParentScreen';
 import PurchaseItem from '../components/LessonModule/PurchaseItem';
+import ListAppBottomSheet from '../components/ListAppBlock/ListAppBottomSheet';
 
 enum TabParentE {
   APP_BLOCK = 'App block',
@@ -707,6 +708,7 @@ The blockAppsSystem function is an asynchronous function that awaits the result 
           <AuthParentScreen changeIsShowAuth={changeIsShowAuth} />
         </View>
       )}
+      {isAndroid && <ListAppBottomSheet />}
     </View>
   );
 });
