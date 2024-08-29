@@ -181,7 +181,7 @@ const EssayLesson = ({
             style={[
               {
                 width: scale(200),
-                height: scale(150),
+                height: verticalScale(140),
               },
               animatedStyle,
             ]}
@@ -195,7 +195,7 @@ const EssayLesson = ({
       }
       buildAnswer={
         <View style={styles.fill}>
-          <Text style={[globalStyle.txtLabel, styles.pb32, styles.textColor]}>
+          <Text style={[globalStyle.txtLabel, styles.pb16, styles.textColor]}>
             Choose the correct answer
           </Text>
           <View style={[styles.boxSelected]}>
@@ -204,7 +204,7 @@ const EssayLesson = ({
                 styles.fonts_SVN_Cherish,
                 styles.textQuestion,
                 styles.textGreen,
-                styles.mt16,
+                styles.mt8,
               ]}>
               {answerSelected}
             </Text>
@@ -217,7 +217,10 @@ const EssayLesson = ({
                   const length =
                     firstMiniTestTask?.question?.[moduleIndex]?.answers
                       ?.length ?? 2;
-                  const size = Math.min((WIDTH_SCREEN - 80) / (length / 2), 50);
+                  const size = Math.min(
+                    (WIDTH_SCREEN - 80) / (length / 2),
+                    verticalScale(44),
+                  );
                   return (
                     <TouchableOpacity
                       key={i}
@@ -254,7 +257,7 @@ const EssayLesson = ({
 
           <PrimaryButton
             text="Submit"
-            style={[styles.mt32]}
+            style={[styles.mt24]}
             onPress={onSubmit}
           />
         </View>
@@ -283,7 +286,7 @@ const styles = StyleSheet.create({
     color: 'white',
   },
   textQuestion: {
-    fontSize: 40,
+    fontSize: verticalScale(34),
     textAlign: 'center',
     color: COLORS.BLUE_258F78,
   },
@@ -311,17 +314,26 @@ const styles = StyleSheet.create({
   ph24: {
     paddingHorizontal: 24,
   },
+  pb8: {
+    paddingBottom: verticalScale(8),
+  },
   pb16: {
-    paddingBottom: 16,
+    paddingBottom: verticalScale(16),
   },
   pb32: {
-    paddingBottom: 32,
+    paddingBottom: verticalScale(32),
+  },
+  mt8: {
+    marginTop: verticalScale(8),
   },
   mt16: {
-    marginTop: 16,
+    marginTop: verticalScale(16),
+  },
+  mt24: {
+    marginTop: verticalScale(24),
   },
   mt32: {
-    marginTop: 32,
+    marginTop: verticalScale(32),
   },
   alignSelfCenter: {
     alignSelf: 'center',
@@ -355,7 +367,7 @@ const styles = StyleSheet.create({
   textVowel: {
     fontFamily: FontFamily.SVNCherishMoment,
     color: '#FBF8CC',
-    fontSize: 32,
+    fontSize: verticalScale(28),
   },
   wapper: {
     marginTop: 8,

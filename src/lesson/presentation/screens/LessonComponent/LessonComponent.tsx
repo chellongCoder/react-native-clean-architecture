@@ -249,7 +249,8 @@ const styles = StyleSheet.create({
   },
   boxAnswer: {
     flex: 1,
-    padding: 32,
+    paddingVertical: verticalScale(24),
+    paddingHorizontal: scale(24),
   },
   textW500s16White: {
     fontWeight: '500',
