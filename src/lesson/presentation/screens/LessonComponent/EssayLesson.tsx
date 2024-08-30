@@ -48,6 +48,9 @@ const EssayLesson = ({
   const globalStyle = useGlobalStyle();
 
   const [answerSelectedChars, setAnswerSelectedChars] = useState<string[]>([]);
+  const [isAnswerCorrect, setIsAnswerCorrect] = useState(false);
+  const [isShowCorrectContainer, setIsShowCorrectContainer] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const [selectedStack, setSelectedStack] = useState<
     {index: number; indexFill: number}[]
@@ -107,13 +110,51 @@ const EssayLesson = ({
     [selectedStack, answerSelectedChars],
   );
 
-  const onSubmit = useCallback(() => {
-    setSelectedStack([]);
-    setAnswerSelectedChars([]);
-    nextModule(answerSelected);
-    resetLearning();
-    resetTesting();
-  }, [answerSelected, nextModule, resetLearning, resetTesting]);
+  const onCheckAnswer = useCallback(() => {
+    return new Promise(resolve => {
+      setIsShowCorrectContainer(true);
+      if (
+        answerSelected?.replace(/\s+/g, '') ===
+        firstMiniTestTask?.question?.[moduleIndex]?.correctAnswer
+      ) {
+        playSound(soundTrack.bell_ding_sound);
+        setIsAnswerCorrect(true);
+      } else {
+        playSound(soundTrack.oh_no_sound);
+        setIsAnswerCorrect(false);
+      }
+
+      setTimeout(() => {
+        setIsShowCorrectContainer(false);
+        resolve(true);
+      }, 1000);
+    });
+  }, [answerSelected, firstMiniTestTask?.question, moduleIndex, playSound]);
+
+  const onSubmit = useCallback(async () => {
+    if (isSubmitting) {
+      return;
+    }
+    setIsSubmitting(true);
+    try {
+      await onCheckAnswer();
+      setSelectedStack([]);
+      setAnswerSelectedChars([]);
+      nextModule(answerSelected);
+      resetLearning();
+      resetTesting();
+      playSoundRef.current = false;
+    } finally {
+      setIsSubmitting(false);
+    }
+  }, [
+    answerSelected,
+    isSubmitting,
+    nextModule,
+    onCheckAnswer,
+    resetLearning,
+    resetTesting,
+  ]);
 
   useEffect(() => {
     if (focus) {
@@ -171,6 +212,8 @@ const EssayLesson = ({
       backgroundColor="#66c270"
       backgroundAnswerColor="#DDF598"
       price="Free"
+      isAnswerCorrect={isAnswerCorrect}
+      isShowCorrectContainer={isShowCorrectContainer}
       buildQuestion={
         <View>
           <Text style={[styles.fonts_SVN_Cherish, styles.textQuestion]}>
