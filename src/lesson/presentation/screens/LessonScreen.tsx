@@ -258,14 +258,14 @@ const LessonScreen = observer(() => {
           point: firstMiniTestTask?.question?.[lessonIndex].point,
         };
 
-        if (
-          finalAnswer ===
-          firstMiniTestTask?.question?.[lessonIndex].correctAnswer
-        ) {
-          playSound(soundTrack.bell_ding_sound);
-        } else {
-          playSound(soundTrack.oh_no_sound);
-        }
+        // if (
+        //   finalAnswer ===
+        //   firstMiniTestTask?.question?.[lessonIndex].correctAnswer
+        // ) {
+        //   playSound(soundTrack.bell_ding_sound);
+        // } else {
+        //   playSound(soundTrack.oh_no_sound);
+        // }
         // * set vào mảng kết quả đã trả lời
         setLessonState({
           result: [...(lessonState.result || []), resultByAnswer],
@@ -292,11 +292,11 @@ const LessonScreen = observer(() => {
           point: testTask?.question?.[lessonIndex].point,
         };
 
-        if (finalAnswer === testTask?.question?.[lessonIndex].correctAnswer) {
-          playSound(soundTrack.bell_ding_sound);
-        } else {
-          playSound(soundTrack.oh_no_sound);
-        }
+        // if (finalAnswer === testTask?.question?.[lessonIndex].correctAnswer) {
+        //   playSound(soundTrack.bell_ding_sound);
+        // } else {
+        //   playSound(soundTrack.oh_no_sound);
+        // }
 
         // * set câu trả lời vào mảng kết quả
         const _trainingResult = [

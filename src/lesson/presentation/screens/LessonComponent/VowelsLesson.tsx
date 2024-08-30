@@ -98,8 +98,10 @@ const VowelsLesson = ({
         answerSelected ===
         firstMiniTestTask?.question?.[moduleIndex]?.correctAnswer
       ) {
+        playSound(soundTrack.bell_ding_sound);
         setIsAnswerCorrect(true);
       } else {
+        playSound(soundTrack.oh_no_sound);
         setIsAnswerCorrect(false);
       }
 
@@ -108,7 +110,7 @@ const VowelsLesson = ({
         resolve(true);
       }, 1000);
     });
-  }, [answerSelected, firstMiniTestTask?.question, moduleIndex]);
+  }, [answerSelected, firstMiniTestTask?.question, moduleIndex, playSound]);
 
   const onSubmit = useCallback(async () => {
     if (isSubmitting) {
