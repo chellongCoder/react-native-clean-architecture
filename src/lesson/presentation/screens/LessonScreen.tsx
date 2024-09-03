@@ -35,6 +35,7 @@ import {RouteParamsDone} from 'src/core/presentation/screens/DoneLessonScreen';
 import {assets} from 'src/core/presentation/utils';
 import {COLORS} from 'src/core/presentation/constants/colors';
 import EssayLesson from './LessonComponent/EssayLesson';
+import {TRAINING_COUNT} from 'src/core/domain/enums/ModuleE';
 
 enum LessonTypeE {
   ACHIEVEMENT,
@@ -84,13 +85,18 @@ const LessonScreen = observer(() => {
         'Detail'
       >
     >().params;
-  const {handlePostUserProgress, setTrainingCount, trainingCount} =
-    useLessonStore();
+  const {
+    handlePostUserProgress,
+    setTrainingCount,
+    trainingCount,
+    setCurrentQuestion,
+    currentQuestion,
+  } = useLessonStore();
 
   const {tasks} = useListQuestions(route?.lessonId);
   const [activeTaskIndex, setActiveTaskIndex] = useState(0);
   const {selectedChild} = useAuthenticationStore();
-  const {playSound, pauseSound} = useContext(SoundGlobalContext);
+  const {playSound, pauseSound, loopSound} = useContext(SoundGlobalContext);
 
   const [lessonIndex, setLessonIndex] = useState(0);
 
@@ -194,7 +200,7 @@ const LessonScreen = observer(() => {
           // * nếu làm xong lần 1
           title = 'amazing'; // * title của câu cảm xúc ở màn done screen
           note = 'You’re doing great.'; // * câu note ở dưới
-        } else if (trainingCount === 2) {
+        } else if (trainingCount === TRAINING_COUNT) {
           // * nếu làm xong lần 2
           title = 'excellent';
           note = 'You can do it !!';
@@ -258,14 +264,6 @@ const LessonScreen = observer(() => {
           point: firstMiniTestTask?.question?.[lessonIndex].point,
         };
 
-        // if (
-        //   finalAnswer ===
-        //   firstMiniTestTask?.question?.[lessonIndex].correctAnswer
-        // ) {
-        //   playSound(soundTrack.bell_ding_sound);
-        // } else {
-        //   playSound(soundTrack.oh_no_sound);
-        // }
         // * set vào mảng kết quả đã trả lời
         setLessonState({
           result: [...(lessonState.result || []), resultByAnswer],
@@ -291,12 +289,6 @@ const LessonScreen = observer(() => {
           status: finalAnswer ? 'completed' : 'failed',
           point: testTask?.question?.[lessonIndex].point,
         };
-
-        // if (finalAnswer === testTask?.question?.[lessonIndex].correctAnswer) {
-        //   playSound(soundTrack.bell_ding_sound);
-        // } else {
-        //   playSound(soundTrack.oh_no_sound);
-        // }
 
         // * set câu trả lời vào mảng kết quả
         const _trainingResult = [
@@ -349,9 +341,30 @@ const LessonScreen = observer(() => {
 
     return () => {
       console.log('Cleanup: attempting to pause current sound');
-      pauseSound();
-      setTrainingCount(3);
+      pauseSound(); // * pausse tất cả các sound khi làm bài
+      loopSound(soundTrack.ukulele_music); // * lặp lại bài background
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
+    return () => {
+      setCurrentQuestion({
+        lessonId: route.lessonId,
+        activeTaskIndex,
+        questionIndex: lessonIndex,
+      });
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [activeTaskIndex, lessonIndex]);
+
+  useEffect(() => {
+    if (currentQuestion && currentQuestion.lessonId === route.lessonId) {
+      setActiveTaskIndex(currentQuestion.activeTaskIndex);
+      setLessonIndex(currentQuestion.questionIndex);
+    } else {
+      setTrainingCount(TRAINING_COUNT); // * set lại TRANING COUNT về ban đàu
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 

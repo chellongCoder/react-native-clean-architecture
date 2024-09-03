@@ -112,9 +112,9 @@ const LessonComponent = ({
                   return <Dotline key={i} bg={bg} />;
                 },
               )}
-              {totalModule > 30 && (
+              {totalModule && (
                 <Text style={[styles.fonts_SVN_Cherish, {color: COLORS.WHITE}]}>
-                  +{totalModule - (moduleIndex > 30 ? moduleIndex + 1 : 30)}
+                  +{totalModule - moduleIndex + 1}
                 </Text>
               )}
             </View>
@@ -134,7 +134,7 @@ const LessonComponent = ({
 };
 
 const Dotline = ({bg}: {bg: string}) => {
-  return <View style={[styles.dotline, {backgroundColor: bg}]} />;
+  return <View style={[styles.dotline, {backgroundColor: bg, opacity: 0}]} />;
 };
 
 export default LessonComponent;

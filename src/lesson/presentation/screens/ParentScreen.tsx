@@ -18,7 +18,6 @@ import ItemCard from '../components/ItemCard';
 import IconListen from 'assets/svg/IconListen';
 import IconBrightness from 'assets/svg/IconBrightness';
 import IconTheme from 'assets/svg/IconTheme';
-import IconDiamond from 'assets/svg/IconDiamond';
 import Volume from '../components/Volume';
 import BookView from '../components/BookView';
 import {useLessonStore} from '../stores/LessonStore/useGetPostsStore';
@@ -39,7 +38,6 @@ import {STACK_NAVIGATOR} from 'src/core/presentation/navigation/ConstantNavigato
 import {CustomTextStyle} from 'src/core/presentation/constants/typography';
 import AccountStatus from 'src/home/presentation/components/AccountStatus';
 import Username from '../components/Username';
-import {useLoadingGlobal} from 'src/core/presentation/hooks/loading/useLoadingGlobal';
 import {useAsyncEffect} from 'src/core/presentation/hooks';
 import SelectApp from '../components/LessonModule/SelectApp';
 import {
@@ -66,6 +64,7 @@ import {useAuthParent} from 'src/hooks/useAuthParent';
 import AuthParentScreen from './AuthParentScreen';
 import PurchaseItem from '../components/LessonModule/PurchaseItem';
 import ListAppBottomSheet from '../components/ListAppBlock/ListAppBottomSheet';
+import Animated, {BounceIn, ReduceMotion} from 'react-native-reanimated';
 
 enum TabParentE {
   APP_BLOCK = 'App block',
@@ -323,17 +322,23 @@ The blockAppsSystem function is an asynchronous function that awaits the result 
    *
    *------------------------**/
   const blockAppsSystem = useCallback(async () => {
-    if (isAndroid) {
-      addToLockedApps(
-        lesson.blockedListAppsSystem.map(v => ({
-          app_name: v.app_name ?? '',
-          package_name: v.package_name ?? '',
-          file_path: v.apk_file_path ?? '',
-        })),
-      );
-    } else {
-      await blockApps(selectedChild?._id ?? '');
-    }
+    try {
+      if (isAndroid) {
+        await addToLockedApps(
+          lesson.blockedListAppsSystem.map(v => ({
+            app_name: v.app_name ?? '',
+            package_name: v.package_name ?? '',
+            file_path: v.apk_file_path ?? '',
+          })),
+        );
+      } else {
+        await blockApps(selectedChild?._id ?? '');
+      }
+      Toast.show({
+        type: 'success',
+        text1: 'Selected apps has been blocked!',
+      });
+    } catch (error) {}
   }, [lesson.blockedListAppsSystem, selectedChild?._id]);
 
   const tabsBody = useMemo(() => {
@@ -501,12 +506,19 @@ The blockAppsSystem function is an asynchronous function that awaits the result 
                 }
               }}
             />
-            <PrimaryButton
-              onPress={hasSaving ? onConfigUserSetting : blockAppsSystem}
-              text={hasSaving ? 'Save' : 'Lock apps'}
-              style={[styles.btnCommon]}
-              disable={!!errorMessage}
-            />
+            {!isShowAuth && (
+              <Animated.View
+                entering={BounceIn.duration(500)
+                  .delay(500)
+                  .reduceMotion(ReduceMotion.Never)}>
+                <PrimaryButton
+                  onPress={blockAppsSystem}
+                  text={'Lock apps'}
+                  style={[styles.btnCommon]}
+                  disable={!!errorMessage}
+                />
+              </Animated.View>
+            )}
           </View>
         </View>
       );
@@ -568,10 +580,10 @@ The blockAppsSystem function is an asynchronous function that awaits the result 
     points,
     point,
     isShowLimitOption,
-    hasSaving,
     onConfigUserSetting,
-    blockAppsSystem,
     lesson,
+    isShowAuth,
+    blockAppsSystem,
     setErrorMessage,
     setBlocked,
     tabSetting,

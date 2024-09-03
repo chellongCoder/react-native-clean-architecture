@@ -22,6 +22,7 @@ import RankingOfChildPayload from 'src/lesson/application/types/RankingOfChildPa
 import TopRankingPayload from 'src/lesson/application/types/TopRankingPayload';
 import GetRankingOfChildUseCase from 'src/lesson/application/useCases/GetRankingOfChildUseCase';
 import GetTopRankingUseCase from 'src/lesson/application/useCases/GetTopRankingUseCase';
+import {TRAINING_COUNT} from 'src/core/domain/enums/ModuleE';
 
 @injectable()
 export class LessonStore {
@@ -44,7 +45,10 @@ export class LessonStore {
   @observable isOverlay?: boolean;
   @observable isUsageStats?: boolean;
   @observable isPushNoti?: boolean;
-  @observable trainingCount = 2;
+  @observable trainingCount = TRAINING_COUNT;
+  @observable currentQuestion:
+    | {lessonId: string; questionIndex: number; activeTaskIndex: number}
+    | undefined;
 
   constructor(
     @provided(UpdateUserSettingUseCase)
@@ -74,7 +78,13 @@ export class LessonStore {
     this.handlePostUserProgress = this.handlePostUserProgress.bind(this);
     this.handleGetSettingUser = this.handleGetSettingUser.bind(this);
     this.setTrainingCount = this.setTrainingCount.bind(this);
+    this.setCurrentQuestion = this.setCurrentQuestion.bind(this);
   }
+
+  @action
+  setCurrentQuestion = (q: typeof this.currentQuestion) => {
+    this.currentQuestion = q;
+  };
 
   @action
   setTrainingCount = (count: number) => {

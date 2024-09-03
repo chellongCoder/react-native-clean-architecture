@@ -32,6 +32,7 @@ import Toast from 'react-native-toast-message';
 import {useCallback, useEffect, useMemo, useState} from 'react';
 import OnBoardingMinitestScreen from './OnBoardingMinitestScreen';
 import Animated, {Easing, FadeIn} from 'react-native-reanimated';
+import {TRAINING_COUNT} from 'src/core/domain/enums/ModuleE';
 
 export type RouteParamsDone = {
   totalResult: TResult[];
@@ -88,7 +89,7 @@ const DoneLessonScreen = () => {
   const onSubmit = useCallback(() => {
     if (route.isMiniTest) {
       resetNavigator(STACK_NAVIGATOR.HOME.HOME_SCREEN);
-      lessonStore.setTrainingCount(3);
+      lessonStore.setTrainingCount(TRAINING_COUNT);
     } else {
       if (lessonStore.trainingCount === 0) {
         setIsShowOnBoard(true);

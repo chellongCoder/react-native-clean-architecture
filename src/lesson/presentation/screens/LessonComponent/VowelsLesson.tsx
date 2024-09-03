@@ -72,7 +72,9 @@ const VowelsLesson = ({
   const env = coreModuleContainer.getProvided<Env>(EnvToken); // Instantiate CoreService
   const focus = useIsFocused();
 
-  const {time, reset: resetTesting} = useTimingQuestion(learningTimer === 0);
+  const {time, reset: resetTesting} = useTimingQuestion(
+    focus && learningTimer === 0, // * nếu ở màn này, và đã hết time 5s học thì mới bắt đầu đếm 10s
+  );
 
   const intervalRef = useRef<NodeJS.Timeout>();
 
