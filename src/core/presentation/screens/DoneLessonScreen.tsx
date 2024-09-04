@@ -92,6 +92,7 @@ const DoneLessonScreen = () => {
       lessonStore.setTrainingCount(TRAINING_COUNT);
     } else {
       if (lessonStore.trainingCount === 0) {
+        // * nếu part tiếp theo là mini test thì show màn loading
         setIsShowOnBoard(true);
         setTimeout(() => {
           goBack();

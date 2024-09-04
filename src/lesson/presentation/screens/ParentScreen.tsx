@@ -428,7 +428,7 @@ The blockAppsSystem function is an asynchronous function that awaits the result 
                   />
                 )}
               </View>
-              <View style={[]}>
+              {/* <View style={[]}>
                 <Text style={[globalStyle.txtButton, styles.textColor]}>
                   Lessons to unlock
                 </Text>
@@ -440,7 +440,7 @@ The blockAppsSystem function is an asynchronous function that awaits the result 
                   </Text>
                   <IconArrowDown />
                 </View>
-              </View>
+              </View> */}
             </View>
             <View style={[styles.fill]}>
               <TouchableOpacity

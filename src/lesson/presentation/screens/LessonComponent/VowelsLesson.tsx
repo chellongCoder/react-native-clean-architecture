@@ -48,7 +48,6 @@ const VowelsLesson = ({
   firstMiniTestTask,
 }: Props) => {
   const globalStyle = useGlobalStyle();
-  const {trainingCount} = useLessonStore();
 
   const {playSound} = useContext(SoundGlobalContext);
   const {ttsSpeak} = useContext(TextToSpeechContext);
@@ -67,7 +66,7 @@ const VowelsLesson = ({
     stop,
     reset: resetLearning,
     time: learningTimer,
-  } = useCountDown(trainingCount === 1 ? 0 : 5);
+  } = useCountDown(5);
   /*------------------------**/
   const env = coreModuleContainer.getProvided<Env>(EnvToken); // Instantiate CoreService
   const focus = useIsFocused();
