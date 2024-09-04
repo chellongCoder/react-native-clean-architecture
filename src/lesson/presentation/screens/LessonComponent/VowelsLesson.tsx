@@ -145,9 +145,7 @@ const VowelsLesson = ({
   const opacity = useSharedValue(0);
 
   useEffect(() => {
-    opacity.value = withTiming(0, {duration: 500}, () => {
-      opacity.value = withTiming(1, {duration: 500});
-    });
+    opacity.value = withTiming(1, {duration: 500});
   }, [moduleIndex, opacity]);
 
   const animatedStyle = useAnimatedStyle(() => {
