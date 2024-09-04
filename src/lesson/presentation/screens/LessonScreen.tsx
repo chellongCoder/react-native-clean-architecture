@@ -196,11 +196,11 @@ const LessonScreen = observer(() => {
 
         let title = '';
         let note = '';
-        if (trainingCount === 3) {
+        if (trainingCount === TRAINING_COUNT) {
           // * nếu làm xong lần 1
           title = 'amazing'; // * title của câu cảm xúc ở màn done screen
           note = 'You’re doing great.'; // * câu note ở dưới
-        } else if (trainingCount === TRAINING_COUNT) {
+        } else if (trainingCount === 2) {
           // * nếu làm xong lần 2
           title = 'excellent';
           note = 'You can do it !!';

@@ -20,6 +20,8 @@ import {useCountDown} from '../../hooks/useCountDown';
 import {coreModuleContainer} from 'src/core/CoreModule';
 import Env, {EnvToken} from 'src/core/domain/entities/Env';
 import Animated, {
+  Easing,
+  ReduceMotion,
   useAnimatedStyle,
   useSharedValue,
   withTiming,
@@ -142,14 +144,25 @@ const VowelsLesson = ({
   }, [firstMiniTestTask?.question, moduleIndex, ttsSpeak]);
 
   const opacity = useSharedValue(0);
+  const scaleS = useSharedValue(1);
 
   useEffect(() => {
-    opacity.value = withTiming(1, {duration: 500});
-  }, [moduleIndex, opacity]);
+    opacity.value = withTiming(0, {duration: 500}, () => {
+      opacity.value = withTiming(1, {duration: 500});
+    });
+    scaleS.value = withTiming(0, {duration: 500}, () => {
+      scaleS.value = withTiming(1, {
+        duration: 500,
+        easing: Easing.elastic(2),
+        reduceMotion: ReduceMotion.System,
+      });
+    });
+  }, [moduleIndex, opacity, scaleS]);
 
   const animatedStyle = useAnimatedStyle(() => {
     return {
       opacity: opacity.value,
+      transform: [{scale: scaleS.value}],
     };
   });
 
