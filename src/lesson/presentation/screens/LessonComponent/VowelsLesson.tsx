@@ -58,6 +58,7 @@ const VowelsLesson = ({
   const [isAnswerCorrect, setIsAnswerCorrect] = useState(false);
   const [isShowCorrectContainer, setIsShowCorrectContainer] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const {trainingCount} = useLessonStore();
 
   /**----------------------
    *todo    TODO hook đếm thời gian học
@@ -68,7 +69,7 @@ const VowelsLesson = ({
     stop,
     reset: resetLearning,
     time: learningTimer,
-  } = useCountDown(5);
+  } = useCountDown(trainingCount === 0 ? 0 : 5);
   /*------------------------**/
   const env = coreModuleContainer.getProvided<Env>(EnvToken); // Instantiate CoreService
   const focus = useIsFocused();

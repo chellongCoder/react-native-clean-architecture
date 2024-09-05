@@ -62,12 +62,28 @@ const DoneLessonScreen = () => {
   const [isShowOnBoard, setIsShowOnBoard] = useState(false);
   useGetUserSetting(deviceToken, selectedChild?._id ?? '', lessonStore);
 
-  const isSuccess = useMemo(
-    () =>
-      lessonStore.unlockPercent <=
-      (totalCorrectAnswer / totalResultLength) * 100,
-    [lessonStore.unlockPercent, totalCorrectAnswer, totalResultLength],
-  );
+  const isSuccess = useMemo(() => {
+    if (route.isMiniTest) {
+      // * nếu check ra mini test
+      if (
+        lessonStore.unlockPercent <=
+        (totalCorrectAnswer / totalResultLength) * 100
+      ) {
+        // * nếu ko đủ điểm unlock
+        return true;
+      } else {
+        return false;
+      }
+    } else {
+      // * nếu ko phải mini test
+      return true;
+    }
+  }, [
+    lessonStore.unlockPercent,
+    route.isMiniTest,
+    totalCorrectAnswer,
+    totalResultLength,
+  ]);
 
   const onUnlockAppSetting = useCallback(async () => {
     if (isSuccess) {
