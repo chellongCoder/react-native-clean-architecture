@@ -147,6 +147,20 @@ const VowelsLesson = ({
   const scaleS = useSharedValue(1);
 
   useEffect(() => {
+    const firstTimeout = setTimeout(() => {
+      onSpeechText();
+
+      const secondTimeout = setTimeout(() => {
+        onSpeechText();
+      }, 2500);
+
+      return () => clearTimeout(secondTimeout);
+    }, 1500);
+
+    return () => clearTimeout(firstTimeout);
+  }, [onSpeechText]);
+
+  useEffect(() => {
     opacity.value = withTiming(0, {duration: 500}, () => {
       opacity.value = withTiming(1, {duration: 500});
     });

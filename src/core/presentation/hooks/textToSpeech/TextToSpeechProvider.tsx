@@ -192,7 +192,7 @@ export const TextToSpeechProvider = ({children}: PropsWithChildren) => {
         Tts.setDefaultRate(isAndroid ? 0.5 : 1);
 
         // Độ ấm của giọng càng thấp giọng càng trầm ấm
-        Tts.setDefaultPitch(1);
+        Tts.setDefaultPitch(1.5);
 
         setIsInitialized(true);
       })
