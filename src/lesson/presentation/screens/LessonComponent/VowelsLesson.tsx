@@ -1,24 +1,13 @@
 import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import React, {
-  useCallback,
-  useContext,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from 'react';
+import React, {useCallback, useContext, useEffect, useState} from 'react';
 import LessonComponent from './LessonComponent';
 import PrimaryButton from '../../components/PrimaryButton';
 import {FontFamily} from 'src/core/presentation/hooks/useFonts';
 import useGlobalStyle from 'src/core/presentation/hooks/useGlobalStyle';
 import {Task} from 'src/home/application/types/GetListQuestionResponse';
 import {COLORS} from 'src/core/presentation/constants/colors';
-import {assets, WIDTH_SCREEN} from 'src/core/presentation/utils';
-import {useTimingQuestion} from '../../hooks/useTimingQuestion';
+import {WIDTH_SCREEN} from 'src/core/presentation/utils';
 import {scale, verticalScale} from 'react-native-size-matters';
-import {useCountDown} from '../../hooks/useCountDown';
-import {coreModuleContainer} from 'src/core/CoreModule';
-import Env, {EnvToken} from 'src/core/domain/entities/Env';
 import Animated, {
   Easing,
   ReduceMotion,
@@ -26,11 +15,9 @@ import Animated, {
   useSharedValue,
   withTiming,
 } from 'react-native-reanimated';
-import {SoundGlobalContext} from 'src/core/presentation/hooks/sound/SoundGlobalContext';
-import {soundTrack} from 'src/core/presentation/hooks/sound/SoundGlobalProvider';
-import {useIsFocused} from '@react-navigation/native';
 import {TextToSpeechContext} from 'src/core/presentation/hooks/textToSpeech/TextToSpeechContext';
 import {useLessonStore} from '../../stores/LessonStore/useGetPostsStore';
+import {useSettingLesson} from '../../hooks/useSettingLesson';
 
 type Props = {
   moduleIndex: number;
@@ -51,94 +38,29 @@ const VowelsLesson = ({
 }: Props) => {
   const globalStyle = useGlobalStyle();
 
-  const {playSound} = useContext(SoundGlobalContext);
   const {ttsSpeak} = useContext(TextToSpeechContext);
 
   const [answerSelected, setAnswerSelected] = useState('');
-  const [isAnswerCorrect, setIsAnswerCorrect] = useState(false);
-  const [isShowCorrectContainer, setIsShowCorrectContainer] = useState(false);
-  const [isSubmitting, setIsSubmitting] = useState(false);
   const {trainingCount} = useLessonStore();
 
-  /**----------------------
-   *todo    TODO hook đếm thời gian học
-   * đếm 5 giây, trả về hàm start, stop, reset
-   *------------------------**/
   const {
-    start,
-    stop,
-    reset: resetLearning,
-    time: learningTimer,
-  } = useCountDown(trainingCount === 0 ? 0 : 5);
-  /*------------------------**/
-  const env = coreModuleContainer.getProvided<Env>(EnvToken); // Instantiate CoreService
-  const focus = useIsFocused();
-
-  const {time, reset: resetTesting} = useTimingQuestion(
-    focus && learningTimer === 0, // * nếu ở màn này, và đã hết time 5s học thì mới bắt đầu đếm 10s
-  );
-
-  const intervalRef = useRef<NodeJS.Timeout>();
-
-  const playSoundRef = useRef<boolean>(false);
-
-  const word = useMemo(() => {
-    if (learningTimer === 0) {
-      //* nếu đếm 5 giây xong
-      if (time >= 0) {
-        // * thì countdown 10 giây để trl
-        return `0:${time < 10 ? '0' + time : time}`;
-      }
-    }
-    // * nếu đang ở tgian học thì hiển thị câu trl
-    return firstMiniTestTask?.question?.[moduleIndex]?.fullAnswer;
-  }, [firstMiniTestTask?.question, learningTimer, moduleIndex, time]);
-
-  const onCheckAnswer = useCallback(() => {
-    return new Promise(resolve => {
-      setIsShowCorrectContainer(true);
-
-      if (
-        answerSelected ===
-        firstMiniTestTask?.question?.[moduleIndex]?.correctAnswer
-      ) {
-        playSound(soundTrack.bell_ding_sound);
-        setIsAnswerCorrect(true);
-      } else {
-        playSound(soundTrack.oh_no_sound);
-        setIsAnswerCorrect(false);
-      }
-
-      setTimeout(() => {
-        setIsShowCorrectContainer(false);
-        resolve(true);
-      }, 1000);
-    });
-  }, [answerSelected, firstMiniTestTask?.question, moduleIndex, playSound]);
-
-  const onSubmit = useCallback(async () => {
-    if (isSubmitting) {
-      return;
-    }
-    setIsSubmitting(true);
-    try {
-      await onCheckAnswer();
+    isAnswerCorrect,
+    isShowCorrectContainer,
+    word,
+    env,
+    learningTimer,
+    submit,
+  } = useSettingLesson({
+    countDownTime: trainingCount === 0 ? 0 : 5,
+    isCorrectAnswer:
+      answerSelected ===
+      firstMiniTestTask?.question?.[moduleIndex]?.correctAnswer,
+    onSubmit: () => {
       setAnswerSelected('');
       nextModule(answerSelected);
-      resetLearning();
-      resetTesting();
-      playSoundRef.current = false;
-    } finally {
-      setIsSubmitting(false);
-    }
-  }, [
-    answerSelected,
-    isSubmitting,
-    nextModule,
-    onCheckAnswer,
-    resetLearning,
-    resetTesting,
-  ]);
+    },
+    fullAnswer: firstMiniTestTask?.question?.[moduleIndex].fullAnswer,
+  });
 
   const onSpeechText = useCallback(() => {
     ttsSpeak?.(
@@ -187,48 +109,6 @@ const VowelsLesson = ({
       transform: [{scale: scaleS.value}],
     };
   });
-
-  /**
-   * bắt đầu start count down 5s
-   */
-  useEffect(() => {
-    if (focus) {
-      intervalRef.current = start();
-    }
-
-    return () => {
-      stop(intervalRef.current!);
-    };
-  }, [focus, start, stop]);
-
-  /**
-   * nếu 5s đếm ngược đã kết thúc -> clear interval 5s
-   */
-  useEffect(() => {
-    if (learningTimer === 0) {
-      stop(intervalRef.current!);
-    }
-  }, [learningTimer, stop]);
-
-  /**
-   * nếu 10s đếm ngược đã kết thúc -> submit câu trả lời
-   */
-  useEffect(() => {
-    if (time === 0) {
-      onSubmit();
-    }
-  }, [onSubmit, time]);
-
-  /**
-   * nếu chưa play sound đếm ngược 10s & 5s đã kết thúc -> play sound
-   */
-  useEffect(() => {
-    if (!playSoundRef.current && learningTimer === 0) {
-      playSound(soundTrack.tiktak);
-      playSoundRef.current = true;
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [learningTimer]);
 
   return (
     <LessonComponent
@@ -361,11 +241,7 @@ const VowelsLesson = ({
             )}
           </View>
 
-          <PrimaryButton
-            text="Submit"
-            style={[styles.mt24]}
-            onPress={onSubmit}
-          />
+          <PrimaryButton text="Submit" style={[styles.mt24]} onPress={submit} />
         </View>
       }
       moduleIndex={moduleIndex}

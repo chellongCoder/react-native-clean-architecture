@@ -1,32 +1,19 @@
-import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import React, {
-  useCallback,
-  useContext,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from 'react';
+import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import React, {useCallback, useEffect, useMemo, useState} from 'react';
 import LessonComponent from './LessonComponent';
 import PrimaryButton from '../../components/PrimaryButton';
 import {FontFamily} from 'src/core/presentation/hooks/useFonts';
 import useGlobalStyle from 'src/core/presentation/hooks/useGlobalStyle';
 import {Task} from 'src/home/application/types/GetListQuestionResponse';
 import {COLORS} from 'src/core/presentation/constants/colors';
-import {assets, WIDTH_SCREEN} from 'src/core/presentation/utils';
-import {useTimingQuestion} from '../../hooks/useTimingQuestion';
+import {WIDTH_SCREEN} from 'src/core/presentation/utils';
 import {scale, verticalScale} from 'react-native-size-matters';
-import {useCountDown} from '../../hooks/useCountDown';
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
   withTiming,
 } from 'react-native-reanimated';
-import {coreModuleContainer} from 'src/core/CoreModule';
-import Env, {EnvToken} from 'src/core/domain/entities/Env';
-import {SoundGlobalContext} from 'src/core/presentation/hooks/sound/SoundGlobalContext';
-import {soundTrack} from 'src/core/presentation/hooks/sound/SoundGlobalProvider';
-import {useIsFocused} from '@react-navigation/native';
+import {useSettingLesson} from '../../hooks/useSettingLesson';
 
 type Props = {
   moduleIndex: number;
@@ -48,9 +35,6 @@ const EssayLesson = ({
   const globalStyle = useGlobalStyle();
 
   const [answerSelectedChars, setAnswerSelectedChars] = useState<string[]>([]);
-  const [isAnswerCorrect, setIsAnswerCorrect] = useState(false);
-  const [isShowCorrectContainer, setIsShowCorrectContainer] = useState(false);
-  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const [selectedStack, setSelectedStack] = useState<
     {index: number; indexFill: number}[]
@@ -61,34 +45,27 @@ const EssayLesson = ({
     [answerSelectedChars],
   );
 
-  const {
-    start,
-    stop,
-    reset: resetLearning,
-    time: learningTimer,
-  } = useCountDown(5);
-  const {playSound, pauseSound} = useContext(SoundGlobalContext);
-
-  const env = coreModuleContainer.getProvided<Env>(EnvToken); // Instantiate CoreService
-
-  const focus = useIsFocused();
-
-  const {time, reset: resetTesting} = useTimingQuestion(learningTimer === 0);
-
-  const intervalRef = useRef<NodeJS.Timeout>();
-
   const opacity = useSharedValue(1);
 
-  const playSoundRef = useRef<boolean>(false);
-
-  const word = useMemo(() => {
-    if (learningTimer === 0) {
-      if (time >= 0) {
-        return `0:${time < 10 ? '0' + time : time}`;
-      }
-    }
-    return firstMiniTestTask?.question?.[moduleIndex]?.fullAnswer;
-  }, [firstMiniTestTask?.question, learningTimer, moduleIndex, time]);
+  const {
+    isAnswerCorrect,
+    isShowCorrectContainer,
+    word,
+    env,
+    learningTimer,
+    submit,
+  } = useSettingLesson({
+    countDownTime: 5,
+    isCorrectAnswer:
+      answerSelected?.replace(/\s+/g, '') ===
+      firstMiniTestTask?.question?.[moduleIndex]?.correctAnswer,
+    onSubmit: () => {
+      setSelectedStack([]);
+      setAnswerSelectedChars([]);
+      nextModule(answerSelected);
+    },
+    fullAnswer: firstMiniTestTask?.question?.[moduleIndex].fullAnswer,
+  });
 
   const onPressItem = useCallback(
     (char: string, index: number) => {
@@ -110,68 +87,6 @@ const EssayLesson = ({
     [selectedStack, answerSelectedChars],
   );
 
-  const onCheckAnswer = useCallback(() => {
-    return new Promise(resolve => {
-      setIsShowCorrectContainer(true);
-      if (
-        answerSelected?.replace(/\s+/g, '') ===
-        firstMiniTestTask?.question?.[moduleIndex]?.correctAnswer
-      ) {
-        playSound(soundTrack.bell_ding_sound);
-        setIsAnswerCorrect(true);
-      } else {
-        playSound(soundTrack.oh_no_sound);
-        setIsAnswerCorrect(false);
-      }
-
-      setTimeout(() => {
-        setIsShowCorrectContainer(false);
-        resolve(true);
-      }, 1000);
-    });
-  }, [answerSelected, firstMiniTestTask?.question, moduleIndex, playSound]);
-
-  const onSubmit = useCallback(async () => {
-    if (isSubmitting) {
-      return;
-    }
-    setIsSubmitting(true);
-    try {
-      await onCheckAnswer();
-      setSelectedStack([]);
-      setAnswerSelectedChars([]);
-      nextModule(answerSelected);
-      resetLearning();
-      resetTesting();
-      playSoundRef.current = false;
-    } finally {
-      setIsSubmitting(false);
-    }
-  }, [
-    answerSelected,
-    isSubmitting,
-    nextModule,
-    onCheckAnswer,
-    resetLearning,
-    resetTesting,
-  ]);
-
-  useEffect(() => {
-    if (focus) {
-      intervalRef.current = start();
-    }
-
-    return () => {
-      stop(intervalRef.current!);
-    };
-  }, [focus, start, stop]);
-
-  useEffect(() => {
-    if (learningTimer === 0) {
-      stop(intervalRef.current!);
-    }
-  }, [learningTimer, playSound, stop]);
-
   useEffect(() => {
     const content = firstMiniTestTask?.question?.[moduleIndex]?.content;
     if (content) {
@@ -184,20 +99,6 @@ const EssayLesson = ({
       opacity.value = withTiming(1, {duration: 500});
     });
   }, [moduleIndex, opacity]);
-
-  useEffect(() => {
-    if (time === 0) {
-      onSubmit();
-    }
-  }, [onSubmit, time]);
-
-  useEffect(() => {
-    if (!playSoundRef.current && learningTimer === 0) {
-      playSound(soundTrack.tiktak);
-      playSoundRef.current = true;
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [learningTimer]);
 
   const animatedStyle = useAnimatedStyle(() => {
     return {
@@ -298,11 +199,7 @@ const EssayLesson = ({
             )}
           </View>
 
-          <PrimaryButton
-            text="Submit"
-            style={[styles.mt24]}
-            onPress={onSubmit}
-          />
+          <PrimaryButton text="Submit" style={[styles.mt24]} onPress={submit} />
         </View>
       }
       moduleIndex={moduleIndex}
