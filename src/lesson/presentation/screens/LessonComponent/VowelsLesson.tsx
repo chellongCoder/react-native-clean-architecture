@@ -141,25 +141,32 @@ const VowelsLesson = ({
   ]);
 
   const onSpeechText = useCallback(() => {
-    ttsSpeak?.(firstMiniTestTask?.question?.[moduleIndex].fullAnswer ?? '');
+    ttsSpeak?.(
+      firstMiniTestTask?.question?.[moduleIndex].fullAnswer
+        .toString()
+        .toLowerCase() ?? '',
+    );
   }, [firstMiniTestTask?.question, moduleIndex, ttsSpeak]);
 
   const opacity = useSharedValue(0);
   const scaleS = useSharedValue(1);
 
   useEffect(() => {
-    const firstTimeout = setTimeout(() => {
-      onSpeechText();
-
-      const secondTimeout = setTimeout(() => {
+    if (focus) {
+      // Check if the component is focused
+      const firstTimeout = setTimeout(() => {
         onSpeechText();
-      }, 2500);
 
-      return () => clearTimeout(secondTimeout);
-    }, 1500);
+        const secondTimeout = setTimeout(() => {
+          onSpeechText();
+        }, 2500);
 
-    return () => clearTimeout(firstTimeout);
-  }, [onSpeechText]);
+        return () => clearTimeout(secondTimeout);
+      }, 1500);
+
+      return () => clearTimeout(firstTimeout);
+    }
+  }, [onSpeechText, focus]); // Added focus to the dependency array
 
   useEffect(() => {
     opacity.value = withTiming(0, {duration: 500}, () => {
