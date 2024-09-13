@@ -65,6 +65,7 @@ import AuthParentScreen from './AuthParentScreen';
 import PurchaseItem from '../components/LessonModule/PurchaseItem';
 import ListAppBottomSheet from '../components/ListAppBlock/ListAppBottomSheet';
 import Animated, {BounceIn, ReduceMotion} from 'react-native-reanimated';
+import CheckSelect from 'src/core/components/checkSelect/CheckSelect';
 
 enum TabParentE {
   APP_BLOCK = 'App block',
@@ -78,13 +79,13 @@ enum TabSettingE {
   THEME = 'Theme',
 }
 
-const tabsData = [
+const tabsParent = [
   {id: TabParentE.APP_BLOCK, name: TabParentE.APP_BLOCK, icon: IClock},
   {id: TabParentE.SETTING, name: TabParentE.SETTING, icon: ICsetting},
   {id: TabParentE.PURCHASE, name: TabParentE.PURCHASE, icon: ICpurchase},
 ];
 
-const tabsSeting = [
+const setingOptions = [
   {id: TabSettingE.SOUND, name: TabSettingE.SOUND, icon: IconListen},
   {
     id: TabSettingE.BRIGHTNESS,
@@ -139,7 +140,7 @@ const ParentScreen = observer(() => {
 
   const [tabParent, setTabparent] = useState(TabParentE.APP_BLOCK);
 
-  const tabsBlock = useMemo(() => {
+  const blockOptions = useMemo(() => {
     if (isAndroid) {
       return (
         lesson.blockedListAppsSystem?.map(app => {
@@ -191,12 +192,12 @@ const ParentScreen = observer(() => {
   console.log(
     '🛠 LOG: 🚀 --> --------------------------------------------------🛠 LOG: 🚀 -->',
   );
-  console.log('🛠 LOG: 🚀 --> ~ tabsBlock ~ tabsBlock:', tabsBlock);
+  console.log('🛠 LOG: 🚀 --> ~ tabsBlock ~ tabsBlock:', blockOptions);
   console.log(
     '🛠 LOG: 🚀 --> --------------------------------------------------🛠 LOG: 🚀 -->',
   );
 
-  const tabsPurchase = [
+  const purchaseOptions = [
     {
       id: '4',
       name: 'Language',
@@ -225,12 +226,16 @@ const ParentScreen = observer(() => {
     [],
   );
 
-  const [tabBlock, setTabBlock] = useState<string>(tabsBlock?.[0]?.name ?? '');
+  const [selectedBlock, setSelectedBlock] = useState<string>(
+    blockOptions?.[0]?.name ?? '',
+  );
 
-  const [tabSetting, setTabSetting] = useState<string>(tabsSeting[0]?.id ?? '');
+  const [selectedSetting, setSelectedSetting] = useState<string>(
+    setingOptions[0]?.id ?? '',
+  );
 
-  const [tabPurchase, setTabPurchase] = useState<string>(
-    tabsPurchase[0]?.id ?? '',
+  const [selectedPurchase, setSelectedPurchase] = useState<string>(
+    purchaseOptions[0]?.id ?? '',
   );
   const [userProfile, setUserProfile] = useState<data>();
   const [isChooseChildren, setIsChooseChildren] = useState<string>(
@@ -293,7 +298,7 @@ const ParentScreen = observer(() => {
       point,
       appBlocked: {
         android: isAndroid
-          ? tabsBlock.map(t => {
+          ? blockOptions.map(t => {
               return {
                 category: t.category,
                 id: t.id ?? '',
@@ -303,7 +308,7 @@ const ParentScreen = observer(() => {
             })
           : [],
         ios: !isAndroid
-          ? tabsBlock.map(t => {
+          ? blockOptions.map(t => {
               return {
                 category: t.category,
                 token: t.token ?? '',
@@ -312,7 +317,7 @@ const ParentScreen = observer(() => {
           : [],
       },
     });
-  }, [deviceToken, lesson, point, selectedChild?._id, tabsBlock]);
+  }, [deviceToken, lesson, point, selectedChild?._id, blockOptions]);
 
   /**-----------------------
    * todo      TODO
@@ -341,40 +346,40 @@ The blockAppsSystem function is an asynchronous function that awaits the result 
     } catch (error) {}
   }, [lesson.blockedListAppsSystem, selectedChild?._id]);
 
-  const tabsBody = useMemo(() => {
+  const listTabOptions = useMemo(() => {
     switch (tabParent) {
       case TabParentE.APP_BLOCK:
-        return tabsBlock;
+        return blockOptions;
       case TabParentE.SETTING:
-        return tabsSeting;
+        return setingOptions;
       case TabParentE.PURCHASE:
-        return tabsPurchase;
+        return purchaseOptions;
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [tabParent, tabsBlock]);
+  }, [tabParent, blockOptions]);
 
-  const tabBody = useMemo(() => {
+  const selectedOption = useMemo(() => {
     switch (tabParent) {
       case TabParentE.APP_BLOCK:
-        return tabBlock;
+        return selectedBlock;
       case TabParentE.SETTING:
-        return tabSetting;
+        return selectedSetting;
       case TabParentE.PURCHASE:
-        return tabPurchase;
+        return selectedPurchase;
     }
-  }, [tabBlock, tabParent, tabPurchase, tabSetting]);
+  }, [selectedBlock, tabParent, selectedPurchase, selectedSetting]);
 
-  const setTabBody = useCallback(
+  const setSelectedOption = useCallback(
     (id: string) => {
       switch (tabParent) {
         case TabParentE.APP_BLOCK:
-          setTabBlock(id);
+          setSelectedBlock(id);
           break;
         case TabParentE.SETTING:
-          setTabSetting(id);
+          setSelectedSetting(id);
           break;
         case TabParentE.PURCHASE:
-          setTabPurchase(id);
+          setSelectedPurchase(id);
           break;
       }
     },
@@ -396,8 +401,8 @@ The blockAppsSystem function is an asynchronous function that awaits the result 
   }, []);
 
   useEffect(() => {
-    setTabBody(tabsBody?.[0]?.name ?? '');
-  }, [setTabBody, tabsBody]);
+    setSelectedOption(listTabOptions?.[0]?.name ?? '');
+  }, [setSelectedOption, listTabOptions]);
 
   useEffect(() => {
     if (lesson.unlockPercent > 0) {
@@ -405,30 +410,46 @@ The blockAppsSystem function is an asynchronous function that awaits the result 
     }
   }, [lesson.unlockPercent]);
 
-  const buildBodyContent = useMemo(() => {
-    if (tabParent === TabParentE.APP_BLOCK) {
-      return (
-        <View style={[styles.rowBetween]}>
-          <View style={[styles.fill, styles.rowBetween]}>
-            <View style={[styles.fill, {zIndex: 999}]}>
-              <View style={[{zIndex: 999}]}>
-                <Text style={[globalStyle.txtButton, styles.textColor]}>
-                  App to lock
-                </Text>
+  const _buildBlockView = () => {
+    return (
+      <>
+        <View style={[styles.bodyBook]}>
+          <Text style={[globalStyle.txtLabel, styles.txtTitleBook]}>
+            {tabParent}
+          </Text>
 
-                {selectedChild && (
-                  <SelectApp
-                    appName={tabBody.trim() !== '' ? tabBody : 'select apps'}
-                    error={errorMessage}
-                    childrenId={selectedChild?._id}
-                    onBlocked={() => {
-                      setErrorMessage('');
-                      setBlocked(true);
-                    }}
-                  />
-                )}
-              </View>
-              {/* <View style={[]}>
+          <ListBlockedApps
+            setTabBody={setSelectedOption}
+            selectedApp={selectedOption}
+            listApp={listTabOptions}
+          />
+        </View>
+        <View style={[styles.bodyContent, styles.rowBetween]}>
+          <View style={[styles.rowBetween]}>
+            <View style={[styles.fill, styles.rowBetween]}>
+              <View style={[styles.fill, {zIndex: 999}]}>
+                <View style={[{zIndex: 999}]}>
+                  <Text style={[globalStyle.txtButton, styles.textColor]}>
+                    App to lock
+                  </Text>
+
+                  {selectedChild && (
+                    <SelectApp
+                      appName={
+                        selectedOption.trim() !== ''
+                          ? selectedOption
+                          : 'select apps'
+                      }
+                      error={errorMessage}
+                      childrenId={selectedChild?._id}
+                      onBlocked={() => {
+                        setErrorMessage('');
+                        setBlocked(true);
+                      }}
+                    />
+                  )}
+                </View>
+                {/* <View style={[]}>
                 <Text style={[globalStyle.txtButton, styles.textColor]}>
                   Lessons to unlock
                 </Text>
@@ -441,154 +462,192 @@ The blockAppsSystem function is an asynchronous function that awaits the result 
                   <IconArrowDown />
                 </View>
               </View> */}
-            </View>
-            <View style={[styles.fill]}>
-              <TouchableOpacity
-                onPress={() => {
-                  setIsShowLimitOption(v => !v);
-                }}
-                activeOpacity={1}>
-                <Text style={[globalStyle.txtButton, styles.textColor]}>
-                  Score to unlock
-                </Text>
-              </TouchableOpacity>
-              <Dropdown
-                data={points}
-                title={point.toString()}
-                onSelectItem={item => setPoint(+item)}
-                prefix="%"
-              />
-
-              <View style={[{zIndex: -2}]}>
-                <Text style={[globalStyle.txtButton, styles.textColor]}>
-                  Your unlock score
-                </Text>
-                <View style={[styles.card, {opacity: 0.6}]}>
-                  <Text style={[globalStyle.txtButton, styles.textCard]}>
-                    {point}%
+              </View>
+              <View style={[styles.fill]}>
+                <TouchableOpacity
+                  onPress={() => {
+                    setIsShowLimitOption(v => !v);
+                  }}
+                  activeOpacity={1}>
+                  <Text style={[globalStyle.txtButton, styles.textColor]}>
+                    Score to unlock
                   </Text>
-                  {isShowLimitOption ? <IconArrowUp /> : <IconArrowDown />}
+                </TouchableOpacity>
+                <Dropdown
+                  data={points}
+                  title={point.toString()}
+                  onSelectItem={item => setPoint(+item)}
+                  prefix="%"
+                />
+
+                <View style={[{zIndex: -2}]}>
+                  <Text style={[globalStyle.txtButton, styles.textColor]}>
+                    Your unlock score
+                  </Text>
+                  <View style={[styles.card, {opacity: 0.6}]}>
+                    <Text style={[globalStyle.txtButton, styles.textCard]}>
+                      {point}%
+                    </Text>
+                    {isShowLimitOption ? <IconArrowUp /> : <IconArrowDown />}
+                  </View>
                 </View>
               </View>
             </View>
-          </View>
-          <View>
-            <View style={[styles.fill]} />
-            <PrimaryButton
-              onPress={onConfigUserSetting}
-              text={'Save'}
-              style={[styles.btnCommon]}
-              isLoading={lesson.isLoadingUserSetting}
-              disable={!!errorMessage}
-            />
-            <PrimaryButton
-              text="Unlock"
-              style={[styles.btnCommon, styles.btnRed]}
-              onPress={async () => {
-                try {
-                  if (selectedChild) {
-                    await unBlockApps(selectedChild?._id);
-                    Toast.show({
-                      type: 'success',
-                      text1: 'Your apps have been unlocked',
-                    });
-                  } else {
-                    Toast.show({
-                      type: 'error',
-                      text1: 'Please select a child',
-                    });
+            <View>
+              <View style={[styles.fill]} />
+              <PrimaryButton
+                onPress={onConfigUserSetting}
+                text={'Save'}
+                style={[styles.btnCommon]}
+                isLoading={lesson.isLoadingUserSetting}
+                disable={!!errorMessage}
+              />
+              <PrimaryButton
+                text="Unlock"
+                style={[styles.btnCommon, styles.btnRed]}
+                onPress={async () => {
+                  try {
+                    if (selectedChild) {
+                      await unBlockApps(selectedChild?._id);
+                      Toast.show({
+                        type: 'success',
+                        text1: 'Your apps have been unlocked',
+                      });
+                    } else {
+                      Toast.show({
+                        type: 'error',
+                        text1: 'Please select a child',
+                      });
+                    }
+                  } catch (error) {
+                    console.log('🛠 LOG: 🚀 --> ~ onPress={ ~ error:', error);
+                  } finally {
+                    lesson.changeBlockedAnonymousListAppSystem(undefined);
+                    lesson.resetListAppSystem();
                   }
-                } catch (error) {
-                  console.log('🛠 LOG: 🚀 --> ~ onPress={ ~ error:', error);
-                } finally {
-                  lesson.changeBlockedAnonymousListAppSystem(undefined);
-                  lesson.resetListAppSystem();
-                }
-              }}
-            />
-            {!isShowAuth && (
-              <Animated.View
-                entering={BounceIn.duration(500)
-                  .delay(500)
-                  .reduceMotion(ReduceMotion.Never)}>
-                <PrimaryButton
-                  onPress={blockAppsSystem}
-                  text={'Lock apps'}
-                  style={[styles.btnCommon]}
-                  disable={!!errorMessage}
-                />
-              </Animated.View>
-            )}
+                }}
+              />
+              {!isShowAuth && (
+                <Animated.View
+                  entering={BounceIn.duration(500)
+                    .delay(500)
+                    .reduceMotion(ReduceMotion.Never)}>
+                  <PrimaryButton
+                    onPress={blockAppsSystem}
+                    text={'Lock apps'}
+                    style={[styles.btnCommon]}
+                    disable={!!errorMessage}
+                  />
+                </Animated.View>
+              )}
+            </View>
           </View>
         </View>
-      );
-    } else if (tabParent === TabParentE.SETTING) {
-      switch (tabSetting) {
-        case TabSettingE.SOUND:
-          return (
-            <View style={[styles.rowBetween]}>
-              <View style={[styles.fill, styles.mr32]}>
-                <Text style={[globalStyle.txtButton, styles.textColor]}>
-                  Background sound
-                </Text>
-                <View style={[styles.mb12, styles.mt4]}>
-                  <Volume
-                    value={80}
-                    onChangValue={v => {
-                      const newVolume = (v / 100).toFixed(1);
-                      soundHook.setVolume(+newVolume);
-                    }}
-                  />
-                </View>
+      </>
+    );
+  };
 
-                <Text style={[globalStyle.txtButton, styles.textColor]}>
-                  Character sound
-                </Text>
-                <View style={[styles.mb12, styles.mt4]}>
-                  <Volume value={30} onChangValue={v => console.log(v)} />
-                </View>
+  const _buildSettingView = () => {
+    return (
+      <View style={[styles.bodySetting]}>
+        <Text style={[globalStyle.txtLabel, styles.txtTitleBlue]}>
+          {tabParent}
+        </Text>
+        <View style={styles.rowBetween}>
+          <View style={[styles.rowBetween]}>
+            <View style={[styles.fill, styles.mr16]}>
+              <Text style={[globalStyle.txtButton, styles.textColor]}>
+                Background sound
+              </Text>
+              <View style={[styles.mb12, styles.mt4]}>
+                <Volume
+                  value={80}
+                  onChangValue={v => {
+                    const newVolume = (v / 100).toFixed(1);
+                    soundHook.setVolume(+newVolume);
+                  }}
+                />
               </View>
-              <View>
-                <View style={[styles.fill]} />
-                <PrimaryButton text="Save" style={[styles.btnCommon]} />
+
+              <Text style={[globalStyle.txtButton, styles.textColor]}>
+                Character sound
+              </Text>
+              <View style={[styles.mb12, styles.mt4]}>
+                <Volume value={30} onChangValue={v => console.log(v)} />
+              </View>
+              <View style={[styles.rowBetween]}>
+                <Text style={[globalStyle.txtButton, styles.textColor]}>
+                  Mode
+                </Text>
+                <CheckSelect name="Light" />
+                <CheckSelect name="Dark" isSelected />
+              </View>
+              <View style={[styles.rowBetween, styles.mt16]}>
+                <Text style={[globalStyle.txtButton, styles.textColor]}>
+                  Language
+                </Text>
+                <CheckSelect name="English" isSelected />
+                <CheckSelect name="Vietnam" />
               </View>
             </View>
-          );
-      }
-    } else if (tabParent === TabParentE.PURCHASE) {
-    }
-    return (
-      <View style={[styles.fill]}>
-        {dataPurchase.map((item, i) => (
-          <PurchaseItem
-            key={i}
-            isBorderTop={i !== 0}
-            title={item.title}
-            description={item.description}
-            icon={assets.book}
-          />
-        ))}
+            <View>
+              <View style={[styles.fill]} />
+              <PrimaryButton
+                text="Set as default"
+                style={[styles.btnCommon, styles.round, styles.btnOrange]}
+              />
+              <PrimaryButton
+                text="Save"
+                style={[styles.btnCommon, styles.round]}
+              />
+            </View>
+          </View>
+        </View>
       </View>
     );
-  }, [
-    tabParent,
-    dataPurchase,
-    globalStyle.txtButton,
-    selectedChild,
-    tabBody,
-    errorMessage,
-    points,
-    point,
-    isShowLimitOption,
-    onConfigUserSetting,
-    lesson,
-    isShowAuth,
-    blockAppsSystem,
-    setErrorMessage,
-    setBlocked,
-    tabSetting,
-    soundHook,
-  ]);
+  };
+
+  const _buildPurchaseView = () => {
+    return (
+      <>
+        <View style={[styles.bodyBook]}>
+          <Text style={[globalStyle.txtLabel, styles.txtTitleBook]}>
+            {tabParent}
+          </Text>
+
+          <ListBlockedApps
+            setTabBody={setSelectedOption}
+            selectedApp={selectedOption}
+            listApp={listTabOptions}
+          />
+        </View>
+        <View style={[styles.bodyContent, styles.rowBetween]}>
+          <View style={[styles.fill]}>
+            {dataPurchase.map((item, i) => (
+              <PurchaseItem
+                key={i}
+                isBorderTop={i !== 0}
+                title={item.title}
+                description={item.description}
+                icon={assets.book}
+              />
+            ))}
+          </View>
+        </View>
+      </>
+    );
+  };
+
+  const buildPage = () => {
+    switch (tabParent) {
+      case TabParentE.APP_BLOCK:
+        return _buildBlockView();
+      case TabParentE.SETTING:
+        return _buildSettingView();
+      case TabParentE.PURCHASE:
+        return _buildPurchaseView();
+    }
+  };
 
   return (
     <View style={[styles.fill, styles.bg, {paddingTop: insets.top}]}>
@@ -612,7 +671,7 @@ The blockAppsSystem function is an asynchronous function that awaits the result 
             showsVerticalScrollIndicator={false}
             contentContainerStyle={[styles.bookContent]}>
             <View style={[styles.rowBetween, styles.ph16]}>
-              {tabsData.map(t => (
+              {tabsParent.map(t => (
                 <ItemCard
                   key={t.id}
                   name={t.name}
@@ -625,20 +684,7 @@ The blockAppsSystem function is an asynchronous function that awaits the result 
                 />
               ))}
             </View>
-            <View style={[styles.bodyBook]}>
-              <Text style={[globalStyle.txtLabel, styles.txtTitleBook]}>
-                {tabParent}
-              </Text>
-
-              <ListBlockedApps
-                setTabBody={setTabBody}
-                selectedApp={tabBody}
-                listApp={tabsBody}
-              />
-            </View>
-            <View style={[styles.bodyContent, styles.rowBetween]}>
-              {buildBodyContent}
-            </View>
+            {buildPage()}
             <View style={[styles.bodyBookTwo]}>
               <Text style={[globalStyle.txtLabel, styles.txtTitleBookTwo]}>
                 Children accounts list
@@ -837,6 +883,10 @@ const styles = StyleSheet.create({
     marginBottom: 16,
     marginLeft: 16,
   },
+  txtTitleBlue: {
+    color: '#78C5B4',
+    marginBottom: 16,
+  },
   txtTitleBookTwo: {
     color: '#1C6349',
     marginBottom: 16,
@@ -850,10 +900,25 @@ const styles = StyleSheet.create({
     paddingBottom: 16,
     backgroundColor: '#FBF8CC',
   },
+  bodySetting: {
+    marginTop: 32,
+    paddingTop: 16,
+    borderRadius: 30,
+    paddingHorizontal: 16,
+    paddingBottom: 16,
+    backgroundColor: '#FBF8CC',
+  },
   btnCommon: {
     width: 80,
-    paddingHorizontal: 10,
+    paddingHorizontal: 4,
     marginBottom: 12,
+  },
+  round: {
+    borderRadius: 300,
+    width: scale(90),
+  },
+  btnOrange: {
+    backgroundColor: '#F2B559',
   },
   btnRed: {
     backgroundColor: '#F28759',

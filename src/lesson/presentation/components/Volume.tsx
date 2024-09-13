@@ -1,5 +1,4 @@
-import IconSoundFill from 'assets/svg/IconSoundFill';
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import {View, StyleSheet, Image} from 'react-native';
 import {Gesture, GestureDetector} from 'react-native-gesture-handler';
 import Animated, {
@@ -16,7 +15,7 @@ type Props = {
 };
 
 const Volume = ({maxValue = 100, value = 0, onChangValue}: Props) => {
-  const widthSlider = useSharedValue(200);
+  const [widthSlider, setWidthSlider] = useState(0);
   const translationX = useSharedValue(0);
   const prevTranslationX = useSharedValue(0);
 
@@ -27,11 +26,11 @@ const Volume = ({maxValue = 100, value = 0, onChangValue}: Props) => {
     .onUpdate(e => {
       translationX.value = Math.max(
         0,
-        Math.min(widthSlider.value, e.translationX + prevTranslationX.value),
+        Math.min(widthSlider, e.translationX + prevTranslationX.value),
       );
     })
     .onEnd(() => {
-      onChangValue?.((translationX.value / widthSlider.value) * maxValue);
+      onChangValue?.((translationX.value / widthSlider) * maxValue);
     })
     .runOnJS(true);
 
@@ -42,7 +41,7 @@ const Volume = ({maxValue = 100, value = 0, onChangValue}: Props) => {
   });
 
   useEffect(() => {
-    translationX.value = withTiming((value * widthSlider.value) / maxValue, {
+    translationX.value = withTiming((value * widthSlider) / maxValue, {
       duration: 100,
     });
   }, [maxValue, translationX, value, widthSlider]);
@@ -56,7 +55,7 @@ const Volume = ({maxValue = 100, value = 0, onChangValue}: Props) => {
       />
       <View
         style={styles.sliderContainer}
-        onLayout={e => (widthSlider.value = e.nativeEvent.layout.width)}>
+        onLayout={e => setWidthSlider(e.nativeEvent.layout.width)}>
         <View style={styles.track} />
         <GestureDetector gesture={pan}>
           <Animated.View style={[styles.thumb, animatedStyle]}>
