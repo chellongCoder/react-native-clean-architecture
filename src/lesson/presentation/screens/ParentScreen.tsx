@@ -480,7 +480,7 @@ The blockAppsSystem function is an asynchronous function that awaits the result 
                   prefix="%"
                 />
 
-                <View style={[{zIndex: -2}]}>
+                {/* <View style={[{zIndex: -2}]}>
                   <Text style={[globalStyle.txtButton, styles.textColor]}>
                     Your unlock score
                   </Text>
@@ -490,7 +490,7 @@ The blockAppsSystem function is an asynchronous function that awaits the result 
                     </Text>
                     {isShowLimitOption ? <IconArrowUp /> : <IconArrowDown />}
                   </View>
-                </View>
+                </View> */}
               </View>
             </View>
             <View>
