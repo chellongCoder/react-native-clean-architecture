@@ -40,6 +40,7 @@ const VowelsLesson = ({
   const globalStyle = useGlobalStyle();
 
   const {ttsSpeak} = useContext(TextToSpeechContext);
+  const focus = useIsFocused();
 
   const [answerSelected, setAnswerSelected] = useState('');
   const {trainingCount} = useLessonStore();
