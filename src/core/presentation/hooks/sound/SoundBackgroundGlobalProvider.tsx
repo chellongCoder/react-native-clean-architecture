@@ -4,12 +4,15 @@ import {SoundGlobalContext} from './SoundGlobalContext';
 import {soundTrack} from './SoundGlobalProvider';
 import {AppLifecycle} from 'react-native-applifecycle';
 import {AppStateStatus} from 'react-native';
+import {lessonModuleContainer} from 'src/lesson/LessonModule';
+import {LessonStore} from 'src/lesson/presentation/stores/LessonStore/LessonStore';
 
 export const SoundBackgroundGlobalProvider = ({
   children,
 }: PropsWithChildren) => {
   const {loopSound, isInitSoundDone, pauseSound, setVolume} =
     useContext(SoundGlobalContext);
+  const lesson = lessonModuleContainer.getProvided(LessonStore);
 
   const [isPlaying, setIsPlaying] = useState(false);
 
@@ -28,7 +31,11 @@ export const SoundBackgroundGlobalProvider = ({
     );
 
     return () => listener.remove();
-  }, [loopSound, pauseSound]);
+  }, [lesson.backgroundSound, loopSound, pauseSound, setVolume]);
+
+  useEffect(() => {
+    setVolume(lesson.backgroundSound);
+  }, [lesson.backgroundSound, setVolume]);
 
   useEffect(() => {
     if (isInitSoundDone) {

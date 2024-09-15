@@ -13,6 +13,9 @@ import {SoundGlobalContext} from 'src/core/presentation/hooks/sound/SoundGlobalC
 import {soundTrack} from 'src/core/presentation/hooks/sound/SoundGlobalProvider';
 import {coreModuleContainer} from 'src/core/CoreModule';
 import Env, {EnvToken} from 'src/core/domain/entities/Env';
+import {VolumeManager} from 'react-native-volume-manager';
+import {useLessonStore} from '../stores/LessonStore/useGetPostsStore';
+import {useAsyncEffect} from 'src/core/presentation/hooks';
 
 type Props = {
   countDownTime: number;
@@ -27,6 +30,7 @@ export const useSettingLesson = ({
   isCorrectAnswer,
   onSubmit,
 }: Props) => {
+  const lessonStore = useLessonStore();
   const {playSound} = useContext(SoundGlobalContext);
   const [isAnswerCorrect, setIsAnswerCorrect] = useState(false);
   const [isShowCorrectContainer, setIsShowCorrectContainer] = useState(false);
@@ -137,6 +141,16 @@ export const useSettingLesson = ({
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [learningTimer]);
+
+  useAsyncEffect(async () => {
+    const currentLevel = await VolumeManager.getVolume();
+
+    VolumeManager.setVolume(Number(lessonStore.charSound));
+
+    return () => {
+      VolumeManager.setVolume(parseFloat(currentLevel.volume + ''));
+    };
+  }, [lessonStore.backgroundSound, lessonStore.charSound]);
 
   return {
     start,

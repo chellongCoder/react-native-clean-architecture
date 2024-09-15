@@ -8,6 +8,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import {create} from 'mobx-persist';
 import {homeModuleContainer} from 'src/home/HomeModule';
 import {HomeStore} from 'src/home/presentation/stores/HomeStore';
+import {lessonModuleContainer} from 'src/lesson/LessonModule';
+import {LessonStore} from 'src/lesson/presentation/stores/LessonStore/LessonStore';
 
 const useHydration = () => {
   const [isHydrated, setIsHydrated] = useState(false);
@@ -32,6 +34,10 @@ const useHydration = () => {
     {
       key: 'authStore',
       store: authenticationModuleContainer.getProvided(AuthenticationStore),
+    },
+    {
+      key: 'lessonStore',
+      store: lessonModuleContainer.getProvided(LessonStore),
     },
   ];
 
