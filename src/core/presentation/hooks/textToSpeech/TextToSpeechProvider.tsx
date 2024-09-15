@@ -3,6 +3,9 @@ import {TextToSpeechContext} from './TextToSpeechContext';
 import Tts from 'react-native-tts';
 import {Platform} from 'react-native';
 import {isAndroid} from '../../utils';
+import {VolumeManager} from 'react-native-volume-manager';
+import {lessonModuleContainer} from 'src/lesson/LessonModule';
+import {LessonStore} from 'src/lesson/presentation/stores/LessonStore/LessonStore';
 
 const iosVoice = [
   {
@@ -150,6 +153,7 @@ const androidVoice = [
 
 export const TextToSpeechProvider = ({children}: PropsWithChildren) => {
   const [isInitialized, setIsInitialized] = useState(false);
+  const lesson = lessonModuleContainer.getProvided(LessonStore);
 
   const ttsSpeak = async (text: string) => {
     console.log('ttsSpeak: ', text);
@@ -200,6 +204,13 @@ export const TextToSpeechProvider = ({children}: PropsWithChildren) => {
         console.error('TTS initialization failed:', error);
       });
   }, []);
+
+  useEffect(() => {
+    const setVolume = async () => {
+      await VolumeManager.setVolume(lesson.charSound);
+    };
+    setVolume();
+  }, [lesson.charSound]);
 
   return (
     <TextToSpeechContext.Provider

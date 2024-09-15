@@ -18,6 +18,7 @@ import Animated, {
 import {TextToSpeechContext} from 'src/core/presentation/hooks/textToSpeech/TextToSpeechContext';
 import {useLessonStore} from '../../stores/LessonStore/useGetPostsStore';
 import {useSettingLesson} from '../../hooks/useSettingLesson';
+import {useIsFocused} from '@react-navigation/native';
 
 type Props = {
   moduleIndex: number;
@@ -42,6 +43,7 @@ const VowelsLesson = ({
 
   const [answerSelected, setAnswerSelected] = useState('');
   const {trainingCount} = useLessonStore();
+  const focus = useIsFocused();
 
   const {
     isAnswerCorrect,

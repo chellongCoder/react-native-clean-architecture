@@ -23,6 +23,8 @@ import TopRankingPayload from 'src/lesson/application/types/TopRankingPayload';
 import GetRankingOfChildUseCase from 'src/lesson/application/useCases/GetRankingOfChildUseCase';
 import GetTopRankingUseCase from 'src/lesson/application/useCases/GetTopRankingUseCase';
 import {TRAINING_COUNT} from 'src/core/domain/enums/ModuleE';
+import {persist, create} from 'mobx-persist';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 @injectable()
 export class LessonStore {
@@ -49,6 +51,9 @@ export class LessonStore {
   @observable currentQuestion:
     | {lessonId: string; questionIndex: number; activeTaskIndex: number}
     | undefined;
+
+  @persist @observable backgroundSound = 0.8;
+  @persist @observable charSound = 0.3;
 
   constructor(
     @provided(UpdateUserSettingUseCase)
@@ -80,6 +85,16 @@ export class LessonStore {
     this.setTrainingCount = this.setTrainingCount.bind(this);
     this.setCurrentQuestion = this.setCurrentQuestion.bind(this);
   }
+
+  @action
+  setCharSound = (e: number) => {
+    this.charSound = e;
+  };
+
+  @action
+  setBackgroundSound = (e: number) => {
+    this.backgroundSound = e;
+  };
 
   @action
   setCurrentQuestion = (q: typeof this.currentQuestion) => {
@@ -278,3 +293,10 @@ export class LessonStore {
     }
   }
 }
+
+export const hydrate = create({
+  storage: AsyncStorage, // or AsyncStorage in react-native.
+  // default: localStorage
+  jsonify: true, // if you use AsyncStorage, here shoud be true
+  // default: true
+});

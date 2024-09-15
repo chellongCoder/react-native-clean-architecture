@@ -66,6 +66,7 @@ import PurchaseItem from '../components/LessonModule/PurchaseItem';
 import ListAppBottomSheet from '../components/ListAppBlock/ListAppBottomSheet';
 import Animated, {BounceIn, ReduceMotion} from 'react-native-reanimated';
 import CheckSelect from 'src/core/components/checkSelect/CheckSelect';
+import {VolumeManager} from 'react-native-volume-manager';
 
 enum TabParentE {
   APP_BLOCK = 'App block',
@@ -244,6 +245,10 @@ const ParentScreen = observer(() => {
   const [isShowLimitOption, setIsShowLimitOption] = useState(false);
   const points = useMemo(() => [100, 75, 50], []);
   const [point, setPoint] = useState(75);
+  const [backgroundSound, setBackgroundSound] = useState<number>(
+    lesson.backgroundSound,
+  );
+  const [charSound, setCharSound] = useState<number>(lesson.charSound);
 
   const onAddChild = () => {
     resetNavigator(STACK_NAVIGATOR.AUTH_NAVIGATOR, {
@@ -318,6 +323,15 @@ const ParentScreen = observer(() => {
       },
     });
   }, [deviceToken, lesson, point, selectedChild?._id, blockOptions]);
+
+  const onSaveSoundSetting = () => {
+    lesson.setBackgroundSound(backgroundSound);
+    lesson.setCharSound(charSound);
+    Toast.show({
+      type: 'success',
+      text1: 'Save volume settings!',
+    });
+  };
 
   /**-----------------------
    * todo      TODO
@@ -561,9 +575,10 @@ The blockAppsSystem function is an asynchronous function that awaits the result 
               </Text>
               <View style={[styles.mb12, styles.mt4]}>
                 <Volume
-                  value={80}
+                  value={backgroundSound * 100}
                   onChangValue={v => {
                     const newVolume = (v / 100).toFixed(1);
+                    setBackgroundSound(Number(newVolume));
                     soundHook.setVolume(+newVolume);
                   }}
                 />
@@ -573,7 +588,13 @@ The blockAppsSystem function is an asynchronous function that awaits the result 
                 Character sound
               </Text>
               <View style={[styles.mb12, styles.mt4]}>
-                <Volume value={30} onChangValue={v => console.log(v)} />
+                <Volume
+                  value={charSound * 100}
+                  onChangValue={async v => {
+                    const newVolume = (v / 100).toFixed(1);
+                    setCharSound(Number(newVolume));
+                  }}
+                />
               </View>
               <View style={[styles.rowBetween]}>
                 <Text style={[globalStyle.txtButton, styles.textColor]}>
@@ -599,6 +620,7 @@ The blockAppsSystem function is an asynchronous function that awaits the result 
               <PrimaryButton
                 text="Save"
                 style={[styles.btnCommon, styles.round]}
+                onPress={onSaveSoundSetting}
               />
             </View>
           </View>
