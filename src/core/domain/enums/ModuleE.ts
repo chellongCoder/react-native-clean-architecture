@@ -1,1 +1,1 @@
-export const TRAINING_COUNT = 3;
+export const TRAINING_COUNT = 1;

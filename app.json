@@ -1,6 +1,9 @@
 {
 "name": "TBD-Edu",
 "displayName": "TBD-Edu",
+"react-native-google-mobile-ads": {
+  "android_app_id": "ca-app-pub-4704292500396201~4060910453"
+},
 "expo": {
     "plugins": [
       [
