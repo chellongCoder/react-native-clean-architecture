@@ -44,7 +44,6 @@ const VowelsLesson = ({
 
   const [answerSelected, setAnswerSelected] = useState('');
   const {trainingCount} = useLessonStore();
-  const focus = useIsFocused();
 
   const {
     isAnswerCorrect,
