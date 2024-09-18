@@ -5,7 +5,6 @@ import {COLORS} from 'src/core/presentation/constants/colors';
 import {CustomTextStyle} from 'src/core/presentation/constants/typography';
 import {HomeContext} from '../stores/HomeContext';
 import {FieldData} from 'src/home/application/types/GetFieldResponse';
-import {useGGAdsMob} from 'src/hooks/useGGAdsMob';
 
 export interface TDataItem {
   id: number | string;
@@ -20,7 +19,6 @@ export interface IMergedData extends TDataItem, FieldData {}
 
 const ListSubject = () => {
   const {homeState, onSelectField} = useContext(HomeContext);
-  const ggAds = useGGAdsMob();
   const data: TData = [
     {
       id: 1,
@@ -63,7 +61,6 @@ const ListSubject = () => {
   );
 
   const onSelectSubject = (e: IMergedData) => {
-    ggAds.showAds();
     onSelectField(e);
   };
 
