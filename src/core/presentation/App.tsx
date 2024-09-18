@@ -45,7 +45,7 @@ const App = () => {
   };
 
   useEffect(() => {
-    !isAndroid && requestScreenTime();
+    // !isAndroid && requestScreenTime();
   }, []);
 
   return (
