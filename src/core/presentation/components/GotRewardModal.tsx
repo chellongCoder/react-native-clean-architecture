@@ -9,13 +9,12 @@ import Animated, {
   useSharedValue,
   withTiming,
 } from 'react-native-reanimated';
-import {ActivityIndicator} from 'react-native';
 
 type Props = {
   onWatchRewardAds: () => void;
   loadedAds: boolean;
 };
-const WatchAdsModal = ({onWatchRewardAds, loadedAds}: Props) => {
+const GotRewardModal = ({onWatchRewardAds, loadedAds}: Props) => {
   const opacity = useSharedValue(0);
   const translateY = useSharedValue(50);
 
@@ -35,32 +34,25 @@ const WatchAdsModal = ({onWatchRewardAds, loadedAds}: Props) => {
       <Animated.View style={[styles.modalContainer, animatedStyle]}>
         <View style={styles.image}>
           <Image
-            source={assets.watch_ads}
+            source={assets.untitled_artwork}
             style={{height: '100%', width: '100%'}}
             resizeMode="contain"
           />
         </View>
         <View style={styles.contentContainer}>
-          <Text style={styles.title}>WATCH AD FOR REWARD</Text>
+          <Text style={styles.title}>YOU GOT REWARD !!</Text>
           <View style={{height: verticalScale(8)}} />
           <Text style={styles.text}>
-            <Text style={styles.txtHint}>
-              Watch AD and collect 1 sunflower. {'\n'}
-            </Text>
-            Have 3 sunflower to get hint for 1 Minitest question.
+            Yayyyy !!! You got
+            <Text style={styles.txtHint}> 1 sunflower. {'\n'}</Text>
+            You can use 3 sunflower seeds to hint 1 minitest question.
           </Text>
         </View>
         <View style={styles.buttonContainer}>
           <TouchableOpacity
-            // onPress={() => ggadsHook.showAds()}
-            style={styles.button}>
-            <Text style={styles.txtButton}>Next</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
             onPress={onWatchRewardAds}
-            style={[styles.button, {backgroundColor: COLORS.PRIMARY}]}>
-            <Text style={styles.txtButton}>Watch AD</Text>
-            {!loadedAds && <ActivityIndicator />}
+            style={[styles.button, {backgroundColor: COLORS.YELLOW_F2B559}]}>
+            <Text style={styles.txtButton}>Get reward</Text>
           </TouchableOpacity>
         </View>
       </Animated.View>
@@ -68,7 +60,7 @@ const WatchAdsModal = ({onWatchRewardAds, loadedAds}: Props) => {
   );
 };
 
-export default WatchAdsModal;
+export default GotRewardModal;
 
 const styles = StyleSheet.create({
   container: {
@@ -89,12 +81,12 @@ const styles = StyleSheet.create({
   },
   contentContainer: {
     alignItems: 'center',
+    alignSelf: 'center',
   },
   title: {
     fontFamily: FontFamily.SVNCherishMoment,
     fontSize: moderateScale(32),
     textAlign: 'center',
-    maxWidth: scale(140),
     color: COLORS.GREEN_4CB572,
   },
   txtHint: {
@@ -105,6 +97,7 @@ const styles = StyleSheet.create({
     color: COLORS.BLUE_1C6349,
     textAlign: 'center',
     fontSize: moderateScale(12),
+    maxWidth: '60%',
   },
   txtButton: {
     fontFamily: FontFamily.Eina01Bold,

@@ -34,6 +34,9 @@ import OnBoardingMinitestScreen from './OnBoardingMinitestScreen';
 import Animated, {Easing, FadeIn} from 'react-native-reanimated';
 import {TRAINING_COUNT} from 'src/core/domain/enums/ModuleE';
 import WatchAdsModal from '../components/WatchAdsModal';
+import {useGGAdsMob} from 'src/hooks/useGGAdsMob';
+import {RewardedAdReward} from 'react-native-google-mobile-ads';
+import GotRewardModal from '../components/GotRewardModal';
 
 export type RouteParamsDone = {
   totalResult: TResult[];
@@ -60,8 +63,18 @@ const DoneLessonScreen = () => {
   const lessonStore = lessonModuleContainer.getProvided(LessonStore);
 
   const {deviceToken, selectedChild} = useAuthenticationStore();
+  const [isShowWatchAds, setIsShowWatchAds] = useState(false);
+  const [isShowGotReward, setIsShowGotReward] = useState(false);
   const [isShowOnBoard, setIsShowOnBoard] = useState(false);
+
   useGetUserSetting(deviceToken, selectedChild?._id ?? '', lessonStore);
+
+  const onEarnReward = useCallback((reward: RewardedAdReward) => {
+    setIsShowWatchAds(false);
+    setIsShowGotReward(true);
+  }, []);
+
+  const ggadsHook = useGGAdsMob({onEarnReward});
 
   const isSuccess = useMemo(() => {
     if (route.isMiniTest) {
@@ -119,6 +132,14 @@ const DoneLessonScreen = () => {
       }
     }
   }, [lessonStore, route.isMiniTest]);
+
+  const onNext = useCallback(() => {
+    setIsShowWatchAds(true);
+  }, []);
+
+  const onWatchRewardAds = useCallback(() => {
+    ggadsHook.showAds();
+  }, [ggadsHook]);
 
   useEffect(() => {
     if (route.isMiniTest) {
@@ -253,7 +274,7 @@ const DoneLessonScreen = () => {
           )}
         </View>
         <View style={styles.wrapperButton}>
-          <TouchableOpacity onPress={onSubmit} style={styles.button}>
+          <TouchableOpacity onPress={onNext} style={styles.button}>
             <Text style={[styleHook.txtButton, styles.textBtn]}>Next</Text>
           </TouchableOpacity>
         </View>
@@ -270,15 +291,41 @@ const DoneLessonScreen = () => {
           <OnBoardingMinitestScreen />
         </Animated.View>
       )}
-      <View
-        style={{
-          position: 'absolute',
-          zIndex: 999,
-          width: '100%',
-          height: '100%',
-        }}>
-        <WatchAdsModal />
-      </View>
+      {isShowWatchAds && (
+        <TouchableOpacity
+          activeOpacity={1}
+          onPress={() => setIsShowWatchAds(false)}
+          style={{
+            position: 'absolute',
+            zIndex: 999,
+            width: '100%',
+            height: '100%',
+          }}>
+          <WatchAdsModal
+            loadedAds={ggadsHook.loaded}
+            onWatchRewardAds={onWatchRewardAds}
+          />
+        </TouchableOpacity>
+      )}
+      {isShowGotReward && (
+        <TouchableOpacity
+          activeOpacity={1}
+          onPress={() => setIsShowWatchAds(false)}
+          style={{
+            position: 'absolute',
+            zIndex: 999,
+            width: '100%',
+            height: '100%',
+          }}>
+          <GotRewardModal
+            loadedAds={ggadsHook.loaded}
+            onWatchRewardAds={() => {
+              setIsShowGotReward(false);
+              onSubmit();
+            }}
+          />
+        </TouchableOpacity>
+      )}
     </View>
   );
 };

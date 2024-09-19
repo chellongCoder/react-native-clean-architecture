@@ -6,13 +6,17 @@ import {
   useInterstitialAd,
   RewardedAd,
   AdEventType,
+  RewardedAdReward,
 } from 'react-native-google-mobile-ads';
 
 const adUnitId = __DEV__
   ? TestIds.REWARDED
   : 'ca-app-pub-4704292500396201/2885520039';
 
-export const useGGAdsMob = () => {
+type Props = {
+  onEarnReward: (reward: RewardedAdReward) => void;
+};
+export const useGGAdsMob = ({onEarnReward}: Props) => {
   const [loaded, setLoaded] = useState(false);
   const rewarded = RewardedAd.createForAdRequest(adUnitId, {
     keywords: ['parent', 'children', 'study'],
@@ -38,12 +42,14 @@ export const useGGAdsMob = () => {
         );
 
         rewarded.load();
+        setLoaded(false);
       },
     );
     const unsubscribeEarned = rewarded.addAdEventListener(
       RewardedAdEventType.EARNED_REWARD,
       reward => {
         console.log('User earned reward of ', reward);
+        onEarnReward(reward);
       },
     );
 
@@ -56,6 +62,7 @@ export const useGGAdsMob = () => {
       unsubscribeEarned();
       unsubscribeClosed();
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [rewarded]);
 
   const showAds = useCallback(() => {
