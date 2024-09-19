@@ -15,7 +15,8 @@
     "postinstall": "patch-package",
     "create:native-module": "npx create-react-native-library@latest",
     "icon": "rn-toolbox icons ./assets/images/icon.png",
-    "splash": "rn-toolbox splash .assets/images/splash.png"
+    "splash": "rn-toolbox splash .assets/images/splash.png",
+    "link:node": "echo export NODE_BINARY=$(command -v node) > .xcode.env.local"
   },
   "dependencies": {
     "@expo/webpack-config": "~19.0.1",

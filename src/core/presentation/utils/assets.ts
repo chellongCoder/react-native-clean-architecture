@@ -30,4 +30,5 @@ export const assets = {
   background_barry: require('assets/images/BACKGROUND_BARRY.png'),
   background_colin: require('assets/images/BACKGROUND_COLIN.png'),
   background_dixie: require('assets/images/BACKGROUND_DIXIE.png'),
+  watch_ads: require('assets/images/watch_ads.png'),
 };

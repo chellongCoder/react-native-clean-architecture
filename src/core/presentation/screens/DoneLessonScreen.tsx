@@ -33,6 +33,7 @@ import {useCallback, useEffect, useMemo, useState} from 'react';
 import OnBoardingMinitestScreen from './OnBoardingMinitestScreen';
 import Animated, {Easing, FadeIn} from 'react-native-reanimated';
 import {TRAINING_COUNT} from 'src/core/domain/enums/ModuleE';
+import WatchAdsModal from '../components/WatchAdsModal';
 
 export type RouteParamsDone = {
   totalResult: TResult[];
@@ -269,6 +270,15 @@ const DoneLessonScreen = () => {
           <OnBoardingMinitestScreen />
         </Animated.View>
       )}
+      <View
+        style={{
+          position: 'absolute',
+          zIndex: 999,
+          width: '100%',
+          height: '100%',
+        }}>
+        <WatchAdsModal />
+      </View>
     </View>
   );
 };
@@ -399,7 +409,7 @@ const styles = StyleSheet.create({
     marginBottom: 16,
   },
   button: {
-    backgroundColor: '#F2B559',
+    backgroundColor: COLORS.YELLOW_F2B559,
     paddingVertical: 12,
     paddingHorizontal: 32,
     borderRadius: 32,

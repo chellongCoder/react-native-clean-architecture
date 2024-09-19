@@ -93,7 +93,17 @@ const LessonScreen = observer(() => {
     currentQuestion,
   } = useLessonStore();
 
-  const {tasks} = useListQuestions(route?.lessonId);
+  const {tasks: apiTasks} = useListQuestions(route?.lessonId);
+
+  const tasks = useMemo(() => {
+    return apiTasks.map(t => {
+      return {
+        ...t,
+        question: t.question.slice(0, 1),
+      };
+    });
+  }, [apiTasks]);
+
   const [activeTaskIndex, setActiveTaskIndex] = useState(0);
   const {selectedChild} = useAuthenticationStore();
   const {playSound, pauseSound, loopSound} = useContext(SoundGlobalContext);
