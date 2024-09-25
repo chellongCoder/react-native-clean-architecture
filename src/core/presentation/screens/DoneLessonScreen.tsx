@@ -37,6 +37,7 @@ import WatchAdsModal from '../components/WatchAdsModal';
 import {useGGAdsMob} from 'src/hooks/useGGAdsMob';
 import {RewardedAdReward} from 'react-native-google-mobile-ads';
 import GotRewardModal from '../components/GotRewardModal';
+import WatchAddScreen from '../components/WatchAddScreen';
 
 export type RouteParamsDone = {
   totalResult: TResult[];
@@ -69,10 +70,19 @@ const DoneLessonScreen = () => {
 
   useGetUserSetting(deviceToken, selectedChild?._id ?? '', lessonStore);
 
-  const onEarnReward = useCallback((reward: RewardedAdReward) => {
-    setIsShowWatchAds(false);
-    setIsShowGotReward(true);
-  }, []);
+  const onEarnReward = useCallback(
+    (reward?: RewardedAdReward) => {
+      setIsShowWatchAds(false);
+      setIsShowGotReward(true);
+      if (reward) {
+        lessonStore.changeChildrenPointFlower({
+          childId: selectedChild?._id ?? '',
+          point: 1,
+        });
+      }
+    },
+    [lessonStore, selectedChild?._id],
+  );
 
   const ggadsHook = useGGAdsMob({onEarnReward});
 
@@ -292,20 +302,18 @@ const DoneLessonScreen = () => {
         </Animated.View>
       )}
       {isShowWatchAds && (
-        <TouchableOpacity
-          activeOpacity={1}
-          onPress={() => setIsShowWatchAds(false)}
+        <View
           style={{
             position: 'absolute',
             zIndex: 999,
             width: '100%',
             height: '100%',
           }}>
-          <WatchAdsModal
+          <WatchAddScreen
             loadedAds={ggadsHook.loaded}
             onWatchRewardAds={onWatchRewardAds}
           />
-        </TouchableOpacity>
+        </View>
       )}
       {isShowGotReward && (
         <TouchableOpacity

@@ -10358,6 +10358,11 @@ react-is@^17.0.1:
   resolved "https://registry.yarnpkg.com/react-is/-/react-is-17.0.2.tgz#e691d4a8e9c789365655539ab372762b0efb54f0"
   integrity sha512-w2GsyukL62IJnlaff/nRegPQR94C/XXamvMWmSHRJ4y7Ts/4ocGRmTHvOs8PSE6pB3dWOrD/nueuU5sduBsQ4w==
 
+react-native-admob-native-ads@^0.7.6:
+  version "0.7.6"
+  resolved "https://registry.yarnpkg.com/react-native-admob-native-ads/-/react-native-admob-native-ads-0.7.6.tgz#1e6e2d0dac466ac68e2c8530ba855f3f82812989"
+  integrity sha512-nApNDUVKrjXqwSxxrIvn1R0IJQs3VHwViK6G4Mbo2irNW8iP/RYC/t6fvvbH9emtHle0AYTwvwIW5JiuieuN8Q==
+
 "react-native-alphadex-screentime@link:./src/modules/react-native-alphadex-screentime":
   version "0.0.0"
   uid ""

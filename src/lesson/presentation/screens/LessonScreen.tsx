@@ -4,6 +4,7 @@ import React, {
   useContext,
   useEffect,
   useMemo,
+  useRef,
   useState,
 } from 'react';
 import AchievementLesson from './LessonComponent/AchievementLesson';
@@ -24,7 +25,7 @@ import {withProviders} from 'src/core/presentation/utils/withProviders';
 import {LessonStoreProvider} from '../stores/LessonStore/LessonStoreProvider';
 import {observer} from 'mobx-react';
 import {useLessonStore} from '../stores/LessonStore/useGetPostsStore';
-import VowelsLesson from './LessonComponent/VowelsLesson';
+import VowelsLesson, {VowelsRef} from './LessonComponent/VowelsLesson';
 import {useListQuestions} from 'src/hooks/useListQuestion';
 import {RouteProp, useRoute} from '@react-navigation/native';
 import useStateCustom from 'src/hooks/useStateCommon';
@@ -36,6 +37,9 @@ import {assets} from 'src/core/presentation/utils';
 import {COLORS} from 'src/core/presentation/constants/colors';
 import EssayLesson from './LessonComponent/EssayLesson';
 import {TRAINING_COUNT} from 'src/core/domain/enums/ModuleE';
+import UseHintModal from 'src/core/presentation/components/UseHintModal';
+import {lessonModuleContainer} from 'src/lesson/LessonModule';
+import {LessonStore} from '../stores/LessonStore/LessonStore';
 
 enum LessonTypeE {
   ACHIEVEMENT,
@@ -67,6 +71,7 @@ export type TLessonState = {
 };
 
 const LessonScreen = observer(() => {
+  const vowelRef = useRef<VowelsRef>();
   const lessons: LessonType[] = [
     // {lessonType: LessonTypeE.ACHIEVEMENT},
     {lessonType: LessonTypeE.VOWEL},
@@ -91,7 +96,11 @@ const LessonScreen = observer(() => {
     trainingCount,
     setCurrentQuestion,
     currentQuestion,
+    isShowHint,
+    toggleUseHint,
+    changeChildrenPointFlower,
   } = useLessonStore();
+  const lessonStore = lessonModuleContainer.getProvided(LessonStore);
 
   const {tasks: apiTasks} = useListQuestions(route?.lessonId);
 
@@ -309,6 +318,8 @@ const LessonScreen = observer(() => {
           trainingResult: _trainingResult,
         });
 
+        isShowHint && toggleUseHint();
+
         /**
          * The lessonIndex >= (firstMiniTestTask?.question.length ?? 1) - 1 condition checks if the lessonIndex is greater than or equal to the index of the last question in the question array. If it is, the condition evaluates to true; otherwise, it evaluates to false.
          * If the condition evaluates to true, the code inside the if statement block will be executed. In this case, it calls the submitModule function and passes resultByAnswer as an argument.
@@ -323,6 +334,7 @@ const LessonScreen = observer(() => {
     [
       firstMiniTestTask?.question,
       firstMiniTestTask?.type,
+      isShowHint,
       lessonIndex,
       lessonState.result,
       lessonState.trainingResult,
@@ -333,11 +345,32 @@ const LessonScreen = observer(() => {
       submitModule,
       testTask?.question,
       testTask?.type,
+      toggleUseHint,
     ],
   );
 
+  const onUseHint = useCallback(async () => {
+    toggleUseHint();
+    if (selectedChild?.adsPoints) {
+      try {
+        await lessonStore.changeChildrenPointFlower({
+          childId: selectedChild?._id ?? '',
+          point: -1,
+        });
+      } catch (error) {}
+    }
+
+    vowelRef.current?.onChoiceCorrectedAnswer();
+  }, [
+    lessonStore,
+    selectedChild?._id,
+    selectedChild?.adsPoints,
+    toggleUseHint,
+  ]);
+
   /**
-   *
+   * pause lại các sound khác
+   * play big bell sound khi vào làm bài
    */
   useEffect(() => {
     const enterMiniTest = () => {
@@ -408,6 +441,7 @@ const LessonScreen = observer(() => {
             lessonName={route.lessonName}
             moduleName={route.moduleName}
             firstMiniTestTask={testTask}
+            ref={vowelRef}
           />
         );
       case LessonTypeE.WRITE:
@@ -461,7 +495,25 @@ const LessonScreen = observer(() => {
     }
   };
 
-  return <View style={[styles.fill]}>{buildLesson()}</View>;
+  const buildHint = () => {
+    return (
+      <View style={styles.hint}>
+        <UseHintModal
+          onClose={() => {
+            toggleUseHint();
+          }}
+          onUseHint={onUseHint}
+        />
+      </View>
+    );
+  };
+
+  return (
+    <View style={[styles.fill]}>
+      {buildLesson()}
+      {isShowHint && buildHint()}
+    </View>
+  );
 });
 
 export default withProviders(LessonStoreProvider)(LessonScreen);
@@ -469,5 +521,11 @@ export default withProviders(LessonStoreProvider)(LessonScreen);
 const styles = StyleSheet.create({
   fill: {
     flex: 1,
+  },
+  hint: {
+    position: 'absolute',
+    zIndex: 999,
+    width: '100%',
+    height: '100%',
   },
 });

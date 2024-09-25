@@ -113,6 +113,7 @@ const EssayLesson = ({
       backgroundColor="#66c270"
       backgroundAnswerColor="#DDF598"
       price="Free"
+      score={10}
       isAnswerCorrect={isAnswerCorrect}
       isShowCorrectContainer={isShowCorrectContainer}
       buildQuestion={

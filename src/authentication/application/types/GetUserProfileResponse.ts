@@ -12,6 +12,7 @@ export interface children {
   userType: 'child' | 'parent';
   username: string;
   description: string;
+  adsPoints: number;
 }
 
 export interface data {

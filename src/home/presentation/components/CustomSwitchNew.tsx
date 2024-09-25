@@ -7,6 +7,7 @@ import Animated, {
   withTiming,
   interpolate,
 } from 'react-native-reanimated';
+import {scale, verticalScale} from 'react-native-size-matters';
 import {
   CustomTextStyle,
   TYPOGRAPHY,
@@ -42,9 +43,10 @@ const activeStyles = {
 type TPros = {
   value: boolean;
   onValueChange: (a: boolean) => void;
+  point: number;
 };
 
-const CustomSwitchNew = ({value, onValueChange}: TPros) => {
+const CustomSwitchNew = ({value, onValueChange, point}: TPros) => {
   const animatedValue = useSharedValue(value ? 0 : 1);
 
   useEffect(() => {
@@ -88,7 +90,7 @@ const CustomSwitchNew = ({value, onValueChange}: TPros) => {
               <View style={styles.fillCenter}>
                 <View style={styles.wrapContent}>
                   <View style={styles.decorate} />
-                  <Text style={styles.title}>0</Text>
+                  <Text style={styles.title}>{point}</Text>
                 </View>
               </View>
             </Animated.View>
@@ -101,28 +103,24 @@ const CustomSwitchNew = ({value, onValueChange}: TPros) => {
 
 const styles = StyleSheet.create({
   pressable: {
-    width: 70,
-    height: 32,
+    width: scale(50),
+    height: verticalScale(20),
     borderRadius: 16,
   },
   border: {
     padding: 2,
   },
   icon: {
-    marginLeft: -38,
-    height: 66,
-    width: 66,
+    height: scale(20),
+    width: scale(20),
   },
   fillCenter: {
     flex: 1,
     alignItems: 'center',
+    justifyContent: 'center',
   },
-  wrapContent: {
-    marginLeft: -12,
-  },
+  wrapContent: {},
   decorate: {
-    backgroundColor: '#fbf8cc',
-    height: 3,
     opacity: 0.5,
     alignSelf: 'stretch',
     borderRadius: 999,
@@ -133,6 +131,8 @@ const styles = StyleSheet.create({
   },
   innerContainer: {
     flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   headGradient: {
     width: 24,
@@ -143,7 +143,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     flex: 1,
-    paddingHorizontal: 8,
   },
   title: {
     ...CustomTextStyle.smallNormal,

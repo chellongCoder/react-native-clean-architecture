@@ -10,16 +10,25 @@ import {
 } from 'react-native-google-mobile-ads';
 
 const adUnitId = __DEV__
-  ? TestIds.REWARDED
+  ? TestIds.REWARDED_INTERSTITIAL
   : 'ca-app-pub-4704292500396201/2885520039';
 
 type Props = {
-  onEarnReward: (reward: RewardedAdReward) => void;
+  onEarnReward: (reward?: RewardedAdReward) => void;
 };
 export const useGGAdsMob = ({onEarnReward}: Props) => {
   const [loaded, setLoaded] = useState(false);
-  const rewarded = RewardedAd.createForAdRequest(adUnitId, {
+  console.log(
+    '🛠 LOG: 🚀 --> ----------------------------------------------🛠 LOG: 🚀 -->',
+  );
+  console.log('🛠 LOG: 🚀 --> ~ useGGAdsMob ~ loaded:', loaded);
+  console.log(
+    '🛠 LOG: 🚀 --> ----------------------------------------------🛠 LOG: 🚀 -->',
+  );
+  const rewarded = RewardedInterstitialAd.createForAdRequest(adUnitId, {
     keywords: ['parent', 'children', 'study'],
+    requestNonPersonalizedAdsOnly: true,
+    requestAgent: 'CoolAds',
   });
 
   useEffect(() => {
@@ -43,6 +52,7 @@ export const useGGAdsMob = ({onEarnReward}: Props) => {
 
         rewarded.load();
         setLoaded(false);
+        onEarnReward();
       },
     );
     const unsubscribeEarned = rewarded.addAdEventListener(

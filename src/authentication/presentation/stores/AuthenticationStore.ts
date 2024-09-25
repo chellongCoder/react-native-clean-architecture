@@ -33,6 +33,8 @@ import ChangeChildDescriptionUseCase from 'src/authentication/application/useCas
 import {ChangeChildDescriptionPayload} from 'src/authentication/application/types/ChangeChildDescriptionPayload';
 import {resetNavigator} from 'src/core/presentation/navigation/actions/RootNavigationActions';
 import {STACK_NAVIGATOR} from 'src/core/presentation/navigation/ConstantNavigator';
+import ChangeChildPointFlowerUsecase from 'src/authentication/application/useCases/ChangeChildPointFlowerUsecase';
+import {ChangeChildPointFlowerPayload} from 'src/authentication/application/types/ChangeChildPointFlowerPayload';
 @injectable()
 export class AuthenticationStore implements AuthenticationStoreState {
   isLoading = false;
@@ -274,6 +276,7 @@ export class AuthenticationStore implements AuthenticationStoreState {
     this.setIsLoading(false);
     return response;
   }
+
   // @action
   // public async loginWithGoogle(args: LoginWithGooglePayload) {
   //   this.setIsLoading(true);

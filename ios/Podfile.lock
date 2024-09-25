@@ -1045,6 +1045,9 @@ PODS:
   - React-Mapbuffer (0.73.6):
     - glog
     - React-debug
+  - react-native-admob-native-ads (0.7.6):
+    - Google-Mobile-Ads-SDK
+    - React-Core
   - react-native-alphadex-screentime (0.1.0):
     - glog
     - RCT-Folly (= 2022.05.16.00)
@@ -1335,6 +1338,7 @@ DEPENDENCIES:
   - React-jsinspector (from `../node_modules/react-native/ReactCommon/jsinspector-modern`)
   - React-logger (from `../node_modules/react-native/ReactCommon/logger`)
   - React-Mapbuffer (from `../node_modules/react-native/ReactCommon`)
+  - react-native-admob-native-ads (from `../node_modules/react-native-admob-native-ads`)
   - react-native-alphadex-screentime (from `../node_modules/react-native-alphadex-screentime`)
   - "react-native-netinfo (from `../node_modules/@react-native-community/netinfo`)"
   - react-native-safe-area-context (from `../node_modules/react-native-safe-area-context`)
@@ -1479,6 +1483,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon/logger"
   React-Mapbuffer:
     :path: "../node_modules/react-native/ReactCommon"
+  react-native-admob-native-ads:
+    :path: "../node_modules/react-native-admob-native-ads"
   react-native-alphadex-screentime:
     :path: "../node_modules/react-native-alphadex-screentime"
   react-native-netinfo:
@@ -1611,6 +1617,7 @@ SPEC CHECKSUMS:
   React-jsinspector: 85583ef014ce53d731a98c66a0e24496f7a83066
   React-logger: 3eb80a977f0d9669468ef641a5e1fabbc50a09ec
   React-Mapbuffer: 84ea43c6c6232049135b1550b8c60b2faac19fab
+  react-native-admob-native-ads: 6529b0dee2036f94ab53f5483c2c27c9c9a10942
   react-native-alphadex-screentime: a28983a3ea15e3516cbfeb3b903911732fb324ee
   react-native-netinfo: 076df4f9b07f6670acf4ce9a75aac8d34c2e2ccc
   react-native-safe-area-context: 0ee144a6170530ccc37a0fd9388e28d06f516a89

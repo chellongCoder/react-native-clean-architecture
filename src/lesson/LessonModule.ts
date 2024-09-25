@@ -14,6 +14,7 @@ import GetUserSettingUseCase from './application/useCases/GetUserSettingUseCase'
 import GetReportProgressChildrenUseCase from './application/useCases/GetReportProgressChildrenUsecase';
 import GetRankingOfChildUseCase from './application/useCases/GetRankingOfChildUseCase';
 import GetTopRankingUseCase from './application/useCases/GetTopRankingUseCase';
+import ChangeChildPointFlowerUsecase from 'src/authentication/application/useCases/ChangeChildPointFlowerUsecase';
 
 @module({
   providers: [
@@ -28,6 +29,7 @@ import GetTopRankingUseCase from './application/useCases/GetTopRankingUseCase';
     FindPostUseCase,
     GetPostsUseCase,
     UpdateUserSettingUseCase,
+    ChangeChildPointFlowerUsecase,
     GetUserSettingUseCase,
     {
       useClass: GetPostsStore,

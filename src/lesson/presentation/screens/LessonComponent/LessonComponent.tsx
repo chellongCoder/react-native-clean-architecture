@@ -1,4 +1,11 @@
-import {View, Text, StyleSheet, ImageBackground, Image} from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  ImageBackground,
+  Image,
+  TouchableOpacity,
+} from 'react-native';
 import React from 'react';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {FontFamily} from 'src/core/presentation/hooks/useFonts';
@@ -9,6 +16,7 @@ import {assets, WIDTH_SCREEN} from 'src/core/presentation/utils';
 import {COLORS} from 'src/core/presentation/constants/colors';
 import {scale, verticalScale} from 'react-native-size-matters';
 import useGlobalStyle from 'src/core/presentation/hooks/useGlobalStyle';
+import CustomSwitchNew from 'src/home/presentation/components/CustomSwitchNew';
 
 type Props = {
   lessonName?: string;
@@ -24,6 +32,7 @@ type Props = {
   score?: number;
   isAnswerCorrect?: boolean;
   isShowCorrectContainer?: boolean;
+  onPressFlower?: () => void;
 };
 
 const LessonComponent = ({
@@ -40,6 +49,7 @@ const LessonComponent = ({
   score = 0,
   isShowCorrectContainer,
   isAnswerCorrect,
+  onPressFlower,
 }: Props) => {
   const insets = useSafeAreaInsets();
   const globalStyle = useGlobalStyle();
@@ -81,7 +91,15 @@ const LessonComponent = ({
               <Text style={[globalStyle.txtNote, styles.textPart]}>{part}</Text>
             </View>
           </View>
+          <TouchableOpacity onPress={onPressFlower}>
+            <CustomSwitchNew
+              point={score}
+              value={false}
+              onValueChange={() => {}}
+            />
+          </TouchableOpacity>
         </View>
+
         <View style={[styles.boxQuestion, styles.pb32]}>{buildQuestion}</View>
         <View style={styles.wrapDescriptionContainer}>
           <View style={styles.wrapImageContainer}>

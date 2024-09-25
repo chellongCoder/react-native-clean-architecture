@@ -1,4 +1,11 @@
-import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {
+  Image,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  TouchableWithoutFeedback,
+  View,
+} from 'react-native';
 import React, {useEffect} from 'react';
 import {assets} from '../utils';
 import {moderateScale, scale, verticalScale} from 'react-native-size-matters';
@@ -9,15 +16,12 @@ import Animated, {
   useSharedValue,
   withTiming,
 } from 'react-native-reanimated';
-import {ActivityIndicator} from 'react-native';
-import {withProviders} from '../utils/withProviders';
-import {AdsNativeProvider} from '../hooks/adsnative/AdsNativeProvider';
 
 type Props = {
-  onWatchRewardAds: () => void;
-  loadedAds: boolean;
+  onClose: () => void;
+  onUseHint: () => void;
 };
-const WatchAdsModal = ({onWatchRewardAds, loadedAds}: Props) => {
+const UseHintModal = ({onUseHint, onClose}: Props) => {
   const opacity = useSharedValue(0);
   const translateY = useSharedValue(50);
 
@@ -33,44 +37,46 @@ const WatchAdsModal = ({onWatchRewardAds, loadedAds}: Props) => {
     };
   });
   return (
-    <View style={styles.container}>
-      <Animated.View style={[styles.modalContainer, animatedStyle]}>
-        <View style={styles.image}>
-          <Image
-            source={assets.watch_ads}
-            style={{height: '100%', width: '100%'}}
-            resizeMode="contain"
-          />
-        </View>
-        <View style={styles.contentContainer}>
-          <Text style={styles.title}>WATCH AD FOR REWARD</Text>
-          <View style={{height: verticalScale(8)}} />
-          <Text style={styles.text}>
-            <Text style={styles.txtHint}>
-              Watch AD and collect 1 sunflower. {'\n'}
-            </Text>
-            Have 3 sunflower to get hint for 1 Minitest question.
-          </Text>
-        </View>
-        <View style={styles.buttonContainer}>
-          <TouchableOpacity
-            // onPress={() => ggadsHook.showAds()}
-            style={styles.button}>
-            <Text style={styles.txtButton}>Next</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={onWatchRewardAds}
-            style={[styles.button, {backgroundColor: COLORS.PRIMARY}]}>
-            <Text style={styles.txtButton}>Watch AD</Text>
-            {!loadedAds && <ActivityIndicator />}
-          </TouchableOpacity>
-        </View>
-      </Animated.View>
-    </View>
+    <TouchableWithoutFeedback onPress={onClose}>
+      <View style={styles.container}>
+        <TouchableWithoutFeedback>
+          <Animated.View style={[styles.modalContainer, animatedStyle]}>
+            <View style={styles.image}>
+              <Image
+                source={assets.untitled_artwork}
+                style={{height: '100%', width: '100%'}}
+                resizeMode="contain"
+              />
+            </View>
+            <View style={styles.contentContainer}>
+              <Text style={styles.title}>USE HINT ?</Text>
+              <View style={{height: verticalScale(8)}} />
+              <Text style={styles.text}>
+                <Text style={styles.txtHint}>
+                  {' '}
+                  2 Sunflowers to hint 1 Minitest question. {'\n'}
+                </Text>
+                Do you want to use it?
+              </Text>
+            </View>
+            <View style={styles.buttonContainer}>
+              <TouchableOpacity onPress={onClose} style={styles.button}>
+                <Text style={styles.txtButton}>No</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={onUseHint}
+                style={[styles.button, {backgroundColor: COLORS.PRIMARY}]}>
+                <Text style={styles.txtButton}>Yes</Text>
+              </TouchableOpacity>
+            </View>
+          </Animated.View>
+        </TouchableWithoutFeedback>
+      </View>
+    </TouchableWithoutFeedback>
   );
 };
 
-export default withProviders(AdsNativeProvider)(WatchAdsModal);
+export default UseHintModal;
 
 const styles = StyleSheet.create({
   container: {
@@ -91,12 +97,12 @@ const styles = StyleSheet.create({
   },
   contentContainer: {
     alignItems: 'center',
+    alignSelf: 'center',
   },
   title: {
     fontFamily: FontFamily.SVNCherishMoment,
     fontSize: moderateScale(32),
     textAlign: 'center',
-    maxWidth: scale(140),
     color: COLORS.GREEN_4CB572,
   },
   txtHint: {
@@ -107,6 +113,7 @@ const styles = StyleSheet.create({
     color: COLORS.BLUE_1C6349,
     textAlign: 'center',
     fontSize: moderateScale(12),
+    maxWidth: '60%',
   },
   txtButton: {
     fontFamily: FontFamily.Eina01Bold,

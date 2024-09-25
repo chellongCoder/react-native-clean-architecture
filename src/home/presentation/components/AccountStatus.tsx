@@ -8,6 +8,7 @@ import {useLoadingGlobal} from 'src/core/presentation/hooks/loading/useLoadingGl
 import useLoginWithCredentials from 'src/authentication/presentation/hooks/useLoginWithCredentials';
 import ICLogout from 'src/core/components/icons/ICLogout';
 import CustomSwitchNew from './CustomSwitchNew';
+import useAuthenticationStore from 'src/authentication/presentation/stores/useAuthenticationStore';
 
 type TProps = {
   title?: string;
@@ -19,6 +20,7 @@ const AccountStatus = (props: TProps) => {
   const {title, subject, isShowLogout} = props;
   const {handleLogOut} = useLoginWithCredentials();
   useLoadingGlobal();
+  const {selectedChild} = useAuthenticationStore();
 
   const [isEnabled, setIsEnabled] = useState(false);
 
@@ -44,7 +46,11 @@ const AccountStatus = (props: TProps) => {
         ) : (
           <View style={{flex: 1}} />
         )}
-        <CustomSwitchNew value={isEnabled} onValueChange={setIsEnabled} />
+        <CustomSwitchNew
+          point={selectedChild?.adsPoints ?? 0}
+          value={isEnabled}
+          onValueChange={setIsEnabled}
+        />
       </View>
       <View style={styles.iconContainer}>
         {subject ? (

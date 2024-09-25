@@ -60,6 +60,7 @@ export const API_ENDPOINTS = {
     UPDATE_CHILDREN_DESCRIPTION: getUserEndPointServices(
       'update-children-description',
     ),
+    UPDATE_CHILD_POINT: getUserEndPointServices('update-child-point'),
   },
   SUBJECT: {
     LIST_ALL_SUBJECT: getSubjectEndPointServices('list-all-subject'),

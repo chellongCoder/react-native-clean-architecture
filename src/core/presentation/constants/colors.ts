@@ -38,4 +38,5 @@ export const COLORS = {
   BLUE_20A7FF: '#20A7FF',
   PURPLE_BD7FF5: '#BD7FF5',
   GREEN_4CB572: '#4CB572',
+  RED_AF3A1B: '#AF3A1B',
 };

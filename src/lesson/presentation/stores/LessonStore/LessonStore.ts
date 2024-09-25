@@ -25,6 +25,8 @@ import GetTopRankingUseCase from 'src/lesson/application/useCases/GetTopRankingU
 import {TRAINING_COUNT} from 'src/core/domain/enums/ModuleE';
 import {persist, create} from 'mobx-persist';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import ChangeChildPointFlowerUsecase from 'src/authentication/application/useCases/ChangeChildPointFlowerUsecase';
+import {ChangeChildPointFlowerPayload} from 'src/authentication/application/types/ChangeChildPointFlowerPayload';
 
 @injectable()
 export class LessonStore {
@@ -52,6 +54,8 @@ export class LessonStore {
     | {lessonId: string; questionIndex: number; activeTaskIndex: number}
     | undefined;
 
+  @observable isShowHint = false;
+
   @persist @observable backgroundSound = 0.8;
   @persist @observable charSound = 0.3;
 
@@ -68,6 +72,8 @@ export class LessonStore {
     private postUserProgressUseCase: PostUserProgressUseCase,
     @provided(GetUserSettingUseCase)
     private getUserSettingUserCase: GetUserSettingUseCase,
+    @provided(ChangeChildPointFlowerUsecase)
+    private changeChildPointFlowerUseCase: ChangeChildPointFlowerUsecase,
   ) {
     makeAutoObservable(this);
     this.bottomSheetAppsRef = React.createRef<BottomSheet>();
@@ -292,6 +298,19 @@ export class LessonStore {
       );
     }
   }
+
+  @action
+  public async changeChildrenPointFlower(data: ChangeChildPointFlowerPayload) {
+    this.isLoadingUserSetting = true;
+    const response = await this.changeChildPointFlowerUseCase.execute(data);
+    this.isLoadingUserSetting = false;
+    return response;
+  }
+
+  @action
+  toggleUseHint = () => {
+    this.isShowHint = !this.isShowHint;
+  };
 }
 
 export const hydrate = create({

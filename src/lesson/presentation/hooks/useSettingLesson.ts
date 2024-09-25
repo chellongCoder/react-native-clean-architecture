@@ -16,6 +16,8 @@ import Env, {EnvToken} from 'src/core/domain/entities/Env';
 import {VolumeManager} from 'react-native-volume-manager';
 import {useLessonStore} from '../stores/LessonStore/useGetPostsStore';
 import {useAsyncEffect} from 'src/core/presentation/hooks';
+import useAuthenticationStore from 'src/authentication/presentation/stores/useAuthenticationStore';
+import Toast from 'react-native-toast-message';
 
 type Props = {
   countDownTime: number;
@@ -31,6 +33,7 @@ export const useSettingLesson = ({
   onSubmit,
 }: Props) => {
   const lessonStore = useLessonStore();
+  const authStore = useAuthenticationStore();
   const {playSound} = useContext(SoundGlobalContext);
   const [isAnswerCorrect, setIsAnswerCorrect] = useState(false);
   const [isShowCorrectContainer, setIsShowCorrectContainer] = useState(false);
@@ -100,6 +103,20 @@ export const useSettingLesson = ({
     }
   }, [isSubmitting, onCheckAnswer, onSubmit, resetLearning, resetTesting]);
 
+  const toggleShowHint = useCallback(() => {
+    if (
+      authStore.selectedChild?.adsPoints &&
+      authStore.selectedChild?.adsPoints > 0
+    ) {
+      lessonStore.toggleUseHint();
+    } else {
+      Toast.show({
+        type: 'info',
+        text1:
+          'Bạn không đủ hoa hướng dương! Hãy xem Quảng Cáo nhiều hơn nhé! :(',
+      });
+    }
+  }, [authStore.selectedChild?.adsPoints, lessonStore]);
   /**
    * bắt đầu start count down 5s
    */
@@ -165,5 +182,7 @@ export const useSettingLesson = ({
     isAnswerCorrect,
     isShowCorrectContainer,
     env,
+    toggleShowHint,
+    isShowHint: lessonStore.isShowHint,
   };
 };
