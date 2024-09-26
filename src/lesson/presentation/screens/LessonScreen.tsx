@@ -98,7 +98,6 @@ const LessonScreen = observer(() => {
     currentQuestion,
     isShowHint,
     toggleUseHint,
-    changeChildrenPointFlower,
   } = useLessonStore();
   const lessonStore = lessonModuleContainer.getProvided(LessonStore);
 
@@ -114,7 +113,8 @@ const LessonScreen = observer(() => {
   }, [apiTasks]);
 
   const [activeTaskIndex, setActiveTaskIndex] = useState(0);
-  const {selectedChild} = useAuthenticationStore();
+  const {selectedChild, getUserProfile, setSelectedChild} =
+    useAuthenticationStore();
   const {playSound, pauseSound, loopSound} = useContext(SoundGlobalContext);
 
   const [lessonIndex, setLessonIndex] = useState(0);
@@ -355,16 +355,26 @@ const LessonScreen = observer(() => {
       try {
         await lessonStore.changeChildrenPointFlower({
           childId: selectedChild?._id ?? '',
-          point: -1,
+          point: -2,
         });
+        const profile = await getUserProfile();
+        const currentChild = profile.data.children.find(
+          child => selectedChild?._id === child._id,
+        );
+
+        if (currentChild) {
+          setSelectedChild(currentChild);
+        }
       } catch (error) {}
     }
 
     vowelRef.current?.onChoiceCorrectedAnswer();
   }, [
+    getUserProfile,
     lessonStore,
     selectedChild?._id,
     selectedChild?.adsPoints,
+    setSelectedChild,
     toggleUseHint,
   ]);
 

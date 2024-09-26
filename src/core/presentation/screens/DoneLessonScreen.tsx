@@ -6,6 +6,7 @@ import React, {
   Alert,
   Image,
   ImageBackground,
+  BackHandler,
 } from 'react-native';
 import useGlobalStyle from '../hooks/useGlobalStyle';
 import ICStar from 'src/core/components/icons/ICStar';
@@ -156,6 +157,14 @@ const DoneLessonScreen = () => {
       onUnlockAppSetting();
     }
   }, [onUnlockAppSetting, route.isMiniTest]);
+
+  useEffect(() => {
+    const backHandler = BackHandler.addEventListener(
+      'hardwareBackPress',
+      () => true,
+    );
+    return () => backHandler.remove();
+  }, []);
 
   if (!isSuccess) {
     return (

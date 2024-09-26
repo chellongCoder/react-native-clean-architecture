@@ -112,8 +112,7 @@ export const useSettingLesson = ({
     } else {
       Toast.show({
         type: 'info',
-        text1:
-          'Bạn không đủ hoa hướng dương! Hãy xem Quảng Cáo nhiều hơn nhé! :(',
+        text1: 'you do not have enough points to use hint!',
       });
     }
   }, [authStore.selectedChild?.adsPoints, lessonStore]);
