@@ -121,13 +121,14 @@ const styles = StyleSheet.create({
   },
   wrapContent: {},
   decorate: {
-    opacity: 0.5,
     alignSelf: 'stretch',
     borderRadius: 999,
   },
   backgroundGradient: {
-    borderRadius: 16,
     flex: 1,
+    borderRadius: scale(10),
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   innerContainer: {
     flex: 1,
@@ -143,12 +144,11 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     flex: 1,
+    justifyContent: 'center',
   },
   title: {
-    ...CustomTextStyle.smallNormal,
     color: '#fbf8cc',
     textTransform: 'uppercase',
-    fontSize: TYPOGRAPHY.SIZE.h6,
     fontFamily: TYPOGRAPHY.FAMILY.SVNCherishMoment,
   },
 });

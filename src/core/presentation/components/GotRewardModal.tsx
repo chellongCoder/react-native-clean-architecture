@@ -45,7 +45,7 @@ const GotRewardModal = ({onWatchRewardAds, loadedAds}: Props) => {
           <Text style={styles.text}>
             Yayyyy !!! You got
             <Text style={styles.txtHint}> 1 sunflower. {'\n'}</Text>
-            You can use 3 sunflower seeds to hint 1 minitest question.
+            You can use 2 sunflower seeds to hint 1 minitest question.
           </Text>
         </View>
         <View style={styles.buttonContainer}>

@@ -107,7 +107,8 @@ const LessonScreen = observer(() => {
     return apiTasks.map(t => {
       return {
         ...t,
-        question: t.question.slice(0, 1),
+        // question: t.question.slice(0, 1),
+        question: t.question,
       };
     });
   }, [apiTasks]);

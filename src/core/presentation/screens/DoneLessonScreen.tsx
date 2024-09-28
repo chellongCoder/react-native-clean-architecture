@@ -64,7 +64,8 @@ const DoneLessonScreen = () => {
   const styleHook = useGlobalStyle();
   const lessonStore = lessonModuleContainer.getProvided(LessonStore);
 
-  const {deviceToken, selectedChild} = useAuthenticationStore();
+  const {deviceToken, selectedChild, getUserProfile, setSelectedChild} =
+    useAuthenticationStore();
   const [isShowWatchAds, setIsShowWatchAds] = useState(false);
   const [isShowGotReward, setIsShowGotReward] = useState(false);
   const [isShowOnBoard, setIsShowOnBoard] = useState(false);
@@ -72,7 +73,14 @@ const DoneLessonScreen = () => {
   useGetUserSetting(deviceToken, selectedChild?._id ?? '', lessonStore);
 
   const onEarnReward = useCallback(
-    (reward?: RewardedAdReward) => {
+    async (reward?: RewardedAdReward) => {
+      console.log(
+        '🛠 LOG: 🚀 --> ---------------------------------------------------🛠 LOG: 🚀 -->',
+      );
+      console.log('🛠 LOG: 🚀 --> ~ DoneLessonScreen ~ reward:', reward);
+      console.log(
+        '🛠 LOG: 🚀 --> ---------------------------------------------------🛠 LOG: 🚀 -->',
+      );
       setIsShowWatchAds(false);
       setIsShowGotReward(true);
       if (reward) {
@@ -80,9 +88,18 @@ const DoneLessonScreen = () => {
           childId: selectedChild?._id ?? '',
           point: 1,
         });
+
+        const profile = await getUserProfile();
+        const currentChild = profile.data.children.find(
+          child => selectedChild?._id === child._id,
+        );
+
+        if (currentChild) {
+          setSelectedChild(currentChild);
+        }
       }
     },
-    [lessonStore, selectedChild?._id],
+    [getUserProfile, lessonStore, selectedChild?._id, setSelectedChild],
   );
 
   const ggadsHook = useGGAdsMob({onEarnReward});
@@ -145,8 +162,12 @@ const DoneLessonScreen = () => {
   }, [lessonStore, route.isMiniTest]);
 
   const onNext = useCallback(() => {
+    if (route.isMiniTest) {
+      onSubmit();
+      return;
+    }
     setIsShowWatchAds(true);
-  }, []);
+  }, [onSubmit, route.isMiniTest]);
 
   const onWatchRewardAds = useCallback(() => {
     ggadsHook.showAds();
@@ -158,13 +179,13 @@ const DoneLessonScreen = () => {
     }
   }, [onUnlockAppSetting, route.isMiniTest]);
 
-  useEffect(() => {
-    const backHandler = BackHandler.addEventListener(
-      'hardwareBackPress',
-      () => true,
-    );
-    return () => backHandler.remove();
-  }, []);
+  // useEffect(() => {
+  //   const backHandler = BackHandler.addEventListener(
+  //     'hardwareBackPress',
+  //     () => true,
+  //   );
+  //   return () => backHandler.remove();
+  // }, []);
 
   if (!isSuccess) {
     return (
@@ -324,7 +345,7 @@ const DoneLessonScreen = () => {
           />
         </View>
       )}
-      {isShowGotReward && (
+      {isShowGotReward && !isShowOnBoard && (
         <TouchableOpacity
           activeOpacity={1}
           onPress={() => setIsShowWatchAds(false)}

@@ -7,11 +7,12 @@ import {
   RewardedAd,
   AdEventType,
   RewardedAdReward,
+  useRewardedInterstitialAd,
 } from 'react-native-google-mobile-ads';
 
 const adUnitId = __DEV__
   ? TestIds.REWARDED_INTERSTITIAL
-  : 'ca-app-pub-4704292500396201/2885520039';
+  : TestIds.REWARDED_INTERSTITIAL;
 
 type Props = {
   onEarnReward: (reward?: RewardedAdReward) => void;
@@ -25,6 +26,26 @@ export const useGGAdsMob = ({onEarnReward}: Props) => {
   console.log(
     '🛠 LOG: 🚀 --> ----------------------------------------------🛠 LOG: 🚀 -->',
   );
+  const {isLoaded, isClosed, load, show, isClicked, isEarnedReward, reward} =
+    useRewardedInterstitialAd(TestIds.REWARDED_INTERSTITIAL, {
+      requestNonPersonalizedAdsOnly: true,
+      keywords: ['parent', 'children', 'study'],
+      requestAgent: 'CoolAds',
+    });
+  console.log(
+    '🛠 LOG: 🚀 --> ------------------------------------------------------------------------🛠 LOG: 🚀 -->',
+  );
+  console.log(
+    '🛠 LOG: 🚀 --> ~ useGGAdsMob ~ isLoaded, isClosed, isEarnedReward:',
+    isLoaded,
+    isClosed,
+    isEarnedReward,
+    reward,
+  );
+  console.log(
+    '🛠 LOG: 🚀 --> ------------------------------------------------------------------------🛠 LOG: 🚀 -->',
+  );
+
   const rewarded = RewardedInterstitialAd.createForAdRequest(adUnitId, {
     keywords: ['parent', 'children', 'study'],
     requestNonPersonalizedAdsOnly: true,
@@ -32,54 +53,29 @@ export const useGGAdsMob = ({onEarnReward}: Props) => {
   });
 
   useEffect(() => {
-    const unsubscribeLoaded = rewarded.addAdEventListener(
-      RewardedAdEventType.LOADED,
-      () => {
-        setLoaded(true);
-      },
-    );
+    if (isClosed) {
+      rewarded.load();
+      setLoaded(false);
+      onEarnReward();
+    }
+  }, [isClosed, onEarnReward, rewarded]);
 
-    const unsubscribeClosed = rewarded.addAdEventListener(
-      AdEventType.CLOSED,
-      () => {
-        console.log(
-          '🛠 LOG: 🚀 --> ------------------------------------------------🛠 LOG: 🚀 -->',
-        );
-        console.log('🛠 LOG: 🚀 --> ~ useEffect ~ rewarded:', rewarded);
-        console.log(
-          '🛠 LOG: 🚀 --> ------------------------------------------------🛠 LOG: 🚀 -->',
-        );
+  useEffect(() => {
+    console.log('User earned reward of ', reward);
+    if (reward && isClosed) {
+      onEarnReward(reward);
+    }
+  }, [isClosed, onEarnReward, reward]);
 
-        rewarded.load();
-        setLoaded(false);
-        onEarnReward();
-      },
-    );
-    const unsubscribeEarned = rewarded.addAdEventListener(
-      RewardedAdEventType.EARNED_REWARD,
-      reward => {
-        console.log('User earned reward of ', reward);
-        onEarnReward(reward);
-      },
-    );
-
-    // Start loading the rewarded ad straight away
-    rewarded.load();
-
-    // Unsubscribe from events on unmount
-    return () => {
-      unsubscribeLoaded();
-      unsubscribeEarned();
-      unsubscribeClosed();
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [rewarded]);
+  useEffect(() => {
+    load();
+  }, [load]);
 
   const showAds = useCallback(() => {
-    rewarded.show();
-  }, [rewarded]);
+    show({immersiveModeEnabled: true});
+  }, [show]);
   return {
-    loaded,
+    loaded: isLoaded,
     showAds,
   };
 };
