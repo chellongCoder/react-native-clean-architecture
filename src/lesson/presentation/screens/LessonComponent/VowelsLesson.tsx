@@ -27,6 +27,7 @@ import {useLessonStore} from '../../stores/LessonStore/useGetPostsStore';
 import {useSettingLesson} from '../../hooks/useSettingLesson';
 import {useIsFocused} from '@react-navigation/native';
 import useAuthenticationStore from 'src/authentication/presentation/stores/useAuthenticationStore';
+import {observer} from 'mobx-react';
 
 type Props = {
   moduleIndex: number;
@@ -41,159 +42,181 @@ export type VowelsRef = {
   onChoiceCorrectedAnswer: () => void;
 };
 
-const VowelsLesson = forwardRef<VowelsRef, Props>(
-  (
-    {
-      moduleIndex,
-      nextModule,
-      totalModule,
-      lessonName,
-      moduleName,
-      firstMiniTestTask,
-    },
-    ref,
-  ) => {
-    const globalStyle = useGlobalStyle();
-
-    const {ttsSpeak} = useContext(TextToSpeechContext);
-    const focus = useIsFocused();
-
-    const [answerSelected, setAnswerSelected] = useState('');
-    const {trainingCount} = useLessonStore();
-    const {selectedChild} = useAuthenticationStore();
-
-    const {
-      isAnswerCorrect,
-      isShowCorrectContainer,
-      word,
-      env,
-      learningTimer,
-      submit,
-      toggleShowHint,
-    } = useSettingLesson({
-      countDownTime: trainingCount === 0 ? 0 : 5,
-      isCorrectAnswer:
-        answerSelected ===
-        firstMiniTestTask?.question?.[moduleIndex]?.correctAnswer,
-      onSubmit: () => {
-        setAnswerSelected('');
-        nextModule(answerSelected);
+const VowelsLesson = observer(
+  forwardRef<VowelsRef, Props>(
+    (
+      {
+        moduleIndex,
+        nextModule,
+        totalModule,
+        lessonName,
+        moduleName,
+        firstMiniTestTask,
       },
-      fullAnswer: firstMiniTestTask?.question?.[moduleIndex].fullAnswer,
-    });
+      ref,
+    ) => {
+      const globalStyle = useGlobalStyle();
 
-    const onSpeechText = useCallback(() => {
-      ttsSpeak?.(
-        firstMiniTestTask?.question?.[moduleIndex].fullAnswer
-          .toString()
-          .toLowerCase() ?? '',
-      );
-    }, [firstMiniTestTask?.question, moduleIndex, ttsSpeak]);
+      const {ttsSpeak} = useContext(TextToSpeechContext);
+      const focus = useIsFocused();
 
-    const opacity = useSharedValue(0);
-    const scaleS = useSharedValue(1);
+      const [answerSelected, setAnswerSelected] = useState('');
+      const {trainingCount} = useLessonStore();
 
-    useEffect(() => {
-      if (focus) {
-        // Check if the component is focused
-        const firstTimeout = setTimeout(() => {
-          onSpeechText();
+      const {selectedChild} = useAuthenticationStore();
 
-          const secondTimeout = setTimeout(() => {
-            onSpeechText();
-          }, 2500);
-
-          return () => clearTimeout(secondTimeout);
-        }, 1500);
-
-        return () => clearTimeout(firstTimeout);
-      }
-    }, [onSpeechText, focus]); // Added focus to the dependency array
-
-    useEffect(() => {
-      opacity.value = withTiming(0, {duration: 500}, () => {
-        opacity.value = withTiming(1, {duration: 500});
+      const {
+        isAnswerCorrect,
+        isShowCorrectContainer,
+        word,
+        env,
+        learningTimer,
+        submit,
+        toggleShowHint,
+        resetLearning,
+      } = useSettingLesson({
+        countDownTime: trainingCount <= 2 ? 0 : 5,
+        isCorrectAnswer:
+          answerSelected ===
+          firstMiniTestTask?.question?.[moduleIndex]?.correctAnswer,
+        onSubmit: () => {
+          setAnswerSelected('');
+          nextModule(answerSelected);
+        },
+        fullAnswer: firstMiniTestTask?.question?.[moduleIndex].fullAnswer,
       });
-      scaleS.value = withTiming(0, {duration: 500}, () => {
-        scaleS.value = withTiming(1, {
-          duration: 500,
-          easing: Easing.elastic(2),
-          reduceMotion: ReduceMotion.System,
-        });
-      });
-    }, [moduleIndex, opacity, scaleS]);
 
-    const animatedStyle = useAnimatedStyle(() => {
-      return {
-        opacity: opacity.value,
-        transform: [{scale: scaleS.value}],
-      };
-    });
-
-    useImperativeHandle(ref, () => ({
-      onChoiceCorrectedAnswer: () => {
-        setAnswerSelected(
-          firstMiniTestTask?.question?.[moduleIndex]?.correctAnswer ?? '',
+      const onSpeechText = useCallback(() => {
+        ttsSpeak?.(
+          firstMiniTestTask?.question?.[moduleIndex].fullAnswer
+            .toString()
+            .toLowerCase() ?? '',
         );
-      },
-    }));
+      }, [firstMiniTestTask?.question, moduleIndex, ttsSpeak]);
 
-    return (
-      <LessonComponent
-        lessonName={lessonName}
-        module={moduleName}
-        part={firstMiniTestTask?.name}
-        backgroundColor="#66c270"
-        backgroundAnswerColor="#DDF598"
-        price="Free"
-        score={selectedChild?.adsPoints}
-        isAnswerCorrect={isAnswerCorrect}
-        isShowCorrectContainer={isShowCorrectContainer}
-        onPressFlower={toggleShowHint}
-        buildQuestion={
-          <View>
-            <Text style={[styles.fonts_SVN_Cherish, styles.textQuestion]}>
-              {word}
-            </Text>
-            <Animated.Image
-              resizeMode={'contain'}
-              width={WIDTH_SCREEN}
-              height={scale(200)}
-              style={[{}, animatedStyle]}
-              source={{
-                uri:
-                  env.IMAGE_QUESTION_BASE_API_URL +
-                  firstMiniTestTask?.question?.[moduleIndex].image,
-              }}
-            />
-          </View>
+      const opacity = useSharedValue(0);
+      const scaleS = useSharedValue(1);
+
+      useEffect(() => {
+        if (trainingCount > 0) {
+          resetLearning();
         }
-        buildAnswer={
-          <View style={styles.fill}>
-            <View style={styles.wrapHeaderContainer}>
-              <View
-                style={{
-                  justifyContent: 'center',
-                  flex: 1,
-                }}>
-                <Text style={[globalStyle.txtLabel, styles.textColor]}>
-                  Choose the correct answer
-                </Text>
-              </View>
+      }, [resetLearning, trainingCount]);
 
-              <TouchableOpacity onPress={onSpeechText}>
-                <Image
-                  source={require('../../../../../assets/images/icon_speech.png')}
-                  style={styles.iconImageContainer}
-                />
-              </TouchableOpacity>
+      useEffect(() => {
+        if (focus) {
+          // Check if the component is focused
+          const firstTimeout = setTimeout(() => {
+            onSpeechText();
+
+            const secondTimeout = setTimeout(() => {
+              onSpeechText();
+            }, 2500);
+
+            return () => clearTimeout(secondTimeout);
+          }, 1500);
+
+          return () => clearTimeout(firstTimeout);
+        }
+      }, [onSpeechText, focus]); // Added focus to the dependency array
+
+      useEffect(() => {
+        opacity.value = withTiming(0, {duration: 500}, () => {
+          opacity.value = withTiming(1, {duration: 500});
+        });
+        scaleS.value = withTiming(0, {duration: 500}, () => {
+          scaleS.value = withTiming(1, {
+            duration: 500,
+            easing: Easing.elastic(2),
+            reduceMotion: ReduceMotion.System,
+          });
+        });
+      }, [moduleIndex, opacity, scaleS]);
+
+      const animatedStyle = useAnimatedStyle(() => {
+        return {
+          opacity: opacity.value,
+          transform: [{scale: scaleS.value}],
+        };
+      });
+
+      useImperativeHandle(ref, () => ({
+        onChoiceCorrectedAnswer: () => {
+          setAnswerSelected(
+            firstMiniTestTask?.question?.[moduleIndex]?.correctAnswer ?? '',
+          );
+        },
+      }));
+
+      return (
+        <LessonComponent
+          lessonName={lessonName}
+          module={moduleName}
+          part={firstMiniTestTask?.name}
+          backgroundColor="#66c270"
+          backgroundAnswerColor="#DDF598"
+          price="Free"
+          score={selectedChild?.adsPoints}
+          isAnswerCorrect={isAnswerCorrect}
+          isShowCorrectContainer={isShowCorrectContainer}
+          onPressFlower={toggleShowHint}
+          buildQuestion={
+            <View>
+              <Text style={[styles.fonts_SVN_Cherish, styles.textQuestion]}>
+                {word}
+              </Text>
+              <Animated.Image
+                resizeMode={'contain'}
+                width={WIDTH_SCREEN}
+                height={scale(200)}
+                style={[{}, animatedStyle]}
+                source={{
+                  uri:
+                    env.IMAGE_QUESTION_BASE_API_URL +
+                    firstMiniTestTask?.question?.[moduleIndex].image,
+                }}
+              />
             </View>
-            <View style={[styles.boxSelected]}>
-              <View style={styles.wrapCharContainer}>
-                {firstMiniTestTask?.question?.[moduleIndex]?.content
-                  .split('')
-                  .map(char => {
-                    if (char === '_' && answerSelected) {
+          }
+          buildAnswer={
+            <View style={styles.fill}>
+              <View style={styles.wrapHeaderContainer}>
+                <View
+                  style={{
+                    justifyContent: 'center',
+                    flex: 1,
+                  }}>
+                  <Text style={[globalStyle.txtLabel, styles.textColor]}>
+                    Choose the correct answer
+                  </Text>
+                </View>
+
+                <TouchableOpacity onPress={onSpeechText}>
+                  <Image
+                    source={require('../../../../../assets/images/icon_speech.png')}
+                    style={styles.iconImageContainer}
+                  />
+                </TouchableOpacity>
+              </View>
+              <View style={[styles.boxSelected]}>
+                <View style={styles.wrapCharContainer}>
+                  {firstMiniTestTask?.question?.[moduleIndex]?.content
+                    .split('')
+                    .map(char => {
+                      if (char === '_' && answerSelected) {
+                        return (
+                          <Text
+                            style={[
+                              styles.fonts_SVN_Cherish,
+                              styles.textQuestion,
+                              styles.textGreen,
+                              styles.mt8,
+                              {textDecorationLine: 'underline'},
+                            ]}>
+                            {answerSelected}
+                          </Text>
+                        );
+                      }
                       return (
                         <Text
                           style={[
@@ -201,88 +224,76 @@ const VowelsLesson = forwardRef<VowelsRef, Props>(
                             styles.textQuestion,
                             styles.textGreen,
                             styles.mt8,
-                            {textDecorationLine: 'underline'},
                           ]}>
-                          {answerSelected}
+                          {char}
                         </Text>
                       );
-                    }
-                    return (
-                      <Text
-                        style={[
-                          styles.fonts_SVN_Cherish,
-                          styles.textQuestion,
-                          styles.textGreen,
-                          styles.mt8,
-                        ]}>
-                        {char}
-                      </Text>
-                    );
-                  })}
-              </View>
+                    })}
+                </View>
 
-              <View style={[styles.wapper, styles.fill]}>
-                {firstMiniTestTask?.question?.[moduleIndex]?.answers?.map(
-                  (e, i) => {
-                    const bg =
-                      e === answerSelected
-                        ? !isAnswerCorrect && isShowCorrectContainer
-                          ? '#F28759'
-                          : '#66C270'
-                        : '#F2B559';
-                    const length =
-                      firstMiniTestTask?.question?.[moduleIndex]?.answers
-                        ?.length ?? 2;
-                    const size = Math.min(
-                      (WIDTH_SCREEN - 80) / (length / 2),
-                      verticalScale(48),
-                    );
-                    return (
-                      <TouchableOpacity
-                        key={i}
-                        onPress={() => setAnswerSelected(e)}
-                        style={[
-                          styles.boxVowel,
-                          {
-                            backgroundColor: bg,
-                            height: size,
-                            width: size,
-                          },
-                        ]}>
-                        <Text style={[styles.textVowel]}>{e}</Text>
-                      </TouchableOpacity>
-                    );
-                  },
+                <View style={[styles.wapper, styles.fill]}>
+                  {firstMiniTestTask?.question?.[moduleIndex]?.answers?.map(
+                    (e, i) => {
+                      const bg =
+                        e === answerSelected
+                          ? !isAnswerCorrect && isShowCorrectContainer
+                            ? '#F28759'
+                            : '#66C270'
+                          : '#F2B559';
+                      const length =
+                        firstMiniTestTask?.question?.[moduleIndex]?.answers
+                          ?.length ?? 2;
+                      const size = Math.min(
+                        (WIDTH_SCREEN - 80) / (length / 2),
+                        verticalScale(48),
+                      );
+                      return (
+                        <TouchableOpacity
+                          key={i}
+                          onPress={() => setAnswerSelected(e)}
+                          style={[
+                            styles.boxVowel,
+                            {
+                              backgroundColor: bg,
+                              height: size,
+                              width: size,
+                            },
+                          ]}>
+                          <Text style={[styles.textVowel]}>{e}</Text>
+                        </TouchableOpacity>
+                      );
+                    },
+                  )}
+                </View>
+                {learningTimer !== 0 && (
+                  <View
+                    style={[
+                      styles.boxSelected,
+                      {
+                        position: 'absolute',
+                        zIndex: 999,
+                        width: '100%',
+                        opacity: 0.7,
+                        height: '100%',
+                      },
+                    ]}
+                  />
                 )}
               </View>
-              {learningTimer !== 0 && (
-                <View
-                  style={[
-                    styles.boxSelected,
-                    {
-                      position: 'absolute',
-                      zIndex: 999,
-                      width: '100%',
-                      opacity: 0.7,
-                      height: '100%',
-                    },
-                  ]}
-                />
-              )}
-            </View>
 
-            <PrimaryButton
-              text="Submit"
-              style={[styles.mt24]}
-              onPress={submit}
-            />
-          </View>
-        }
-        moduleIndex={moduleIndex}
-        totalModule={totalModule}
-      />
-    );
-  },
+              <PrimaryButton
+                text="Submit"
+                style={[styles.mt24]}
+                onPress={submit}
+              />
+            </View>
+          }
+          moduleIndex={moduleIndex}
+          totalModule={totalModule}
+        />
+      );
+    },
+  ),
 );
 
 export default VowelsLesson;

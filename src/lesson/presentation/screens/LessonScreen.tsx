@@ -107,8 +107,8 @@ const LessonScreen = observer(() => {
     return apiTasks.map(t => {
       return {
         ...t,
-        // question: t.question.slice(0, 1),
-        question: t.question,
+        question: t.question.slice(0, 1),
+        // question: t.question,
       };
     });
   }, [apiTasks]);
@@ -252,15 +252,15 @@ const LessonScreen = observer(() => {
       setLessonIndex(0); // * reset về câu 0
     },
     [
+      tasks,
       activeTaskIndex,
       firstMiniTestTask?.type,
-      route.lessonName,
-      route.moduleName,
-      setLessonState,
       setTrainingCount,
-      tasks,
-      testTask?.name,
       trainingCount,
+      route.moduleName,
+      route.lessonName,
+      testTask?.name,
+      setLessonState,
     ],
   );
 
@@ -412,6 +412,9 @@ const LessonScreen = observer(() => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeTaskIndex, lessonIndex]);
 
+  /**----------------------
+   *todo    Logic đi tới câu đã làm khi back lại
+   *------------------------**/
   useEffect(() => {
     if (currentQuestion && currentQuestion.lessonId === route.lessonId) {
       setActiveTaskIndex(currentQuestion.activeTaskIndex);
@@ -419,6 +422,7 @@ const LessonScreen = observer(() => {
     } else {
       setTrainingCount(TRAINING_COUNT); // * set lại TRANING COUNT về ban đàu
     }
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 

@@ -92,11 +92,13 @@ export const useSettingLesson = ({
       return;
     }
     setIsSubmitting(true);
+
     try {
-      await onCheckAnswer();
-      onSubmit?.();
       resetLearning();
       resetTesting();
+
+      await onCheckAnswer();
+      onSubmit?.();
       playSoundRef.current = false;
     } finally {
       setIsSubmitting(false);
