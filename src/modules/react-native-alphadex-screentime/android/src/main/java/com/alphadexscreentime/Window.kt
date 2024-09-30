@@ -15,9 +15,9 @@ import android.view.View
 import android.view.WindowManager
 import android.widget.Button
 import android.widget.TextView
-import com.andrognito.pinlockview.IndicatorDots
-import com.andrognito.pinlockview.PinLockListener
-import com.andrognito.pinlockview.PinLockView
+//import com.andrognito.pinlockview.IndicatorDots
+//import com.andrognito.pinlockview.PinLockListener
+//import com.andrognito.pinlockview.PinLockView
 
 class Window(
   private val context: Context
@@ -31,24 +31,24 @@ class Window(
   private val mWindowManager: WindowManager
   private val layoutInflater: LayoutInflater
 
-  private var mPinLockView: PinLockView? = null
-  private var mIndicatorDots: IndicatorDots? = null
-  private val mPinLockListener: PinLockListener = object : PinLockListener {
-
-    @SuppressLint("LogConditional")
-    override fun onComplete(pin: String) {
-      Log.d(PinCodeActivity.TAG, "Pin complete: $pin")
-      pinCode = pin
-      doneButton()
-    }
-
-    override fun onEmpty() {
-      Log.d(PinCodeActivity.TAG, "Pin empty")
-    }
-
-    @SuppressLint("LogConditional")
-    override fun onPinChange(pinLength: Int, intermediatePin: String) {}
-  }
+//  private var mPinLockView: PinLockView? = null
+//  private var mIndicatorDots: IndicatorDots? = null
+//  private val mPinLockListener: PinLockListener = object : PinLockListener {
+//
+//    @SuppressLint("LogConditional")
+//    override fun onComplete(pin: String) {
+//      Log.d(PinCodeActivity.TAG, "Pin complete: $pin")
+//      pinCode = pin
+//      doneButton()
+//    }
+//
+//    override fun onEmpty() {
+//      Log.d(PinCodeActivity.TAG, "Pin empty")
+//    }
+//
+//    @SuppressLint("LogConditional")
+//    override fun onPinChange(pinLength: Int, intermediatePin: String) {}
+//  }
 
   fun open() {
     try {
@@ -82,7 +82,7 @@ class Window(
 
   fun doneButton() {
     try {
-      mPinLockView!!.resetPinLockView()
+//      mPinLockView!!.resetPinLockView()
       val saveAppData: SharedPreferences = context.getSharedPreferences("save_app_data", Context.MODE_PRIVATE)
       val dta: String = saveAppData.getString("password", "PASSWORD")!!
       if(pinCode == "000000"){

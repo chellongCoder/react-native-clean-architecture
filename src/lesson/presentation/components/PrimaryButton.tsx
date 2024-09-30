@@ -30,12 +30,7 @@ const PrimaryButton = ({isLoading = false, ...props}: Props) => {
 
   return (
     <TouchableOpacity
-      style={[
-        styles.button,
-        {alignSelf: alignSelf},
-        props.style,
-        props.disable && {backgroundColor: COLORS.DISABLED},
-      ]}
+      style={[styles.button, {alignSelf: alignSelf}, props.style]}
       onPress={props.onPress}
       disabled={props.disable}>
       <Text style={[styles.text, commonStyle.txtButton, props.textStyle]}>

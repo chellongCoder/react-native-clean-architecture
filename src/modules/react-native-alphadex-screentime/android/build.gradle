@@ -3,7 +3,6 @@ buildscript {
   ext.kotlin_version = '1.7.10'
 
   repositories {
-    jcenter()
     google()
     mavenCentral()
   }
@@ -78,9 +77,20 @@ android {
 }
 
 repositories {
-  jcenter()
-  mavenCentral()
   google()
+  mavenCentral()
+  maven {
+    url = "https://repo1.maven.org/maven2/"
+  }
+  maven {
+    url "https://repo.spring.io/release"
+  }
+  maven {
+    url "https://repository.jboss.org/maven2"
+  }
+  maven {
+    url 'https://repo.jenkins-ci.org/public/'
+  }
 }
 
 
@@ -88,14 +98,14 @@ dependencies {
   // For < 0.71, this will be from the local maven repo
   // For > 0.71, this will be replaced by `com.facebook.react:react-android:$version` by react gradle plugin
   //noinspection GradleDynamicVersion
-  implementation "com.facebook.react:react-native:+"
+  implementation 'androidx.appcompat:appcompat:1.7.0'
+
+
+  implementation "com.facebook.react:react-native:0.20.1"
   implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-  implementation 'androidx.appcompat:appcompat:1.5.0'
-
-  implementation 'com.andrognito.pinlockview:pinlockview:2.1.0'
-  implementation 'com.github.mmin18:realtimeblurview:1.2.1'
-
   implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
+//  implementation 'com.andrognito.pinlockview:pinlockview:2.1.0'
+//  implementation 'com.github.mmin18:realtimeblurview:1.2.1'
 
 
 

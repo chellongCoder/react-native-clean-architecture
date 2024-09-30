@@ -199,6 +199,7 @@ const ItemPermission = observer(({lesson}: {lesson: LessonStore}) => {
             clearInterval(timeRef.current);
             lesson.onCloseSheetPermission();
           }}
+          disable={!isConfirm}
           text="Confirm"
           style={{
             borderRadius: scale(24),
