@@ -11,8 +11,9 @@ import {
   TextInputKeyPressEventData,
   Pressable,
 } from 'react-native';
-import React, {useRef, useState} from 'react';
+import React, {useCallback, useRef, useState} from 'react';
 import useGlobalStyle from 'src/core/presentation/hooks/useGlobalStyle';
+import {useFocusEffect} from '@react-navigation/native';
 
 type Props = {
   textInputProp?: TextInputProps;
@@ -102,6 +103,15 @@ export const CommonInputPassword = (props: Props) => {
     refs[index].current?.focus();
   };
 
+  useFocusEffect(
+    useCallback(() => {
+      if (props.autofocus) {
+        setTimeout(() => refs[0].current?.focus(), 100);
+      }
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [props.autofocus]),
+  );
+
   return (
     <View style={styles.pb32}>
       <Text style={[commonStyle.txtLabel, styles.txtLabel]}>{props.label}</Text>
@@ -121,7 +131,7 @@ export const CommonInputPassword = (props: Props) => {
                   maxLength={1}
                   onKeyPress={e => handleKeyPress(e, i)}
                   secureTextEntry
-                  autoFocus={props.autofocus && i === 0}
+                  // autoFocus={props.autofocus && i === 0}
                   keyboardType={'number-pad'}
                 />
               </View>
