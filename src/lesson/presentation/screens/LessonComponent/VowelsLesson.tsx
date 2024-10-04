@@ -97,11 +97,13 @@ const VowelsLesson = observer(
       const opacity = useSharedValue(0);
       const scaleS = useSharedValue(1);
 
+      /**
+       * * reset lại countdown khi lần làm thay đổi
+       */
       useEffect(() => {
-        if (trainingCount > 0) {
-          resetLearning();
-        }
-      }, [resetLearning, trainingCount]);
+        resetLearning();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+      }, [trainingCount]);
 
       useEffect(() => {
         if (focus) {

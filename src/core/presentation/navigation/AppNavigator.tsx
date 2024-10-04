@@ -19,6 +19,7 @@ import ParentScreen from 'src/lesson/presentation/screens/ParentScreen';
 import AuthParentScreen from 'src/lesson/presentation/screens/AuthParentScreen';
 import HomeScreen from 'src/home/presentation/screens/HomeScreen';
 import SubjectScreen from 'src/home/presentation/screens/SubjectScreen';
+import GoogleAdmobWapper from '../screens/GoogleAdmobWapper';
 
 const AuthStack = createStackNavigator();
 const HomeStack = createStackNavigator();
@@ -140,7 +141,7 @@ export const HomeStackScreens = (): React.ReactElement => {
       <HomeStack.Screen
         name={STACK_NAVIGATOR.HOME.DONE_LESSON_SCREEN}
         key={STACK_NAVIGATOR.HOME.DONE_LESSON_SCREEN}
-        component={DoneLessonScreen}
+        component={GoogleAdmobWapper}
         listeners={({navigation: navBottom}) => ({
           focus: () => {
             hideBottomTab(navBottom);

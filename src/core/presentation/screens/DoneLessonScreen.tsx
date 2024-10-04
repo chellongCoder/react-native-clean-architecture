@@ -7,6 +7,7 @@ import React, {
   Image,
   ImageBackground,
   BackHandler,
+  ActivityIndicator,
 } from 'react-native';
 import useGlobalStyle from '../hooks/useGlobalStyle';
 import ICStar from 'src/core/components/icons/ICStar';
@@ -34,11 +35,12 @@ import {useCallback, useEffect, useMemo, useState} from 'react';
 import OnBoardingMinitestScreen from './OnBoardingMinitestScreen';
 import Animated, {Easing, FadeIn} from 'react-native-reanimated';
 import {TRAINING_COUNT} from 'src/core/domain/enums/ModuleE';
-import WatchAdsModal from '../components/WatchAdsModal';
-import {useGGAdsMob} from 'src/hooks/useGGAdsMob';
+
 import {RewardedAdReward} from 'react-native-google-mobile-ads';
 import GotRewardModal from '../components/GotRewardModal';
 import WatchAddScreen from '../components/WatchAddScreen';
+import {useGoogleAdsmob} from '../hooks/ggads/useGoogleAdsmob';
+import {GoogleAdsmobProvider} from '../hooks/ggads/GoogleAdsmobProvider';
 
 export type RouteParamsDone = {
   totalResult: TResult[];
@@ -54,7 +56,7 @@ export type RouteParamsDone = {
   partName?: string;
 };
 
-const DoneLessonScreen = () => {
+const DoneLessonScreen = ({}) => {
   const route = useRoute<RouteProp<{param: RouteParamsDone}>>()?.params;
 
   const totalResultLength = route.totalResult?.length || 0;
@@ -71,16 +73,10 @@ const DoneLessonScreen = () => {
   const [isShowOnBoard, setIsShowOnBoard] = useState(false);
 
   useGetUserSetting(deviceToken, selectedChild?._id ?? '', lessonStore);
+  const ggadsHook = useGoogleAdsmob();
 
   const onEarnReward = useCallback(
     async (reward?: RewardedAdReward) => {
-      console.log(
-        '🛠 LOG: 🚀 --> ---------------------------------------------------🛠 LOG: 🚀 -->',
-      );
-      console.log('🛠 LOG: 🚀 --> ~ DoneLessonScreen ~ reward:', reward);
-      console.log(
-        '🛠 LOG: 🚀 --> ---------------------------------------------------🛠 LOG: 🚀 -->',
-      );
       setIsShowWatchAds(false);
       setIsShowGotReward(true);
       if (reward) {
@@ -102,7 +98,11 @@ const DoneLessonScreen = () => {
     [getUserProfile, lessonStore, selectedChild?._id, setSelectedChild],
   );
 
-  const ggadsHook = useGGAdsMob({onEarnReward});
+  useEffect(() => {
+    if (ggadsHook.reward && ggadsHook.isClosed) {
+      onEarnReward?.(ggadsHook.reward);
+    }
+  }, [ggadsHook.isClosed, ggadsHook.reward, onEarnReward]);
 
   const isSuccess = useMemo(() => {
     if (route.isMiniTest) {
@@ -148,6 +148,7 @@ const DoneLessonScreen = () => {
     if (route.isMiniTest) {
       resetNavigator(STACK_NAVIGATOR.HOME.HOME_SCREEN);
       lessonStore.setTrainingCount(TRAINING_COUNT);
+      lessonStore.setCurrentQuestion(undefined);
     } else {
       if (lessonStore.trainingCount === 0) {
         // * nếu part tiếp theo là mini test thì show màn loading
@@ -161,16 +162,41 @@ const DoneLessonScreen = () => {
     }
   }, [lessonStore, route.isMiniTest]);
 
+  const onReceiveReward = useCallback(() => {
+    setIsShowGotReward(false);
+    onSubmit();
+  }, [onSubmit]);
+
+  console.log(
+    '🛠 LOG: 🚀 --> ---------------------------------------🛠 LOG: 🚀 -->',
+  );
+  console.log('🛠 LOG: 🚀 --> ~ onNext ~ route:', route);
+  console.log(
+    '🛠 LOG: 🚀 --> ---------------------------------------🛠 LOG: 🚀 -->',
+  );
+
   const onNext = useCallback(() => {
     if (route.isMiniTest) {
       onSubmit();
       return;
     }
+    console.log(
+      '🛠 LOG: 🚀 --> -----------------------------------------------🛠 LOG: 🚀 -->',
+    );
+    console.log('🛠 LOG: 🚀 --> ~ onNext ~ ggadsHook:', ggadsHook);
+    console.log(
+      '🛠 LOG: 🚀 --> -----------------------------------------------🛠 LOG: 🚀 -->',
+    );
+
+    if (ggadsHook.reward === undefined && !ggadsHook.loaded) {
+      onReceiveReward();
+      return;
+    }
     setIsShowWatchAds(true);
-  }, [onSubmit, route.isMiniTest]);
+  }, [ggadsHook, onReceiveReward, onSubmit, route.isMiniTest]);
 
   const onWatchRewardAds = useCallback(() => {
-    ggadsHook.showAds();
+    ggadsHook.showAds?.();
   }, [ggadsHook]);
 
   useEffect(() => {
@@ -248,125 +274,129 @@ const DoneLessonScreen = () => {
   }
 
   return (
-    <View style={styles.container}>
-      <ImageBackground
-        style={styles.titleContainer}
-        source={
-          typeof route.backgroundAndie === 'string'
-            ? {uri: route.backgroundAndie}
-            : route.backgroundAndie
-        }
-        resizeMode="cover">
-        <HeaderLesson
-          lessonName={route.lessonName}
-          module={route.moduleName}
-          part={route.partName}
-        />
-        <Text style={[styleHook.txtWord, styles.text]}>YAYYY !!!</Text>
-        <Image
+    <GoogleAdsmobProvider>
+      <View style={styles.container}>
+        <ImageBackground
+          style={styles.titleContainer}
           source={
-            typeof route.andieImage === 'string'
-              ? {uri: route.andieImage}
-              : route.andieImage
+            typeof route.backgroundAndie === 'string'
+              ? {uri: route.backgroundAndie}
+              : route.backgroundAndie
           }
-          style={{height: scale(200), width: scale(200)}}
-          resizeMode="contain"
-        />
-      </ImageBackground>
-      <BookView
-        style={styles.achievementContainer}
-        contentStyle={styles.content}
-        colorBg={route.colorBgBookView}
-        imageBackground={assets.bee_bg}>
-        <View style={styles.achievementContent}>
-          <View style={styles.backgroundStar}>
-            <Image
-              source={assets.achievement_icon_new}
-              resizeMode="contain"
-              style={{height: '100%', width: '100%'}}
+          resizeMode="cover">
+          <HeaderLesson
+            lessonName={route.lessonName}
+            module={route.moduleName}
+            part={route.partName}
+          />
+          <Text style={[styleHook.txtWord, styles.text]}>YAYYY !!!</Text>
+          <Image
+            source={
+              typeof route.andieImage === 'string'
+                ? {uri: route.andieImage}
+                : route.andieImage
+            }
+            style={{height: scale(200), width: scale(200)}}
+            resizeMode="contain"
+          />
+        </ImageBackground>
+        <BookView
+          style={styles.achievementContainer}
+          contentStyle={styles.content}
+          colorBg={route.colorBgBookView}
+          imageBackground={assets.bee_bg}>
+          <View style={styles.achievementContent}>
+            <View style={styles.backgroundStar}>
+              <Image
+                source={assets.achievement_icon_new}
+                resizeMode="contain"
+                style={{height: '100%', width: '100%'}}
+              />
+            </View>
+            <View style={styles.wrapperContent}>
+              <Text style={[styleHook.txtModule, styles.contentTitle]}>
+                {route.title} !!!
+              </Text>
+              <Text
+                style={[styleHook.txtNote, styles.contentDescription]}
+                textBreakStrategy="balanced">
+                Good job!!! Now let’s practice again{' '}
+                {route.countTime && (
+                  <Text style={[{fontFamily: FontFamily.Eina01Bold}]}>
+                    {route.countTime ?? ''} {'\n'}
+                  </Text>
+                )}
+                {route.note}
+              </Text>
+            </View>
+            {route.isMiniTest && (
+              <View style={styles.wrapStarContainer}>
+                <Image
+                  source={assets.untitled_artwork}
+                  style={styles.star}
+                  resizeMode="contain"
+                />
+                <Text style={styles.starText}>{0}</Text>
+              </View>
+            )}
+          </View>
+          <View style={styles.wrapperButton}>
+            <TouchableOpacity
+              disabled={ggadsHook.isFetching}
+              onPress={onNext}
+              style={styles.button}>
+              <Text style={[styleHook.txtButton, styles.textBtn]}>Next</Text>
+              {ggadsHook.isFetching && <ActivityIndicator />}
+            </TouchableOpacity>
+          </View>
+        </BookView>
+        {isShowOnBoard && (
+          <Animated.View
+            entering={FadeIn.duration(200).easing(Easing.ease)}
+            style={{
+              position: 'absolute',
+              zIndex: 999,
+              width: '100%',
+              height: '100%',
+            }}>
+            <OnBoardingMinitestScreen />
+          </Animated.View>
+        )}
+        {isShowWatchAds && (
+          <View
+            style={{
+              position: 'absolute',
+              zIndex: 999,
+              width: '100%',
+              height: '100%',
+            }}>
+            <WatchAddScreen
+              loadedAds={!!ggadsHook.loaded}
+              onWatchRewardAds={onWatchRewardAds}
             />
           </View>
-          <View style={styles.wrapperContent}>
-            <Text style={[styleHook.txtModule, styles.contentTitle]}>
-              {route.title} !!!
-            </Text>
-            <Text
-              style={[styleHook.txtNote, styles.contentDescription]}
-              textBreakStrategy="balanced">
-              Good job!!! Now let’s practice again{' '}
-              {route.countTime && (
-                <Text style={[{fontFamily: FontFamily.Eina01Bold}]}>
-                  {route.countTime ?? ''} {'\n'}
-                </Text>
-              )}
-              {route.note}
-            </Text>
-          </View>
-          {route.isMiniTest && (
-            <View style={styles.wrapStarContainer}>
-              <Image
-                source={assets.untitled_artwork}
-                style={styles.star}
-                resizeMode="contain"
-              />
-              <Text style={styles.starText}>{0}</Text>
-            </View>
-          )}
-        </View>
-        <View style={styles.wrapperButton}>
-          <TouchableOpacity onPress={onNext} style={styles.button}>
-            <Text style={[styleHook.txtButton, styles.textBtn]}>Next</Text>
+        )}
+        {isShowGotReward && !isShowOnBoard && (
+          <TouchableOpacity
+            activeOpacity={1}
+            onPress={() => setIsShowWatchAds(false)}
+            style={{
+              position: 'absolute',
+              zIndex: 999,
+              width: '100%',
+              height: '100%',
+            }}>
+            <GotRewardModal
+              loadedAds={!!ggadsHook.loaded}
+              onWatchRewardAds={onReceiveReward}
+            />
           </TouchableOpacity>
-        </View>
-      </BookView>
-      {isShowOnBoard && (
-        <Animated.View
-          entering={FadeIn.duration(200).easing(Easing.ease)}
-          style={{
-            position: 'absolute',
-            zIndex: 999,
-            width: '100%',
-            height: '100%',
-          }}>
-          <OnBoardingMinitestScreen />
-        </Animated.View>
-      )}
-      {isShowWatchAds && (
-        <View
-          style={{
-            position: 'absolute',
-            zIndex: 999,
-            width: '100%',
-            height: '100%',
-          }}>
-          <WatchAddScreen
-            loadedAds={ggadsHook.loaded}
-            onWatchRewardAds={onWatchRewardAds}
-          />
-        </View>
-      )}
-      {isShowGotReward && !isShowOnBoard && (
-        <TouchableOpacity
-          activeOpacity={1}
-          onPress={() => setIsShowWatchAds(false)}
-          style={{
-            position: 'absolute',
-            zIndex: 999,
-            width: '100%',
-            height: '100%',
-          }}>
-          <GotRewardModal
-            loadedAds={ggadsHook.loaded}
-            onWatchRewardAds={() => {
-              setIsShowGotReward(false);
-              onSubmit();
-            }}
-          />
-        </TouchableOpacity>
-      )}
-    </View>
+        )}
+      </View>
+    </GoogleAdsmobProvider>
   );
 };
+
 export default DoneLessonScreen;
 const styles = StyleSheet.create({
   container: {
@@ -499,6 +529,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 32,
     borderRadius: 32,
     alignSelf: 'center',
+    flexDirection: 'row',
+    justifyContent: 'center',
   },
   textBtn: {
     fontSize: 10,
