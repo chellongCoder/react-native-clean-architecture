@@ -4,6 +4,7 @@ import HttpClient from './infrastructure/implementations/HttpClient';
 import {IHttpClientToken} from './domain/specifications/IHttpClient';
 import {EnvToken} from './domain/entities/Env';
 import env from './infrastructure/env';
+import {IapStore} from './presentation/store/iapStore';
 
 @module({
   providers: [
@@ -17,6 +18,11 @@ import env from './infrastructure/env';
       isGlobal: true,
       provide: IHttpClientToken,
       useClass: HttpClient,
+    },
+    {
+      isGlobal: true,
+      useClass: IapStore,
+      scope: 'Singleton',
     },
   ],
 })

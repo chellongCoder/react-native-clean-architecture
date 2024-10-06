@@ -7,7 +7,13 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import React, {useCallback, useEffect, useMemo, useState} from 'react';
+import React, {
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+} from 'react';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import useGlobalStyle from 'src/core/presentation/hooks/useGlobalStyle';
 import IconUser from 'assets/svg/IconUser';
@@ -67,6 +73,7 @@ import ListAppBottomSheet from '../components/ListAppBlock/ListAppBottomSheet';
 import Animated, {BounceIn, ReduceMotion} from 'react-native-reanimated';
 import CheckSelect from 'src/core/components/checkSelect/CheckSelect';
 import {VolumeManager} from 'react-native-volume-manager';
+import {IapContext} from 'src/core/presentation/store/iapContext';
 
 enum TabParentE {
   APP_BLOCK = 'App block',
@@ -101,6 +108,7 @@ const ParentScreen = observer(() => {
   const globalStyle = useGlobalStyle();
   const lesson = useLessonStore();
   const soundHook = useSoundBackgroundGlobal();
+  const {iapState, makePurchase} = useContext(IapContext);
 
   const {
     getUserProfile,
@@ -400,6 +408,12 @@ The blockAppsSystem function is an asynchronous function that awaits the result 
     [tabParent],
   );
 
+  const onPurchaseModule = () => {
+    // if (iapState.products && iapState.products[0].productId) {
+    //   makePurchase?.(iapState.products[0].productId);
+    // }
+  };
+
   useEffect(() => {
     handleGetUserProfile();
   }, [handleGetUserProfile]);
@@ -652,6 +666,7 @@ The blockAppsSystem function is an asynchronous function that awaits the result 
                 title={item.title}
                 description={item.description}
                 icon={assets.book}
+                onPress={onPurchaseModule}
               />
             ))}
           </View>

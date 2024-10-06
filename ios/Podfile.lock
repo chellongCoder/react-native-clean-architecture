@@ -1245,6 +1245,7 @@ PODS:
     - Google-Mobile-Ads-SDK (= 11.7.0)
     - GoogleUserMessagingPlatform (= 2.5.0)
     - RCT-Folly (= 2022.05.16.00)
+  - RNIap (12.15.3):
     - React-Core
   - RNKeychain (8.2.0):
     - React-Core
@@ -1368,6 +1369,7 @@ DEPENDENCIES:
   - RNDeviceInfo (from `../node_modules/react-native-device-info`)
   - RNGestureHandler (from `../node_modules/react-native-gesture-handler`)
   - RNGoogleMobileAds (from `../node_modules/react-native-google-mobile-ads`)
+  - RNIap (from `../node_modules/react-native-iap`)
   - RNKeychain (from `../node_modules/react-native-keychain`)
   - RNReanimated (from `../node_modules/react-native-reanimated`)
   - RNScreens (from `../node_modules/react-native-screens`)
@@ -1543,6 +1545,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-gesture-handler"
   RNGoogleMobileAds:
     :path: "../node_modules/react-native-google-mobile-ads"
+  RNIap:
+    :path: "../node_modules/react-native-iap"
   RNKeychain:
     :path: "../node_modules/react-native-keychain"
   RNReanimated:
@@ -1647,6 +1651,7 @@ SPEC CHECKSUMS:
   RNDeviceInfo: b899ce37a403a4dea52b7cb85e16e49c04a5b88e
   RNGestureHandler: 15c6ef51acba34c49ff03003806cf5dd6098f383
   RNGoogleMobileAds: f9959d58545ba76e51fc37c6d2e021df9ab38a82
+  RNIap: 76bb8783a92a6e6bd2ad7a1e91a8b2e75930db36
   RNKeychain: bfe3d12bf4620fe488771c414530bf16e88f3678
   RNReanimated: f6b02d8f5eaa2830296411d4ec3b8ef5442dd13d
   RNScreens: 17e2f657f1b09a71ec3c821368a04acbb7ebcb46

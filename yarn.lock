@@ -10407,6 +10407,10 @@ react-native-google-mobile-ads@^14.2.3:
   dependencies:
     "@iabtcf/core" "^1.5.3"
     use-deep-compare-effect "^1.8.1"
+react-native-iap@^12.15.3:
+  version "12.15.3"
+  resolved "https://registry.yarnpkg.com/react-native-iap/-/react-native-iap-12.15.3.tgz#f51d32d1777e9b16bd623be8ec9943d45b6c6d1c"
+  integrity sha512-lhw6Gz+f4yFxfYGHqO8MP/aRbUB0asqiMrfOFP1EedCgn8+5M/UK7QAlv1+hbsYYeBfFug0zkCImwCL7a8g4uA==
 
 react-native-keychain@^8.2.0:
   version "8.2.0"

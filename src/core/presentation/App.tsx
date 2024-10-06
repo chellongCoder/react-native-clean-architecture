@@ -19,6 +19,7 @@ import {LogBox, StatusBar} from 'react-native';
 import {SoundBackgroundGlobalProvider} from './hooks/sound/SoundBackgroundGlobalProvider';
 import {OfflineProvider} from './hooks/offline/OfflineProvider';
 import {TextToSpeechProvider} from './hooks/textToSpeech/TextToSpeechProvider';
+import {IapProvider} from './store/iapProvider';
 
 LogBox.ignoreLogs(['Warning: ...']); // Ignore log notification by message
 LogBox.ignoreAllLogs(); //Ignore all log notifications
@@ -62,8 +63,10 @@ const App = () => {
                 <SoundBackgroundGlobalProvider>
                   <TextToSpeechProvider>
                     <AuthenticationProvider>
-                      <RootNavigator />
-                      <Toast />
+                      <IapProvider>
+                        <RootNavigator />
+                        <Toast />
+                      </IapProvider>
                     </AuthenticationProvider>
                   </TextToSpeechProvider>
                 </SoundBackgroundGlobalProvider>
