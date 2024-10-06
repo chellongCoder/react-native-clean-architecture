@@ -31,6 +31,16 @@ class Window(
   private val mWindowManager: WindowManager
   private val layoutInflater: LayoutInflater
 
+  private var homeButtonListener: HomeButtonListener? = null
+
+  interface HomeButtonListener {
+      fun onHomeButtonPressed()
+  }
+
+  fun setHomeButtonListener(listener: HomeButtonListener) {
+      this.homeButtonListener = listener
+  }
+
 //  private var mPinLockView: PinLockView? = null
 //  private var mIndicatorDots: IndicatorDots? = null
 //  private val mPinLockListener: PinLockListener = object : PinLockListener {
@@ -85,7 +95,7 @@ class Window(
 //      mPinLockView!!.resetPinLockView()
       val saveAppData: SharedPreferences = context.getSharedPreferences("save_app_data", Context.MODE_PRIVATE)
       val dta: String = saveAppData.getString("password", "PASSWORD")!!
-      if(pinCode == "000000"){
+      if(pinCode == "00000"){
         println("$pinCode---------------pincode")
         close()
       }else{
@@ -125,11 +135,14 @@ class Window(
 //			 doneButton()
 //		}
 		btnClose!!.setOnClickListener {
-			val intent = Intent(Intent.ACTION_MAIN).apply {
-				addCategory(Intent.CATEGORY_HOME)
-				flags = Intent.FLAG_ACTIVITY_NEW_TASK
-			}
-			context.startActivity(intent)
+			 val intent = Intent(Intent.ACTION_MAIN).apply {
+			 	addCategory(Intent.CATEGORY_HOME)
+			 	flags = Intent.FLAG_ACTIVITY_NEW_TASK
+			 }
+			 context.startActivity(intent)
+//      close()
+//      homeButtonListener?.onHomeButtonPressed()
+
 		}
 
     val saveAppData: SharedPreferences = context.getSharedPreferences("save_app_data", Context.MODE_PRIVATE)

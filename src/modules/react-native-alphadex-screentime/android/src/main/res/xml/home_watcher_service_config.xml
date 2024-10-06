@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+  <accessibility-service xmlns:android="http://schemas.android.com/apk/res/android"
+    android:description="@string/alert_description"
+    android:packageNames="com.alphadex.tbd.app"
+    android:accessibilityEventTypes="typeWindowStateChanged"
+    android:canRetrieveWindowContent="true"
+    android:accessibilityFeedbackType="feedbackGeneric"
+    android:notificationTimeout="100"
+    android:accessibilityFlags="flagDefault" />
+</PreferenceScreen>

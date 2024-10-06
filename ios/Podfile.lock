@@ -1245,6 +1245,7 @@ PODS:
     - Google-Mobile-Ads-SDK (= 11.7.0)
     - GoogleUserMessagingPlatform (= 2.5.0)
     - RCT-Folly (= 2022.05.16.00)
+    - React-Core
   - RNIap (12.15.3):
     - React-Core
   - RNKeychain (8.2.0):
