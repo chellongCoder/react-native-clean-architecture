@@ -45,7 +45,6 @@ const LessonComponent = ({
   buildQuestion,
   moduleIndex,
   totalModule,
-  price = '',
   score = 0,
   isShowCorrectContainer,
   isAnswerCorrect,
@@ -132,7 +131,7 @@ const LessonComponent = ({
               )}
               {totalModule && (
                 <Text style={[styles.fonts_SVN_Cherish, {color: COLORS.WHITE}]}>
-                  +{totalModule - moduleIndex + 1}
+                  +{totalModule - moduleIndex}
                 </Text>
               )}
             </View>

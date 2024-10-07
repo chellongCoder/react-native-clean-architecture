@@ -107,8 +107,9 @@ const LessonScreen = observer(() => {
     return apiTasks.map(t => {
       return {
         ...t,
-        question: t.question.slice(0, 1),
-        // question: t.question,
+        // question: t.question.slice(0, 1),
+        // question: t.question.slice(0, 5),
+        question: t.question,
       };
     });
   }, [apiTasks]);
@@ -267,7 +268,7 @@ const LessonScreen = observer(() => {
   const nextModule = useCallback(
     (answerSelected: string) => {
       // * bỏ đi các khoảng trống ở câu trả lời
-      const finalAnswer = answerSelected.replaceAll(' ', '');
+      const finalAnswer = answerSelected.trim();
 
       // * check điều kiện là đang đến part mini test
       if (testTask?.type === firstMiniTestTask?.type) {

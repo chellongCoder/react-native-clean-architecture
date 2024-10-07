@@ -57,7 +57,7 @@ const EssayLesson = ({
   } = useSettingLesson({
     countDownTime: 5,
     isCorrectAnswer:
-      answerSelected?.replace(/\s+/g, '') ===
+      answerSelected ===
       firstMiniTestTask?.question?.[moduleIndex]?.correctAnswer,
     onSubmit: () => {
       setSelectedStack([]);
@@ -89,8 +89,13 @@ const EssayLesson = ({
 
   useEffect(() => {
     const content = firstMiniTestTask?.question?.[moduleIndex]?.content;
+
     if (content) {
-      setAnswerSelectedChars(content.split(''));
+      // First, remove single spaces between underscores
+      let modifiedContent = content.replace(/(?<=_)\s(?=_)/g, '');
+      // Then, reduce sequences of more than one space to a single space
+      modifiedContent = modifiedContent.replace(/\s{2,}/g, ' ');
+      setAnswerSelectedChars(modifiedContent.split(''));
     }
   }, [firstMiniTestTask?.question, moduleIndex]);
 
