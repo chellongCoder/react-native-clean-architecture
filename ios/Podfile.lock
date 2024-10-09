@@ -1062,6 +1062,8 @@ PODS:
     - React
     - React-callinvoker
     - React-Core
+  - react-native-voice (3.2.4):
+    - React-Core
   - react-native-volume-manager (1.10.0):
     - Mute
     - React-Core
@@ -1250,6 +1252,8 @@ PODS:
     - React-Core
   - RNKeychain (8.2.0):
     - React-Core
+  - RNPermissions (4.1.5):
+    - React-Core
   - RNReanimated (3.6.3):
     - glog
     - RCT-Folly (= 2022.05.16.00)
@@ -1345,6 +1349,7 @@ DEPENDENCIES:
   - "react-native-netinfo (from `../node_modules/@react-native-community/netinfo`)"
   - react-native-safe-area-context (from `../node_modules/react-native-safe-area-context`)
   - "react-native-skia (from `../node_modules/@shopify/react-native-skia`)"
+  - "react-native-voice (from `../node_modules/@react-native-voice/voice`)"
   - react-native-volume-manager (from `../node_modules/react-native-volume-manager`)
   - React-nativeconfig (from `../node_modules/react-native/ReactCommon`)
   - React-NativeModulesApple (from `../node_modules/react-native/ReactCommon/react/nativemodule/core/platform/ios`)
@@ -1372,6 +1377,7 @@ DEPENDENCIES:
   - RNGoogleMobileAds (from `../node_modules/react-native-google-mobile-ads`)
   - RNIap (from `../node_modules/react-native-iap`)
   - RNKeychain (from `../node_modules/react-native-keychain`)
+  - RNPermissions (from `../node_modules/react-native-permissions`)
   - RNReanimated (from `../node_modules/react-native-reanimated`)
   - RNScreens (from `../node_modules/react-native-screens`)
   - RNSound (from `../node_modules/react-native-sound`)
@@ -1496,6 +1502,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-safe-area-context"
   react-native-skia:
     :path: "../node_modules/@shopify/react-native-skia"
+  react-native-voice:
+    :path: "../node_modules/@react-native-voice/voice"
   react-native-volume-manager:
     :path: "../node_modules/react-native-volume-manager"
   React-nativeconfig:
@@ -1550,6 +1558,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-iap"
   RNKeychain:
     :path: "../node_modules/react-native-keychain"
+  RNPermissions:
+    :path: "../node_modules/react-native-permissions"
   RNReanimated:
     :path: "../node_modules/react-native-reanimated"
   RNScreens:
@@ -1627,6 +1637,7 @@ SPEC CHECKSUMS:
   react-native-netinfo: 076df4f9b07f6670acf4ce9a75aac8d34c2e2ccc
   react-native-safe-area-context: 0ee144a6170530ccc37a0fd9388e28d06f516a89
   react-native-skia: 6938bc9afbfaa3a335f53bd37a122fa1af9ea428
+  react-native-voice: f5e8eec2278451d0017eb6a30a6ccc726aca34e0
   react-native-volume-manager: 3c7d8047841b6831730dea7bf25250522388b4f4
   React-nativeconfig: b4d4e9901d4cabb57be63053fd2aa6086eb3c85f
   React-NativeModulesApple: cd26e56d56350e123da0c1e3e4c76cb58a05e1ee
@@ -1654,6 +1665,7 @@ SPEC CHECKSUMS:
   RNGoogleMobileAds: f9959d58545ba76e51fc37c6d2e021df9ab38a82
   RNIap: 76bb8783a92a6e6bd2ad7a1e91a8b2e75930db36
   RNKeychain: bfe3d12bf4620fe488771c414530bf16e88f3678
+  RNPermissions: 4264b7f2eeb0fae15cc6629316105d0b4f920231
   RNReanimated: f6b02d8f5eaa2830296411d4ec3b8ef5442dd13d
   RNScreens: 17e2f657f1b09a71ec3c821368a04acbb7ebcb46
   RNSound: 6c156f925295bdc83e8e422e7d8b38d33bc71852
@@ -1662,6 +1674,6 @@ SPEC CHECKSUMS:
   TextToSpeech: 2b930ec3756afde499061f4f01ea895e1f75dccb
   Yoga: 805bf71192903b20fc14babe48080582fee65a80
 
-PODFILE CHECKSUM: a634e31419aa0cf47cadfe5fdfa12d5ff533b1da
+PODFILE CHECKSUM: f3d2abad12452fcb6628a9b24fee8bfae46cfef8
 
 COCOAPODS: 1.15.2

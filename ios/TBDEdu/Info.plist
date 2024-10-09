@@ -43,6 +43,12 @@
 				</dict>
 			</dict>
 	</dict>
+	<key>NSAppleMusicUsageDescription</key>
+	<string>To select local pictures from library, and change your information photo in our application, allow us to access your Media</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>$(PRODUCT_NAME) would like to use your microphone (for searching)</string>
+	<key>NSSpeechRecognitionUsageDescription</key>
+	<string>$(PRODUCT_NAME) would like to recognize your speech (for searching)</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string></string>
 	<key>UIAppFonts</key>

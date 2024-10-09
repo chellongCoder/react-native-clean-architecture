@@ -54,6 +54,7 @@ export type RouteParamsDone = {
   moduleName?: string;
   lessonName?: string;
   partName?: string;
+  noMiniTest?: boolean;
 };
 
 const DoneLessonScreen = ({}) => {
@@ -145,10 +146,21 @@ const DoneLessonScreen = ({}) => {
   }, [isSuccess, lessonStore]);
 
   const onSubmit = useCallback(() => {
-    if (route.isMiniTest) {
+    if (route.noMiniTest) {
+      lessonStore.setTrainingCount(TRAINING_COUNT);
       resetNavigator(STACK_NAVIGATOR.HOME.HOME_SCREEN);
+
+      setTimeout(() => {
+        lessonStore.setCurrentQuestion(undefined);
+      }, 1000);
+      return;
+    }
+    if (route.isMiniTest) {
       lessonStore.setTrainingCount(TRAINING_COUNT);
       lessonStore.setCurrentQuestion(undefined);
+      setTimeout(() => {
+        resetNavigator(STACK_NAVIGATOR.HOME.HOME_SCREEN);
+      }, 0);
     } else {
       if (lessonStore.trainingCount === 0) {
         // * nếu part tiếp theo là mini test thì show màn loading
@@ -160,7 +172,7 @@ const DoneLessonScreen = ({}) => {
         goBack();
       }
     }
-  }, [lessonStore, route.isMiniTest]);
+  }, [lessonStore, route.isMiniTest, route.noMiniTest]);
 
   const onReceiveReward = useCallback(() => {
     setIsShowGotReward(false);
