@@ -40,17 +40,30 @@ import {TRAINING_COUNT} from 'src/core/domain/enums/ModuleE';
 import UseHintModal from 'src/core/presentation/components/UseHintModal';
 import {lessonModuleContainer} from 'src/lesson/LessonModule';
 import {LessonStore} from '../stores/LessonStore/LessonStore';
+import PronunciationLesson from './LessonComponent/PronunciationLesson';
 
 enum LessonTypeE {
-  ACHIEVEMENT,
-  WRITE,
-  VOCABULARY_LISTEN,
-  VOCABULARY_FILL_BLANK,
-  VOCABULARY_TRANSLATE,
-  GEOMETRY,
-  MATH,
+  TEXT = 'text',
+  CHOOSE_CORRECT_ANSWER = 'choose_correct_answer',
+  MULTIPLE_CHOICE = 'multiple_choice',
+  FILL_IN_BLANK = 'fill_in_blank',
+  TRUE_FALSE = 'true_false',
+  MATCHING = 'matching',
   ESSAY = 'essay',
-  VOWEL = 'fill_in_blank',
+  AUDIO = 'audio',
+  IMAGE = 'image',
+  VIDEO = 'video',
+  READING = 'reading',
+  LISTENING = 'listening',
+  SPEAKING = 'speaking',
+  GRAMMAR = 'grammar',
+  VOCABULARY = 'vocabulary',
+  READING_COMPREHENSION = 'reading_comprehension',
+  WRITING = 'writing',
+  CONVERSATION = 'conversation',
+  PRONUNCIATION = 'pronunciation',
+  TRANSLATION = 'translation',
+  EXPLANATION = 'explanation',
 }
 
 type LessonType = {
@@ -74,14 +87,21 @@ const LessonScreen = observer(() => {
   const vowelRef = useRef<VowelsRef>();
   const lessons: LessonType[] = [
     // {lessonType: LessonTypeE.ACHIEVEMENT},
-    {lessonType: LessonTypeE.VOWEL},
+    {lessonType: LessonTypeE.AUDIO},
     {lessonType: LessonTypeE.ESSAY},
-    {lessonType: LessonTypeE.WRITE},
-    {lessonType: LessonTypeE.VOCABULARY_LISTEN},
-    {lessonType: LessonTypeE.VOCABULARY_FILL_BLANK},
-    {lessonType: LessonTypeE.VOCABULARY_TRANSLATE},
-    {lessonType: LessonTypeE.GEOMETRY},
-    {lessonType: LessonTypeE.MATH},
+    {lessonType: LessonTypeE.CHOOSE_CORRECT_ANSWER},
+    {lessonType: LessonTypeE.CONVERSATION},
+    {lessonType: LessonTypeE.EXPLANATION},
+    {lessonType: LessonTypeE.FILL_IN_BLANK},
+    {lessonType: LessonTypeE.GRAMMAR},
+    {lessonType: LessonTypeE.PRONUNCIATION},
+    {lessonType: LessonTypeE.READING},
+    {lessonType: LessonTypeE.READING_COMPREHENSION},
+    {lessonType: LessonTypeE.SPEAKING},
+    {lessonType: LessonTypeE.TRANSLATION},
+    {lessonType: LessonTypeE.TRUE_FALSE},
+    {lessonType: LessonTypeE.VIDEO},
+    {lessonType: LessonTypeE.WRITING},
   ];
   const route =
     useRoute<
@@ -90,6 +110,8 @@ const LessonScreen = observer(() => {
         'Detail'
       >
     >().params;
+
+  const lessonStore = lessonModuleContainer.getProvided(LessonStore);
   const {
     handlePostUserProgress,
     setTrainingCount,
@@ -98,8 +120,7 @@ const LessonScreen = observer(() => {
     currentQuestion,
     isShowHint,
     toggleUseHint,
-  } = useLessonStore();
-  const lessonStore = lessonModuleContainer.getProvided(LessonStore);
+  } = lessonStore;
 
   const {tasks: apiTasks} = useListQuestions(route?.lessonId);
 
@@ -107,9 +128,9 @@ const LessonScreen = observer(() => {
     return apiTasks.map(t => {
       return {
         ...t,
-        // question: t.question.slice(0, 1),
+        question: t.question.slice(0, 1),
         // question: t.question.slice(0, 5),
-        question: t.question,
+        // question: t.question,
       };
     });
   }, [apiTasks]);
@@ -180,12 +201,26 @@ const LessonScreen = observer(() => {
 
   const nextPart = useCallback(
     (trainingResult: TResult[]) => {
+      console.log(
+        '🛠 LOG: 🚀 --> ---------------------------------------------------------------🛠 LOG: 🚀 -->',
+      );
+      console.log(
+        '🛠 LOG: 🚀 --> ~ LessonScreen ~ trainingResult:',
+        trainingResult,
+        tasks?.[activeTaskIndex + 1],
+      );
+      console.log(
+        '🛠 LOG: 🚀 --> ---------------------------------------------------------------🛠 LOG: 🚀 -->',
+      );
       /**-----------------------
        * todo      sang part tiếp theo
        *  nếu check ra part tiếp theo là mini test
        *  * trừ đi 1 lần làm
        *------------------------**/
-      if (tasks?.[activeTaskIndex + 1].type === firstMiniTestTask?.type) {
+      if (
+        tasks?.[activeTaskIndex + 1] === undefined ||
+        tasks?.[activeTaskIndex + 1].type === firstMiniTestTask?.type
+      ) {
         setTrainingCount(trainingCount - 1);
 
         /**-----------------------
@@ -206,6 +241,7 @@ const LessonScreen = observer(() => {
               moduleName: route.moduleName,
               lessonName: route.lessonName,
               partName: testTask?.name,
+              noMiniTest: !firstMiniTestTask,
             },
           );
           // * sang lần làm tiếp theo
@@ -255,7 +291,7 @@ const LessonScreen = observer(() => {
     [
       tasks,
       activeTaskIndex,
-      firstMiniTestTask?.type,
+      firstMiniTestTask,
       setTrainingCount,
       trainingCount,
       route.moduleName,
@@ -370,6 +406,7 @@ const LessonScreen = observer(() => {
       } catch (error) {}
     }
 
+    // * tự động chọn câu trả lời đúng
     vowelRef.current?.onChoiceCorrectedAnswer();
   }, [
     getUserProfile,
@@ -410,8 +447,7 @@ const LessonScreen = observer(() => {
         questionIndex: lessonIndex,
       });
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [activeTaskIndex, lessonIndex]);
+  }, [activeTaskIndex, lessonIndex, route.lessonId, setCurrentQuestion]);
 
   /**----------------------
    *todo    Logic đi tới câu đã làm khi back lại
@@ -429,14 +465,6 @@ const LessonScreen = observer(() => {
 
   const buildLesson = () => {
     switch (testTask?.question?.[lessonIndex]?.type as LessonTypeE) {
-      case LessonTypeE.ACHIEVEMENT:
-        return (
-          <AchievementLesson
-            moduleIndex={lessonIndex}
-            nextModule={nextModule}
-            totalModule={lessons.length}
-          />
-        );
       case LessonTypeE.ESSAY:
         return (
           <EssayLesson
@@ -448,7 +476,19 @@ const LessonScreen = observer(() => {
             firstMiniTestTask={testTask}
           />
         );
-      case LessonTypeE.VOWEL:
+      case LessonTypeE.PRONUNCIATION:
+        return (
+          <PronunciationLesson
+            moduleIndex={lessonIndex}
+            nextModule={nextModule}
+            totalModule={testTask?.question.length ?? 0}
+            lessonName={route.lessonName}
+            moduleName={route.moduleName}
+            firstMiniTestTask={testTask}
+            ref={vowelRef}
+          />
+        );
+      case LessonTypeE.FILL_IN_BLANK:
         return (
           <VowelsLesson
             moduleIndex={lessonIndex}
@@ -460,54 +500,64 @@ const LessonScreen = observer(() => {
             ref={vowelRef}
           />
         );
-      case LessonTypeE.WRITE:
-        return (
-          <WriteLesson
-            moduleIndex={lessonIndex}
-            nextModule={nextModule}
-            totalModule={lessons.length}
-          />
-        );
-      case LessonTypeE.VOCABULARY_LISTEN:
-        return (
-          <ListenLesson
-            moduleIndex={lessonIndex}
-            nextModule={nextModule}
-            totalModule={lessons.length}
-          />
-        );
-      case LessonTypeE.VOCABULARY_FILL_BLANK:
-        return (
-          <FillBlankLesson
-            moduleIndex={lessonIndex}
-            nextModule={nextModule}
-            totalModule={lessons.length}
-          />
-        );
-      case LessonTypeE.VOCABULARY_TRANSLATE:
-        return (
-          <TranslateLesson
-            moduleIndex={lessonIndex}
-            nextModule={nextModule}
-            totalModule={lessons.length}
-          />
-        );
-      case LessonTypeE.GEOMETRY:
-        return (
-          <GeometryLesson
-            moduleIndex={lessonIndex}
-            nextModule={nextModule}
-            totalModule={lessons.length}
-          />
-        );
-      case LessonTypeE.MATH:
-        return (
-          <MathLesson
-            moduleIndex={lessonIndex}
-            nextModule={nextModule}
-            totalModule={lessons.length}
-          />
-        );
+      // case LessonTypeE.ACHIEVEMENT:
+      //   return (
+      //     <AchievementLesson
+      //       moduleIndex={lessonIndex}
+      //       nextModule={nextModule}
+      //       totalModule={lessons.length}
+      //     />
+      //   );
+      // case LessonTypeE.WRITE:
+      //   return (
+      //     <WriteLesson
+      //       moduleIndex={lessonIndex}
+      //       nextModule={nextModule}
+      //       totalModule={lessons.length}
+      //     />
+      //   );
+      // case LessonTypeE.VOCABULARY_LISTEN:
+      //   return (
+      //     <ListenLesson
+      //       moduleIndex={lessonIndex}
+      //       nextModule={nextModule}
+      //       totalModule={lessons.length}
+      //     />
+      //   );
+      // case LessonTypeE.VOCABULARY_FILL_BLANK:
+      //   return (
+      //     <FillBlankLesson
+      //       moduleIndex={lessonIndex}
+      //       nextModule={nextModule}
+      //       totalModule={lessons.length}
+      //     />
+      //   );
+      // case LessonTypeE.VOCABULARY_TRANSLATE:
+      //   return (
+      //     <TranslateLesson
+      //       moduleIndex={lessonIndex}
+      //       nextModule={nextModule}
+      //       totalModule={lessons.length}
+      //     />
+      //   );
+      // case LessonTypeE.GEOMETRY:
+      //   return (
+      //     <GeometryLesson
+      //       moduleIndex={lessonIndex}
+      //       nextModule={nextModule}
+      //       totalModule={lessons.length}
+      //     />
+      //   );
+      // case LessonTypeE.MATH:
+      //   return (
+      //     <MathLesson
+      //       moduleIndex={lessonIndex}
+      //       nextModule={nextModule}
+      //       totalModule={lessons.length}
+      //     />
+      //   );
+      default:
+        return <></>;
     }
   };
 

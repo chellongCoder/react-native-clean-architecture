@@ -18,12 +18,13 @@ import {useLessonStore} from '../stores/LessonStore/useGetPostsStore';
 import {useAsyncEffect} from 'src/core/presentation/hooks';
 import useAuthenticationStore from 'src/authentication/presentation/stores/useAuthenticationStore';
 import Toast from 'react-native-toast-message';
+import {useSpeechToText} from './useSpeechToText';
 
 type Props = {
   countDownTime: number;
   fullAnswer?: string;
   isCorrectAnswer?: boolean;
-  onSubmit?: () => void;
+  onSubmit?: (speechResult?: string) => void;
 };
 
 export const useSettingLesson = ({
@@ -57,6 +58,21 @@ export const useSettingLesson = ({
 
   const playSoundRef = useRef<boolean>(false);
 
+  const {
+    startRecording,
+    onResultPress,
+    speechResult,
+    clearSpeechResult,
+    errorSpeech,
+  } = useSpeechToText();
+  console.log(
+    '🛠 LOG: 🚀 --> --------------------------------------------🛠 LOG: 🚀 -->',
+  );
+  console.log('🛠 LOG: 🚀 --> ~ speechResult:', speechResult);
+  console.log(
+    '🛠 LOG: 🚀 --> --------------------------------------------🛠 LOG: 🚀 -->',
+  );
+
   const word = useMemo(() => {
     if (learningTimer === 0) {
       //* nếu đếm 5 giây xong
@@ -69,6 +85,25 @@ export const useSettingLesson = ({
     return fullAnswer;
   }, [fullAnswer, learningTimer, time]);
 
+  /**
+   * Checks the correctness of the answer and provides feedback.
+   *
+   * This function evaluates whether the provided answer is correct and triggers appropriate sound feedback.
+   * It also manages the visibility of the correct answer container by showing it initially and hiding it after a delay.
+   * The function resolves a promise after the feedback delay, which can be used to chain further actions.
+   *
+   * @remarks
+   * - The function uses a Promise to handle asynchronous behavior, allowing actions to be chained after the answer check is complete.
+   * - It manipulates UI state (`isShowCorrectContainer` and `isAnswerCorrect`) to provide visual feedback.
+   * - Sound feedback is provided using `playSound` with different tracks depending on the answer's correctness.
+   * - The function assumes `isCorrectAnswer` is available in the scope to determine the correctness of the answer.
+   *
+   * @example
+   * // To check an answer and handle the result:
+   * onCheckAnswer().then(() => {
+   *   console.log('Answer checking complete');
+   * });
+   */
   const onCheckAnswer = useCallback(() => {
     return new Promise(resolve => {
       setIsShowCorrectContainer(true);
@@ -87,6 +122,37 @@ export const useSettingLesson = ({
     });
   }, [isCorrectAnswer, playSound]);
 
+  // * start record
+  const startRecord = useCallback(async () => {
+    console.log('start record');
+    await startRecording();
+  }, [startRecording]);
+
+  // * stop record
+  const stopRecord = useCallback(async () => {
+    console.log('stop record');
+    await onResultPress();
+  }, [onResultPress]);
+  /**
+   * Submits the current lesson's answer and handles the submission state.
+   *
+   * This function orchestrates the submission process for a lesson. It first checks if a submission is already in progress
+   * using the `isSubmitting` state. If not, it sets the submission state to true, resets the learning and testing timers,
+   * checks the answer, optionally calls a provided `onSubmit` callback, and resets the play sound flag.
+   * The submission state is always reset to false upon completion or failure.
+   *
+   * @remarks
+   * - The function is asynchronous and uses several hooks and external functions:
+   *   - `resetLearning` and `resetTesting` to reset timers.
+   *   - `onCheckAnswer` to validate the answer.
+   *   - `onSubmit` callback which might be provided externally.
+   * - It ensures that the submission process cannot be triggered multiple times concurrently by checking `isSubmitting`.
+   * - The `playSoundRef` is used to manage audio feedback state, ensuring it is reset after submission.
+   *
+   * @example
+   * // To submit an answer:
+   * submit();
+   */
   const submit = useCallback(async () => {
     if (isSubmitting) {
       return;
@@ -96,15 +162,40 @@ export const useSettingLesson = ({
     try {
       resetLearning();
       resetTesting();
-
+      stopRecord();
+      clearSpeechResult();
       await onCheckAnswer();
-      onSubmit?.();
+      onSubmit?.(speechResult);
       playSoundRef.current = false;
     } finally {
       setIsSubmitting(false);
     }
-  }, [isSubmitting, onCheckAnswer, onSubmit, resetLearning, resetTesting]);
+  }, [
+    clearSpeechResult,
+    isSubmitting,
+    onCheckAnswer,
+    onSubmit,
+    resetLearning,
+    resetTesting,
+    speechResult,
+    stopRecord,
+  ]);
 
+  /**
+   * Toggles the hint usage based on the availability of advertisement points.
+   *
+   * This function checks if the selected child in the authentication store has enough advertisement points to use a hint.
+   * If the child has sufficient points, it triggers the hint usage in the lesson store.
+   * If not, it displays an informational toast message indicating that there are not enough points to use the hint.
+   *
+   * @remarks
+   * This function relies on the `authStore` for checking the points and `lessonStore` for toggling the hint usage.
+   * It is important that the `authStore.selectedChild?.adsPoints` is properly updated elsewhere in the application to ensure correct behavior.
+   *
+   * @example
+   * // To attempt to toggle hint usage:
+   * toggleShowHint();
+   */
   const toggleShowHint = useCallback(() => {
     if (
       authStore.selectedChild?.adsPoints &&
@@ -118,6 +209,7 @@ export const useSettingLesson = ({
       });
     }
   }, [authStore.selectedChild?.adsPoints, lessonStore]);
+
   /**
    * bắt đầu start count down 5s
    */
@@ -185,5 +277,10 @@ export const useSettingLesson = ({
     env,
     toggleShowHint,
     isShowHint: lessonStore.isShowHint,
+    startRecord,
+    stopRecord,
+    speechResult,
+    errorSpeech,
+    clearSpeechResult,
   };
 };

@@ -32,4 +32,6 @@ export const assets = {
   background_dixie: require('assets/images/BACKGROUND_DIXIE.png'),
   watch_ads: require('assets/images/watch_ads.png'),
   authBackground: require('assets/images/authBackground.png'),
+  icon_speech: require('assets/images/icon_speech.png'),
+  icon_voice: require('assets/images/icon_voice.png'),
 };
