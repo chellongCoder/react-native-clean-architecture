@@ -174,10 +174,11 @@ export class LessonStore {
   };
 
   changeListAppSystem = async () => {
-    const apps = await getInstalledApps();
-
-    runInAction(() => {
-      this.listAppsSystem = [...apps];
+    getInstalledApps().then(apps => {
+      runInAction(() => {
+        this.listAppsSystem = [...apps];
+      });
+      return apps;
     });
   };
 

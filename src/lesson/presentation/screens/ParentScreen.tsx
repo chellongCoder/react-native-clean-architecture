@@ -418,15 +418,11 @@ The blockAppsSystem function is an asynchronous function that awaits the result 
     handleGetUserProfile();
   }, [handleGetUserProfile]);
 
-  // useAsyncEffect(async () => {
-  //   if (isAndroid) {
-  //     try {
-  //       await lesson.changeListAppSystem();
-  //     } catch (error) {
-  //     } finally {
-  //     }
-  //   }
-  // }, []);
+  useAsyncEffect(async () => {
+    if (isAndroid) {
+      lesson.changeListAppSystem();
+    }
+  }, []);
 
   useEffect(() => {
     setSelectedOption(listTabOptions?.[0]?.name ?? '');
