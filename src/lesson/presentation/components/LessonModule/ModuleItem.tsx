@@ -80,7 +80,9 @@ const ModuleItem = (props: Props) => {
             </Text>
           </TouchableOpacity>
           <View style={{height: verticalScale(4)}} />
-          <Text style={[styles.subtitle, globalStyle.txtNote]}>
+          <Text
+            numberOfLines={2}
+            style={[styles.subtitle, globalStyle.txtNote]}>
             {props.subTitle}
           </Text>
         </View>
