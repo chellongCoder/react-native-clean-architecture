@@ -80,9 +80,7 @@ const ModuleItem = (props: Props) => {
             </Text>
           </TouchableOpacity>
           <View style={{height: verticalScale(4)}} />
-          <Text
-            numberOfLines={2}
-            style={[styles.subtitle, globalStyle.txtNote]}>
+          <Text style={[styles.subtitle, globalStyle.txtNote]}>
             {props.subTitle}
           </Text>
         </View>
@@ -165,6 +163,7 @@ const styles = StyleSheet.create({
   },
   subtitle: {
     color: COLORS.GREEN_1C6349,
+    maxWidth: scale(120),
   },
   buttonContainer: {
     alignItems: 'center',

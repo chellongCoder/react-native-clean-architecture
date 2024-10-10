@@ -50,7 +50,10 @@ const ListModule = observer(() => {
                 totalQuestion={module.totalQuestion}
                 isFinished={module.progressOfChildren > 0}
                 title={module.name}
-                subTitle={module.description}
+                subTitle={module.tasks
+                  .map(item => item.description)
+                  .join('\n\n')
+                  .toString()}
                 id={module._id}
                 lessonName={selectedSubject?.name}
                 image={module.image}

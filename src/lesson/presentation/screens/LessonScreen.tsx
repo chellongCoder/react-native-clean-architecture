@@ -128,9 +128,9 @@ const LessonScreen = observer(() => {
     return apiTasks.map(t => {
       return {
         ...t,
-        question: t.question.slice(0, 1),
+        // question: t.question.slice(0, 1),
         // question: t.question.slice(0, 5),
-        // question: t.question,
+        question: t.question,
       };
     });
   }, [apiTasks]);
@@ -201,17 +201,6 @@ const LessonScreen = observer(() => {
 
   const nextPart = useCallback(
     (trainingResult: TResult[]) => {
-      console.log(
-        '🛠 LOG: 🚀 --> ---------------------------------------------------------------🛠 LOG: 🚀 -->',
-      );
-      console.log(
-        '🛠 LOG: 🚀 --> ~ LessonScreen ~ trainingResult:',
-        trainingResult,
-        tasks?.[activeTaskIndex + 1],
-      );
-      console.log(
-        '🛠 LOG: 🚀 --> ---------------------------------------------------------------🛠 LOG: 🚀 -->',
-      );
       /**-----------------------
        * todo      sang part tiếp theo
        *  nếu check ra part tiếp theo là mini test

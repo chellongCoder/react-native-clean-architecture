@@ -21,6 +21,7 @@ export interface Task {
   question: Question[];
   stt: number;
   type: 'training' | 'mini_test';
+  description: string;
 }
 export default interface GetListQuestionResponse {
   data: {

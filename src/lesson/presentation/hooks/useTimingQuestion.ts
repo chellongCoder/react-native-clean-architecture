@@ -1,8 +1,8 @@
 import {useEffect, useRef, useState} from 'react';
 import {useCountDown} from './useCountDown';
 
-export const useTimingQuestion = (isStart: boolean) => {
-  const {start, stop, time, reset} = useCountDown(10);
+export const useTimingQuestion = (isStart: boolean, totalTime?: number) => {
+  const {start, stop, time, reset} = useCountDown(totalTime ?? 10);
   const intervalRef = useRef<NodeJS.Timeout>();
   useEffect(() => {
     if (isStart) {

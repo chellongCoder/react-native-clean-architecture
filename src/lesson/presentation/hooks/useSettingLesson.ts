@@ -19,9 +19,11 @@ import {useAsyncEffect} from 'src/core/presentation/hooks';
 import useAuthenticationStore from 'src/authentication/presentation/stores/useAuthenticationStore';
 import Toast from 'react-native-toast-message';
 import {useSpeechToText} from './useSpeechToText';
+import {formatTimeMMSS} from 'src/core/presentation/utils';
 
 type Props = {
   countDownTime: number;
+  totalTime?: number;
   fullAnswer?: string;
   isCorrectAnswer?: boolean;
   onSubmit?: (speechResult?: string) => void;
@@ -29,6 +31,7 @@ type Props = {
 
 export const useSettingLesson = ({
   countDownTime,
+  totalTime,
   fullAnswer,
   isCorrectAnswer,
   onSubmit,
@@ -50,6 +53,7 @@ export const useSettingLesson = ({
 
   const {time, reset: resetTesting} = useTimingQuestion(
     focus && learningTimer === 0, // * nếu ở màn này, và đã hết time 5s học thì mới bắt đầu đếm 10s
+    totalTime,
   );
 
   const env = coreModuleContainer.getProvided<Env>(EnvToken); // Instantiate CoreService
@@ -65,20 +69,13 @@ export const useSettingLesson = ({
     clearSpeechResult,
     errorSpeech,
   } = useSpeechToText();
-  console.log(
-    '🛠 LOG: 🚀 --> --------------------------------------------🛠 LOG: 🚀 -->',
-  );
-  console.log('🛠 LOG: 🚀 --> ~ speechResult:', speechResult);
-  console.log(
-    '🛠 LOG: 🚀 --> --------------------------------------------🛠 LOG: 🚀 -->',
-  );
 
   const word = useMemo(() => {
     if (learningTimer === 0) {
       //* nếu đếm 5 giây xong
       if (time >= 0) {
         // * thì countdown 10 giây để trl
-        return `0:${time < 10 ? '0' + time : time}`;
+        return formatTimeMMSS(time);
       }
     }
     // * nếu đang ở tgian học thì hiển thị câu trl

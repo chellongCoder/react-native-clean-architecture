@@ -1,3 +1,5 @@
+import {Task} from './GetListQuestionResponse';
+
 export interface Module {
   _id: string;
   name: string;
@@ -8,6 +10,7 @@ export interface Module {
   totalQuestion: number;
   progressOfChildren: number;
   image: string;
+  tasks: Task[];
 }
 
 export default interface GetListLessonResponse {

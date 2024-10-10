@@ -111,6 +111,7 @@ const PronunciationLesson = observer(
           nextModule(answerSelected);
         },
         fullAnswer: firstMiniTestTask?.question?.[moduleIndex].fullAnswer,
+        totalTime: 5 * 60, // * tổng time làm 1câu
       });
 
       const scaleLP = useSharedValue(1);
@@ -266,14 +267,25 @@ const PronunciationLesson = observer(
               </View>
               <View style={[styles.boxSelected]}>
                 <View style={styles.wrapCharContainer}>
-                  <Text
-                    style={[
-                      styles.fonts_SVN_Cherish,
-                      styles.textQuestion,
-                      styles.textGreen,
-                    ]}>
-                    {speechResult}
-                  </Text>
+                  {isCorrectAnswer ? (
+                    <Text
+                      style={[
+                        styles.fonts_SVN_Cherish,
+                        styles.textQuestion,
+                        styles.textGreen,
+                      ]}>
+                      {speechResult}
+                    </Text>
+                  ) : (
+                    <Text
+                      style={[
+                        styles.fonts_EinaBold,
+                        styles.textQuestion,
+                        styles.textRed,
+                      ]}>
+                      {speechResult}
+                    </Text>
+                  )}
                 </View>
                 <GestureDetector gesture={longPressGesture}>
                   <Animated.View style={animatedStyleLongPress}>
@@ -334,6 +346,9 @@ const styles = StyleSheet.create({
   fonts_SVN_Cherish: {
     fontFamily: FontFamily.SVNCherishMoment,
   },
+  fonts_EinaBold: {
+    fontFamily: FontFamily.Eina01Bold,
+  },
   textColor: {
     color: '#1C6349',
   },
@@ -349,6 +364,9 @@ const styles = StyleSheet.create({
   },
   textGreen: {
     color: '#258F78',
+  },
+  textRed: {
+    color: COLORS.RED_E1460E,
   },
   txtWhite: {
     color: 'white',

@@ -39,4 +39,5 @@ export const COLORS = {
   PURPLE_BD7FF5: '#BD7FF5',
   GREEN_4CB572: '#4CB572',
   RED_AF3A1B: '#AF3A1B',
+  RED_E1460E: '#E1460E',
 };
