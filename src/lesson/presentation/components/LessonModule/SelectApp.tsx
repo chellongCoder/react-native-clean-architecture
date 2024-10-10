@@ -13,6 +13,7 @@ import {isAndroid} from 'src/core/presentation/utils';
 import {COLORS} from 'src/core/presentation/constants/colors';
 import {useAnimatedShake} from 'src/hooks/useAnimatedShake';
 import Animated from 'react-native-reanimated';
+import {useLessonStore} from '../../stores/LessonStore/useGetPostsStore';
 type Props = {
   appName: string;
   error?: string;
@@ -20,7 +21,7 @@ type Props = {
   onBlocked?: () => void;
 };
 const SelectApp = ({appName, error, childrenId, onBlocked}: Props) => {
-  const lesson = lessonModuleContainer.getProvided(LessonStore);
+  const lesson = useLessonStore();
   const globalStyle = useGlobalStyle();
   const {shake, rStyle} = useAnimatedShake();
   const shakeRef = useRef<NodeJS.Timeout>(null);

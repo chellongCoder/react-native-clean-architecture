@@ -2,7 +2,7 @@ import {useCallback, useEffect, useMemo, useState} from 'react';
 import {useFocusEffect} from '@react-navigation/native';
 
 export const useAuthParent = () => {
-  const [isShowAuth, setIsShowAuth] = useState(false);
+  const [isShowAuth, setIsShowAuth] = useState(true);
   useFocusEffect(
     useCallback(() => {
       console.log('ParentScreen is focused');
