@@ -1,5 +1,5 @@
 import {FlatList, Image} from 'react-native';
-import React, {memo, useMemo, useState} from 'react';
+import React, {memo, useCallback, useMemo, useState} from 'react';
 import {useLessonStore} from '../../stores/LessonStore/useGetPostsStore';
 import {observer} from 'mobx-react';
 import BottomSheetCustom from '../BottomSheet';
@@ -10,6 +10,12 @@ import ItemApps, {AppItem} from './ItemApps';
 const ListAppBottomSheet = observer(() => {
   const lesson = useLessonStore();
   const [apps, setApps] = useState<AppEntity[]>([]);
+
+  const [isSheetOpen, setSheetOpen] = useState(false);
+
+  const handleSheetChanges = useCallback((index: number) => {
+    setSheetOpen(index > 0);
+  }, []);
 
   const transformAppEntityToListItem = (appEntity: AppEntity): AppItem => {
     return {
@@ -32,6 +38,11 @@ const ListAppBottomSheet = observer(() => {
     [lesson.listAppsSystem],
   );
 
+  const listItemDisplay = useMemo(
+    () => (isSheetOpen ? listItem : listItem.slice(0, 12)),
+    [listItem, isSheetOpen],
+  );
+
   return (
     <>
       {lesson.bottomSheetAppsRef && (
@@ -40,12 +51,13 @@ const ListAppBottomSheet = observer(() => {
           ref={lesson.bottomSheetAppsRef}
           title="List Apps"
           backgroundColor={COLORS.BACKGROUND}
+          onChange={handleSheetChanges}
           onDone={() => {
             lesson.onCloseSheetApps();
             lesson.changeBlockedListAppSystem(apps);
           }}>
           <FlatList
-            data={listItem}
+            data={listItemDisplay}
             renderItem={({item}) => {
               const blockedApps = lesson.blockedListAppsSystem;
               const blockedApp = blockedApps.find(
@@ -73,6 +85,8 @@ const ListAppBottomSheet = observer(() => {
                 />
               );
             }}
+            initialNumToRender={10}
+            maxToRenderPerBatch={5}
             keyExtractor={(_, i) => i.toString()}
           />
         </BottomSheetCustom>
