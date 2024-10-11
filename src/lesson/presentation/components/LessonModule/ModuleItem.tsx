@@ -59,7 +59,7 @@ const ModuleItem = (props: Props) => {
 
   return !props.isFinished ? (
     <View style={[styles.container, {backgroundColor: COLORS.WHITE_FBF8CC}]}>
-      <View style={[globalStyle.rowCenter]}>
+      <View style={[globalStyle.rowCenter, {flex: 1}]}>
         <View
           style={[
             styles.iconContainer,
@@ -80,7 +80,9 @@ const ModuleItem = (props: Props) => {
             </Text>
           </TouchableOpacity>
           <View style={{height: verticalScale(4)}} />
-          <Text style={[styles.subtitle, globalStyle.txtNote]}>
+          <Text
+            numberOfLines={2}
+            style={[styles.subtitle, globalStyle.txtNote]}>
             {props.subTitle}
           </Text>
         </View>
@@ -156,10 +158,10 @@ const styles = StyleSheet.create({
   },
   textContainer: {
     flexDirection: 'column',
+    flex: 1,
   },
   title: {
     color: COLORS.GREEN_1C6349,
-    maxWidth: 100,
   },
   subtitle: {
     color: COLORS.GREEN_1C6349,
