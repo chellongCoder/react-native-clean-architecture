@@ -54,7 +54,9 @@ export const useSpeechToText = () => {
       partialResults: undefined,
     });
     try {
-      await Voice.start('en-US');
+      await Voice.start('en-US', {
+        EXTRA_SPEECH_INPUT_COMPLETE_SILENCE_LENGTH_MILLIS: 30000, //Extra time to recognize voice when no text change
+      });
     } catch (error) {
       console.log('error raised', error);
     }
