@@ -51,7 +51,7 @@ const ListModule = observer(() => {
                 isFinished={module.progressOfChildren > 0}
                 title={module.name}
                 subTitle={module.tasks
-                  .map(item => item.description)
+                  ?.map(item => item.description)
                   .join('\n\n')
                   .toString()}
                 id={module._id}

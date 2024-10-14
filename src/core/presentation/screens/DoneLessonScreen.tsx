@@ -99,12 +99,6 @@ const DoneLessonScreen = ({}) => {
     [getUserProfile, lessonStore, selectedChild?._id, setSelectedChild],
   );
 
-  useEffect(() => {
-    if (ggadsHook.reward && ggadsHook.isClosed) {
-      onEarnReward?.(ggadsHook.reward);
-    }
-  }, [ggadsHook.isClosed, ggadsHook.reward, onEarnReward]);
-
   const isSuccess = useMemo(() => {
     if (route.isMiniTest) {
       // * nếu check ra mini test
@@ -210,6 +204,29 @@ const DoneLessonScreen = ({}) => {
   const onWatchRewardAds = useCallback(() => {
     ggadsHook.showAds?.();
   }, [ggadsHook]);
+
+  useEffect(() => {
+    if (ggadsHook.reward && ggadsHook.isClosed && ggadsHook.isEarnedReward) {
+      onEarnReward?.(ggadsHook.reward);
+    }
+  }, [
+    ggadsHook.isClosed,
+    ggadsHook.isEarnedReward,
+    ggadsHook.reward,
+    onEarnReward,
+  ]);
+
+  useEffect(() => {
+    if (ggadsHook.reward && ggadsHook.isClosed && !ggadsHook.isEarnedReward) {
+      onSubmit();
+    }
+  }, [
+    ggadsHook.isClosed,
+    ggadsHook.isEarnedReward,
+    ggadsHook.reward,
+    onEarnReward,
+    onSubmit,
+  ]);
 
   useEffect(() => {
     if (route.isMiniTest) {

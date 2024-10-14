@@ -274,7 +274,7 @@ const PronunciationLesson = observer(
                         styles.textQuestion,
                         styles.textGreen,
                       ]}>
-                      {speechResult}
+                      {answerSelected}
                     </Text>
                   ) : (
                     <Text
@@ -283,7 +283,7 @@ const PronunciationLesson = observer(
                         styles.textQuestion,
                         styles.textRed,
                       ]}>
-                      {speechResult}
+                      {answerSelected}
                     </Text>
                   )}
                 </View>

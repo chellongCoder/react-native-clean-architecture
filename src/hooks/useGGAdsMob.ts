@@ -15,9 +15,7 @@ const adUnitId = __DEV__
   ? TestIds.REWARDED_INTERSTITIAL
   : TestIds.REWARDED_INTERSTITIAL;
 
-type Props = {
-  onEarnReward: (reward?: RewardedAdReward) => void;
-};
+type Props = {};
 export const useGGAdsMob = () => {
   const [loaded, setLoaded] = useState(false);
   console.log(
@@ -28,6 +26,9 @@ export const useGGAdsMob = () => {
     '🛠 LOG: 🚀 --> ----------------------------------------------🛠 LOG: 🚀 -->',
   );
 
+  const [adsId, setAdsId] = useState<string | null>(
+    TestIds.REWARDED_INTERSTITIAL,
+  );
   const {
     isLoaded,
     isClosed,
@@ -38,7 +39,9 @@ export const useGGAdsMob = () => {
     reward,
     error,
     isOpened,
-  } = useRewardedInterstitialAd(TestIds.REWARDED_INTERSTITIAL);
+  } = useRewardedInterstitialAd(adsId, {
+    requestNonPersonalizedAdsOnly: true,
+  });
   console.log(
     '🛠 LOG: 🚀 --> ------------------------------------------------------------------------🛠 LOG: 🚀 -->',
   );
@@ -57,17 +60,9 @@ export const useGGAdsMob = () => {
 
   useEffect(() => {
     if (isClosed) {
-      setLoaded(true);
-      load();
+      setAdsId(null);
     }
-  }, [isClosed, load, reward]);
-
-  // useEffect(() => {
-  //   console.log('User earned reward of ', reward);
-  //   if (reward && isClosed) {
-  //     onEarnReward.current?.(reward);
-  //   }
-  // }, [isClosed, onEarnReward, reward]);
+  }, [isClosed]);
 
   useEffect(() => {
     setLoaded(true);
