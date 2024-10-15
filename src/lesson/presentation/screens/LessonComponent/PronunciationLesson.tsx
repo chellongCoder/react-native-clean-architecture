@@ -22,6 +22,7 @@ import Animated, {
   runOnJS,
   useAnimatedStyle,
   useSharedValue,
+  withRepeat,
   withSpring,
   withTiming,
 } from 'react-native-reanimated';
@@ -32,6 +33,7 @@ import {useIsFocused} from '@react-navigation/native';
 import useAuthenticationStore from 'src/authentication/presentation/stores/useAuthenticationStore';
 import {observer} from 'mobx-react';
 import {Gesture, GestureDetector} from 'react-native-gesture-handler';
+import * as Haptics from 'expo-haptics';
 
 type Props = {
   moduleIndex: number;
@@ -101,6 +103,7 @@ const PronunciationLesson = observer(
         resetLearning,
         startRecord: handleStartRecord,
         stopRecord: handleStopRecord,
+        loadingRecord,
         speechResult,
         errorSpeech,
       } = useSettingLesson({
@@ -126,11 +129,23 @@ const PronunciationLesson = observer(
 
       const opacity = useSharedValue(0);
       const scaleS = useSharedValue(1);
+      // Inside your component
+      const scaleValue = useSharedValue(0.05); // Start from 0.05 times the size to scale from 10 to 200
+      const opacityValue = useSharedValue(1); // Start with full opacity
 
-      useEffect(() => {
-        setAnswerSelected(speechResult ?? '');
-      }, [speechResult]);
-
+      const animatedCircleStyle = useAnimatedStyle(() => {
+        return {
+          transform: [{scale: scaleValue.value}],
+          opacity: opacityValue.value,
+          width: 200, // Fixed width to scale to
+          height: 200, // Fixed height to scale to
+          borderRadius: 100, // Maintain circular shape
+          backgroundColor: COLORS.PRIMARY,
+          justifyContent: 'center',
+          alignItems: 'center',
+          position: 'absolute',
+        };
+      });
       useEffect(() => {
         if (errorSpeech) {
           scaleLP.value = withSpring(1);
@@ -143,23 +158,6 @@ const PronunciationLesson = observer(
         resetLearning();
         // eslint-disable-next-line react-hooks/exhaustive-deps
       }, [trainingCount]);
-
-      useEffect(() => {
-        if (focus) {
-          // Check if the component is focused
-          const firstTimeout = setTimeout(() => {
-            onSpeechText();
-
-            const secondTimeout = setTimeout(() => {
-              onSpeechText();
-            }, 2500);
-
-            return () => clearTimeout(secondTimeout);
-          }, 1500);
-
-          return () => clearTimeout(firstTimeout);
-        }
-      }, [onSpeechText, focus]); // Added focus to the dependency array
 
       useEffect(() => {
         opacity.value = withTiming(0, {duration: 500}, () => {
@@ -181,15 +179,52 @@ const PronunciationLesson = observer(
         };
       });
 
+      const startAnimationRecord = useCallback(() => {
+        scaleValue.value = withRepeat(
+          withTiming(1, {duration: 1000, easing: Easing.out(Easing.ease)}),
+          -1, // Repeat indefinitely
+          false, // Enable reverse mode
+        );
+        opacityValue.value = withRepeat(
+          withTiming(0, {duration: 1000, easing: Easing.linear}),
+          -1, // Repeat indefinitely
+          false, // Enable reverse mode
+        );
+      }, [opacityValue, scaleValue]);
+
+      const stopAnimationRecord = useCallback(() => {
+        // Stop the animations by setting the shared values to their initial states
+        scaleValue.value = 0.05; // Reset to initial scale
+        opacityValue.value = 1; // Reset to full opacity
+      }, [scaleValue, opacityValue]);
+
       const startRecord = useCallback(() => {
+        // Logs the initiation of the recording process to the console.
         console.log('start record');
-        handleStartRecord();
-      }, [handleStartRecord]);
+        Haptics.selectionAsync();
+        // Checks if there is no ongoing recording process (loadingRecord is false).
+        if (!loadingRecord) {
+          // Initiates the animation associated with recording. This could involve visual feedback like pulsing or scaling effects.
+          startAnimationRecord();
+
+          // Calls the handleStartRecord function which likely starts the actual audio recording.
+          // This function is expected to handle all the setup necessary for capturing audio input.
+          handleStartRecord();
+        }
+      }, [handleStartRecord, startAnimationRecord, loadingRecord]);
 
       const stopRecord = useCallback(() => {
+        // Logs the termination of the recording process to the console.
         console.log('stop record');
+
+        // Stops any ongoing animations associated with the recording.
+        // This could involve stopping visual feedback like pulsing or scaling effects.
+        stopAnimationRecord();
+
+        // Calls the handleStopRecord function which likely stops the actual audio recording.
+        // This function is expected to handle all necessary cleanup and finalization of the recording process.
         handleStopRecord();
-      }, [handleStopRecord]);
+      }, [handleStopRecord, stopAnimationRecord]);
 
       const longPressGesture = Gesture.LongPress()
         .onStart(() => {
@@ -204,6 +239,8 @@ const PronunciationLesson = observer(
       const animatedStyleLongPress = useAnimatedStyle(() => {
         return {
           transform: [{scale: scaleLP.value}],
+          alignItems: 'center',
+          justifyContent: 'center',
         };
       });
 
@@ -214,6 +251,43 @@ const PronunciationLesson = observer(
           );
         },
       }));
+
+      useEffect(() => {
+        if (focus) {
+          // Check if the component is focused
+
+          const firstTimeout = setTimeout(() => {
+            onSpeechText();
+
+            const secondTimeout = setTimeout(() => {
+              onSpeechText();
+            }, 2500);
+
+            return () => clearTimeout(secondTimeout);
+          }, 1500);
+
+          return () => clearTimeout(firstTimeout);
+        }
+      }, [onSpeechText, focus]); // Added focus to the dependency array
+
+      useEffect(() => {
+        setTimeout(() => {
+          startRecord();
+        }, 5000);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+      }, [moduleIndex]);
+
+      // This effect updates the `answerSelected` state whenever `speechResult` changes.
+      // `speechResult` is presumably the result from a speech-to-text operation.
+      // If `speechResult` is undefined or null, it defaults to an empty string.
+      useEffect(() => {
+        setAnswerSelected(() => {
+          if (speechResult !== '') {
+            stopRecord();
+          }
+          return speechResult ?? '';
+        });
+      }, [speechResult, stopRecord]);
 
       return (
         <LessonComponent
@@ -287,8 +361,10 @@ const PronunciationLesson = observer(
                     </Text>
                   )}
                 </View>
+
                 <GestureDetector gesture={longPressGesture}>
                   <Animated.View style={animatedStyleLongPress}>
+                    <Animated.View style={animatedCircleStyle} />
                     <TouchableOpacity
                       activeOpacity={1}
                       onLongPress={() => {
@@ -326,6 +402,7 @@ const PronunciationLesson = observer(
                 text="Submit"
                 style={[styles.mt24]}
                 onPress={submit}
+                disable={!answerSelected}
               />
             </View>
           }

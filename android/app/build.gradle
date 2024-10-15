@@ -79,7 +79,7 @@ android {
         applicationId "com.alphadex.tbd.app"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 16
+        versionCode 18
         versionName "1.0"
         missingDimensionStrategy "store", "play"
     }

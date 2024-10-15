@@ -24,7 +24,7 @@ type TState = {
   checkEmpty?: boolean;
 };
 
-export const useSpeechToText = () => {
+export const useSpeechToText = (fullAnswer?: string) => {
   const [voiceState, setVoiceState] = useStateCustom<TState>({
     recognized: false,
     pitch: '',
@@ -55,7 +55,7 @@ export const useSpeechToText = () => {
     });
     try {
       await Voice.start('en-US', {
-        EXTRA_SPEECH_INPUT_COMPLETE_SILENCE_LENGTH_MILLIS: 30000, //Extra time to recognize voice when no text change
+        EXTRA_SPEECH_INPUT_COMPLETE_SILENCE_LENGTH_MILLIS: 10000, //Extra time to recognize voice when no text change
       });
     } catch (error) {
       console.log('error raised', error);
@@ -72,16 +72,40 @@ export const useSpeechToText = () => {
 
   const onSpeechPartialResults = useCallback(
     (e: any) => {
+      // Logs the partial results event to the console for debugging.
       console.log(
         '🛠 LOG: 🚀 --> ----------------------------------------🛠 LOG: 🚀 -->',
       );
-      console.log('🛠 LOG: 🚀 --> ~ onSpeechPartialResults ~ e:', e);
+      console.log('🛠 LOG: 🚀 --> ~ onSpeechPartialResults ~ e:', fullAnswer, e);
       console.log(
         '🛠 LOG: 🚀 --> ----------------------------------------🛠 LOG: 🚀 -->',
       );
-      setVoiceState({time: false, partialResults: e?.value?.[0]});
+
+      // Checks if the event contains any speech recognition results.
+      if (
+        !e?.value?.length ||
+        e?.value?.every((item: string) => item.trim() === '')
+      ) {
+        return; // Exits the function if there are no results.
+      }
+
+      // Attempts to find a result that matches the `fullAnswer` exactly, ignoring case.
+      const approximateResult = e?.value?.find(
+        (item: string) =>
+          item.toLocaleUpperCase() === fullAnswer?.toLocaleUpperCase(),
+      );
+
+      // Updates the reference text with either the matching result or the first result.
+      if (approximateResult) {
+        refText.current = approximateResult; // Sets to the exact match if found.
+      } else {
+        refText.current = e?.value?.[0]; // Sets to the first result if no exact match is found.
+      }
+
+      // Updates the voice state with the new result and sets `time` to false.
+      setVoiceState({time: false, results: refText.current});
     },
-    [setVoiceState],
+    [fullAnswer, setVoiceState],
   );
 
   const stopRecording = useCallback(async () => {
@@ -103,6 +127,7 @@ export const useSpeechToText = () => {
 
   const onSpeechResultsHandler = useCallback(
     (e: any) => {
+      // Logs the final results event to the console for debugging.
       console.log(
         '🛠 LOG: 🚀 --> ----------------------------------------🛠 LOG: 🚀 -->',
       );
@@ -110,10 +135,32 @@ export const useSpeechToText = () => {
       console.log(
         '🛠 LOG: 🚀 --> ----------------------------------------🛠 LOG: 🚀 -->',
       );
-      refText.current = e?.value?.[0];
-      setVoiceState({time: false, results: e?.value?.[0]});
+
+      // Checks if the event contains any non-empty speech recognition results.
+      if (
+        !e?.value?.length ||
+        e.value.every((item: string) => item.trim() === '')
+      ) {
+        return; // Exits the function if there are no meaningful results.
+      }
+
+      // Attempts to find a result that matches the `fullAnswer` exactly, ignoring case.
+      const approximateResult = e.value.find(
+        (item: string) =>
+          item.toLocaleUpperCase() === fullAnswer?.toLocaleUpperCase(),
+      );
+
+      // Updates the reference text with either the matching result or the first result.
+      if (approximateResult) {
+        refText.current = approximateResult; // Sets to the exact match if found.
+      } else {
+        refText.current = e.value[0]; // Sets to the first result if no exact match is found.
+      }
+
+      // Updates the voice state with the new result and sets `time` to false.
+      setVoiceState({time: false, results: refText.current});
     },
-    [setVoiceState],
+    [fullAnswer, setVoiceState],
   );
 
   const _onSpeechError = useCallback(
@@ -218,7 +265,7 @@ export const useSpeechToText = () => {
       Voice.destroy().then(Voice.removeAllListeners);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [fullAnswer]);
 
   return {
     voiceState,
@@ -228,5 +275,6 @@ export const useSpeechToText = () => {
     onResultPress, //stop speech + clear previous result
     clearSpeechResult, //clear result
     handleRecordWithVoice,
+    loading: voiceState.loading,
   };
 };

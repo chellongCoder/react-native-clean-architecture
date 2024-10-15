@@ -68,7 +68,8 @@ export const useSettingLesson = ({
     speechResult,
     clearSpeechResult,
     errorSpeech,
-  } = useSpeechToText();
+    loading: loadingRecord,
+  } = useSpeechToText(fullAnswer);
 
   const word = useMemo(() => {
     if (learningTimer === 0) {
@@ -276,6 +277,7 @@ export const useSettingLesson = ({
     isShowHint: lessonStore.isShowHint,
     startRecord,
     stopRecord,
+    loadingRecord,
     speechResult,
     errorSpeech,
     clearSpeechResult,
