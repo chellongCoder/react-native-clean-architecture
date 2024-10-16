@@ -1,8 +1,8 @@
 import {useEffect, useState} from 'react';
 import {useLoadingGlobal} from 'src/core/presentation/hooks/loading/useLoadingGlobal';
-import {Module} from 'src/home/application/types/GetListLessonResponse';
+
 import {
-  Question,
+  LessonSettingT,
   Task,
 } from 'src/home/application/types/GetListQuestionResponse';
 import useHomeStore from 'src/home/presentation/stores/useHomeStore';
@@ -11,6 +11,7 @@ export const useListQuestions = (lessonId: string) => {
   const homeStore = useHomeStore();
 
   const [tasks, setTasks] = useState<Task[]>([]);
+  const [lessonSetting, setLessonSetting] = useState<LessonSettingT>();
 
   const loading = useLoadingGlobal();
 
@@ -21,7 +22,10 @@ export const useListQuestions = (lessonId: string) => {
         subjectId: lessonId,
       })
       .then(response => {
-        setTasks(response.data.tasks);
+        setTasks(() => {
+          setLessonSetting(response.data.lessonSetting);
+          return response.data.tasks;
+        });
       })
       .finally(() => {
         loading.hide?.();
@@ -31,5 +35,6 @@ export const useListQuestions = (lessonId: string) => {
 
   return {
     tasks,
+    lessonSetting,
   };
 };

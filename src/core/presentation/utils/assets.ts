@@ -34,4 +34,5 @@ export const assets = {
   authBackground: require('assets/images/authBackground.png'),
   icon_speech: require('assets/images/icon_speech.png'),
   icon_voice: require('assets/images/icon_voice.png'),
+  ruler_deg: require('assets/images/ruler_deg.png'),
 };

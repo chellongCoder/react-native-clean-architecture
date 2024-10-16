@@ -41,6 +41,8 @@ import UseHintModal from 'src/core/presentation/components/UseHintModal';
 import {lessonModuleContainer} from 'src/lesson/LessonModule';
 import {LessonStore} from '../stores/LessonStore/LessonStore';
 import PronunciationLesson from './LessonComponent/PronunciationLesson';
+import Env, {EnvToken} from 'src/core/domain/entities/Env';
+import {coreModuleContainer} from 'src/core/CoreModule';
 
 enum LessonTypeE {
   TEXT = 'text',
@@ -64,6 +66,7 @@ enum LessonTypeE {
   PRONUNCIATION = 'pronunciation',
   TRANSLATION = 'translation',
   EXPLANATION = 'explanation',
+  MATH = 'math',
 }
 
 type LessonType = {
@@ -112,6 +115,8 @@ const LessonScreen = observer(() => {
     >().params;
 
   const lessonStore = lessonModuleContainer.getProvided(LessonStore);
+  const env = coreModuleContainer.getProvided<Env>(EnvToken); // Instantiate CoreService
+
   const {
     handlePostUserProgress,
     setTrainingCount,
@@ -122,7 +127,7 @@ const LessonScreen = observer(() => {
     toggleUseHint,
   } = lessonStore;
 
-  const {tasks: apiTasks} = useListQuestions(route?.lessonId);
+  const {tasks: apiTasks, lessonSetting} = useListQuestions(route?.lessonId);
 
   const tasks = useMemo(() => {
     return apiTasks.map(t => {
@@ -463,6 +468,9 @@ const LessonScreen = observer(() => {
             lessonName={route.lessonName}
             moduleName={route.moduleName}
             firstMiniTestTask={testTask}
+            backgroundImage={
+              env.IMAGE_BACKGROUND_BASE_API_URL + lessonSetting?.backgroundImage
+            }
           />
         );
       case LessonTypeE.PRONUNCIATION:
@@ -474,6 +482,9 @@ const LessonScreen = observer(() => {
             lessonName={route.lessonName}
             moduleName={route.moduleName}
             firstMiniTestTask={testTask}
+            backgroundImage={
+              env.IMAGE_BACKGROUND_BASE_API_URL + lessonSetting?.backgroundImage
+            }
             ref={vowelRef}
           />
         );
@@ -486,6 +497,9 @@ const LessonScreen = observer(() => {
             lessonName={route.lessonName}
             moduleName={route.moduleName}
             firstMiniTestTask={testTask}
+            backgroundImage={
+              env.IMAGE_BACKGROUND_BASE_API_URL + lessonSetting?.backgroundImage
+            }
             ref={vowelRef}
           />
         );
@@ -537,14 +551,20 @@ const LessonScreen = observer(() => {
       //       totalModule={lessons.length}
       //     />
       //   );
-      // case LessonTypeE.MATH:
-      //   return (
-      //     <MathLesson
-      //       moduleIndex={lessonIndex}
-      //       nextModule={nextModule}
-      //       totalModule={lessons.length}
-      //     />
-      //   );
+      case LessonTypeE.MATH:
+        return (
+          <MathLesson
+            moduleIndex={lessonIndex}
+            nextModule={nextModule}
+            totalModule={testTask?.question.length ?? 0}
+            backgroundImage={
+              env.IMAGE_BACKGROUND_BASE_API_URL + lessonSetting?.backgroundImage
+            }
+            // lessonName={route.lessonName}
+            // moduleName={route.moduleName}
+            // firstMiniTestTask={testTask}
+          />
+        );
       default:
         return <></>;
     }

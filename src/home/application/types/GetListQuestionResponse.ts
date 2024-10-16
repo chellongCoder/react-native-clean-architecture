@@ -23,10 +23,20 @@ export interface Task {
   type: 'training' | 'mini_test';
   description: string;
 }
+export type LessonSettingT = {
+  backgroundImage: string;
+  createdAt: string;
+  figureFailImage: string;
+  figureSuccessImage: string;
+  finishImage: string;
+  themeName: string;
+  title: string;
+};
 export default interface GetListQuestionResponse {
   data: {
     name: string;
     tasks: Task[];
+    lessonSetting: LessonSettingT;
     _id: string;
   };
   error?: {

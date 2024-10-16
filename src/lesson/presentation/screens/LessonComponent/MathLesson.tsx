@@ -1,34 +1,49 @@
-import {StyleSheet, Text, View} from 'react-native';
+import {Image, StyleSheet, Text, View} from 'react-native';
 import React from 'react';
 import LessonComponent from './LessonComponent';
 import PrimaryButton from '../../components/PrimaryButton';
 import {FontFamily} from 'src/core/presentation/hooks/useFonts';
 import useGlobalStyle from 'src/core/presentation/hooks/useGlobalStyle';
+import {assets} from 'src/core/presentation/utils';
+import DraggableZoomableRotatableImage from '../../components/Ruler';
+import {verticalScale} from 'react-native-size-matters';
 
 type Props = {
   moduleIndex: number;
   totalModule: number;
-nextModule: (e: string) => void;
+  nextModule: (e: string) => void;
+  backgroundImage?: string;
 };
 
-const MathLesson = ({moduleIndex, nextModule, totalModule}: Props) => {
+const MathLesson = ({
+  moduleIndex,
+  nextModule,
+  totalModule,
+  backgroundImage,
+}: Props) => {
   const globalStyle = useGlobalStyle();
   return (
     <LessonComponent
+      backgroundImage={backgroundImage}
       module="Module 7"
       backgroundColor="#a3f0df"
       backgroundAnswerColor="#358DBE"
       buildQuestion={
-        <View>
-          <View style={styles.pb32} />
-          <Text
+        <View style={{width: '100%', height: 400}}>
+          {/* <Text
             style={[
               styles.fonts_SVN_Cherish,
               styles.textQuestion,
               styles.txtQuestionColor,
             ]}>
             56 + ? = 100
-          </Text>
+          </Text> */}
+          <View style={{width: '100%', height: verticalScale(200)}}>
+            <DraggableZoomableRotatableImage
+              source={assets.ruler_deg}
+              style={{width: '100%', height: '100%'}}
+            />
+          </View>
         </View>
       }
       buildAnswer={
@@ -107,13 +122,7 @@ const MathLesson = ({moduleIndex, nextModule, totalModule}: Props) => {
             </View>
           </View>
 
-          <PrimaryButton
-            text="Submit"
-            style={[styles.mt32]}
-            onPress={() => {
-              nextModule();
-            }}
-          />
+          <PrimaryButton text="Submit" style={[styles.mt32]} />
         </View>
       }
       moduleIndex={moduleIndex}

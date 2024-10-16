@@ -39,6 +39,8 @@ const appConfig: ExpoConfig = {
       'https://storage.googleapis.com/alphadex-image/question-image/',
     IMAGE_MODULE_BASE_API_URL:
       'https://storage.googleapis.com/alphadex-image/module-images/',
+    IMAGE_BACKGROUND_BASE_API_URL:
+      'https://storage.googleapis.com/alphadex-image/backgrounds/',
   },
 };
 

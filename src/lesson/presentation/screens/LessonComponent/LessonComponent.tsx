@@ -5,8 +5,9 @@ import {
   ImageBackground,
   Image,
   TouchableOpacity,
+  ImageSourcePropType,
 } from 'react-native';
-import React from 'react';
+import React, {useState} from 'react';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {FontFamily} from 'src/core/presentation/hooks/useFonts';
 import IconDiamond from 'assets/svg/IconDiamond';
@@ -23,6 +24,7 @@ type Props = {
   module?: string;
   part?: string;
   backgroundColor?: string;
+  backgroundImage?: string;
   backgroundAnswerColor: string;
   buildQuestion: React.ReactNode;
   buildAnswer: React.ReactNode;
@@ -49,9 +51,19 @@ const LessonComponent = ({
   isShowCorrectContainer,
   isAnswerCorrect,
   onPressFlower,
+  backgroundImage,
 }: Props) => {
   const insets = useSafeAreaInsets();
   const globalStyle = useGlobalStyle();
+
+  const [source, setSource] = useState<ImageSourcePropType | undefined>({
+    uri: backgroundImage,
+  });
+
+  const handleError = () => {
+    setSource(assets.background_vowels);
+  };
+
   return (
     <View
       style={[
@@ -59,19 +71,22 @@ const LessonComponent = ({
         {paddingTop: 0, backgroundColor: backgroundColor},
       ]}>
       <ImageBackground
-        source={assets.background_vowels}
+        onError={handleError}
+        source={source}
         width={WIDTH_SCREEN}
-        imageStyle={{marginBottom: -30}}
+        imageStyle={{marginBottom: -verticalScale(30)}}
         resizeMode="cover"
-        style={[styles.ph24, styles.fill]}>
+        style={[styles.fill]}>
         <View style={{height: insets.top}} />
-        <View style={[styles.rowBetween, {alignItems: 'flex-start'}]}>
-          <View
-            style={[
-              styles.rowBetween,
-              {alignItems: 'center', maxWidth: scale(200)},
-            ]}>
-            <Text style={[styles.fonts_SVN_Cherish, styles.textTitle]}>
+        <View
+          style={[
+            styles.rowBetween,
+            {alignItems: 'flex-start', marginHorizontal: scale(10)},
+          ]}>
+          <View style={[styles.rowBetween, {alignItems: 'center'}]}>
+            <Text
+              numberOfLines={2}
+              style={[styles.fonts_SVN_Cherish, styles.textTitle]}>
               {lessonName}
             </Text>
             <View
@@ -130,7 +145,11 @@ const LessonComponent = ({
                 },
               )}
               {totalModule && (
-                <Text style={[styles.fonts_SVN_Cherish, {color: COLORS.WHITE}]}>
+                <Text
+                  style={[
+                    styles.fonts_SVN_Cherish,
+                    {color: COLORS.WHITE, marginRight: scale(10)},
+                  ]}>
                   +{totalModule - moduleIndex}
                 </Text>
               )}
@@ -205,7 +224,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
   },
   pb32: {
-    paddingBottom: 32,
+    paddingBottom: verticalScale(32),
   },
   pv32: {
     paddingVertical: 32,
@@ -220,15 +239,16 @@ const styles = StyleSheet.create({
     fontFamily: FontFamily.SVNCherishMoment,
   },
   textTitle: {
-    fontSize: 30,
+    fontSize: scale(30),
     color: COLORS.GREEN_1C6349,
   },
   alightEnd: {
     alignItems: 'flex-end',
   },
   textModule: {
-    fontSize: 10,
+    fontSize: scale(10),
     color: COLORS.BLUE_258F78,
+    maxWidth: scale(150),
   },
   textPart: {
     fontSize: 10,
@@ -251,7 +271,7 @@ const styles = StyleSheet.create({
   },
   boxQuestion: {
     flex: 1,
-    padding: scale(16),
+    // padding: scale(16),
     alignItems: 'center',
   },
   textLarge: {

@@ -42,6 +42,7 @@ type Props = {
   lessonName: string;
   moduleName: string;
   firstMiniTestTask?: Task;
+  backgroundImage?: string;
 };
 
 export type VowelsRef = {
@@ -58,6 +59,7 @@ const PronunciationLesson = observer(
         lessonName,
         moduleName,
         firstMiniTestTask,
+        backgroundImage,
       },
       ref,
     ) => {
@@ -291,6 +293,7 @@ const PronunciationLesson = observer(
 
       return (
         <LessonComponent
+          backgroundImage={backgroundImage}
           lessonName={lessonName}
           module={moduleName}
           part={firstMiniTestTask?.name}

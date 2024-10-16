@@ -22,6 +22,7 @@ type Props = {
   lessonName: string;
   moduleName: string;
   firstMiniTestTask?: Task;
+  backgroundImage?: string;
 };
 
 const EssayLesson = ({
@@ -31,6 +32,7 @@ const EssayLesson = ({
   lessonName,
   moduleName,
   firstMiniTestTask,
+  backgroundImage,
 }: Props) => {
   const globalStyle = useGlobalStyle();
 
@@ -112,6 +114,7 @@ const EssayLesson = ({
   });
   return (
     <LessonComponent
+      backgroundImage={backgroundImage}
       lessonName={lessonName}
       module={moduleName}
       part={firstMiniTestTask?.name}
