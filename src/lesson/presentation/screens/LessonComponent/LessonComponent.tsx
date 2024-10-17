@@ -18,6 +18,7 @@ import {COLORS} from 'src/core/presentation/constants/colors';
 import {scale, verticalScale} from 'react-native-size-matters';
 import useGlobalStyle from 'src/core/presentation/hooks/useGlobalStyle';
 import CustomSwitchNew from 'src/home/presentation/components/CustomSwitchNew';
+import {TYPOGRAPHY} from 'src/core/presentation/constants/typography';
 
 type Props = {
   lessonName?: string;
@@ -34,6 +35,7 @@ type Props = {
   score?: number;
   isAnswerCorrect?: boolean;
   isShowCorrectContainer?: boolean;
+  txtCountDown?: string;
   onPressFlower?: () => void;
 };
 
@@ -52,6 +54,7 @@ const LessonComponent = ({
   isAnswerCorrect,
   onPressFlower,
   backgroundImage,
+  txtCountDown,
 }: Props) => {
   const insets = useSafeAreaInsets();
   const globalStyle = useGlobalStyle();
@@ -105,13 +108,24 @@ const LessonComponent = ({
               <Text style={[globalStyle.txtNote, styles.textPart]}>{part}</Text>
             </View>
           </View>
-          <TouchableOpacity onPress={onPressFlower}>
-            <CustomSwitchNew
-              point={score}
-              value={false}
-              onValueChange={() => {}}
-            />
-          </TouchableOpacity>
+          <View style={{alignItems: 'flex-end'}}>
+            {txtCountDown && (
+              <ImageBackground
+                style={styles.countDown}
+                resizeMode="contain"
+                source={assets.drug_bg}>
+                <Text style={styles.txtCountDown}>{txtCountDown}</Text>
+              </ImageBackground>
+            )}
+            <View style={{height: verticalScale(5)}} />
+            <TouchableOpacity onPress={onPressFlower}>
+              <CustomSwitchNew
+                point={score}
+                value={false}
+                onValueChange={() => {}}
+              />
+            </TouchableOpacity>
+          </View>
         </View>
 
         <View style={[styles.boxQuestion, styles.pb32]}>{buildQuestion}</View>
@@ -271,8 +285,8 @@ const styles = StyleSheet.create({
   },
   boxQuestion: {
     flex: 1,
-    // padding: scale(16),
     alignItems: 'center',
+    zIndex: 999,
   },
   textLarge: {
     fontSize: 140,
@@ -334,5 +348,18 @@ const styles = StyleSheet.create({
     width: 200,
     position: 'absolute',
     left: -24,
+  },
+  countDown: {
+    width: scale(60),
+    aspectRatio: 4 / 2,
+    borderRadius: scale(30),
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  txtCountDown: {
+    color: COLORS.WHITE_FBF8CC,
+    textTransform: 'uppercase',
+    fontFamily: TYPOGRAPHY.FAMILY.SVNCherishMoment,
+    fontSize: scale(16),
   },
 });

@@ -8,6 +8,7 @@ import Animated, {
   interpolate,
 } from 'react-native-reanimated';
 import {scale, verticalScale} from 'react-native-size-matters';
+import {COLORS} from 'src/core/presentation/constants/colors';
 import {
   CustomTextStyle,
   TYPOGRAPHY,
@@ -147,7 +148,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   title: {
-    color: '#fbf8cc',
+    color: COLORS.WHITE_FBF8CC,
     textTransform: 'uppercase',
     fontFamily: TYPOGRAPHY.FAMILY.SVNCherishMoment,
   },

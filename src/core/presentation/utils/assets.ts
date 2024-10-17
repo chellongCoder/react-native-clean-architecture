@@ -35,4 +35,6 @@ export const assets = {
   icon_speech: require('assets/images/icon_speech.png'),
   icon_voice: require('assets/images/icon_voice.png'),
   ruler_deg: require('assets/images/ruler_deg.png'),
+  drug_bg: require('assets/images/drug_bg.png'),
+  rectangle: require('assets/images/rectangle.png'),
 };
