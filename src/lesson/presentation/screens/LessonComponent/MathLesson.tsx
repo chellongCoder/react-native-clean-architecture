@@ -26,10 +26,13 @@ const MathLesson = ({
     <LessonComponent
       backgroundImage={backgroundImage}
       module="Module 7"
+      lessonName={'route'}
+      part={'firstMiniTestTask?.name'}
       backgroundColor="#a3f0df"
       backgroundAnswerColor="#358DBE"
+      txtCountDown={'word'}
       buildQuestion={
-        <View style={{width: '100%', height: 400}}>
+        <View style={{width: '100%', aspectRatio: 4 / 3}}>
           {/* <Text
             style={[
               styles.fonts_SVN_Cherish,
@@ -38,7 +41,23 @@ const MathLesson = ({
             ]}>
             56 + ? = 100
           </Text> */}
-          <View style={{width: '100%', height: verticalScale(200)}}>
+          <View
+            style={{
+              width: '100%',
+              height: verticalScale(150),
+            }}>
+            <Image
+              source={assets.rectangle}
+              style={{width: '100%', height: '100%'}}
+              resizeMode="contain"
+            />
+          </View>
+          <View
+            style={{
+              width: '100%',
+              height: verticalScale(80),
+              zIndex: 999,
+            }}>
             <DraggableZoomableRotatableImage
               source={assets.ruler_deg}
               style={{width: '100%', height: '100%'}}
