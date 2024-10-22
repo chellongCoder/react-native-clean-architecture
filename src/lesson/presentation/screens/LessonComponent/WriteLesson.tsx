@@ -5,11 +5,12 @@ import PrimaryButton from '../../components/PrimaryButton';
 import {FontFamily} from 'src/core/presentation/hooks/useFonts';
 import useGlobalStyle from 'src/core/presentation/hooks/useGlobalStyle';
 import CanvasWrite, {CanvasWriteRef} from '../../components/CanvasWrite';
+import HanziWrite from '../../components/HanziWrite';
 
 type Props = {
   moduleIndex: number;
   totalModule: number;
-nextModule: (e: string) => void;
+  nextModule: (e: string) => void;
 };
 
 const WriteLesson = ({moduleIndex, nextModule, totalModule}: Props) => {
@@ -31,7 +32,7 @@ const WriteLesson = ({moduleIndex, nextModule, totalModule}: Props) => {
       buildAnswer={
         <View style={styles.fill}>
           <Text style={[globalStyle.txtLabel, styles.pb32]}>Write the "Á"</Text>
-          <CanvasWrite
+          <HanziWrite
             ref={canvasWriteRef}
             text={{content: 'Á', color: '#66C270'}}
             matchPoints={matchPointsA}
@@ -51,7 +52,7 @@ const WriteLesson = ({moduleIndex, nextModule, totalModule}: Props) => {
                 `${isCorrect ? 'chính xác' : 'không chính xác'}`,
               );
               canvasWriteRef.current?.reset();
-              nextModule();
+              // nextModule();
             }}
           />
         </View>
