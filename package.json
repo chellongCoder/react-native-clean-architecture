@@ -21,6 +21,7 @@
   "dependencies": {
     "@expo/webpack-config": "~19.0.1",
     "@gorhom/bottom-sheet": "^4.6.3",
+    "@jamsch/react-native-hanzi-writer": "^0.4.0",
     "@react-native-async-storage/async-storage": "1.21.0",
     "@react-native-community/netinfo": "^11.3.2",
     "@react-native-voice/voice": "^3.2.4",
