@@ -67,6 +67,7 @@ enum LessonTypeE {
   TRANSLATION = 'translation',
   EXPLANATION = 'explanation',
   MATH = 'math',
+  WRITE = 'write',
 }
 
 type LessonType = {
@@ -459,20 +460,20 @@ const LessonScreen = observer(() => {
 
   const buildLesson = () => {
     switch (testTask?.question?.[lessonIndex]?.type as LessonTypeE) {
-      case LessonTypeE.ESSAY:
-        return (
-          <EssayLesson
-            moduleIndex={lessonIndex}
-            nextModule={nextModule}
-            totalModule={testTask?.question.length ?? 0}
-            lessonName={route.lessonName}
-            moduleName={route.moduleName}
-            firstMiniTestTask={testTask}
-            backgroundImage={
-              env.IMAGE_BACKGROUND_BASE_API_URL + lessonSetting?.backgroundImage
-            }
-          />
-        );
+      // case LessonTypeE.ESSAY:
+      //   return (
+      //     <EssayLesson
+      //       moduleIndex={lessonIndex}
+      //       nextModule={nextModule}
+      //       totalModule={testTask?.question.length ?? 0}
+      //       lessonName={route.lessonName}
+      //       moduleName={route.moduleName}
+      //       firstMiniTestTask={testTask}
+      //       backgroundImage={
+      //         env.IMAGE_BACKGROUND_BASE_API_URL + lessonSetting?.backgroundImage
+      //       }
+      //     />
+      //   );
       case LessonTypeE.PRONUNCIATION:
         return (
           <PronunciationLesson
@@ -511,14 +512,14 @@ const LessonScreen = observer(() => {
       //       totalModule={lessons.length}
       //     />
       //   );
-      // case LessonTypeE.WRITE:
-      //   return (
-      //     <WriteLesson
-      //       moduleIndex={lessonIndex}
-      //       nextModule={nextModule}
-      //       totalModule={lessons.length}
-      //     />
-      //   );
+      case LessonTypeE.WRITE:
+        return (
+          <WriteLesson
+            moduleIndex={lessonIndex}
+            nextModule={nextModule}
+            totalModule={lessons.length}
+          />
+        );
       // case LessonTypeE.VOCABULARY_LISTEN:
       //   return (
       //     <ListenLesson
@@ -551,7 +552,7 @@ const LessonScreen = observer(() => {
       //       totalModule={lessons.length}
       //     />
       //   );
-      case LessonTypeE.MATH:
+      case LessonTypeE.ESSAY:
         return (
           <MathLesson
             moduleIndex={lessonIndex}

@@ -7,6 +7,7 @@ import useGlobalStyle from 'src/core/presentation/hooks/useGlobalStyle';
 import {assets} from 'src/core/presentation/utils';
 import DraggableZoomableRotatableImage from '../../components/Ruler';
 import {verticalScale} from 'react-native-size-matters';
+import GeometryComponent from './GeometryComponent';
 
 type Props = {
   moduleIndex: number;
@@ -48,100 +49,21 @@ const MathLesson = ({
             }}>
             <Image
               source={assets.rectangle}
-              style={{width: '100%', height: '100%'}}
+              style={globalStyle.image_100}
               resizeMode="contain"
             />
           </View>
-          <View
-            style={{
-              width: '100%',
-              height: verticalScale(80),
-              zIndex: 999,
-            }}>
+          <View style={styles.rulerContainer}>
             <DraggableZoomableRotatableImage
               source={assets.ruler_deg}
-              style={{width: '100%', height: '100%'}}
+              style={globalStyle.image_100}
             />
           </View>
         </View>
       }
       buildAnswer={
         <View style={styles.fill}>
-          <Text style={[globalStyle.txtLabel, styles.pb32, styles.txtWhite]}>
-            Which is answer ?
-          </Text>
-
-          <View style={[styles.rowBetween, styles.pb16]}>
-            <View style={[styles.boxItemAnswer, styles.center, styles.fill]}>
-              <Text
-                style={[
-                  globalStyle.txtLabel,
-                  styles.textQuestion,
-                  styles.fonts_SVN_Cherish,
-                ]}>
-                40
-              </Text>
-            </View>
-            <View style={[styles.pr16]} />
-            <View style={[styles.boxItemAnswer, styles.center, styles.fill]}>
-              <Text
-                style={[
-                  globalStyle.txtLabel,
-                  styles.textQuestion,
-                  styles.fonts_SVN_Cherish,
-                ]}>
-                54
-              </Text>
-            </View>
-            <View style={[styles.pr16]} />
-            <View style={[styles.boxItemAnswer, styles.center, styles.fill]}>
-              <Text
-                style={[
-                  globalStyle.txtLabel,
-                  styles.textQuestion,
-                  styles.fonts_SVN_Cherish,
-                ]}>
-                46
-              </Text>
-            </View>
-          </View>
-
-          <View style={[styles.rowBetween, styles.pb16]}>
-            <View style={[styles.boxItemAnswer, styles.center, styles.fill]}>
-              <Text
-                style={[
-                  globalStyle.txtLabel,
-                  styles.textQuestion,
-                  styles.fonts_SVN_Cherish,
-                ]}>
-                45
-              </Text>
-            </View>
-            <View style={[styles.pr16]} />
-            <View style={[styles.boxItemAnswer, styles.center, styles.fill]}>
-              <Text
-                style={[
-                  globalStyle.txtLabel,
-                  styles.textQuestion,
-                  styles.fonts_SVN_Cherish,
-                ]}>
-                43
-              </Text>
-            </View>
-            <View style={[styles.pr16]} />
-            <View style={[styles.boxItemAnswer, styles.center, styles.fill]}>
-              <Text
-                style={[
-                  globalStyle.txtLabel,
-                  styles.textQuestion,
-                  styles.fonts_SVN_Cherish,
-                ]}>
-                44
-              </Text>
-            </View>
-          </View>
-
-          <PrimaryButton text="Submit" style={[styles.mt32]} />
+          <GeometryComponent />
         </View>
       }
       moduleIndex={moduleIndex}
@@ -213,5 +135,10 @@ const styles = StyleSheet.create({
     height: 94,
     backgroundColor: '#F2B559',
     borderRadius: 15,
+  },
+  rulerContainer: {
+    width: '100%',
+    height: verticalScale(80),
+    zIndex: 999,
   },
 });

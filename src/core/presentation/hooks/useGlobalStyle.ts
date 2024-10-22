@@ -40,5 +40,9 @@ export default function useGlobalStyle() {
     spaceBetween: {
       justifyContent: 'space-between',
     },
+    image_100: {
+      width: '100%',
+      height: '100%',
+    },
   });
 }
