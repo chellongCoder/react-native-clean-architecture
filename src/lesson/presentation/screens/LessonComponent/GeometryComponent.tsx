@@ -1,21 +1,34 @@
-import React, {useState} from 'react';
+import React, {useCallback, useState} from 'react';
 import {View, Text, StyleSheet, TouchableOpacity, Image} from 'react-native';
-import {verticalScale} from 'react-native-size-matters';
+import {scale, verticalScale} from 'react-native-size-matters';
 import useGlobalStyle from 'src/core/presentation/hooks/useGlobalStyle';
+import {assets} from 'src/core/presentation/utils';
+import {Question} from 'src/home/application/types/GetListQuestionResponse';
 
-const GeometryComponent = () => {
+type GeometryComponentProps = {
+  question?: Question;
+  imageUrl?: string;
+  _setSelectedAnswer?: (answer: string) => void;
+  onSubmit?: () => void;
+  selectedAnswer: string;
+};
+const GeometryComponent = ({
+  question,
+  imageUrl,
+  _setSelectedAnswer,
+  onSubmit: _onSubmit,
+  selectedAnswer,
+}: GeometryComponentProps) => {
   const globalStyle = useGlobalStyle();
-  const listAnswer = ['15', '30', '45', '60'];
-
-  const [selectedAnswer, setSelectedAnswer] = useState<string>('');
+  const listAnswer = question?.answers;
 
   const onSelectAnswer = (item: string) => {
-    setSelectedAnswer(item);
+    _setSelectedAnswer && _setSelectedAnswer(item);
   };
 
-  const onSubmit = () => {
-    console.log('onSubmit');
-  };
+  const onSubmit = useCallback(() => {
+    _onSubmit?.();
+  }, [_onSubmit]);
 
   return (
     <View style={styles.container}>
@@ -29,24 +42,27 @@ const GeometryComponent = () => {
         <View style={[{flex: 1}, styles.questionContainer]}>
           <View style={{alignItems: 'center'}}>
             <Text style={[globalStyle.txtModule, styles.questionTitle]}>
-              B = ?
+              {question?.content}
             </Text>
           </View>
 
           <Image
-            source={require('../../../../../assets/images/triangleGemetryQuestion.png')}
-            style={{marginTop: 16}}
+            source={imageUrl ? {uri: imageUrl} : assets.rectangle}
+            style={{width: scale(150), height: verticalScale(150)}}
+            resizeMode="contain"
           />
         </View>
 
         {/* List answer */}
         <View style={[{flex: 0.7}, styles.listAnswerContainer]}>
-          {listAnswer.map(item => {
+          {listAnswer?.map(item => {
             return (
               <TouchableOpacity
                 style={[
                   styles.answerContainer,
-                  item === selectedAnswer ? {backgroundColor: '#66C270'} : {},
+                  item.trim() === selectedAnswer.trim()
+                    ? {backgroundColor: '#66C270'}
+                    : {},
                 ]}
                 onPress={() => onSelectAnswer(item)}
                 disabled={item === selectedAnswer}>
@@ -62,8 +78,8 @@ const GeometryComponent = () => {
       {/* Submit button container */}
       <View style={styles.wrapButtonContainer}>
         <TouchableOpacity style={styles.buttonContainer} onPress={onSubmit}>
-          <Text style={[styles.buttonTitle, globalStyle.txtModule]}>
-            Submit
+          <Text style={[styles.buttonTitle, globalStyle.txtLabel]}>
+            Nộp bài
           </Text>
         </TouchableOpacity>
       </View>
@@ -102,9 +118,8 @@ const styles = StyleSheet.create({
   },
   answerContainer: {
     backgroundColor: '#F2B559',
-    borderRadius: 10,
-    paddingVertical: 4,
-    paddingHorizontal: 32,
+    borderRadius: scale(10),
+    paddingVertical: verticalScale(4),
     alignItems: 'center',
   },
   answerTitle: {

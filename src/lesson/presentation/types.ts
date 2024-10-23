@@ -5,3 +5,8 @@ export interface PostSliceState {
   items: Post[];
   currentPost: Post | null;
 }
+
+export type LessonRef = {
+  onChoiceCorrectedAnswer: () => void;
+  isAnswerCorrect: boolean;
+};

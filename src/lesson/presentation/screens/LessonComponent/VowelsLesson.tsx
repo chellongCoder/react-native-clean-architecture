@@ -28,6 +28,7 @@ import {useSettingLesson} from '../../hooks/useSettingLesson';
 import {useIsFocused} from '@react-navigation/native';
 import useAuthenticationStore from 'src/authentication/presentation/stores/useAuthenticationStore';
 import {observer} from 'mobx-react';
+import {LessonRef} from '../../types';
 
 type Props = {
   moduleIndex: number;
@@ -37,14 +38,11 @@ type Props = {
   moduleName: string;
   firstMiniTestTask?: Task;
   backgroundImage?: string;
-};
-
-export type VowelsRef = {
-  onChoiceCorrectedAnswer: () => void;
+  characterImage?: string;
 };
 
 const VowelsLesson = observer(
-  forwardRef<VowelsRef, Props>(
+  forwardRef<LessonRef, Props>(
     (
       {
         moduleIndex,
@@ -54,6 +52,7 @@ const VowelsLesson = observer(
         moduleName,
         firstMiniTestTask,
         backgroundImage,
+        characterImage,
       },
       ref,
     ) => {
@@ -145,6 +144,7 @@ const VowelsLesson = observer(
       });
 
       useImperativeHandle(ref, () => ({
+        isAnswerCorrect,
         onChoiceCorrectedAnswer: () => {
           setAnswerSelected(
             firstMiniTestTask?.question?.[moduleIndex]?.correctAnswer ?? '',
@@ -155,6 +155,7 @@ const VowelsLesson = observer(
       return (
         <LessonComponent
           backgroundImage={backgroundImage}
+          characterImage={characterImage}
           lessonName={lessonName}
           module={moduleName}
           part={firstMiniTestTask?.name}

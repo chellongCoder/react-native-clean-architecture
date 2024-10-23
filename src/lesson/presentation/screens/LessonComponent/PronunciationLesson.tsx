@@ -34,6 +34,7 @@ import useAuthenticationStore from 'src/authentication/presentation/stores/useAu
 import {observer} from 'mobx-react';
 import {Gesture, GestureDetector} from 'react-native-gesture-handler';
 import * as Haptics from 'expo-haptics';
+import {LessonRef} from '../../types';
 
 type Props = {
   moduleIndex: number;
@@ -43,14 +44,11 @@ type Props = {
   moduleName: string;
   firstMiniTestTask?: Task;
   backgroundImage?: string;
-};
-
-export type VowelsRef = {
-  onChoiceCorrectedAnswer: () => void;
+  characterImage?: string;
 };
 
 const PronunciationLesson = observer(
-  forwardRef<VowelsRef, Props>(
+  forwardRef<LessonRef, Props>(
     (
       {
         moduleIndex,
@@ -60,6 +58,7 @@ const PronunciationLesson = observer(
         moduleName,
         firstMiniTestTask,
         backgroundImage,
+        characterImage,
       },
       ref,
     ) => {
@@ -82,18 +81,7 @@ const PronunciationLesson = observer(
       const {trainingCount} = useLessonStore();
 
       const {selectedChild} = useAuthenticationStore();
-      console.log(
-        '🛠 LOG: 🚀 --> ------------------------------------------------🛠 LOG: 🚀 -->',
-      );
-      console.log(
-        '🛠 LOG: 🚀 --> ~ answerSelected:',
-        answerSelected,
-        firstMiniTestTask?.question?.[moduleIndex]?.fullAnswer,
-        isCorrectAnswer,
-      );
-      console.log(
-        '🛠 LOG: 🚀 --> ------------------------------------------------🛠 LOG: 🚀 -->',
-      );
+
       const {
         isAnswerCorrect,
         isShowCorrectContainer,
@@ -247,6 +235,7 @@ const PronunciationLesson = observer(
       });
 
       useImperativeHandle(ref, () => ({
+        isAnswerCorrect,
         onChoiceCorrectedAnswer: () => {
           setAnswerSelected(
             firstMiniTestTask?.question?.[moduleIndex]?.correctAnswer ?? '',
@@ -294,6 +283,7 @@ const PronunciationLesson = observer(
       return (
         <LessonComponent
           backgroundImage={backgroundImage}
+          characterImage={characterImage}
           lessonName={lessonName}
           module={moduleName}
           part={firstMiniTestTask?.name}

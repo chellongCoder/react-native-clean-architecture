@@ -10,8 +10,6 @@ import {
 import React, {useState} from 'react';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {FontFamily} from 'src/core/presentation/hooks/useFonts';
-import IconDiamond from 'assets/svg/IconDiamond';
-import IconStar from 'assets/svg/iconStar';
 import BookView from '../../components/BookView';
 import {assets, WIDTH_SCREEN} from 'src/core/presentation/utils';
 import {COLORS} from 'src/core/presentation/constants/colors';
@@ -26,6 +24,7 @@ type Props = {
   part?: string;
   backgroundColor?: string;
   backgroundImage?: string;
+  characterImage?: string;
   backgroundAnswerColor: string;
   buildQuestion: React.ReactNode;
   buildAnswer: React.ReactNode;
@@ -54,6 +53,7 @@ const LessonComponent = ({
   isAnswerCorrect,
   onPressFlower,
   backgroundImage,
+  characterImage,
   txtCountDown,
 }: Props) => {
   const insets = useSafeAreaInsets();
@@ -132,7 +132,12 @@ const LessonComponent = ({
         <View style={styles.wrapDescriptionContainer}>
           <View style={styles.wrapImageContainer}>
             <Image
-              source={require('../../../../../assets/images/barry_1.png')}
+              source={
+                characterImage
+                  ? {uri: characterImage}
+                  : require('../../../../../assets/images/barry_1.png')
+              }
+              resizeMode="contain"
               style={styles.imageContainer}
             />
           </View>
@@ -342,12 +347,14 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'flex-end',
   },
-  wrapImageContainer: {height: 150, width: 100},
+  wrapImageContainer: {
+    height: verticalScale(120),
+    width: scale(100),
+    marginBottom: -verticalScale(10),
+  },
   imageContainer: {
-    height: 200,
-    width: 200,
-    position: 'absolute',
-    left: -24,
+    height: '100%',
+    width: '100%',
   },
   countDown: {
     width: scale(60),

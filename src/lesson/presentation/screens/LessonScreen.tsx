@@ -24,8 +24,7 @@ import {STACK_NAVIGATOR} from 'src/core/presentation/navigation/ConstantNavigato
 import {withProviders} from 'src/core/presentation/utils/withProviders';
 import {LessonStoreProvider} from '../stores/LessonStore/LessonStoreProvider';
 import {observer} from 'mobx-react';
-import {useLessonStore} from '../stores/LessonStore/useGetPostsStore';
-import VowelsLesson, {VowelsRef} from './LessonComponent/VowelsLesson';
+import VowelsLesson from './LessonComponent/VowelsLesson';
 import {useListQuestions} from 'src/hooks/useListQuestion';
 import {RouteProp, useRoute} from '@react-navigation/native';
 import useStateCustom from 'src/hooks/useStateCommon';
@@ -43,7 +42,31 @@ import {LessonStore} from '../stores/LessonStore/LessonStore';
 import PronunciationLesson from './LessonComponent/PronunciationLesson';
 import Env, {EnvToken} from 'src/core/domain/entities/Env';
 import {coreModuleContainer} from 'src/core/CoreModule';
+import {LessonRef} from '../types';
 
+export enum MathQuestionType {
+  MATH_TEXT = 'math_text',
+  MATH_CHOOSE_CORRECT_ANSWER = 'math_choose_correct_answer',
+  MATH_MULTIPLE_CHOICE = 'math_multiple_choice',
+  MATH_FILL_IN_BLANK = 'math_fill_in_blank',
+  MATH_TRUE_FALSE = 'math_true_false',
+  MATH_MATCHING = 'math_matching',
+  MATH_ESSAY = 'math_essay',
+  MATH_AUDIO = 'math_audio',
+  MATH_IMAGE = 'math_image',
+  MATH_VIDEO = 'math_video',
+  MATH_READING = 'math_reading',
+  MATH_LISTENING = 'math_listening',
+  MATH_SPEAKING = 'math_speaking',
+  MATH_GRAMMAR = 'math_grammar',
+  MATH_VOCABULARY = 'math_vocabulary',
+  MATH_READING_COMPREHENSION = 'math_reading_comprehension',
+  MATH_WRITING = 'math_writing',
+  MATH_CONVERSATION = 'math_conversation',
+  MATH_PRONUNCIATION = 'math_pronunciation',
+  MATH_TRANSLATION = 'math_translation',
+  MATH_EXPLANATION = 'math_explanation',
+}
 enum LessonTypeE {
   TEXT = 'text',
   CHOOSE_CORRECT_ANSWER = 'choose_correct_answer',
@@ -88,7 +111,7 @@ export type TLessonState = {
 };
 
 const LessonScreen = observer(() => {
-  const vowelRef = useRef<VowelsRef>();
+  const vowelRef = useRef<LessonRef>();
   const lessons: LessonType[] = [
     // {lessonType: LessonTypeE.ACHIEVEMENT},
     {lessonType: LessonTypeE.AUDIO},
@@ -459,21 +482,29 @@ const LessonScreen = observer(() => {
   }, []);
 
   const buildLesson = () => {
-    switch (testTask?.question?.[lessonIndex]?.type as LessonTypeE) {
-      // case LessonTypeE.ESSAY:
-      //   return (
-      //     <EssayLesson
-      //       moduleIndex={lessonIndex}
-      //       nextModule={nextModule}
-      //       totalModule={testTask?.question.length ?? 0}
-      //       lessonName={route.lessonName}
-      //       moduleName={route.moduleName}
-      //       firstMiniTestTask={testTask}
-      //       backgroundImage={
-      //         env.IMAGE_BACKGROUND_BASE_API_URL + lessonSetting?.backgroundImage
-      //       }
-      //     />
-      //   );
+    switch (
+      testTask?.question?.[lessonIndex]?.type as LessonTypeE | MathQuestionType
+    ) {
+      case LessonTypeE.ESSAY:
+        return (
+          <EssayLesson
+            moduleIndex={lessonIndex}
+            nextModule={nextModule}
+            totalModule={testTask?.question.length ?? 0}
+            lessonName={route.lessonName}
+            moduleName={route.moduleName}
+            firstMiniTestTask={testTask}
+            backgroundImage={
+              env.IMAGE_BACKGROUND_BASE_API_URL + lessonSetting?.backgroundImage
+            }
+            characterImage={
+              env.IMAGE_BACKGROUND_BASE_API_URL +
+              (vowelRef.current?.isAnswerCorrect
+                ? lessonSetting?.figureSuccessImage
+                : lessonSetting?.figureFailImage)
+            }
+          />
+        );
       case LessonTypeE.PRONUNCIATION:
         return (
           <PronunciationLesson
@@ -485,6 +516,12 @@ const LessonScreen = observer(() => {
             firstMiniTestTask={testTask}
             backgroundImage={
               env.IMAGE_BACKGROUND_BASE_API_URL + lessonSetting?.backgroundImage
+            }
+            characterImage={
+              env.IMAGE_BACKGROUND_BASE_API_URL +
+              (vowelRef.current?.isAnswerCorrect
+                ? lessonSetting?.figureSuccessImage
+                : lessonSetting?.figureFailImage)
             }
             ref={vowelRef}
           />
@@ -500,6 +537,12 @@ const LessonScreen = observer(() => {
             firstMiniTestTask={testTask}
             backgroundImage={
               env.IMAGE_BACKGROUND_BASE_API_URL + lessonSetting?.backgroundImage
+            }
+            characterImage={
+              env.IMAGE_BACKGROUND_BASE_API_URL +
+              (vowelRef.current?.isAnswerCorrect
+                ? lessonSetting?.figureSuccessImage
+                : lessonSetting?.figureFailImage)
             }
             ref={vowelRef}
           />
@@ -552,7 +595,10 @@ const LessonScreen = observer(() => {
       //       totalModule={lessons.length}
       //     />
       //   );
-      case LessonTypeE.ESSAY:
+      /**----------------------
+       *todo    các question cho môn toán
+       *------------------------**/
+      case MathQuestionType.MATH_CHOOSE_CORRECT_ANSWER:
         return (
           <MathLesson
             moduleIndex={lessonIndex}
@@ -561,9 +607,16 @@ const LessonScreen = observer(() => {
             backgroundImage={
               env.IMAGE_BACKGROUND_BASE_API_URL + lessonSetting?.backgroundImage
             }
-            // lessonName={route.lessonName}
-            // moduleName={route.moduleName}
-            // firstMiniTestTask={testTask}
+            characterImage={
+              env.IMAGE_BACKGROUND_BASE_API_URL +
+              (vowelRef.current?.isAnswerCorrect
+                ? lessonSetting?.figureSuccessImage
+                : lessonSetting?.figureFailImage)
+            }
+            lessonName={route.lessonName}
+            moduleName={route.moduleName}
+            firstMiniTestTask={testTask}
+            ref={vowelRef}
           />
         );
       default:
