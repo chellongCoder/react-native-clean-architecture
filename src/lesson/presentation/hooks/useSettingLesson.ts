@@ -123,6 +123,7 @@ export const useSettingLesson = ({
   // * start record
   const startRecord = useCallback(async () => {
     console.log('start record');
+    // Pass a key in list language. Ex: await startRecording('china');
     await startRecording();
   }, [startRecording]);
 

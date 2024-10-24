@@ -24,6 +24,46 @@ type TState = {
   checkEmpty?: boolean;
 };
 
+type TLanguageMap = {
+  taiwan: string;
+  france: string;
+  italia: string;
+  vietnam: string;
+  korean: string;
+  canada: string;
+  singapore: string;
+  india: string;
+  newzealand: string;
+  yue: string;
+  zhcn: string;
+  england: string;
+  japan: string;
+  zhhk: string;
+  china: string;
+  unitedstates: string;
+};
+
+const initSpeechLanguage: TLanguageMap = {
+  taiwan: 'zh-TW',
+  france: 'fr-FR',
+  italia: 'it-IT',
+  vietnam: 'vi-VN',
+  korean: 'ko-KR',
+  canada: 'en-CA',
+  singapore: 'en-SG',
+  india: 'en-IN',
+  newzealand: 'en-NZ',
+  yue: 'yue-CN',
+  zhcn: 'zh-CN',
+  england: 'en-GB',
+  japan: 'ja-JP',
+  zhhk: 'zh-HK',
+  china: 'wuu-CN',
+  unitedstates: 'en-US',
+};
+
+type TLanguageKeys = keyof typeof initSpeechLanguage; // Create a union type of the keys
+
 export const useSpeechToText = (fullAnswer?: string) => {
   const [voiceState, setVoiceState] = useStateCustom<TState>({
     recognized: false,
@@ -44,23 +84,26 @@ export const useSpeechToText = (fullAnswer?: string) => {
 
   const onSpeechVolumeChanged = useCallback(() => {}, []);
 
-  const startRecording = useCallback(async () => {
-    refText.current = '';
-    setVoiceState({
-      results: '',
-      checkEmpty: false,
-      loading: true,
-      time: true,
-      partialResults: undefined,
-    });
-    try {
-      await Voice.start('en-US', {
-        EXTRA_SPEECH_INPUT_COMPLETE_SILENCE_LENGTH_MILLIS: 10000, //Extra time to recognize voice when no text change
+  const startRecording = useCallback(
+    async (language: TLanguageKeys) => {
+      refText.current = '';
+      setVoiceState({
+        results: '',
+        checkEmpty: false,
+        loading: true,
+        time: true,
+        partialResults: undefined,
       });
-    } catch (error) {
-      console.log('error raised', error);
-    }
-  }, [setVoiceState]);
+      try {
+        await Voice.start(language ? language : 'en-US', {
+          EXTRA_SPEECH_INPUT_COMPLETE_SILENCE_LENGTH_MILLIS: 10000, //Extra time to recognize voice when no text change
+        });
+      } catch (error) {
+        console.log('error raised', error);
+      }
+    },
+    [setVoiceState],
+  );
 
   const clearSpeechResult = useCallback(() => {
     setVoiceState({
@@ -276,5 +319,6 @@ export const useSpeechToText = (fullAnswer?: string) => {
     clearSpeechResult, //clear result
     handleRecordWithVoice,
     loading: voiceState.loading,
+    initSpeechLanguage,
   };
 };
