@@ -151,6 +151,120 @@ const androidVoice = [
   },
 ];
 
+type TLanguageList = {
+  'Arabic (Saudi Arabia)': string;
+  'Bangla (Bangladesh)': string;
+  'Bangla (India)': string;
+  'Czech (Czech Republic)': string;
+  'Danish (Denmark)': string;
+  'Austrian German': string;
+  'Swiss German': string;
+  'Standard German (as spoken in Germany)': string;
+  'Modern Greek': string;
+  'Australian English': string;
+  'Canadian English': string;
+  'British English': string;
+  'Irish English': string;
+  'Indian English': string;
+  'New Zealand English': string;
+  'US English': string;
+  'English (South Africa)': string;
+  'Argentine Spanish': string;
+  'Chilean Spanish': string;
+  'Colombian Spanish': string;
+  'Castilian Spanish (as spoken in Central-Northern Spain)': string;
+  'Mexican Spanish': string;
+  'American Spanish': string;
+  'Finnish (Finland)': string;
+  'Belgian French': string;
+  'Canadian French': string;
+  'Swiss French': string;
+  'Standard French (especially in France)': string;
+  'Hebrew (Israel)': string;
+  'Hindi (India)': string;
+  'Hungarian (Hungary)': string;
+  'Indonesian (Indonesia)': string;
+  'Swiss Italian': string;
+  'Standard Italian (as spoken in Italy)': string;
+  'Japanese (Japan)': string;
+  'Korean (Republic of Korea)': string;
+  'Belgian Dutch': string;
+  'Standard Dutch (as spoken in The Netherlands)': string;
+  'Norwegian (Norway)': string;
+  'Polish (Poland)': string;
+  'Brazilian Portuguese': string;
+  'European Portuguese (as written and spoken in Portugal)': string;
+  'Romanian (Romania)': string;
+  'Russian (Russian Federation)': string;
+  'Slovak (Slovakia)': string;
+  'Swedish (Sweden)': string;
+  'Indian Tamil': string;
+  'Sri Lankan Tamil': string;
+  'Thai (Thailand)': string;
+  'Turkish (Turkey)': string;
+  'Mainland China, simplified characters': string;
+  'Hong Kong, traditional characters': string;
+  'Taiwan, traditional characters': string;
+};
+
+const listLanguage: TLanguageList = {
+  'Arabic (Saudi Arabia)': 'ar-SA',
+  'Bangla (Bangladesh)': 'bn-BD',
+  'Bangla (India)': 'bn-IN',
+  'Czech (Czech Republic)': 'cs-CZ',
+  'Danish (Denmark)': 'da-DK',
+  'Austrian German': 'de-AT',
+  'Swiss German': 'de-CH',
+  'Standard German (as spoken in Germany)': 'de-DE',
+  'Modern Greek': 'el-GR',
+  'Australian English': 'en-AU',
+  'Canadian English': 'en-CA',
+  'British English': 'en-GB',
+  'Irish English': 'en-IE',
+  'Indian English': 'en-IN',
+  'New Zealand English': 'en-NZ',
+  'US English': 'en-US',
+  'English (South Africa)': 'en-ZA',
+  'Argentine Spanish': 'es-AR',
+  'Chilean Spanish': 'es-CL',
+  'Colombian Spanish': 'es-CO',
+  'Castilian Spanish (as spoken in Central-Northern Spain)': 'es-ES',
+  'Mexican Spanish': 'es-MX',
+  'American Spanish': 'es-US',
+  'Finnish (Finland)': 'fi-FI',
+  'Belgian French': 'fr-BE',
+  'Canadian French': 'fr-CA',
+  'Swiss French': 'fr-CH',
+  'Standard French (especially in France)': 'fr-FR',
+  'Hebrew (Israel)': 'he-IL',
+  'Hindi (India)': 'hi-IN',
+  'Hungarian (Hungary)': 'hu-HU',
+  'Indonesian (Indonesia)': 'id-ID',
+  'Swiss Italian': 'it-CH',
+  'Standard Italian (as spoken in Italy)': 'it-IT',
+  'Japanese (Japan)': 'ja-JP',
+  'Korean (Republic of Korea)': 'ko-KR',
+  'Belgian Dutch': 'nl-BE',
+  'Standard Dutch (as spoken in The Netherlands)': 'nl-NL',
+  'Norwegian (Norway)': 'no-NO',
+  'Polish (Poland)': 'pl-PL',
+  'Brazilian Portuguese': 'pt-BR',
+  'European Portuguese (as written and spoken in Portugal)': 'pt-PT',
+  'Romanian (Romania)': 'ro-RO',
+  'Russian (Russian Federation)': 'ru-RU',
+  'Slovak (Slovakia)': 'sk-SK',
+  'Swedish (Sweden)': 'sv-SE',
+  'Indian Tamil': 'ta-IN',
+  'Sri Lankan Tamil': 'ta-LK',
+  'Thai (Thailand)': 'th-TH',
+  'Turkish (Turkey)': 'tr-TR',
+  'Mainland China, simplified characters': 'zh-CN',
+  'Hong Kong, traditional characters': 'zh-HK',
+  'Taiwan, traditional characters': 'zh-TW',
+};
+
+export type TLanguageKeys = keyof typeof listLanguage; // Create a union type of the keys
+
 export const TextToSpeechProvider = ({children}: PropsWithChildren) => {
   const [isInitialized, setIsInitialized] = useState(false);
   const lesson = lessonModuleContainer.getProvided(LessonStore);
@@ -175,8 +289,17 @@ export const TextToSpeechProvider = ({children}: PropsWithChildren) => {
     await Tts.setDefaultPitch(rate);
   };
 
-  const updateDefaultVoice = async (voiceId: number) => {
-    await Tts.setDefaultLanguage(iosVoice[voiceId].id);
+  const updateDefaultVoice = async (
+    voiceId?: number,
+    language?: TLanguageKeys,
+  ) => {
+    if (language) {
+      await Tts.setDefaultLanguage(language);
+    } else {
+      if (voiceId) {
+        await Tts.setDefaultLanguage(iosVoice[voiceId].id);
+      }
+    }
   };
 
   useEffect(() => {
