@@ -207,7 +207,7 @@ type TLanguageList = {
   'Taiwan, traditional characters': string;
 };
 
-const listLanguage: TLanguageList = {
+export const listLanguage: TLanguageList = {
   'Arabic (Saudi Arabia)': 'ar-SA',
   'Bangla (Bangladesh)': 'bn-BD',
   'Bangla (India)': 'bn-IN',
@@ -297,7 +297,7 @@ export const TextToSpeechProvider = ({children}: PropsWithChildren) => {
       await Tts.setDefaultLanguage(language);
     } else {
       if (voiceId) {
-        await Tts.setDefaultLanguage(iosVoice[voiceId].id);
+        await Tts.setDefaultVoice(iosVoice[voiceId].id);
       }
     }
   };

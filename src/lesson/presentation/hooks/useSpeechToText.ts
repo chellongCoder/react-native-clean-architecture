@@ -58,7 +58,7 @@ const initSpeechLanguage: TLanguageMap = {
   england: 'en-GB',
   japan: 'ja-JP',
   zhhk: 'zh-HK',
-  china: 'wuu-CN',
+  china: 'zh-CN',
   unitedstates: 'en-US',
 };
 
@@ -86,6 +86,13 @@ export const useSpeechToText = (fullAnswer?: string) => {
 
   const startRecording = useCallback(
     async (language: TLanguageKeys) => {
+      console.log(
+        '🛠 LOG: 🚀 --> ------------------------------------🛠 LOG: 🚀 -->',
+      );
+      console.log('🛠 LOG: 🚀 --> ~ language:', language);
+      console.log(
+        '🛠 LOG: 🚀 --> ------------------------------------🛠 LOG: 🚀 -->',
+      );
       refText.current = '';
       setVoiceState({
         results: '',
@@ -95,7 +102,7 @@ export const useSpeechToText = (fullAnswer?: string) => {
         partialResults: undefined,
       });
       try {
-        await Voice.start(language ? language : 'en-US', {
+        await Voice.start(language ? initSpeechLanguage[language] : 'en-US', {
           EXTRA_SPEECH_INPUT_COMPLETE_SILENCE_LENGTH_MILLIS: 10000, //Extra time to recognize voice when no text change
         });
       } catch (error) {

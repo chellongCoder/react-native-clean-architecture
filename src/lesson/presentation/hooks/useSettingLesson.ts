@@ -39,7 +39,7 @@ export const useSettingLesson = ({
   const lessonStore = useLessonStore();
   const authStore = useAuthenticationStore();
   const {playSound} = useContext(SoundGlobalContext);
-  const [isAnswerCorrect, setIsAnswerCorrect] = useState(false);
+  const [isAnswerCorrect, setIsAnswerCorrect] = useState<boolean | undefined>(); // * nếu undefined thì là chưa chọn câu trả lời
   const [isShowCorrectContainer, setIsShowCorrectContainer] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const {
@@ -124,7 +124,7 @@ export const useSettingLesson = ({
   const startRecord = useCallback(async () => {
     console.log('start record');
     // Pass a key in list language. Ex: await startRecording('china');
-    await startRecording();
+    await startRecording('china');
   }, [startRecording]);
 
   // * stop record

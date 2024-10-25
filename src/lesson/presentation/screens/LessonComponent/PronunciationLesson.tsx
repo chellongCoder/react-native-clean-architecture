@@ -35,6 +35,8 @@ import {observer} from 'mobx-react';
 import {Gesture, GestureDetector} from 'react-native-gesture-handler';
 import * as Haptics from 'expo-haptics';
 import {LessonRef} from '../../types';
+import Tts from 'react-native-tts';
+import {listLanguage} from 'src/core/presentation/hooks/textToSpeech/TextToSpeechProvider';
 
 type Props = {
   moduleIndex: number;
@@ -64,7 +66,7 @@ const PronunciationLesson = observer(
     ) => {
       const globalStyle = useGlobalStyle();
 
-      const {ttsSpeak} = useContext(TextToSpeechContext);
+      const {ttsSpeak, updateDefaultVoice} = useContext(TextToSpeechContext);
       const focus = useIsFocused();
 
       const [answerSelected, setAnswerSelected] = useState('');
@@ -110,11 +112,7 @@ const PronunciationLesson = observer(
       const scaleLP = useSharedValue(1);
 
       const onSpeechText = useCallback(() => {
-        ttsSpeak?.(
-          firstMiniTestTask?.question?.[moduleIndex].fullAnswer
-            .toString()
-            .toLowerCase() ?? '',
-        );
+        ttsSpeak?.('你好，世界');
       }, [firstMiniTestTask?.question, moduleIndex, ttsSpeak]);
 
       const opacity = useSharedValue(0);
@@ -136,6 +134,10 @@ const PronunciationLesson = observer(
           position: 'absolute',
         };
       });
+
+      /**
+       * * nếu có lỗi khi nói thì scale lại button
+       */
       useEffect(() => {
         if (errorSpeech) {
           scaleLP.value = withSpring(1);
@@ -148,6 +150,29 @@ const PronunciationLesson = observer(
         resetLearning();
         // eslint-disable-next-line react-hooks/exhaustive-deps
       }, [trainingCount]);
+
+      useEffect(() => {
+        Tts.voices().then(voices => {
+          console.log(
+            '🛠 LOG: 🚀 --> ---------------------------------------------------🛠 LOG: 🚀 -->',
+          );
+          console.log(
+            '🛠 LOG: 🚀 --> ~ Tts.voices ~ zhCNVoices:',
+            voices.filter(e => e.language.includes('zh')),
+          );
+          console.log(
+            '🛠 LOG: 🚀 --> ---------------------------------------------------🛠 LOG: 🚀 -->',
+          );
+          const zhCNVoice = voices.find(
+            voice =>
+              voice.language ===
+              listLanguage['Mainland China, simplified characters'],
+          );
+          if (zhCNVoice) {
+            Tts.setDefaultVoice(zhCNVoice.id);
+          }
+        });
+      }, []);
 
       useEffect(() => {
         opacity.value = withTiming(0, {duration: 500}, () => {

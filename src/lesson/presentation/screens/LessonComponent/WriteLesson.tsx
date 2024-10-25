@@ -6,35 +6,60 @@ import {FontFamily} from 'src/core/presentation/hooks/useFonts';
 import useGlobalStyle from 'src/core/presentation/hooks/useGlobalStyle';
 import CanvasWrite, {CanvasWriteRef} from '../../components/CanvasWrite';
 import HanziWrite from '../../components/HanziWrite';
+import {Task} from 'src/home/application/types/GetListQuestionResponse';
+import useAuthenticationStore from 'src/authentication/presentation/stores/useAuthenticationStore';
+import {verticalScale} from 'react-native-size-matters';
 
 type Props = {
   moduleIndex: number;
   totalModule: number;
   nextModule: (e: string) => void;
+  lessonName: string;
+  moduleName: string;
+  firstMiniTestTask?: Task;
+  backgroundImage?: string;
+  characterImage?: string;
 };
 
-const WriteLesson = ({moduleIndex, nextModule, totalModule}: Props) => {
+const WriteLesson = ({
+  moduleIndex,
+  nextModule,
+  totalModule,
+  lessonName,
+  moduleName,
+  firstMiniTestTask,
+  backgroundImage,
+  characterImage,
+}: Props) => {
   const globalStyle = useGlobalStyle();
   const canvasWriteRef = useRef<CanvasWriteRef>(null);
+  const {selectedChild} = useAuthenticationStore();
+
   return (
     <LessonComponent
-      module="Module 2"
+      backgroundImage={backgroundImage}
+      characterImage={characterImage}
+      lessonName={lessonName}
+      module={moduleName}
+      part={firstMiniTestTask?.name}
       backgroundColor="#66c270"
       backgroundAnswerColor="#DDF598"
+      score={selectedChild?.adsPoints}
       buildQuestion={
         <View>
-          <Text style={[styles.fonts_SVN_Cherish, styles.textLarge]}>Á</Text>
           <Text style={[styles.fonts_SVN_Cherish, styles.textQuestion]}>
-            CON CÁ
+            趨
           </Text>
+          <Text style={[styles.fonts_SVN_Cherish, styles.textLarge]}>趨</Text>
         </View>
       }
       buildAnswer={
         <View style={styles.fill}>
-          <Text style={[globalStyle.txtLabel, styles.pb32]}>Write the "Á"</Text>
+          <Text style={[globalStyle.txtLabel]}>Write the "趨"</Text>
+          <View style={{height: verticalScale(10)}} />
           <HanziWrite
             ref={canvasWriteRef}
-            text={{content: 'Á', color: '#66C270'}}
+            text={{content: '趨', color: '#66C270'}}
             matchPoints={matchPointsA}
           />
           <PrimaryButton
@@ -90,9 +115,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
   },
-  pb32: {
-    paddingBottom: 32,
-  },
+  pb32: {},
   mt32: {
     marginTop: 32,
   },

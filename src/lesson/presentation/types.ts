@@ -8,5 +8,5 @@ export interface PostSliceState {
 
 export type LessonRef = {
   onChoiceCorrectedAnswer: () => void;
-  isAnswerCorrect: boolean;
+  isAnswerCorrect?: boolean;
 };

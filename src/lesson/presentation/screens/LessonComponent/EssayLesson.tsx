@@ -9,6 +9,8 @@ import {COLORS} from 'src/core/presentation/constants/colors';
 import {WIDTH_SCREEN} from 'src/core/presentation/utils';
 import {scale, verticalScale} from 'react-native-size-matters';
 import Animated, {
+  Easing,
+  ReduceMotion,
   useAnimatedStyle,
   useSharedValue,
   withTiming,
@@ -50,6 +52,7 @@ const EssayLesson = ({
   );
 
   const opacity = useSharedValue(1);
+  const scaleS = useSharedValue(1);
 
   const {
     isAnswerCorrect,
@@ -107,11 +110,22 @@ const EssayLesson = ({
     opacity.value = withTiming(0, {duration: 500}, () => {
       opacity.value = withTiming(1, {duration: 500});
     });
-  }, [moduleIndex, opacity]);
+    opacity.value = withTiming(0, {duration: 500}, () => {
+      opacity.value = withTiming(1, {duration: 500});
+    });
+    scaleS.value = withTiming(0, {duration: 500}, () => {
+      scaleS.value = withTiming(1, {
+        duration: 500,
+        easing: Easing.elastic(2),
+        reduceMotion: ReduceMotion.System,
+      });
+    });
+  }, [moduleIndex, opacity, scaleS]);
 
   const animatedStyle = useAnimatedStyle(() => {
     return {
       opacity: opacity.value,
+      transform: [{scale: scaleS.value}],
     };
   });
   return (

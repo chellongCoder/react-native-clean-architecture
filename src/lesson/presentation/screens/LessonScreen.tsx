@@ -111,7 +111,8 @@ export type TLessonState = {
 };
 
 const LessonScreen = observer(() => {
-  const vowelRef = useRef<LessonRef>();
+  const vowelRef = useRef<LessonRef>({isAnswerCorrect: true});
+
   const lessons: LessonType[] = [
     // {lessonType: LessonTypeE.ACHIEVEMENT},
     {lessonType: LessonTypeE.AUDIO},
@@ -191,6 +192,13 @@ const LessonScreen = observer(() => {
       return tasks[activeTaskIndex];
     }
   }, [activeTaskIndex, firstMiniTestTask, tasks]);
+
+  const hasShowCharacter = useMemo(() => {
+    return vowelRef.current?.isAnswerCorrect === true ||
+      vowelRef.current?.isAnswerCorrect === undefined
+      ? true
+      : false;
+  }, []);
 
   const submitModule = useCallback(
     async (item: TResult) => {
@@ -499,7 +507,7 @@ const LessonScreen = observer(() => {
             }
             characterImage={
               env.IMAGE_BACKGROUND_BASE_API_URL +
-              (vowelRef.current?.isAnswerCorrect
+              (hasShowCharacter
                 ? lessonSetting?.figureSuccessImage
                 : lessonSetting?.figureFailImage)
             }
@@ -519,7 +527,7 @@ const LessonScreen = observer(() => {
             }
             characterImage={
               env.IMAGE_BACKGROUND_BASE_API_URL +
-              (vowelRef.current?.isAnswerCorrect
+              (hasShowCharacter
                 ? lessonSetting?.figureSuccessImage
                 : lessonSetting?.figureFailImage)
             }
@@ -540,7 +548,7 @@ const LessonScreen = observer(() => {
             }
             characterImage={
               env.IMAGE_BACKGROUND_BASE_API_URL +
-              (vowelRef.current?.isAnswerCorrect
+              (hasShowCharacter
                 ? lessonSetting?.figureSuccessImage
                 : lessonSetting?.figureFailImage)
             }
@@ -555,12 +563,24 @@ const LessonScreen = observer(() => {
       //       totalModule={lessons.length}
       //     />
       //   );
-      case LessonTypeE.WRITE:
+      case LessonTypeE.ESSAY:
         return (
           <WriteLesson
             moduleIndex={lessonIndex}
+            totalModule={testTask?.question.length ?? 0}
+            lessonName={route.lessonName}
+            moduleName={route.moduleName}
+            firstMiniTestTask={testTask}
             nextModule={nextModule}
-            totalModule={lessons.length}
+            backgroundImage={
+              env.IMAGE_BACKGROUND_BASE_API_URL + lessonSetting?.backgroundImage
+            }
+            characterImage={
+              env.IMAGE_BACKGROUND_BASE_API_URL +
+              (hasShowCharacter
+                ? lessonSetting?.figureSuccessImage
+                : lessonSetting?.figureFailImage)
+            }
           />
         );
       // case LessonTypeE.VOCABULARY_LISTEN:
@@ -609,7 +629,7 @@ const LessonScreen = observer(() => {
             }
             characterImage={
               env.IMAGE_BACKGROUND_BASE_API_URL +
-              (vowelRef.current?.isAnswerCorrect
+              (hasShowCharacter
                 ? lessonSetting?.figureSuccessImage
                 : lessonSetting?.figureFailImage)
             }

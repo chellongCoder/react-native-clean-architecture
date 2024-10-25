@@ -1,8 +1,10 @@
 import React, {forwardRef, useEffect, useImperativeHandle} from 'react';
-import {Button, StyleSheet, View, Text} from 'react-native';
+import {Button, StyleSheet, View, Text, Alert} from 'react-native';
 import {SkPath} from '@shopify/react-native-skia';
 import {HanziWriter, useHanziWriter} from '@jamsch/react-native-hanzi-writer';
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
+import {COLORS} from 'src/core/presentation/constants/colors';
+import {scale} from 'react-native-size-matters';
 
 type Props = {
   text?: {
@@ -67,14 +69,18 @@ const HanziWrite = forwardRef<HanziWriteRef, Props>((props: Props, ref) => {
       /** Optional. Default: 0. */
       quizStartStrokeNum: 0,
       /** Highlights correct stroke (uses <QuizMistakeHighlighter />) after incorrect attempts. Set to `false` to disable. */
-      showHintAfterMisses: 2,
+      showHintAfterMisses: 1,
       onComplete({totalMistakes}) {
         console.log(
           `Quiz complete! You made a total of ${totalMistakes} mistakes`,
+          Alert.alert(
+            `Quiz complete! You made a total of ${totalMistakes} mistakes`,
+          ),
         );
       },
       onCorrectStroke() {
         console.log('onCorrectStroke');
+        Alert.alert('Correct stroke!');
       },
       onMistake(strokeData) {
         console.log('onMistake', strokeData);
@@ -88,7 +94,7 @@ const HanziWrite = forwardRef<HanziWriteRef, Props>((props: Props, ref) => {
         styles.container,
         props.backgroundColor ? {backgroundColor: props.backgroundColor} : null,
       ]}>
-      <GestureHandlerRootView style={{flex: 1}}>
+      <GestureHandlerRootView style={{}}>
         <HanziWriter
           writer={writer}
           // Optional, render out your loading UI
@@ -102,7 +108,8 @@ const HanziWrite = forwardRef<HanziWriteRef, Props>((props: Props, ref) => {
           }
           style={{alignSelf: 'center'}}>
           {/** Optional, grid lines to help draw the character */}
-          {/* <HanziWriter.GridLines color="#ddd" /> */}
+          <HanziWriter.Outline color="#ddd" />
+          <HanziWriter.GridLines color="#ddd" />
           <HanziWriter.Svg>
             {/** The outline is laid under the character */}
             <HanziWriter.Outline color="#ccc" />
@@ -112,7 +119,7 @@ const HanziWrite = forwardRef<HanziWriteRef, Props>((props: Props, ref) => {
             <HanziWriter.QuizStrokes />
             {/** The mistake highligher will animate and fade out a stroke in quiz mode */}
             <HanziWriter.QuizMistakeHighlighter
-              color="#539bf5"
+              color={COLORS.PRIMARY}
               strokeDuration={400}
             />
           </HanziWriter.Svg>
@@ -125,8 +132,10 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#FBF8CC',
-    borderRadius: 20,
+    borderRadius: scale(20),
     overflow: 'hidden',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   chiSo: {
     padding: 8,
