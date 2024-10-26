@@ -1,5 +1,5 @@
 import {Image, StyleSheet, Text, View} from 'react-native';
-import React, {forwardRef, useImperativeHandle, useState} from 'react';
+import React, {forwardRef, useImperativeHandle, useMemo, useState} from 'react';
 import LessonComponent from './LessonComponent';
 import {FontFamily} from 'src/core/presentation/hooks/useFonts';
 import useGlobalStyle from 'src/core/presentation/hooks/useGlobalStyle';
@@ -19,7 +19,8 @@ type Props = {
   totalModule: number;
   nextModule: (e: string) => void;
   backgroundImage?: string;
-  characterImage?: string;
+  characterImageSuccess?: string;
+  characterImageFail?: string;
   lessonName: string;
   moduleName: string;
   firstMiniTestTask?: Task;
@@ -32,7 +33,8 @@ const MathLesson = forwardRef<LessonRef, Props>(
       nextModule,
       totalModule,
       backgroundImage,
-      characterImage,
+      characterImageSuccess,
+      characterImageFail,
       lessonName,
       moduleName,
       firstMiniTestTask,
@@ -72,7 +74,14 @@ const MathLesson = forwardRef<LessonRef, Props>(
         nextModule(answerSelected);
       },
       fullAnswer: firstMiniTestTask?.question?.[moduleIndex].fullAnswer,
+      totalTime: 20,
     });
+
+    const characterImage = useMemo(() => {
+      return isAnswerCorrect === true || isAnswerCorrect === undefined
+        ? characterImageSuccess
+        : characterImageFail;
+    }, [characterImageFail, characterImageSuccess, isAnswerCorrect]);
 
     useImperativeHandle(ref, () => ({
       isAnswerCorrect,

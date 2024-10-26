@@ -33,7 +33,7 @@ export type HanziWriteRef = {
 
 const HanziWrite = forwardRef<HanziWriteRef, Props>((props: Props, ref) => {
   const writer = useHanziWriter({
-    character: '趨',
+    character: props.text?.content ?? '',
     // (Optional) This is where you would load the character data from a CDN
     loader(char) {
       return fetch(

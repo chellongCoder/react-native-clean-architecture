@@ -25,7 +25,8 @@ type Props = {
   moduleName: string;
   firstMiniTestTask?: Task;
   backgroundImage?: string;
-  characterImage?: string;
+  characterImageSuccess?: string;
+  characterImageFail?: string;
 };
 
 const EssayLesson = ({
@@ -36,7 +37,8 @@ const EssayLesson = ({
   moduleName,
   firstMiniTestTask,
   backgroundImage,
-  characterImage,
+  characterImageSuccess,
+  characterImageFail,
 }: Props) => {
   const globalStyle = useGlobalStyle();
 
@@ -73,6 +75,12 @@ const EssayLesson = ({
     },
     fullAnswer: firstMiniTestTask?.question?.[moduleIndex].fullAnswer,
   });
+
+  const characterImage = useMemo(() => {
+    return isAnswerCorrect === true || isAnswerCorrect === undefined
+      ? characterImageSuccess
+      : characterImageFail;
+  }, [characterImageFail, characterImageSuccess, isAnswerCorrect]);
 
   const onPressItem = useCallback(
     (char: string, index: number) => {

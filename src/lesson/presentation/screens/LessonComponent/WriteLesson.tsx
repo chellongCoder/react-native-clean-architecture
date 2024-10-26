@@ -1,14 +1,19 @@
 import {Alert, StyleSheet, Text, View} from 'react-native';
-import React, {useRef} from 'react';
+import React, {useMemo, useRef, useState} from 'react';
 import LessonComponent from './LessonComponent';
 import PrimaryButton from '../../components/PrimaryButton';
 import {FontFamily} from 'src/core/presentation/hooks/useFonts';
 import useGlobalStyle from 'src/core/presentation/hooks/useGlobalStyle';
-import CanvasWrite, {CanvasWriteRef} from '../../components/CanvasWrite';
+import {CanvasWriteRef} from '../../components/CanvasWrite';
 import HanziWrite from '../../components/HanziWrite';
 import {Task} from 'src/home/application/types/GetListQuestionResponse';
 import useAuthenticationStore from 'src/authentication/presentation/stores/useAuthenticationStore';
-import {verticalScale} from 'react-native-size-matters';
+import {scale, verticalScale} from 'react-native-size-matters';
+import Animated from 'react-native-reanimated';
+import {WIDTH_SCREEN} from 'src/core/presentation/utils';
+import {useLessonStore} from '../../stores/LessonStore/useGetPostsStore';
+import {useSettingLesson} from '../../hooks/useSettingLesson';
+import {COLORS} from 'src/core/presentation/constants/colors';
 
 type Props = {
   moduleIndex: number;
@@ -34,7 +39,40 @@ const WriteLesson = ({
   const globalStyle = useGlobalStyle();
   const canvasWriteRef = useRef<CanvasWriteRef>(null);
   const {selectedChild} = useAuthenticationStore();
+  const [answerSelected, setAnswerSelected] = useState('');
+  const {trainingCount} = useLessonStore();
 
+  const isCorrectAnswer = useMemo(() => {
+    return (
+      answerSelected.toLocaleLowerCase() ===
+      firstMiniTestTask?.question?.[moduleIndex]?.fullAnswer.toLocaleLowerCase()
+    );
+  }, [answerSelected, firstMiniTestTask?.question, moduleIndex]);
+
+  const {
+    isAnswerCorrect,
+    isShowCorrectContainer,
+    word,
+    env,
+    learningTimer,
+    submit,
+    toggleShowHint,
+    resetLearning,
+    startRecord: handleStartRecord,
+    stopRecord: handleStopRecord,
+    loadingRecord,
+    speechResult,
+    errorSpeech,
+  } = useSettingLesson({
+    countDownTime: trainingCount <= 2 ? 0 : 5,
+    isCorrectAnswer: !!isCorrectAnswer,
+    onSubmit: () => {
+      setAnswerSelected('');
+      nextModule(answerSelected);
+    },
+    fullAnswer: firstMiniTestTask?.question?.[moduleIndex].fullAnswer,
+    totalTime: 5 * 60, // * tổng time làm 1câu
+  });
   return (
     <LessonComponent
       backgroundImage={backgroundImage}
@@ -48,9 +86,19 @@ const WriteLesson = ({
       buildQuestion={
         <View>
           <Text style={[styles.fonts_SVN_Cherish, styles.textQuestion]}>
-            趨
+            {firstMiniTestTask?.question?.[moduleIndex].content}
           </Text>
-          <Text style={[styles.fonts_SVN_Cherish, styles.textLarge]}>趨</Text>
+          <Animated.Image
+            resizeMode={'contain'}
+            width={WIDTH_SCREEN}
+            height={scale(150)}
+            style={[{}]}
+            source={{
+              uri:
+                env.IMAGE_QUESTION_BASE_API_URL +
+                firstMiniTestTask?.question?.[moduleIndex].image,
+            }}
+          />
         </View>
       }
       buildAnswer={
@@ -59,7 +107,11 @@ const WriteLesson = ({
           <View style={{height: verticalScale(10)}} />
           <HanziWrite
             ref={canvasWriteRef}
-            text={{content: '趨', color: '#66C270'}}
+            text={{
+              content:
+                firstMiniTestTask?.question?.[moduleIndex].correctAnswer ?? '',
+              color: COLORS.PRIMARY,
+            }}
             matchPoints={matchPointsA}
           />
           <PrimaryButton

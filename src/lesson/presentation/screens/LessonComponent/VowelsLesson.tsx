@@ -5,6 +5,7 @@ import React, {
   useContext,
   useEffect,
   useImperativeHandle,
+  useMemo,
   useState,
 } from 'react';
 import LessonComponent from './LessonComponent';
@@ -38,7 +39,8 @@ type Props = {
   moduleName: string;
   firstMiniTestTask?: Task;
   backgroundImage?: string;
-  characterImage?: string;
+  characterImageSuccess?: string;
+  characterImageFail?: string;
 };
 
 const VowelsLesson = observer(
@@ -52,7 +54,8 @@ const VowelsLesson = observer(
         moduleName,
         firstMiniTestTask,
         backgroundImage,
-        characterImage,
+        characterImageSuccess,
+        characterImageFail,
       },
       ref,
     ) => {
@@ -86,6 +89,12 @@ const VowelsLesson = observer(
         },
         fullAnswer: firstMiniTestTask?.question?.[moduleIndex].fullAnswer,
       });
+
+      const characterImage = useMemo(() => {
+        return isAnswerCorrect === true || isAnswerCorrect === undefined
+          ? characterImageSuccess
+          : characterImageFail;
+      }, [characterImageFail, characterImageSuccess, isAnswerCorrect]);
 
       const onSpeechText = useCallback(() => {
         ttsSpeak?.(

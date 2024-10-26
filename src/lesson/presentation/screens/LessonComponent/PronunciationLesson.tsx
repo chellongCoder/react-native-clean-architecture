@@ -46,7 +46,8 @@ type Props = {
   moduleName: string;
   firstMiniTestTask?: Task;
   backgroundImage?: string;
-  characterImage?: string;
+  characterImageSuccess?: string;
+  characterImageFail?: string;
 };
 
 const PronunciationLesson = observer(
@@ -60,7 +61,8 @@ const PronunciationLesson = observer(
         moduleName,
         firstMiniTestTask,
         backgroundImage,
-        characterImage,
+        characterImageSuccess,
+        characterImageFail,
       },
       ref,
     ) => {
@@ -108,6 +110,12 @@ const PronunciationLesson = observer(
         fullAnswer: firstMiniTestTask?.question?.[moduleIndex].fullAnswer,
         totalTime: 5 * 60, // * tổng time làm 1câu
       });
+
+      const characterImage = useMemo(() => {
+        return isAnswerCorrect === true || isAnswerCorrect === undefined
+          ? characterImageSuccess
+          : characterImageFail;
+      }, [characterImageFail, characterImageSuccess, isAnswerCorrect]);
 
       const scaleLP = useSharedValue(1);
 

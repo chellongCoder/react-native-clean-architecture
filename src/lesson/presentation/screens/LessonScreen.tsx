@@ -113,24 +113,6 @@ export type TLessonState = {
 const LessonScreen = observer(() => {
   const vowelRef = useRef<LessonRef>({isAnswerCorrect: true});
 
-  const lessons: LessonType[] = [
-    // {lessonType: LessonTypeE.ACHIEVEMENT},
-    {lessonType: LessonTypeE.AUDIO},
-    {lessonType: LessonTypeE.ESSAY},
-    {lessonType: LessonTypeE.CHOOSE_CORRECT_ANSWER},
-    {lessonType: LessonTypeE.CONVERSATION},
-    {lessonType: LessonTypeE.EXPLANATION},
-    {lessonType: LessonTypeE.FILL_IN_BLANK},
-    {lessonType: LessonTypeE.GRAMMAR},
-    {lessonType: LessonTypeE.PRONUNCIATION},
-    {lessonType: LessonTypeE.READING},
-    {lessonType: LessonTypeE.READING_COMPREHENSION},
-    {lessonType: LessonTypeE.SPEAKING},
-    {lessonType: LessonTypeE.TRANSLATION},
-    {lessonType: LessonTypeE.TRUE_FALSE},
-    {lessonType: LessonTypeE.VIDEO},
-    {lessonType: LessonTypeE.WRITING},
-  ];
   const route =
     useRoute<
       RouteProp<
@@ -192,13 +174,6 @@ const LessonScreen = observer(() => {
       return tasks[activeTaskIndex];
     }
   }, [activeTaskIndex, firstMiniTestTask, tasks]);
-
-  const hasShowCharacter = useMemo(() => {
-    return vowelRef.current?.isAnswerCorrect === true ||
-      vowelRef.current?.isAnswerCorrect === undefined
-      ? true
-      : false;
-  }, []);
 
   const submitModule = useCallback(
     async (item: TResult) => {
@@ -490,6 +465,11 @@ const LessonScreen = observer(() => {
   }, []);
 
   const buildLesson = () => {
+    const hasShowCharacter =
+      vowelRef.current?.isAnswerCorrect === true ||
+      vowelRef.current?.isAnswerCorrect === undefined
+        ? true
+        : false;
     switch (
       testTask?.question?.[lessonIndex]?.type as LessonTypeE | MathQuestionType
     ) {
@@ -505,11 +485,12 @@ const LessonScreen = observer(() => {
             backgroundImage={
               env.IMAGE_BACKGROUND_BASE_API_URL + lessonSetting?.backgroundImage
             }
-            characterImage={
+            characterImageSuccess={
               env.IMAGE_BACKGROUND_BASE_API_URL +
-              (hasShowCharacter
-                ? lessonSetting?.figureSuccessImage
-                : lessonSetting?.figureFailImage)
+              lessonSetting?.figureSuccessImage
+            }
+            characterImageFail={
+              env.IMAGE_BACKGROUND_BASE_API_URL + lessonSetting?.figureFailImage
             }
           />
         );
@@ -525,11 +506,12 @@ const LessonScreen = observer(() => {
             backgroundImage={
               env.IMAGE_BACKGROUND_BASE_API_URL + lessonSetting?.backgroundImage
             }
-            characterImage={
+            characterImageSuccess={
               env.IMAGE_BACKGROUND_BASE_API_URL +
-              (hasShowCharacter
-                ? lessonSetting?.figureSuccessImage
-                : lessonSetting?.figureFailImage)
+              lessonSetting?.figureSuccessImage
+            }
+            characterImageFail={
+              env.IMAGE_BACKGROUND_BASE_API_URL + lessonSetting?.figureFailImage
             }
             ref={vowelRef}
           />
@@ -546,11 +528,12 @@ const LessonScreen = observer(() => {
             backgroundImage={
               env.IMAGE_BACKGROUND_BASE_API_URL + lessonSetting?.backgroundImage
             }
-            characterImage={
+            characterImageSuccess={
               env.IMAGE_BACKGROUND_BASE_API_URL +
-              (hasShowCharacter
-                ? lessonSetting?.figureSuccessImage
-                : lessonSetting?.figureFailImage)
+              lessonSetting?.figureSuccessImage
+            }
+            characterImageFail={
+              env.IMAGE_BACKGROUND_BASE_API_URL + lessonSetting?.figureFailImage
             }
             ref={vowelRef}
           />
@@ -563,7 +546,7 @@ const LessonScreen = observer(() => {
       //       totalModule={lessons.length}
       //     />
       //   );
-      case LessonTypeE.ESSAY:
+      case LessonTypeE.WRITING:
         return (
           <WriteLesson
             moduleIndex={lessonIndex}
@@ -627,11 +610,12 @@ const LessonScreen = observer(() => {
             backgroundImage={
               env.IMAGE_BACKGROUND_BASE_API_URL + lessonSetting?.backgroundImage
             }
-            characterImage={
+            characterImageSuccess={
               env.IMAGE_BACKGROUND_BASE_API_URL +
-              (hasShowCharacter
-                ? lessonSetting?.figureSuccessImage
-                : lessonSetting?.figureFailImage)
+              lessonSetting?.figureSuccessImage
+            }
+            characterImageFail={
+              env.IMAGE_BACKGROUND_BASE_API_URL + lessonSetting?.figureFailImage
             }
             lessonName={route.lessonName}
             moduleName={route.moduleName}
