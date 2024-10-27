@@ -83,6 +83,7 @@ const WriteLesson = ({
       backgroundColor="#66c270"
       backgroundAnswerColor="#DDF598"
       score={selectedChild?.adsPoints}
+      isShowCorrectContainer
       buildQuestion={
         <View>
           <Text style={[styles.fonts_SVN_Cherish, styles.textQuestion]}>
@@ -103,7 +104,10 @@ const WriteLesson = ({
       }
       buildAnswer={
         <View style={styles.fill}>
-          <Text style={[globalStyle.txtLabel]}>Write the "趨"</Text>
+          <Text style={[globalStyle.txtLabel]}>
+            Write the "
+            {firstMiniTestTask?.question?.[moduleIndex].correctAnswer}"
+          </Text>
           <View style={{height: verticalScale(10)}} />
           <HanziWrite
             ref={canvasWriteRef}
@@ -114,24 +118,7 @@ const WriteLesson = ({
             }}
             matchPoints={matchPointsA}
           />
-          <PrimaryButton
-            text="Submit"
-            style={[styles.mt32]}
-            onPress={() => {
-              const result = canvasWriteRef.current?.getResult();
-              const isCorrect =
-                result &&
-                result?.matchPointNumber > matchPointsA.length - 4 &&
-                result?.strokesNumber <= 3 &&
-                result.maxDistance <= 15;
-              Alert.alert(
-                'Kết quả',
-                `${isCorrect ? 'chính xác' : 'không chính xác'}`,
-              );
-              canvasWriteRef.current?.reset();
-              // nextModule();
-            }}
-          />
+          <PrimaryButton text="Submit" style={[styles.mt32]} onPress={submit} />
         </View>
       }
       moduleIndex={moduleIndex}
