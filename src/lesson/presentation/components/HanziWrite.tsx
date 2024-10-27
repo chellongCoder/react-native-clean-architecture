@@ -1,10 +1,17 @@
-import React, {forwardRef, useEffect, useImperativeHandle} from 'react';
+import React, {
+  forwardRef,
+  useCallback,
+  useEffect,
+  useImperativeHandle,
+  useState,
+} from 'react';
 import {Button, StyleSheet, View, Text, Alert} from 'react-native';
 import {SkPath} from '@shopify/react-native-skia';
 import {HanziWriter, useHanziWriter} from '@jamsch/react-native-hanzi-writer';
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
 import {COLORS} from 'src/core/presentation/constants/colors';
 import {scale} from 'react-native-size-matters';
+import PrimaryButton from './PrimaryButton';
 
 type Props = {
   text?: {
@@ -16,52 +23,28 @@ type Props = {
       require: number;
     };
   };
-  matchDistance?: number;
   backgroundColor?: string;
-  matchPoints?: {x: number; y: number; passed?: boolean}[];
+  onComplete?: (totalMistakes: number) => void;
 };
 
 export type HanziWriteRef = {
-  reset(): void;
-  getResult(): {
-    strokesNumber: number;
-    maxDistance: number;
-    paths: SkPath[];
-    matchPointNumber: number;
-  };
+  //
 };
 
 const HanziWrite = forwardRef<HanziWriteRef, Props>((props: Props, ref) => {
+  const [loading, setLoading] = useState(true);
   const writer = useHanziWriter({
     character: props.text?.content ?? '',
     // (Optional) This is where you would load the character data from a CDN
     loader(char) {
       return fetch(
         `https://cdn.jsdelivr.net/npm/hanzi-writer-data@2.0/${char}.json`,
-      ).then(res => res.json());
+      ).then(res => {
+        setTimeout(() => setLoading(false), 50);
+        return res.json();
+      });
     },
   });
-
-  const reset = () => {
-    //
-  };
-
-  useEffect(() => {
-    startQuiz();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  useImperativeHandle(ref, () => ({
-    reset,
-    getResult: () => ({
-      maxDistance: 0,
-      paths: [],
-      matchPointNumber: 0,
-      strokesNumber: 0,
-    }),
-  }));
-
-  const quizActive = writer.quiz.useStore(s => s.active);
 
   const startQuiz = () => {
     writer.quiz.start({
@@ -72,22 +55,30 @@ const HanziWrite = forwardRef<HanziWriteRef, Props>((props: Props, ref) => {
       /** Highlights correct stroke (uses <QuizMistakeHighlighter />) after incorrect attempts. Set to `false` to disable. */
       showHintAfterMisses: 1,
       onComplete({totalMistakes}) {
-        // console.log(
-        //   `Quiz complete! You made a total of ${totalMistakes} mistakes`,
-        //   Alert.alert(
-        //     `Quiz complete! You made a total of ${totalMistakes} mistakes`,
-        //   ),
-        // );
+        props.onComplete?.(totalMistakes);
       },
       onCorrectStroke() {
         console.log('onCorrectStroke');
-        Alert.alert('Correct stroke!');
+        // Alert.alert('Correct stroke!');
       },
       onMistake(strokeData) {
         console.log('onMistake', strokeData);
       },
     });
   };
+
+  useEffect(() => {
+    if (!loading) {
+      startQuiz();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [loading]);
+
+  useEffect(() => {
+    setLoading(true);
+  }, [props.text?.content]);
+
+  useImperativeHandle(ref, () => ({}));
 
   return (
     <View
