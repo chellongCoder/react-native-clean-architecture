@@ -41,13 +41,14 @@ const WriteLesson = ({
   const {selectedChild} = useAuthenticationStore();
   const [answerSelected, setAnswerSelected] = useState('');
   const {trainingCount} = useLessonStore();
+  const [isCorrect, setIscorrect] = useState(false);
 
-  const isCorrectAnswer = useMemo(() => {
-    return (
-      answerSelected.toLocaleLowerCase() ===
-      firstMiniTestTask?.question?.[moduleIndex]?.fullAnswer.toLocaleLowerCase()
-    );
-  }, [answerSelected, firstMiniTestTask?.question, moduleIndex]);
+  // const isCorrectAnswer = useMemo(() => {
+  //   return (
+  //     answerSelected.toLocaleLowerCase() ===
+  //     firstMiniTestTask?.question?.[moduleIndex]?.fullAnswer.toLocaleLowerCase()
+  //   );
+  // }, [answerSelected, firstMiniTestTask?.question, moduleIndex]);
 
   const {
     isAnswerCorrect,
@@ -65,10 +66,11 @@ const WriteLesson = ({
     errorSpeech,
   } = useSettingLesson({
     countDownTime: trainingCount <= 2 ? 0 : 5,
-    isCorrectAnswer: !!isCorrectAnswer,
+    isCorrectAnswer: !!isCorrect,
     onSubmit: () => {
       setAnswerSelected('');
       nextModule(answerSelected);
+      setIscorrect(false);
     },
     fullAnswer: firstMiniTestTask?.question?.[moduleIndex].fullAnswer,
     totalTime: 5 * 60, // * tổng time làm 1câu
@@ -116,9 +118,16 @@ const WriteLesson = ({
                 firstMiniTestTask?.question?.[moduleIndex].correctAnswer ?? '',
               color: COLORS.PRIMARY,
             }}
-            matchPoints={matchPointsA}
+            onComplete={totalMistakes => {
+              setIscorrect(true);
+            }}
           />
-          <PrimaryButton text="Submit" style={[styles.mt32]} onPress={submit} />
+          <PrimaryButton
+            text="Submit"
+            disable={!isCorrect}
+            style={[styles.mt32]}
+            onPress={submit}
+          />
         </View>
       }
       moduleIndex={moduleIndex}
