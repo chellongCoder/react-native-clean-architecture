@@ -48,7 +48,8 @@ const HanziWrite = forwardRef<HanziWriteRef, Props>((props: Props, ref) => {
 
   useEffect(() => {
     startQuiz();
-  });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   useImperativeHandle(ref, () => ({
     reset,
@@ -71,12 +72,12 @@ const HanziWrite = forwardRef<HanziWriteRef, Props>((props: Props, ref) => {
       /** Highlights correct stroke (uses <QuizMistakeHighlighter />) after incorrect attempts. Set to `false` to disable. */
       showHintAfterMisses: 1,
       onComplete({totalMistakes}) {
-        console.log(
-          `Quiz complete! You made a total of ${totalMistakes} mistakes`,
-          Alert.alert(
-            `Quiz complete! You made a total of ${totalMistakes} mistakes`,
-          ),
-        );
+        // console.log(
+        //   `Quiz complete! You made a total of ${totalMistakes} mistakes`,
+        //   Alert.alert(
+        //     `Quiz complete! You made a total of ${totalMistakes} mistakes`,
+        //   ),
+        // );
       },
       onCorrectStroke() {
         console.log('onCorrectStroke');
