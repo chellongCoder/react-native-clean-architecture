@@ -7,7 +7,7 @@ import {VolumeManager} from 'react-native-volume-manager';
 import {lessonModuleContainer} from 'src/lesson/LessonModule';
 import {LessonStore} from 'src/lesson/presentation/stores/LessonStore/LessonStore';
 
-const iosVoice = [
+export const iosVoice = [
   {
     id: 'com.apple.speech.synthesis.voice.Trinoids',
     language: 'en-US',
@@ -290,15 +290,26 @@ export const TextToSpeechProvider = ({children}: PropsWithChildren) => {
   };
 
   const updateDefaultVoice = async (
-    voiceId?: number,
+    voiceId?: string,
     language?: TLanguageKeys,
   ) => {
+    console.log(
+      '🛠 LOG: 🚀 --> -----------------------------------------------------------------------------------------------------------------------------------------🛠 LOG: 🚀 -->',
+    );
+    console.log(
+      `🛠 LOG: 🚀 --> ~ TextToSpeechProvider ~ voiceId?: string,
+    language?: TLanguageKeys,:`,
+      voiceId,
+      language,
+    );
+    console.log(
+      '🛠 LOG: 🚀 --> -----------------------------------------------------------------------------------------------------------------------------------------🛠 LOG: 🚀 -->',
+    );
     if (language) {
-      await Tts.setDefaultLanguage(language);
-    } else {
-      if (voiceId) {
-        await Tts.setDefaultVoice(iosVoice[voiceId].id);
-      }
+      await Tts.setDefaultLanguage(listLanguage[language]);
+    }
+    if (voiceId) {
+      await Tts.setDefaultVoice(voiceId);
     }
   };
 

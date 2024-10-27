@@ -24,7 +24,7 @@ type TState = {
   checkEmpty?: boolean;
 };
 
-type TLanguageMap = {
+export type TLanguageMap = {
   taiwan: string;
   france: string;
   italia: string;

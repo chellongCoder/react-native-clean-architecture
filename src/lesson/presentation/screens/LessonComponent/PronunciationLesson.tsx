@@ -14,7 +14,7 @@ import {FontFamily} from 'src/core/presentation/hooks/useFonts';
 import useGlobalStyle from 'src/core/presentation/hooks/useGlobalStyle';
 import {Task} from 'src/home/application/types/GetListQuestionResponse';
 import {COLORS} from 'src/core/presentation/constants/colors';
-import {assets, WIDTH_SCREEN} from 'src/core/presentation/utils';
+import {assets, isAndroid, WIDTH_SCREEN} from 'src/core/presentation/utils';
 import {scale, verticalScale} from 'react-native-size-matters';
 import Animated, {
   Easing,
@@ -36,7 +36,10 @@ import {Gesture, GestureDetector} from 'react-native-gesture-handler';
 import * as Haptics from 'expo-haptics';
 import {LessonRef} from '../../types';
 import Tts from 'react-native-tts';
-import {listLanguage} from 'src/core/presentation/hooks/textToSpeech/TextToSpeechProvider';
+import {
+  iosVoice,
+  listLanguage,
+} from 'src/core/presentation/hooks/textToSpeech/TextToSpeechProvider';
 
 type Props = {
   moduleIndex: number;
@@ -78,7 +81,7 @@ const PronunciationLesson = observer(
           answerSelected.toLocaleLowerCase() ===
           firstMiniTestTask?.question?.[
             moduleIndex
-          ]?.fullAnswer.toLocaleLowerCase()
+          ]?.correctAnswer.toLocaleLowerCase()
         );
       }, [answerSelected, firstMiniTestTask?.question, moduleIndex]);
 
@@ -108,6 +111,7 @@ const PronunciationLesson = observer(
           nextModule(answerSelected);
         },
         fullAnswer: firstMiniTestTask?.question?.[moduleIndex].fullAnswer,
+        correctAnswer: firstMiniTestTask?.question?.[moduleIndex].correctAnswer,
         totalTime: 5 * 60, // * tổng time làm 1câu
       });
 
@@ -120,7 +124,11 @@ const PronunciationLesson = observer(
       const scaleLP = useSharedValue(1);
 
       const onSpeechText = useCallback(() => {
-        ttsSpeak?.('你好，世界');
+        ttsSpeak?.(
+          firstMiniTestTask?.question?.[moduleIndex].correctAnswer
+            .toString()
+            .toLowerCase() ?? '',
+        );
       }, [firstMiniTestTask?.question, moduleIndex, ttsSpeak]);
 
       const opacity = useSharedValue(0);
@@ -160,27 +168,36 @@ const PronunciationLesson = observer(
       }, [trainingCount]);
 
       useEffect(() => {
+        console.log(
+          '🛠 LOG: 🚀 --> -----------------------------------------------------🛠 LOG: 🚀 -->',
+        );
+        console.log('🛠 LOG: 🚀 --> ~ Tts.voices ~ lessonName:', lessonName);
+        console.log(
+          '🛠 LOG: 🚀 --> -----------------------------------------------------🛠 LOG: 🚀 -->',
+        );
+
         Tts.voices().then(voices => {
-          console.log(
-            '🛠 LOG: 🚀 --> ---------------------------------------------------🛠 LOG: 🚀 -->',
-          );
-          console.log(
-            '🛠 LOG: 🚀 --> ~ Tts.voices ~ zhCNVoices:',
-            voices.filter(e => e.language.includes('zh')),
-          );
-          console.log(
-            '🛠 LOG: 🚀 --> ---------------------------------------------------🛠 LOG: 🚀 -->',
-          );
-          const zhCNVoice = voices.find(
-            voice =>
-              voice.language ===
-              listLanguage['Mainland China, simplified characters'],
-          );
-          if (zhCNVoice) {
-            Tts.setDefaultVoice(zhCNVoice.id);
+          if (lessonName.toLocaleLowerCase().includes('english')) {
+            const engVoice = voices.find(
+              voice => voice.language === listLanguage['US English'],
+            );
+            updateDefaultVoice?.(
+              isAndroid ? engVoice?.id : iosVoice[3].id,
+              'US English',
+            );
+          } else if (lessonName.toLocaleLowerCase().includes('mandarin')) {
+            const engVoice = voices.find(
+              voice =>
+                voice.language ===
+                listLanguage['Mainland China, simplified characters'],
+            );
+            updateDefaultVoice?.(
+              engVoice?.id,
+              'Mainland China, simplified characters',
+            );
           }
         });
-      }, []);
+      }, [lessonName, updateDefaultVoice]);
 
       useEffect(() => {
         opacity.value = withTiming(0, {duration: 500}, () => {
@@ -229,12 +246,23 @@ const PronunciationLesson = observer(
         if (!loadingRecord) {
           // Initiates the animation associated with recording. This could involve visual feedback like pulsing or scaling effects.
           startAnimationRecord();
+          console.log(
+            '🛠 LOG: 🚀 --> ------------------------------------------------------🛠 LOG: 🚀 -->',
+          );
+          console.log('🛠 LOG: 🚀 --> ~ startRecord ~ lessonName:', lessonName);
+          console.log(
+            '🛠 LOG: 🚀 --> ------------------------------------------------------🛠 LOG: 🚀 -->',
+          );
 
           // Calls the handleStartRecord function which likely starts the actual audio recording.
           // This function is expected to handle all the setup necessary for capturing audio input.
-          handleStartRecord();
+          if (lessonName.toLocaleLowerCase().includes('english')) {
+            handleStartRecord('unitedstates');
+          } else if (lessonName.toLocaleLowerCase().includes('mandarin')) {
+            handleStartRecord('china');
+          }
         }
-      }, [handleStartRecord, startAnimationRecord, loadingRecord]);
+      }, [loadingRecord, startAnimationRecord, lessonName, handleStartRecord]);
 
       const stopRecord = useCallback(() => {
         // Logs the termination of the recording process to the console.
@@ -335,7 +363,7 @@ const PronunciationLesson = observer(
               <Animated.Image
                 resizeMode={'contain'}
                 width={WIDTH_SCREEN}
-                height={scale(200)}
+                height={scale(150)}
                 style={[{}, animatedStyle]}
                 source={{
                   uri:
