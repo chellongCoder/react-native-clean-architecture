@@ -85,7 +85,7 @@ const WriteLesson = ({
       backgroundColor="#66c270"
       backgroundAnswerColor="#DDF598"
       score={selectedChild?.adsPoints}
-      isShowCorrectContainer
+      isShowCorrectContainer={isShowCorrectContainer}
       buildQuestion={
         <View>
           <Text style={[styles.fonts_SVN_Cherish, styles.textQuestion]}>
