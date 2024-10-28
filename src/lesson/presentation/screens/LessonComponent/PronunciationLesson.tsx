@@ -118,7 +118,7 @@ const PronunciationLesson = observer(
       const settings = useMemo(() => {
         if (lessonName.toLocaleLowerCase().includes('english')) {
           return {
-            backgroundAnswerColor: COLORS.PRIMARY,
+            backgroundAnswerColor: COLORS.GREEN_66C270,
           };
         } else if (lessonName.toLocaleLowerCase().includes('mandarin')) {
           return {
