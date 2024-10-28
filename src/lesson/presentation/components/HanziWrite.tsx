@@ -60,7 +60,7 @@ const HanziWrite = forwardRef<HanziWriteRef, Props>((props: Props, ref) => {
       startQuiz();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [writer.characterState.status]);
+  }, [writer.characterState.status, props.text?.content]);
 
   useImperativeHandle(ref, () => ({}));
 
