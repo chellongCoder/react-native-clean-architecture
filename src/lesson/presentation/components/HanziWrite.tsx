@@ -1,17 +1,9 @@
-import React, {
-  forwardRef,
-  useCallback,
-  useEffect,
-  useImperativeHandle,
-  useState,
-} from 'react';
-import {Button, StyleSheet, View, Text, Alert} from 'react-native';
-import {SkPath} from '@shopify/react-native-skia';
+import React, {forwardRef, useEffect, useImperativeHandle} from 'react';
+import {Button, StyleSheet, View, Text} from 'react-native';
 import {HanziWriter, useHanziWriter} from '@jamsch/react-native-hanzi-writer';
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
 import {COLORS} from 'src/core/presentation/constants/colors';
 import {scale} from 'react-native-size-matters';
-import PrimaryButton from './PrimaryButton';
 
 type Props = {
   text?: {
@@ -32,17 +24,13 @@ export type HanziWriteRef = {
 };
 
 const HanziWrite = forwardRef<HanziWriteRef, Props>((props: Props, ref) => {
-  const [loading, setLoading] = useState(true);
   const writer = useHanziWriter({
     character: props.text?.content ?? '',
     // (Optional) This is where you would load the character data from a CDN
     loader(char) {
       return fetch(
         `https://cdn.jsdelivr.net/npm/hanzi-writer-data@2.0/${char}.json`,
-      ).then(res => {
-        setTimeout(() => setLoading(false), 50);
-        return res.json();
-      });
+      ).then(res => res.json());
     },
   });
 
@@ -68,15 +56,11 @@ const HanziWrite = forwardRef<HanziWriteRef, Props>((props: Props, ref) => {
   };
 
   useEffect(() => {
-    if (!loading) {
+    if (writer.characterState.status === 'resolved') {
       startQuiz();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [loading]);
-
-  useEffect(() => {
-    setLoading(true);
-  }, [props.text?.content]);
+  }, [writer.characterState.status]);
 
   useImperativeHandle(ref, () => ({}));
 
