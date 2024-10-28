@@ -88,14 +88,19 @@ const HanziWrite = forwardRef<HanziWriteRef, Props>((props: Props, ref) => {
           <HanziWriter.GridLines color="#ddd" />
           <HanziWriter.Svg>
             {/** The outline is laid under the character */}
-            <HanziWriter.Outline color="#ccc" />
+            <HanziWriter.Outline
+              color={COLORS.CUSTOM(COLORS.RED_AF3A1B, 0.3)}
+            />
             {/** The character is displayed on top. Animations run here. Quizzing will hide it */}
-            <HanziWriter.Character color="#555" radicalColor="green" />
+            <HanziWriter.Character
+              color={COLORS.RED_AF3A1B}
+              radicalColor={COLORS.RED_AF3A1B}
+            />
             {/** Quiz strokes display after every correct stroke in quiz mode */}
             <HanziWriter.QuizStrokes />
             {/** The mistake highligher will animate and fade out a stroke in quiz mode */}
             <HanziWriter.QuizMistakeHighlighter
-              color={COLORS.PRIMARY}
+              color={COLORS.RED_AF3A1B}
               strokeDuration={400}
             />
           </HanziWriter.Svg>

@@ -1,5 +1,19 @@
-import {Alert, StyleSheet, Text, View} from 'react-native';
-import React, {useMemo, useRef, useState} from 'react';
+import {
+  Alert,
+  Image,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
+import React, {
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import LessonComponent from './LessonComponent';
 import PrimaryButton from '../../components/PrimaryButton';
 import {FontFamily} from 'src/core/presentation/hooks/useFonts';
@@ -10,10 +24,16 @@ import {Task} from 'src/home/application/types/GetListQuestionResponse';
 import useAuthenticationStore from 'src/authentication/presentation/stores/useAuthenticationStore';
 import {scale, verticalScale} from 'react-native-size-matters';
 import Animated from 'react-native-reanimated';
-import {WIDTH_SCREEN} from 'src/core/presentation/utils';
+import {assets, isAndroid, WIDTH_SCREEN} from 'src/core/presentation/utils';
 import {useLessonStore} from '../../stores/LessonStore/useGetPostsStore';
 import {useSettingLesson} from '../../hooks/useSettingLesson';
 import {COLORS} from 'src/core/presentation/constants/colors';
+import Tts from 'react-native-tts';
+import {
+  iosVoice,
+  listLanguage,
+} from 'src/core/presentation/hooks/textToSpeech/TextToSpeechProvider';
+import {TextToSpeechContext} from 'src/core/presentation/hooks/textToSpeech/TextToSpeechContext';
 
 type Props = {
   moduleIndex: number;
@@ -23,7 +43,8 @@ type Props = {
   moduleName: string;
   firstMiniTestTask?: Task;
   backgroundImage?: string;
-  characterImage?: string;
+  characterImageSuccess?: string;
+  characterImageFail?: string;
 };
 
 const WriteLesson = ({
@@ -34,7 +55,8 @@ const WriteLesson = ({
   moduleName,
   firstMiniTestTask,
   backgroundImage,
-  characterImage,
+  characterImageFail,
+  characterImageSuccess,
 }: Props) => {
   const globalStyle = useGlobalStyle();
   const canvasWriteRef = useRef<CanvasWriteRef>(null);
@@ -43,13 +65,8 @@ const WriteLesson = ({
   const {trainingCount} = useLessonStore();
   const [isCorrect, setIscorrect] = useState(false);
 
-  // const isCorrectAnswer = useMemo(() => {
-  //   return (
-  //     answerSelected.toLocaleLowerCase() ===
-  //     firstMiniTestTask?.question?.[moduleIndex]?.fullAnswer.toLocaleLowerCase()
-  //   );
-  // }, [answerSelected, firstMiniTestTask?.question, moduleIndex]);
-
+  const {ttsSpeak, updateDefaultVoice} = useContext(TextToSpeechContext);
+  const [isShowMeaning, setiIsShowMeaning] = useState(false);
   const {
     isAnswerCorrect,
     isShowCorrectContainer,
@@ -75,6 +92,53 @@ const WriteLesson = ({
     fullAnswer: firstMiniTestTask?.question?.[moduleIndex].fullAnswer,
     totalTime: 5 * 60, // * tổng time làm 1câu
   });
+
+  const characterImage = useMemo(() => {
+    return isAnswerCorrect === true || isAnswerCorrect === undefined
+      ? characterImageSuccess
+      : characterImageFail;
+  }, [characterImageFail, characterImageSuccess, isAnswerCorrect]);
+
+  const onSpeechText = useCallback(() => {
+    ttsSpeak?.(
+      firstMiniTestTask?.question?.[moduleIndex].correctAnswer
+        .toString()
+        .toLowerCase() ?? '',
+    );
+  }, [firstMiniTestTask?.question, moduleIndex, ttsSpeak]);
+
+  useEffect(() => {
+    console.log(
+      '🛠 LOG: 🚀 --> -----------------------------------------------------🛠 LOG: 🚀 -->',
+    );
+    console.log('🛠 LOG: 🚀 --> ~ Tts.voices ~ lessonName:', lessonName);
+    console.log(
+      '🛠 LOG: 🚀 --> -----------------------------------------------------🛠 LOG: 🚀 -->',
+    );
+
+    Tts.voices().then(voices => {
+      if (lessonName.toLocaleLowerCase().includes('english')) {
+        const engVoice = voices.find(
+          voice => voice.language === listLanguage['US English'],
+        );
+        updateDefaultVoice?.(
+          isAndroid ? engVoice?.id : iosVoice[3].id,
+          'US English',
+        );
+      } else if (lessonName.toLocaleLowerCase().includes('mandarin')) {
+        const engVoice = voices.find(
+          voice =>
+            voice.language ===
+            listLanguage['Mainland China, simplified characters'],
+        );
+        updateDefaultVoice?.(
+          engVoice?.id,
+          'Mainland China, simplified characters',
+        );
+      }
+    });
+  }, [lessonName, updateDefaultVoice]);
+
   return (
     <LessonComponent
       backgroundImage={backgroundImage}
@@ -83,33 +147,59 @@ const WriteLesson = ({
       module={moduleName}
       part={firstMiniTestTask?.name}
       backgroundColor="#66c270"
-      backgroundAnswerColor="#DDF598"
+      backgroundAnswerColor={COLORS.PINK_F9C799}
       score={selectedChild?.adsPoints}
+      isAnswerCorrect={isAnswerCorrect}
       isShowCorrectContainer={isShowCorrectContainer}
       buildQuestion={
         <View>
           <Text style={[styles.fonts_SVN_Cherish, styles.textQuestion]}>
             {firstMiniTestTask?.question?.[moduleIndex].content}
           </Text>
-          <Animated.Image
-            resizeMode={'contain'}
-            width={WIDTH_SCREEN}
-            height={scale(150)}
-            style={[{}]}
-            source={{
-              uri:
-                env.IMAGE_QUESTION_BASE_API_URL +
-                firstMiniTestTask?.question?.[moduleIndex].image,
-            }}
-          />
+          <TouchableOpacity
+            onPress={() => setiIsShowMeaning(v => !v)}
+            activeOpacity={1}>
+            <Image
+              resizeMode={'contain'}
+              width={WIDTH_SCREEN}
+              style={[
+                {
+                  width: WIDTH_SCREEN,
+                  height: scale(150),
+                },
+              ]}
+              source={{
+                uri:
+                  env.IMAGE_QUESTION_BASE_API_URL +
+                  (isShowMeaning
+                    ? firstMiniTestTask?.question?.[moduleIndex]
+                        .descriptionImage
+                    : firstMiniTestTask?.question?.[moduleIndex].image),
+              }}
+            />
+          </TouchableOpacity>
         </View>
       }
       buildAnswer={
         <View style={styles.fill}>
-          <Text style={[globalStyle.txtLabel]}>
-            Write the "
-            {firstMiniTestTask?.question?.[moduleIndex].correctAnswer}"
-          </Text>
+          <View
+            style={{
+              justifyContent: 'space-between',
+              flexDirection: 'row',
+            }}>
+            <Text style={[globalStyle.txtLabel]}>
+              Write the "
+              {firstMiniTestTask?.question?.[moduleIndex].correctAnswer}"
+            </Text>
+            <TouchableOpacity onPress={onSpeechText}>
+              <Image
+                source={assets.icon_speech}
+                style={styles.iconAIVoiceContainer}
+                resizeMode="contain"
+              />
+            </TouchableOpacity>
+          </View>
+
           <View style={{height: verticalScale(10)}} />
           <HanziWrite
             ref={canvasWriteRef}
@@ -122,12 +212,7 @@ const WriteLesson = ({
               setIscorrect(true);
             }}
           />
-          <PrimaryButton
-            text="Submit"
-            disable={!isCorrect}
-            style={[styles.mt32]}
-            onPress={submit}
-          />
+          <PrimaryButton text="Submit" style={[styles.mt32]} onPress={submit} />
         </View>
       }
       moduleIndex={moduleIndex}
@@ -151,9 +236,9 @@ const styles = StyleSheet.create({
     color: 'white',
   },
   textQuestion: {
-    fontSize: 40,
+    fontSize: scale(40),
     textAlign: 'center',
-    color: 'white',
+    color: COLORS.RED_811010,
   },
   rowAround: {
     flexDirection: 'row',
@@ -170,6 +255,7 @@ const styles = StyleSheet.create({
   alignSelfCenter: {
     alignSelf: 'center',
   },
+  iconAIVoiceContainer: {height: scale(31), width: scale(31)},
 });
 
 const matchPointsA = [

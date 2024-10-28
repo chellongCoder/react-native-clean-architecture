@@ -79,7 +79,7 @@ android {
         applicationId "com.alphadex.tbd.app"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 19
+        versionCode 20
         versionName "1.0"
         missingDimensionStrategy "store", "play"
     }
@@ -119,6 +119,7 @@ dependencies {
     implementation 'com.google.android.gms:play-services-ads:22.2.0'
     // implementation 'com.andrognito.pinlockview:pinlockview:2.1.0'
     // implementation 'com.github.mmin18:realtimeblurview:1.2.1'
+    implementation ("com.facebook.fresco:animated-gif:3.1.0")
 
     if (hermesEnabled.toBoolean()) {
         implementation("com.facebook.react:hermes-android")

@@ -558,11 +558,12 @@ const LessonScreen = observer(() => {
             backgroundImage={
               env.IMAGE_BACKGROUND_BASE_API_URL + lessonSetting?.backgroundImage
             }
-            characterImage={
+            characterImageSuccess={
               env.IMAGE_BACKGROUND_BASE_API_URL +
-              (hasShowCharacter
-                ? lessonSetting?.figureSuccessImage
-                : lessonSetting?.figureFailImage)
+              lessonSetting?.figureSuccessImage
+            }
+            characterImageFail={
+              env.IMAGE_BACKGROUND_BASE_API_URL + lessonSetting?.figureFailImage
             }
           />
         );

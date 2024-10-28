@@ -115,6 +115,21 @@ const PronunciationLesson = observer(
         totalTime: 5 * 60, // * tổng time làm 1câu
       });
 
+      const settings = useMemo(() => {
+        if (lessonName.toLocaleLowerCase().includes('english')) {
+          return {
+            backgroundAnswerColor: COLORS.PRIMARY,
+          };
+        } else if (lessonName.toLocaleLowerCase().includes('mandarin')) {
+          return {
+            backgroundAnswerColor: COLORS.PINK_F9C799,
+          };
+        }
+        return {
+          backgroundAnswerColor: COLORS.PRIMARY,
+        };
+      }, [lessonName]);
+
       const characterImage = useMemo(() => {
         return isAnswerCorrect === true || isAnswerCorrect === undefined
           ? characterImageSuccess
@@ -349,7 +364,7 @@ const PronunciationLesson = observer(
           module={moduleName}
           part={firstMiniTestTask?.name}
           backgroundColor="#66c270"
-          backgroundAnswerColor="#DDF598"
+          backgroundAnswerColor={settings.backgroundAnswerColor}
           price="Free"
           score={selectedChild?.adsPoints}
           isAnswerCorrect={isAnswerCorrect}

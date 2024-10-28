@@ -14,6 +14,7 @@ export interface Question {
   answers: Answer[];
   fullAnswer: string;
   image: string;
+  descriptionImage: string;
 }
 
 export interface Task {

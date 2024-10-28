@@ -1,6 +1,7 @@
 import React, {useCallback, useState} from 'react';
 import {View, Text, StyleSheet, TouchableOpacity, Image} from 'react-native';
 import {scale, verticalScale} from 'react-native-size-matters';
+import {COLORS} from 'src/core/presentation/constants/colors';
 import useGlobalStyle from 'src/core/presentation/hooks/useGlobalStyle';
 import {assets} from 'src/core/presentation/utils';
 import {Question} from 'src/home/application/types/GetListQuestionResponse';
@@ -61,7 +62,7 @@ const GeometryComponent = ({
                 style={[
                   styles.answerContainer,
                   item.trim() === selectedAnswer.trim()
-                    ? {backgroundColor: '#66C270'}
+                    ? {backgroundColor: COLORS.GREEN_66C270}
                     : {},
                 ]}
                 onPress={() => onSelectAnswer(item)}
@@ -98,11 +99,11 @@ const styles = StyleSheet.create({
     color: '#003C82',
   },
   wrapBodyContainer: {
-    flex: 1,
-    borderRadius: 32,
+    height: scale(230),
+    borderRadius: scale(32),
     backgroundColor: '#FBF8CC',
     flexDirection: 'row',
-    padding: 16,
+    padding: scale(16),
   },
   questionContainer: {
     flexDirection: 'column',
@@ -117,13 +118,13 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   answerContainer: {
-    backgroundColor: '#F2B559',
+    backgroundColor: COLORS.YELLOW_F2B559,
     borderRadius: scale(10),
     paddingVertical: verticalScale(4),
     alignItems: 'center',
   },
   answerTitle: {
-    fontSize: 35,
+    fontSize: scale(20),
     color: '#FBF8CC',
   },
   wrapButtonContainer: {

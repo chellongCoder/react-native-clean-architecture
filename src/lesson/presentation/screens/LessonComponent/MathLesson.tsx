@@ -1,4 +1,4 @@
-import {Image, StyleSheet, Text, View} from 'react-native';
+import {Image, LayoutChangeEvent, StyleSheet, Text, View} from 'react-native';
 import React, {forwardRef, useImperativeHandle, useMemo, useState} from 'react';
 import LessonComponent from './LessonComponent';
 import {FontFamily} from 'src/core/presentation/hooks/useFonts';
@@ -43,17 +43,19 @@ const MathLesson = forwardRef<LessonRef, Props>(
   ) => {
     const globalStyle = useGlobalStyle();
     const [answerSelected, setAnswerSelected] = useState('');
-    console.log(
-      '🛠 LOG: 🚀 --> ------------------------------------------------🛠 LOG: 🚀 -->',
-    );
-    console.log('🛠 LOG: 🚀 --> ~ answerSelected:', answerSelected);
-    console.log(
-      '🛠 LOG: 🚀 --> ------------------------------------------------🛠 LOG: 🚀 -->',
-    );
 
     const {trainingCount} = useLessonStore();
 
     const {selectedChild} = useAuthenticationStore();
+
+    const isCorrectAnswer = useMemo(() => {
+      return (
+        answerSelected.trim().toLocaleLowerCase() ===
+        firstMiniTestTask?.question?.[moduleIndex]?.correctAnswer
+          .trim()
+          .toLocaleLowerCase()
+      );
+    }, [answerSelected, firstMiniTestTask?.question, moduleIndex]);
 
     const {
       isAnswerCorrect,
@@ -66,9 +68,7 @@ const MathLesson = forwardRef<LessonRef, Props>(
       resetLearning,
     } = useSettingLesson({
       countDownTime: trainingCount <= 2 ? 0 : 5,
-      isCorrectAnswer:
-        answerSelected.trim() ===
-        firstMiniTestTask?.question?.[moduleIndex]?.correctAnswer.trim(),
+      isCorrectAnswer,
       onSubmit: () => {
         setAnswerSelected('');
         nextModule(answerSelected);
@@ -82,6 +82,13 @@ const MathLesson = forwardRef<LessonRef, Props>(
         ? characterImageSuccess
         : characterImageFail;
     }, [characterImageFail, characterImageSuccess, isAnswerCorrect]);
+
+    const [geometryHeight, setGeometryHeight] = useState(0);
+
+    const onLayout = (event: LayoutChangeEvent) => {
+      const {height} = event.nativeEvent.layout;
+      setGeometryHeight(height);
+    };
 
     useImperativeHandle(ref, () => ({
       isAnswerCorrect,
@@ -111,7 +118,7 @@ const MathLesson = forwardRef<LessonRef, Props>(
         isShowCorrectContainer={isShowCorrectContainer}
         onPressFlower={toggleShowHint}
         buildQuestion={
-          <View style={{width: '100%', aspectRatio: 4 / 3}}>
+          <View style={{width: '80%'}}>
             <View
               style={{
                 width: '100%',
@@ -136,7 +143,7 @@ const MathLesson = forwardRef<LessonRef, Props>(
           </View>
         }
         buildAnswer={
-          <View style={styles.fill}>
+          <View onLayout={onLayout} style={styles.fill}>
             <GeometryComponent
               question={firstMiniTestTask?.question?.[moduleIndex]}
               imageUrl={
@@ -158,7 +165,7 @@ const MathLesson = forwardRef<LessonRef, Props>(
                     zIndex: 999,
                     width: '100%',
                     opacity: 0.7,
-                    // height: '100%',
+                    height: geometryHeight - scale(80),
                   },
                 ]}
               />
@@ -233,7 +240,7 @@ const styles = StyleSheet.create({
   },
   boxItemAnswer: {
     height: 94,
-    backgroundColor: '#F2B559',
+    backgroundColor: COLORS.YELLOW_F2B559,
     borderRadius: 15,
   },
   rulerContainer: {
@@ -243,11 +250,11 @@ const styles = StyleSheet.create({
   },
   boxSelected: {
     backgroundColor: COLORS.WHITE_FFFBE3,
-    height: verticalScale(220),
+    height: verticalScale(230),
     flex: 1,
     borderRadius: scale(30),
     justifyContent: 'center',
     alignItems: 'center',
-    marginTop: verticalScale(28),
+    marginTop: verticalScale(30),
   },
 });

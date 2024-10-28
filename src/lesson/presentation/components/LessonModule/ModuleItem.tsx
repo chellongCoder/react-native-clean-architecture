@@ -5,11 +5,7 @@ import useGlobalStyle from 'src/core/presentation/hooks/useGlobalStyle';
 import {COLORS} from 'src/core/presentation/constants/colors';
 import Button from './Button';
 import {scale, verticalScale} from 'react-native-size-matters';
-import {
-  // ScreenTimeComponent,
-  selectedAppsData,
-  sentEvent,
-} from 'react-native-alphadex-screentime';
+
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import {navigateScreen} from 'src/core/presentation/navigation/actions/RootNavigationActions';
 import {STACK_NAVIGATOR} from 'src/core/presentation/navigation/ConstantNavigator';
@@ -69,10 +65,7 @@ const ModuleItem = (props: Props) => {
         </View>
         <View style={{width: scale(22)}} />
         <View style={styles.textContainer}>
-          <TouchableOpacity
-            onPress={() => {
-              sentEvent();
-            }}>
+          <TouchableOpacity>
             <Text
               numberOfLines={2}
               style={[styles.title, globalStyle.txtLabel]}>
@@ -86,7 +79,7 @@ const ModuleItem = (props: Props) => {
         </View>
       </View>
       <View style={styles.buttonContainer}>
-        <TouchableOpacity onPress={async () => {}}>
+        <TouchableOpacity>
           <Text style={[styles.title, globalStyle.txtLabel]}>
             {props.progress}/{props.totalQuestion}
           </Text>
@@ -117,7 +110,7 @@ const ModuleItem = (props: Props) => {
         </View>
       </View>
       <View style={styles.buttonContainer}>
-        <TouchableOpacity onPress={async () => {}}>
+        <TouchableOpacity>
           <Text style={[styles.title, globalStyle.txtLabel]}>
             {props.progress}/{props.totalQuestion}
           </Text>
