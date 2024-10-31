@@ -475,7 +475,7 @@ const styles = StyleSheet.create({
     fontFamily: FontFamily.SVNCherishMoment,
   },
   fonts_EinaBold: {
-    fontFamily: FontFamily.Eina01Bold,
+    fontFamily: FontFamily.SVNNeuzeitBold,
   },
   textColor: {
     color: '#1C6349',
@@ -590,7 +590,7 @@ const styles = StyleSheet.create({
   iconImageContainer: {height: scale(71), width: scale(71)},
   iconAIVoiceContainer: {height: scale(31), width: scale(31)},
   hintText: {
-    fontFamily: FontFamily.Eina01Bold,
+    fontFamily: FontFamily.SVNNeuzeitBold,
     color: COLORS.PRIMARY,
     fontSize: scale(12),
   },

@@ -43,7 +43,7 @@ export const HomeProvider = ({children}: PropsWithChildren) => {
         storeData(OfflineEnum.LIST_SUBJECT, res.data);
         if (res.data) {
           setHomeState({listSubject: res.data});
-          navigateScreen(STACK_NAVIGATOR.HOME.SUBJECT_SCREEN);
+          navigateScreen(STACK_NAVIGATOR.HOME.SUBJECT_SCREEN, {});
         }
       }
     }
@@ -74,7 +74,7 @@ export const HomeProvider = ({children}: PropsWithChildren) => {
 
   useEffect(() => {
     if (!isConnected) {
-      navigateScreen(STACK_NAVIGATOR.HOME.SUBJECT_SCREEN);
+      navigateScreen(STACK_NAVIGATOR.HOME.SUBJECT_SCREEN, {});
     }
   }, [homeState.field, isConnected]);
 

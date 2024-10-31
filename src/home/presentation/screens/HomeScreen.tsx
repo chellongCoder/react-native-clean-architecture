@@ -31,7 +31,6 @@ const styles = StyleSheet.create({
   },
   wrapContentContainer: {
     flex: 1,
-    paddingHorizontal: scale(16),
   },
 });
 

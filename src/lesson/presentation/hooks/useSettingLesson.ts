@@ -237,7 +237,7 @@ export const useSettingLesson = ({
   }, [learningTimer, stop]);
 
   /**
-   * nếu 10s đếm ngược đã kết thúc -> submit câu trả lời
+   * * nếu 10s đếm ngược đã kết thúc -> submit câu trả lời
    */
   useEffect(() => {
     if (time === 0) {
@@ -246,7 +246,7 @@ export const useSettingLesson = ({
   }, [submit, time]);
 
   /**
-   * nếu chưa play sound đếm ngược 10s & 5s đã kết thúc -> play sound
+   * * nếu chưa play sound đếm ngược 10s & 5s đã kết thúc -> play sound
    */
   useEffect(() => {
     if (!playSoundRef.current && learningTimer === 0) {
@@ -256,6 +256,9 @@ export const useSettingLesson = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [learningTimer]);
 
+  /**
+   * * set âm lượng được lưu trong config khi vào màn làm bài
+   */
   useAsyncEffect(async () => {
     const currentLevel = await VolumeManager.getVolume();
 
@@ -265,6 +268,12 @@ export const useSettingLesson = ({
       VolumeManager.setVolume(parseFloat(currentLevel.volume + ''));
     };
   }, [lessonStore.backgroundSound, lessonStore.charSound]);
+
+  useEffect(() => {
+    return () => {
+      stopRecord();
+    };
+  }, [stopRecord]);
 
   return {
     start,

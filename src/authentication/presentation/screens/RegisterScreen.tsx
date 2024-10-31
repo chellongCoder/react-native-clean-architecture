@@ -275,9 +275,9 @@ const styles = StyleSheet.create({
     color: COLORS.ERROR,
   },
   subTitle: {
-    color: '#1C6349',
-    fontFamily: FontFamily.Eina01Regular,
-    fontSize: 10,
+    color: COLORS.BLUE_1C6349,
+    fontFamily: FontFamily.SVNNeuzeitRegular,
+    fontSize: scale(10),
   },
 });
 

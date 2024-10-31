@@ -7,13 +7,13 @@ export default function useGlobalStyle() {
   return StyleSheet.create({
     txtNote: {
       fontSize: moderateScale(8),
-      fontFamily: FontFamily.Eina01Regular,
+      fontFamily: FontFamily.SVNNeuzeitRegular,
       lineHeight: verticalScale(10),
       color: COLORS.BACKGROUND,
     },
     txtLabel: {
       fontSize: moderateScale(15),
-      fontFamily: FontFamily.Eina01Bold,
+      fontFamily: FontFamily.SVNNeuzeitBold,
     },
     txtWord: {
       fontSize: moderateScale(40),
@@ -25,7 +25,7 @@ export default function useGlobalStyle() {
     },
     txtButton: {
       fontSize: moderateScale(10),
-      fontFamily: FontFamily.Eina01Bold,
+      fontFamily: FontFamily.SVNNeuzeitBold,
     },
     marginVertical: {
       marginTop: verticalScale(8),

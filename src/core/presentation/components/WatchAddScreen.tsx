@@ -93,7 +93,7 @@ const styles = StyleSheet.create({
     color: COLORS.RED_AF3A1B,
   },
   txtHint: {
-    fontFamily: FontFamily.Eina01Bold,
+    fontFamily: FontFamily.SVNNeuzeitBold,
     fontSize: moderateScale(12),
     color: COLORS.RED_AF3A1B,
   },
@@ -104,7 +104,7 @@ const styles = StyleSheet.create({
     maxWidth: scale(160),
   },
   txtButton: {
-    fontFamily: FontFamily.Eina01Bold,
+    fontFamily: FontFamily.SVNNeuzeitBold,
     fontSize: moderateScale(18),
     color: COLORS.WHITE_FBF8CC,
   },

@@ -1,10 +1,15 @@
-import React, {useContext} from 'react';
+import React, {useContext, useEffect} from 'react';
 import {View, Text, TouchableOpacity, FlatList, StyleSheet} from 'react-native';
 import {scale} from 'react-native-size-matters';
 import {COLORS} from 'src/core/presentation/constants/colors';
 import {CustomTextStyle} from 'src/core/presentation/constants/typography';
 import {HomeContext} from '../stores/HomeContext';
 import {FieldData} from 'src/home/application/types/GetFieldResponse';
+import Animated, {
+  useAnimatedStyle,
+  useSharedValue,
+  withSpring,
+} from 'react-native-reanimated';
 
 export interface TDataItem {
   id: number | string;
@@ -45,9 +50,16 @@ const ListSubject = () => {
       textColor: COLORS.YELLOW_FFBF60,
     },
   ];
+  const scaleValue = useSharedValue(0.5);
 
-  const mergedData: IMergedData[] = homeState?.listField?.map(
-    (field: IMergedData, index: number) => {
+  const animatedStyle = useAnimatedStyle(() => {
+    return {
+      transform: [{scale: scaleValue.value}],
+    };
+  });
+
+  const mergedData = homeState?.listField?.map(
+    (field: FieldData, index: number) => {
       const dataIndex = index % data.length; // Cycle through data array
       const dataItem = data[dataIndex];
 
@@ -64,9 +76,21 @@ const ListSubject = () => {
     onSelectField(e);
   };
 
+  useEffect(() => {
+    if (mergedData?.length) {
+      scaleValue.value = withSpring(1, {
+        duration: 500,
+        restSpeedThreshold: 0.5,
+        dampingRatio: 0.3,
+      });
+    }
+  }, [mergedData?.length, scaleValue]);
+
   const renderItem = ({item, index}: {item: IMergedData; index: number}) => {
     return (
-      <View key={index} style={[styles.contentContainer]}>
+      <Animated.View
+        key={index}
+        style={[styles.contentContainer, animatedStyle]}>
         {item.position === 'right' && (
           <View style={[styles.container, {height: scale(132)}]} />
         )}
@@ -82,7 +106,7 @@ const ListSubject = () => {
             {item.name}
           </Text>
         </TouchableOpacity>
-      </View>
+      </Animated.View>
     );
   };
 
@@ -102,6 +126,7 @@ const ListSubject = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    paddingHorizontal: scale(16),
   },
   contentContainer: {
     flex: 1,

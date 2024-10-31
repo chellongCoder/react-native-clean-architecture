@@ -12,6 +12,7 @@ import Animated, {
 import {ActivityIndicator} from 'react-native';
 import {withProviders} from '../utils/withProviders';
 import {AdsNativeProvider} from '../hooks/adsnative/AdsNativeProvider';
+import {CustomTextStyle} from '../constants/typography';
 
 type Props = {
   onWatchRewardAds: () => void;
@@ -100,7 +101,7 @@ const styles = StyleSheet.create({
     color: COLORS.GREEN_4CB572,
   },
   txtHint: {
-    fontFamily: FontFamily.Eina01Bold,
+    ...CustomTextStyle.body1,
     fontSize: moderateScale(12),
   },
   text: {
@@ -109,7 +110,7 @@ const styles = StyleSheet.create({
     fontSize: moderateScale(12),
   },
   txtButton: {
-    fontFamily: FontFamily.Eina01Bold,
+    fontFamily: FontFamily.SVNNeuzeitRegular,
     fontSize: moderateScale(18),
     color: COLORS.WHITE_FBF8CC,
   },

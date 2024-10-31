@@ -15,13 +15,14 @@ import {observer} from 'mobx-react';
 import {useLoadingGlobal} from 'src/core/presentation/hooks/loading/useLoadingGlobal';
 import {navigateScreen} from 'src/core/presentation/navigation/actions/RootNavigationActions';
 import {STACK_NAVIGATOR} from 'src/core/presentation/navigation/ConstantNavigator';
-import {scale} from 'react-native-size-matters';
+import {scale, verticalScale} from 'react-native-size-matters';
 import Dropdown from 'src/core/components/dropdown/Dropdown';
+import useGlobalStyle from 'src/core/presentation/hooks/useGlobalStyle';
 
 const LoginScreen = observer(() => {
   const {handleLoginWithCredentials} = useLoginWithCredentials();
   useLoadingGlobal();
-
+  const globalStyle = useGlobalStyle();
   const [emailOrPhone, setEmailOrPhone] = useState('');
   const [password, setPassword] = useState('');
   const [lang, setLang] = useState('Eng');
@@ -34,7 +35,7 @@ const LoginScreen = observer(() => {
   };
 
   const onRegister = () => {
-    navigateScreen(STACK_NAVIGATOR.AUTH.REGISTER_SCREEN);
+    navigateScreen(STACK_NAVIGATOR.AUTH.REGISTER_SCREEN, {});
   };
 
   return (
@@ -115,12 +116,18 @@ const LoginScreen = observer(() => {
           <TouchableOpacity
             onPress={onRegister}
             style={{marginVertical: scale(32)}}>
-            <Text style={[styles.txtLink, styles.mv8, styles.textCenter]}>
+            <Text
+              style={[
+                globalStyle.txtLabel,
+                styles.txtLink,
+                styles.mv8,
+                styles.textCenter,
+              ]}>
               Don't have account?{' '}
               <Text
                 style={{
                   textDecorationLine: 'underline',
-                  fontFamily: FontFamily.Eina01Bold,
+                  fontFamily: FontFamily.SVNNeuzeitBold,
                 }}>
                 Sign up now
               </Text>
@@ -176,15 +183,14 @@ const styles = StyleSheet.create({
     marginHorizontal: 12,
   },
   mv8: {
-    marginVertical: 8,
+    marginVertical: verticalScale(8),
   },
   mt48: {
     marginTop: scale(24),
     marginBottom: scale(48),
   },
   txtLink: {
-    fontFamily: FontFamily.Eina01Regular,
-    fontSize: 10,
+    fontSize: scale(10),
     color: '#1C6349',
   },
   textCenter: {

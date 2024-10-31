@@ -356,7 +356,7 @@ const DoneLessonScreen = ({}) => {
                 textBreakStrategy="balanced">
                 Good job!!! Now let’s practice again{' '}
                 {route.countTime && (
-                  <Text style={[{fontFamily: FontFamily.Eina01Bold}]}>
+                  <Text style={[{fontFamily: FontFamily.SVNNeuzeitBold}]}>
                     {route.countTime ?? ''} {'\n'}
                   </Text>
                 )}
