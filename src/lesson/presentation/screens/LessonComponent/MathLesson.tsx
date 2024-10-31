@@ -1,10 +1,19 @@
 import {Image, LayoutChangeEvent, StyleSheet, Text, View} from 'react-native';
-import React, {forwardRef, useImperativeHandle, useMemo, useState} from 'react';
+import React, {
+  forwardRef,
+  useEffect,
+  useImperativeHandle,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import LessonComponent from './LessonComponent';
 import {FontFamily} from 'src/core/presentation/hooks/useFonts';
 import useGlobalStyle from 'src/core/presentation/hooks/useGlobalStyle';
 import {assets} from 'src/core/presentation/utils';
-import DraggableZoomableRotatableImage from '../../components/Ruler';
+import DraggableZoomableRotatableImage, {
+  DraggableImageRef,
+} from '../../components/Ruler';
 import {scale, verticalScale} from 'react-native-size-matters';
 import GeometryComponent from './GeometryComponent';
 import {Task} from 'src/home/application/types/GetListQuestionResponse';
@@ -41,6 +50,8 @@ const MathLesson = forwardRef<LessonRef, Props>(
     }: Props,
     ref,
   ) => {
+    const imageRef = useRef<DraggableImageRef>(null);
+
     const globalStyle = useGlobalStyle();
     const [answerSelected, setAnswerSelected] = useState('');
 
@@ -99,6 +110,12 @@ const MathLesson = forwardRef<LessonRef, Props>(
       },
     }));
 
+    useEffect(() => {
+      if (moduleIndex) {
+        imageRef.current?.resetAnimation();
+      }
+    }, [moduleIndex]);
+
     return (
       <LessonComponent
         backgroundImage={backgroundImage}
@@ -138,6 +155,7 @@ const MathLesson = forwardRef<LessonRef, Props>(
               <DraggableZoomableRotatableImage
                 source={assets.ruler_deg}
                 style={globalStyle.image_100}
+                ref={imageRef}
               />
             </View>
           </View>

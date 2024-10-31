@@ -34,6 +34,7 @@ import {
   listLanguage,
 } from 'src/core/presentation/hooks/textToSpeech/TextToSpeechProvider';
 import {TextToSpeechContext} from 'src/core/presentation/hooks/textToSpeech/TextToSpeechContext';
+import {useIsFocused} from '@react-navigation/native';
 
 type Props = {
   moduleIndex: number;
@@ -66,6 +67,8 @@ const WriteLesson = ({
   const [isCorrect, setIscorrect] = useState(false);
 
   const {ttsSpeak, updateDefaultVoice} = useContext(TextToSpeechContext);
+  const focus = useIsFocused();
+
   const [isShowMeaning, setiIsShowMeaning] = useState(false);
   const {
     isAnswerCorrect,
@@ -106,6 +109,24 @@ const WriteLesson = ({
         .toLowerCase() ?? '',
     );
   }, [firstMiniTestTask?.question, moduleIndex, ttsSpeak]);
+
+  useEffect(() => {
+    if (focus) {
+      // Check if the component is focused
+
+      const firstTimeout = setTimeout(() => {
+        onSpeechText();
+
+        const secondTimeout = setTimeout(() => {
+          onSpeechText();
+        }, 2500);
+
+        return () => clearTimeout(secondTimeout);
+      }, 1500);
+
+      return () => clearTimeout(firstTimeout);
+    }
+  }, [onSpeechText, focus]); // Added focus to the dependency array
 
   useEffect(() => {
     console.log(

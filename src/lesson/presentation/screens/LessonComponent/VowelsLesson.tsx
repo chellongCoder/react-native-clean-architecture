@@ -65,7 +65,7 @@ const VowelsLesson = observer(
       const focus = useIsFocused();
 
       const [answerSelected, setAnswerSelected] = useState('');
-      const {trainingCount} = useLessonStore();
+      const {trainingCount, getSetting} = useLessonStore();
 
       const {selectedChild} = useAuthenticationStore();
 
@@ -90,6 +90,10 @@ const VowelsLesson = observer(
         fullAnswer: firstMiniTestTask?.question?.[moduleIndex].fullAnswer,
       });
 
+      const settings = useMemo(
+        () => getSetting(lessonName),
+        [getSetting, lessonName],
+      );
       const characterImage = useMemo(() => {
         return isAnswerCorrect === true || isAnswerCorrect === undefined
           ? characterImageSuccess
@@ -169,7 +173,7 @@ const VowelsLesson = observer(
           module={moduleName}
           part={firstMiniTestTask?.name}
           backgroundColor="#66c270"
-          backgroundAnswerColor="#DDF598"
+          backgroundAnswerColor={settings.backgroundAnswerColor}
           price="Free"
           score={selectedChild?.adsPoints}
           isAnswerCorrect={isAnswerCorrect}

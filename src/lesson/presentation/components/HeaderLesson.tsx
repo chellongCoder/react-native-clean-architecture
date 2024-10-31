@@ -1,5 +1,5 @@
 import {StyleSheet, Text, View} from 'react-native';
-import React from 'react';
+import React, {useMemo} from 'react';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import useGlobalStyle from 'src/core/presentation/hooks/useGlobalStyle';
 import {scale, verticalScale} from 'react-native-size-matters';
@@ -15,11 +15,20 @@ type Props = {
   price?: string;
   part?: string;
   score?: number;
+  color?: string;
 };
 
-const HeaderLesson = ({lessonName, module, price, score, part}: Props) => {
+const HeaderLesson = ({
+  lessonName,
+  module,
+  price,
+  score,
+  part,
+  color,
+}: Props) => {
   const insets = useSafeAreaInsets();
   const globalStyle = useGlobalStyle();
+  const textColor = useMemo(() => color, [color]);
   return (
     <View>
       <View style={{height: insets.top}} />
@@ -29,7 +38,12 @@ const HeaderLesson = ({lessonName, module, price, score, part}: Props) => {
             styles.rowBetween,
             {alignItems: 'center', maxWidth: scale(250)},
           ]}>
-          <Text style={[styles.fonts_SVN_Cherish, styles.textTitle]}>
+          <Text
+            style={[
+              styles.fonts_SVN_Cherish,
+              styles.textTitle,
+              {color: textColor},
+            ]}>
             {lessonName}
           </Text>
           <View
@@ -42,10 +56,22 @@ const HeaderLesson = ({lessonName, module, price, score, part}: Props) => {
             }}
           />
           <View>
-            <Text style={[globalStyle.txtButton, styles.textModule]}>
+            <Text
+              style={[
+                globalStyle.txtButton,
+                styles.textModule,
+                {color: textColor},
+              ]}>
               {module}
             </Text>
-            <Text style={[globalStyle.txtNote, styles.textPart]}>{part}</Text>
+            <Text
+              style={[
+                globalStyle.txtNote,
+                styles.textPart,
+                {color: textColor},
+              ]}>
+              {part}
+            </Text>
           </View>
         </View>
       </View>
@@ -69,18 +95,18 @@ const styles = StyleSheet.create({
     fontFamily: FontFamily.SVNCherishMoment,
   },
   textTitle: {
-    fontSize: 30,
+    fontSize: scale(30),
     color: COLORS.GREEN_1C6349,
   },
   alightEnd: {
     alignItems: 'flex-end',
   },
   textModule: {
-    fontSize: 10,
+    fontSize: scale(10),
     color: COLORS.BLUE_258F78,
   },
   textPart: {
-    fontSize: 10,
+    fontSize: scale(10),
     color: COLORS.BLUE_258F78,
     fontWeight: '300',
   },

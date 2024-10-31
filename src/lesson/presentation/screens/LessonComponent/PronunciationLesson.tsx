@@ -85,7 +85,7 @@ const PronunciationLesson = observer(
         );
       }, [answerSelected, firstMiniTestTask?.question, moduleIndex]);
 
-      const {trainingCount} = useLessonStore();
+      const {trainingCount, getSetting} = useLessonStore();
 
       const {selectedChild} = useAuthenticationStore();
 
@@ -115,20 +115,10 @@ const PronunciationLesson = observer(
         totalTime: 5 * 60, // * tổng time làm 1câu
       });
 
-      const settings = useMemo(() => {
-        if (lessonName.toLocaleLowerCase().includes('english')) {
-          return {
-            backgroundAnswerColor: COLORS.GREEN_66C270,
-          };
-        } else if (lessonName.toLocaleLowerCase().includes('mandarin')) {
-          return {
-            backgroundAnswerColor: COLORS.PINK_F9C799,
-          };
-        }
-        return {
-          backgroundAnswerColor: COLORS.PRIMARY,
-        };
-      }, [lessonName]);
+      const settings = useMemo(
+        () => getSetting(lessonName),
+        [getSetting, lessonName],
+      );
 
       const characterImage = useMemo(() => {
         return isAnswerCorrect === true || isAnswerCorrect === undefined
@@ -183,14 +173,6 @@ const PronunciationLesson = observer(
       }, [trainingCount]);
 
       useEffect(() => {
-        console.log(
-          '🛠 LOG: 🚀 --> -----------------------------------------------------🛠 LOG: 🚀 -->',
-        );
-        console.log('🛠 LOG: 🚀 --> ~ Tts.voices ~ lessonName:', lessonName);
-        console.log(
-          '🛠 LOG: 🚀 --> -----------------------------------------------------🛠 LOG: 🚀 -->',
-        );
-
         Tts.voices().then(voices => {
           if (lessonName.toLocaleLowerCase().includes('english')) {
             const engVoice = voices.find(

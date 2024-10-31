@@ -234,13 +234,13 @@ const DoneLessonScreen = ({}) => {
     }
   }, [onUnlockAppSetting, route.isMiniTest]);
 
-  // useEffect(() => {
-  //   const backHandler = BackHandler.addEventListener(
-  //     'hardwareBackPress',
-  //     () => true,
-  //   );
-  //   return () => backHandler.remove();
-  // }, []);
+  useEffect(() => {
+    const backHandler = BackHandler.addEventListener(
+      'hardwareBackPress',
+      () => false,
+    );
+    return () => backHandler.remove();
+  }, []);
 
   if (!isSuccess) {
     return (
@@ -253,11 +253,14 @@ const DoneLessonScreen = ({}) => {
               : route.backgroundAndie
           }
           resizeMode="cover">
+          <View style={styles.overlayBgImage} />
+
           <HeaderLesson
             lessonName={route.lessonName}
             module={route.moduleName}
             part={route.partName}
           />
+
           <Text style={[styleHook.txtWord, styles.text]}>OH NOO !!!</Text>
           <Image
             source={
@@ -313,10 +316,12 @@ const DoneLessonScreen = ({}) => {
               : route.backgroundAndie
           }
           resizeMode="cover">
+          <View style={styles.overlayBgImage} />
           <HeaderLesson
             lessonName={route.lessonName}
             module={route.moduleName}
             part={route.partName}
+            color={route.colorBgBookView}
           />
           <Text style={[styleHook.txtWord, styles.text]}>YAYYY !!!</Text>
           <Image
@@ -382,45 +387,30 @@ const DoneLessonScreen = ({}) => {
         {isShowOnBoard && (
           <Animated.View
             entering={FadeIn.duration(200).easing(Easing.ease)}
-            style={{
-              position: 'absolute',
-              zIndex: 999,
-              width: '100%',
-              height: '100%',
-            }}>
+            style={styles.absoluteContent}>
             <OnBoardingMinitestScreen />
           </Animated.View>
         )}
         {isShowWatchAds && (
-          <View
-            style={{
-              position: 'absolute',
-              zIndex: 999,
-              width: '100%',
-              height: '100%',
-            }}>
+          <View style={styles.absoluteContent}>
             <WatchAddScreen
               loadedAds={!!ggadsHook.loaded}
               onWatchRewardAds={onWatchRewardAds}
             />
           </View>
         )}
-        {isShowGotReward && !isShowOnBoard && (
-          <TouchableOpacity
-            activeOpacity={1}
-            onPress={() => setIsShowWatchAds(false)}
-            style={{
-              position: 'absolute',
-              zIndex: 999,
-              width: '100%',
-              height: '100%',
-            }}>
-            <GotRewardModal
-              loadedAds={!!ggadsHook.loaded}
-              onWatchRewardAds={onReceiveReward}
-            />
-          </TouchableOpacity>
-        )}
+        {isShowGotReward &&
+          !isShowOnBoard && ( // * nnếu biến này true và đang ko show onboard screen thì show modal này lên
+            <TouchableOpacity
+              activeOpacity={1}
+              onPress={() => setIsShowWatchAds(false)}
+              style={styles.absoluteContent}>
+              <GotRewardModal
+                loadedAds={!!ggadsHook.loaded}
+                onWatchRewardAds={onReceiveReward}
+              />
+            </TouchableOpacity>
+          )}
       </View>
     </GoogleAdsmobProvider>
   );
@@ -565,5 +555,19 @@ const styles = StyleSheet.create({
     fontSize: 10,
     fontWeight: 'bold',
     color: '#FBF8CC',
+  },
+  absoluteContent: {
+    position: 'absolute',
+    zIndex: 999,
+    width: '100%',
+    height: '100%',
+  },
+  overlayBgImage: {
+    backgroundColor: COLORS.CUSTOM(COLORS.BLACK, 0.8),
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    width: '100%',
+    height: '110%',
   },
 });

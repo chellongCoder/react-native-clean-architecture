@@ -93,10 +93,6 @@ enum LessonTypeE {
   WRITE = 'write',
 }
 
-type LessonType = {
-  lessonType: LessonTypeE;
-};
-
 export type TResult = {
   userId?: string;
   taskId?: string;
@@ -111,7 +107,7 @@ export type TLessonState = {
 };
 
 const LessonScreen = observer(() => {
-  const vowelRef = useRef<LessonRef>({isAnswerCorrect: true});
+  const vowelRef = useRef<LessonRef>();
 
   const route =
     useRoute<
@@ -132,6 +128,7 @@ const LessonScreen = observer(() => {
     currentQuestion,
     isShowHint,
     toggleUseHint,
+    getSetting,
   } = lessonStore;
 
   const {tasks: apiTasks, lessonSetting} = useListQuestions(route?.lessonId);
@@ -140,9 +137,9 @@ const LessonScreen = observer(() => {
     return apiTasks.map(t => {
       return {
         ...t,
-        // question: t.question.slice(0, 1),
+        question: t.question.slice(0, 1),
         // question: t.question.slice(0, 5),
-        question: t.question,
+        // question: t.question,
       };
     });
   }, [apiTasks]);
@@ -175,6 +172,11 @@ const LessonScreen = observer(() => {
     }
   }, [activeTaskIndex, firstMiniTestTask, tasks]);
 
+  const settings = useMemo(
+    () => getSetting(route.lessonName),
+    [getSetting, route.lessonName],
+  );
+
   const submitModule = useCallback(
     async (item: TResult) => {
       playSound(soundTrack.good_result);
@@ -187,9 +189,13 @@ const LessonScreen = observer(() => {
             STACK_NAVIGATOR.HOME.DONE_LESSON_SCREEN,
             {
               totalResult,
-              andieImage: assets.andie_2,
-              backgroundAndie: assets.background_barry,
-              colorBgBookView: COLORS.GREEN_009C6F,
+              andieImage:
+                env.IMAGE_BACKGROUND_BASE_API_URL +
+                lessonSetting?.figureSuccessImage,
+              backgroundAndie:
+                env.IMAGE_BACKGROUND_BASE_API_URL +
+                lessonSetting?.backgroundImage,
+              colorBgBookView: settings.backgroundAnswerColor,
               title: 'you did great',
               note: 'Good job!!! You pass the Minitest, \nnow app is unlocked !',
               isMiniTest: true,
@@ -202,11 +208,15 @@ const LessonScreen = observer(() => {
       }
     },
     [
+      env.IMAGE_BACKGROUND_BASE_API_URL,
       handlePostUserProgress,
+      lessonSetting?.backgroundImage,
+      lessonSetting?.figureSuccessImage,
       lessonState.result,
       playSound,
       route.lessonName,
       route.moduleName,
+      settings.backgroundAnswerColor,
       testTask?.name,
     ],
   );
@@ -234,9 +244,13 @@ const LessonScreen = observer(() => {
             STACK_NAVIGATOR.HOME.DONE_LESSON_SCREEN,
             {
               totalResult: trainingResult || [],
-              andieImage: assets.andie_2,
-              backgroundAndie: assets.background_barry,
-              colorBgBookView: COLORS.GREEN_009C6F,
+              andieImage:
+                env.IMAGE_BACKGROUND_BASE_API_URL +
+                lessonSetting?.figureSuccessImage,
+              backgroundAndie:
+                env.IMAGE_BACKGROUND_BASE_API_URL +
+                lessonSetting?.backgroundImage,
+              colorBgBookView: settings.backgroundAnswerColor,
               title: 'you did great',
               note: 'Good job!!! Now it’s time for MINITEST. \nTry your best !',
               moduleName: route.moduleName,
@@ -268,9 +282,13 @@ const LessonScreen = observer(() => {
           STACK_NAVIGATOR.HOME.DONE_LESSON_SCREEN,
           {
             totalResult: trainingResult || [],
-            andieImage: assets.andie_2,
-            backgroundAndie: assets.background_barry,
-            colorBgBookView: COLORS.GREEN_009C6F,
+            andieImage:
+              env.IMAGE_BACKGROUND_BASE_API_URL +
+              lessonSetting?.figureSuccessImage,
+            backgroundAndie:
+              env.IMAGE_BACKGROUND_BASE_API_URL +
+              lessonSetting?.backgroundImage,
+            colorBgBookView: settings.backgroundAnswerColor,
             title,
             countTime: `${trainingCount - 1} more time`,
             note,
@@ -295,6 +313,10 @@ const LessonScreen = observer(() => {
       firstMiniTestTask,
       setTrainingCount,
       trainingCount,
+      env.IMAGE_BACKGROUND_BASE_API_URL,
+      lessonSetting?.figureSuccessImage,
+      lessonSetting?.backgroundImage,
+      settings.backgroundAnswerColor,
       route.moduleName,
       route.lessonName,
       testTask?.name,

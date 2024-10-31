@@ -1,7 +1,13 @@
 import BottomSheet from '@gorhom/bottom-sheet/lib/typescript/components/bottomSheet/BottomSheet';
 import {BottomSheetMethods} from '@gorhom/bottom-sheet/lib/typescript/types';
 import {injectable, provided} from 'inversify-sugar';
-import {action, makeAutoObservable, observable, runInAction} from 'mobx';
+import {
+  action,
+  computed,
+  makeAutoObservable,
+  observable,
+  runInAction,
+} from 'mobx';
 import React, {RefObject} from 'react';
 import {AppEntity} from 'src/modules/react-native-alphadex-screentime/src/entities/AppEntity';
 import {
@@ -27,6 +33,7 @@ import {persist, create} from 'mobx-persist';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import ChangeChildPointFlowerUsecase from 'src/authentication/application/useCases/ChangeChildPointFlowerUsecase';
 import {ChangeChildPointFlowerPayload} from 'src/authentication/application/types/ChangeChildPointFlowerPayload';
+import {COLORS} from 'src/core/presentation/constants/colors';
 
 @injectable()
 export class LessonStore {
@@ -58,6 +65,25 @@ export class LessonStore {
 
   @persist @observable backgroundSound = 0.8;
   @persist @observable charSound = 0.3;
+
+  @computed getSetting(lessonName: string) {
+    if (lessonName.toLocaleLowerCase().includes('english')) {
+      return {
+        backgroundAnswerColor: COLORS.GREEN_DDF598,
+      };
+    } else if (lessonName.toLocaleLowerCase().includes('mandarin')) {
+      return {
+        backgroundAnswerColor: COLORS.PINK_F9C799,
+      };
+    } else if (lessonName.toLocaleLowerCase().includes('toán')) {
+      return {
+        backgroundAnswerColor: COLORS.BLUE_A3F0DF,
+      };
+    }
+    return {
+      backgroundAnswerColor: COLORS.PRIMARY,
+    };
+  }
 
   constructor(
     @provided(UpdateUserSettingUseCase)
