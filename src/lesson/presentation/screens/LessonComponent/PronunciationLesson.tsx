@@ -42,6 +42,7 @@ import {
 import {usePronunciation} from '../../hooks/usePronunciation';
 import RecordButton from '../../components/RecordButton';
 import ImageMeaning from '../../components/ImageMeaning';
+import useHomeStore from 'src/home/presentation/stores/useHomeStore';
 
 type Props = {
   moduleIndex: number;
@@ -124,9 +125,11 @@ const PronunciationLesson = observer(
         correctAnswer: firstMiniTestTask?.question?.[moduleIndex].correctAnswer,
       });
 
+      const {lessonSetting} = useHomeStore();
+
       const settings = useMemo(
-        () => getSetting(lessonName),
-        [getSetting, lessonName],
+        () => getSetting(lessonSetting),
+        [getSetting, lessonSetting],
       );
 
       const characterImage = useMemo(() => {

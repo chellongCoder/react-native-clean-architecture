@@ -30,6 +30,7 @@ import {useIsFocused} from '@react-navigation/native';
 import useAuthenticationStore from 'src/authentication/presentation/stores/useAuthenticationStore';
 import {observer} from 'mobx-react';
 import {LessonRef} from '../../types';
+import useHomeStore from 'src/home/presentation/stores/useHomeStore';
 
 type Props = {
   moduleIndex: number;
@@ -90,9 +91,11 @@ const VowelsLesson = observer(
         fullAnswer: firstMiniTestTask?.question?.[moduleIndex].fullAnswer,
       });
 
+      const {lessonSetting} = useHomeStore();
+
       const settings = useMemo(
-        () => getSetting(lessonName),
-        [getSetting, lessonName],
+        () => getSetting(lessonSetting),
+        [getSetting, lessonSetting],
       );
       const characterImage = useMemo(() => {
         return isAnswerCorrect === true || isAnswerCorrect === undefined
@@ -173,7 +176,9 @@ const VowelsLesson = observer(
           module={moduleName}
           part={firstMiniTestTask?.name}
           backgroundColor="#66c270"
-          backgroundAnswerColor={settings.backgroundAnswerColor}
+          backgroundAnswerColor={
+            settings.backgroundAnswerColor ?? COLORS.GREEN_DDF598
+          }
           price="Free"
           score={selectedChild?.adsPoints}
           isAnswerCorrect={isAnswerCorrect}
