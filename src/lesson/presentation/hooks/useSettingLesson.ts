@@ -18,7 +18,7 @@ import {useLessonStore} from '../stores/LessonStore/useGetPostsStore';
 import {useAsyncEffect} from 'src/core/presentation/hooks';
 import useAuthenticationStore from 'src/authentication/presentation/stores/useAuthenticationStore';
 import Toast from 'react-native-toast-message';
-import {TLanguageMap, useSpeechToText} from './useSpeechToText';
+import {useSpeechToText} from './useSpeechToText';
 import {formatTimeMMSS} from 'src/core/presentation/utils';
 
 type Props = {
@@ -64,14 +64,8 @@ export const useSettingLesson = ({
 
   const playSoundRef = useRef<boolean>(false);
 
-  const {
-    startRecording,
-    onResultPress,
-    speechResult,
-    clearSpeechResult,
-    errorSpeech,
-    loading: loadingRecord,
-  } = useSpeechToText(correctAnswer);
+  const {onResultPress, speechResult, clearSpeechResult} =
+    useSpeechToText(correctAnswer);
 
   const word = useMemo(() => {
     if (learningTimer === 0) {
@@ -121,16 +115,6 @@ export const useSettingLesson = ({
       }, 1000);
     });
   }, [isCorrectAnswer, playSound]);
-
-  // * start record
-  const startRecord = useCallback(
-    async (language: keyof TLanguageMap) => {
-      console.log('start record');
-      // Pass a key in list language. Ex: await startRecording('china');
-      await startRecording(language);
-    },
-    [startRecording],
-  );
 
   // * stop record
   const stopRecord = useCallback(async () => {
@@ -290,11 +274,6 @@ export const useSettingLesson = ({
     env,
     toggleShowHint,
     isShowHint: lessonStore.isShowHint,
-    startRecord,
-    stopRecord,
-    loadingRecord,
-    speechResult,
-    errorSpeech,
     clearSpeechResult,
   };
 };

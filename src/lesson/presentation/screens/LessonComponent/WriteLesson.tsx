@@ -23,8 +23,7 @@ import HanziWrite from '../../components/HanziWrite';
 import {Task} from 'src/home/application/types/GetListQuestionResponse';
 import useAuthenticationStore from 'src/authentication/presentation/stores/useAuthenticationStore';
 import {scale, verticalScale} from 'react-native-size-matters';
-import Animated from 'react-native-reanimated';
-import {assets, isAndroid, WIDTH_SCREEN} from 'src/core/presentation/utils';
+import {assets, isAndroid} from 'src/core/presentation/utils';
 import {useLessonStore} from '../../stores/LessonStore/useGetPostsStore';
 import {useSettingLesson} from '../../hooks/useSettingLesson';
 import {COLORS} from 'src/core/presentation/constants/colors';
@@ -35,6 +34,7 @@ import {
 } from 'src/core/presentation/hooks/textToSpeech/TextToSpeechProvider';
 import {TextToSpeechContext} from 'src/core/presentation/hooks/textToSpeech/TextToSpeechContext';
 import {useIsFocused} from '@react-navigation/native';
+import ImageMeaning from '../../components/ImageMeaning';
 
 type Props = {
   moduleIndex: number;
@@ -69,22 +69,7 @@ const WriteLesson = ({
   const {ttsSpeak, updateDefaultVoice} = useContext(TextToSpeechContext);
   const focus = useIsFocused();
 
-  const [isShowMeaning, setiIsShowMeaning] = useState(false);
-  const {
-    isAnswerCorrect,
-    isShowCorrectContainer,
-    word,
-    env,
-    learningTimer,
-    submit,
-    toggleShowHint,
-    resetLearning,
-    startRecord: handleStartRecord,
-    stopRecord: handleStopRecord,
-    loadingRecord,
-    speechResult,
-    errorSpeech,
-  } = useSettingLesson({
+  const {isAnswerCorrect, isShowCorrectContainer, submit} = useSettingLesson({
     countDownTime: trainingCount <= 2 ? 0 : 5,
     isCorrectAnswer: !!isCorrect,
     onSubmit: () => {
@@ -177,28 +162,13 @@ const WriteLesson = ({
           <Text style={[styles.fonts_SVN_Cherish, styles.textQuestion]}>
             {firstMiniTestTask?.question?.[moduleIndex].content}
           </Text>
-          <TouchableOpacity
-            onPress={() => setiIsShowMeaning(v => !v)}
-            activeOpacity={1}>
-            <Image
-              resizeMode={'contain'}
-              width={WIDTH_SCREEN}
-              style={[
-                {
-                  width: WIDTH_SCREEN,
-                  height: scale(150),
-                },
-              ]}
-              source={{
-                uri:
-                  env.IMAGE_QUESTION_BASE_API_URL +
-                  (isShowMeaning
-                    ? firstMiniTestTask?.question?.[moduleIndex]
-                        .descriptionImage
-                    : firstMiniTestTask?.question?.[moduleIndex].image),
-              }}
-            />
-          </TouchableOpacity>
+
+          <ImageMeaning
+            descriptionImage={
+              firstMiniTestTask?.question?.[moduleIndex].descriptionImage
+            }
+            image={firstMiniTestTask?.question?.[moduleIndex].image}
+          />
         </View>
       }
       buildAnswer={

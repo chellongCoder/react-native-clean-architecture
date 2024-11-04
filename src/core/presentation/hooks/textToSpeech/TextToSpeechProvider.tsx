@@ -1,6 +1,6 @@
 import React, {PropsWithChildren, useEffect, useState} from 'react';
 import {TextToSpeechContext} from './TextToSpeechContext';
-import Tts from 'react-native-tts';
+import Tts, {Voice} from 'react-native-tts';
 import {Platform} from 'react-native';
 import {isAndroid} from '../../utils';
 import {VolumeManager} from 'react-native-volume-manager';
@@ -268,6 +268,7 @@ export type TLanguageKeys = keyof typeof listLanguage; // Create a union type of
 export const TextToSpeechProvider = ({children}: PropsWithChildren) => {
   const [isInitialized, setIsInitialized] = useState(false);
   const lesson = lessonModuleContainer.getProvided(LessonStore);
+  const [voices, setVoices] = useState<Voice[]>([]);
 
   const ttsSpeak = async (text: string) => {
     console.log('ttsSpeak: ', text);
@@ -333,6 +334,8 @@ export const TextToSpeechProvider = ({children}: PropsWithChildren) => {
         Tts.setDefaultPitch(1.5);
 
         setIsInitialized(true);
+
+        Tts.voices().then(vs => setVoices(vs));
       })
       .catch(error => {
         console.error('TTS initialization failed:', error);
@@ -353,6 +356,7 @@ export const TextToSpeechProvider = ({children}: PropsWithChildren) => {
         updateSpeechRate,
         updateSpeechPitch,
         updateDefaultVoice,
+        voices,
       }}>
       {children}
     </TextToSpeechContext.Provider>

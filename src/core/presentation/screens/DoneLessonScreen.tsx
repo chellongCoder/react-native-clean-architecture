@@ -10,7 +10,6 @@ import React, {
   ActivityIndicator,
 } from 'react-native';
 import useGlobalStyle from '../hooks/useGlobalStyle';
-import ICStar from 'src/core/components/icons/ICStar';
 import {STACK_NAVIGATOR} from '../navigation/ConstantNavigator';
 import {
   goBack,
@@ -20,7 +19,11 @@ import {unBlockApps} from 'react-native-alphadex-screentime';
 import {lessonModuleContainer} from 'src/lesson/LessonModule';
 import {LessonStore} from 'src/lesson/presentation/stores/LessonStore/LessonStore';
 import {RouteProp, useRoute} from '@react-navigation/native';
-import {TResult} from 'src/lesson/presentation/screens/LessonScreen';
+import {
+  LessonTypeE,
+  MathQuestionType,
+  TResult,
+} from 'src/lesson/presentation/screens/LessonScreen';
 import {useGetUserSetting} from 'src/hooks/useGetUserSetting';
 import useAuthenticationStore from 'src/authentication/presentation/stores/useAuthenticationStore';
 import BookView from 'src/lesson/presentation/components/BookView';
@@ -55,6 +58,7 @@ export type RouteParamsDone = {
   lessonName?: string;
   partName?: string;
   noMiniTest?: boolean;
+  type?: LessonTypeE | MathQuestionType;
 };
 
 const DoneLessonScreen = ({}) => {

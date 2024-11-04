@@ -67,7 +67,7 @@ export enum MathQuestionType {
   MATH_TRANSLATION = 'math_translation',
   MATH_EXPLANATION = 'math_explanation',
 }
-enum LessonTypeE {
+export enum LessonTypeE {
   TEXT = 'text',
   CHOOSE_CORRECT_ANSWER = 'choose_correct_answer',
   MULTIPLE_CHOICE = 'multiple_choice',
@@ -137,9 +137,9 @@ const LessonScreen = observer(() => {
     return apiTasks.map(t => {
       return {
         ...t,
-        question: t.question.slice(0, 1),
+        // question: t.question.slice(0, 1),
         // question: t.question.slice(0, 5),
-        // question: t.question,
+        question: t.question,
       };
     });
   }, [apiTasks]);
@@ -202,6 +202,7 @@ const LessonScreen = observer(() => {
               moduleName: route.moduleName,
               lessonName: route.lessonName,
               partName: testTask?.name,
+              type: testTask?.question?.[lessonIndex]?.type,
             },
           );
         }
@@ -210,6 +211,7 @@ const LessonScreen = observer(() => {
     [
       env.IMAGE_BACKGROUND_BASE_API_URL,
       handlePostUserProgress,
+      lessonIndex,
       lessonSetting?.backgroundImage,
       lessonSetting?.figureSuccessImage,
       lessonState.result,
@@ -218,6 +220,7 @@ const LessonScreen = observer(() => {
       route.moduleName,
       settings.backgroundAnswerColor,
       testTask?.name,
+      testTask?.question,
     ],
   );
 
@@ -257,6 +260,7 @@ const LessonScreen = observer(() => {
               lessonName: route.lessonName,
               partName: testTask?.name,
               noMiniTest: !firstMiniTestTask,
+              type: testTask?.question?.[lessonIndex]?.type,
             },
           );
           // * sang lần làm tiếp theo
@@ -295,6 +299,7 @@ const LessonScreen = observer(() => {
             moduleName: route.moduleName,
             lessonName: route.lessonName,
             partName: testTask?.name,
+            type: testTask?.question?.[lessonIndex]?.type,
           },
         );
         // * set kết quả training về rỗng
@@ -320,6 +325,8 @@ const LessonScreen = observer(() => {
       route.moduleName,
       route.lessonName,
       testTask?.name,
+      testTask?.question,
+      lessonIndex,
       setLessonState,
     ],
   );
@@ -487,11 +494,6 @@ const LessonScreen = observer(() => {
   }, []);
 
   const buildLesson = () => {
-    const hasShowCharacter =
-      vowelRef.current?.isAnswerCorrect === true ||
-      vowelRef.current?.isAnswerCorrect === undefined
-        ? true
-        : false;
     switch (
       testTask?.question?.[lessonIndex]?.type as LessonTypeE | MathQuestionType
     ) {

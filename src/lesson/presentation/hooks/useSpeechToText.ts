@@ -68,7 +68,7 @@ export const useSpeechToText = (fullAnswer?: string) => {
   const [voiceState, setVoiceState] = useStateCustom<TState>({
     recognized: false,
     pitch: '',
-    error: {},
+    error: undefined,
     end: false,
     started: false,
     results: '',
@@ -105,7 +105,10 @@ export const useSpeechToText = (fullAnswer?: string) => {
         await Voice.start(language ? initSpeechLanguage[language] : 'en-US', {
           EXTRA_SPEECH_INPUT_COMPLETE_SILENCE_LENGTH_MILLIS: 10000, //Extra time to recognize voice when no text change
         });
-      } catch (error) {
+      } catch (error: any) {
+        setVoiceState({
+          error: {code: error?.code, message: error?.message},
+        });
         console.log('error raised', error);
       }
     },
@@ -126,7 +129,12 @@ export const useSpeechToText = (fullAnswer?: string) => {
       console.log(
         '🛠 LOG: 🚀 --> ----------------------------------------🛠 LOG: 🚀 -->',
       );
-      console.log('🛠 LOG: 🚀 --> ~ onSpeechPartialResults ~ e:', fullAnswer, e);
+      console.log(
+        '🛠 LOG: 🚀 --> ~ onSpeechPartialResults ~ e, refText.current:',
+        fullAnswer,
+        e,
+        refText.current,
+      );
       console.log(
         '🛠 LOG: 🚀 --> ----------------------------------------🛠 LOG: 🚀 -->',
       );
@@ -136,6 +144,7 @@ export const useSpeechToText = (fullAnswer?: string) => {
         !e?.value?.length ||
         e?.value?.every((item: string) => item.trim() === '')
       ) {
+        setVoiceState({checkEmpty: true});
         return; // Exits the function if there are no results.
       }
 
@@ -153,7 +162,7 @@ export const useSpeechToText = (fullAnswer?: string) => {
       }
 
       // Updates the voice state with the new result and sets `time` to false.
-      setVoiceState({time: false, results: refText.current});
+      setVoiceState({time: false, results: refText.current, checkEmpty: false});
     },
     [fullAnswer, setVoiceState],
   );
@@ -162,7 +171,10 @@ export const useSpeechToText = (fullAnswer?: string) => {
     setVoiceState({loading: false});
     try {
       await Voice.stop();
-    } catch (error) {
+    } catch (error: any) {
+      setVoiceState({
+        error: {code: error?.code, message: error?.message},
+      });
       console.log('error raised', error);
     }
   }, [setVoiceState]);
@@ -172,19 +184,12 @@ export const useSpeechToText = (fullAnswer?: string) => {
   }, [stopRecording]);
 
   const onSpeechEndHandler = () => {
-    setVoiceState({loading: false});
+    setVoiceState({loading: false, error: undefined});
   };
 
   const onSpeechResultsHandler = useCallback(
     (e: any) => {
       // Logs the final results event to the console for debugging.
-      console.log(
-        '🛠 LOG: 🚀 --> ----------------------------------------🛠 LOG: 🚀 -->',
-      );
-      console.log('🛠 LOG: 🚀 --> ~ onSpeechResultsHandler ~ e:', e);
-      console.log(
-        '🛠 LOG: 🚀 --> ----------------------------------------🛠 LOG: 🚀 -->',
-      );
 
       // Checks if the event contains any non-empty speech recognition results.
       if (
@@ -262,17 +267,7 @@ export const useSpeechToText = (fullAnswer?: string) => {
 
   const handleRecordWithVoice = useCallback(async () => {
     const voiceIsAvailable = await Voice.isAvailable();
-    console.log(
-      '🛠 LOG: 🚀 --> ----------------------------------------------------------------------------🛠 LOG: 🚀 -->',
-    );
-    console.log(
-      '🛠 LOG: 🚀 --> ~ handleRecordWithVoice ~ voiceIsAvailable:',
-      voiceIsAvailable,
-    );
-    console.log(
-      '🛠 LOG: 🚀 --> ----------------------------------------------------------------------------🛠 LOG: 🚀 -->',
-    );
-    // this.setIsFirstTimeOpenTutModal();
+
     if (voiceIsAvailable) {
       const res: TPermissionResponse = await CheckVoicePermission();
       console.log(
@@ -300,6 +295,13 @@ export const useSpeechToText = (fullAnswer?: string) => {
     }
   }, []);
 
+  const setErrorSpeech = useCallback(
+    (error: typeof voiceState.error) => {
+      setVoiceState({error});
+    },
+    [setVoiceState, voiceState],
+  );
+
   useEffect(() => {
     Voice.onSpeechStart = onSpeechStartHandler;
     Voice.onSpeechEnd = onSpeechEndHandler;
@@ -321,11 +323,13 @@ export const useSpeechToText = (fullAnswer?: string) => {
     voiceState,
     speechResult: voiceState.partialResults || voiceState.results, //speech result
     errorSpeech: voiceState.error,
+    setErrorSpeech,
     startRecording, //start speech
     onResultPress, //stop speech + clear previous result
     clearSpeechResult, //clear result
     handleRecordWithVoice,
     loading: voiceState.loading,
     initSpeechLanguage,
+    checkEmpty: voiceState.checkEmpty,
   };
 };

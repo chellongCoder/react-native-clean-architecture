@@ -32,14 +32,16 @@ import {useSettingLesson} from '../../hooks/useSettingLesson';
 import {useIsFocused} from '@react-navigation/native';
 import useAuthenticationStore from 'src/authentication/presentation/stores/useAuthenticationStore';
 import {observer} from 'mobx-react';
-import {Gesture, GestureDetector} from 'react-native-gesture-handler';
 import * as Haptics from 'expo-haptics';
 import {LessonRef} from '../../types';
-import Tts from 'react-native-tts';
+
 import {
   iosVoice,
   listLanguage,
 } from 'src/core/presentation/hooks/textToSpeech/TextToSpeechProvider';
+import {usePronunciation} from '../../hooks/usePronunciation';
+import RecordButton from '../../components/RecordButton';
+import ImageMeaning from '../../components/ImageMeaning';
 
 type Props = {
   moduleIndex: number;
@@ -71,7 +73,8 @@ const PronunciationLesson = observer(
     ) => {
       const globalStyle = useGlobalStyle();
 
-      const {ttsSpeak, updateDefaultVoice} = useContext(TextToSpeechContext);
+      const {ttsSpeak, updateDefaultVoice, voices} =
+        useContext(TextToSpeechContext);
       const focus = useIsFocused();
 
       const [answerSelected, setAnswerSelected] = useState('');
@@ -98,11 +101,6 @@ const PronunciationLesson = observer(
         submit,
         toggleShowHint,
         resetLearning,
-        startRecord: handleStartRecord,
-        stopRecord: handleStopRecord,
-        loadingRecord,
-        speechResult,
-        errorSpeech,
       } = useSettingLesson({
         countDownTime: trainingCount <= 2 ? 0 : 5,
         isCorrectAnswer: !!isCorrectAnswer,
@@ -113,6 +111,17 @@ const PronunciationLesson = observer(
         fullAnswer: firstMiniTestTask?.question?.[moduleIndex].fullAnswer,
         correctAnswer: firstMiniTestTask?.question?.[moduleIndex].correctAnswer,
         totalTime: 5 * 60, // * tổng time làm 1câu
+      });
+
+      const {
+        errorSpeech,
+        loadingRecord,
+        speechResult,
+        startRecord: handleStartRecord,
+        stopRecord: handleStopRecord,
+        checkEmpty,
+      } = usePronunciation({
+        correctAnswer: firstMiniTestTask?.question?.[moduleIndex].correctAnswer,
       });
 
       const settings = useMemo(
@@ -173,28 +182,26 @@ const PronunciationLesson = observer(
       }, [trainingCount]);
 
       useEffect(() => {
-        Tts.voices().then(voices => {
-          if (lessonName.toLocaleLowerCase().includes('english')) {
-            const engVoice = voices.find(
-              voice => voice.language === listLanguage['US English'],
-            );
-            updateDefaultVoice?.(
-              isAndroid ? engVoice?.id : iosVoice[3].id,
-              'US English',
-            );
-          } else if (lessonName.toLocaleLowerCase().includes('mandarin')) {
-            const engVoice = voices.find(
-              voice =>
-                voice.language ===
-                listLanguage['Mainland China, simplified characters'],
-            );
-            updateDefaultVoice?.(
-              engVoice?.id,
-              'Mainland China, simplified characters',
-            );
-          }
-        });
-      }, [lessonName, updateDefaultVoice]);
+        if (lessonName.toLocaleLowerCase().includes('english')) {
+          const engVoice = voices?.find(
+            voice => voice.language === listLanguage['US English'],
+          );
+          updateDefaultVoice?.(
+            isAndroid ? engVoice?.id : iosVoice[3].id,
+            'US English',
+          );
+        } else if (lessonName.toLocaleLowerCase().includes('mandarin')) {
+          const engVoice = voices?.find(
+            voice =>
+              voice.language ===
+              listLanguage['Mainland China, simplified characters'],
+          );
+          updateDefaultVoice?.(
+            engVoice?.id,
+            'Mainland China, simplified characters',
+          );
+        }
+      }, [lessonName, updateDefaultVoice, voices]);
 
       useEffect(() => {
         opacity.value = withTiming(0, {duration: 500}, () => {
@@ -242,7 +249,6 @@ const PronunciationLesson = observer(
         // Checks if there is no ongoing recording process (loadingRecord is false).
         if (!loadingRecord) {
           // Initiates the animation associated with recording. This could involve visual feedback like pulsing or scaling effects.
-          startAnimationRecord();
           console.log(
             '🛠 LOG: 🚀 --> ------------------------------------------------------🛠 LOG: 🚀 -->',
           );
@@ -259,7 +265,7 @@ const PronunciationLesson = observer(
             handleStartRecord('china');
           }
         }
-      }, [loadingRecord, startAnimationRecord, lessonName, handleStartRecord]);
+      }, [loadingRecord, lessonName, handleStartRecord]);
 
       const stopRecord = useCallback(() => {
         // Logs the termination of the recording process to the console.
@@ -267,30 +273,11 @@ const PronunciationLesson = observer(
 
         // Stops any ongoing animations associated with the recording.
         // This could involve stopping visual feedback like pulsing or scaling effects.
-        stopAnimationRecord();
 
         // Calls the handleStopRecord function which likely stops the actual audio recording.
         // This function is expected to handle all necessary cleanup and finalization of the recording process.
         handleStopRecord();
-      }, [handleStopRecord, stopAnimationRecord]);
-
-      const longPressGesture = Gesture.LongPress()
-        .onStart(() => {
-          scaleLP.value = withSpring(1.2);
-          runOnJS(startRecord)();
-        })
-        .onEnd(() => {
-          scaleLP.value = withSpring(1);
-          runOnJS(stopRecord)();
-        });
-
-      const animatedStyleLongPress = useAnimatedStyle(() => {
-        return {
-          transform: [{scale: scaleLP.value}],
-          alignItems: 'center',
-          justifyContent: 'center',
-        };
-      });
+      }, [handleStopRecord]);
 
       useImperativeHandle(ref, () => ({
         isAnswerCorrect,
@@ -357,16 +344,11 @@ const PronunciationLesson = observer(
               <Text style={[styles.fonts_SVN_Cherish, styles.textQuestion]}>
                 {word}
               </Text>
-              <Animated.Image
-                resizeMode={'contain'}
-                width={WIDTH_SCREEN}
-                height={scale(150)}
-                style={[{}, animatedStyle]}
-                source={{
-                  uri:
-                    env.IMAGE_QUESTION_BASE_API_URL +
-                    firstMiniTestTask?.question?.[moduleIndex].image,
-                }}
+              <ImageMeaning
+                descriptionImage={
+                  firstMiniTestTask?.question?.[moduleIndex].descriptionImage
+                }
+                image={firstMiniTestTask?.question?.[moduleIndex].image}
               />
             </View>
           }
@@ -413,25 +395,23 @@ const PronunciationLesson = observer(
                   )}
                 </View>
 
-                <GestureDetector gesture={longPressGesture}>
-                  <Animated.View style={animatedStyleLongPress}>
-                    <Animated.View style={animatedCircleStyle} />
-                    <TouchableOpacity
-                      activeOpacity={1}
-                      onLongPress={() => {
-                        console.log('long press');
-                      }}>
-                      <Image
-                        source={assets.icon_voice}
-                        style={styles.iconImageContainer}
-                        resizeMode="contain"
-                      />
-                    </TouchableOpacity>
-                  </Animated.View>
-                </GestureDetector>
+                <RecordButton
+                  startRecord={startRecord}
+                  stopRecord={stopRecord}
+                  loadingRecord={loadingRecord}
+                  errorSpeech={
+                    checkEmpty ? {code: 'EMPTY', message: ''} : undefined
+                  }
+                />
                 <View style={{marginTop: verticalScale(10)}} />
-                <Text style={styles.hintText}>
-                  to record the answer Hold the button
+                <Text
+                  style={[
+                    styles.hintText,
+                    checkEmpty && {color: COLORS.RED_AF3A1B},
+                  ]}>
+                  {loadingRecord
+                    ? 'Loading'
+                    : 'Please click button and record again'}
                 </Text>
                 {learningTimer !== 0 && (
                   <View
