@@ -1,5 +1,5 @@
 import {injectable, provided} from 'inversify-sugar';
-import {action, makeAutoObservable, observable, runInAction} from 'mobx';
+import {action, makeAutoObservable, observable} from 'mobx';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {create, persist} from 'mobx-persist';
 import HomeStoreState from './types/HomeStoreState';
@@ -12,6 +12,7 @@ import {GetListLessonPayload} from 'src/home/application/types/GetListLessonPayl
 import GetListLessonUseCase from 'src/home/application/useCases/GetListLessonUseCase';
 import {Module} from 'src/home/application/types/GetListLessonResponse';
 import GetListQuestionUseCase from 'src/home/application/useCases/GetListQuestionUseCase';
+import {LessonSettingT} from 'src/home/application/types/GetListQuestionResponse';
 
 @injectable()
 export class HomeStore implements HomeStoreState {
@@ -28,6 +29,8 @@ export class HomeStore implements HomeStoreState {
   @persist('list') @observable listSubject: Subject[] = [];
   @persist('list') @observable listModule: Module[] = [];
   @persist subjectId = '';
+
+  @observable lessonSetting?: LessonSettingT;
 
   constructor(
     @provided(GetFieldUseCase)
@@ -101,6 +104,7 @@ export class HomeStore implements HomeStoreState {
     const response = await this.getListQuestionUseCase.execute({
       subjectId,
     });
+    this.lessonSetting = response.data.lessonSetting;
     this.setIsLoading(false);
     return response;
   }

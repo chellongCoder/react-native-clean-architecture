@@ -25,6 +25,8 @@ export interface Task {
   description: string;
 }
 export type LessonSettingT = {
+  backgroundButtonColor: string;
+  backgroundColor: string;
   backgroundImage: string;
   createdAt: string;
   figureFailImage: string;

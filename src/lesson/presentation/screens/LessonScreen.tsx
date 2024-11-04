@@ -32,8 +32,6 @@ import useAuthenticationStore from 'src/authentication/presentation/stores/useAu
 import {SoundGlobalContext} from 'src/core/presentation/hooks/sound/SoundGlobalContext';
 import {soundTrack} from 'src/core/presentation/hooks/sound/SoundGlobalProvider';
 import {RouteParamsDone} from 'src/core/presentation/screens/DoneLessonScreen';
-import {assets} from 'src/core/presentation/utils';
-import {COLORS} from 'src/core/presentation/constants/colors';
 import EssayLesson from './LessonComponent/EssayLesson';
 import {TRAINING_COUNT} from 'src/core/domain/enums/ModuleE';
 import UseHintModal from 'src/core/presentation/components/UseHintModal';
@@ -43,6 +41,7 @@ import PronunciationLesson from './LessonComponent/PronunciationLesson';
 import Env, {EnvToken} from 'src/core/domain/entities/Env';
 import {coreModuleContainer} from 'src/core/CoreModule';
 import {LessonRef} from '../types';
+import useHomeStore from 'src/home/presentation/stores/useHomeStore';
 
 export enum MathQuestionType {
   MATH_TEXT = 'math_text',
@@ -131,7 +130,9 @@ const LessonScreen = observer(() => {
     getSetting,
   } = lessonStore;
 
-  const {tasks: apiTasks, lessonSetting} = useListQuestions(route?.lessonId);
+  const {lessonSetting} = useHomeStore();
+
+  const {tasks: apiTasks} = useListQuestions(route?.lessonId);
 
   const tasks = useMemo(() => {
     return apiTasks.map(t => {
@@ -173,8 +174,8 @@ const LessonScreen = observer(() => {
   }, [activeTaskIndex, firstMiniTestTask, tasks]);
 
   const settings = useMemo(
-    () => getSetting(route.lessonName),
-    [getSetting, route.lessonName],
+    () => getSetting(lessonSetting),
+    [getSetting, lessonSetting],
   );
 
   const submitModule = useCallback(

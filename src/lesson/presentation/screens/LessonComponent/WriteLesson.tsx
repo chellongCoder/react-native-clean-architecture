@@ -1,11 +1,4 @@
-import {
-  Alert,
-  Image,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import React, {
   useCallback,
   useContext,
@@ -199,6 +192,7 @@ const WriteLesson = ({
                 firstMiniTestTask?.question?.[moduleIndex].correctAnswer ?? '',
               color: COLORS.PRIMARY,
             }}
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
             onComplete={totalMistakes => {
               setIscorrect(true);
             }}

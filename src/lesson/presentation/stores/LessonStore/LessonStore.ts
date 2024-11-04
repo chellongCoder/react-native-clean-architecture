@@ -34,6 +34,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import ChangeChildPointFlowerUsecase from 'src/authentication/application/useCases/ChangeChildPointFlowerUsecase';
 import {ChangeChildPointFlowerPayload} from 'src/authentication/application/types/ChangeChildPointFlowerPayload';
 import {COLORS} from 'src/core/presentation/constants/colors';
+import {LessonSettingT} from 'src/home/application/types/GetListQuestionResponse';
 
 @injectable()
 export class LessonStore {
@@ -66,22 +67,9 @@ export class LessonStore {
   @persist @observable backgroundSound = 0.8;
   @persist @observable charSound = 0.3;
 
-  @computed getSetting(lessonName: string) {
-    if (lessonName.toLocaleLowerCase().includes('english')) {
-      return {
-        backgroundAnswerColor: COLORS.GREEN_DDF598,
-      };
-    } else if (lessonName.toLocaleLowerCase().includes('mandarin')) {
-      return {
-        backgroundAnswerColor: COLORS.PINK_F9C799,
-      };
-    } else if (lessonName.toLocaleLowerCase().includes('toán')) {
-      return {
-        backgroundAnswerColor: COLORS.BLUE_A3F0DF,
-      };
-    }
+  @computed getSetting(lessonSetting?: LessonSettingT) {
     return {
-      backgroundAnswerColor: COLORS.PRIMARY,
+      backgroundAnswerColor: lessonSetting?.backgroundColor,
     };
   }
 
