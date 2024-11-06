@@ -4,6 +4,7 @@ import Animated, {
   Easing,
   useAnimatedStyle,
   useSharedValue,
+  withDelay,
   withRepeat,
   withSpring,
   withTiming,
@@ -24,25 +25,10 @@ const RecordButton = ({
   loadingRecord,
   errorSpeech,
 }: Props) => {
-  const scaleValue = useSharedValue(0.05); // Start from 0.05 times the size to scale from 10 to 200
-  const opacityValue = useSharedValue(1); // Start with full opacity
   const clickRef = useRef(false);
 
   const scaleLP = useSharedValue(1);
 
-  const animatedCircleStyle = useAnimatedStyle(() => {
-    return {
-      transform: [{scale: scaleValue.value}],
-      opacity: opacityValue.value,
-      width: 200, // Fixed width to scale to
-      height: 200, // Fixed height to scale to
-      borderRadius: 100, // Maintain circular shape
-      backgroundColor: COLORS.PRIMARY,
-      justifyContent: 'center',
-      alignItems: 'center',
-      position: 'absolute',
-    };
-  });
   const animatedStyleLongPress = useAnimatedStyle(() => {
     return {
       transform: [{scale: scaleLP.value}],
@@ -52,26 +38,12 @@ const RecordButton = ({
   });
   const startAnimationRecord = useCallback(() => {
     scaleLP.value = withSpring(1.2);
-
-    scaleValue.value = withRepeat(
-      withTiming(1, {duration: 1000, easing: Easing.out(Easing.ease)}),
-      -1, // Repeat indefinitely
-      false, // Enable reverse mode
-    );
-    opacityValue.value = withRepeat(
-      withTiming(0, {duration: 1000, easing: Easing.linear}),
-      -1, // Repeat indefinitely
-      false, // Enable reverse mode
-    );
-  }, [opacityValue, scaleLP, scaleValue]);
+  }, [scaleLP]);
 
   const stopAnimationRecord = useCallback(() => {
     // Stop the animations by setting the shared values to their initial states
     scaleLP.value = withSpring(1);
-
-    scaleValue.value = 0.05; // Reset to initial scale
-    opacityValue.value = 1; // Reset to full opacity
-  }, [scaleLP, scaleValue, opacityValue]);
+  }, [scaleLP]);
 
   useEffect(() => {
     if (!loadingRecord) {
@@ -85,7 +57,7 @@ const RecordButton = ({
 
   return (
     <Animated.View style={animatedStyleLongPress}>
-      <Animated.View style={animatedCircleStyle} />
+      {loadingRecord && [0, 200, 400, 700].map(delay => <Ring delay={delay} />)}
       <TouchableOpacity
         activeOpacity={1}
         onPress={() => {
@@ -115,3 +87,43 @@ const styles = StyleSheet.create({
 });
 
 export default RecordButton;
+
+export function Ring({delay}: {delay: number}) {
+  const scaleValue = useSharedValue(0.05); // Start from 0.05 times the size to scale from 10 to 200
+  const opacityValue = useSharedValue(1); // Start with full opacit
+
+  const animatedCircleStyle = useAnimatedStyle(() => {
+    return {
+      transform: [{scale: scaleValue.value}],
+      opacity: opacityValue.value,
+      width: 200, // Fixed width to scale to
+      height: 200, // Fixed height to scale to
+      borderRadius: 100, // Maintain circular shape
+      backgroundColor: COLORS.PRIMARY,
+      justifyContent: 'center',
+      alignItems: 'center',
+      position: 'absolute',
+    };
+  });
+
+  useEffect(() => {
+    scaleValue.value = withDelay(
+      delay,
+      withRepeat(
+        withTiming(1, {duration: 1800, easing: Easing.out(Easing.ease)}),
+        -1, // Repeat indefinitely
+        false, // Enable reverse mode
+      ),
+    );
+    opacityValue.value = withDelay(
+      delay,
+      withRepeat(
+        withTiming(0, {duration: 1800, easing: Easing.linear}),
+        -1, // Repeat indefinitely
+        false, // Enable reverse mode
+      ),
+    );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [delay]);
+  return <Animated.View style={animatedCircleStyle} />;
+}

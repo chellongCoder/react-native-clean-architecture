@@ -140,7 +140,6 @@ const styles = StyleSheet.create({
   },
   icon: {height: '80%', width: '80%'},
   container: {
-    backgroundColor: 'red',
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
@@ -152,7 +151,7 @@ const styles = StyleSheet.create({
   },
   title: {
     color: COLORS.GREEN_1C6349,
-    maxWidth: 100,
+    maxWidth: scale(100),
   },
   subtitle: {
     color: COLORS.GREEN_1C6349,
