@@ -20,7 +20,9 @@ export const AppStack = createStackNavigator();
 const RootNavigator: FC = () => {
   const {getUsernamePasswordInKeychain} = useLoginWithCredentials();
   const {isConnected, getData} = useOfflineMode();
+
   const isHydrated = useHydration();
+
   useFonts();
   usePermissionApplock();
 

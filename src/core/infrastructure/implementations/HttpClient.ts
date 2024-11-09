@@ -27,6 +27,7 @@ class HttpClient implements IHttpClient {
         Origin: this.env.EXPO_BASE_API_DOMAIN,
       };
 
+      requestConfig.timeout = 5000;
       return requestConfig;
     });
 
@@ -38,16 +39,16 @@ class HttpClient implements IHttpClient {
         );
         return response;
       },
-      async error => {
+      async (error?: Record<string, any> | undefined) => {
         console.log('🛠 LOG: 🚀 --> ~ HttpClient ~ constructor ~ error:', error);
-        const originalRequest = error.config;
+        const originalRequest = error?.config;
         const store =
           authenticationModuleContainer.getProvided(AuthenticationStore);
         const {getRefreshToken, handleUserLogOut, refreshToken} = store;
 
         const isExpiredStatus =
-          error.response.status === 401 || error.response.status === 403;
-        if (error.response && !originalRequest._retry && isExpiredStatus) {
+          error?.response?.status === 401 || error?.response?.status === 403;
+        if (error?.response && !originalRequest._retry && isExpiredStatus) {
           if (!this.isRefreshing) {
             this.isRefreshing = true;
             originalRequest._retry = true;

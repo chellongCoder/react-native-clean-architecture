@@ -1,15 +1,19 @@
 import {useCallback} from 'react';
 import {STACK_NAVIGATOR} from 'src/core/presentation/navigation/ConstantNavigator';
-import {pushScreen} from 'src/core/presentation/navigation/actions/RootNavigationActions';
+import {replaceScreen} from 'src/core/presentation/navigation/actions/RootNavigationActions';
 
-const useNavigateAuthSuccess = () => {
+const useNavigateAuth = () => {
   const handleNavigateAuthenticationSuccess = useCallback(async () => {
-    pushScreen(STACK_NAVIGATOR.AUTH.LIST_CHILDREN_SCREEN);
+    replaceScreen(STACK_NAVIGATOR.AUTH.LIST_CHILDREN_SCREEN, {});
   }, []);
 
+  const handleNavigateAuthenticationFail = useCallback(async () => {
+    replaceScreen(STACK_NAVIGATOR.AUTH.LOGIN_SCREEN, {});
+  }, []);
   return {
     handleNavigateAuthenticationSuccess,
+    handleNavigateAuthenticationFail,
   };
 };
 
-export default useNavigateAuthSuccess;
+export default useNavigateAuth;

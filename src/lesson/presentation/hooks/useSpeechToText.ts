@@ -104,7 +104,7 @@ export const useSpeechToText = (fullAnswer?: string) => {
       try {
         await Voice.start(language ? initSpeechLanguage[language] : 'en-US', {
           EXTRA_SPEECH_INPUT_COMPLETE_SILENCE_LENGTH_MILLIS: 10000, //Extra time to recognize voice when no text change
-          // RECOGNIZER_ENGINE: 'GOOGLE',
+          RECOGNIZER_ENGINE: 'GOOGLE',
         });
       } catch (error: any) {
         setVoiceState({

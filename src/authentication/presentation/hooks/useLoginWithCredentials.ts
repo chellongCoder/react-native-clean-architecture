@@ -3,7 +3,7 @@ import {useCallback, useState} from 'react';
 import {LoginUsernamePasswordPayload} from 'src/authentication/application/types/LoginPayload';
 import {AxiosError, isAxiosError} from 'axios';
 import {Keyboard} from 'react-native';
-import useNavigateAuthSuccess from './useNavigateAuthSuccess';
+import useNavigateAuth from './useNavigateAuthSuccess';
 import {CustomErrorType, StatusCode} from '../types/StatusCode';
 import {Messages} from '../constants/message';
 import useAuthenticationStore from '../stores/useAuthenticationStore';
@@ -37,7 +37,10 @@ const useLoginWithCredentials = () => {
     changeParentName,
     changeChildrenDescription,
   } = useAuthenticationStore();
-  const {handleNavigateAuthenticationSuccess} = useNavigateAuthSuccess();
+  const {
+    handleNavigateAuthenticationSuccess,
+    handleNavigateAuthenticationFail,
+  } = useNavigateAuth();
 
   const [formData, setFormData] =
     useState<LoginUsernamePasswordPayload>(DefaultFormData);
@@ -151,6 +154,7 @@ const useLoginWithCredentials = () => {
           email: email,
           password: password,
         });
+
         if (res.error) {
           Toast.show({
             type: 'error',
@@ -168,7 +172,15 @@ const useLoginWithCredentials = () => {
           handleNavigateAuthenticationSuccess();
         }
         resetForm();
-      } catch (error) {
+      } catch (error: any) {
+        handleNavigateAuthenticationFail();
+        const errorTimeout = (error.message as string).includes('timeout')
+          ? 'Lost connection to server. Please try again!'
+          : error.message;
+        Toast.show({
+          type: 'error',
+          text1: errorTimeout,
+        });
         if (isAxiosError(error)) {
           handleErrorLoginCredentials(error as AxiosError);
         }
@@ -178,6 +190,7 @@ const useLoginWithCredentials = () => {
     },
     [
       handleErrorLoginCredentials,
+      handleNavigateAuthenticationFail,
       handleNavigateAuthenticationSuccess,
       loginUsernamePassword,
       resetForm,
