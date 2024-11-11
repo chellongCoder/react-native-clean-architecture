@@ -39,7 +39,10 @@ import ICAddChild from 'src/core/components/icons/ICAddChild';
 import {COLORS} from 'src/core/presentation/constants/colors';
 import ICManIconMedium from 'src/core/components/icons/ICManIconMedium';
 import {s, scale, verticalScale} from 'react-native-size-matters';
-import {resetNavigator} from 'src/core/presentation/navigation/actions/RootNavigationActions';
+import {
+  pushScreen,
+  resetNavigator,
+} from 'src/core/presentation/navigation/actions/RootNavigationActions';
 import {STACK_NAVIGATOR} from 'src/core/presentation/navigation/ConstantNavigator';
 import {CustomTextStyle} from 'src/core/presentation/constants/typography';
 import AccountStatus from 'src/home/presentation/components/AccountStatus';
@@ -412,6 +415,7 @@ The blockAppsSystem function is an asynchronous function that awaits the result 
     // if (iapState.products && iapState.products[0].productId) {
     //   makePurchase?.(iapState.products[0].productId);
     // }
+    pushScreen(STACK_NAVIGATOR.PARENT.MORE_MODULE_SCREEN, {});
   };
 
   useEffect(() => {

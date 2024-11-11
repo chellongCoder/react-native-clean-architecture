@@ -160,6 +160,7 @@ const useLoginWithCredentials = () => {
             type: 'error',
             text1: res.error.message,
           });
+          handleNavigateAuthenticationFail();
         } else {
           Toast.show({
             type: 'success',

@@ -33,14 +33,14 @@ const appConfig: ExpoConfig = {
     favicon: './assets/images/favicon.png',
   },
   extra: {
-    EXPO_BASE_API_DOMAIN: 'https://google.tbd-alphadex.com',
-    EXPO_BASE_API_URL: 'https://google.tbd-alphadex.com',
+    EXPO_BASE_API_DOMAIN: 'https://dev.tbd-alphadex.com',
+    EXPO_BASE_API_URL: 'https://dev.tbd-alphadex.com',
     IMAGE_QUESTION_BASE_API_URL:
-      'https://storage.googleapis.com/alphadex-image/question-image/',
+      'https://storage.cloud.google.com/alphadex-image-abeeci/question-image/',
     IMAGE_MODULE_BASE_API_URL:
-      'https://storage.googleapis.com/alphadex-image/module-images/',
+      'https://storage.cloud.google.com/alphadex-image-abeeci/module-images/',
     IMAGE_BACKGROUND_BASE_API_URL:
-      'https://storage.googleapis.com/alphadex-image/backgrounds/',
+      'https://storage.cloud.google.com/alphadex-image-abeeci/backgrounds/',
   },
 };
 

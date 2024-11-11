@@ -20,6 +20,7 @@ import AuthParentScreen from 'src/lesson/presentation/screens/AuthParentScreen';
 import HomeScreen from 'src/home/presentation/screens/HomeScreen';
 import SubjectScreen from 'src/home/presentation/screens/SubjectScreen';
 import GoogleAdmobWapper from '../screens/GoogleAdmobWapper';
+import NewMoreScreen from 'src/lesson/presentation/screens/NewMoreScreen';
 
 const AuthStack = createStackNavigator();
 const HomeStack = createStackNavigator();
@@ -195,6 +196,16 @@ export const ParentStackScreens = (): React.ReactElement => {
         name={STACK_NAVIGATOR.PARENT.PARENT_SCREEN}
         key={STACK_NAVIGATOR.PARENT.PARENT_SCREEN}
         component={ParentScreen}
+        listeners={({navigation: navBottom}) => ({
+          focus: () => {
+            showBottomTab(navBottom);
+          },
+        })}
+      />
+      <ParentStack.Screen
+        name={STACK_NAVIGATOR.PARENT.MORE_MODULE_SCREEN}
+        key={STACK_NAVIGATOR.PARENT.MORE_MODULE_SCREEN}
+        component={NewMoreScreen}
         listeners={({navigation: navBottom}) => ({
           focus: () => {
             showBottomTab(navBottom);
