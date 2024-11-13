@@ -36,12 +36,15 @@ const appConfig: ExpoConfig = {
     EXPO_BASE_API_DOMAIN: 'https://dev.tbd-alphadex.com',
     EXPO_BASE_API_URL: 'https://dev.tbd-alphadex.com',
     IMAGE_QUESTION_BASE_API_URL:
-      'https://storage.cloud.google.com/alphadex-image-abeeci/question-image/',
+      'https://storage.googleapis.com/alphadex-image-abeeci/question-image/',
     IMAGE_MODULE_BASE_API_URL:
-      'https://storage.cloud.google.com/alphadex-image-abeeci/module-images/',
+      'https://storage.googleapis.com/alphadex-image-abeeci/module-images/',
     IMAGE_BACKGROUND_BASE_API_URL:
-      'https://storage.cloud.google.com/alphadex-image-abeeci/backgrounds/',
+      'https://storage.googleapis.com/alphadex-image-abeeci/backgrounds/',
   },
 };
+//storage.googleapis.com/alphadex-image-abeeci/backgrounds/
+//storage.googleapis.com/alphadex-image-abeeci/module-images/
+//storage.googleapis.com/alphadex-image-abeeci/question-image/
 
 export default appConfig;

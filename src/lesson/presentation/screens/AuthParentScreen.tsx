@@ -25,7 +25,7 @@ import Animated, {
 import {usePermissionApplock} from 'src/hooks/usePermissionApplock';
 import {useLoadingGlobal} from 'src/core/presentation/hooks/loading/useLoadingGlobal';
 
-const AuthParentScreen = ({changeIsShowAuth}) => {
+const AuthParentScreen = ({changeIsShowAuth}: any) => {
   // const [password, setPassword] = useState('');
   const passwordRef = useRef('');
   const [error, setError] = useState('');
