@@ -1,19 +1,13 @@
 import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {
-  RewardedInterstitialAd,
-  RewardedAdEventType,
   TestIds,
-  useInterstitialAd,
-  RewardedAd,
-  AdEventType,
-  RewardedAdReward,
   useRewardedInterstitialAd,
 } from 'react-native-google-mobile-ads';
 import Toast from 'react-native-toast-message';
 
-const adUnitId = __DEV__
+const adUnitId = !__DEV__
   ? TestIds.REWARDED_INTERSTITIAL
-  : TestIds.REWARDED_INTERSTITIAL;
+  : 'ca-app-pub-9069193131931191/1910380480';
 
 type Props = {};
 export const useGGAdsMob = () => {
@@ -26,9 +20,7 @@ export const useGGAdsMob = () => {
     '🛠 LOG: 🚀 --> ----------------------------------------------🛠 LOG: 🚀 -->',
   );
 
-  const [adsId, setAdsId] = useState<string | null>(
-    TestIds.REWARDED_INTERSTITIAL,
-  );
+  const [adsId, setAdsId] = useState<string | null>(adUnitId);
   const {
     isLoaded,
     isClosed,
@@ -78,12 +70,15 @@ export const useGGAdsMob = () => {
       }, 5000);
     }
     if (isLoaded) {
+      if (!loaded) {
+        Toast.show({type: 'success', text1: 'ads loaded!'});
+      }
       if (timeout.current) {
         clearTimeout(timeout.current);
       }
       setLoaded(false);
     }
-  }, [isLoaded]);
+  }, [isLoaded, loaded]);
 
   const showAds = useCallback(() => {
     if (!isLoaded) {
