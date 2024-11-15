@@ -1,5 +1,5 @@
 import {Dimensions, Platform} from 'react-native';
-import {check, PERMISSIONS, request} from 'react-native-permissions';
+import {check, PERMISSIONS, request, RESULTS} from 'react-native-permissions';
 
 export * from './assets';
 
@@ -26,6 +26,16 @@ export type TPermissionResponse = {
   result?: string;
   message: 'success' | 'fail';
 };
+
+export const checkTrackTransparency = async () => {
+  const result = await check(PERMISSIONS.IOS.APP_TRACKING_TRANSPARENCY);
+  if (result === RESULTS.DENIED) {
+    // The permission has not been requested, so request it.
+    await request(PERMISSIONS.IOS.APP_TRACKING_TRANSPARENCY);
+  }
+  return {result: result, message: 'success'};
+};
+
 export const CheckVoicePermission = async (): Promise<TPermissionResponse> => {
   try {
     if (Platform.OS === 'ios') {

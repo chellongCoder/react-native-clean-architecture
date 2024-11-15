@@ -17,6 +17,7 @@ import {CustomTextStyle} from 'src/core/presentation/constants/typography';
 import useAuthenticationStore from '../stores/useAuthenticationStore';
 import {useLoadingGlobal} from 'src/core/presentation/hooks/loading/useLoadingGlobal';
 import {
+  navigateScreen,
   pushScreen,
   resetNavigator,
 } from 'src/core/presentation/navigation/actions/RootNavigationActions';
@@ -41,8 +42,7 @@ const ListChildrenScreen = React.memo(() => {
   const [isChooseChildren, setIsChooseChildren] = useState<string>();
 
   const onLogout = () => {
-    removeCurrentCredentials();
-    resetNavigator(STACK_NAVIGATOR.AUTH_NAVIGATOR);
+    navigateScreen(STACK_NAVIGATOR.AUTH.LOGIN_SCREEN, {});
   };
 
   const onAddChild = () => {

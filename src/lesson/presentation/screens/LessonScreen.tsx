@@ -138,9 +138,9 @@ const LessonScreen = observer(() => {
     return apiTasks.map(t => {
       return {
         ...t,
-        question: t.question.slice(0, 1),
+        // question: t.question.slice(0, 1),
         // question: t.question.slice(0, 5),
-        // question: t.question,
+        question: t.question,
       };
     });
   }, [apiTasks]);
@@ -191,14 +191,17 @@ const LessonScreen = observer(() => {
             {
               totalResult,
               andieImage:
-                env.IMAGE_BACKGROUND_BASE_API_URL +
-                lessonSetting?.figureSuccessImage,
+                item.status === 'completed'
+                  ? env.IMAGE_BACKGROUND_BASE_API_URL +
+                    lessonSetting?.figureSuccessImage
+                  : env.IMAGE_BACKGROUND_BASE_API_URL +
+                    lessonSetting?.figureFailImage,
               backgroundAndie:
                 env.IMAGE_BACKGROUND_BASE_API_URL +
                 lessonSetting?.backgroundImage,
               colorBgBookView: settings.backgroundAnswerColor,
               title: 'you did great',
-              note: 'Good job!!! You pass the Minitest, \nnow app is unlocked !',
+              note: 'Good job!!! You pass the Minitest, \n now app is unlocked and you recieved 1 Sunflower. Check it in Achievement.',
               isMiniTest: true,
               moduleName: route.moduleName,
               lessonName: route.lessonName,
@@ -214,6 +217,7 @@ const LessonScreen = observer(() => {
       handlePostUserProgress,
       lessonIndex,
       lessonSetting?.backgroundImage,
+      lessonSetting?.figureFailImage,
       lessonSetting?.figureSuccessImage,
       lessonState.result,
       playSound,

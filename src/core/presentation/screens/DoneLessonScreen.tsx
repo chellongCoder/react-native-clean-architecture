@@ -367,14 +367,14 @@ const DoneLessonScreen = ({}) => {
                 {route.note}
               </Text>
             </View>
-            {route.isMiniTest && (
+            {route.isMiniTest && ( // * nếu là mini test thì show số hoa
               <View style={styles.wrapStarContainer}>
                 <Image
                   source={assets.untitled_artwork}
                   style={styles.star}
                   resizeMode="contain"
                 />
-                <Text style={styles.starText}>{0}</Text>
+                <Text style={styles.starText}>{1}</Text>
               </View>
             )}
           </View>
