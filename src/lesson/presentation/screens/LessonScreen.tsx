@@ -42,6 +42,7 @@ import Env, {EnvToken} from 'src/core/domain/entities/Env';
 import {coreModuleContainer} from 'src/core/CoreModule';
 import {LessonRef} from '../types';
 import useHomeStore from 'src/home/presentation/stores/useHomeStore';
+import ScienceLesson from './LessonComponent/ScienceLesson';
 
 export enum MathQuestionType {
   MATH_TEXT = 'math_text',
@@ -90,6 +91,7 @@ export enum LessonTypeE {
   EXPLANATION = 'explanation',
   MATH = 'math',
   WRITE = 'write',
+  SCIENCE = 'science',
 }
 
 export type TResult = {
@@ -578,6 +580,27 @@ const LessonScreen = observer(() => {
       case LessonTypeE.WRITING:
         return (
           <WriteLesson
+            moduleIndex={lessonIndex}
+            totalModule={testTask?.question.length ?? 0}
+            lessonName={route.lessonName}
+            moduleName={route.moduleName}
+            firstMiniTestTask={testTask}
+            nextModule={nextModule}
+            backgroundImage={
+              env.IMAGE_BACKGROUND_BASE_API_URL + lessonSetting?.backgroundImage
+            }
+            characterImageSuccess={
+              env.IMAGE_BACKGROUND_BASE_API_URL +
+              lessonSetting?.figureSuccessImage
+            }
+            characterImageFail={
+              env.IMAGE_BACKGROUND_BASE_API_URL + lessonSetting?.figureFailImage
+            }
+          />
+        );
+      case LessonTypeE.SCIENCE:
+        return (
+          <ScienceLesson
             moduleIndex={lessonIndex}
             totalModule={testTask?.question.length ?? 0}
             lessonName={route.lessonName}
