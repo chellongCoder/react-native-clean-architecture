@@ -6,6 +6,8 @@ import {AppLifecycle} from 'react-native-applifecycle';
 import {AppStateStatus} from 'react-native';
 import {lessonModuleContainer} from 'src/lesson/LessonModule';
 import {LessonStore} from 'src/lesson/presentation/stores/LessonStore/LessonStore';
+import RootNavigation from '../../navigation/actions/RootNavigationActions';
+import {STACK_NAVIGATOR} from '../../navigation/ConstantNavigator';
 
 export const SoundBackgroundGlobalProvider = ({
   children,
@@ -13,6 +15,7 @@ export const SoundBackgroundGlobalProvider = ({
   const {loopSound, isInitSoundDone, pauseSound, setVolume} =
     useContext(SoundGlobalContext);
   const lesson = lessonModuleContainer.getProvided(LessonStore);
+  const route = RootNavigation.current?.getCurrentRoute();
 
   const [isPlaying, setIsPlaying] = useState(false);
 
@@ -25,13 +28,15 @@ export const SoundBackgroundGlobalProvider = ({
         if (state === 'background') {
           pauseSound();
         } else {
-          loopSound(soundTrack.ukulele_music);
+          if (route?.name !== STACK_NAVIGATOR.HOME.LESSON) {
+            loopSound(soundTrack.ukulele_music);
+          }
         }
       },
     );
 
     return () => listener.remove();
-  }, [lesson.backgroundSound, loopSound, pauseSound, setVolume]);
+  }, [lesson.backgroundSound, loopSound, pauseSound, route?.name, setVolume]);
 
   useEffect(() => {
     setVolume(lesson.backgroundSound);
