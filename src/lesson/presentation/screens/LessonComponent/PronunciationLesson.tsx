@@ -14,12 +14,11 @@ import {FontFamily} from 'src/core/presentation/hooks/useFonts';
 import useGlobalStyle from 'src/core/presentation/hooks/useGlobalStyle';
 import {Task} from 'src/home/application/types/GetListQuestionResponse';
 import {COLORS} from 'src/core/presentation/constants/colors';
-import {assets, isAndroid, WIDTH_SCREEN} from 'src/core/presentation/utils';
+import {assets, getCorrectAnswer, isAndroid} from 'src/core/presentation/utils';
 import {scale, verticalScale} from 'react-native-size-matters';
-import Animated, {
+import {
   Easing,
   ReduceMotion,
-  runOnJS,
   useAnimatedStyle,
   useSharedValue,
   withRepeat,
@@ -56,6 +55,44 @@ type Props = {
   characterImageFail?: string;
 };
 
+/**
+ * PronunciationLesson is a React functional component wrapped with MobX's observer and React's forwardRef.
+ * It represents a pronunciation lesson screen in a React Native application.
+ *
+ * @component
+ * @param {Props} props - The properties passed to the component.
+ * @param {number} props.moduleIndex - The index of the current module.
+ * @param {function} props.nextModule - Function to call to proceed to the next module.
+ * @param {number} props.totalModule - The total number of modules.
+ * @param {string} props.lessonName - The name of the lesson.
+ * @param {string} props.moduleName - The name of the module.
+ * @param {object} props.firstMiniTestTask - The first mini test task object.
+ * @param {string} props.firstMiniTestTask.name - The name of the mini test task.
+ * @param {object[]} props.firstMiniTestTask.question - The array of questions in the mini test task.
+ * @param {string} props.firstMiniTestTask.question[].correctAnswer - The correct answer for the question.
+ * @param {string} props.firstMiniTestTask.question[].fullAnswer - The full answer for the question.
+ * @param {string} props.firstMiniTestTask.question[].descriptionImage - The description image for the question.
+ * @param {string} props.firstMiniTestTask.question[].image - The image for the question.
+ * @param {string} props.backgroundImage - The background image for the lesson.
+ * @param {string} props.characterImageSuccess - The character image to display on success.
+ * @param {string} props.characterImageFail - The character image to display on failure.
+ * @param {React.Ref<LessonRef>} ref - The reference to the lesson component.
+ *
+ * @returns {JSX.Element} The rendered PronunciationLesson component.
+ *
+ * @example
+ * <PronunciationLesson
+ *   moduleIndex={0}
+ *   nextModule={handleNextModule}
+ *   totalModule={5}
+ *   lessonName="English Pronunciation"
+ *   moduleName="Module 1"
+ *   firstMiniTestTask={miniTestTask}
+ *   backgroundImage="path/to/background.png"
+ *   characterImageSuccess="path/to/success.png"
+ *   characterImageFail="path/to/fail.png"
+ * />
+ */
 const PronunciationLesson = observer(
   forwardRef<LessonRef, Props>(
     (
@@ -81,11 +118,33 @@ const PronunciationLesson = observer(
       const [answerSelected, setAnswerSelected] = useState('');
 
       const isCorrectAnswer = useMemo(() => {
+        if (
+          typeof firstMiniTestTask?.question?.[moduleIndex]?.correctAnswer ===
+          'string'
+        ) {
+          return (
+            answerSelected.toLocaleLowerCase() ===
+            getCorrectAnswer(
+              firstMiniTestTask?.question?.[moduleIndex]?.correctAnswer,
+            ).toLocaleLowerCase()
+          );
+        } else if (
+          typeof firstMiniTestTask?.question?.[moduleIndex]?.correctAnswer ===
+          'object'
+        ) {
+          return firstMiniTestTask?.question?.[
+            moduleIndex
+          ]?.correctAnswer?.some((item: string) => {
+            return (
+              answerSelected.toLocaleLowerCase() === item.toLocaleLowerCase()
+            );
+          });
+        }
         return (
           answerSelected.toLocaleLowerCase() ===
-          firstMiniTestTask?.question?.[
-            moduleIndex
-          ]?.correctAnswer.toLocaleLowerCase()
+          getCorrectAnswer(
+            firstMiniTestTask?.question?.[moduleIndex]?.correctAnswer,
+          ).toLocaleLowerCase()
         );
       }, [answerSelected, firstMiniTestTask?.question, moduleIndex]);
 
@@ -110,19 +169,24 @@ const PronunciationLesson = observer(
           nextModule(answerSelected);
         },
         fullAnswer: firstMiniTestTask?.question?.[moduleIndex].fullAnswer,
-        correctAnswer: firstMiniTestTask?.question?.[moduleIndex].correctAnswer,
+        correctAnswer: getCorrectAnswer(
+          firstMiniTestTask?.question?.[moduleIndex].correctAnswer,
+        ),
         totalTime: 5 * 60, // * tổng time làm 1câu
       });
 
       const {
         errorSpeech,
+        setErrorSpeech,
         loadingRecord,
         speechResult,
         startRecord: handleStartRecord,
         stopRecord: handleStopRecord,
         checkEmpty,
       } = usePronunciation({
-        correctAnswer: firstMiniTestTask?.question?.[moduleIndex].correctAnswer,
+        correctAnswer: getCorrectAnswer(
+          firstMiniTestTask?.question?.[moduleIndex].correctAnswer,
+        ),
       });
 
       const {lessonSetting} = useHomeStore();
@@ -142,9 +206,9 @@ const PronunciationLesson = observer(
 
       const onSpeechText = useCallback(() => {
         ttsSpeak?.(
-          firstMiniTestTask?.question?.[moduleIndex].correctAnswer
-            .toString()
-            .toLowerCase() ?? '',
+          getCorrectAnswer(
+            firstMiniTestTask?.question?.[moduleIndex].correctAnswer,
+          ),
         );
       }, [firstMiniTestTask?.question, moduleIndex, ttsSpeak]);
 
@@ -249,6 +313,7 @@ const PronunciationLesson = observer(
         // Logs the initiation of the recording process to the console.
         console.log('start record');
         Haptics.selectionAsync();
+        setErrorSpeech?.(undefined);
         // Checks if there is no ongoing recording process (loadingRecord is false).
         if (!loadingRecord) {
           // Initiates the animation associated with recording. This could involve visual feedback like pulsing or scaling effects.
@@ -268,7 +333,7 @@ const PronunciationLesson = observer(
             handleStartRecord('china');
           }
         }
-      }, [loadingRecord, lessonName, handleStartRecord]);
+      }, [setErrorSpeech, loadingRecord, lessonName, handleStartRecord]);
 
       const stopRecord = useCallback(() => {
         // Logs the termination of the recording process to the console.
@@ -286,7 +351,9 @@ const PronunciationLesson = observer(
         isAnswerCorrect,
         onChoiceCorrectedAnswer: () => {
           setAnswerSelected(
-            firstMiniTestTask?.question?.[moduleIndex]?.correctAnswer ?? '',
+            getCorrectAnswer(
+              firstMiniTestTask?.question?.[moduleIndex]?.correctAnswer,
+            ),
           );
         },
       }));
@@ -403,7 +470,11 @@ const PronunciationLesson = observer(
                   stopRecord={stopRecord}
                   loadingRecord={loadingRecord}
                   errorSpeech={
-                    checkEmpty ? {code: 'EMPTY', message: ''} : undefined
+                    errorSpeech
+                      ? errorSpeech
+                      : checkEmpty
+                      ? {code: 'EMPTY', message: ''}
+                      : undefined
                   }
                 />
                 <View style={{marginTop: verticalScale(10)}} />
@@ -413,7 +484,7 @@ const PronunciationLesson = observer(
                     checkEmpty && {color: COLORS.RED_AF3A1B},
                   ]}>
                   {loadingRecord
-                    ? 'Loading'
+                    ? 'Listening...'
                     : 'Please click button and record again'}
                 </Text>
                 {learningTimer !== 0 && (

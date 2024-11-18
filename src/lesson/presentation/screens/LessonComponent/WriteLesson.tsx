@@ -16,7 +16,7 @@ import HanziWrite from '../../components/HanziWrite';
 import {Task} from 'src/home/application/types/GetListQuestionResponse';
 import useAuthenticationStore from 'src/authentication/presentation/stores/useAuthenticationStore';
 import {scale, verticalScale} from 'react-native-size-matters';
-import {assets, isAndroid} from 'src/core/presentation/utils';
+import {assets, getCorrectAnswer, isAndroid} from 'src/core/presentation/utils';
 import {useLessonStore} from '../../stores/LessonStore/useGetPostsStore';
 import {useSettingLesson} from '../../hooks/useSettingLesson';
 import {COLORS} from 'src/core/presentation/constants/colors';
@@ -82,9 +82,9 @@ const WriteLesson = ({
 
   const onSpeechText = useCallback(() => {
     ttsSpeak?.(
-      firstMiniTestTask?.question?.[moduleIndex].correctAnswer
-        .toString()
-        .toLowerCase() ?? '',
+      getCorrectAnswer(
+        firstMiniTestTask?.question?.[moduleIndex].correctAnswer,
+      ),
     );
   }, [firstMiniTestTask?.question, moduleIndex, ttsSpeak]);
 
@@ -172,8 +172,7 @@ const WriteLesson = ({
               flexDirection: 'row',
             }}>
             <Text style={[globalStyle.txtLabel]}>
-              Write the "
-              {firstMiniTestTask?.question?.[moduleIndex].correctAnswer}"
+              Write the "{firstMiniTestTask?.question?.[moduleIndex].answers}"
             </Text>
             <TouchableOpacity onPress={onSpeechText}>
               <Image
@@ -189,7 +188,9 @@ const WriteLesson = ({
             ref={canvasWriteRef}
             text={{
               content:
-                firstMiniTestTask?.question?.[moduleIndex].correctAnswer ?? '',
+                firstMiniTestTask?.question?.[
+                  moduleIndex
+                ]?.answers?.toString() ?? '',
               color: COLORS.PRIMARY,
             }}
             // eslint-disable-next-line @typescript-eslint/no-unused-vars

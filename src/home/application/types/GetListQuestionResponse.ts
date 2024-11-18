@@ -1,7 +1,7 @@
 export type Answer = string;
 export interface Question {
   content: string;
-  correctAnswer: string;
+  correctAnswer: string | string[];
   createdAt: string;
   description: string;
   isDeleted: false;

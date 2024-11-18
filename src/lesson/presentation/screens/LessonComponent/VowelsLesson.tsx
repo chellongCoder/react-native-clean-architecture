@@ -14,7 +14,7 @@ import {FontFamily} from 'src/core/presentation/hooks/useFonts';
 import useGlobalStyle from 'src/core/presentation/hooks/useGlobalStyle';
 import {Task} from 'src/home/application/types/GetListQuestionResponse';
 import {COLORS} from 'src/core/presentation/constants/colors';
-import {WIDTH_SCREEN} from 'src/core/presentation/utils';
+import {getCorrectAnswer, WIDTH_SCREEN} from 'src/core/presentation/utils';
 import {scale, verticalScale} from 'react-native-size-matters';
 import Animated, {
   Easing,
@@ -83,7 +83,9 @@ const VowelsLesson = observer(
         countDownTime: trainingCount <= 2 ? 0 : 5,
         isCorrectAnswer:
           answerSelected ===
-          firstMiniTestTask?.question?.[moduleIndex]?.correctAnswer,
+          getCorrectAnswer(
+            firstMiniTestTask?.question?.[moduleIndex]?.correctAnswer,
+          ),
         onSubmit: () => {
           setAnswerSelected('');
           nextModule(answerSelected);
@@ -163,7 +165,9 @@ const VowelsLesson = observer(
         isAnswerCorrect,
         onChoiceCorrectedAnswer: () => {
           setAnswerSelected(
-            firstMiniTestTask?.question?.[moduleIndex]?.correctAnswer ?? '',
+            getCorrectAnswer(
+              firstMiniTestTask?.question?.[moduleIndex]?.correctAnswer,
+            ),
           );
         },
       }));

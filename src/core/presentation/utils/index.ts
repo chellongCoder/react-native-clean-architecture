@@ -64,3 +64,12 @@ export function formatTimeMMSS(seconds: number) {
 
   return `${formattedMinutes}:${formattedSeconds}`;
 }
+
+export function getCorrectAnswer(answer?: string | string[]) {
+  if (typeof answer === 'string') {
+    return answer;
+  } else if (typeof answer === 'object') {
+    return answer?.[0];
+  }
+  return '';
+}

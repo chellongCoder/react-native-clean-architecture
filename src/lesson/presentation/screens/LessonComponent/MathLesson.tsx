@@ -10,7 +10,7 @@ import React, {
 import LessonComponent from './LessonComponent';
 import {FontFamily} from 'src/core/presentation/hooks/useFonts';
 import useGlobalStyle from 'src/core/presentation/hooks/useGlobalStyle';
-import {assets} from 'src/core/presentation/utils';
+import {assets, getCorrectAnswer} from 'src/core/presentation/utils';
 import DraggableZoomableRotatableImage, {
   DraggableImageRef,
 } from '../../components/Ruler';
@@ -62,7 +62,9 @@ const MathLesson = forwardRef<LessonRef, Props>(
     const isCorrectAnswer = useMemo(() => {
       return (
         answerSelected.trim().toLocaleLowerCase() ===
-        firstMiniTestTask?.question?.[moduleIndex]?.correctAnswer
+        getCorrectAnswer(
+          firstMiniTestTask?.question?.[moduleIndex]?.correctAnswer,
+        )
           .trim()
           .toLocaleLowerCase()
       );

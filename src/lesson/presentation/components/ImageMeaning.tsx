@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {Image, TouchableOpacity} from 'react-native';
+import {Image, TouchableOpacity, TouchableWithoutFeedback} from 'react-native';
 import {scale} from 'react-native-size-matters';
 import {coreModuleContainer} from 'src/core/CoreModule';
 import Env, {EnvToken} from 'src/core/domain/entities/Env';
@@ -9,9 +9,7 @@ const ImageMeaning = ({descriptionImage, image}) => {
   const env = coreModuleContainer.getProvided<Env>(EnvToken); // Instantiate CoreService
   const [isShowMeaning, setIsShowMeaning] = useState(false);
   return (
-    <TouchableOpacity
-      activeOpacity={1}
-      onPress={() => setIsShowMeaning(v => !v)}>
+    <TouchableWithoutFeedback onPress={() => setIsShowMeaning(v => !v)}>
       <Image
         resizeMode={'contain'}
         width={WIDTH_SCREEN}
@@ -27,7 +25,7 @@ const ImageMeaning = ({descriptionImage, image}) => {
             (isShowMeaning ? descriptionImage : image),
         }}
       />
-    </TouchableOpacity>
+    </TouchableWithoutFeedback>
   );
 };
 

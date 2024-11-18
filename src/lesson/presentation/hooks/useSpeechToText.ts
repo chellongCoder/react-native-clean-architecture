@@ -62,6 +62,25 @@ const initSpeechLanguage: TLanguageMap = {
   unitedstates: 'en-US',
 };
 
+const initSpeechLanguageCloud: TLanguageMap = {
+  taiwan: 'zh-TW',
+  france: 'fr-FR',
+  italia: 'it-IT',
+  vietnam: 'vi-VN',
+  korean: 'ko-KR',
+  canada: 'en-CA',
+  singapore: 'en-SG',
+  india: 'en-IN',
+  newzealand: 'en-NZ',
+  yue: 'yue-CN',
+  zhcn: 'zh-CN',
+  england: 'en-GB',
+  japan: 'ja-JP',
+  zhhk: 'zh-HK',
+  china: 'cmn-Hans-CN',
+  unitedstates: 'en-US',
+};
+
 type TLanguageKeys = keyof typeof initSpeechLanguage; // Create a union type of the keys
 
 export const useSpeechToText = (fullAnswer?: string) => {
@@ -77,6 +96,8 @@ export const useSpeechToText = (fullAnswer?: string) => {
     loading: false,
     checkEmpty: false,
   });
+
+  const RECOGNIZER_ENGINE = useRef('GOOGLE').current;
 
   const refText = useRef('');
 
@@ -102,18 +123,24 @@ export const useSpeechToText = (fullAnswer?: string) => {
         partialResults: undefined,
       });
       try {
-        await Voice.start(language ? initSpeechLanguage[language] : 'en-US', {
-          EXTRA_SPEECH_INPUT_COMPLETE_SILENCE_LENGTH_MILLIS: 10000, //Extra time to recognize voice when no text change
-          RECOGNIZER_ENGINE: 'GOOGLE',
-        });
+        if (RECOGNIZER_ENGINE) {
+          await Voice.start(
+            language ? initSpeechLanguageCloud[language] : 'en-US',
+            {
+              EXTRA_SPEECH_INPUT_COMPLETE_SILENCE_LENGTH_MILLIS: 10000, //Extra time to recognize voice when no text change
+              RECOGNIZER_ENGINE: RECOGNIZER_ENGINE,
+            },
+          );
+        } else {
+          await Voice.start(language ? initSpeechLanguage[language] : 'en-US', {
+            EXTRA_SPEECH_INPUT_COMPLETE_SILENCE_LENGTH_MILLIS: 10000, //Extra time to recognize voice when no text change
+          });
+        }
       } catch (error: any) {
-        setVoiceState({
-          error: {code: error?.code, message: error?.message},
-        });
         console.log('error raised', error);
       }
     },
-    [setVoiceState],
+    [RECOGNIZER_ENGINE, setVoiceState],
   );
 
   const clearSpeechResult = useCallback(() => {
@@ -190,31 +217,63 @@ export const useSpeechToText = (fullAnswer?: string) => {
 
   const onSpeechResultsHandler = useCallback(
     (e: any) => {
-      // Logs the final results event to the console for debugging.
-
-      // Checks if the event contains any non-empty speech recognition results.
-      if (
-        !e?.value?.length ||
-        e.value.every((item: string) => item.trim() === '')
-      ) {
-        return; // Exits the function if there are no meaningful results.
-      }
-
-      // Attempts to find a result that matches the `fullAnswer` exactly, ignoring case.
-      const approximateResult = e.value.find(
-        (item: string) =>
-          item.toLocaleUpperCase() === fullAnswer?.toLocaleUpperCase(),
+      console.log(
+        '🛠 LOG: 🚀 --> -----------------------------------------------------------------------🛠 LOG: 🚀 -->',
+      );
+      console.log(
+        '🛠 LOG: 🚀 --> ~ file: useSpeechToText.ts:194 ~ useSpeechToText ~ e:',
+        e,
+        refText.current,
+      );
+      console.log(
+        '🛠 LOG: 🚀 --> -----------------------------------------------------------------------🛠 LOG: 🚀 -->',
       );
 
-      // Updates the reference text with either the matching result or the first result.
-      if (approximateResult) {
-        refText.current = approximateResult; // Sets to the exact match if found.
-      } else {
-        refText.current = e.value[0]; // Sets to the first result if no exact match is found.
-      }
+      if (isAndroid) {
+        // Checks if the event contains any speech recognition results.
+        if (!e?.value?.length && !refText.current) {
+          setVoiceState({checkEmpty: true});
+          return; // Exits the function if there are no results.
+        }
 
-      // Updates the voice state with the new result and sets `time` to false.
-      setVoiceState({time: false, results: refText.current});
+        // Updates the reference text with either the matching result or the first result.
+        if (!refText.current) {
+          refText.current = e.value; // Sets to the exact match if found.
+        }
+
+        // Updates the voice state with the new result and sets `time` to false.
+        setVoiceState({
+          time: false,
+          results: refText.current.trim(),
+          checkEmpty: false,
+        });
+      } else {
+        // Logs the final results event to the console for debugging.
+
+        // Checks if the event contains any non-empty speech recognition results.
+        if (
+          !e?.value?.length ||
+          e.value.every((item: string) => item.trim() === '')
+        ) {
+          return; // Exits the function if there are no meaningful results.
+        }
+
+        // Attempts to find a result that matches the `fullAnswer` exactly, ignoring case.
+        const approximateResult = e.value.find(
+          (item: string) =>
+            item.toLocaleUpperCase() === fullAnswer?.toLocaleUpperCase(),
+        );
+
+        // Updates the reference text with either the matching result or the first result.
+        if (approximateResult) {
+          refText.current = approximateResult; // Sets to the exact match if found.
+        } else {
+          refText.current = e.value[0]; // Sets to the first result if no exact match is found.
+        }
+
+        // Updates the voice state with the new result and sets `time` to false.
+        setVoiceState({time: false, results: refText.current});
+      }
     },
     [fullAnswer, setVoiceState],
   );
