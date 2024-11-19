@@ -64,6 +64,22 @@ export const IapProvider = observer(({children}: PropsWithChildren) => {
     }
   };
 
+  // init connection to store
+  const initializeConnection = useCallback(async () => {
+    try {
+      await initConnection();
+      if (isAndroid) {
+        await flushFailedPurchasesCachedAsPendingAndroid();
+      }
+    } catch (error) {
+      console.log('An error occurred', error);
+    }
+  }, []);
+
+  useEffect(() => {
+    initializeConnection();
+  }, [initializeConnection]);
+
   // get list product
   useEffect(() => {
     const purchaseUpdateSubscription = purchaseUpdatedListener(
@@ -102,22 +118,6 @@ export const IapProvider = observer(({children}: PropsWithChildren) => {
       purchaseErrorSubscription.remove();
     };
   }, [setIapState]);
-
-  // init connection to store
-  const initializeConnection = useCallback(async () => {
-    try {
-      await initConnection();
-      if (isAndroid) {
-        await flushFailedPurchasesCachedAsPendingAndroid();
-      }
-    } catch (error) {
-      console.log('An error occurred', error);
-    }
-  }, []);
-
-  useEffect(() => {
-    initializeConnection();
-  }, [initializeConnection]);
 
   return (
     <IapContext.Provider
