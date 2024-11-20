@@ -43,10 +43,10 @@ platform :android do
 
   desc "Build and upload APK to Firebase App Distribution"
   lane :upload_to_firebase do
-    gradle(task: "clean assembleRelease")
+    # gradle(task: "assembleRelease")
 
     firebase_app_distribution(
-      app: "com.alphadex.tbd.app",
+      app: "1:827845646125:android:61618b15b8dab04bf625a4",
       firebase_cli_token: "1//0eoz3S6LpCLt9CgYIARAAGA4SNwF-L9IrDR3gSYYfWxmfhoeqG5TBuoeJBIYzoGCZOajUoHMwKGkDGUC5Cv6UuLaICEePCQmLIbE",
       apk_path: "./app/build/outputs/apk/release/app-release.apk",
       release_notes: "New release",
