@@ -20,6 +20,7 @@ import {SoundBackgroundGlobalProvider} from './hooks/sound/SoundBackgroundGlobal
 import {OfflineProvider} from './hooks/offline/OfflineProvider';
 import {TextToSpeechProvider} from './hooks/textToSpeech/TextToSpeechProvider';
 import {IapProvider} from './store/iapProvider';
+import FirebaseCrashlyticProvider from './hooks/firebaseCrashlytic/FirebaseCrashlyticProvider';
 
 LogBox.ignoreLogs(['Warning: ...']); // Ignore log notification by message
 LogBox.ignoreAllLogs(); //Ignore all log notifications
@@ -58,20 +59,22 @@ const App = () => {
       <SafeAreaProvider initialMetrics={initialWindowMetrics}>
         <GestureHandlerRootView style={{flex: 1}}>
           <LoadingGlobalProvider>
-            <OfflineProvider>
-              <SoundGlobalProvider>
-                <SoundBackgroundGlobalProvider>
-                  <TextToSpeechProvider>
-                    <AuthenticationProvider>
-                      <IapProvider>
-                        <RootNavigator />
-                        <Toast />
-                      </IapProvider>
-                    </AuthenticationProvider>
-                  </TextToSpeechProvider>
-                </SoundBackgroundGlobalProvider>
-              </SoundGlobalProvider>
-            </OfflineProvider>
+            <FirebaseCrashlyticProvider>
+              <OfflineProvider>
+                <SoundGlobalProvider>
+                  <SoundBackgroundGlobalProvider>
+                    <TextToSpeechProvider>
+                      <AuthenticationProvider>
+                        <IapProvider>
+                          <RootNavigator />
+                          <Toast />
+                        </IapProvider>
+                      </AuthenticationProvider>
+                    </TextToSpeechProvider>
+                  </SoundBackgroundGlobalProvider>
+                </SoundGlobalProvider>
+              </OfflineProvider>
+            </FirebaseCrashlyticProvider>
           </LoadingGlobalProvider>
         </GestureHandlerRootView>
       </SafeAreaProvider>

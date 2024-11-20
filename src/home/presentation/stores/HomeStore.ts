@@ -13,6 +13,11 @@ import GetListLessonUseCase from 'src/home/application/useCases/GetListLessonUse
 import {Module} from 'src/home/application/types/GetListLessonResponse';
 import GetListQuestionUseCase from 'src/home/application/useCases/GetListQuestionUseCase';
 import {LessonSettingT} from 'src/home/application/types/GetListQuestionResponse';
+import LoggingActionUseCase from 'src/home/application/useCases/LoggingActionUseCase';
+import {
+  ActionE,
+  LoggingActionPayload,
+} from 'src/home/application/types/LoggingActionPayload';
 
 @injectable()
 export class HomeStore implements HomeStoreState {
@@ -44,6 +49,9 @@ export class HomeStore implements HomeStoreState {
 
     @provided(GetListQuestionUseCase)
     private getListQuestionUseCase: GetListQuestionUseCase,
+
+    @provided(LoggingActionUseCase)
+    private loggingActionUseCase: LoggingActionUseCase,
   ) {
     this.initializePersistence();
     this.getField = this.getField.bind(this);
@@ -106,6 +114,12 @@ export class HomeStore implements HomeStoreState {
     });
     this.lessonSetting = response.data.lessonSetting;
     this.setIsLoading(false);
+    return response;
+  }
+
+  @action
+  public async putLoggingAction(log: LoggingActionPayload) {
+    const response = await this.loggingActionUseCase.execute(log);
     return response;
   }
 }

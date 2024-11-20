@@ -19,6 +19,10 @@ import {LessonStoreProvider} from '../stores/LessonStore/LessonStoreProvider';
 import IconCloseCircle from 'assets/svg/IconCloseCircle';
 import IconBook from 'assets/svg/IconBook';
 import IconCheckout from 'assets/svg/IconCheckout';
+import {scale, verticalScale} from 'react-native-size-matters';
+import {HEIGHT_SCREEN} from 'src/core/presentation/utils';
+import {COLORS} from 'src/core/presentation/constants/colors';
+import {goBack} from 'src/core/presentation/navigation/actions/RootNavigationActions';
 
 const NewMoreScreen = observer(() => {
   const insets = useSafeAreaInsets();
@@ -35,11 +39,11 @@ const NewMoreScreen = observer(() => {
             </Text>
           </TouchableOpacity>
 
-          <Price price="FREE" />
+          <Price price="100" />
         </View>
-        <View style={[styles.profile]}>
+        <TouchableOpacity style={[styles.profile]}>
           <IconUser width={70} height={70} />
-        </View>
+        </TouchableOpacity>
         <TouchableOpacity style={[styles.pt16, styles.rowHCenter]}>
           <Text style={[globalStyle.txtLabel, styles.txtParentName]}>
             Parent's Name
@@ -50,16 +54,20 @@ const NewMoreScreen = observer(() => {
           Parent’s email
         </Text>
       </View>
-      <View style={[styles.center, styles.iconClose]}>
+      <TouchableOpacity
+        onPress={goBack}
+        style={[styles.center, styles.iconClose]}>
         <IconCloseCircle />
-      </View>
+      </TouchableOpacity>
       <BookView style={[styles.mt16, styles.fill]} colorBg="#FFE699">
         <View style={styles.title}>
           <Text style={[globalStyle.txtLabel, styles.txtTitle]}>
             Vietnamese{'\n'}New more modules list
           </Text>
         </View>
-        <ScrollView contentContainerStyle={[styles.bookContent]}>
+        <ScrollView
+          style={{height: HEIGHT_SCREEN / 4}}
+          contentContainerStyle={[styles.bookContent]}>
           <View style={styles.lstItem}>
             <View style={styles.item}>
               <View style={styles.iconBook}>
@@ -74,9 +82,16 @@ const NewMoreScreen = observer(() => {
                   typesetting industry. Lorem
                 </Text>
               </View>
-              <TouchableOpacity style={[styles.button, styles.w70]}>
-                <Text style={[globalStyle.txtButton, styles.textBtn]}>Buy</Text>
-              </TouchableOpacity>
+              <View style={{gap: verticalScale(14), alignItems: 'center'}}>
+                <Text style={[globalStyle.txtLabel, styles.textColor]}>
+                  100$
+                </Text>
+                <TouchableOpacity style={[styles.button, styles.w70]}>
+                  <Text style={[globalStyle.txtButton, styles.textBtn]}>
+                    Add to cart
+                  </Text>
+                </TouchableOpacity>
+              </View>
             </View>
             <View style={styles.item}>
               <View style={styles.iconBook}>
@@ -91,9 +106,16 @@ const NewMoreScreen = observer(() => {
                   typesetting industry. Lorem
                 </Text>
               </View>
-              <TouchableOpacity style={[styles.button, styles.w70]}>
-                <Text style={[globalStyle.txtButton, styles.textBtn]}>Buy</Text>
-              </TouchableOpacity>
+              <View style={{gap: verticalScale(14), alignItems: 'center'}}>
+                <Text style={[globalStyle.txtLabel, styles.textColor]}>
+                  100$
+                </Text>
+                <TouchableOpacity style={[styles.button, styles.w70]}>
+                  <Text style={[globalStyle.txtButton, styles.textBtn]}>
+                    Add to cart
+                  </Text>
+                </TouchableOpacity>
+              </View>
             </View>
           </View>
         </ScrollView>
@@ -104,11 +126,6 @@ const NewMoreScreen = observer(() => {
             </View>
             <IconCheckout />
           </View>
-          <TouchableOpacity style={[styles.button]}>
-            <Text style={[globalStyle.txtButton, styles.textBtn]}>
-              Check out
-            </Text>
-          </TouchableOpacity>
         </View>
       </BookView>
     </View>
@@ -122,7 +139,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   bg: {
-    backgroundColor: '#fbf8cc',
+    backgroundColor: COLORS.WHITE_FBF8CC,
   },
   btnLogout: {
     backgroundColor: '#66C270',
@@ -172,15 +189,13 @@ const styles = StyleSheet.create({
   mt16: {
     marginTop: 16,
   },
-  bookContent: {
-    paddingHorizontal: 16,
-  },
+  bookContent: {},
   title: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
     paddingHorizontal: 30,
-    marginBottom: 20,
+    marginBottom: verticalScale(20),
   },
   txtTitle: {
     color: '#1C6349',
@@ -192,7 +207,7 @@ const styles = StyleSheet.create({
     borderRadius: 30,
     paddingHorizontal: 16,
     paddingBottom: 16,
-    backgroundColor: '#FBF8CC',
+    backgroundColor: COLORS.WHITE_FBF8CC,
   },
   center: {
     alignItems: 'center',
@@ -206,21 +221,20 @@ const styles = StyleSheet.create({
     gap: 16,
   },
   item: {
-    height: 94.87,
-    backgroundColor: '#FBF8CC',
-    borderRadius: 30,
-    width: 370,
+    height: verticalScale(94.87),
+    backgroundColor: COLORS.WHITE_FBF8CC,
+    borderRadius: scale(30),
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    gap: 16,
+    gap: scale(16),
   },
   itemContent: {
     flexDirection: 'column',
     justifyContent: 'space-between',
     alignItems: 'flex-start',
-    width: 152,
-    gap: 4,
+    maxWidth: scale(152),
+    gap: verticalScale(4),
   },
   iconBook: {
     width: 60,
@@ -232,14 +246,11 @@ const styles = StyleSheet.create({
   },
   button: {
     backgroundColor: '#66C270',
-    paddingVertical: 8,
-    paddingHorizontal: 16,
-    borderRadius: 10,
+    paddingVertical: verticalScale(8),
+    borderRadius: scale(10),
     alignItems: 'center',
-    height: 28,
-    width: 90,
-    top: 15,
-    position: 'relative',
+    height: verticalScale(28),
+    width: scale(90),
   },
   w70: {
     width: 70,
@@ -247,7 +258,7 @@ const styles = StyleSheet.create({
   textBtn: {
     fontSize: 10,
     fontWeight: 'bold',
-    color: '#FBF8CC',
+    color: COLORS.WHITE_FBF8CC,
   },
   checkout: {
     flexDirection: 'column',
@@ -279,6 +290,6 @@ const styles = StyleSheet.create({
   },
   textDot: {
     fontSize: 8,
-    color: '#FBF8CC',
+    color: COLORS.WHITE_FBF8CC,
   },
 });

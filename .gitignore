@@ -77,3 +77,4 @@ dist/
 
 .npmrc
 vendor/bundle/ruby
+android/fastlane/lithe-site-441407-r6-1c765977e9c3.json

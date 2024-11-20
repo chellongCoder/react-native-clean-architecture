@@ -6,6 +6,7 @@ import {HomeStore} from './presentation/stores/HomeStore';
 import GetListSubjectUseCase from './application/useCases/GetListSubjectUseCase';
 import GetListLessonUseCase from './application/useCases/GetListLessonUseCase';
 import GetListQuestionUseCase from './application/useCases/GetListQuestionUseCase';
+import LoggingActionUseCase from './application/useCases/LoggingActionUseCase';
 
 @module({
   providers: [
@@ -21,6 +22,7 @@ import GetListQuestionUseCase from './application/useCases/GetListQuestionUseCas
     GetListSubjectUseCase,
     GetListLessonUseCase,
     GetListQuestionUseCase,
+    LoggingActionUseCase,
   ],
 })
 export class HomeModule {}

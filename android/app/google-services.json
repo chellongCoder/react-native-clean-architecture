@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "827845646125",
+    "project_id": "lithe-site-441407-r6",
+    "storage_bucket": "lithe-site-441407-r6.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:827845646125:android:61618b15b8dab04bf625a4",
+        "android_client_info": {
+          "package_name": "com.alphadex.tbd.app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAzTB4KlpzK2Tm4Yet9xTueYCq_MxqTA6c"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

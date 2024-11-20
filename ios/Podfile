@@ -42,6 +42,17 @@ end
 
 target 'TBDEdu' do
   use_expo_modules!
+
+  pod 'FirebaseCrashlytics', :modular_headers => true
+  pod 'FirebaseCore', :modular_headers => true
+  pod 'FirebaseInstallations', :modular_headers => true
+  pod 'GoogleDataTransport', :modular_headers => true
+  pod 'GoogleUtilities', :modular_headers => true
+  pod 'FirebaseSessions', :modular_headers => true
+  pod 'FirebaseCoreExtension', :modular_headers => true
+  pod 'nanopb', :modular_headers => true
+  
+  
   post_integrate do |installer|
     begin
       expo_patch_react_imports!(installer)
@@ -51,7 +62,7 @@ target 'TBDEdu' do
   end
   config = use_native_modules!
   flags = get_default_flags()
-
+  
   use_react_native!(
     :path => config[:reactNativePath],
         # Hermes is now enabled by default. Disable by setting this flag to false.

@@ -10,6 +10,8 @@ import GetListSubjectResponse from '../application/types/GetListSubjectResponse'
 import {GetListLessonPayload} from '../application/types/GetListLessonPayload';
 import GetListLessonResponse from '../application/types/GetListLessonResponse';
 import GetListQuestionResponse from '../application/types/GetListQuestionResponse';
+import {LoggingActionPayload} from '../application/types/LoggingActionPayload';
+import {LoggingActionResponse} from '../application/types/LoggingActionResponse';
 
 @injectable()
 class HomeRepository implements IHomeRepository {
@@ -44,11 +46,29 @@ class HomeRepository implements IHomeRepository {
     return response;
   }
 
+  /**
+   * Retrieves a list of questions for lessons associated with a specific subject.
+   *
+   * @param {Object} params - The parameters for the request.
+   * @param {string} params.subjectId - The unique identifier of the subject for which to retrieve lesson questions.
+   * @returns {Promise<GetListQuestionResponse>} A promise that resolves to the response containing the list of questions.
+   */
   public async getListLessonQuestions({
     subjectId,
   }: Partial<GetListLessonPayload>): Promise<GetListQuestionResponse> {
     const response: GetListQuestionResponse = await this.httpClient.get(
       `${API_ENDPOINTS.LESSON.QUESTIONS}/${subjectId}`,
+    );
+    return response;
+  }
+
+  public async putLoggingAction({
+    userId,
+    ...body
+  }: Partial<LoggingActionPayload>): Promise<LoggingActionResponse> {
+    const response: LoggingActionResponse = await this.httpClient.post(
+      `${API_ENDPOINTS.DEFAULT.LOGGING}`,
+      {userId: userId ? userId : 'guest', ...body},
     );
     return response;
   }

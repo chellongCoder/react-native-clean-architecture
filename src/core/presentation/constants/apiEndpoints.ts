@@ -7,8 +7,12 @@ const SERVICES = {
   LESSON: '/lesson',
   USER_SETTING: '/user-setting',
   USER_PROGRESS: '/user-progress',
+  LOGGING: '/logging',
 };
 
+const getLoggingEndPointServices = () => {
+  return `/api${API_VERSION}${SERVICES.LOGGING}`;
+};
 const getAuthEndPointServices = (path: string) => {
   return `/api${API_VERSION}${SERVICES.AUTH}/${path}`;
 };
@@ -85,5 +89,8 @@ export const API_ENDPOINTS = {
     ),
     RANKING_OF_CHILD: getUserProgressEndPointServices('ranking-of-child'),
     TOP_RANKING: getUserProgressEndPointServices('top-ranking'),
+  },
+  DEFAULT: {
+    LOGGING: getLoggingEndPointServices(),
   },
 };

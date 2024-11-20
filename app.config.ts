@@ -2,8 +2,8 @@ import {ExpoConfig} from '@expo/config-types';
 import packageJson from './package.json';
 
 const appConfig: ExpoConfig = {
-  name: 'BTD-Edu',
-  slug: 'BTD-Edu',
+  name: 'ABeeCi',
+  slug: 'abeeci',
   scheme: 'rnca',
   version: packageJson.version,
   entryPoint: './index.js',

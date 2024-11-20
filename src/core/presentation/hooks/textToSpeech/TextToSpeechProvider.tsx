@@ -6,6 +6,10 @@ import {isAndroid} from '../../utils';
 import {VolumeManager} from 'react-native-volume-manager';
 import {lessonModuleContainer} from 'src/lesson/LessonModule';
 import {LessonStore} from 'src/lesson/presentation/stores/LessonStore/LessonStore';
+import {HomeStore} from 'src/home/presentation/stores/HomeStore';
+import {ActionE} from 'src/home/application/types/LoggingActionPayload';
+import useAuthenticationStore from 'src/authentication/presentation/stores/useAuthenticationStore';
+import {homeModuleContainer} from 'src/home/HomeModule';
 
 export const iosVoice = [
   {
@@ -267,7 +271,12 @@ export type TLanguageKeys = keyof typeof listLanguage; // Create a union type of
 
 export const TextToSpeechProvider = ({children}: PropsWithChildren) => {
   const [isInitialized, setIsInitialized] = useState(false);
+
+  const {selectedChild} = useAuthenticationStore();
+
   const lesson = lessonModuleContainer.getProvided(LessonStore);
+  const homeStore = homeModuleContainer.getProvided(HomeStore);
+
   const [voices, setVoices] = useState<Voice[]>([]);
 
   const ttsSpeak = async (text: string) => {
@@ -278,9 +287,18 @@ export const TextToSpeechProvider = ({children}: PropsWithChildren) => {
     } else {
       console.log('TTS not initialized yet.');
     }
+
+    homeStore.putLoggingAction({
+      action: ActionE.VIEW_DATA,
+      key: 'voices',
+      userId: selectedChild?.parentId,
+      value: voices,
+    });
   };
 
-  Tts.voices().then(voices => console.log(voices));
+  Tts.voices().then(voices => {
+    console.log('voices', voices);
+  });
 
   const updateSpeechRate = async (rate: number) => {
     await Tts.setDefaultRate(rate);
@@ -335,7 +353,9 @@ export const TextToSpeechProvider = ({children}: PropsWithChildren) => {
 
         setIsInitialized(true);
 
-        Tts.voices().then(vs => setVoices(vs));
+        Tts.voices().then(vs => {
+          setVoices(vs);
+        });
       })
       .catch(error => {
         console.error('TTS initialization failed:', error);
