@@ -1,4 +1,4 @@
-package com.alphadex.tbd.app
+package com.ttvas.vastestbilling
 
 import android.app.Application
 import android.content.res.Configuration

@@ -1,4 +1,4 @@
-package com.alphadex.tbd.app
+package com.ttvas.vastestbilling
 import expo.modules.ReactActivityDelegateWrapper
 
 import com.facebook.react.ReactActivity

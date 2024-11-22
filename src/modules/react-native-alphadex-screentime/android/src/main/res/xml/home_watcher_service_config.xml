@@ -2,7 +2,7 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
   <accessibility-service xmlns:android="http://schemas.android.com/apk/res/android"
     android:description="@string/alert_description"
-    android:packageNames="com.alphadex.tbd.app"
+    android:packageNames="com.ttvas.vastestbilling"
     android:accessibilityEventTypes="typeWindowStateChanged"
     android:canRetrieveWindowContent="true"
     android:accessibilityFeedbackType="feedbackGeneric"

@@ -27,7 +27,7 @@ export type TIapState = {
 };
 
 const productSkus = Platform.select({
-  android: ['abc_test_1'],
+  android: ['abc_test_1', 'abc_test_2', 'abc_test_3'],
 });
 
 export const constants = {
@@ -43,6 +43,7 @@ export const IapProvider = observer(({children}: PropsWithChildren) => {
 
   // Purchase 1 time products
   const makePurchase = async (sku: Sku) => {
+    console.log('makePurchase: ', sku);
     try {
       const res = await requestPurchase(
         isAndroid
@@ -80,6 +81,20 @@ export const IapProvider = observer(({children}: PropsWithChildren) => {
     initializeConnection();
   }, [initializeConnection]);
 
+  const fetchProducts = async () => {
+    setIapState({isLoading: true});
+    try {
+      const result = await getProducts({skus: constants.productSkus || []});
+      console.log('getProducts result: ', result);
+      if (result) {
+        setIapState({products: result, isLoading: false});
+      }
+    } catch (error) {
+      setIapState({isLoading: false});
+      console.log('Cannot get list product: ', error);
+    }
+  };
+
   // get list product
   useEffect(() => {
     const purchaseUpdateSubscription = purchaseUpdatedListener(
@@ -100,18 +115,7 @@ export const IapProvider = observer(({children}: PropsWithChildren) => {
     const purchaseErrorSubscription = purchaseErrorListener(error =>
       console.error('Purchase error', error.message),
     );
-    const fetchProducts = async () => {
-      setIapState({isLoading: true});
-      try {
-        const result = await getProducts({skus: constants.productSkus || []});
-        if (result) {
-          setIapState({products: result, isLoading: false});
-        }
-      } catch (error) {
-        setIapState({isLoading: false});
-        console.log('Cannot get list product: ', error);
-      }
-    };
+
     fetchProducts();
     return () => {
       purchaseUpdateSubscription.remove();
@@ -124,6 +128,7 @@ export const IapProvider = observer(({children}: PropsWithChildren) => {
       value={{
         iapState,
         makePurchase,
+        fetchProducts,
       }}>
       {children}
     </IapContext.Provider>

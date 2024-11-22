@@ -111,7 +111,7 @@ const ParentScreen = observer(() => {
   const globalStyle = useGlobalStyle();
   const lesson = useLessonStore();
   const soundHook = useSoundBackgroundGlobal();
-  const {iapState, makePurchase} = useContext(IapContext);
+  const {iapState, makePurchase, fetchProducts} = useContext(IapContext);
 
   const {
     getUserProfile,
@@ -412,10 +412,12 @@ The blockAppsSystem function is an asynchronous function that awaits the result 
   );
 
   const onPurchaseModule = () => {
-    // if (iapState.products && iapState.products[0].productId) {
-    //   makePurchase?.(iapState.products[0].productId);
+    // if (iapState.products) {
+    console.log('onPurchaseModule');
+    // fetchProducts();
+    makePurchase?.('abc_test_3');
     // }
-    pushScreen(STACK_NAVIGATOR.PARENT.MORE_MODULE_SCREEN, {});
+    // pushScreen(STACK_NAVIGATOR.PARENT.MORE_MODULE_SCREEN, {});
   };
 
   useEffect(() => {
