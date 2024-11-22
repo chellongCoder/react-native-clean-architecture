@@ -48,6 +48,7 @@ type Props = {
   backgroundImage?: string;
   characterImageSuccess?: string;
   characterImageFail?: string;
+  answers: string[];
 };
 
 const ScienceLesson = ({
@@ -60,25 +61,45 @@ const ScienceLesson = ({
   backgroundImage,
   characterImageFail,
   characterImageSuccess,
+  answers,
 }: Props) => {
   const globalStyle = useGlobalStyle();
   const {selectedChild} = useAuthenticationStore();
   const [answerSelected, setAnswerSelected] = useState('');
   const {trainingCount} = useLessonStore();
-  const [isCorrect, setIscorrect] = useState(false);
+  const isCorrectAnswer = useMemo(() => {
+    return (
+      `${answerSelected.trim().toLocaleLowerCase().replace('#', '')}.png` ===
+      firstMiniTestTask?.question?.[moduleIndex]?.correctAnswer
+    );
+  }, [answerSelected, firstMiniTestTask?.question, moduleIndex]);
 
-  const listColors = ['black', 'yellow', 'orange', 'purple', 'green', 'grey'];
+  const listColors = answers;
+
+  const colorsMix = useMemo(() => {
+    // Step 1: Split the string by commas to get an array of file names
+    const fileNames =
+      firstMiniTestTask?.question?.[moduleIndex].content?.split(',');
+
+    // Step 2: Remove the `.png` extension and add `#` prefix to each color code
+    const colorCodes = fileNames?.map(
+      fileName => `#${fileName.replace('.png', '')}`,
+    );
+
+    return colorCodes;
+  }, [firstMiniTestTask?.question, moduleIndex]);
 
   const {ttsSpeak, updateDefaultVoice} = useContext(TextToSpeechContext);
   const focus = useIsFocused();
 
   const {isAnswerCorrect, isShowCorrectContainer, submit} = useSettingLesson({
     countDownTime: trainingCount <= 2 ? 0 : 5,
-    isCorrectAnswer: !!isCorrect,
+    isCorrectAnswer: !!isCorrectAnswer,
     onSubmit: () => {
       setAnswerSelected('');
-      nextModule(answerSelected);
-      setIscorrect(false);
+      nextModule(
+        `${answerSelected.trim().toLocaleLowerCase().replace('#', '')}.png`,
+      );
     },
     fullAnswer: firstMiniTestTask?.question?.[moduleIndex].fullAnswer,
     totalTime: 5 * 60, // * tổng time làm 1câu
@@ -161,7 +182,13 @@ const ScienceLesson = ({
       isAnswerCorrect={isAnswerCorrect}
       isShowCorrectContainer={isShowCorrectContainer}
       buildQuestion={
-        <ColorMixing color1="red" color2="blue" colorMixed="purple" />
+        <ColorMixing
+          color1={colorsMix?.[0]}
+          color2={colorsMix?.[1]}
+          colorMixed={`#${(
+            firstMiniTestTask?.question?.[moduleIndex].correctAnswer as string
+          ).replace('.png', '')}`}
+        />
       }
       buildAnswer={
         <View style={styles.fill}>

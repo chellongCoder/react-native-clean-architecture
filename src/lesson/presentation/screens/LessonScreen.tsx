@@ -92,6 +92,7 @@ export enum LessonTypeE {
   MATH = 'math',
   WRITE = 'write',
   SCIENCE = 'science',
+  MIX_COLOR = 'mix_color',
 }
 
 export type TResult = {
@@ -140,9 +141,9 @@ const LessonScreen = observer(() => {
     return apiTasks.map(t => {
       return {
         ...t,
-        // question: t.question.slice(0, 1),
+        question: t.question.slice(0, 1),
         // question: t.question.slice(0, 5),
-        question: t.question,
+        // question: t.question,
       };
     });
   }, [apiTasks]);
@@ -340,6 +341,17 @@ const LessonScreen = observer(() => {
 
   const nextModule = useCallback(
     (answerSelected: string) => {
+      console.log(
+        '🛠 LOG: 🚀 --> --------------------------------------------------------------------------------------------🛠 LOG: 🚀 -->',
+      );
+      console.log(
+        '🛠 LOG: 🚀 --> ~ file: LessonScreen.tsx:345 ~ LessonScreen ~ answerSelected:',
+        answerSelected,
+      );
+      console.log(
+        '🛠 LOG: 🚀 --> --------------------------------------------------------------------------------------------🛠 LOG: 🚀 -->',
+      );
+
       // * bỏ đi các khoảng trống ở câu trả lời
       const finalAnswer = answerSelected.trim();
 
@@ -598,10 +610,13 @@ const LessonScreen = observer(() => {
             }
           />
         );
-      case LessonTypeE.SCIENCE:
+      case LessonTypeE.MIX_COLOR:
         return (
           <ScienceLesson
             moduleIndex={lessonIndex}
+            answers={(testTask?.question[lessonIndex]?.answers ?? []).map(
+              v => '#' + v.replace('.png', ''),
+            )}
             totalModule={testTask?.question.length ?? 0}
             lessonName={route.lessonName}
             moduleName={route.moduleName}

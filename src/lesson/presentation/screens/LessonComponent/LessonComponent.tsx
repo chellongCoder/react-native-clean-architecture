@@ -88,8 +88,9 @@ const LessonComponent = ({
           ]}>
           <View style={[styles.rowBetween, {alignItems: 'center'}]}>
             <Text
-              numberOfLines={2}
-              style={[styles.fonts_SVN_Cherish, styles.textTitle]}>
+              numberOfLines={1}
+              style={[styles.fonts_SVN_Cherish, styles.textTitle]}
+              ellipsizeMode="middle">
               {lessonName}
             </Text>
             <View
@@ -260,6 +261,7 @@ const styles = StyleSheet.create({
   textTitle: {
     fontSize: scale(30),
     color: COLORS.GREEN_1C6349,
+    maxWidth: scale(150),
   },
   alightEnd: {
     alignItems: 'flex-end',
