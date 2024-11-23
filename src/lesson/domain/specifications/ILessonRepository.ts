@@ -10,6 +10,8 @@ import TopRankingPayload from 'src/lesson/application/types/TopRankingPayload';
 import TopRankingResponse from 'src/lesson/application/types/TopRankingResponse';
 import {ChangeChildPointFlowerPayload} from 'src/authentication/application/types/ChangeChildPointFlowerPayload';
 import {ChangeChildPointFlowerResponse} from 'src/authentication/application/types/ChangeChildPointFlowerResponse';
+import PurchaseModulePayload from 'src/lesson/application/types/PurchaseModulePayload';
+import PurchaseModuleResponse from 'src/lesson/application/types/PurchaseModuleResponse';
 
 export const ILessonRepositoryToken = Symbol('ILessonRepository');
 
@@ -32,4 +34,7 @@ export interface ILessonRepository {
   changePointFlowerChild: (
     data: ChangeChildPointFlowerPayload,
   ) => Promise<ChangeChildPointFlowerResponse>;
+  purchaseModule: (
+    payload: PurchaseModulePayload,
+  ) => Promise<PurchaseModuleResponse>;
 }

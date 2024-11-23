@@ -15,6 +15,7 @@ import GetReportProgressChildrenUseCase from './application/useCases/GetReportPr
 import GetRankingOfChildUseCase from './application/useCases/GetRankingOfChildUseCase';
 import GetTopRankingUseCase from './application/useCases/GetTopRankingUseCase';
 import ChangeChildPointFlowerUsecase from 'src/authentication/application/useCases/ChangeChildPointFlowerUsecase';
+import PurchaseModuleUseCase from './application/useCases/PurchaseModuleUseCase';
 
 @module({
   providers: [
@@ -47,6 +48,7 @@ import ChangeChildPointFlowerUsecase from 'src/authentication/application/useCas
     PostUserProgressUseCase,
     GetRankingOfChildUseCase,
     GetTopRankingUseCase,
+    PurchaseModuleUseCase,
   ],
 })
 export class LessonModule {}

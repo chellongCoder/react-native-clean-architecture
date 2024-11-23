@@ -21,6 +21,8 @@ import TopRankingPayload from 'src/lesson/application/types/TopRankingPayload';
 import TopRankingResponse from 'src/lesson/application/types/TopRankingResponse';
 import {ChangeChildPointFlowerPayload} from 'src/authentication/application/types/ChangeChildPointFlowerPayload';
 import {ChangeChildPointFlowerResponse} from 'src/authentication/application/types/ChangeChildPointFlowerResponse';
+import PurchaseModulePayload from 'src/lesson/application/types/PurchaseModulePayload';
+import PurchaseModuleResponse from 'src/lesson/application/types/PurchaseModuleResponse';
 
 @injectable()
 class LessonRepository implements ILessonRepository {
@@ -113,6 +115,18 @@ class LessonRepository implements ILessonRepository {
       API_ENDPOINTS.USER.UPDATE_CHILD_POINT,
       data,
     );
+    return response;
+  }
+
+  public async purchaseModule(
+    data: PurchaseModulePayload,
+  ): Promise<PurchaseModuleResponse> {
+    console.log('purchaseModule data: ', data);
+    const response: PurchaseModuleResponse = await this.httpClient.post(
+      API_ENDPOINTS.VERIFY_PAYMENT.GOOGLE,
+      data,
+    );
+    console.log('response: ', response);
     return response;
   }
 }
