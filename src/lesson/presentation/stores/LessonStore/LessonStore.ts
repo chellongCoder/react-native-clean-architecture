@@ -33,8 +33,9 @@ import {persist, create} from 'mobx-persist';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import ChangeChildPointFlowerUsecase from 'src/authentication/application/useCases/ChangeChildPointFlowerUsecase';
 import {ChangeChildPointFlowerPayload} from 'src/authentication/application/types/ChangeChildPointFlowerPayload';
-import {COLORS} from 'src/core/presentation/constants/colors';
 import {LessonSettingT} from 'src/home/application/types/GetListQuestionResponse';
+import PurchaseModuleUseCase from 'src/lesson/application/useCases/PurchaseModuleUseCase';
+import PurchaseModulePayload from 'src/lesson/application/types/PurchaseModulePayload';
 
 @injectable()
 export class LessonStore {
@@ -88,6 +89,8 @@ export class LessonStore {
     private getUserSettingUserCase: GetUserSettingUseCase,
     @provided(ChangeChildPointFlowerUsecase)
     private changeChildPointFlowerUseCase: ChangeChildPointFlowerUsecase,
+    @provided(PurchaseModuleUseCase)
+    private purchaseModuleUseCase: PurchaseModuleUseCase,
   ) {
     makeAutoObservable(this);
     this.bottomSheetAppsRef = React.createRef<BottomSheet>();
@@ -104,6 +107,7 @@ export class LessonStore {
     this.handleGetSettingUser = this.handleGetSettingUser.bind(this);
     this.setTrainingCount = this.setTrainingCount.bind(this);
     this.setCurrentQuestion = this.setCurrentQuestion.bind(this);
+    this.handlePurchaseModule = this.handlePurchaseModule.bind(this);
   }
 
   @action
@@ -319,6 +323,12 @@ export class LessonStore {
     this.isLoadingUserSetting = true;
     const response = await this.changeChildPointFlowerUseCase.execute(data);
     this.isLoadingUserSetting = false;
+    return response;
+  }
+
+  @action
+  public async handlePurchaseModule(data: PurchaseModulePayload) {
+    const response = await this.purchaseModuleUseCase.execute(data);
     return response;
   }
 

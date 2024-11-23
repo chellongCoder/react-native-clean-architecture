@@ -1,4 +1,4 @@
-import React, {PropsWithChildren, useCallback, useEffect} from 'react';
+import React, {PropsWithChildren, useEffect} from 'react';
 
 import {
   initConnection,
@@ -10,6 +10,7 @@ import {
   purchaseErrorListener,
   getProducts,
   Product,
+  ProductPurchase,
 } from 'react-native-iap';
 import {Platform} from 'react-native';
 import {observer} from 'mobx-react';
@@ -17,6 +18,9 @@ import {observer} from 'mobx-react';
 import useStateCustom from 'src/hooks/useStateCommon';
 import {isAndroid} from '../utils';
 import {IapContext} from './iapContext';
+import {lessonModuleContainer} from 'src/lesson/LessonModule';
+import {LessonStore} from 'src/lesson/presentation/stores/LessonStore/LessonStore';
+import PurchaseModulePayload from 'src/lesson/application/types/PurchaseModulePayload';
 // import {coreModuleContainer} from 'src/core/CoreModule';
 
 export type TProduct = Product;
@@ -27,7 +31,7 @@ export type TIapState = {
 };
 
 const productSkus = Platform.select({
-  android: ['abc_test_1'],
+  android: ['abc_test_1', 'abc_test_2', 'abc_test_3'],
 });
 
 export const constants = {
@@ -35,7 +39,9 @@ export const constants = {
 };
 
 export const IapProvider = observer(({children}: PropsWithChildren) => {
-  // const store = coreModuleContainer.getProvided(IapStore);
+  const store = lessonModuleContainer.getProvided(LessonStore);
+  const {handlePurchaseModule} = store;
+
   const [iapState, setIapState] = useStateCustom<TIapState>({
     products: [],
     isLoading: false,
@@ -44,7 +50,7 @@ export const IapProvider = observer(({children}: PropsWithChildren) => {
   // Purchase 1 time products
   const makePurchase = async (sku: Sku) => {
     try {
-      const res = await requestPurchase(
+      const res: ProductPurchase = await requestPurchase(
         isAndroid
           ? {
               skus: [sku],
@@ -55,7 +61,18 @@ export const IapProvider = observer(({children}: PropsWithChildren) => {
             },
       );
       if (res) {
-        console.log('requestPurchase Success: ', res);
+        const params: PurchaseModulePayload = {
+          packageName: res.productId,
+          productId: res.productId,
+          purchaseToken: res.purchaseToken || '',
+        };
+
+        try {
+          const purchaseModuleRes = await handlePurchaseModule(params);
+          console.log('purchaseModuleRes: ', purchaseModuleRes);
+        } catch (error) {
+          console.log('Error occurred while verify purchase', error);
+        }
       } else {
         console.log('requestPurchase Failed');
       }
@@ -96,28 +113,21 @@ export const IapProvider = observer(({children}: PropsWithChildren) => {
         console.log('Cannot get list product: ', error);
       }
     };
-    fetchProducts();
+    const initializeProducts = async () => {
+      const res = await initConnection();
+      if (res) {
+        if (isAndroid) {
+          await flushFailedPurchasesCachedAsPendingAndroid();
+        }
+        await fetchProducts(); // Ensure fetchProducts is awaited
+      }
+    };
+    initializeProducts();
     return () => {
       purchaseUpdateSubscription.remove();
       purchaseErrorSubscription.remove();
     };
   }, [setIapState]);
-
-  // init connection to store
-  const initializeConnection = useCallback(async () => {
-    try {
-      await initConnection();
-      if (isAndroid) {
-        await flushFailedPurchasesCachedAsPendingAndroid();
-      }
-    } catch (error) {
-      console.log('An error occurred', error);
-    }
-  }, []);
-
-  useEffect(() => {
-    initializeConnection();
-  }, [initializeConnection]);
 
   return (
     <IapContext.Provider

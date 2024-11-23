@@ -412,10 +412,11 @@ The blockAppsSystem function is an asynchronous function that awaits the result 
   );
 
   const onPurchaseModule = () => {
-    // if (iapState.products && iapState.products[0].productId) {
-    //   makePurchase?.(iapState.products[0].productId);
-    // }
-    pushScreen(STACK_NAVIGATOR.PARENT.MORE_MODULE_SCREEN, {});
+    console.log('iapState.products: ', iapState.products);
+    if (iapState.products) {
+      makePurchase?.(iapState.products[1].productId);
+    }
+    // pushScreen(STACK_NAVIGATOR.PARENT.MORE_MODULE_SCREEN, {});
   };
 
   useEffect(() => {
