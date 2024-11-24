@@ -1,10 +1,11 @@
 /* eslint-disable react-native/no-inline-styles */
-import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {StyleSheet, Text, TouchableOpacity, View, Image} from 'react-native';
 import React, {
   useCallback,
   useContext,
   useEffect,
   useMemo,
+  useRef,
   useState,
 } from 'react';
 import LessonComponent from './LessonComponent';
@@ -14,7 +15,7 @@ import useGlobalStyle from 'src/core/presentation/hooks/useGlobalStyle';
 import {Task} from 'src/home/application/types/GetListQuestionResponse';
 import useAuthenticationStore from 'src/authentication/presentation/stores/useAuthenticationStore';
 import {scale, verticalScale} from 'react-native-size-matters';
-import {isAndroid} from 'src/core/presentation/utils';
+import {isAndroid, WIDTH_SCREEN} from 'src/core/presentation/utils';
 import {useLessonStore} from '../../stores/LessonStore/useGetPostsStore';
 import {useSettingLesson} from '../../hooks/useSettingLesson';
 import {COLORS} from 'src/core/presentation/constants/colors';
@@ -37,6 +38,7 @@ import Animated, {
   withSpring,
   withTiming,
 } from 'react-native-reanimated';
+import * as Haptics from 'expo-haptics';
 
 type Props = {
   moduleIndex: number;
@@ -92,18 +94,19 @@ const ScienceLesson = ({
   const {ttsSpeak, updateDefaultVoice} = useContext(TextToSpeechContext);
   const focus = useIsFocused();
 
-  const {isAnswerCorrect, isShowCorrectContainer, submit} = useSettingLesson({
-    countDownTime: trainingCount <= 2 ? 0 : 5,
-    isCorrectAnswer: !!isCorrectAnswer,
-    onSubmit: () => {
-      setAnswerSelected('');
-      nextModule(
-        `${answerSelected.trim().toLocaleLowerCase().replace('#', '')}.png`,
-      );
-    },
-    fullAnswer: firstMiniTestTask?.question?.[moduleIndex].fullAnswer,
-    totalTime: 5 * 60, // * tổng time làm 1câu
-  });
+  const {isAnswerCorrect, isShowCorrectContainer, submit, word} =
+    useSettingLesson({
+      countDownTime: trainingCount <= 2 ? 0 : 5,
+      isCorrectAnswer: !!isCorrectAnswer,
+      onSubmit: () => {
+        setAnswerSelected('');
+        nextModule(
+          `${answerSelected.trim().toLocaleLowerCase().replace('#', '')}.png`,
+        );
+      },
+      fullAnswer: firstMiniTestTask?.question?.[moduleIndex].fullAnswer,
+      totalTime: 5 * 60, // * tổng time làm 1câu
+    });
 
   const characterImage = useMemo(() => {
     return isAnswerCorrect === true || isAnswerCorrect === undefined
@@ -181,6 +184,11 @@ const ScienceLesson = ({
       score={selectedChild?.adsPoints}
       isAnswerCorrect={isAnswerCorrect}
       isShowCorrectContainer={isShowCorrectContainer}
+      txtCountDown={
+        word === firstMiniTestTask?.question?.[moduleIndex].content
+          ? undefined
+          : word
+      }
       buildQuestion={
         <ColorMixing
           color1={colorsMix?.[0]}
@@ -215,12 +223,12 @@ const ScienceLesson = ({
                 justifyContent: 'center',
                 alignItems: 'center',
               }}>
-              <Circle bg="red" size={40} mh={15} mv={15} />
+              <Circle bg={colorsMix?.[0]} size={40} mh={15} mv={15} />
               <Text
                 style={[globalStyle.txtModule, {color: COLORS.GREEN_009C6F}]}>
                 +
               </Text>
-              <Circle bg="blue" size={40} mh={15} mv={15} />
+              <Circle bg={colorsMix?.[1]} size={40} mh={15} mv={15} />
               <Text
                 style={[globalStyle.txtModule, {color: COLORS.GREEN_009C6F}]}>
                 =
@@ -242,13 +250,13 @@ const ScienceLesson = ({
               style={{
                 flexWrap: 'wrap',
                 flexDirection: 'row',
-                justifyContent: 'space-between',
+                justifyContent: 'space-around',
               }}>
               {listColors.map(e => (
                 <Circle
                   bg={e}
                   size={70}
-                  mh={20}
+                  mh={(WIDTH_SCREEN - 70 * 3 - scale(64)) / 6}
                   mv={8}
                   onPress={() => setAnswerSelected(e)}
                 />
@@ -287,15 +295,17 @@ const Circle = ({
       onPress={onPress}
       style={[
         {
-          backgroundColor: bg,
+          backgroundColor: bg?.startsWith('#') ? bg : undefined,
           height: size,
           width: size,
           borderRadius: size / 2,
           marginHorizontal: mh,
           marginVertical: mv,
+          overflow: 'hidden',
         },
-      ]}
-    />
+      ]}>
+      <Image source={{uri: bg}} style={{flex: 1}} resizeMode="cover" />
+    </TouchableOpacity>
   );
 };
 
@@ -312,6 +322,7 @@ const ColorMixing = ({
 }) => {
   const circleSize = 106;
   const spacing = 24;
+  const isHapticed = useRef(false);
 
   const translateX1 = useSharedValue(0.0);
   const translateY1 = useSharedValue(0.0);
@@ -328,7 +339,7 @@ const ColorMixing = ({
     const coordinateY2 = translateY2.value;
     return (
       (coordinateX2 - coordinateX1) ** 2 + (coordinateY2 - coordinateY1) ** 2 <=
-      (circleSize / 2) ** 2
+      (circleSize / 8) ** 2
     );
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -337,6 +348,14 @@ const ColorMixing = ({
     .onChange(e => {
       translateX1.value = e.translationX;
       translateY1.value = e.translationY;
+      if (checkIntersect()) {
+        if (!isHapticed.current) {
+          isHapticed.current = true;
+          runOnJS(Haptics.impactAsync)(Haptics.ImpactFeedbackStyle.Medium);
+        }
+      } else {
+        isHapticed.current = false;
+      }
     })
     .onFinalize(() => {
       if (checkIntersect()) {
