@@ -21,6 +21,7 @@ import {IapContext} from './iapContext';
 import {lessonModuleContainer} from 'src/lesson/LessonModule';
 import {LessonStore} from 'src/lesson/presentation/stores/LessonStore/LessonStore';
 import PurchaseModulePayload from 'src/lesson/application/types/PurchaseModulePayload';
+import {generateFullUUID} from 'src/authentication/presentation/constants/common';
 // import {coreModuleContainer} from 'src/core/CoreModule';
 
 export type TProduct = Product;
@@ -47,19 +48,47 @@ export const IapProvider = observer(({children}: PropsWithChildren) => {
     isLoading: false,
   });
 
+  const formatPackageId = (packageId: any): string => {
+    // Prepend zeros until the length is 4
+    while (packageId.length < 4) {
+      packageId = '0' + packageId;
+    }
+    return packageId;
+  };
+
+  const formatUserId = (packageId: any): string => {
+    // Prepend zeros until the length is 4
+    while (packageId.length < 12) {
+      packageId = '0' + packageId;
+    }
+    return packageId.toString();
+  };
+
+  const uuid = generateFullUUID();
+
   // Purchase 1 time products
   const makePurchase = async (sku: Sku) => {
+    const arr = uuid.split('-');
+
+    const appAccountToken = `${arr[0]}-${arr[1]}-${arr[2]}-${formatPackageId(
+      sku + '',
+    )}-${formatUserId(sku + '')}`;
+    console.log('appAccountToken: ', appAccountToken);
     try {
       const res: ProductPurchase = await requestPurchase(
         isAndroid
           ? {
               skus: [sku],
+              obfuscatedAccountIdAndroid: appAccountToken,
+              obfuscatedProfileIdAndroid: appAccountToken,
+              appAccountToken,
             }
           : {
               sku,
               andDangerouslyFinishTransactionAutomaticallyIOS: false,
             },
       );
+      console.log('res: ', res);
       if (res) {
         const params: PurchaseModulePayload = {
           packageName: res.productId,
