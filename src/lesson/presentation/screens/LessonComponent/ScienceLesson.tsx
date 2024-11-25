@@ -25,7 +25,6 @@ import {
   listLanguage,
 } from 'src/core/presentation/hooks/textToSpeech/TextToSpeechProvider';
 import {TextToSpeechContext} from 'src/core/presentation/hooks/textToSpeech/TextToSpeechContext';
-import {useIsFocused} from '@react-navigation/native';
 import {
   Gesture,
   GestureDetector,
@@ -68,11 +67,12 @@ const ScienceLesson = ({
   const globalStyle = useGlobalStyle();
   const {selectedChild} = useAuthenticationStore();
   const [answerSelected, setAnswerSelected] = useState('');
+
   const {trainingCount} = useLessonStore();
   const isCorrectAnswer = useMemo(() => {
     return (
       `${answerSelected.trim().toLocaleLowerCase().replace('#', '')}.png` ===
-      firstMiniTestTask?.question?.[moduleIndex]?.correctAnswer
+      firstMiniTestTask?.question?.[moduleIndex]?.fullAnswer.toLocaleLowerCase()
     );
   }, [answerSelected, firstMiniTestTask?.question, moduleIndex]);
 
@@ -91,8 +91,7 @@ const ScienceLesson = ({
     return colorCodes;
   }, [firstMiniTestTask?.question, moduleIndex]);
 
-  const {ttsSpeak, updateDefaultVoice} = useContext(TextToSpeechContext);
-  const focus = useIsFocused();
+  const {updateDefaultVoice} = useContext(TextToSpeechContext);
 
   const {isAnswerCorrect, isShowCorrectContainer, submit, word} =
     useSettingLesson({
@@ -113,32 +112,6 @@ const ScienceLesson = ({
       ? characterImageSuccess
       : characterImageFail;
   }, [characterImageFail, characterImageSuccess, isAnswerCorrect]);
-
-  const onSpeechText = useCallback(() => {
-    ttsSpeak?.(
-      firstMiniTestTask?.question?.[moduleIndex].correctAnswer
-        .toString()
-        .toLowerCase() ?? '',
-    );
-  }, [firstMiniTestTask?.question, moduleIndex, ttsSpeak]);
-
-  useEffect(() => {
-    if (focus) {
-      // Check if the component is focused
-
-      const firstTimeout = setTimeout(() => {
-        onSpeechText();
-
-        const secondTimeout = setTimeout(() => {
-          onSpeechText();
-        }, 2500);
-
-        return () => clearTimeout(secondTimeout);
-      }, 1500);
-
-      return () => clearTimeout(firstTimeout);
-    }
-  }, [onSpeechText, focus]); // Added focus to the dependency array
 
   useEffect(() => {
     console.log(
@@ -185,7 +158,7 @@ const ScienceLesson = ({
       isAnswerCorrect={isAnswerCorrect}
       isShowCorrectContainer={isShowCorrectContainer}
       txtCountDown={
-        word === firstMiniTestTask?.question?.[moduleIndex].content
+        word === firstMiniTestTask?.question?.[moduleIndex].fullAnswer
           ? undefined
           : word
       }
