@@ -24,6 +24,7 @@ export interface data {
   createdAt: string;
   updatedAt: string;
   children: children[];
+  diamond: number;
 }
 
 export default interface GetUserProfileResponse {

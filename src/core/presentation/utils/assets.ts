@@ -39,4 +39,7 @@ export const assets = {
   drug_bg: require('assets/images/drug_bg.png'),
   rectangle: require('assets/images/rectangle.png'),
   diamond_pack: require('assets/images/diamond_pack.png'),
+  diamond: require('assets/images/diamond.png'),
+  paymentSuccess: require('assets/images/paymentSuccess.png'),
+  paymentFailed: require('assets/images/paymentFailed.png'),
 };

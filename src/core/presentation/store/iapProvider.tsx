@@ -11,8 +11,9 @@ import {
   getProducts,
   Product,
   ProductPurchase,
+  endConnection,
 } from 'react-native-iap';
-import {Platform} from 'react-native';
+import {Platform, StyleSheet, View} from 'react-native';
 import {observer} from 'mobx-react';
 // import {IapStore} from './iapStore';
 import useStateCustom from 'src/hooks/useStateCommon';
@@ -22,6 +23,8 @@ import {lessonModuleContainer} from 'src/lesson/LessonModule';
 import {LessonStore} from 'src/lesson/presentation/stores/LessonStore/LessonStore';
 import PurchaseModulePayload from 'src/lesson/application/types/PurchaseModulePayload';
 import {generateFullUUID} from 'src/authentication/presentation/constants/common';
+import PurchaseSuccessScreen from '../screens/PurchaseSuccessScreen';
+import useAuthenticationStore from 'src/authentication/presentation/stores/useAuthenticationStore';
 // import {coreModuleContainer} from 'src/core/CoreModule';
 
 export type TProduct = Product;
@@ -29,6 +32,8 @@ export type TProduct = Product;
 export type TIapState = {
   products?: TProduct[];
   isLoading?: boolean;
+  isPurchaseSuccess?: boolean;
+  isShowModal?: boolean;
 };
 
 const productSkus = Platform.select({
@@ -46,6 +51,8 @@ export const IapProvider = observer(({children}: PropsWithChildren) => {
   const [iapState, setIapState] = useStateCustom<TIapState>({
     products: [],
     isLoading: false,
+    isPurchaseSuccess: false,
+    isShowModal: false,
   });
 
   const formatPackageId = (packageId: any): string => {
@@ -69,36 +76,43 @@ export const IapProvider = observer(({children}: PropsWithChildren) => {
   // Purchase 1 time products
   const makePurchase = async (sku: Sku) => {
     const arr = uuid.split('-');
-
     const appAccountToken = `${arr[0]}-${arr[1]}-${arr[2]}-${formatPackageId(
       sku + '',
     )}-${formatUserId(sku + '')}`;
-    console.log('appAccountToken: ', appAccountToken);
+
     try {
-      const res: ProductPurchase = await requestPurchase(
-        isAndroid
-          ? {
-              skus: [sku],
-              obfuscatedAccountIdAndroid: appAccountToken,
-              obfuscatedProfileIdAndroid: appAccountToken,
-              appAccountToken,
-            }
-          : {
-              sku,
-              andDangerouslyFinishTransactionAutomaticallyIOS: false,
-            },
-      );
-      console.log('res: ', res);
+      setIapState({isPurchaseSuccess: false});
+      const res: ProductPurchase | ProductPurchase[] | void =
+        await requestPurchase(
+          isAndroid
+            ? {
+                skus: [sku],
+                obfuscatedAccountIdAndroid: appAccountToken,
+                obfuscatedProfileIdAndroid: appAccountToken,
+                appAccountToken,
+              }
+            : {
+                sku,
+                andDangerouslyFinishTransactionAutomaticallyIOS: false,
+              },
+        );
+
       if (res) {
+        const purchase = Array.isArray(res) ? res[0] : res;
         const params: PurchaseModulePayload = {
-          packageName: res.productId,
-          productId: res.productId,
-          purchaseToken: res.purchaseToken || '',
+          packageName: purchase?.packageNameAndroid || '',
+          productId: purchase?.productId || '',
+          purchaseToken: purchase?.purchaseToken || '',
+          orderId: purchase?.transactionId || '',
         };
 
         try {
           const purchaseModuleRes = await handlePurchaseModule(params);
-          console.log('purchaseModuleRes: ', purchaseModuleRes);
+          if (purchaseModuleRes) {
+            setIapState({isShowModal: true, isPurchaseSuccess: true});
+          } else {
+            setIapState({isShowModal: true, isPurchaseSuccess: false});
+          }
         } catch (error) {
           console.log('Error occurred while verify purchase', error);
         }
@@ -110,53 +124,66 @@ export const IapProvider = observer(({children}: PropsWithChildren) => {
     }
   };
 
-  // get list product
-  useEffect(() => {
-    const purchaseUpdateSubscription = purchaseUpdatedListener(
-      async purchase => {
-        const receipt = purchase.transactionReceipt;
-        if (receipt) {
-          try {
-            await finishTransaction({purchase, isConsumable: false});
-          } catch (error) {
-            console.error(
-              'An error occurred while completing transaction',
-              error,
-            );
-          }
-        }
-      },
-    );
-    const purchaseErrorSubscription = purchaseErrorListener(error =>
-      console.error('Purchase error', error.message),
-    );
-    const fetchProducts = async () => {
-      setIapState({isLoading: true});
-      try {
-        const result = await getProducts({skus: constants.productSkus || []});
-        if (result) {
-          setIapState({products: result, isLoading: false});
-        }
-      } catch (error) {
-        setIapState({isLoading: false});
-        console.log('Cannot get list product: ', error);
+  const fetchProducts = async () => {
+    setIapState({isLoading: true});
+    try {
+      const result = await getProducts({skus: constants.productSkus || []});
+      console.log('getProducts result: ', result);
+      if (result) {
+        setIapState({products: result, isLoading: false});
       }
-    };
-    const initializeProducts = async () => {
-      const res = await initConnection();
-      if (res) {
-        if (isAndroid) {
+    } catch (error) {
+      setIapState({isLoading: false});
+      console.log('Cannot get list product: ', error);
+    }
+  };
+
+  useEffect(() => {
+    const initializeConnection = async () => {
+      try {
+        await initConnection();
+        if (Platform.OS === 'android') {
           await flushFailedPurchasesCachedAsPendingAndroid();
         }
-        await fetchProducts(); // Ensure fetchProducts is awaited
+      } catch (error: unknown) {
+        if (error instanceof Error) {
+          console.error('An error occurred', error.message);
+        } else {
+          console.error('An unknown error occurred', error);
+        }
       }
     };
-    initializeProducts();
+
+    const purchaseUpdate = purchaseUpdatedListener(async purchase => {
+      const receipt = purchase.transactionReceipt;
+
+      if (receipt) {
+        try {
+          await finishTransaction({purchase, isConsumable: true});
+        } catch (error: unknown) {
+          if (error instanceof Error) {
+            console.error('An error occurred', error.message);
+          } else {
+            console.error('An unknown error occurred', error);
+          }
+        }
+      }
+    });
+
+    const purchaseError = purchaseErrorListener(error =>
+      console.error('Purchase error', error.message),
+    );
+
+    initializeConnection();
+    fetchProducts();
+
     return () => {
-      purchaseUpdateSubscription.remove();
-      purchaseErrorSubscription.remove();
+      endConnection();
+      purchaseUpdate.remove();
+      purchaseError.remove();
     };
-  }, [setIapState]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <IapContext.Provider
@@ -165,6 +192,23 @@ export const IapProvider = observer(({children}: PropsWithChildren) => {
         makePurchase,
       }}>
       {children}
+      {iapState.isShowModal ? (
+        <View style={styles.absoluteContent}>
+          <PurchaseSuccessScreen
+            isSuccess={iapState.isPurchaseSuccess ?? false}
+            setIapState={setIapState}
+          />
+        </View>
+      ) : null}
     </IapContext.Provider>
   );
+});
+
+const styles = StyleSheet.create({
+  absoluteContent: {
+    position: 'absolute',
+    zIndex: 999,
+    width: '100%',
+    height: '100%',
+  },
 });

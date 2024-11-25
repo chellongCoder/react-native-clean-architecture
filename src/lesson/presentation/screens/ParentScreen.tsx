@@ -77,6 +77,7 @@ import Animated, {BounceIn, ReduceMotion} from 'react-native-reanimated';
 import CheckSelect from 'src/core/components/checkSelect/CheckSelect';
 import {VolumeManager} from 'react-native-volume-manager';
 import {IapContext} from 'src/core/presentation/store/iapContext';
+import {useIsFocused} from '@react-navigation/native';
 
 enum TabParentE {
   APP_BLOCK = 'App block',
@@ -422,6 +423,12 @@ The blockAppsSystem function is an asynchronous function that awaits the result 
     handleGetUserProfile();
   }, [handleGetUserProfile]);
 
+  useEffect(() => {
+    if (iapState.isPurchaseSuccess) {
+      handleGetUserProfile();
+    }
+  }, [handleGetUserProfile, iapState.isPurchaseSuccess]);
+
   useAsyncEffect(async () => {
     if (isAndroid) {
       lesson.changeListAppSystem();
@@ -690,7 +697,11 @@ The blockAppsSystem function is an asynchronous function that awaits the result 
     <View style={[styles.fill, styles.bg, {paddingTop: insets.top}]}>
       <View style={[styles.head]}>
         <View style={[styles.rowBetween]}>
-          <AccountStatus isShowLogout={true} />
+          <AccountStatus
+            isShowLogout={true}
+            isParentScreen={true}
+            diamond={userProfile?.diamond ?? 0}
+          />
         </View>
         <View style={[styles.profile_border]}>
           <View style={[styles.profile]}>
