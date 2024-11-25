@@ -217,33 +217,16 @@ const PronunciationLesson = observer(
 
       const opacity = useSharedValue(0);
       const scaleS = useSharedValue(1);
-      // Inside your component
-      const scaleValue = useSharedValue(0.05); // Start from 0.05 times the size to scale from 10 to 200
-      const opacityValue = useSharedValue(1); // Start with full opacity
-
-      const animatedCircleStyle = useAnimatedStyle(() => {
-        return {
-          transform: [{scale: scaleValue.value}],
-          opacity: opacityValue.value,
-          width: 200, // Fixed width to scale to
-          height: 200, // Fixed height to scale to
-          borderRadius: 100, // Maintain circular shape
-          backgroundColor: COLORS.PRIMARY,
-          justifyContent: 'center',
-          alignItems: 'center',
-          position: 'absolute',
-        };
-      });
 
       /**
        * * nếu có lỗi khi nói thì scale lại button
        */
       useEffect(() => {
-        if (errorSpeech) {
+        if (errorSpeech || checkEmpty) {
           scaleLP.value = withSpring(1);
           setIsDisabledRecord(false); // * nếu có câu trả lời trả về thì enable nút
         }
-      }, [errorSpeech, scaleLP]);
+      }, [checkEmpty, errorSpeech, scaleLP]);
       /**
        * * reset lại countdown khi lần làm thay đổi
        */
@@ -357,20 +340,13 @@ const PronunciationLesson = observer(
         }
       }, [onSpeechText, focus]); // Added focus to the dependency array
 
-      const timeout = useRef<NodeJS.Timeout>();
-      useEffect(() => {
-        timeout.current = setTimeout(() => {
-          startRecord();
-        }, 5000);
-      }, [moduleIndex, startRecord]);
-
       useEffect(() => {
         return () => {
-          clearTimeout(timeout.current);
           stopRecord();
         };
         // eslint-disable-next-line react-hooks/exhaustive-deps
       }, []);
+
       // This effect updates the `answerSelected` state whenever `speechResult` changes.
       // `speechResult` is presumably the result from a speech-to-text operation.
       // If `speechResult` is undefined or null, it defaults to an empty string.
@@ -440,7 +416,17 @@ const PronunciationLesson = observer(
                         styles.textQuestion,
                         styles.textGreen,
                       ]}>
-                      {answerSelected}
+                      {typeof firstMiniTestTask?.question?.[moduleIndex] // * nếu correctAnswer là string thì hiển thị answerSelected
+                        ?.correctAnswer === 'string'
+                        ? answerSelected
+                        : firstMiniTestTask?.question?.[ // * nếu correctAnswer là mảng thì check xem correctAnswer đã là chuỗi chưa, nếu chưa thì hiển thị phần tử khác với answerSelected
+                            moduleIndex
+                          ]?.correctAnswer
+                            ?.find(e =>
+                              !Number(answerSelected)
+                                ? answerSelected
+                                : e !== answerSelected,
+                            )}
                     </Text>
                   ) : (
                     <Text
@@ -477,7 +463,7 @@ const PronunciationLesson = observer(
                     ? 'Listening...'
                     : isDisabledRecord
                     ? 'Processing voice...'
-                    : 'Please click button and record again'}
+                    : 'To record the answer Hold the button'}
                 </Text>
                 {learningTimer !== 0 && (
                   <View

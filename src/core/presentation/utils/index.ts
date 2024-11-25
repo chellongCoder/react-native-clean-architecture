@@ -69,7 +69,7 @@ export function getCorrectAnswer(answer?: string | string[]) {
   if (typeof answer === 'string') {
     return answer;
   } else if (typeof answer === 'object') {
-    return answer?.[0];
+    return answer?.[1];
   }
   return '';
 }

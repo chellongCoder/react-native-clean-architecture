@@ -1,7 +1,9 @@
 import React, {useCallback, useEffect, useRef} from 'react';
 import {TouchableOpacity, Image, StyleSheet} from 'react-native';
+import {Gesture, GestureDetector} from 'react-native-gesture-handler';
 import Animated, {
   Easing,
+  runOnJS,
   useAnimatedStyle,
   useSharedValue,
   withDelay,
@@ -47,6 +49,20 @@ const RecordButton = ({
     scaleLP.value = withSpring(1);
   }, [scaleLP]);
 
+  const longPressGesture = Gesture.LongPress()
+    .onStart(() => {
+      scaleLP.value = withSpring(1.2);
+      if (startRecord) {
+        runOnJS(startRecord)();
+      }
+    })
+    .onEnd(() => {
+      scaleLP.value = withSpring(1);
+      if (stopRecord) {
+        runOnJS(stopRecord)();
+      }
+    });
+
   useEffect(() => {
     if (!loadingRecord) {
       stopAnimationRecord();
@@ -57,30 +73,30 @@ const RecordButton = ({
     }
   }, [loadingRecord, startAnimationRecord, stopAnimationRecord]);
 
+  // Conditionally apply the long press gesture
+  const gesture = disabled ? Gesture.Tap() : longPressGesture;
+
   return (
     <Animated.View style={animatedStyleLongPress}>
-      {loadingRecord && [0, 200, 400, 700].map(delay => <Ring delay={delay} />)}
-      <TouchableOpacity
-        activeOpacity={1}
-        disabled={disabled}
-        onPress={() => {
-          if (clickRef.current) {
-            // stopAnimationRecord();
-            stopRecord?.();
-            clickRef.current = !clickRef.current;
-          } else {
-            // startAnimationRecord();
-            startRecord?.();
-            clickRef.current = !clickRef.current;
-          }
-          console.log('press');
-        }}>
-        <Image
-          source={errorSpeech ? assets.icon_voice_disable : assets.icon_voice}
-          style={styles.iconImageContainer}
-          resizeMode="contain"
-        />
-      </TouchableOpacity>
+      <GestureDetector gesture={gesture}>
+        <Animated.View style={animatedStyleLongPress}>
+          {loadingRecord &&
+            [0, 200, 400, 700].map(delay => <Ring delay={delay} />)}
+          <TouchableOpacity
+            activeOpacity={1}
+            onLongPress={() => {
+              console.log('long press');
+            }}>
+            <Image
+              source={
+                errorSpeech ? assets.icon_voice_disable : assets.icon_voice
+              }
+              style={styles.iconImageContainer}
+              resizeMode="contain"
+            />
+          </TouchableOpacity>
+        </Animated.View>
+      </GestureDetector>
     </Animated.View>
   );
 };
