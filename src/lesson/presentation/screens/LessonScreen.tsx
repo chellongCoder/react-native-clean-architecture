@@ -42,6 +42,7 @@ import Env, {EnvToken} from 'src/core/domain/entities/Env';
 import {coreModuleContainer} from 'src/core/CoreModule';
 import {LessonRef} from '../types';
 import useHomeStore from 'src/home/presentation/stores/useHomeStore';
+import ScienceLesson from './LessonComponent/ScienceLesson';
 
 export enum MathQuestionType {
   MATH_TEXT = 'math_text',
@@ -90,6 +91,8 @@ export enum LessonTypeE {
   EXPLANATION = 'explanation',
   MATH = 'math',
   WRITE = 'write',
+  SCIENCE = 'science',
+  MIX_COLOR = 'mix_color',
 }
 
 export type TResult = {
@@ -338,6 +341,17 @@ const LessonScreen = observer(() => {
 
   const nextModule = useCallback(
     (answerSelected: string) => {
+      console.log(
+        '🛠 LOG: 🚀 --> --------------------------------------------------------------------------------------------🛠 LOG: 🚀 -->',
+      );
+      console.log(
+        '🛠 LOG: 🚀 --> ~ file: LessonScreen.tsx:345 ~ LessonScreen ~ answerSelected:',
+        answerSelected,
+      );
+      console.log(
+        '🛠 LOG: 🚀 --> --------------------------------------------------------------------------------------------🛠 LOG: 🚀 -->',
+      );
+
       // * bỏ đi các khoảng trống ở câu trả lời
       const finalAnswer = answerSelected.trim();
 
@@ -579,6 +593,30 @@ const LessonScreen = observer(() => {
         return (
           <WriteLesson
             moduleIndex={lessonIndex}
+            totalModule={testTask?.question.length ?? 0}
+            lessonName={route.lessonName}
+            moduleName={route.moduleName}
+            firstMiniTestTask={testTask}
+            nextModule={nextModule}
+            backgroundImage={
+              env.IMAGE_BACKGROUND_BASE_API_URL + lessonSetting?.backgroundImage
+            }
+            characterImageSuccess={
+              env.IMAGE_BACKGROUND_BASE_API_URL +
+              lessonSetting?.figureSuccessImage
+            }
+            characterImageFail={
+              env.IMAGE_BACKGROUND_BASE_API_URL + lessonSetting?.figureFailImage
+            }
+          />
+        );
+      case LessonTypeE.MIX_COLOR:
+        return (
+          <ScienceLesson
+            moduleIndex={lessonIndex}
+            answers={(testTask?.question[lessonIndex]?.answers ?? []).map(
+              v => '#' + v.replace('.png', ''),
+            )}
             totalModule={testTask?.question.length ?? 0}
             lessonName={route.lessonName}
             moduleName={route.moduleName}
