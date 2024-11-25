@@ -1142,6 +1142,8 @@ PODS:
     - glog
     - RCT-Folly (= 2022.05.16.00)
     - React-Core
+  - react-native-get-random-values (1.11.0):
+    - React-Core
   - react-native-netinfo (11.3.2):
     - React-Core
   - react-native-safe-area-context (4.8.2):
@@ -1453,6 +1455,7 @@ DEPENDENCIES:
   - React-Mapbuffer (from `../node_modules/react-native/ReactCommon`)
   - react-native-admob-native-ads (from `../node_modules/react-native-admob-native-ads`)
   - react-native-alphadex-screentime (from `../node_modules/react-native-alphadex-screentime`)
+  - react-native-get-random-values (from `../node_modules/react-native-get-random-values`)
   - "react-native-netinfo (from `../node_modules/@react-native-community/netinfo`)"
   - react-native-safe-area-context (from `../node_modules/react-native-safe-area-context`)
   - "react-native-skia (from `../node_modules/@shopify/react-native-skia`)"
@@ -1620,6 +1623,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-admob-native-ads"
   react-native-alphadex-screentime:
     :path: "../node_modules/react-native-alphadex-screentime"
+  react-native-get-random-values:
+    :path: "../node_modules/react-native-get-random-values"
   react-native-netinfo:
     :path: "../node_modules/@react-native-community/netinfo"
   react-native-safe-area-context:
@@ -1776,6 +1781,7 @@ SPEC CHECKSUMS:
   React-Mapbuffer: 84ea43c6c6232049135b1550b8c60b2faac19fab
   react-native-admob-native-ads: 6529b0dee2036f94ab53f5483c2c27c9c9a10942
   react-native-alphadex-screentime: a28983a3ea15e3516cbfeb3b903911732fb324ee
+  react-native-get-random-values: 21325b2244dfa6b58878f51f9aa42821e7ba3d06
   react-native-netinfo: 076df4f9b07f6670acf4ce9a75aac8d34c2e2ccc
   react-native-safe-area-context: 0ee144a6170530ccc37a0fd9388e28d06f516a89
   react-native-skia: 6938bc9afbfaa3a335f53bd37a122fa1af9ea428
@@ -1818,6 +1824,6 @@ SPEC CHECKSUMS:
   TextToSpeech: 2b930ec3756afde499061f4f01ea895e1f75dccb
   Yoga: 805bf71192903b20fc14babe48080582fee65a80
 
-PODFILE CHECKSUM: 1b1ed24be924c3f7309f765e37fc9b9585ccd6cc
+PODFILE CHECKSUM: 2136dd344121a48314747f03afb0077b4611feef
 
 COCOAPODS: 1.14.2
