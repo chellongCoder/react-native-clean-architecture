@@ -18,12 +18,14 @@ type Props = {
   stopRecord?: () => void;
   loadingRecord?: boolean;
   errorSpeech?: {code?: string; message?: string};
+  disabled?: boolean;
 };
 const RecordButton = ({
   startRecord,
   stopRecord,
   loadingRecord,
   errorSpeech,
+  disabled,
 }: Props) => {
   const clickRef = useRef(false);
 
@@ -60,6 +62,7 @@ const RecordButton = ({
       {loadingRecord && [0, 200, 400, 700].map(delay => <Ring delay={delay} />)}
       <TouchableOpacity
         activeOpacity={1}
+        disabled={disabled}
         onPress={() => {
           if (clickRef.current) {
             // stopAnimationRecord();

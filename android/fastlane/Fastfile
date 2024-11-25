@@ -41,9 +41,25 @@ platform :android do
     gradle(task: "clean bundleRelease")
   end
 
+  desc "Increment versionCode"
+  lane :increment_version_code do
+    # Read the current versionCode from build.gradle
+    version_code = sh("grep versionCode ../app/build.gradle | awk '{print $2}'").to_i
+    new_version_code = version_code + 1
+
+    # Update the versionCode in build.gradle
+    sh("sed -i '' 's/versionCode #{version_code}/versionCode #{new_version_code}/' ../app/build.gradle")
+
+    UI.message("Incremented versionCode to #{new_version_code}")
+  end
+
   desc "Build and upload APK to Firebase App Distribution"
   lane :upload_to_firebase do
-    # gradle(task: "assembleRelease")
+
+    increment_version_code
+
+    gradle(task: "assembleRelease")
+
 
     firebase_app_distribution(
       app: "1:827845646125:android:61618b15b8dab04bf625a4",

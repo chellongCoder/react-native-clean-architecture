@@ -47,6 +47,14 @@ Deploy a new version to the Google Play
 
 Build AAB
 
+### android increment_version_code
+
+```sh
+[bundle exec] fastlane android increment_version_code
+```
+
+Increment versionCode
+
 ### android upload_to_firebase
 
 ```sh

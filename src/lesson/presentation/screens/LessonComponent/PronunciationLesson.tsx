@@ -6,6 +6,7 @@ import React, {
   useEffect,
   useImperativeHandle,
   useMemo,
+  useRef,
   useState,
 } from 'react';
 import LessonComponent from './LessonComponent';
@@ -116,6 +117,8 @@ const PronunciationLesson = observer(
       const focus = useIsFocused();
 
       const [answerSelected, setAnswerSelected] = useState('');
+
+      const [isDisabledRecord, setIsDisabledRecord] = useState(false);
 
       const isCorrectAnswer = useMemo(() => {
         if (
@@ -238,6 +241,7 @@ const PronunciationLesson = observer(
       useEffect(() => {
         if (errorSpeech) {
           scaleLP.value = withSpring(1);
+          setIsDisabledRecord(false); // * nếu có câu trả lời trả về thì enable nút
         }
       }, [errorSpeech, scaleLP]);
       /**
@@ -283,32 +287,6 @@ const PronunciationLesson = observer(
         });
       }, [moduleIndex, opacity, scaleS]);
 
-      const animatedStyle = useAnimatedStyle(() => {
-        return {
-          opacity: opacity.value,
-          transform: [{scale: scaleS.value}],
-        };
-      });
-
-      const startAnimationRecord = useCallback(() => {
-        scaleValue.value = withRepeat(
-          withTiming(1, {duration: 1000, easing: Easing.out(Easing.ease)}),
-          -1, // Repeat indefinitely
-          false, // Enable reverse mode
-        );
-        opacityValue.value = withRepeat(
-          withTiming(0, {duration: 1000, easing: Easing.linear}),
-          -1, // Repeat indefinitely
-          false, // Enable reverse mode
-        );
-      }, [opacityValue, scaleValue]);
-
-      const stopAnimationRecord = useCallback(() => {
-        // Stop the animations by setting the shared values to their initial states
-        scaleValue.value = 0.05; // Reset to initial scale
-        opacityValue.value = 1; // Reset to full opacity
-      }, [scaleValue, opacityValue]);
-
       const startRecord = useCallback(() => {
         // Logs the initiation of the recording process to the console.
         console.log('start record');
@@ -345,6 +323,9 @@ const PronunciationLesson = observer(
         // Calls the handleStopRecord function which likely stops the actual audio recording.
         // This function is expected to handle all necessary cleanup and finalization of the recording process.
         handleStopRecord();
+
+        // * disable button record when finish record to proceed data
+        setIsDisabledRecord(true);
       }, [handleStopRecord]);
 
       useImperativeHandle(ref, () => ({
@@ -376,13 +357,20 @@ const PronunciationLesson = observer(
         }
       }, [onSpeechText, focus]); // Added focus to the dependency array
 
+      const timeout = useRef<NodeJS.Timeout>();
       useEffect(() => {
-        setTimeout(() => {
+        timeout.current = setTimeout(() => {
           startRecord();
         }, 5000);
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-      }, [moduleIndex]);
+      }, [moduleIndex, startRecord]);
 
+      useEffect(() => {
+        return () => {
+          clearTimeout(timeout.current);
+          stopRecord();
+        };
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+      }, []);
       // This effect updates the `answerSelected` state whenever `speechResult` changes.
       // `speechResult` is presumably the result from a speech-to-text operation.
       // If `speechResult` is undefined or null, it defaults to an empty string.
@@ -391,6 +379,7 @@ const PronunciationLesson = observer(
           if (speechResult !== '') {
             stopRecord();
           }
+          setIsDisabledRecord(false); // * nếu có câu trả lời trả về thì enable nút
           return speechResult ?? '';
         });
       }, [speechResult, stopRecord]);
@@ -469,6 +458,7 @@ const PronunciationLesson = observer(
                   startRecord={startRecord}
                   stopRecord={stopRecord}
                   loadingRecord={loadingRecord}
+                  disabled={isDisabledRecord}
                   errorSpeech={
                     errorSpeech
                       ? errorSpeech
@@ -485,6 +475,8 @@ const PronunciationLesson = observer(
                   ]}>
                   {loadingRecord
                     ? 'Listening...'
+                    : isDisabledRecord
+                    ? 'Processing voice...'
                     : 'Please click button and record again'}
                 </Text>
                 {learningTimer !== 0 && (
