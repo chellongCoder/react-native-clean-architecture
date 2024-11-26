@@ -464,7 +464,7 @@ const styles = StyleSheet.create({
   },
   pb32: {},
   mt32: {
-    marginTop: 32,
+    marginTop: verticalScale(10),
   },
   alignSelfCenter: {
     alignSelf: 'center',

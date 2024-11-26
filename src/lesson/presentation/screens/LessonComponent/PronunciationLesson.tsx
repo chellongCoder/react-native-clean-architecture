@@ -43,6 +43,9 @@ import {usePronunciation} from '../../hooks/usePronunciation';
 import RecordButton from '../../components/RecordButton';
 import ImageMeaning from '../../components/ImageMeaning';
 import useHomeStore from 'src/home/presentation/stores/useHomeStore';
+import {ActionE} from 'src/home/application/types/LoggingActionPayload';
+import {homeModuleContainer} from 'src/home/HomeModule';
+import {HomeStore} from 'src/home/presentation/stores/HomeStore';
 
 type Props = {
   moduleIndex: number;
@@ -153,6 +156,8 @@ const PronunciationLesson = observer(
 
       const {trainingCount, getSetting} = useLessonStore();
 
+      const homeStore = homeModuleContainer.getProvided(HomeStore);
+
       const {selectedChild} = useAuthenticationStore();
 
       const {
@@ -225,7 +230,15 @@ const PronunciationLesson = observer(
         if (errorSpeech || checkEmpty) {
           scaleLP.value = withSpring(1);
           setIsDisabledRecord(false); // * nếu có câu trả lời trả về thì enable nút
+
+          homeStore.putLoggingAction({
+            action: ActionE.VIEW_DATA,
+            key: 'error speech',
+            userId: selectedChild?.parentId,
+            value: errorSpeech || {empty: true},
+          });
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
       }, [checkEmpty, errorSpeech, scaleLP]);
       /**
        * * reset lại countdown khi lần làm thay đổi
@@ -371,13 +384,18 @@ const PronunciationLesson = observer(
           backgroundAnswerColor={settings.backgroundAnswerColor}
           price="Free"
           score={selectedChild?.adsPoints}
+          txtCountDown={
+            word === firstMiniTestTask?.question?.[moduleIndex].content
+              ? undefined
+              : word
+          }
           isAnswerCorrect={isAnswerCorrect}
           isShowCorrectContainer={isShowCorrectContainer}
           onPressFlower={toggleShowHint}
           buildQuestion={
             <View>
               <Text style={[styles.fonts_SVN_Cherish, styles.textQuestion]}>
-                {word}
+                {firstMiniTestTask?.question?.[moduleIndex].correctAnswer}
               </Text>
               <ImageMeaning
                 descriptionImage={
