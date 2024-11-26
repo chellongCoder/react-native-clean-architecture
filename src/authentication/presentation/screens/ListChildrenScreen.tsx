@@ -46,7 +46,7 @@ const ListChildrenScreen = React.memo(() => {
   };
 
   const onAddChild = () => {
-    resetNavigator(STACK_NAVIGATOR.AUTH.REGISTER_CHILD_SCREEN);
+    navigateScreen(STACK_NAVIGATOR.AUTH.REGISTER_CHILD_SCREEN, {});
   };
 
   const onSelectChild = (item: children) => {
@@ -56,7 +56,7 @@ const ListChildrenScreen = React.memo(() => {
 
   const onEnter = () => {
     if (isChooseChildren) {
-      pushScreen(STACK_NAVIGATOR.BOTTOM_TAB_SCREENS);
+      pushScreen(STACK_NAVIGATOR.BOTTOM_TAB_SCREENS, {});
     }
   };
 
