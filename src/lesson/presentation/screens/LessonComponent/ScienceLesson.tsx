@@ -196,18 +196,33 @@ const ScienceLesson = ({
                 justifyContent: 'center',
                 alignItems: 'center',
               }}>
-              <Circle bg={colorsMix?.[0]} size={40} mh={15} mv={15} />
+              <Circle
+                bg={colorsMix?.[0]}
+                size={verticalScale(32)}
+                mh={15}
+                mv={verticalScale(12)}
+              />
               <Text
                 style={[globalStyle.txtModule, {color: COLORS.GREEN_009C6F}]}>
                 +
               </Text>
-              <Circle bg={colorsMix?.[1]} size={40} mh={15} mv={15} />
+              <Circle
+                bg={colorsMix?.[1]}
+                size={verticalScale(32)}
+                mh={15}
+                mv={verticalScale(12)}
+              />
               <Text
                 style={[globalStyle.txtModule, {color: COLORS.GREEN_009C6F}]}>
                 =
               </Text>
               {answerSelected ? (
-                <Circle bg={answerSelected} size={40} mh={15} mv={15} />
+                <Circle
+                  bg={answerSelected}
+                  size={verticalScale(32)}
+                  mh={15}
+                  mv={verticalScale(12)}
+                />
               ) : (
                 <Text
                   style={[
@@ -228,16 +243,14 @@ const ScienceLesson = ({
               {listColors.map(e => (
                 <Circle
                   bg={e}
-                  size={70}
-                  mh={(WIDTH_SCREEN - 70 * 3 - scale(64)) / 6}
-                  mv={8}
+                  size={verticalScale(54)}
+                  mh={(WIDTH_SCREEN - verticalScale(54) * 3 - scale(64)) / 6}
+                  mv={verticalScale(6)}
                   onPress={() => setAnswerSelected(e)}
                 />
               ))}
             </View>
           </View>
-
-          <View style={{height: verticalScale(10)}} />
 
           <PrimaryButton text="Submit" style={[styles.mt32]} onPress={submit} />
         </View>
