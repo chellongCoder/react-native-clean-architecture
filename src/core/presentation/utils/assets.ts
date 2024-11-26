@@ -38,4 +38,5 @@ export const assets = {
   ruler_deg: require('assets/images/ruler_deg.png'),
   drug_bg: require('assets/images/drug_bg.png'),
   rectangle: require('assets/images/rectangle.png'),
+  diamond_pack: require('assets/images/diamond_pack.png'),
 };
