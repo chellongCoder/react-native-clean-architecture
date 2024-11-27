@@ -412,6 +412,16 @@ const ColorMixing = ({
     setIsMixed(false);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [color1, color2, colorMixed]);
+
+  useEffect(() => {
+    if (isMixed) {
+      translateX1.value = 0;
+      translateY1.value = 0;
+      translateX2.value = 0;
+      translateY2.value = 0;
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isMixed]);
   return (
     <GestureHandlerRootView
       style={{marginTop: 50, flexDirection: 'row'}}
