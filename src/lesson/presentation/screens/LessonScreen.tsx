@@ -43,6 +43,7 @@ import {coreModuleContainer} from 'src/core/CoreModule';
 import {LessonRef} from '../types';
 import useHomeStore from 'src/home/presentation/stores/useHomeStore';
 import ScienceLesson from './LessonComponent/ScienceLesson';
+import {shuffleArray} from 'src/core/presentation/utils';
 
 export enum MathQuestionType {
   MATH_TEXT = 'math_text',
@@ -143,7 +144,7 @@ const LessonScreen = observer(() => {
         ...t,
         // question: t.question.slice(0, 1),
         // question: t.question.slice(0, 5),
-        question: t.question,
+        question: shuffleArray(t.question),
       };
     });
   }, [apiTasks]);

@@ -174,7 +174,9 @@ const PronunciationLesson = observer(
         isCorrectAnswer: !!isCorrectAnswer,
         onSubmit: () => {
           setAnswerSelected('');
+          clearSpeechResult();
           nextModule(answerSelected);
+          setIsDisabledRecord(false);
         },
         fullAnswer: firstMiniTestTask?.question?.[moduleIndex].fullAnswer,
         correctAnswer: getCorrectAnswer(
@@ -190,6 +192,7 @@ const PronunciationLesson = observer(
         speechResult,
         startRecord: handleStartRecord,
         stopRecord: handleStopRecord,
+        clearSpeechResult,
         checkEmpty,
       } = usePronunciation({
         correctAnswer: getCorrectAnswer(
@@ -315,13 +318,9 @@ const PronunciationLesson = observer(
 
         // Stops any ongoing animations associated with the recording.
         // This could involve stopping visual feedback like pulsing or scaling effects.
-
+        handleStopRecord();
         // Calls the handleStopRecord function which likely stops the actual audio recording.
         // This function is expected to handle all necessary cleanup and finalization of the recording process.
-        handleStopRecord();
-
-        // * disable button record when finish record to proceed data
-        setIsDisabledRecord(true);
       }, [handleStopRecord]);
 
       useImperativeHandle(ref, () => ({
@@ -395,7 +394,7 @@ const PronunciationLesson = observer(
           buildQuestion={
             <View>
               <Text style={[styles.fonts_SVN_Cherish, styles.textQuestion]}>
-                {firstMiniTestTask?.question?.[moduleIndex].correctAnswer}
+                {firstMiniTestTask?.question?.[moduleIndex].answers}
               </Text>
               <ImageMeaning
                 descriptionImage={
@@ -460,7 +459,12 @@ const PronunciationLesson = observer(
 
                 <RecordButton
                   startRecord={startRecord}
-                  stopRecord={stopRecord}
+                  stopRecord={() => {
+                    stopRecord();
+
+                    // Disable record button after recording to process data
+                    setIsDisabledRecord(true);
+                  }}
                   loadingRecord={loadingRecord}
                   disabled={isDisabledRecord}
                   errorSpeech={
@@ -481,6 +485,8 @@ const PronunciationLesson = observer(
                     ? 'Listening...'
                     : isDisabledRecord
                     ? 'Processing voice...'
+                    : errorSpeech || checkEmpty
+                    ? 'Please try again'
                     : 'To record the answer Hold the button'}
                 </Text>
                 {learningTimer !== 0 && (

@@ -73,3 +73,19 @@ export function getCorrectAnswer(answer?: string | string[]) {
   }
   return '';
 }
+
+// Function to get a random element from t.question
+export const getRandomQuestion = (questions: any[]) => {
+  const randomIndex = Math.floor(Math.random() * questions.length);
+  return questions[randomIndex];
+};
+
+// Function to shuffle an array using the Fisher-Yates algorithm
+export const shuffleArray = (array: any[]) => {
+  const shuffledArray = [...array]; // Create a copy of the array
+  for (let i = shuffledArray.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [shuffledArray[i], shuffledArray[j]] = [shuffledArray[j], shuffledArray[i]];
+  }
+  return shuffledArray;
+};

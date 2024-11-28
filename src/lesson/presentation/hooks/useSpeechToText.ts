@@ -146,8 +146,8 @@ export const useSpeechToText = (fullAnswer?: string) => {
   const clearSpeechResult = useCallback(() => {
     setVoiceState({
       results: '',
-      partialResults: '',
-      error: {},
+      partialResults: undefined,
+      error: undefined,
     });
   }, [setVoiceState]);
 

@@ -89,7 +89,6 @@ const ItemPermission = observer(({lesson}: {lesson: LessonStore}) => {
       const overlay = await checkOverlayPermission();
       const usageState = await hasUsageStatsPermission();
       const pushNoti = await checkAndRequestNotificationPermission();
-
       if (overlay && usageState && pushNoti) {
         lesson.setIsOverlay(overlay);
         lesson.setIsUsageStats(usageState);
@@ -100,10 +99,10 @@ const ItemPermission = observer(({lesson}: {lesson: LessonStore}) => {
       if (lesson.isOverlay !== overlay) {
         lesson.setIsOverlay(overlay);
       }
-      if (lesson.isUsageStats !== overlay) {
+      if (lesson.isUsageStats !== usageState) {
         lesson.setIsUsageStats(usageState);
       }
-      if (lesson.isPushNoti !== overlay) {
+      if (lesson.isPushNoti !== pushNoti) {
         lesson.setIsPushNoti(pushNoti);
       }
     }, 1000);
@@ -118,6 +117,7 @@ const ItemPermission = observer(({lesson}: {lesson: LessonStore}) => {
     <View style={{width: '90%', alignSelf: 'center'}}>
       <>
         <TouchableOpacity
+          disabled={isOverlay}
           onPress={() => {
             askOverlayPermission();
           }}
@@ -144,6 +144,7 @@ const ItemPermission = observer(({lesson}: {lesson: LessonStore}) => {
       </>
       <>
         <TouchableOpacity
+          disabled={isUsageStats}
           onPress={() => {
             startUsageStatsPermission();
           }}
@@ -171,6 +172,7 @@ const ItemPermission = observer(({lesson}: {lesson: LessonStore}) => {
       </>
       <>
         <TouchableOpacity
+          disabled={isPushNoti}
           onPress={() => {
             console.log('Push notification');
             requestPushNotificationPermission();
