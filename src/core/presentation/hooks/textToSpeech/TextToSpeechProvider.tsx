@@ -335,6 +335,8 @@ export const TextToSpeechProvider = ({children}: PropsWithChildren) => {
   useEffect(() => {
     Tts.getInitStatus()
       .then(() => {
+        console.log('ALL OK TTS ✅'); // TTS is initialized successfully
+
         // Tiếng nói
         Tts.setDefaultLanguage(
           Platform.OS === 'android'
@@ -351,6 +353,9 @@ export const TextToSpeechProvider = ({children}: PropsWithChildren) => {
         // Độ ấm của giọng càng thấp giọng càng trầm ấm
         Tts.setDefaultPitch(1.5);
 
+        // Ignore the silent switch on the device, allowing TTS to play even if the device is set to silent
+        Tts.setIgnoreSilentSwitch('ignore');
+
         setIsInitialized(true);
 
         Tts.voices().then(vs => {
@@ -359,6 +364,11 @@ export const TextToSpeechProvider = ({children}: PropsWithChildren) => {
       })
       .catch(error => {
         console.error('TTS initialization failed:', error);
+        // If there is no TTS engine installed, request to install one
+        if (error.code === 'no_engine') {
+          console.log('NO ENGINE TTS ✅');
+          Tts.requestInstallEngine();
+        }
       });
   }, []);
 

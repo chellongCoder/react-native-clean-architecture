@@ -226,11 +226,15 @@ const PronunciationLesson = observer(
       const opacity = useSharedValue(0);
       const scaleS = useSharedValue(1);
 
+      const isError = useMemo(() => {
+        return errorSpeech || checkEmpty;
+      }, [checkEmpty, errorSpeech]);
+
       /**
        * * nếu có lỗi khi nói thì scale lại button
        */
       useEffect(() => {
-        if (errorSpeech || checkEmpty) {
+        if (isError) {
           scaleLP.value = withSpring(1);
           setIsDisabledRecord(false); // * nếu có câu trả lời trả về thì enable nút
 
@@ -314,7 +318,7 @@ const PronunciationLesson = observer(
 
       const stopRecord = useCallback(() => {
         // Logs the termination of the recording process to the console.
-        console.log('stop record');
+        console.log('handle stop record');
 
         // Stops any ongoing animations associated with the recording.
         // This could involve stopping visual feedback like pulsing or scaling effects.
@@ -462,8 +466,10 @@ const PronunciationLesson = observer(
                   stopRecord={() => {
                     stopRecord();
 
-                    // Disable record button after recording to process data
-                    setIsDisabledRecord(true);
+                    if (!isError) {
+                      // Disable record button after recording to process data
+                      setIsDisabledRecord(true);
+                    }
                   }}
                   loadingRecord={loadingRecord}
                   disabled={isDisabledRecord}
@@ -479,13 +485,13 @@ const PronunciationLesson = observer(
                 <Text
                   style={[
                     styles.hintText,
-                    checkEmpty && {color: COLORS.RED_AF3A1B},
+                    isError && {color: COLORS.RED_AF3A1B},
                   ]}>
                   {loadingRecord
                     ? 'Listening...'
                     : isDisabledRecord
                     ? 'Processing voice...'
-                    : errorSpeech || checkEmpty
+                    : isError
                     ? 'Please try again'
                     : 'To record the answer Hold the button'}
                 </Text>

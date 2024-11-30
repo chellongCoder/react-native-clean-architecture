@@ -28,7 +28,6 @@ export const usePronunciation = ({correctAnswer}: Props) => {
 
   // * stop record
   const stopRecord = useCallback(async () => {
-    console.log('stop record');
     await onResultPress();
   }, [onResultPress]);
 

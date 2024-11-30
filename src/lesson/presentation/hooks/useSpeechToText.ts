@@ -190,7 +190,11 @@ export const useSpeechToText = (fullAnswer?: string) => {
       }
 
       // Updates the voice state with the new result and sets `time` to false.
-      setVoiceState({time: false, results: refText.current, checkEmpty: false});
+      setVoiceState({
+        time: false,
+        results: refText.current,
+        checkEmpty: false,
+      });
     },
     [fullAnswer, setVoiceState],
   );
@@ -237,7 +241,11 @@ export const useSpeechToText = (fullAnswer?: string) => {
         }
 
         // Updates the reference text with either the matching result or the first result.
-        if (!refText.current) {
+        // * nếu ref text chưa có giá trị || ref text có giá trị và giá trị mới khác giá trị cũ
+        if (
+          !refText.current ||
+          (refText.current !== e.value && e.value !== '')
+        ) {
           refText.current = e.value; // Sets to the exact match if found.
         }
 
