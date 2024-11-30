@@ -415,7 +415,7 @@ The blockAppsSystem function is an asynchronous function that awaits the result 
     // if (iapState.products && iapState.products[0].productId) {
     //   makePurchase?.(iapState.products[0].productId);
     // }
-    pushScreen(STACK_NAVIGATOR.PARENT.MORE_MODULE_SCREEN, {});
+    pushScreen(STACK_NAVIGATOR.PARENT.CHECKOUT_SCREEN, {});
   };
 
   useEffect(() => {
