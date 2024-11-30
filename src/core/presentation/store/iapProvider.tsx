@@ -28,7 +28,9 @@ import {authenticationModuleContainer} from 'src/authentication/AuthenticationMo
 import {AuthenticationStore} from 'src/authentication/presentation/stores/AuthenticationStore';
 // import {coreModuleContainer} from 'src/core/CoreModule';
 
-export type TProduct = Product;
+export type TProduct = Product & {
+  diamond: number;
+};
 
 export type TIapState = {
   products?: TProduct[];
@@ -126,8 +128,17 @@ export const IapProvider = observer(({children}: PropsWithChildren) => {
       const listSku = resultFromBE?.map(item => item.productId);
       try {
         const result = await getProducts({skus: listSku || []});
+        const merged = resultFromBE.map(item1 => {
+          const matchingItem2 = result.find(
+            item2 => item2.productId === item1.productId,
+          );
+          return {
+            ...item1,
+            ...(matchingItem2 || {}),
+          };
+        });
         if (result) {
-          setIapState({products: result, isLoading: false});
+          setIapState({products: merged, isLoading: false});
         }
       } catch (error) {
         setIapState({isLoading: false});

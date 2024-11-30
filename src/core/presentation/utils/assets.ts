@@ -46,4 +46,10 @@ export const assets = {
   paymentFailBackground: require('assets/images/paymentFailBackground.png'),
   checkCircle: require('assets/images/checkCircle.png'),
   failCircle: require('assets/images/failCircle.png'),
+  diamondLeaf: require('assets/images/diamondLeaf.png'),
+  diamondLeaf1: require('assets/images/diamondLeaf1.png'),
+  diamondLeaf2: require('assets/images/diamondLeaf2.png'),
+  diamondLeaf3: require('assets/images/diamondLeaf3.png'),
+  diamondLeaf4: require('assets/images/diamondLeaf4.png'),
+  diamondLeaf5: require('assets/images/diamondLeaf5.png'),
 };
