@@ -1,4 +1,4 @@
-import React, {PropsWithChildren, useEffect} from 'react';
+import React, {PropsWithChildren, useCallback, useEffect} from 'react';
 
 import {
   initConnection,
@@ -24,7 +24,8 @@ import {LessonStore} from 'src/lesson/presentation/stores/LessonStore/LessonStor
 import PurchaseModulePayload from 'src/lesson/application/types/PurchaseModulePayload';
 import {generateFullUUID} from 'src/authentication/presentation/constants/common';
 import PurchaseSuccessScreen from '../screens/PurchaseSuccessScreen';
-import useAuthenticationStore from 'src/authentication/presentation/stores/useAuthenticationStore';
+import {authenticationModuleContainer} from 'src/authentication/AuthenticationModule';
+import {AuthenticationStore} from 'src/authentication/presentation/stores/AuthenticationStore';
 // import {coreModuleContainer} from 'src/core/CoreModule';
 
 export type TProduct = Product;
@@ -36,17 +37,11 @@ export type TIapState = {
   isShowModal?: boolean;
 };
 
-const productSkus = Platform.select({
-  android: ['abc_test_1', 'abc_test_2', 'abc_test_3'],
-});
-
-export const constants = {
-  productSkus,
-};
-
 export const IapProvider = observer(({children}: PropsWithChildren) => {
   const store = lessonModuleContainer.getProvided(LessonStore);
-  const {handlePurchaseModule} = store;
+  const {token} =
+    authenticationModuleContainer.getProvided(AuthenticationStore);
+  const {handlePurchaseModule, handleGetProductFromBE} = store;
 
   const [iapState, setIapState] = useStateCustom<TIapState>({
     products: [],
@@ -124,19 +119,41 @@ export const IapProvider = observer(({children}: PropsWithChildren) => {
     }
   };
 
-  const fetchProducts = async () => {
-    setIapState({isLoading: true});
+  const fetchProducts = useCallback(
+    async (resultFromBE: TProduct[]) => {
+      setIapState({isLoading: true});
+
+      const listSku = resultFromBE?.map(item => item.productId);
+      try {
+        const result = await getProducts({skus: listSku || []});
+        if (result) {
+          setIapState({products: result, isLoading: false});
+        }
+      } catch (error) {
+        setIapState({isLoading: false});
+        console.log('Cannot get list product: ', error);
+      }
+    },
+    [setIapState],
+  );
+
+  const fetchProductsFromBE = useCallback(async () => {
     try {
-      const result = await getProducts({skus: constants.productSkus || []});
-      console.log('getProducts result: ', result);
-      if (result) {
-        setIapState({products: result, isLoading: false});
+      const resultFromBE = await handleGetProductFromBE();
+      if (resultFromBE) {
+        setIapState({products: resultFromBE, isLoading: false});
+        fetchProducts(resultFromBE);
       }
     } catch (error) {
-      setIapState({isLoading: false});
-      console.log('Cannot get list product: ', error);
+      console.log('cannot get product from be: ', error);
     }
-  };
+  }, [fetchProducts, handleGetProductFromBE, setIapState]);
+
+  useEffect(() => {
+    if (token) {
+      fetchProductsFromBE();
+    }
+  }, [fetchProductsFromBE, token]);
 
   useEffect(() => {
     const initializeConnection = async () => {
@@ -175,14 +192,12 @@ export const IapProvider = observer(({children}: PropsWithChildren) => {
     );
 
     initializeConnection();
-    fetchProducts();
 
     return () => {
       endConnection();
       purchaseUpdate.remove();
       purchaseError.remove();
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (

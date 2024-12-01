@@ -296,9 +296,7 @@ export const TextToSpeechProvider = ({children}: PropsWithChildren) => {
     });
   };
 
-  Tts.voices().then(voices => {
-    console.log('voices', voices);
-  });
+  Tts.voices().then(voices => {});
 
   const updateSpeechRate = async (rate: number) => {
     await Tts.setDefaultRate(rate);

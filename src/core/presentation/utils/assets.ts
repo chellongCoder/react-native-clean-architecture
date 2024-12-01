@@ -42,4 +42,8 @@ export const assets = {
   diamond: require('assets/images/diamond.png'),
   paymentSuccess: require('assets/images/paymentSuccess.png'),
   paymentFailed: require('assets/images/paymentFailed.png'),
+  paymentSuccessBackground: require('assets/images/paymentSuccessBackground.png'),
+  paymentFailBackground: require('assets/images/paymentFailBackground.png'),
+  checkCircle: require('assets/images/checkCircle.png'),
+  failCircle: require('assets/images/failCircle.png'),
 };

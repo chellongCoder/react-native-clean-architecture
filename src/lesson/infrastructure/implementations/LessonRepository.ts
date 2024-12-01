@@ -121,12 +121,17 @@ class LessonRepository implements ILessonRepository {
   public async purchaseModule(
     data: PurchaseModulePayload,
   ): Promise<PurchaseModuleResponse> {
-    console.log('purchaseModule data: ', data);
     const response: PurchaseModuleResponse = await this.httpClient.post(
       API_ENDPOINTS.VERIFY_PAYMENT.GOOGLE,
       data,
     );
-    console.log('response: ', response);
+    return response;
+  }
+
+  public async getProductFromBE(): Promise<any> {
+    const response: any = await this.httpClient.get(
+      API_ENDPOINTS.GET_PRODUCT.PRODUCT,
+    );
     return response;
   }
 }

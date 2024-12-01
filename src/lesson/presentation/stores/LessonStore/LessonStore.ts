@@ -36,6 +36,7 @@ import {ChangeChildPointFlowerPayload} from 'src/authentication/application/type
 import {LessonSettingT} from 'src/home/application/types/GetListQuestionResponse';
 import PurchaseModuleUseCase from 'src/lesson/application/useCases/PurchaseModuleUseCase';
 import PurchaseModulePayload from 'src/lesson/application/types/PurchaseModulePayload';
+import GetProductUseCase from 'src/lesson/application/useCases/getProductUseCase';
 
 @injectable()
 export class LessonStore {
@@ -64,6 +65,7 @@ export class LessonStore {
     | undefined;
 
   @observable isShowHint = false;
+  @observable productFromBE = [];
 
   @persist @observable backgroundSound = 0.8;
   @persist @observable charSound = 0.3;
@@ -91,6 +93,8 @@ export class LessonStore {
     private changeChildPointFlowerUseCase: ChangeChildPointFlowerUsecase,
     @provided(PurchaseModuleUseCase)
     private purchaseModuleUseCase: PurchaseModuleUseCase,
+    @provided(GetProductUseCase)
+    private getProductUseCase: GetProductUseCase,
   ) {
     makeAutoObservable(this);
     this.bottomSheetAppsRef = React.createRef<BottomSheet>();
@@ -108,6 +112,7 @@ export class LessonStore {
     this.setTrainingCount = this.setTrainingCount.bind(this);
     this.setCurrentQuestion = this.setCurrentQuestion.bind(this);
     this.handlePurchaseModule = this.handlePurchaseModule.bind(this);
+    this.handleGetProductFromBE = this.handleGetProductFromBE.bind(this);
   }
 
   @action
@@ -329,6 +334,13 @@ export class LessonStore {
   @action
   public async handlePurchaseModule(data: PurchaseModulePayload) {
     const response = await this.purchaseModuleUseCase.execute(data);
+    return response;
+  }
+
+  @action
+  public async handleGetProductFromBE() {
+    const response = await this.getProductUseCase.execute();
+    this.productFromBE = response.data;
     return response;
   }
 
