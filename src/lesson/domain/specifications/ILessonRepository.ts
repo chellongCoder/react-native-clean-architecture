@@ -37,4 +37,5 @@ export interface ILessonRepository {
   purchaseModule: (
     payload: PurchaseModulePayload,
   ) => Promise<PurchaseModuleResponse>;
+  getProductFromBE: () => Promise<any>;
 }

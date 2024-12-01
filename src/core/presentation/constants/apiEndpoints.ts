@@ -9,6 +9,11 @@ const SERVICES = {
   USER_PROGRESS: '/user-progress',
   LOGGING: '/logging',
   VERIFY_GOOGLE_PAYMENT: '/google-api/verify',
+  PRODUCT: '/product',
+};
+
+const getProduct = () => {
+  return `/api${API_VERSION}${SERVICES.PRODUCT}`;
 };
 
 const getLoggingEndPointServices = () => {
@@ -100,5 +105,8 @@ export const API_ENDPOINTS = {
   },
   VERIFY_PAYMENT: {
     GOOGLE: verifyGooglePaymentServices(),
+  },
+  GET_PRODUCT: {
+    PRODUCT: getProduct(),
   },
 };
