@@ -4,8 +4,9 @@ import BottomSheet, {
   BottomSheetBackdrop,
   BottomSheetBackdropProps,
   BottomSheetProps,
-  BottomSheetScrollView,
+  BottomSheetFlatList,
   BottomSheetView,
+  BottomSheetScrollView,
 } from '@gorhom/bottom-sheet';
 import useGlobalStyle from 'src/core/presentation/hooks/useGlobalStyle';
 import {SharedValue} from 'react-native-reanimated';
