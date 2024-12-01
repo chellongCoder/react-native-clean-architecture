@@ -47,7 +47,7 @@ const ListAppBottomSheet = observer(() => {
     <>
       {lesson.bottomSheetAppsRef && (
         <BottomSheetCustom
-          snapPoints={['50']}
+          snapPoints={[200]}
           ref={lesson.bottomSheetAppsRef}
           title="List Apps"
           backgroundColor={COLORS.BACKGROUND}
