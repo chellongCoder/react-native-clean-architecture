@@ -9,15 +9,18 @@ import useLoginWithCredentials from 'src/authentication/presentation/hooks/useLo
 import ICLogout from 'src/core/components/icons/ICLogout';
 import CustomSwitchNew from './CustomSwitchNew';
 import useAuthenticationStore from 'src/authentication/presentation/stores/useAuthenticationStore';
+import Diamond from './Diamond';
 
 type TProps = {
   title?: string;
   subject?: string;
   isShowLogout?: boolean;
+  isParentScreen?: boolean;
+  diamond?: number;
 };
 
 const AccountStatus = (props: TProps) => {
-  const {title, subject, isShowLogout} = props;
+  const {title, subject, isShowLogout, isParentScreen, diamond} = props;
   const {handleLogOut} = useLoginWithCredentials();
   useLoadingGlobal();
   const {selectedChild} = useAuthenticationStore();
@@ -46,11 +49,15 @@ const AccountStatus = (props: TProps) => {
         ) : (
           <View style={{flex: 1}} />
         )}
-        <CustomSwitchNew
-          point={selectedChild?.adsPoints ?? 0}
-          value={isEnabled}
-          onValueChange={setIsEnabled}
-        />
+        {isParentScreen ? (
+          <Diamond diamond={diamond} />
+        ) : (
+          <CustomSwitchNew
+            point={selectedChild?.adsPoints ?? 0}
+            value={isEnabled}
+            onValueChange={setIsEnabled}
+          />
+        )}
       </View>
       <View style={styles.iconContainer}>
         {subject ? (

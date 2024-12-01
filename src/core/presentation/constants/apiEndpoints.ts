@@ -8,6 +8,12 @@ const SERVICES = {
   USER_SETTING: '/user-setting',
   USER_PROGRESS: '/user-progress',
   LOGGING: '/logging',
+  VERIFY_GOOGLE_PAYMENT: '/google-api/verify',
+  PRODUCT: '/product',
+};
+
+const getProduct = () => {
+  return `/api${API_VERSION}${SERVICES.PRODUCT}`;
 };
 
 const getLoggingEndPointServices = () => {
@@ -39,6 +45,10 @@ const getLessonEndPointServices = () => {
 
 const getUserSettingEndPointServices = (path: string) => {
   return `/api${API_VERSION}${SERVICES.USER_SETTING}/${path}`;
+};
+
+const verifyGooglePaymentServices = () => {
+  return `/api${API_VERSION}${SERVICES.VERIFY_GOOGLE_PAYMENT}`;
 };
 
 const getUserProgressEndPointServices = (path?: string) => {
@@ -92,5 +102,11 @@ export const API_ENDPOINTS = {
   },
   DEFAULT: {
     LOGGING: getLoggingEndPointServices(),
+  },
+  VERIFY_PAYMENT: {
+    GOOGLE: verifyGooglePaymentServices(),
+  },
+  GET_PRODUCT: {
+    PRODUCT: getProduct(),
   },
 };

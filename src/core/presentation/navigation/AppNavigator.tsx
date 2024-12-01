@@ -22,6 +22,8 @@ import SubjectScreen from 'src/home/presentation/screens/SubjectScreen';
 import GoogleAdmobWapper from '../screens/GoogleAdmobWapper';
 import NewMoreScreen from 'src/lesson/presentation/screens/NewMoreScreen';
 import CheckoutScreen from 'src/lesson/presentation/screens/CheckoutScreen';
+import PurchaseSuccessScreen from '../screens/PurchaseSuccessScreen';
+import PurchaseFailedScreen from '../screens/PurchaseFailedScreen';
 
 const AuthStack = createStackNavigator();
 const HomeStack = createStackNavigator();
@@ -217,6 +219,26 @@ export const ParentStackScreens = (): React.ReactElement => {
         name={STACK_NAVIGATOR.PARENT.CHECKOUT_SCREEN}
         key={STACK_NAVIGATOR.PARENT.CHECKOUT_SCREEN}
         component={CheckoutScreen}
+        listeners={({navigation: navBottom}) => ({
+          focus: () => {
+            showBottomTab(navBottom);
+          },
+        })}
+      />
+      <ParentStack.Screen
+        name={STACK_NAVIGATOR.PARENT.PURCHASE_SUCCESS_SCREEN}
+        key={STACK_NAVIGATOR.PARENT.PURCHASE_SUCCESS_SCREEN}
+        component={PurchaseSuccessScreen}
+        listeners={({navigation: navBottom}) => ({
+          focus: () => {
+            hideBottomTab(navBottom);
+          },
+        })}
+      />
+      <ParentStack.Screen
+        name={STACK_NAVIGATOR.PARENT.PURCHASE_FAILED_SCREEN}
+        key={STACK_NAVIGATOR.PARENT.PURCHASE_FAILED_SCREEN}
+        component={PurchaseFailedScreen}
         listeners={({navigation: navBottom}) => ({
           focus: () => {
             hideBottomTab(navBottom);

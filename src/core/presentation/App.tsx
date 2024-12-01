@@ -21,6 +21,7 @@ import {OfflineProvider} from './hooks/offline/OfflineProvider';
 import {TextToSpeechProvider} from './hooks/textToSpeech/TextToSpeechProvider';
 import {IapProvider} from './store/iapProvider';
 import FirebaseCrashlyticProvider from './hooks/firebaseCrashlytic/FirebaseCrashlyticProvider';
+import {withIAPContext} from 'react-native-iap';
 
 LogBox.ignoreLogs(['Warning: ...']); // Ignore log notification by message
 LogBox.ignoreAllLogs(); //Ignore all log notifications
@@ -82,4 +83,4 @@ const App = () => {
   );
 };
 
-export default App;
+export default withIAPContext(App);

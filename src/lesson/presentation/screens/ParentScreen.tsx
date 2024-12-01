@@ -6,6 +6,9 @@ import {
   Text,
   TouchableOpacity,
   View,
+  Image,
+  FlatList,
+  ImageBackground,
 } from 'react-native';
 import React, {
   useCallback,
@@ -44,7 +47,10 @@ import {
   resetNavigator,
 } from 'src/core/presentation/navigation/actions/RootNavigationActions';
 import {STACK_NAVIGATOR} from 'src/core/presentation/navigation/ConstantNavigator';
-import {CustomTextStyle} from 'src/core/presentation/constants/typography';
+import {
+  CustomTextStyle,
+  TYPOGRAPHY,
+} from 'src/core/presentation/constants/typography';
 import AccountStatus from 'src/home/presentation/components/AccountStatus';
 import Username from '../components/Username';
 import {useAsyncEffect} from 'src/core/presentation/hooks';
@@ -77,6 +83,10 @@ import Animated, {BounceIn, ReduceMotion} from 'react-native-reanimated';
 import CheckSelect from 'src/core/components/checkSelect/CheckSelect';
 import {VolumeManager} from 'react-native-volume-manager';
 import {IapContext} from 'src/core/presentation/store/iapContext';
+import {useIsFocused} from '@react-navigation/native';
+import {TProduct} from 'src/core/presentation/store/iapProvider';
+import {FontSlant} from '@shopify/react-native-skia';
+import DiamondContainer from './LessonComponent/DiamondContainer';
 
 enum TabParentE {
   APP_BLOCK = 'App block',
@@ -122,14 +132,12 @@ const ParentScreen = observer(() => {
   } = useAuthenticationStore();
 
   useGetUserSetting(deviceToken, selectedChild?._id ?? '', lesson);
-  const {isShowAuth, changeIsShowAuth} = useAuthParent();
-  console.log(
-    '🛠 LOG: 🚀 --> ----------------------------------------🛠 LOG: 🚀 -->',
-  );
-  console.log('🛠 LOG: 🚀 --> ~ isShowAuth:', isShowAuth);
-  console.log(
-    '🛠 LOG: 🚀 --> ----------------------------------------🛠 LOG: 🚀 -->',
-  );
+  const {
+    // isShowAuth,
+    changeIsShowAuth,
+  } = useAuthParent();
+  const isShowAuth = false;
+
   const hasDataServer = useMemo(
     () =>
       !!lesson.blockedListAppsSystem.length ||
@@ -200,14 +208,6 @@ const ParentScreen = observer(() => {
     lesson.blockedAnonymousListAppsSystem?.categoryTokens,
     lesson.blockedListAppsSystem,
   ]);
-
-  console.log(
-    '🛠 LOG: 🚀 --> --------------------------------------------------🛠 LOG: 🚀 -->',
-  );
-  console.log('🛠 LOG: 🚀 --> ~ tabsBlock ~ tabsBlock:', blockOptions);
-  console.log(
-    '🛠 LOG: 🚀 --> --------------------------------------------------🛠 LOG: 🚀 -->',
-  );
 
   const purchaseOptions = [
     {
@@ -412,15 +412,25 @@ The blockAppsSystem function is an asynchronous function that awaits the result 
   );
 
   const onPurchaseModule = () => {
-    // if (iapState.products && iapState.products[0].productId) {
-    //   makePurchase?.(iapState.products[0].productId);
+    // if (iapState?.products) {
+    //   makePurchase?.(iapState?.products?.[0]?.productId);
     // }
-    pushScreen(STACK_NAVIGATOR.PARENT.CHECKOUT_SCREEN, {});
+    // pushScreen(STACK_NAVIGATOR.PARENT.MORE_MODULE_SCREEN, {});
+  };
+
+  const onBuyDiamond = (item: TProduct) => {
+    makePurchase?.(item.productId);
   };
 
   useEffect(() => {
     handleGetUserProfile();
   }, [handleGetUserProfile]);
+
+  useEffect(() => {
+    if (iapState.isPurchaseSuccess) {
+      handleGetUserProfile();
+    }
+  }, [handleGetUserProfile, iapState.isPurchaseSuccess]);
 
   useAsyncEffect(async () => {
     if (isAndroid) {
@@ -671,10 +681,11 @@ The blockAppsSystem function is an asynchronous function that awaits the result 
             ))}
           </View>
         </View>
+
+        <DiamondContainer onBuyDiamond={onBuyDiamond} />
       </>
     );
   };
-
   const buildPage = () => {
     switch (tabParent) {
       case TabParentE.APP_BLOCK:
@@ -690,7 +701,11 @@ The blockAppsSystem function is an asynchronous function that awaits the result 
     <View style={[styles.fill, styles.bg, {paddingTop: insets.top}]}>
       <View style={[styles.head]}>
         <View style={[styles.rowBetween]}>
-          <AccountStatus isShowLogout={true} />
+          <AccountStatus
+            isShowLogout={true}
+            isParentScreen={true}
+            diamond={userProfile?.diamond ?? 0}
+          />
         </View>
         <View style={[styles.profile_border]}>
           <View style={[styles.profile]}>
@@ -1020,5 +1035,23 @@ const styles = StyleSheet.create({
   option: {
     paddingVertical: verticalScale(6),
     color: COLORS.GREEN_1C6349,
+  },
+  wrapDiamondPurchaseContainer: {
+    marginTop: 16,
+    backgroundColor: COLORS.WHITE_FBF8CC,
+    borderRadius: 32,
+  },
+  diamondPurchaseContainer: {
+    backgroundColor: COLORS.BLUE_78C5B4,
+    borderRadius: 32,
+    padding: 16,
+  },
+  purchaseHeaderTitle: {
+    fontSize: 16,
+    color: COLORS.WHITE_FBF8CC,
+    fontFamily: TYPOGRAPHY.FAMILY.SVNNeuzeitBold,
+  },
+  wrapDiamondPurchaseContentContainer: {
+    padding: 16,
   },
 });

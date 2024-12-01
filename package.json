@@ -61,6 +61,7 @@
     "react-native-device-info": "^11.1.0",
     "react-native-dropdown-picker": "^5.4.6",
     "react-native-gesture-handler": "~2.14.0",
+    "react-native-get-random-values": "^1.11.0",
     "react-native-google-mobile-ads": "^14.2.3",
     "react-native-iap": "^12.15.3",
     "react-native-keychain": "^8.2.0",
@@ -76,7 +77,8 @@
     "react-native-toast-message": "^2.2.0",
     "react-native-tts": "^4.1.1",
     "react-native-volume-manager": "^1.10.0",
-    "react-native-web": "~0.19.6"
+    "react-native-web": "~0.19.6",
+    "uuid": "^10.0.0"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
@@ -95,6 +97,7 @@
     "@types/react": "~18.2.45",
     "@types/react-native": "~0.69.1",
     "@types/react-test-renderer": "^18.0.0",
+    "@types/uuid": "^10.0.0",
     "babel-jest": "^29.6.3",
     "babel-plugin-module-resolver": "^4.1.0",
     "babel-plugin-transform-typescript-metadata": "^0.3.2",
