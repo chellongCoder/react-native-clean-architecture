@@ -34,6 +34,7 @@ export type LessonSettingT = {
   finishImage: string;
   themeName: string;
   title: string;
+  prompt: string[];
 };
 export default interface GetListQuestionResponse {
   data: {

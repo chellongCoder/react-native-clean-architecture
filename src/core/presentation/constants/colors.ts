@@ -42,4 +42,5 @@ export const COLORS = {
   RED_E1460E: '#E1460E',
   RED_811010: '#811010',
   PINK_F9C799: '#F9C799',
+  GREEN_43F656: '#43F656',
 };

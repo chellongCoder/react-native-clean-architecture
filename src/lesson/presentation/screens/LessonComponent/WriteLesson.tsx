@@ -28,6 +28,7 @@ import {
 import {TextToSpeechContext} from 'src/core/presentation/hooks/textToSpeech/TextToSpeechContext';
 import {useIsFocused} from '@react-navigation/native';
 import ImageMeaning from '../../components/ImageMeaning';
+import useHomeStore from 'src/home/presentation/stores/useHomeStore';
 
 type Props = {
   moduleIndex: number;
@@ -56,11 +57,17 @@ const WriteLesson = ({
   const canvasWriteRef = useRef<CanvasWriteRef>(null);
   const {selectedChild} = useAuthenticationStore();
   const [answerSelected, setAnswerSelected] = useState('');
-  const {trainingCount} = useLessonStore();
+  const {trainingCount, getSetting} = useLessonStore();
   const [isCorrect, setIscorrect] = useState(false);
 
   const {ttsSpeak, updateDefaultVoice} = useContext(TextToSpeechContext);
   const focus = useIsFocused();
+  const {lessonSetting} = useHomeStore();
+
+  const settings = useMemo(
+    () => getSetting(lessonSetting),
+    [getSetting, lessonSetting],
+  );
 
   const {isAnswerCorrect, isShowCorrectContainer, submit} = useSettingLesson({
     countDownTime: trainingCount <= 2 ? 0 : 5,
@@ -146,7 +153,8 @@ const WriteLesson = ({
       module={moduleName}
       part={firstMiniTestTask?.name}
       backgroundColor="#66c270"
-      backgroundAnswerColor={COLORS.PINK_F9C799}
+      backgroundAnswerColor={settings.backgroundAnswerColor}
+      prompt={settings.prompt?.toString()}
       score={selectedChild?.adsPoints}
       isAnswerCorrect={isAnswerCorrect}
       isShowCorrectContainer={isShowCorrectContainer}

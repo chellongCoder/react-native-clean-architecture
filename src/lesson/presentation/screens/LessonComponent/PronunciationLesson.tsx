@@ -385,6 +385,7 @@ const PronunciationLesson = observer(
           part={firstMiniTestTask?.name}
           backgroundColor="#66c270"
           backgroundAnswerColor={settings.backgroundAnswerColor}
+          prompt={settings.prompt?.toString()}
           price="Free"
           score={selectedChild?.adsPoints}
           txtCountDown={
@@ -398,7 +399,7 @@ const PronunciationLesson = observer(
           buildQuestion={
             <View>
               <Text style={[styles.fonts_SVN_Cherish, styles.textQuestion]}>
-                {firstMiniTestTask?.question?.[moduleIndex].answers}
+                {firstMiniTestTask?.question?.[moduleIndex].content}
               </Text>
               <ImageMeaning
                 descriptionImage={
@@ -493,7 +494,7 @@ const PronunciationLesson = observer(
                     ? 'Processing voice...'
                     : isError
                     ? 'Please try again'
-                    : 'To record the answer Hold the button'}
+                    : 'Press n hold to record, release finger after record'}
                 </Text>
                 {learningTimer !== 0 && (
                   <View

@@ -7,7 +7,7 @@ import {
   TouchableOpacity,
   ImageSourcePropType,
 } from 'react-native';
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {FontFamily} from 'src/core/presentation/hooks/useFonts';
 import BookView from '../../components/BookView';
@@ -36,6 +36,7 @@ type Props = {
   isShowCorrectContainer?: boolean;
   txtCountDown?: string;
   onPressFlower?: () => void;
+  prompt?: string;
 };
 
 const LessonComponent = ({
@@ -55,10 +56,11 @@ const LessonComponent = ({
   backgroundImage,
   characterImage,
   txtCountDown,
+  prompt,
 }: Props) => {
   const insets = useSafeAreaInsets();
   const globalStyle = useGlobalStyle();
-
+  const [isShowPrompt, setIsShowPrompt] = useState(true);
   const [source, setSource] = useState<ImageSourcePropType | undefined>({
     uri: backgroundImage,
   });
@@ -66,6 +68,13 @@ const LessonComponent = ({
   const handleError = () => {
     setSource(assets.background_vowels);
   };
+
+  useEffect(() => {
+    setIsShowPrompt(true);
+    setTimeout(() => {
+      setIsShowPrompt(false);
+    }, 3000);
+  }, [moduleIndex]);
 
   return (
     <View
@@ -102,11 +111,19 @@ const LessonComponent = ({
                 marginHorizontal: scale(8),
               }}
             />
-            <View>
-              <Text style={[globalStyle.txtButton, styles.textModule]}>
+            <View style={{maxWidth: scale(130)}}>
+              <Text
+                adjustsFontSizeToFit
+                style={[globalStyle.txtButton, styles.textModule]}
+                numberOfLines={1}>
                 {module}
               </Text>
-              <Text style={[globalStyle.txtNote, styles.textPart]}>{part}</Text>
+              <Text
+                adjustsFontSizeToFit
+                style={[globalStyle.txtNote, styles.textPart]}
+                numberOfLines={1}>
+                {part}
+              </Text>
             </View>
           </View>
           <View style={{alignItems: 'flex-end'}}>
@@ -149,6 +166,11 @@ const LessonComponent = ({
                 <Text style={styles.correctTitle}>
                   {isAnswerCorrect ? 'Correct !!' : 'Incorrect !!'}
                 </Text>
+              </View>
+            )}
+            {isShowPrompt && (
+              <View style={styles.wrapCorrectContainer}>
+                <Text style={styles.promptTitle}>{prompt}</Text>
               </View>
             )}
             <View style={[styles.tabs]}>
@@ -261,7 +283,6 @@ const styles = StyleSheet.create({
   textTitle: {
     fontSize: scale(30),
     color: COLORS.GREEN_1C6349,
-    maxWidth: scale(150),
   },
   alightEnd: {
     alignItems: 'flex-end',
@@ -269,7 +290,6 @@ const styles = StyleSheet.create({
   textModule: {
     fontSize: scale(10),
     color: COLORS.BLUE_258F78,
-    maxWidth: scale(150),
   },
   textPart: {
     fontSize: 10,
@@ -293,15 +313,15 @@ const styles = StyleSheet.create({
   boxQuestion: {
     flex: 1,
     alignItems: 'center',
-    zIndex: 999,
+    // zIndex: 999,
   },
   textLarge: {
-    fontSize: 140,
+    fontSize: scale(140),
     textAlign: 'center',
     color: 'white',
   },
   textQuestion: {
-    fontSize: 40,
+    fontSize: scale(40),
     textAlign: 'center',
     color: 'white',
   },
@@ -332,18 +352,24 @@ const styles = StyleSheet.create({
   },
   wrapCorrectContainer: {
     backgroundColor: '#FBF8CC',
-    marginBottom: 8,
-    padding: 16,
-    borderTopLeftRadius: 36,
-    borderTopRightRadius: 36,
-    borderBottomRightRadius: 36,
+    marginBottom: scale(8),
+    padding: scale(16),
+    borderTopLeftRadius: scale(36),
+    borderTopRightRadius: scale(36),
+    borderBottomRightRadius: scale(36),
     alignItems: 'center',
     alignSelf: 'flex-start',
+    zIndex: 999,
   },
   correctTitle: {
     color: '#1C6A59',
     textTransform: 'uppercase',
     fontWeight: 'bold',
+  },
+  promptTitle: {
+    color: COLORS.GREEN_1C6A59,
+    fontWeight: 'bold',
+    zIndex: 999,
   },
   wrapDescriptionContainer: {
     flexDirection: 'row',

@@ -1,4 +1,4 @@
-import React, {useContext} from 'react';
+import React, {useContext, useState} from 'react';
 import {
   StyleSheet,
   View,
@@ -12,9 +12,10 @@ import {assets} from 'src/core/presentation/utils/assets';
 import ItemCard from '../../components/ItemCard';
 import {TYPOGRAPHY} from 'src/core/presentation/constants/typography';
 import {COLORS} from 'src/core/presentation/constants/colors';
-import {scale} from 'react-native-size-matters';
+import {scale, verticalScale} from 'react-native-size-matters';
 import {TProduct} from 'src/core/presentation/store/iapProvider';
 import {IapContext} from 'src/core/presentation/store/iapContext';
+import PrimaryButton from '../../components/PrimaryButton';
 
 type TProps = {
   onBuyDiamond: (item: TProduct) => void;
@@ -23,6 +24,8 @@ type TProps = {
 const DiamondContainer = (props: TProps) => {
   const {onBuyDiamond} = props;
   const {iapState} = useContext(IapContext);
+
+  const [itemIndex, setItemIndex] = useState(-1);
 
   return (
     <View style={styles.wrapDiamondPurchaseContainer}>
@@ -48,20 +51,24 @@ const DiamondContainer = (props: TProps) => {
               assets.diamondLeaf5,
             ];
             return (
-              <TouchableOpacity
-                onPress={() => {
-                  onBuyDiamond(item);
-                }}
-                id={index?.toString()}
-                style={styles.touchableOpacity}>
+              <View id={index?.toString()} style={styles.touchableOpacity}>
                 <ItemCard
+                  onPress={() => {
+                    // onBuyDiamond(item);
+
+                    setItemIndex(index);
+                  }}
                   Icon={
                     <Image
                       source={assets.diamond_pack}
                       style={styles.itemCardImage}
                     />
                   }
-                  backgroundFocusColor={COLORS.WHITE_FBF8CC}
+                  backgroundFocusColor={
+                    itemIndex === index
+                      ? COLORS.GREEN_43F656
+                      : COLORS.WHITE_FBF8CC
+                  }
                   backgroundColor={COLORS.YELLOW_F2B559}
                   borderWidth={4}
                   isFocus={true}
@@ -89,11 +96,20 @@ const DiamondContainer = (props: TProps) => {
                   {item.price}
                   {item.currency}
                 </Text>
-              </TouchableOpacity>
+              </View>
             );
           }}
         />
       </View>
+
+      <PrimaryButton
+        text="Checkout"
+        style={{marginVertical: verticalScale(20), borderRadius: scale(100)}}
+        onPress={() => {
+          onBuyDiamond(iapState.products?.[itemIndex]);
+        }}
+        disable={!iapState.products || !iapState.products?.length}
+      />
     </View>
   );
 };

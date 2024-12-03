@@ -22,6 +22,7 @@ import useAuthenticationStore from 'src/authentication/presentation/stores/useAu
 import {useSettingLesson} from '../../hooks/useSettingLesson';
 import {COLORS} from 'src/core/presentation/constants/colors';
 import {LessonRef} from '../../types';
+import useHomeStore from 'src/home/presentation/stores/useHomeStore';
 
 type Props = {
   moduleIndex: number;
@@ -55,7 +56,7 @@ const MathLesson = forwardRef<LessonRef, Props>(
     const globalStyle = useGlobalStyle();
     const [answerSelected, setAnswerSelected] = useState('');
 
-    const {trainingCount} = useLessonStore();
+    const {trainingCount, getSetting} = useLessonStore();
 
     const {selectedChild} = useAuthenticationStore();
 
@@ -69,6 +70,13 @@ const MathLesson = forwardRef<LessonRef, Props>(
           .toLocaleLowerCase()
       );
     }, [answerSelected, firstMiniTestTask?.question, moduleIndex]);
+
+    const {lessonSetting} = useHomeStore();
+
+    const settings = useMemo(
+      () => getSetting(lessonSetting),
+      [getSetting, lessonSetting],
+    );
 
     const {
       isAnswerCorrect,
@@ -126,7 +134,8 @@ const MathLesson = forwardRef<LessonRef, Props>(
         lessonName={lessonName}
         part={firstMiniTestTask?.name}
         backgroundColor="#a3f0df"
-        backgroundAnswerColor={COLORS.BLUE_A3F0DF}
+        backgroundAnswerColor={settings.backgroundAnswerColor}
+        prompt={settings.prompt?.toString()}
         score={selectedChild?.adsPoints}
         txtCountDown={
           word === firstMiniTestTask?.question?.[moduleIndex].content

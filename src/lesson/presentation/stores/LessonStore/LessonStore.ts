@@ -73,6 +73,7 @@ export class LessonStore {
   @computed getSetting(lessonSetting?: LessonSettingT) {
     return {
       backgroundAnswerColor: lessonSetting?.backgroundColor,
+      prompt: lessonSetting?.prompt,
     };
   }
 

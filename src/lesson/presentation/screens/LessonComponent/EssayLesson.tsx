@@ -16,6 +16,9 @@ import Animated, {
   withTiming,
 } from 'react-native-reanimated';
 import {useSettingLesson} from '../../hooks/useSettingLesson';
+import useHomeStore from 'src/home/presentation/stores/useHomeStore';
+import {useLessonStore} from '../../stores/LessonStore/useGetPostsStore';
+import useAuthenticationStore from 'src/authentication/presentation/stores/useAuthenticationStore';
 
 type Props = {
   moduleIndex: number;
@@ -55,7 +58,14 @@ const EssayLesson = ({
 
   const opacity = useSharedValue(1);
   const scaleS = useSharedValue(1);
+  const {getSetting} = useLessonStore();
+  const {selectedChild} = useAuthenticationStore();
+  const {lessonSetting} = useHomeStore();
 
+  const settings = useMemo(
+    () => getSetting(lessonSetting),
+    [getSetting, lessonSetting],
+  );
   const {
     isAnswerCorrect,
     isShowCorrectContainer,
@@ -144,9 +154,10 @@ const EssayLesson = ({
       module={moduleName}
       part={firstMiniTestTask?.name}
       backgroundColor="#66c270"
-      backgroundAnswerColor="#DDF598"
+      backgroundAnswerColor={settings.backgroundAnswerColor}
+      prompt={settings.prompt?.toString()}
       price="Free"
-      score={10}
+      score={selectedChild?.adsPoints}
       isAnswerCorrect={isAnswerCorrect}
       isShowCorrectContainer={isShowCorrectContainer}
       buildQuestion={

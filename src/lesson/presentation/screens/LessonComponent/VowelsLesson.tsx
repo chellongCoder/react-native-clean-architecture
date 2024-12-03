@@ -183,6 +183,7 @@ const VowelsLesson = observer(
           backgroundAnswerColor={
             settings.backgroundAnswerColor ?? COLORS.GREEN_DDF598
           }
+          prompt={settings.prompt?.toString()}
           price="Free"
           score={selectedChild?.adsPoints}
           isAnswerCorrect={isAnswerCorrect}

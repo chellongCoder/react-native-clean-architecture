@@ -132,11 +132,8 @@ const ParentScreen = observer(() => {
   } = useAuthenticationStore();
 
   useGetUserSetting(deviceToken, selectedChild?._id ?? '', lesson);
-  const {
-    // isShowAuth,
-    changeIsShowAuth,
-  } = useAuthParent();
-  const isShowAuth = false;
+  const {isShowAuth: isAuthenSetting, changeIsShowAuth} = useAuthParent();
+  const isShowAuth = __DEV__ ? false : isAuthenSetting;
 
   const hasDataServer = useMemo(
     () =>
@@ -415,7 +412,7 @@ The blockAppsSystem function is an asynchronous function that awaits the result 
     // if (iapState?.products) {
     //   makePurchase?.(iapState?.products?.[0]?.productId);
     // }
-    // pushScreen(STACK_NAVIGATOR.PARENT.MORE_MODULE_SCREEN, {});
+    pushScreen(STACK_NAVIGATOR.PARENT.MORE_MODULE_SCREEN, {});
   };
 
   const onBuyDiamond = (item: TProduct) => {
