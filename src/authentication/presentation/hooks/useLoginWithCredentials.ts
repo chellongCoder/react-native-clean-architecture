@@ -20,6 +20,7 @@ import * as Keychain from 'react-native-keychain';
 import {ComparePasswordPayload} from 'src/authentication/application/types/ComparePasswordPayload';
 import {ChangeParentNamePayload} from 'src/authentication/application/types/ChangeParentNamePayload';
 import {ChangeChildDescriptionPayload} from 'src/authentication/application/types/ChangeChildDescriptionPayload';
+import {useLoadingGlobal} from 'src/core/presentation/hooks/loading/useLoadingGlobal';
 
 const DefaultFormData = {email: '', password: ''};
 
@@ -41,6 +42,7 @@ const useLoginWithCredentials = () => {
     handleNavigateAuthenticationSuccess,
     handleNavigateAuthenticationFail,
   } = useNavigateAuth();
+  const globalLoading = useLoadingGlobal();
 
   const [formData, setFormData] =
     useState<LoginUsernamePasswordPayload>(DefaultFormData);
@@ -148,6 +150,7 @@ const useLoginWithCredentials = () => {
     async (props: {email: string; password: string}) => {
       const {email, password} = props;
       try {
+        globalLoading.toggleLoading?.(true, 'login');
         Keyboard.dismiss();
         setErrorMessage('');
         const res = await loginUsernamePassword({
@@ -187,8 +190,10 @@ const useLoginWithCredentials = () => {
         }
       } finally {
         setIsLoading(false);
+        globalLoading.toggleLoading?.(false, 'login');
       }
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [
       handleErrorLoginCredentials,
       handleNavigateAuthenticationFail,
@@ -263,7 +268,7 @@ const useLoginWithCredentials = () => {
             email: emailOrPhoneNumber,
             password: password,
           });
-          pushScreen(STACK_NAVIGATOR.AUTH.REGISTER_CHILD_SCREEN);
+          pushScreen(STACK_NAVIGATOR.AUTH.REGISTER_CHILD_SCREEN, {});
         }
       } catch (error) {
         if (isAxiosError(error)) {

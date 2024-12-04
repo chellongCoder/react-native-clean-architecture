@@ -1,29 +1,37 @@
-import React, {PropsWithChildren, useCallback, useRef, useState} from 'react';
-import {LoadingGlobalContext} from './LoadingGlobalContext';
-import LoadingGlobal from '../../components/LoadingGlobal';
+import {useContext} from 'react';
+
+const useLoadingGlobal = () => {
+  return useContext(LoadingGlobalContext);
+};
+
+export default useLoadingGlobal;
+
+import React, {useCallback, useMemo, useRef, useState} from 'react';
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
   withDelay,
   withTiming,
 } from 'react-native-reanimated';
-import useGlobalStyle from '../useGlobalStyle';
+import Loading from './Components/Loading';
+// import useTheme from './useThemeDefault';
 
-export const LoadingGlobalProvider = ({children}: PropsWithChildren) => {
-  const [shown, setShown] = useState(false);
+export type LoadingGlobalT = {
+  status?: boolean;
+  toggleLoading?: (bool: boolean, nameSpace?: string) => void;
+};
+
+export const LoadingGlobalContext = React.createContext<LoadingGlobalT>({});
+
+export const LoadingGlobalProvider = ({
+  children,
+}: {
+  children: React.ReactNode;
+}) => {
   const [status, setStatus] = useState(false);
 
   const nameSpaceRef = useRef<string | undefined>('');
   const opacity = useSharedValue(0);
-  const styleGlobal = useGlobalStyle();
-
-  const show = useCallback(() => {
-    setShown(true);
-  }, []);
-
-  const hide = useCallback(() => {
-    setShown(false);
-  }, []);
 
   const toggleLoading = useCallback(
     (bool: boolean, nameSpace?: string) => {
@@ -60,21 +68,32 @@ export const LoadingGlobalProvider = ({children}: PropsWithChildren) => {
     };
   });
 
+  const contextValue = useMemo<LoadingGlobalT>(
+    () => ({
+      status,
+      toggleLoading,
+    }),
+    [status, toggleLoading],
+  );
+
   return (
-    <LoadingGlobalContext.Provider
-      value={{
-        show,
-        hide,
-        toggleLoading,
-        isShown: status,
-      }}>
+    <LoadingGlobalContext.Provider value={contextValue}>
       {children}
       {status ? (
-        <Animated.View style={[styleGlobal.positionAbsolute, animatedStyle]}>
-          <LoadingGlobal />
+        <Animated.View
+          style={[
+            Common.positionAbsolute,
+            animatedStyle,
+            {
+              top: 0,
+              left: 0,
+              bottom: 0,
+              right: 0,
+            },
+          ]}>
+          <Loading />
         </Animated.View>
       ) : null}
-      {/* {shown ? <LoadingGlobal /> : null} */}
     </LoadingGlobalContext.Provider>
   );
 };

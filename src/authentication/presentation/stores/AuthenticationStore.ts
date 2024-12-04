@@ -9,7 +9,10 @@ import IHttpClient, {
 } from 'src/core/domain/specifications/IHttpClient';
 import LoginUsernamePasswordUseCase from 'src/authentication/application/useCases/LoginUsernamePasswordUsecase';
 import LoginResponse from 'src/authentication/application/types/LoginResponse';
-import {LoginUsernamePasswordPayload} from 'src/authentication/application/types/LoginPayload';
+import {
+  LoginUsernamePasswordPayload,
+  LoginWithGooglePayload,
+} from 'src/authentication/application/types/LoginPayload';
 import {LoginMethods} from '../constants/common';
 import RegisterUseCase from 'src/authentication/application/useCases/RegisterUsecase';
 import {RegisterPayload} from 'src/authentication/application/types/RegisterPayload';
@@ -277,15 +280,15 @@ export class AuthenticationStore implements AuthenticationStoreState {
     return response;
   }
 
-  // @action
-  // public async loginWithGoogle(args: LoginWithGooglePayload) {
-  //   this.setIsLoading(true);
-  //   const response = await this.loginWithGoogleUseCase.execute(args);
-  //   this.setCurrentCredentials(response);
-  //   this.setLoginMethod(LoginMethods.Google);
-  //   this.setIsLoading(false);
-  //   return response;
-  // }
+  @action
+  public async loginWithGoogle(args: LoginWithGooglePayload) {
+    this.setIsLoading(true);
+    // const response = await this.loginWithGoogleUseCase.execute(args);
+    // this.setCurrentCredentials(response);
+    // this.setLoginMethod(LoginMethods.Google);
+    this.setIsLoading(false);
+    // return response;
+  }
 }
 
 export const hydrate = create({

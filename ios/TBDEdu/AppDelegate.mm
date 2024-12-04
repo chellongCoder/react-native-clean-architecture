@@ -2,6 +2,7 @@
 #import <Firebase.h>
 
 #import <React/RCTBundleURLProvider.h>
+#import <GoogleSignIn/GoogleSignIn.h>
 
 @implementation AppDelegate
 
@@ -19,7 +20,10 @@
   return result;  // here
 }
 
-
+// AppDelegate.m
+- (BOOL)application:(UIApplication *)application openURL:(nonnull NSURL *)url options:(nonnull NSDictionary<NSString *,id> *)options {
+  return [GIDSignIn.sharedInstance handleURL:url];
+}
 
 - (NSURL *)sourceURLForBridge:(RCTBridge *)bridge
 {

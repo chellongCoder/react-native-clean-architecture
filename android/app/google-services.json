@@ -12,7 +12,28 @@
           "package_name": "com.alphadex.tbd.app"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "827845646125-192sjfs61v1ublbvfhm8u5nmh1rp71vh.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.alphadex.tbd.app",
+            "certificate_hash": "5e8f16062ea3cd2c4a0d547876baa6f38cabf625"
+          }
+        },
+        {
+          "client_id": "827845646125-fhicjm453lreoo706avk911mpvd31v5g.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.alphadex.tbd.app",
+            "certificate_hash": "5d9d7ed6a24f1b68c9af5b38c788458f43677ef3"
+          }
+        },
+        {
+          "client_id": "827845646125-49mekr1f87vgc0d40bj06llmoe2mvkq3.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyAzTB4KlpzK2Tm4Yet9xTueYCq_MxqTA6c"
@@ -20,7 +41,19 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "827845646125-49mekr1f87vgc0d40bj06llmoe2mvkq3.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "827845646125-gle21suv3a6pe4tgdma4ch04h359c6ds.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.hisoft.tbd.app"
+              }
+            }
+          ]
         }
       }
     }

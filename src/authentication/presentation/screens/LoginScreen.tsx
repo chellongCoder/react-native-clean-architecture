@@ -18,10 +18,13 @@ import {STACK_NAVIGATOR} from 'src/core/presentation/navigation/ConstantNavigato
 import {scale, verticalScale} from 'react-native-size-matters';
 import Dropdown from 'src/core/components/dropdown/Dropdown';
 import useGlobalStyle from 'src/core/presentation/hooks/useGlobalStyle';
+import useGoogleLogin from 'src/hooks/useGoogleLogin';
+import {COLORS} from 'src/core/presentation/constants/colors';
 
 const LoginScreen = observer(() => {
   const {handleLoginWithCredentials} = useLoginWithCredentials();
   useLoadingGlobal();
+  const {handleLoginViaGoogle} = useGoogleLogin();
   const globalStyle = useGlobalStyle();
   const [emailOrPhone, setEmailOrPhone] = useState('');
   const [password, setPassword] = useState('');
@@ -95,24 +98,27 @@ const LoginScreen = observer(() => {
             Or log in with
           </Text>
           <PrimaryButton
+            onPress={() => {
+              handleLoginViaGoogle();
+            }}
             text="Google"
             wrapContent={false}
             style={[
               styles.mv8,
               {
-                backgroundColor: '#F2B559',
+                backgroundColor: COLORS.YELLOW_F2B559,
               },
             ]}
           />
-          <PrimaryButton
+          {/* <PrimaryButton
             text="Facebook"
             wrapContent={false}
             style={[
               {
-                backgroundColor: '#F2B559',
+                backgroundColor: COLORS.YELLOW_F2B559,
               },
             ]}
-          />
+          /> */}
           <TouchableOpacity
             onPress={onRegister}
             style={{marginVertical: scale(32)}}>
