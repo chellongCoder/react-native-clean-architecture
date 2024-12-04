@@ -95,7 +95,11 @@ const LessonComponent = ({
             styles.rowBetween,
             {alignItems: 'flex-start', marginHorizontal: scale(10)},
           ]}>
-          <View style={[styles.rowBetween, {alignItems: 'center'}]}>
+          <View
+            style={[
+              styles.rowBetween,
+              {alignItems: 'center', maxWidth: scale(150)},
+            ]}>
             <Text
               numberOfLines={1}
               style={[styles.fonts_SVN_Cherish, styles.textTitle]}
@@ -111,7 +115,7 @@ const LessonComponent = ({
                 marginHorizontal: scale(8),
               }}
             />
-            <View style={{maxWidth: scale(130)}}>
+            <View style={{maxWidth: scale(120)}}>
               <Text
                 adjustsFontSizeToFit
                 style={[globalStyle.txtButton, styles.textModule]}

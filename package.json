@@ -24,6 +24,7 @@
     "@jamsch/react-native-hanzi-writer": "^0.4.0",
     "@react-native-async-storage/async-storage": "1.21.0",
     "@react-native-community/netinfo": "^11.3.2",
+    "@react-native-firebase/analytics": "^21.6.1",
     "@react-native-firebase/app": "^21.5.0",
     "@react-native-firebase/crashlytics": "^21.5.0",
     "@react-native-voice/voice": "^3.2.4",

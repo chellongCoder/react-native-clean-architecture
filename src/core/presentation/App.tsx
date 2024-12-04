@@ -22,6 +22,7 @@ import {TextToSpeechProvider} from './hooks/textToSpeech/TextToSpeechProvider';
 import {IapProvider} from './store/iapProvider';
 import FirebaseCrashlyticProvider from './hooks/firebaseCrashlytic/FirebaseCrashlyticProvider';
 import {withIAPContext} from 'react-native-iap';
+import crashlytics from '@react-native-firebase/crashlytics';
 
 LogBox.ignoreLogs(['Warning: ...']); // Ignore log notification by message
 LogBox.ignoreAllLogs(); //Ignore all log notifications
@@ -40,6 +41,7 @@ const App = () => {
   const changeRouteName = () => {
     const previousRouteName = routeNameRef.current;
     const currentRoute = RootNavigation.current?.getCurrentRoute();
+
     if (currentRoute) {
       const currentRouteName = currentRoute.name;
       screenTracking(previousRouteName, currentRouteName);
@@ -48,6 +50,8 @@ const App = () => {
   };
 
   useEffect(() => {
+    crashlytics().log('App mounted.');
+
     !isAndroid && requestScreenTime();
   }, []);
 

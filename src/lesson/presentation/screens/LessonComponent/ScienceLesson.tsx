@@ -38,6 +38,7 @@ import Animated, {
   withTiming,
 } from 'react-native-reanimated';
 import * as Haptics from 'expo-haptics';
+import useHomeStore from 'src/home/presentation/stores/useHomeStore';
 
 type Props = {
   moduleIndex: number;
@@ -68,7 +69,7 @@ const ScienceLesson = ({
   const {selectedChild} = useAuthenticationStore();
   const [answerSelected, setAnswerSelected] = useState('');
 
-  const {trainingCount} = useLessonStore();
+  const {trainingCount, getSetting} = useLessonStore();
   const isCorrectAnswer = useMemo(() => {
     return (
       `${answerSelected.trim().toLocaleLowerCase().replace('#', '')}.png` ===
@@ -78,6 +79,12 @@ const ScienceLesson = ({
 
   const listColors = answers;
 
+  const {lessonSetting} = useHomeStore();
+
+  const settings = useMemo(
+    () => getSetting(lessonSetting),
+    [getSetting, lessonSetting],
+  );
   const colorsMix = useMemo(() => {
     // Step 1: Split the string by commas to get an array of file names
     const fileNames =
@@ -153,7 +160,8 @@ const ScienceLesson = ({
       module={moduleName}
       part={firstMiniTestTask?.name}
       backgroundColor="#66c270"
-      backgroundAnswerColor={COLORS.PINK_F9C799}
+      backgroundAnswerColor={settings.backgroundAnswerColor}
+      prompt={settings.prompt?.toString()}
       score={selectedChild?.adsPoints}
       isAnswerCorrect={isAnswerCorrect}
       isShowCorrectContainer={isShowCorrectContainer}

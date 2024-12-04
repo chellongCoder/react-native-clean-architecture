@@ -3,12 +3,18 @@
  * @param previousRouteName
  * @param currentRouteName
  */
-export const screenTracking = (
+import analytics from '@react-native-firebase/analytics';
+
+export const screenTracking = async (
   previousRouteName: string | undefined,
   currentRouteName: string,
-): void => {
+): Promise<void> => {
   console.log('screenTracking: ', currentRouteName);
   if (previousRouteName !== currentRouteName) {
     // track something
+    await analytics().logScreenView({
+      screen_name: currentRouteName,
+      screen_class: currentRouteName,
+    });
   }
 };

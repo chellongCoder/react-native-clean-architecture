@@ -483,19 +483,23 @@ const PronunciationLesson = observer(
                   }
                 />
                 <View style={{marginTop: verticalScale(10)}} />
-                <Text
-                  style={[
-                    styles.hintText,
-                    isError && {color: COLORS.RED_AF3A1B},
-                  ]}>
-                  {loadingRecord
-                    ? 'Listening...'
-                    : isDisabledRecord
-                    ? 'Processing voice...'
-                    : isError
-                    ? 'Please try again'
-                    : 'Press n hold to record, release finger after record'}
-                </Text>
+                <View>
+                  <Text
+                    adjustsFontSizeToFit
+                    numberOfLines={1}
+                    style={[
+                      styles.hintText,
+                      isError && {color: COLORS.RED_AF3A1B},
+                    ]}>
+                    {loadingRecord
+                      ? 'Listening...'
+                      : isDisabledRecord
+                      ? 'Processing voice...'
+                      : isError
+                      ? 'Please try again'
+                      : 'Press n hold to record, release finger after record'}
+                  </Text>
+                </View>
                 {learningTimer !== 0 && (
                   <View
                     style={[

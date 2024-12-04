@@ -2995,6 +2995,13 @@
   resolved "https://registry.yarnpkg.com/@react-native-community/netinfo/-/netinfo-11.3.2.tgz#e63201d0b87ad42d086d1003be48ae7b327f0594"
   integrity sha512-YsaS3Dutnzqd1BEoeC+DEcuNJedYRkN6Ef3kftT5Sm8ExnCF94C/nl4laNxuvFli3+Jz8Df3jO25Jn8A9S0h4w==
 
+"@react-native-firebase/analytics@^21.6.1":
+  version "21.6.1"
+  resolved "https://registry.yarnpkg.com/@react-native-firebase/analytics/-/analytics-21.6.1.tgz#33b5018f65bd9c36e3a6729add0533995a8cfea2"
+  integrity sha512-rCNPU5HSeFPjoWIxsC+5hObNPF9dv/pcMaYr9Ww6obmzJtrwtmUvwJow+BTV80PvuV7d+C6fWxl9L78EaA861A==
+  dependencies:
+    superstruct "^2.0.2"
+
 "@react-native-firebase/app@^21.5.0":
   version "21.5.0"
   resolved "https://registry.yarnpkg.com/@react-native-firebase/app/-/app-21.5.0.tgz#a639f0db3557d91bbf99298d504b4eaf46625b31"
@@ -12445,6 +12452,11 @@ superstruct@^0.6.2:
   dependencies:
     clone-deep "^2.0.1"
     kind-of "^6.0.1"
+
+superstruct@^2.0.2:
+  version "2.0.2"
+  resolved "https://registry.yarnpkg.com/superstruct/-/superstruct-2.0.2.tgz#3f6d32fbdc11c357deff127d591a39b996300c54"
+  integrity sha512-uV+TFRZdXsqXTL2pRvujROjdZQ4RAlBUS5BTh9IGm+jTqQntYThciG/qu57Gs69yjnVUSqdxF9YLmSnpupBW9A==
 
 supports-color@^2.0.0:
   version "2.0.0"
