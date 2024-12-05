@@ -1,6 +1,9 @@
 import * as React from 'react';
 import {STACK_NAVIGATOR} from './ConstantNavigator';
-import {createStackNavigator} from '@react-navigation/stack';
+import {
+  CardStyleInterpolators,
+  createStackNavigator,
+} from '@react-navigation/stack';
 import {AppStack} from './RootNavigator';
 import TabNavigator from './tabNavigator/TabNavigator';
 import {hideBottomTab, showBottomTab} from './actions/RootNavigationActions';
@@ -9,7 +12,6 @@ import LessonScreen from 'src/lesson/presentation/screens/LessonScreen';
 import AchievementScreen from 'src/achievement/presentation/AchievementScreen';
 import RankScreen from 'src/rank/presentation/RankScreen';
 import LoginScreen from 'src/authentication/presentation/screens/LoginScreen';
-import DoneLessonScreen from '../screens/DoneLessonScreen';
 import OnBoardingScreen from '../screens/OnBoardingScreen';
 import RegisterScreen from 'src/authentication/presentation/screens/RegisterScreen';
 import RegisterChildScreen from 'src/authentication/presentation/screens/RegisterChildScreen';
@@ -101,6 +103,7 @@ export const HomeStackScreens = (): React.ReactElement => {
       screenOptions={{
         cardOverlayEnabled: false,
         headerShown: false,
+        cardStyleInterpolator: CardStyleInterpolators.forFadeFromCenter, // Add this line
       }}>
       <HomeStack.Screen
         name={STACK_NAVIGATOR.HOME.HOME_SCREEN}

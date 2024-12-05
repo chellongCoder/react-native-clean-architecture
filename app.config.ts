@@ -36,8 +36,9 @@ const appConfig: ExpoConfig = {
     EXPO_BASE_API_DOMAIN: 'https://dev.tbd-alphadex.com',
     EXPO_BASE_API_URL: 'https://dev.tbd-alphadex.com',
     EXPO_IOS_CLIENT_ID:
+      '827845646125-gle21suv3a6pe4tgdma4ch04h359c6ds.apps.googleusercontent.com',
+    WEB_CLIENT_ID:
       '827845646125-49mekr1f87vgc0d40bj06llmoe2mvkq3.apps.googleusercontent.com',
-
     IMAGE_QUESTION_BASE_API_URL:
       'https://storage.googleapis.com/alphadex-image-abeeci/question-image/',
     IMAGE_MODULE_BASE_API_URL:

@@ -62,6 +62,7 @@ const getUserProgressEndPointServices = (path?: string) => {
 export const API_ENDPOINTS = {
   AUTHENTICATION: {
     LOGIN_WITH_CREDENTIALS: getAuthEndPointServices('login'),
+    LOGIN_WITH_GOOGLE: getAuthEndPointServices('google'),
     REFRESH_TOKEN: getAuthEndPointServices('refresh-token'),
   },
   USER: {

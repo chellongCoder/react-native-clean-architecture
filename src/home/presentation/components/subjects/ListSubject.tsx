@@ -1,15 +1,22 @@
 import React, {useContext, useEffect} from 'react';
 import {View, Text, TouchableOpacity, FlatList, StyleSheet} from 'react-native';
-import {scale} from 'react-native-size-matters';
+import {scale, verticalScale} from 'react-native-size-matters';
 import {COLORS} from 'src/core/presentation/constants/colors';
 import {CustomTextStyle} from 'src/core/presentation/constants/typography';
-import {HomeContext} from '../stores/HomeContext';
+import {HomeContext} from '../../stores/HomeContext';
 import {FieldData} from 'src/home/application/types/GetFieldResponse';
 import Animated, {
+  interpolate,
+  runOnJS,
   useAnimatedStyle,
   useSharedValue,
+  withDelay,
   withSpring,
+  withTiming,
 } from 'react-native-reanimated';
+import SubjectItem from './SubjectItem';
+import {HEIGHT_SCREEN, WIDTH_SCREEN} from 'src/core/presentation/utils';
+import {Extrapolate} from '@shopify/react-native-skia';
 
 export interface TDataItem {
   id: number | string;
@@ -52,6 +59,36 @@ const ListSubject = () => {
   ];
   const scaleValue = useSharedValue(0.5);
 
+  const selectedItemOpacity = useSharedValue(0);
+  const selectedItemStyle = useAnimatedStyle(() => {
+    return {
+      opacity: selectedItemOpacity.value,
+    };
+  });
+
+  const animatedScaleStyle = useAnimatedStyle(() => {
+    const size =
+      homeState.field?.position === 'right'
+        ? styles.rightContentContainer
+        : styles.leftContentContainer;
+    const width = interpolate(
+      selectedItemOpacity.value,
+      [0, 1, 0],
+      [0, size.width, WIDTH_SCREEN],
+      Extrapolate.CLAMP,
+    );
+    const height = interpolate(
+      selectedItemOpacity.value,
+      [0, 1, 0],
+      [0, size.height, WIDTH_SCREEN],
+      Extrapolate.CLAMP,
+    );
+    return {
+      width,
+      height,
+    };
+  });
+
   const animatedStyle = useAnimatedStyle(() => {
     return {
       transform: [{scale: scaleValue.value}],
@@ -88,27 +125,24 @@ const ListSubject = () => {
 
   const renderItem = ({item, index}: {item: IMergedData; index: number}) => {
     return (
-      <Animated.View
+      <SubjectItem
         key={index}
-        style={[styles.contentContainer, animatedStyle]}>
-        {item.position === 'right' && (
-          <View style={[styles.container, {height: scale(132)}]} />
-        )}
-        <TouchableOpacity
-          style={[
-            item.position === 'right'
-              ? styles.rightContentContainer
-              : styles.leftContentContainer,
-            {backgroundColor: item.bgc},
-          ]}
-          onPress={() => onSelectSubject(item)}>
-          <Text style={[styles.itemTitle, {color: item.textColor}]}>
-            {item.name}
-          </Text>
-        </TouchableOpacity>
-      </Animated.View>
+        item={item}
+        animatedStyle={animatedStyle}
+        onSelectSubject={onSelectSubject}
+      />
     );
   };
+
+  useEffect(() => {
+    if (homeState.field) {
+      selectedItemOpacity.value = withSpring(1, {duration: 500}, () => {
+        selectedItemOpacity.value = withTiming(0, {duration: 500}, () => {
+          runOnJS(onSelectField)(undefined);
+        });
+      });
+    }
+  }, [homeState.field, onSelectField, selectedItemOpacity]);
 
   return (
     <View style={styles.container}>
@@ -119,6 +153,41 @@ const ListSubject = () => {
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{paddingBottom: scale(54)}}
       />
+
+      {homeState?.field ? (
+        <Animated.View
+          onResponderMove={() => {
+            selectedItemOpacity.value = withTiming(0, {duration: 500});
+          }}
+          style={[
+            selectedItemStyle,
+            {
+              position: 'absolute',
+              backgroundColor: 'rgba(0,0,0,0.5)',
+              height: HEIGHT_SCREEN,
+              width: WIDTH_SCREEN,
+              alignItems: 'center',
+              justifyContent: 'center',
+            },
+          ]}>
+          <Animated.View
+            style={[
+              animatedScaleStyle,
+              homeState.field.position === 'right'
+                ? styles.rightContentContainer
+                : styles.leftContentContainer,
+              {
+                backgroundColor: homeState.field.bgc,
+                marginBottom: verticalScale(50),
+              },
+            ]}>
+            <Text
+              style={[styles.itemTitle, {color: homeState.field.textColor}]}>
+              {homeState.field.name}
+            </Text>
+          </Animated.View>
+        </Animated.View>
+      ) : null}
     </View>
   );
 };
@@ -146,8 +215,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 999,
-    position: 'absolute',
-    right: 0,
   },
   itemTitle: {
     ...CustomTextStyle.h1_SVNCherishMoment,

@@ -150,7 +150,14 @@ const LessonComponent = ({
           </View>
         </View>
 
-        <View style={[styles.boxQuestion, styles.pb32]}>{buildQuestion}</View>
+        <View
+          style={[
+            styles.boxQuestion,
+            styles.pb32,
+            !isShowPrompt && {zIndex: 999},
+          ]}>
+          {buildQuestion}
+        </View>
         <View style={styles.wrapDescriptionContainer}>
           <View style={styles.wrapImageContainer}>
             <Image
@@ -363,7 +370,7 @@ const styles = StyleSheet.create({
     borderBottomRightRadius: scale(36),
     alignItems: 'center',
     alignSelf: 'flex-start',
-    zIndex: 999,
+    zIndex: 998,
   },
   correctTitle: {
     color: '#1C6A59',
@@ -373,7 +380,7 @@ const styles = StyleSheet.create({
   promptTitle: {
     color: COLORS.GREEN_1C6A59,
     fontWeight: 'bold',
-    zIndex: 999,
+    zIndex: 998,
   },
   wrapDescriptionContainer: {
     flexDirection: 'row',

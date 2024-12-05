@@ -2,7 +2,7 @@ import React, {Fragment} from 'react';
 import {StyleSheet, View} from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {COLORS} from 'src/core/presentation/constants/colors';
-import ListSubject from '../components/ListSubject';
+import ListSubject from '../components/subjects/ListSubject';
 import AccountStatus from '../components/AccountStatus';
 import {scale} from 'react-native-size-matters';
 import {observer} from 'mobx-react';

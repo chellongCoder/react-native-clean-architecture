@@ -7,7 +7,7 @@ import useHomeStore from './useHomeStore';
 import useStateCustom from 'src/hooks/useStateCommon';
 import {FieldData} from 'src/home/application/types/GetFieldResponse';
 import {useLoadingGlobal} from 'src/core/presentation/hooks/loading/useLoadingGlobal';
-import {IMergedData} from '../components/ListSubject';
+import {IMergedData} from '../components/subjects/ListSubject';
 import {Subject} from 'src/home/application/types/GetListSubjectResponse';
 import {navigateScreen} from 'src/core/presentation/navigation/actions/RootNavigationActions';
 import {STACK_NAVIGATOR} from 'src/core/presentation/navigation/ConstantNavigator';
@@ -32,7 +32,7 @@ export const HomeProvider = ({children}: PropsWithChildren) => {
     listSubject: undefined,
   });
 
-  const onSelectField = (e: IMergedData) => {
+  const onSelectField = (e?: IMergedData) => {
     setHomeState({field: e});
   };
 
@@ -72,11 +72,11 @@ export const HomeProvider = ({children}: PropsWithChildren) => {
     getDataFromStore();
   }, [getData, isConnected, setHomeState]);
 
-  useEffect(() => {
-    if (!isConnected) {
-      navigateScreen(STACK_NAVIGATOR.HOME.SUBJECT_SCREEN, {});
-    }
-  }, [homeState.field, isConnected]);
+  // useEffect(() => {
+  //   if (!isConnected) {
+  //     navigateScreen(STACK_NAVIGATOR.HOME.SUBJECT_SCREEN, {});
+  //   }
+  // }, [homeState.field, isConnected]);
 
   return (
     <HomeContext.Provider

@@ -5,6 +5,7 @@ import {
   Text,
   TouchableOpacity,
   View,
+  Image,
 } from 'react-native';
 import React, {useState} from 'react';
 import PrimaryButton from '../components/PrimaryButton';
@@ -20,6 +21,7 @@ import Dropdown from 'src/core/components/dropdown/Dropdown';
 import useGlobalStyle from 'src/core/presentation/hooks/useGlobalStyle';
 import useGoogleLogin from 'src/hooks/useGoogleLogin';
 import {COLORS} from 'src/core/presentation/constants/colors';
+import {assets} from 'src/core/presentation/utils';
 
 const LoginScreen = observer(() => {
   const {handleLoginWithCredentials} = useLoginWithCredentials();
@@ -55,6 +57,10 @@ const LoginScreen = observer(() => {
           data={['Eng', 'Vie']}
         />
 
+        <View style={styles.logoContainer}>
+          <Image source={assets.logo} style={styles.logo} />
+        </View>
+
         <View style={[styles.fill, styles.justifyCenter]}>
           <CommonInput
             label="Email or phone number"
@@ -77,13 +83,13 @@ const LoginScreen = observer(() => {
 
           <View style={[styles.mt48]}>
             {/* <Text style={[styles.txtLink, styles.mv8]}>Another account?</Text> */}
-            <View style={[styles.rowAround, {paddingHorizontal: scale(16)}]}>
-              {/* <PrimaryButton
+            <View style={[styles.rowAround]}>
+              <PrimaryButton
                 text="Register"
                 style={styles.fill}
                 onPress={onRegister}
-              /> */}
-              {/* <View style={styles.mh12} /> */}
+              />
+              <View style={styles.mh12} />
               <PrimaryButton
                 text="Login"
                 style={styles.fill}
@@ -110,15 +116,6 @@ const LoginScreen = observer(() => {
               },
             ]}
           />
-          {/* <PrimaryButton
-            text="Facebook"
-            wrapContent={false}
-            style={[
-              {
-                backgroundColor: COLORS.YELLOW_F2B559,
-              },
-            ]}
-          /> */}
           <TouchableOpacity
             onPress={onRegister}
             style={{marginVertical: scale(32)}}>
@@ -204,5 +201,14 @@ const styles = StyleSheet.create({
   },
   rowAround: {
     flexDirection: 'row',
+  },
+  logoContainer: {
+    alignItems: 'center',
+    marginTop: verticalScale(20),
+  },
+  logo: {
+    width: scale(150),
+    height: scale(150),
+    resizeMode: 'contain',
   },
 });

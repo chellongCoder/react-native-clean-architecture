@@ -21,6 +21,7 @@ import {ComparePasswordPayload} from 'src/authentication/application/types/Compa
 import {ChangeParentNamePayload} from 'src/authentication/application/types/ChangeParentNamePayload';
 import {ChangeChildDescriptionPayload} from 'src/authentication/application/types/ChangeChildDescriptionPayload';
 import {useLoadingGlobal} from 'src/core/presentation/hooks/loading/useLoadingGlobal';
+import {LoginMethods} from '../constants/common';
 
 const DefaultFormData = {email: '', password: ''};
 
@@ -37,6 +38,10 @@ const useLoginWithCredentials = () => {
     comparePassword,
     changeParentName,
     changeChildrenDescription,
+    getRefreshToken,
+    token,
+    loginMethod,
+    refreshToken,
   } = useAuthenticationStore();
   const {
     handleNavigateAuthenticationSuccess,
@@ -210,6 +215,7 @@ const useLoginWithCredentials = () => {
     try {
       // Retrieve the credentials
       const credentials = await Keychain.getGenericPassword();
+
       if (credentials && credentials.username && credentials.password) {
         console.log(
           'Credentials successfully loaded for user ' + credentials.username,
@@ -221,6 +227,11 @@ const useLoginWithCredentials = () => {
         return true;
       } else {
         console.log('No credentials stored');
+        if (loginMethod === LoginMethods.Google) {
+          handleNavigateAuthenticationSuccess();
+          getRefreshToken(refreshToken);
+          return;
+        }
         replaceScreen(STACK_NAVIGATOR.AUTH.LOGIN_SCREEN);
         return null;
       }
@@ -229,7 +240,13 @@ const useLoginWithCredentials = () => {
       replaceScreen(STACK_NAVIGATOR.AUTH.LOGIN_SCREEN);
       return null;
     }
-  }, [handleLoginWithCredentials]);
+  }, [
+    getRefreshToken,
+    handleLoginWithCredentials,
+    handleNavigateAuthenticationSuccess,
+    loginMethod,
+    refreshToken,
+  ]);
 
   const handleRegister = useCallback(
     async (props: RegisterPayload) => {
@@ -244,6 +261,7 @@ const useLoginWithCredentials = () => {
         phone,
       } = props;
       try {
+        globalLoading.toggleLoading(true, 'register');
         const res = await register({
           emailOrPhoneNumber,
           username,
@@ -276,8 +294,10 @@ const useLoginWithCredentials = () => {
         }
       } finally {
         setIsLoading(false);
+        globalLoading.toggleLoading(false, 'register');
       }
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [
       handleErrorRegister,
       register,
@@ -306,7 +326,7 @@ const useLoginWithCredentials = () => {
             type: 'success',
             text1: res.message,
           });
-          pushScreen(STACK_NAVIGATOR.AUTH.LIST_CHILDREN_SCREEN);
+          pushScreen(STACK_NAVIGATOR.AUTH.LIST_CHILDREN_SCREEN, {});
         }
       } catch (error) {
         if (isAxiosError(error)) {

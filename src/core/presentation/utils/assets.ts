@@ -13,6 +13,7 @@ export const assets = {
   rank_icon_new: require('assets/images/rank_icon_new.png'),
   setting_icon: require('assets/images/setting_icon.png'),
   sound_icon: require('assets/images/sound_icon.png'),
+  logo: require('assets/images/icon.png'),
   hexagon_frame: require('assets/images/hexagon_frame.png'),
   onboarding: require('assets/images/ONBOARDINGSCREEN.png'),
   onboarding_minitest: require('assets/images/onboarding_minitest.png'),

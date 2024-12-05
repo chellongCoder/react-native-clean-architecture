@@ -9,6 +9,7 @@ import {ComparePasswordResponse} from '../application/types/ComparePasswordRespo
 import DeleteChildrenResponse from '../application/types/DeleteChildrenResponse';
 import GetListSubjectResponse from '../application/types/GetListSubjectResponse';
 import GetUserProfileResponse from '../application/types/GetUserProfileResponse';
+import {LoginGooglePayload} from '../application/types/LoginGooglePayload';
 import {LoginUsernamePasswordPayload} from '../application/types/LoginPayload';
 import {RefreshTokenResponse} from '../application/types/LoginResponse';
 import {RegisterChildPayload} from '../application/types/RegisterChildPayload';
@@ -25,6 +26,8 @@ export interface IAuthenticationRepository {
   loginWithCredentials: (
     data: LoginUsernamePasswordPayload,
   ) => Promise<AuthenticationEntity>;
+
+  loginGoogle: (data: LoginGooglePayload) => Promise<AuthenticationEntity>;
 
   registerUser: (data: RegisterPayload) => Promise<RegisterResponse>;
 

@@ -27,12 +27,20 @@ import {AssignChildrenResponse} from 'src/authentication/application/types/Assig
 import DeleteChildrenResponse from 'src/authentication/application/types/DeleteChildrenResponse';
 import {ChangeChildDescriptionPayload} from 'src/authentication/application/types/ChangeChildDescriptionPayload';
 import {ChangeChildDescriptionResponse} from 'src/authentication/application/types/ChangeChildDescriptionResponse';
+import {LoginGooglePayload} from 'src/authentication/application/types/LoginGooglePayload';
 
 @injectable()
 class AuthenticationRepository implements IAuthenticationRepository {
   constructor(
     @provided(IHttpClientToken) private readonly httpClient: IHttpClient,
   ) {}
+  public async loginGoogle(data: LoginGooglePayload): Promise<any> {
+    const response: any = await this.httpClient.post(
+      API_ENDPOINTS.AUTHENTICATION.LOGIN_WITH_GOOGLE,
+      data,
+    );
+    return response;
+  }
 
   public async loginWithCredentials(
     args: LoginUsernamePasswordPayload,

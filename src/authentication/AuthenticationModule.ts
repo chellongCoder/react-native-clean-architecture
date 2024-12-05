@@ -14,6 +14,7 @@ import ChangeParentNameUseCase from './application/useCases/ChangeParentNameUsec
 import AssignChildrenUseCase from './application/useCases/AssignChildrenUsecase';
 import DeleteChildrenUseCase from './application/useCases/DeleteChildrenUsecase';
 import ChangeChildDescriptionUseCase from './application/useCases/ChangeChildDescriptionUsecase';
+import LoginGoogleUserCase from './application/useCases/LoginGoogleUserCase';
 
 @module({
   providers: [
@@ -36,6 +37,7 @@ import ChangeChildDescriptionUseCase from './application/useCases/ChangeChildDes
     ChangeParentNameUseCase,
     AssignChildrenUseCase,
     DeleteChildrenUseCase,
+    LoginGoogleUserCase,
     ChangeChildDescriptionUseCase,
   ],
 })

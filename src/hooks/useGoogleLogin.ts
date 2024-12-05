@@ -18,7 +18,7 @@ import Toast from 'react-native-toast-message';
 GoogleSignIn.configure({
   scopes: ['email', 'profile'],
   iosClientId: env?.EXPO_IOS_CLIENT_ID,
-  webClientId: env?.EXPO_IOS_CLIENT_ID,
+  webClientId: env?.WEB_CLIENT_ID,
 });
 
 const useGoogleLogin = () => {
@@ -44,21 +44,21 @@ const useGoogleLogin = () => {
       console.log(
         '🛠 LOG: 🚀 --> -----------------------------------------------🛠 LOG: 🚀 -->',
       );
-      setErrorMessage('');
       setIsLoading(true);
-      // loginWithGoogle({
-      //   accessToken: value.data?.idToken,
-      //   provider: SocialName.GOOGLE,
-      // })
-      //   .then(res =>
-      //     handleLoginSuccess(loggingContentTypes.LOGIN.Google, res.data.token),
-      //   )
-      //   .catch(error => {
-      //     setIsLoading(false);
-      //     setErrorMessage(getAxiosErrorMessage(error));
-      //   });
+      if (value.data?.idToken) {
+        loginWithGoogle({
+          idToken: value.data?.idToken,
+        })
+          .catch(error => {
+            setIsLoading(false);
+          })
+          .finally(() => {
+            globalLoading.toggleLoading(false, 'google');
+          });
+      }
     },
-    [setErrorMessage, setIsLoading],
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [loginWithGoogle, setErrorMessage, setIsLoading],
   );
 
   const handleLoginViaGoogle = useCallback(async () => {

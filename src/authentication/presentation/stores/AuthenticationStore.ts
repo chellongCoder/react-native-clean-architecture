@@ -9,10 +9,7 @@ import IHttpClient, {
 } from 'src/core/domain/specifications/IHttpClient';
 import LoginUsernamePasswordUseCase from 'src/authentication/application/useCases/LoginUsernamePasswordUsecase';
 import LoginResponse from 'src/authentication/application/types/LoginResponse';
-import {
-  LoginUsernamePasswordPayload,
-  LoginWithGooglePayload,
-} from 'src/authentication/application/types/LoginPayload';
+import {LoginUsernamePasswordPayload} from 'src/authentication/application/types/LoginPayload';
 import {LoginMethods} from '../constants/common';
 import RegisterUseCase from 'src/authentication/application/useCases/RegisterUsecase';
 import {RegisterPayload} from 'src/authentication/application/types/RegisterPayload';
@@ -36,8 +33,8 @@ import ChangeChildDescriptionUseCase from 'src/authentication/application/useCas
 import {ChangeChildDescriptionPayload} from 'src/authentication/application/types/ChangeChildDescriptionPayload';
 import {resetNavigator} from 'src/core/presentation/navigation/actions/RootNavigationActions';
 import {STACK_NAVIGATOR} from 'src/core/presentation/navigation/ConstantNavigator';
-import ChangeChildPointFlowerUsecase from 'src/authentication/application/useCases/ChangeChildPointFlowerUsecase';
-import {ChangeChildPointFlowerPayload} from 'src/authentication/application/types/ChangeChildPointFlowerPayload';
+import LoginGoogleUserCase from 'src/authentication/application/useCases/LoginGoogleUserCase';
+import {LoginGooglePayload} from 'src/authentication/application/types/LoginGooglePayload';
 @injectable()
 export class AuthenticationStore implements AuthenticationStoreState {
   isLoading = false;
@@ -85,6 +82,9 @@ export class AuthenticationStore implements AuthenticationStoreState {
 
     @provided(ChangeChildDescriptionUseCase)
     private changeChildDescriptionUseCase: ChangeChildDescriptionUseCase,
+
+    @provided(LoginGoogleUserCase)
+    private loginGoogleUserCase: LoginGoogleUserCase,
 
     @provided(IHttpClientToken) private readonly httpClient: IHttpClient, // @provided(CoreStore) private coreStore: CoreStore,
   ) {
@@ -200,6 +200,7 @@ export class AuthenticationStore implements AuthenticationStoreState {
   public async getRefreshToken(refreshToken: string) {
     this.httpClient.setAuthCredentials({token: refreshToken});
     const response = await this.getRefreshTokenUseCase.execute(refreshToken);
+
     // Set new access token
     this.httpClient.setAuthCredentials({token: response.data.accessToken});
     return response;
@@ -281,13 +282,13 @@ export class AuthenticationStore implements AuthenticationStoreState {
   }
 
   @action
-  public async loginWithGoogle(args: LoginWithGooglePayload) {
+  public async loginWithGoogle(args: LoginGooglePayload) {
     this.setIsLoading(true);
-    // const response = await this.loginWithGoogleUseCase.execute(args);
-    // this.setCurrentCredentials(response);
-    // this.setLoginMethod(LoginMethods.Google);
+    const response = await this.loginGoogleUserCase.execute(args);
+    this.setCurrentCredentials(response);
+    this.setLoginMethod(LoginMethods.Google);
     this.setIsLoading(false);
-    // return response;
+    return response;
   }
 }
 
