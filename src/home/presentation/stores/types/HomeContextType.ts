@@ -7,4 +7,5 @@ export interface HomeContextType {
   // Add more custom values as needed
   homeState: IHomeState;
   onSelectField: (e?: IMergedData) => void;
+  fetchListSubject: (field?: IHomeState['field']) => void;
 }

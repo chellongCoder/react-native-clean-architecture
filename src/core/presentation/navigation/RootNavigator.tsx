@@ -43,15 +43,10 @@ const RootNavigator: FC = () => {
     if (isConnected !== null && isHydrated) {
       if (isConnected) {
         getUsernamePasswordInKeychain();
-      } else {
-        if (userProfile) {
-          replaceScreen(STACK_NAVIGATOR.AUTH.LIST_CHILDREN_SCREEN);
-        } else {
-          replaceScreen(STACK_NAVIGATOR.AUTH_NAVIGATOR);
-        }
       }
     }
-  }, [getUsernamePasswordInKeychain, isConnected, isHydrated, userProfile]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isConnected, isHydrated, userProfile]);
 
   return (
     <AppStack.Navigator
