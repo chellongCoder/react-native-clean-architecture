@@ -3,7 +3,6 @@ import React, {
   Text,
   StyleSheet,
   TouchableOpacity,
-  Alert,
   Image,
   ImageBackground,
   BackHandler,

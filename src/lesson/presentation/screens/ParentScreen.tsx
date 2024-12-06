@@ -81,12 +81,14 @@ import PurchaseItem from '../components/LessonModule/PurchaseItem';
 import ListAppBottomSheet from '../components/ListAppBlock/ListAppBottomSheet';
 import Animated, {BounceIn, ReduceMotion} from 'react-native-reanimated';
 import CheckSelect from 'src/core/components/checkSelect/CheckSelect';
-import {VolumeManager} from 'react-native-volume-manager';
 import {IapContext} from 'src/core/presentation/store/iapContext';
-import {useIsFocused} from '@react-navigation/native';
 import {TProduct} from 'src/core/presentation/store/iapProvider';
-import {FontSlant} from '@shopify/react-native-skia';
+
 import DiamondContainer from './LessonComponent/DiamondContainer';
+import {HomeProvider} from 'src/home/presentation/stores/HomeProvider';
+import {HomeContext} from 'src/home/presentation/stores/HomeContext';
+import {FieldData} from 'src/home/application/types/GetFieldResponse';
+import {Subject} from 'src/home/application/types/GetListSubjectResponse';
 
 enum TabParentE {
   APP_BLOCK = 'App block',
@@ -130,6 +132,16 @@ const ParentScreen = observer(() => {
     deviceToken,
     deleteChildren,
   } = useAuthenticationStore();
+
+  const {homeState, fetchListSubject} = useContext(HomeContext);
+
+  const listFields = useMemo(() => {
+    return homeState.listField;
+  }, [homeState.listField]);
+
+  const subjects = useMemo(() => {
+    return homeState.listSubject;
+  }, [homeState.listSubject]);
 
   useGetUserSetting(deviceToken, selectedChild?._id ?? '', lesson);
   const {isShowAuth: isAuthenSetting, changeIsShowAuth} = useAuthParent();
@@ -253,6 +265,8 @@ const ParentScreen = observer(() => {
   const [isShowLimitOption, setIsShowLimitOption] = useState(false);
   const points = useMemo(() => [100, 75, 50], []);
   const [point, setPoint] = useState(75);
+  const [selectedField, setSelectedField] = useState<FieldData | undefined>();
+  const [selectedSubject, setSelectedSubject] = useState<Subject | undefined>();
   const [backgroundSound, setBackgroundSound] = useState<number>(
     lesson.backgroundSound,
   );
@@ -445,6 +459,11 @@ The blockAppsSystem function is an asynchronous function that awaits the result 
     }
   }, [lesson.unlockPercent]);
 
+  useEffect(() => {
+    setSelectedField(listFields?.[0]);
+    fetchListSubject(listFields?.[0]);
+  }, [listFields]);
+
   const _buildBlockView = () => {
     return (
       <>
@@ -484,6 +503,16 @@ The blockAppsSystem function is an asynchronous function that awaits the result 
                     />
                   )}
                 </View>
+                <Dropdown
+                  data={listFields ?? []}
+                  title={selectedField?.name ?? listFields?.[0]?.name}
+                  onSelectItem={item => {
+                    setSelectedField(item);
+                    fetchListSubject(item);
+                  }}
+                  width={scale(100)}
+                  nameIndex="name"
+                />
                 {/* <View style={[]}>
                 <Text style={[globalStyle.txtButton, styles.textColor]}>
                   Lessons to unlock
@@ -508,12 +537,28 @@ The blockAppsSystem function is an asynchronous function that awaits the result 
                     Score to unlock
                   </Text>
                 </TouchableOpacity>
-                <Dropdown
-                  data={points}
-                  title={point.toString()}
-                  onSelectItem={item => setPoint(+item)}
-                  prefix="%"
-                />
+                <View style={{zIndex: 999}}>
+                  <Dropdown
+                    data={points}
+                    title={point.toString()}
+                    onSelectItem={item => setPoint(+item)}
+                    prefix="%"
+                  />
+                </View>
+
+                <View style={{height: verticalScale(30)}} />
+
+                <View style={{zIndex: 998}}>
+                  <Dropdown
+                    data={subjects ?? []}
+                    title={selectedSubject?.name ?? subjects?.[0]?.name}
+                    onSelectItem={item => {
+                      setSelectedSubject(item);
+                    }}
+                    width={scale(100)}
+                    nameIndex="name"
+                  />
+                </View>
 
                 {/* <View style={[{zIndex: -2}]}>
                   <Text style={[globalStyle.txtButton, styles.textColor]}>
@@ -733,7 +778,7 @@ The blockAppsSystem function is an asynchronous function that awaits the result 
                 />
               ))}
             </View>
-            {buildPage()}
+            <View style={{zIndex: 999}}>{buildPage()}</View>
             <View style={[styles.bodyBookTwo]}>
               <Text style={[globalStyle.txtLabel, styles.txtTitleBookTwo]}>
                 Children accounts list
@@ -820,7 +865,7 @@ The blockAppsSystem function is an asynchronous function that awaits the result 
   );
 });
 
-export default withProviders(LessonStoreProvider)(ParentScreen);
+export default withProviders(LessonStoreProvider, HomeProvider)(ParentScreen);
 
 const styles = StyleSheet.create({
   fill: {

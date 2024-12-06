@@ -14,12 +14,20 @@ import Animated, {
 type Props = {
   data: any[];
   title: string;
-  onSelectItem: (item: string) => void;
+  onSelectItem: (item: any) => void;
   width?: number;
   prefix?: string;
+  nameIndex?: string;
 };
 
-const Dropdown = ({data, title, width, prefix, onSelectItem}: Props) => {
+const Dropdown = ({
+  data,
+  title,
+  width,
+  prefix,
+  nameIndex,
+  onSelectItem,
+}: Props) => {
   const globalStyle = useGlobalStyle();
   const [isShowLimitOption, setIsShowLimitOption] = useState(false);
   const ITEM_HEIGHT = scale(40);
@@ -99,7 +107,7 @@ const Dropdown = ({data, title, width, prefix, onSelectItem}: Props) => {
                         : {},
                     ]}>
                     <Text style={[globalStyle.txtNote, styles.option]}>
-                      {p}
+                      {typeof p === 'object' ? p[nameIndex!] : p}
                       {prefix}
                     </Text>
                   </TouchableOpacity>
