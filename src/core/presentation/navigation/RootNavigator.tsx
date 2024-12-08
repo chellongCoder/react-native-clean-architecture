@@ -14,6 +14,7 @@ import {withProviders} from '../utils/withProviders';
 import {LessonStoreProvider} from 'src/lesson/presentation/stores/LessonStore/LessonStoreProvider';
 import {usePermissionApplock} from 'src/hooks/usePermissionApplock';
 import useHydration from 'src/hooks/useHydration';
+import {PopupModalGlobalProvider} from '../hooks/popup/PopupModalGlobalProvider';
 
 export const AppStack = createStackNavigator();
 
@@ -61,4 +62,7 @@ const RootNavigator: FC = () => {
   );
 };
 
-export default withProviders(LessonStoreProvider)(RootNavigator);
+export default withProviders(
+  LessonStoreProvider,
+  PopupModalGlobalProvider,
+)(RootNavigator);

@@ -23,6 +23,7 @@ export const assets = {
   star: require('assets/images/star.png'),
   untitled_artwork: require('assets/images/untitled_artwork.png'),
   bee_bg: require('assets/images/bee_bg.png'),
+  bee_x50: require('assets/images/bee_x50.png'),
   andie_1: require('assets/images/andie_1.png'),
   andie_2: require('assets/images/andie_2.png'),
   andie_3: require('assets/images/andie_3.png'),
@@ -53,4 +54,5 @@ export const assets = {
   diamondLeaf3: require('assets/images/diamondLeaf3.png'),
   diamondLeaf4: require('assets/images/diamondLeaf4.png'),
   diamondLeaf5: require('assets/images/diamondLeaf5.png'),
+  diamond_amount: require('assets/images/diamond_amount.png'),
 };

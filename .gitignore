@@ -82,3 +82,4 @@ patches/@react-native-voice+voice+3.2.4.patch
 ios/.xcode.env.local
 .xcode.env.local
 ios/.xcode.env.local
+assets/screen_shot
