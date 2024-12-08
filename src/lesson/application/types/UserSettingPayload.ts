@@ -17,9 +17,15 @@ export type AppBlockT = {
   android: TokenAppAndroidT[];
   ios: TokenAppT[];
 };
+
+export type BlockedModuleSetting = {
+  percent: number;
+  moduleId: string;
+};
 export default interface UserSettingPayload {
   appBlocked?: AppBlockT;
   deviceToken: string;
   point?: number;
   childrenId: string;
+  modules: BlockedModuleSetting[];
 }

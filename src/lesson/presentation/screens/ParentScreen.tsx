@@ -89,6 +89,7 @@ import {HomeProvider} from 'src/home/presentation/stores/HomeProvider';
 import {HomeContext} from 'src/home/presentation/stores/HomeContext';
 import {FieldData} from 'src/home/application/types/GetFieldResponse';
 import {Subject} from 'src/home/application/types/GetListSubjectResponse';
+import {BlockedModuleSetting} from 'src/lesson/application/types/UserSettingPayload';
 
 enum TabParentE {
   APP_BLOCK = 'App block',
@@ -142,6 +143,14 @@ const ParentScreen = observer(() => {
   const subjects = useMemo(() => {
     return homeState.listSubject;
   }, [homeState.listSubject]);
+
+  console.log(
+    '🛠 LOG: 🚀 --> -----------------------------------------------🛠 LOG: 🚀 -->',
+  );
+  console.log('🛠 LOG: 🚀 --> ~ subjects ~ subjects:', subjects);
+  console.log(
+    '🛠 LOG: 🚀 --> -----------------------------------------------🛠 LOG: 🚀 -->',
+  );
 
   useGetUserSetting(deviceToken, selectedChild?._id ?? '', lesson);
   const {isShowAuth: isAuthenSetting, changeIsShowAuth} = useAuthParent();
@@ -267,6 +276,13 @@ const ParentScreen = observer(() => {
   const [point, setPoint] = useState(75);
   const [selectedField, setSelectedField] = useState<FieldData | undefined>();
   const [selectedSubject, setSelectedSubject] = useState<Subject | undefined>();
+  console.log(
+    '🛠 LOG: 🚀 --> --------------------------------------------------🛠 LOG: 🚀 -->',
+  );
+  console.log('🛠 LOG: 🚀 --> ~ selectedSubject:', selectedSubject);
+  console.log(
+    '🛠 LOG: 🚀 --> --------------------------------------------------🛠 LOG: 🚀 -->',
+  );
   const [backgroundSound, setBackgroundSound] = useState<number>(
     lesson.backgroundSound,
   );
@@ -319,10 +335,17 @@ const ParentScreen = observer(() => {
   ]);
 
   const onConfigUserSetting = useCallback(() => {
+    const modules: BlockedModuleSetting[] = [
+      {
+        percent: 50,
+        moduleId: selectedSubject?._id ?? '',
+      },
+    ];
     lesson.updateAppBlock({
       childrenId: selectedChild?._id ?? '',
       deviceToken,
       point,
+      modules,
       appBlocked: {
         android: isAndroid
           ? blockOptions.map(t => {
@@ -344,7 +367,14 @@ const ParentScreen = observer(() => {
           : [],
       },
     });
-  }, [deviceToken, lesson, point, selectedChild?._id, blockOptions]);
+  }, [
+    selectedSubject?._id,
+    lesson,
+    selectedChild?._id,
+    deviceToken,
+    point,
+    blockOptions,
+  ]);
 
   const onSaveSoundSetting = () => {
     lesson.setBackgroundSound(backgroundSound);
@@ -461,7 +491,10 @@ The blockAppsSystem function is an asynchronous function that awaits the result 
 
   useEffect(() => {
     setSelectedField(listFields?.[0]);
-    fetchListSubject(listFields?.[0]);
+    fetchListSubject(listFields?.[0]).then(v => {
+      setSelectedSubject(v?.[0]);
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [listFields]);
 
   const _buildBlockView = () => {

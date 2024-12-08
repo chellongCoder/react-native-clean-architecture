@@ -44,6 +44,7 @@ export const HomeProvider = ({children}: PropsWithChildren) => {
         if (res.data) {
           setHomeState({listSubject: res.data});
         }
+        return res.data;
       }
     },
     [getListSubject, setHomeState, storeData],
