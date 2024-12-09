@@ -36,9 +36,9 @@ export const PopupModalGlobalProvider = ({children}: PropsWithChildren) => {
   return (
     <PopupModalContext.Provider value={{show, hide, isShown}}>
       {children}
-      <ReceivedDiamondPopup isVisible={false} onClose={hide} />
+      <ReceivedDiamondPopup isVisible={isShown} onClose={hide} />
       <FeedbackPopup
-        isVisible={true}
+        isVisible={isShown}
         onClose={hide}
         onSubmitFeedback={() => {
           /* handle feedback submission */

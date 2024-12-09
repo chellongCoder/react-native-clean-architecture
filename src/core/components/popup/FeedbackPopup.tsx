@@ -65,7 +65,6 @@ const FeedbackPopup: React.FC<FeedbackPopupProps> = ({
             />
             <View style={styles.iconContainer}>
               {icons.map(({id, component: Icon}) => {
-                console.log('id: ', id === selectedIcon);
                 return (
                   <TouchableOpacity
                     key={id}
