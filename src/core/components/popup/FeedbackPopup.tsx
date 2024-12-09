@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useCallback, useState} from 'react';
 import {
   Modal,
   View,
@@ -6,12 +6,38 @@ import {
   TextInput,
   TouchableOpacity,
   StyleSheet,
-  Image,
 } from 'react-native';
-import {assets} from 'src/core/presentation/utils';
+import {COLORS} from 'src/core/presentation/constants/colors';
+import {TYPOGRAPHY} from 'src/core/presentation/constants/typography';
+import IconCry from 'assets/svg/IconCry';
+import IconLike from 'assets/svg/IconLike';
+import IconLove from 'assets/svg/IconLove';
+import IconNormal from 'assets/svg/IconNormal';
+import IconSad from 'assets/svg/IconSad';
 
-const FeedbackPopup = ({isVisible, onClose, onSubmitFeedback}) => {
+interface FeedbackPopupProps {
+  isVisible: boolean;
+  onClose: () => void;
+  onSubmitFeedback: (feedback: string) => void;
+}
+
+const FeedbackPopup: React.FC<FeedbackPopupProps> = ({
+  isVisible,
+  onClose,
+  onSubmitFeedback,
+}) => {
   const [feedback, setFeedback] = useState('');
+  const [selectedIcon, setSelectedIcon] = useState<string | null>(null);
+
+  const onSent = useCallback(() => {}, []);
+
+  const icons = [
+    {id: 'cry', component: IconCry},
+    {id: 'sad', component: IconSad},
+    {id: 'normal', component: IconNormal},
+    {id: 'like', component: IconLike},
+    {id: 'love', component: IconLove},
+  ];
 
   return (
     <Modal
@@ -20,30 +46,37 @@ const FeedbackPopup = ({isVisible, onClose, onSubmitFeedback}) => {
       visible={isVisible}
       onRequestClose={onClose}>
       <View style={styles.centeredView}>
-        <View style={styles.modalView}>
-          <Image
-            source={assets.bee_x50} // Update the path as necessary
-            style={styles.beeImage}
-          />
-          <Text style={styles.modalText}>PHẢN HỒI Ý KIẾN CỦA BẠN</Text>
-          <Text style={styles.modalTextSmall}>
-            Để nhận miễn phí 50 kim cương
-          </Text>
-          <TextInput
-            style={styles.input}
-            onChangeText={setFeedback}
-            value={feedback}
-            placeholder="App dùng ổn :)"
-            multiline
-          />
-          <View style={styles.reactionContainer}>
-            {/* Add reaction icons here */}
+        <View style={styles.contentContainer}>
+          <View>
+            <Text style={styles.title}>
+              phản hồi ý kiến của bạn{'\n'} để nhận
+              <Text style={{color: COLORS.RED_F28759}}>
+                {' '}
+                miễn phí 50 kim cươngs
+              </Text>
+            </Text>
+            <TextInput
+              placeholder="App dùng ổn :3"
+              style={styles.textInputContainer}
+              multiline
+              onChangeText={e => setFeedback(e)}
+            />
+            <View style={styles.iconContainer}>
+              {icons.map(({id, component: Icon}) => {
+                console.log('id: ', id === selectedIcon);
+                return (
+                  <TouchableOpacity
+                    key={id}
+                    onPress={() => setSelectedIcon(id)}>
+                    <Icon fill={selectedIcon === id ? '#F2CA30' : undefined} />
+                  </TouchableOpacity>
+                );
+              })}
+            </View>
+            <TouchableOpacity style={styles.sentBtnContainer} onPress={onSent}>
+              <Text style={styles.btnTitle}>Gửi</Text>
+            </TouchableOpacity>
           </View>
-          <TouchableOpacity
-            style={styles.button}
-            onPress={() => onSubmitFeedback(feedback)}>
-            <Text style={styles.buttonText}>Gửi</Text>
-          </TouchableOpacity>
         </View>
       </View>
     </Modal>
@@ -55,60 +88,47 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    marginTop: 22,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    padding: 32,
   },
-  modalView: {
-    margin: 20,
-    backgroundColor: 'white',
-    borderRadius: 20,
-    padding: 35,
-    alignItems: 'center',
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 4,
-    elevation: 5,
+  contentContainer: {
+    borderRadius: 32,
+    padding: 16,
+    backgroundColor: COLORS.WHITE_FBF8CC,
+    width: '100%',
   },
-  modalText: {
-    marginBottom: 15,
+  title: {
     textAlign: 'center',
-    fontWeight: 'bold',
+    fontSize: 24,
+    textTransform: 'uppercase',
+    fontFamily: TYPOGRAPHY.FAMILY.SVNCherishMoment,
+    color: COLORS.GREEN_4CB572,
   },
-  modalTextSmall: {
-    marginBottom: 20,
-    textAlign: 'center',
-    color: 'gray',
+  textInputContainer: {
+    borderRadius: 16,
+    backgroundColor: COLORS.GREEN_DDF598,
+    paddingVertical: 24,
+    paddingHorizontal: 16,
+    marginVertical: 24,
+    minHeight: 108,
   },
-  input: {
-    marginBottom: 20,
-    width: 250,
-    height: 100,
-    borderColor: 'gray',
-    borderWidth: 1,
-    padding: 10,
-  },
-  reactionContainer: {
+  iconContainer: {
     flexDirection: 'row',
-    marginBottom: 20,
+    justifyContent: 'space-around',
   },
-  button: {
-    borderRadius: 20,
-    padding: 10,
-    elevation: 2,
-    backgroundColor: '#2196F3',
+  sentBtnContainer: {
+    borderRadius: 46,
+    backgroundColor: COLORS.YELLOW_F2B559,
+    paddingVertical: 16,
+    paddingHorizontal: 32,
+    alignSelf: 'center',
+    marginTop: 32,
   },
-  buttonText: {
-    color: 'white',
+  btnTitle: {
+    fontSize: 18,
     fontWeight: 'bold',
-    textAlign: 'center',
-  },
-  beeImage: {
-    width: 100, // Adjust size as needed
-    height: 100, // Adjust size as needed
-    marginBottom: 20,
+    fontFamily: TYPOGRAPHY.FAMILY.SVNNeuzeitBold,
+    color: COLORS.WHITE_FBF8CC,
   },
 });
 
