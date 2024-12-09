@@ -6,6 +6,7 @@ import {
   TextInput,
   TouchableOpacity,
   StyleSheet,
+  Image,
 } from 'react-native';
 import {COLORS} from 'src/core/presentation/constants/colors';
 import {TYPOGRAPHY} from 'src/core/presentation/constants/typography';
@@ -14,6 +15,7 @@ import IconLike from 'assets/svg/IconLike';
 import IconLove from 'assets/svg/IconLove';
 import IconNormal from 'assets/svg/IconNormal';
 import IconSad from 'assets/svg/IconSad';
+import {assets} from 'src/core/presentation/utils';
 
 interface FeedbackPopupProps {
   isVisible: boolean;
@@ -47,7 +49,7 @@ const FeedbackPopup: React.FC<FeedbackPopupProps> = ({
       onRequestClose={onClose}>
       <View style={styles.centeredView}>
         <View style={styles.contentContainer}>
-          <View>
+          <View style={{marginTop: 80}}>
             <Text style={styles.title}>
               phản hồi ý kiến của bạn{'\n'} để nhận
               <Text style={{color: COLORS.RED_F28759}}>
@@ -76,6 +78,13 @@ const FeedbackPopup: React.FC<FeedbackPopupProps> = ({
             <TouchableOpacity style={styles.sentBtnContainer} onPress={onSent}>
               <Text style={styles.btnTitle}>Gửi</Text>
             </TouchableOpacity>
+          </View>
+          <View style={styles.wrapImageContainer}>
+            <Image
+              source={assets.feedbackImage}
+              resizeMode="contain"
+              style={{height: '100%', width: '100%'}}
+            />
           </View>
         </View>
       </View>
@@ -129,6 +138,12 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     fontFamily: TYPOGRAPHY.FAMILY.SVNNeuzeitBold,
     color: COLORS.WHITE_FBF8CC,
+  },
+  wrapImageContainer: {
+    position: 'absolute',
+    width: '100%',
+    height: 200,
+    top: -100,
   },
 });
 

@@ -55,4 +55,5 @@ export const assets = {
   diamondLeaf4: require('assets/images/diamondLeaf4.png'),
   diamondLeaf5: require('assets/images/diamondLeaf5.png'),
   diamond_amount: require('assets/images/diamond_amount.png'),
+  feedbackImage: require('assets/images/feedbackImage.png'),
 };
