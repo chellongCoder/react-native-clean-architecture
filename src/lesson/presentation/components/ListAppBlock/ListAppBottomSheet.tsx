@@ -6,6 +6,8 @@ import BottomSheetCustom from '../BottomSheet';
 import {AppEntity} from 'src/lesson/domain/entities/AppEntity';
 import {COLORS} from 'src/core/presentation/constants/colors';
 import ItemApps, {AppItem} from './ItemApps';
+import {scale, verticalScale} from 'react-native-size-matters';
+import {heightItem} from 'src/core/presentation/navigation/tabNavigator/BottomTabBar/TabButton';
 
 const ListAppBottomSheet = observer(() => {
   const lesson = useLessonStore();
@@ -85,6 +87,7 @@ const ListAppBottomSheet = observer(() => {
                 />
               );
             }}
+            style={{paddingBottom: verticalScale(heightItem)}}
             initialNumToRender={10}
             maxToRenderPerBatch={5}
             keyExtractor={(_, i) => i.toString()}

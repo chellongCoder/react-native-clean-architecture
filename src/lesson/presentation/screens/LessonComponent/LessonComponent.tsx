@@ -179,7 +179,7 @@ const LessonComponent = ({
                 </Text>
               </View>
             )}
-            {isShowPrompt && (
+            {isShowPrompt && prompt && (
               <View style={styles.wrapCorrectContainer}>
                 <Text style={styles.promptTitle}>{prompt}</Text>
               </View>

@@ -17,6 +17,8 @@ const {BOTTOM_TAB} = STACK_NAVIGATOR;
 
 const widthScreen = Dimensions.get('screen').width;
 
+export const heightItem = 54;
+
 const BottomTabColor = {
   [BOTTOM_TAB.HOME_TAB]: COLORS.GREEN_66C270,
   [BOTTOM_TAB.TARGET_TAB]: COLORS.YELLOW_F2B559,
@@ -160,7 +162,7 @@ const TabButton = ({
       style={[
         {
           ...styles.bottomMenuContainer,
-          height: scale(54),
+          height: scale(heightItem),
         },
         translateXStyles,
       ]}>

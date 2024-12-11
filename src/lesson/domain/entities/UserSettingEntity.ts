@@ -1,4 +1,7 @@
-import {AppBlockT} from 'src/lesson/application/types/UserSettingPayload';
+import {
+  AppBlockT,
+  BlockedModuleSetting,
+} from 'src/lesson/application/types/UserSettingPayload';
 
 export default interface UserSettingEntity {
   _id: string;
@@ -6,4 +9,5 @@ export default interface UserSettingEntity {
   deviceToken: string;
   appBlocked: AppBlockT;
   point: number;
+  modules: BlockedModuleSetting[];
 }

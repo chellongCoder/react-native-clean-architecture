@@ -57,10 +57,6 @@ const LoginScreen = observer(() => {
           data={['Eng', 'Vie']}
         />
 
-        <View style={styles.logoContainer}>
-          <Image source={assets.logo} style={styles.logo} />
-        </View>
-
         <View style={[styles.fill, styles.justifyCenter]}>
           <CommonInput
             label="Email or phone number"

@@ -21,8 +21,6 @@ import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import useGlobalStyle from 'src/core/presentation/hooks/useGlobalStyle';
 import IconUser from 'assets/svg/IconUser';
 import PrimaryButton from '../components/PrimaryButton';
-import IconArrowDown from 'assets/svg/IconArrowDown';
-import IconArrowUp from 'assets/svg/IconArrowUp';
 import ItemCard from '../components/ItemCard';
 import IconListen from 'assets/svg/IconListen';
 import IconBrightness from 'assets/svg/IconBrightness';
@@ -85,7 +83,10 @@ import {IapContext} from 'src/core/presentation/store/iapContext';
 import {TProduct} from 'src/core/presentation/store/iapProvider';
 
 import DiamondContainer from './LessonComponent/DiamondContainer';
-import {HomeProvider} from 'src/home/presentation/stores/HomeProvider';
+import {
+  HomeProvider,
+  IHomeState,
+} from 'src/home/presentation/stores/HomeProvider';
 import {HomeContext} from 'src/home/presentation/stores/HomeContext';
 import {FieldData} from 'src/home/application/types/GetFieldResponse';
 import {Subject} from 'src/home/application/types/GetListSubjectResponse';
@@ -172,9 +173,6 @@ const ParentScreen = observer(() => {
     hasDataServer,
     selectedChild?._id ?? '',
   );
-  const hasSaving = useMemo(() => {
-    return blocked && errorMessage === '';
-  }, [blocked, errorMessage]);
 
   const [tabParent, setTabparent] = useState(TabParentE.APP_BLOCK);
 
@@ -337,7 +335,7 @@ const ParentScreen = observer(() => {
   const onConfigUserSetting = useCallback(() => {
     const modules: BlockedModuleSetting[] = [
       {
-        percent: 50,
+        percent: point,
         moduleId: selectedSubject?._id ?? '',
       },
     ];
@@ -463,6 +461,29 @@ The blockAppsSystem function is an asynchronous function that awaits the result 
     makePurchase?.(item.productId);
   };
 
+  const handleSelectedSubject = useCallback(
+    (field: IHomeState['field']) => {
+      fetchListSubject(field).then(v => {
+        const blockedModules = v?.filter(subject =>
+          lesson.blockedModules?.some(blockedModule => {
+            if (subject._id === blockedModule.moduleId) {
+              return {
+                ...subject,
+                percent: blockedModule.percent,
+              };
+            }
+          }),
+        );
+
+        setSelectedSubject(blockedModules?.[0] ?? v?.[0]);
+
+        setPoint(p => lesson.blockedModules?.[0]?.percent ?? p);
+      });
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [lesson.blockedModules],
+  );
+
   useEffect(() => {
     handleGetUserProfile();
   }, [handleGetUserProfile]);
@@ -491,11 +512,8 @@ The blockAppsSystem function is an asynchronous function that awaits the result 
 
   useEffect(() => {
     setSelectedField(listFields?.[0]);
-    fetchListSubject(listFields?.[0]).then(v => {
-      setSelectedSubject(v?.[0]);
-    });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [listFields]);
+    handleSelectedSubject(listFields?.[0]);
+  }, [listFields, handleSelectedSubject]);
 
   const _buildBlockView = () => {
     return (
@@ -541,7 +559,7 @@ The blockAppsSystem function is an asynchronous function that awaits the result 
                   title={selectedField?.name ?? listFields?.[0]?.name}
                   onSelectItem={item => {
                     setSelectedField(item);
-                    fetchListSubject(item);
+                    handleSelectedSubject(item);
                   }}
                   width={scale(100)}
                   nameIndex="name"

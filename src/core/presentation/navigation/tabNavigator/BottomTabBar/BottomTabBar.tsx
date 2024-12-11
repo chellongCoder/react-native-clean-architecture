@@ -3,7 +3,6 @@ import {Platform, View, StatusBar} from 'react-native';
 import styles from '../styles';
 import {BottomTabBarProps} from '@react-navigation/bottom-tabs';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
-import {COLORS} from 'src/core/presentation/constants/colors';
 import TabButton from './TabButton';
 
 export interface CustomStatusBarProps {

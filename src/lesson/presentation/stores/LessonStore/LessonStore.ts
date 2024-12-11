@@ -14,7 +14,9 @@ import {
   FamilyActivitySelection,
   getInstalledApps,
 } from 'react-native-alphadex-screentime';
-import UserSettingPayload from 'src/lesson/application/types/UserSettingPayload';
+import UserSettingPayload, {
+  BlockedModuleSetting,
+} from 'src/lesson/application/types/UserSettingPayload';
 import UpdateUserSettingUseCase from 'src/lesson/application/useCases/UpdateUserSettingUseCase';
 import Toast from 'react-native-toast-message';
 import PostUserProgressUseCase from 'src/lesson/application/useCases/PostUserProgressUseCase';
@@ -69,6 +71,8 @@ export class LessonStore {
 
   @persist @observable backgroundSound = 0.8;
   @persist @observable charSound = 0.3;
+
+  @persist @observable blockedModules?: BlockedModuleSetting[] = [];
 
   @computed getSetting(lessonSetting?: LessonSettingT) {
     return {
@@ -309,6 +313,7 @@ export class LessonStore {
           }) ?? [];
       }
       this.setUnlockPercent(response?.data?.point ?? 0);
+      this.blockedModules = response.data?.modules;
       return response;
     } catch (error) {
       console.log(
