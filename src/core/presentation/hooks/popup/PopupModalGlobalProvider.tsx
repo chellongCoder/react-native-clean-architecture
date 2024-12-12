@@ -23,7 +23,7 @@ export const PopupModalContext = createContext<PopupModalContextType>({
 
 // Define the provider component
 export const PopupModalGlobalProvider = ({children}: PropsWithChildren) => {
-  const [isShown, setIsShown] = useState(false);
+  const [isShown, setIsShown] = useState(true);
 
   const show = useCallback(() => {
     setIsShown(true);
@@ -36,12 +36,13 @@ export const PopupModalGlobalProvider = ({children}: PropsWithChildren) => {
   return (
     <PopupModalContext.Provider value={{show, hide, isShown}}>
       {children}
-      <ReceivedDiamondPopup isVisible={isShown} onClose={hide} />
+      <ReceivedDiamondPopup isVisible={false} onClose={hide} />
       <FeedbackPopup
         isVisible={isShown}
         onClose={hide}
         onSubmitFeedback={() => {
           /* handle feedback submission */
+          hide()
         }}
       />
       {/* Optionally, you can include the modal component here if it should be global */}

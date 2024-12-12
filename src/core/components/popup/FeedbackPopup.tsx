@@ -47,7 +47,10 @@ const FeedbackPopup: React.FC<FeedbackPopupProps> = ({
       transparent={true}
       visible={isVisible}
       onRequestClose={onClose}>
-      <View style={styles.centeredView}>
+      <TouchableOpacity
+        activeOpacity={1}
+        onPress={onClose}
+        style={styles.centeredView}>
         <View style={styles.contentContainer}>
           <View style={{marginTop: 80}}>
             <Text style={styles.title}>
@@ -86,7 +89,7 @@ const FeedbackPopup: React.FC<FeedbackPopupProps> = ({
             />
           </View>
         </View>
-      </View>
+      </TouchableOpacity>
     </Modal>
   );
 };
