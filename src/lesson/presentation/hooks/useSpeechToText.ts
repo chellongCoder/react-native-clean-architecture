@@ -211,6 +211,18 @@ export const useSpeechToText = (fullAnswer?: string) => {
     }
   }, [setVoiceState]);
 
+  const destroyRecording = useCallback(async () => {
+    setVoiceState({loading: false});
+    try {
+      await Voice.destroy();
+    } catch (error: any) {
+      setVoiceState({
+        error: {code: error?.code, message: error?.message},
+      });
+      console.log('error raised', error);
+    }
+  }, [setVoiceState]);
+
   const onResultPress = useCallback(async () => {
     await stopRecording();
   }, [stopRecording]);
@@ -394,6 +406,7 @@ export const useSpeechToText = (fullAnswer?: string) => {
     setErrorSpeech,
     startRecording, //start speech
     onResultPress, //stop speech + clear previous result
+    destroy: destroyRecording,
     clearSpeechResult, //clear result
     handleRecordWithVoice,
     loading: voiceState.loading,

@@ -18,6 +18,7 @@ import {assets} from 'src/core/presentation/utils';
 type Props = {
   startRecord?: () => void;
   stopRecord?: () => void;
+  onPress?: () => void;
   loadingRecord?: boolean;
   errorSpeech?: {code?: string; message?: string};
   disabled?: boolean;
@@ -28,6 +29,7 @@ const RecordButton = ({
   loadingRecord,
   errorSpeech,
   disabled,
+  onPress,
 }: Props) => {
   const clickRef = useRef(false);
 
@@ -74,7 +76,11 @@ const RecordButton = ({
   }, [loadingRecord, startAnimationRecord, stopAnimationRecord]);
 
   // Conditionally apply the long press gesture
-  const gesture = disabled ? Gesture.Tap() : longPressGesture;
+  const gesture = disabled
+    ? Gesture.Tap().onStart(e => {
+        onPress && runOnJS(onPress)();
+      })
+    : longPressGesture;
 
   return (
     <Animated.View style={animatedStyleLongPress}>

@@ -1,5 +1,5 @@
 import {injectable, provided} from 'inversify-sugar';
-import {action, makeAutoObservable} from 'mobx';
+import {action, makeAutoObservable, observable} from 'mobx';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {create, persist} from 'mobx-persist';
 
@@ -22,7 +22,9 @@ import LogOutUseCase from 'src/authentication/application/useCases/LogoutUsecase
 import * as Keychain from 'react-native-keychain';
 import ComparePasswordUseCase from 'src/authentication/application/useCases/ComparePasswordUsecase';
 import {ComparePasswordPayload} from 'src/authentication/application/types/ComparePasswordPayload';
-import {children} from 'src/authentication/application/types/GetUserProfileResponse';
+import GetUserProfileResponse, {
+  children,
+} from 'src/authentication/application/types/GetUserProfileResponse';
 import ChangeParentNameUseCase from 'src/authentication/application/useCases/ChangeParentNameUsecase';
 import {ChangeParentNamePayload} from 'src/authentication/application/types/ChangeParentNamePayload';
 import {getAndroidId, getDeviceToken} from 'react-native-device-info';
@@ -45,6 +47,7 @@ export class AuthenticationStore implements AuthenticationStoreState {
   isHydrated = false;
   selectedChild: children | undefined = undefined;
   @persist deviceToken = '1234567891011';
+  @observable userProfile?: GetUserProfileResponse['data'];
 
   constructor(
     @provided(LoginUsernamePasswordUseCase)
@@ -192,6 +195,7 @@ export class AuthenticationStore implements AuthenticationStoreState {
     if (response.error) {
       return response;
     }
+    this.userProfile = response.data;
     this.setIsLoading(false);
     return response;
   }

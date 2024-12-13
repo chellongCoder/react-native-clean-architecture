@@ -1,9 +1,12 @@
+import {observer} from 'mobx-react';
 import React, {
   createContext,
   PropsWithChildren,
   useCallback,
+  useEffect,
   useState,
 } from 'react';
+import useAuthenticationStore from 'src/authentication/presentation/stores/useAuthenticationStore';
 import FeedbackPopup from 'src/core/components/popup/FeedbackPopup';
 import ReceivedDiamondPopup from 'src/core/components/popup/ReceivedDiamondPopup';
 
@@ -22,30 +25,40 @@ export const PopupModalContext = createContext<PopupModalContextType>({
 });
 
 // Define the provider component
-export const PopupModalGlobalProvider = ({children}: PropsWithChildren) => {
-  const [isShown, setIsShown] = useState(true);
+export const PopupModalGlobalProvider = observer(
+  ({children}: PropsWithChildren) => {
+    const {userProfile} = useAuthenticationStore();
 
-  const show = useCallback(() => {
-    setIsShown(true);
-  }, []);
+    const [isShown, setIsShown] = useState(false);
 
-  const hide = useCallback(() => {
-    setIsShown(false);
-  }, []);
+    const show = useCallback(() => {
+      setIsShown(true);
+    }, []);
 
-  return (
-    <PopupModalContext.Provider value={{show, hide, isShown}}>
-      {children}
-      <ReceivedDiamondPopup isVisible={false} onClose={hide} />
-      <FeedbackPopup
-        isVisible={isShown}
-        onClose={hide}
-        onSubmitFeedback={() => {
-          /* handle feedback submission */
-          hide()
-        }}
-      />
-      {/* Optionally, you can include the modal component here if it should be global */}
-    </PopupModalContext.Provider>
-  );
-};
+    const hide = useCallback(() => {
+      setIsShown(false);
+    }, []);
+
+    useEffect(() => {
+      if (userProfile) {
+        setIsShown(!userProfile?.hasFeedBack);
+      }
+    }, [userProfile]);
+
+    return (
+      <PopupModalContext.Provider value={{show, hide, isShown}}>
+        {children}
+        <ReceivedDiamondPopup isVisible={false} onClose={hide} />
+        <FeedbackPopup
+          isVisible={isShown}
+          onClose={hide}
+          onSubmitFeedback={() => {
+            /* handle feedback submission */
+            hide();
+          }}
+        />
+        {/* Optionally, you can include the modal component here if it should be global */}
+      </PopupModalContext.Provider>
+    );
+  },
+);

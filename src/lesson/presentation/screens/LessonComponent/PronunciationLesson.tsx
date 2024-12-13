@@ -192,6 +192,7 @@ const PronunciationLesson = observer(
         speechResult,
         startRecord: handleStartRecord,
         stopRecord: handleStopRecord,
+        destroy: handleDestroyRecord,
         clearSpeechResult,
         checkEmpty,
       } = usePronunciation({
@@ -474,6 +475,11 @@ const PronunciationLesson = observer(
                   }}
                   loadingRecord={loadingRecord}
                   disabled={isDisabledRecord}
+                  onPress={async () => {
+                    console.log('Press record');
+                    await handleDestroyRecord();
+                    setIsDisabledRecord(false);
+                  }}
                   errorSpeech={
                     errorSpeech
                       ? errorSpeech

@@ -10,6 +10,7 @@ export const usePronunciation = ({correctAnswer}: Props) => {
     onResultPress,
     speechResult,
     clearSpeechResult,
+    destroy,
     errorSpeech,
     setErrorSpeech,
     loading: loadingRecord,
@@ -40,5 +41,6 @@ export const usePronunciation = ({correctAnswer}: Props) => {
     setErrorSpeech,
     loadingRecord,
     checkEmpty,
+    destroy,
   };
 };
