@@ -28,12 +28,15 @@ import DeleteChildrenResponse from 'src/authentication/application/types/DeleteC
 import {ChangeChildDescriptionPayload} from 'src/authentication/application/types/ChangeChildDescriptionPayload';
 import {ChangeChildDescriptionResponse} from 'src/authentication/application/types/ChangeChildDescriptionResponse';
 import {LoginGooglePayload} from 'src/authentication/application/types/LoginGooglePayload';
+import {PostReportPayload} from 'src/authentication/application/types/PostReportPayload';
+import {PostReportResponse} from 'src/authentication/application/types/PostReportResponse';
 
 @injectable()
 class AuthenticationRepository implements IAuthenticationRepository {
   constructor(
     @provided(IHttpClientToken) private readonly httpClient: IHttpClient,
   ) {}
+
   public async loginGoogle(data: LoginGooglePayload): Promise<any> {
     const response: any = await this.httpClient.post(
       API_ENDPOINTS.AUTHENTICATION.LOGIN_WITH_GOOGLE,
@@ -168,6 +171,16 @@ class AuthenticationRepository implements IAuthenticationRepository {
   ): Promise<ChangeChildDescriptionResponse> {
     const response: ChangeChildDescriptionResponse = await this.httpClient.post(
       API_ENDPOINTS.USER.UPDATE_CHILDREN_DESCRIPTION,
+      data,
+    );
+    return response;
+  }
+
+  public async postReport(
+    data: PostReportPayload,
+  ): Promise<PostReportResponse> {
+    const response: PostReportResponse = await this.httpClient.post(
+      API_ENDPOINTS.REPORT.POST_REPORT,
       data,
     );
     return response;

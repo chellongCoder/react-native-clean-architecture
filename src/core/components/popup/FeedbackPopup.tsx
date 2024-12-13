@@ -16,23 +16,14 @@ import IconLove from 'assets/svg/IconLove';
 import IconNormal from 'assets/svg/IconNormal';
 import IconSad from 'assets/svg/IconSad';
 import {assets} from 'src/core/presentation/utils';
+import useAuthenticationStore from 'src/authentication/presentation/stores/useAuthenticationStore';
 
 interface FeedbackPopupProps {
   isVisible: boolean;
   onClose: () => void;
-  onSubmitFeedback: (feedback: string) => void;
 }
 
-const FeedbackPopup: React.FC<FeedbackPopupProps> = ({
-  isVisible,
-  onClose,
-  onSubmitFeedback,
-}) => {
-  const [feedback, setFeedback] = useState('');
-  const [selectedIcon, setSelectedIcon] = useState<string | null>(null);
-
-  const onSent = useCallback(() => {}, []);
-
+const FeedbackPopup: React.FC<FeedbackPopupProps> = ({isVisible, onClose}) => {
   const icons = [
     {id: 'cry', component: IconCry},
     {id: 'sad', component: IconSad},
@@ -40,6 +31,29 @@ const FeedbackPopup: React.FC<FeedbackPopupProps> = ({
     {id: 'like', component: IconLike},
     {id: 'love', component: IconLove},
   ];
+
+  const [feedback, setFeedback] = useState('');
+  const [selectedIcon, setSelectedIcon] = useState<string | null>(icons[4]?.id);
+
+  const {handlePostReport} = useAuthenticationStore();
+
+  const onSent = useCallback(async () => {
+    if (feedback.trim().length > 0 && selectedIcon) {
+      try {
+        const params = {
+          content: feedback,
+          react: selectedIcon,
+          image: 'https://example.com/image.jpg',
+        };
+        const res = await handlePostReport(params);
+        if (res) {
+          onClose();
+        }
+      } catch (error) {
+        console.log('post report fail: ', error);
+      }
+    }
+  }, [feedback, handlePostReport, onClose, selectedIcon]);
 
   return (
     <Modal

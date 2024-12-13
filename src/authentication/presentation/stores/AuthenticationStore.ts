@@ -37,6 +37,8 @@ import {resetNavigator} from 'src/core/presentation/navigation/actions/RootNavig
 import {STACK_NAVIGATOR} from 'src/core/presentation/navigation/ConstantNavigator';
 import LoginGoogleUserCase from 'src/authentication/application/useCases/LoginGoogleUserCase';
 import {LoginGooglePayload} from 'src/authentication/application/types/LoginGooglePayload';
+import PostReportUseCase from 'src/authentication/application/useCases/PostReportUseCase';
+import {PostReportPayload} from 'src/authentication/application/types/PostReportPayload';
 @injectable()
 export class AuthenticationStore implements AuthenticationStoreState {
   isLoading = false;
@@ -89,6 +91,9 @@ export class AuthenticationStore implements AuthenticationStoreState {
     @provided(LoginGoogleUserCase)
     private loginGoogleUserCase: LoginGoogleUserCase,
 
+    @provided(PostReportUseCase)
+    private postReportUserCase: PostReportUseCase,
+
     @provided(IHttpClientToken) private readonly httpClient: IHttpClient, // @provided(CoreStore) private coreStore: CoreStore,
   ) {
     this.loginUsernamePassword = this.loginUsernamePassword.bind(this);
@@ -103,6 +108,7 @@ export class AuthenticationStore implements AuthenticationStoreState {
     this.getUserProfile = this.getUserProfile.bind(this);
     this.getRefreshToken = this.getRefreshToken.bind(this);
     this.handleUserLogOut = this.handleUserLogOut.bind(this);
+    this.handlePostReport = this.handlePostReport.bind(this);
   }
 
   private async initializePersistence() {
@@ -291,6 +297,14 @@ export class AuthenticationStore implements AuthenticationStoreState {
     const response = await this.loginGoogleUserCase.execute(args);
     this.setCurrentCredentials(response);
     this.setLoginMethod(LoginMethods.Google);
+    this.setIsLoading(false);
+    return response;
+  }
+
+  @action
+  public async handlePostReport(args: PostReportPayload) {
+    this.setIsLoading(true);
+    const response = await this.postReportUserCase.execute(args);
     this.setIsLoading(false);
     return response;
   }

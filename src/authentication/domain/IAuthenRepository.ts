@@ -12,6 +12,8 @@ import GetUserProfileResponse from '../application/types/GetUserProfileResponse'
 import {LoginGooglePayload} from '../application/types/LoginGooglePayload';
 import {LoginUsernamePasswordPayload} from '../application/types/LoginPayload';
 import {RefreshTokenResponse} from '../application/types/LoginResponse';
+import {PostReportPayload} from '../application/types/PostReportPayload';
+import {PostReportResponse} from '../application/types/PostReportResponse';
 import {RegisterChildPayload} from '../application/types/RegisterChildPayload';
 import RegisterChildResponse from '../application/types/RegisterChildResponse';
 import {RegisterPayload} from '../application/types/RegisterPayload';
@@ -58,4 +60,6 @@ export interface IAuthenticationRepository {
   changeChildDescription: (
     data: ChangeChildDescriptionPayload,
   ) => Promise<ChangeChildDescriptionResponse>;
+
+  postReport: (data: PostReportPayload) => Promise<PostReportResponse>;
 }

@@ -39,7 +39,6 @@ const useLoginWithCredentials = () => {
     changeParentName,
     changeChildrenDescription,
     getRefreshToken,
-    token,
     loginMethod,
     refreshToken,
   } = useAuthenticationStore();

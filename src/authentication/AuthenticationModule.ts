@@ -15,6 +15,7 @@ import AssignChildrenUseCase from './application/useCases/AssignChildrenUsecase'
 import DeleteChildrenUseCase from './application/useCases/DeleteChildrenUsecase';
 import ChangeChildDescriptionUseCase from './application/useCases/ChangeChildDescriptionUsecase';
 import LoginGoogleUserCase from './application/useCases/LoginGoogleUserCase';
+import PostReportUseCase from './application/useCases/PostReportUseCase';
 
 @module({
   providers: [
@@ -39,6 +40,7 @@ import LoginGoogleUserCase from './application/useCases/LoginGoogleUserCase';
     DeleteChildrenUseCase,
     LoginGoogleUserCase,
     ChangeChildDescriptionUseCase,
+    PostReportUseCase,
   ],
 })
 export class AuthenticationModule {}

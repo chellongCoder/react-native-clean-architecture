@@ -9,6 +9,7 @@ import React, {
 import useAuthenticationStore from 'src/authentication/presentation/stores/useAuthenticationStore';
 import FeedbackPopup from 'src/core/components/popup/FeedbackPopup';
 import ReceivedDiamondPopup from 'src/core/components/popup/ReceivedDiamondPopup';
+import useStateCustom from 'src/hooks/useStateCommon';
 
 // Define the context type
 type PopupModalContextType = {
@@ -25,40 +26,43 @@ export const PopupModalContext = createContext<PopupModalContextType>({
 });
 
 // Define the provider component
-export const PopupModalGlobalProvider = observer(
-  ({children}: PropsWithChildren) => {
-    const {userProfile} = useAuthenticationStore();
+export const PopupModalGlobalProvider = ({children}: PropsWithChildren) => {
+  const [isShown, setIsShown] = useState(false);
+  const [popupState, setPopupState] = useStateCustom({
+    isShowFeedBack: true,
+    isShowReceived: false,
+  });
+  const {userProfile} = useAuthenticationStore();
 
-    const [isShown, setIsShown] = useState(false);
+  const show = useCallback(() => {
+    setIsShown(true);
+  }, []);
 
-    const show = useCallback(() => {
-      setIsShown(true);
-    }, []);
+  const hide = useCallback(() => {
+    setIsShown(false);
+  }, []);
 
-    const hide = useCallback(() => {
-      setIsShown(false);
-    }, []);
+  const onShowReceived = useCallback(() => {
+    setPopupState({isShowFeedBack: false, isShowReceived: true});
+  }, [setPopupState]);
 
-    useEffect(() => {
-      if (userProfile) {
-        setIsShown(!userProfile?.hasFeedBack);
-      }
-    }, [userProfile]);
-
-    return (
-      <PopupModalContext.Provider value={{show, hide, isShown}}>
-        {children}
-        <ReceivedDiamondPopup isVisible={false} onClose={hide} />
-        <FeedbackPopup
-          isVisible={isShown}
-          onClose={hide}
-          onSubmitFeedback={() => {
-            /* handle feedback submission */
-            hide();
-          }}
-        />
-        {/* Optionally, you can include the modal component here if it should be global */}
-      </PopupModalContext.Provider>
-    );
-  },
-);
+  useEffect(() => {
+    if (userProfile) {
+      setIsShown(!userProfile?.hasFeedBack);
+    }
+  }, [userProfile]);
+  return (
+    <PopupModalContext.Provider value={{show, hide, isShown}}>
+      {children}
+      <ReceivedDiamondPopup
+        isVisible={popupState.isShowReceived}
+        onClose={hide}
+      />
+      <FeedbackPopup
+        isVisible={popupState.isShowFeedBack}
+        onClose={onShowReceived}
+      />
+      {/* Optionally, you can include the modal component here if it should be global */}
+    </PopupModalContext.Provider>
+  );
+};
