@@ -11,21 +11,22 @@ import PropTypes from 'prop-types';
 import {COLORS} from 'src/core/presentation/constants/colors';
 import {TYPOGRAPHY} from 'src/core/presentation/constants/typography';
 import {assets} from 'src/core/presentation/utils';
+import { scale } from 'react-native-size-matters';
 
 const ReceivedDiamondPopup = ({
   isVisible,
   onClose,
 }: {
   isVisible: boolean;
-  onClose: () => void;
+  onClose: ({isShowFeedBack, isShowReceived} : {isShowFeedBack: boolean, isShowReceived: boolean}) => void;
 }) => {
   return (
     <Modal
       animationType="slide"
       transparent={true}
       visible={isVisible}
-      onRequestClose={onClose}>
-      <View style={styles.centeredView}>
+      onRequestClose={() => onClose({isShowFeedBack: false, isShowReceived: false})}>
+      <TouchableOpacity activeOpacity={1} onPress={() => onClose({isShowFeedBack: false, isShowReceived: false})} style={styles.centeredView}>
         <View style={styles.modalView}>
           <View style={styles.wrapImageContainer}>
             <Image
@@ -34,19 +35,22 @@ const ReceivedDiamondPopup = ({
             />
           </View>
           <View style={{marginTop: 50}}>
-            <Text style={styles.title}>bạn đã nhận được{'\n'}50 kim cương</Text>
+            <Text style={styles.title}>YOU GOT{'\n'}50 DIAMONDS</Text>
             <Text
               style={{
                 fontFamily: TYPOGRAPHY.FAMILY.SVNNeuzeitRegular,
+                textAlign: 'center',
+                color: COLORS.BLUE_1C6349
               }}>
-              Cảm ơn bạn đã phản hồi ý kiến.{'\n'}Bạn đã nhận được 50 kim cương
+              Thank you for your feedback.
+              You received 50 diamonds.
             </Text>
-            <TouchableOpacity style={styles.sentBtnContainer} onPress={onClose}>
-              <Text style={styles.btnTitle}>Đóng</Text>
+            <TouchableOpacity style={styles.sentBtnContainer} onPress={() => onClose({isShowFeedBack: false, isShowReceived: false})}>
+              <Text style={styles.btnTitle}>Close</Text>
             </TouchableOpacity>
           </View>
         </View>
-      </View>
+      </TouchableOpacity>
     </Modal>
   );
 };
@@ -62,14 +66,14 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: 'rgba(0, 0, 0, 0.5)', // Semi-transparent background
-    paddingHorizontal: 32,
+    paddingHorizontal: scale(32),
   },
   modalView: {
-    margin: 20,
+    margin: scale(20),
     width: '100%',
     backgroundColor: COLORS.WHITE_FBF8CC,
-    borderRadius: 20,
-    padding: 35,
+    borderRadius: scale(20),
+    padding: scale(35),
     alignItems: 'center',
     shadowColor: '#000',
     shadowOffset: {
@@ -81,9 +85,9 @@ const styles = StyleSheet.create({
     elevation: 5,
   },
   diamondImage: {
-    width: 150, // Adjust size as needed
-    height: 150, // Adjust size as needed
-    marginBottom: 20,
+    width: scale(150), // Adjust size as needed
+    height: scale(150), // Adjust size as needed
+    marginBottom: scale(20),
   },
   modalText: {
     marginBottom: 15,

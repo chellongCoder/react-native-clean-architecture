@@ -10,10 +10,15 @@ const SERVICES = {
   LOGGING: '/logging',
   VERIFY_GOOGLE_PAYMENT: '/google-api/verify',
   PRODUCT: '/product',
+  REPORT: '/report',
 };
 
 const getProduct = () => {
   return `/api${API_VERSION}${SERVICES.PRODUCT}`;
+};
+
+const getReport = () => {
+  return `/api${API_VERSION}${SERVICES.REPORT}`;
 };
 
 const getLoggingEndPointServices = () => {
@@ -109,5 +114,8 @@ export const API_ENDPOINTS = {
   },
   GET_PRODUCT: {
     PRODUCT: getProduct(),
+  },
+  REPORT: {
+    POST_REPORT: getReport(),
   },
 };

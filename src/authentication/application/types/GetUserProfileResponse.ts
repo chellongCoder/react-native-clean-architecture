@@ -25,7 +25,7 @@ export interface data {
   updatedAt: string;
   children: children[];
   diamond: number;
-  hasFeedBack: boolean;
+  isReported: boolean;
 }
 
 export default interface GetUserProfileResponse {

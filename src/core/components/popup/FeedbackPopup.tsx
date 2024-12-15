@@ -17,10 +17,21 @@ import IconNormal from 'assets/svg/IconNormal';
 import IconSad from 'assets/svg/IconSad';
 import {assets} from 'src/core/presentation/utils';
 import useAuthenticationStore from 'src/authentication/presentation/stores/useAuthenticationStore';
+import Toast from 'react-native-toast-message';
+import {scale} from 'react-native-size-matters';
+import useGlobalStyle from 'src/core/presentation/hooks/useGlobalStyle';
+import {TouchableWithoutFeedback} from 'react-native-gesture-handler';
+import {useLoadingGlobal} from 'src/core/presentation/hooks/loading/useLoadingGlobal';
 
 interface FeedbackPopupProps {
   isVisible: boolean;
-  onClose: () => void;
+  onClose: ({
+    isShowFeedBack,
+    isShowReceived,
+  }: {
+    isShowFeedBack: boolean;
+    isShowReceived: boolean;
+  }) => void;
 }
 
 const FeedbackPopup: React.FC<FeedbackPopupProps> = ({isVisible, onClose}) => {
@@ -35,11 +46,13 @@ const FeedbackPopup: React.FC<FeedbackPopupProps> = ({isVisible, onClose}) => {
   const [feedback, setFeedback] = useState('');
   const [selectedIcon, setSelectedIcon] = useState<string | null>(icons[4]?.id);
 
+  const globalStyle = useGlobalStyle();
   const {handlePostReport} = useAuthenticationStore();
-
+  const loading = useLoadingGlobal();
   const onSent = useCallback(async () => {
-    if (feedback.trim().length > 0 && selectedIcon) {
+    if (feedback.trim().length > 10 && selectedIcon) {
       try {
+        loading.toggleLoading(true, 'LoadingFeedback');
         const params = {
           content: feedback,
           react: selectedIcon,
@@ -47,12 +60,27 @@ const FeedbackPopup: React.FC<FeedbackPopupProps> = ({isVisible, onClose}) => {
         };
         const res = await handlePostReport(params);
         if (res) {
-          onClose();
+          onClose({isShowFeedBack: false, isShowReceived: true});
         }
       } catch (error) {
         console.log('post report fail: ', error);
+        Toast.show({
+          type: 'error',
+          text1: 'Error',
+          text2: 'Gửi phản hồi thất bại',
+        });
+      } finally {
+        loading.toggleLoading(false, 'LoadingFeedback');
       }
+    } else {
+      Toast.show({
+        type: 'error',
+        text1: 'Error',
+        text2:
+          'content need to be more than 10 characters long and icon need to be selected',
+      });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [feedback, handlePostReport, onClose, selectedIcon]);
 
   return (
@@ -60,19 +88,30 @@ const FeedbackPopup: React.FC<FeedbackPopupProps> = ({isVisible, onClose}) => {
       animationType="slide"
       transparent={true}
       visible={isVisible}
-      onRequestClose={onClose}>
+      style={{height: 500, width: '100%'}}
+      onRequestClose={() =>
+        onClose({isShowFeedBack: false, isShowReceived: false})
+      }>
       <TouchableOpacity
         activeOpacity={1}
-        onPress={onClose}
-        style={styles.centeredView}>
-        <View style={styles.contentContainer}>
+        onPress={() => {
+          onClose({isShowFeedBack: false, isShowReceived: false});
+        }}
+        style={styles.centeredView}
+      />
+      <View style={styles.contentContainer}>
+        <TouchableWithoutFeedback onPress={() => null}>
           <View style={{marginTop: 80}}>
             <Text style={styles.title}>
-              phản hồi ý kiến của bạn{'\n'} để nhận
-              <Text style={{color: COLORS.RED_F28759}}>
-                {' '}
-                miễn phí 50 kim cươngs
-              </Text>
+              SEND US YOUR FEEDBACK{'\n'}AND RECEIVE
+              <Text style={{color: COLORS.RED_F28759}}> 50 DIAMONDS FREE</Text>
+            </Text>
+            <Text
+              style={[
+                globalStyle.txtNote,
+                {fontStyle: 'italic', color: COLORS.YELLOW_F2B559},
+              ]}>
+              * Comment need to be more than 10 characters long
             </Text>
             <TextInput
               placeholder="App dùng ổn :3"
@@ -92,18 +131,18 @@ const FeedbackPopup: React.FC<FeedbackPopupProps> = ({isVisible, onClose}) => {
               })}
             </View>
             <TouchableOpacity style={styles.sentBtnContainer} onPress={onSent}>
-              <Text style={styles.btnTitle}>Gửi</Text>
+              <Text style={styles.btnTitle}>Send</Text>
             </TouchableOpacity>
           </View>
-          <View style={styles.wrapImageContainer}>
-            <Image
-              source={assets.feedbackImage}
-              resizeMode="contain"
-              style={{height: '100%', width: '100%'}}
-            />
-          </View>
+        </TouchableWithoutFeedback>
+        <View style={styles.wrapImageContainer}>
+          <Image
+            source={assets.feedbackImage}
+            resizeMode="contain"
+            style={{height: '100%', width: '100%'}}
+          />
         </View>
-      </TouchableOpacity>
+      </View>
     </Modal>
   );
 };
@@ -114,13 +153,17 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
-    padding: 32,
+    padding: scale(32),
   },
   contentContainer: {
     borderRadius: 32,
-    padding: 16,
+    padding: scale(16),
     backgroundColor: COLORS.WHITE_FBF8CC,
-    width: '100%',
+    width: '90%',
+    zIndex: 999,
+    position: 'absolute',
+    alignSelf: 'center',
+    top: '20%',
   },
   title: {
     textAlign: 'center',
@@ -130,12 +173,14 @@ const styles = StyleSheet.create({
     color: COLORS.GREEN_4CB572,
   },
   textInputContainer: {
-    borderRadius: 16,
+    borderRadius: scale(16),
     backgroundColor: COLORS.GREEN_DDF598,
-    paddingVertical: 24,
-    paddingHorizontal: 16,
-    marginVertical: 24,
-    minHeight: 108,
+    paddingVertical: scale(8),
+    paddingHorizontal: scale(16),
+    marginBottom: scale(24),
+    marginTop: scale(5),
+    minHeight: scale(108),
+    textAlignVertical: 'top',
   },
   iconContainer: {
     flexDirection: 'row',
