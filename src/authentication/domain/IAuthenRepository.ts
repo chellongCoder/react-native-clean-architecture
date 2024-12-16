@@ -7,6 +7,8 @@ import {ChangeParentNameResponse} from '../application/types/ChangeParentNameRes
 import {ComparePasswordPayload} from '../application/types/ComparePasswordPayload';
 import {ComparePasswordResponse} from '../application/types/ComparePasswordResponse';
 import DeleteChildrenResponse from '../application/types/DeleteChildrenResponse';
+import {ForceUpdateAppPayload} from '../application/types/ForceUpdateAppPayload';
+import {ForceUpdateAppResponse} from '../application/types/ForceUpdateAppResponse';
 import GetListSubjectResponse from '../application/types/GetListSubjectResponse';
 import GetUserProfileResponse from '../application/types/GetUserProfileResponse';
 import {LoginGooglePayload} from '../application/types/LoginGooglePayload';
@@ -62,4 +64,7 @@ export interface IAuthenticationRepository {
   ) => Promise<ChangeChildDescriptionResponse>;
 
   postReport: (data: PostReportPayload) => Promise<PostReportResponse>;
+  forceUpdateApp: (
+    data: ForceUpdateAppPayload,
+  ) => Promise<ForceUpdateAppResponse>;
 }

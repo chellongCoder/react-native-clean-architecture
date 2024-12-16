@@ -11,6 +11,7 @@ const SERVICES = {
   VERIFY_GOOGLE_PAYMENT: '/google-api/verify',
   PRODUCT: '/product',
   REPORT: '/report',
+  APP_VERSION: '/app-version',
 };
 
 const getProduct = () => {
@@ -62,6 +63,10 @@ const getUserProgressEndPointServices = (path?: string) => {
   } else {
     return `/api${API_VERSION}${SERVICES.USER_PROGRESS}`;
   }
+};
+
+const getAppVersion = () => {
+  return `/api${API_VERSION}${SERVICES.APP_VERSION}`;
 };
 
 export const API_ENDPOINTS = {
@@ -117,5 +122,8 @@ export const API_ENDPOINTS = {
   },
   REPORT: {
     POST_REPORT: getReport(),
+  },
+  APP_VERSION: {
+    APP_VERSION: getAppVersion(),
   },
 };
