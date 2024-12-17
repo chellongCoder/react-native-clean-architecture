@@ -30,6 +30,8 @@ import {ChangeChildDescriptionResponse} from 'src/authentication/application/typ
 import {LoginGooglePayload} from 'src/authentication/application/types/LoginGooglePayload';
 import {PostReportPayload} from 'src/authentication/application/types/PostReportPayload';
 import {PostReportResponse} from 'src/authentication/application/types/PostReportResponse';
+import {ForceUpdateAppPayload} from 'src/authentication/application/types/ForceUpdateAppPayload';
+import {ForceUpdateAppResponse} from 'src/authentication/application/types/ForceUpdateAppResponse';
 
 @injectable()
 class AuthenticationRepository implements IAuthenticationRepository {
@@ -182,6 +184,15 @@ class AuthenticationRepository implements IAuthenticationRepository {
     const response: PostReportResponse = await this.httpClient.post(
       API_ENDPOINTS.REPORT.POST_REPORT,
       data,
+    );
+    return response;
+  }
+
+  public async forceUpdateApp(
+    data: ForceUpdateAppPayload,
+  ): Promise<ForceUpdateAppResponse> {
+    const response: ForceUpdateAppResponse = await this.httpClient.get(
+      `${API_ENDPOINTS.APP_VERSION.APP_VERSION}?platform=${data.platform}`,
     );
     return response;
   }

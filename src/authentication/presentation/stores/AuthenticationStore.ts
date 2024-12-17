@@ -39,6 +39,9 @@ import LoginGoogleUserCase from 'src/authentication/application/useCases/LoginGo
 import {LoginGooglePayload} from 'src/authentication/application/types/LoginGooglePayload';
 import PostReportUseCase from 'src/authentication/application/useCases/PostReportUseCase';
 import {PostReportPayload} from 'src/authentication/application/types/PostReportPayload';
+import ForceUpdateAppUseCase from 'src/authentication/application/useCases/ForceUpdateAppUseCase';
+import {ForceUpdateAppPayload} from 'src/authentication/application/types/ForceUpdateAppPayload';
+import {ForceUpdateAppResponse} from 'src/authentication/application/types/ForceUpdateAppResponse';
 @injectable()
 export class AuthenticationStore implements AuthenticationStoreState {
   isLoading = false;
@@ -50,6 +53,7 @@ export class AuthenticationStore implements AuthenticationStoreState {
   selectedChild: children | undefined = undefined;
   @persist deviceToken = '1234567891011';
   @observable userProfile?: GetUserProfileResponse['data'];
+  @observable appInfo?: ForceUpdateAppResponse['data'];
 
   constructor(
     @provided(LoginUsernamePasswordUseCase)
@@ -94,6 +98,9 @@ export class AuthenticationStore implements AuthenticationStoreState {
     @provided(PostReportUseCase)
     private postReportUserCase: PostReportUseCase,
 
+    @provided(ForceUpdateAppUseCase)
+    private forceUpdateAppUseCase: ForceUpdateAppUseCase,
+
     @provided(IHttpClientToken) private readonly httpClient: IHttpClient, // @provided(CoreStore) private coreStore: CoreStore,
   ) {
     this.loginUsernamePassword = this.loginUsernamePassword.bind(this);
@@ -109,6 +116,7 @@ export class AuthenticationStore implements AuthenticationStoreState {
     this.getRefreshToken = this.getRefreshToken.bind(this);
     this.handleUserLogOut = this.handleUserLogOut.bind(this);
     this.handlePostReport = this.handlePostReport.bind(this);
+    this.handleGetForceUpdateApp = this.handleGetForceUpdateApp.bind(this);
   }
 
   private async initializePersistence() {
@@ -305,6 +313,14 @@ export class AuthenticationStore implements AuthenticationStoreState {
   public async handlePostReport(args: PostReportPayload) {
     this.setIsLoading(true);
     const response = await this.postReportUserCase.execute(args);
+    this.setIsLoading(false);
+    return response;
+  }
+
+  @action
+  public async handleGetForceUpdateApp(args: ForceUpdateAppPayload) {
+    this.setIsLoading(true);
+    const response = await this.forceUpdateAppUseCase.execute(args);
     this.setIsLoading(false);
     return response;
   }
