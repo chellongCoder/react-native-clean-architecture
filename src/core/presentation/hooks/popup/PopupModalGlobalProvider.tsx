@@ -14,6 +14,10 @@ import ForceUpdateAppPopup from 'src/core/components/popup/ForceUpdateAppPopup';
 import ReceivedDiamondPopup from 'src/core/components/popup/ReceivedDiamondPopup';
 import useStateCustom from 'src/hooks/useStateCommon';
 import {getVersion} from 'react-native-device-info';
+import DeviceInfo from 'react-native-device-info';
+import {useAsyncEffect} from '..';
+import {useNavigationState} from '@react-navigation/native';
+import {STACK_NAVIGATOR} from '../../navigation/ConstantNavigator';
 
 // Define the context type
 type PopupModalContextType = {
@@ -39,13 +43,18 @@ type TPopupState = {
 // Define the provider component
 export const PopupModalGlobalProvider = observer(
   ({children}: PropsWithChildren) => {
+    const currentRoute = useNavigationState(
+      state => state?.routes?.[state?.index]?.name,
+    );
+
     const [isShown, setIsShown] = useState(false);
     const [popupState, setPopupState] = useStateCustom<TPopupState>({
       isShowFeedBack: false,
       isShowReceived: false,
-      isShowForceUpdateApp: true,
+      isShowForceUpdateApp: false,
       appInfo: undefined,
     });
+
     const {userProfile, handleGetForceUpdateApp} = useAuthenticationStore();
 
     const show = useCallback(() => {
@@ -83,8 +92,14 @@ export const PopupModalGlobalProvider = observer(
       }
     };
 
-    useEffect(() => {
-      if (popupState.appInfo?.version !== getVersion()) {
+    const getFeedbackInfo = async () => {
+      const buildId = await DeviceInfo.getBuildNumber();
+
+      if (
+        popupState.appInfo &&
+        popupState.appInfo?.version ===
+          getVersion().toString() + buildId.toString()
+      ) {
         setPopupState({isShowForceUpdateApp: true});
       } else if (userProfile) {
         setPopupState({
@@ -92,12 +107,18 @@ export const PopupModalGlobalProvider = observer(
           isShowReceived: false,
         });
       }
-    }, [popupState.appInfo?.version, setPopupState, userProfile]);
+    };
+
+    useAsyncEffect(async () => {
+      getUpdateAppInfo();
+    }, []);
 
     useEffect(() => {
-      getUpdateAppInfo();
+      if (currentRoute === STACK_NAVIGATOR.BOTTOM_TAB_SCREENS) {
+        getFeedbackInfo();
+      }
       // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+    }, [currentRoute]);
 
     return (
       <PopupModalContext.Provider value={{show, hide, isShown}}>

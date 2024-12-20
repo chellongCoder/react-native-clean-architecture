@@ -1,5 +1,11 @@
-import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import React, {useCallback, useEffect, useMemo, useState} from 'react';
+import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import React, {
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+} from 'react';
 import LessonComponent from './LessonComponent';
 import PrimaryButton from '../../components/PrimaryButton';
 import {FontFamily} from 'src/core/presentation/hooks/useFonts';
@@ -19,6 +25,7 @@ import {useSettingLesson} from '../../hooks/useSettingLesson';
 import useHomeStore from 'src/home/presentation/stores/useHomeStore';
 import {useLessonStore} from '../../stores/LessonStore/useGetPostsStore';
 import useAuthenticationStore from 'src/authentication/presentation/stores/useAuthenticationStore';
+import {TextToSpeechContext} from 'src/core/presentation/hooks/textToSpeech/TextToSpeechContext';
 
 type Props = {
   moduleIndex: number;
@@ -66,6 +73,8 @@ const EssayLesson = ({
     () => getSetting(lessonSetting),
     [getSetting, lessonSetting],
   );
+  const {ttsSpeak} = useContext(TextToSpeechContext);
+
   const {
     isAnswerCorrect,
     isShowCorrectContainer,
@@ -85,6 +94,14 @@ const EssayLesson = ({
     },
     fullAnswer: firstMiniTestTask?.question?.[moduleIndex].fullAnswer,
   });
+
+  const onSpeechText = useCallback(() => {
+    ttsSpeak?.(
+      firstMiniTestTask?.question?.[moduleIndex].fullAnswer
+        .toString()
+        .toLowerCase() ?? '',
+    );
+  }, [firstMiniTestTask?.question, moduleIndex, ttsSpeak]);
 
   const characterImage = useMemo(() => {
     return isAnswerCorrect === true || isAnswerCorrect === undefined
@@ -184,9 +201,24 @@ const EssayLesson = ({
       }
       buildAnswer={
         <View style={styles.fill}>
-          <Text style={[globalStyle.txtLabel, styles.pb16, styles.textColor]}>
-            Choose the correct answer
-          </Text>
+          <View style={styles.wrapHeaderContainer}>
+            <View
+              style={{
+                justifyContent: 'center',
+                flex: 1,
+              }}>
+              <Text style={[globalStyle.txtLabel, styles.textColor]}>
+                Choose the correct answer
+              </Text>
+            </View>
+
+            <TouchableOpacity onPress={onSpeechText}>
+              <Image
+                source={require('../../../../../assets/images/icon_speech.png')}
+                style={styles.iconImageContainer}
+              />
+            </TouchableOpacity>
+          </View>
           <View style={[styles.boxSelected]}>
             <Text
               style={[
@@ -360,5 +392,14 @@ const styles = StyleSheet.create({
     flexWrap: 'wrap',
     justifyContent: 'center',
     alignContent: 'center',
+  },
+  wrapHeaderContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginBottom: verticalScale(8),
+  },
+  iconImageContainer: {
+    height: verticalScale(45),
+    width: verticalScale(40),
   },
 });

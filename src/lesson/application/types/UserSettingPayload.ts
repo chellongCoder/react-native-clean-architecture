@@ -27,5 +27,5 @@ export default interface UserSettingPayload {
   deviceToken: string;
   point?: number;
   childrenId: string;
-  modules: BlockedModuleSetting[];
+  modules?: BlockedModuleSetting[];
 }

@@ -439,7 +439,10 @@ const styles = StyleSheet.create({
   wrapHeaderContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginBottom: 8,
+    marginBottom: verticalScale(8),
   },
-  iconImageContainer: {height: 45, width: 40},
+  iconImageContainer: {
+    height: verticalScale(45),
+    width: verticalScale(40),
+  },
 });

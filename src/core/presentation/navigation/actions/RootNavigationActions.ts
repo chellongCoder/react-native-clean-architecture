@@ -73,4 +73,8 @@ export const showBottomTab = (
       tabBarVisible: true,
     });
 };
+// New function to get the current route
+export const getCurrentRoute = (): string | undefined => {
+  return navigationRef.current?.getCurrentRoute()?.name;
+};
 export default navigationRef;

@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   StyleSheet,
   Image,
+  Keyboard,
 } from 'react-native';
 import {COLORS} from 'src/core/presentation/constants/colors';
 import {TYPOGRAPHY} from 'src/core/presentation/constants/typography';
@@ -99,7 +100,11 @@ const FeedbackPopup: React.FC<FeedbackPopupProps> = ({isVisible, onClose}) => {
         }}
         style={styles.centeredView}
       />
-      <View style={styles.contentContainer}>
+      <View
+        onTouchMove={e => {
+          Keyboard.dismiss();
+        }}
+        style={styles.contentContainer}>
         <TouchableWithoutFeedback onPress={() => null}>
           <View style={{marginTop: 80}}>
             <Text style={styles.title}>
@@ -114,10 +119,11 @@ const FeedbackPopup: React.FC<FeedbackPopupProps> = ({isVisible, onClose}) => {
               * Comment need to be more than 10 characters long
             </Text>
             <TextInput
-              placeholder="App dùng ổn :3"
+              placeholder="Aa..."
               style={styles.textInputContainer}
               multiline
               onChangeText={e => setFeedback(e)}
+              autoFocus
             />
             <View style={styles.iconContainer}>
               {icons.map(({id, component: Icon}) => {

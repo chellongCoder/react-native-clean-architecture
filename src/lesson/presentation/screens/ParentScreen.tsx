@@ -334,6 +334,7 @@ const ParentScreen = observer(() => {
 
   const onConfigUserSetting = useCallback(() => {
     const modules: BlockedModuleSetting[] = [
+      ...(lesson.blockedModules ?? []),
       {
         percent: point,
         moduleId: selectedSubject?._id ?? '',
