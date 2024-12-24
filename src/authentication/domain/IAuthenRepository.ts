@@ -20,6 +20,8 @@ import {RegisterChildPayload} from '../application/types/RegisterChildPayload';
 import RegisterChildResponse from '../application/types/RegisterChildResponse';
 import {RegisterPayload} from '../application/types/RegisterPayload';
 import RegisterResponse from '../application/types/RegisterResponse';
+import {UpdatePasswordPayload} from '../application/types/UpdatePasswordPayload';
+import {UpdatePasswordResponse} from '../application/types/UpdatePasswordResponse';
 import AuthenticationEntity from './entities/Authentication';
 
 export const IAuthenticationRepositoryToken = Symbol(
@@ -48,6 +50,10 @@ export interface IAuthenticationRepository {
   comparePassword: (
     data: ComparePasswordPayload,
   ) => Promise<ComparePasswordResponse>;
+
+  updatePassword: (
+    data: UpdatePasswordPayload,
+  ) => Promise<UpdatePasswordResponse>;
 
   changeParentName: (
     data: ChangeParentNamePayload,

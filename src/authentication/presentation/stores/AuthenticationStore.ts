@@ -42,6 +42,8 @@ import {PostReportPayload} from 'src/authentication/application/types/PostReport
 import ForceUpdateAppUseCase from 'src/authentication/application/useCases/ForceUpdateAppUseCase';
 import {ForceUpdateAppPayload} from 'src/authentication/application/types/ForceUpdateAppPayload';
 import {ForceUpdateAppResponse} from 'src/authentication/application/types/ForceUpdateAppResponse';
+import UpdatePasswordUseCase from 'src/authentication/application/useCases/UpdatePasswordUsecase';
+import {UpdatePasswordPayload} from 'src/authentication/application/types/UpdatePasswordPayload';
 @injectable()
 export class AuthenticationStore implements AuthenticationStoreState {
   isLoading = false;
@@ -79,6 +81,9 @@ export class AuthenticationStore implements AuthenticationStoreState {
 
     @provided(ComparePasswordUseCase)
     private comparePasswordUseCase: ComparePasswordUseCase,
+
+    @provided(UpdatePasswordUseCase)
+    private updatePasswordUseCase: UpdatePasswordUseCase,
 
     @provided(ChangeParentNameUseCase)
     private changeParentNameUseCase: ChangeParentNameUseCase,
@@ -242,6 +247,17 @@ export class AuthenticationStore implements AuthenticationStoreState {
   public async comparePassword(data: ComparePasswordPayload) {
     this.setIsLoading(true);
     const response = await this.comparePasswordUseCase.execute(data);
+    if (response.code) {
+      return response;
+    }
+    this.setIsLoading(false);
+    return response;
+  }
+
+  @action
+  public async updatePassword(data: UpdatePasswordPayload) {
+    this.setIsLoading(true);
+    const response = await this.updatePasswordUseCase.execute(data);
     if (response.code) {
       return response;
     }

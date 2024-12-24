@@ -26,6 +26,7 @@ import NewMoreScreen from 'src/lesson/presentation/screens/NewMoreScreen';
 import CheckoutScreen from 'src/lesson/presentation/screens/CheckoutScreen';
 import PurchaseSuccessScreen from '../screens/PurchaseSuccessScreen';
 import PurchaseFailedScreen from '../screens/PurchaseFailedScreen';
+import ChangePasswordScreen from 'src/authentication/presentation/screens/ChangePasswordScreen';
 
 const AuthStack = createStackNavigator();
 const HomeStack = createStackNavigator();
@@ -87,6 +88,16 @@ export const AuthStackScreens = (): React.ReactElement => {
         name={STACK_NAVIGATOR.AUTH.LIST_CHILDREN_SCREEN}
         key={STACK_NAVIGATOR.AUTH.LIST_CHILDREN_SCREEN}
         component={ListChildrenScreen}
+        listeners={({navigation: navBottom}) => ({
+          focus: () => {
+            hideBottomTab(navBottom);
+          },
+        })}
+      />
+      <AuthStack.Screen
+        name={STACK_NAVIGATOR.AUTH.CHANGE_PASSWORD}
+        key={STACK_NAVIGATOR.AUTH.CHANGE_PASSWORD}
+        component={ChangePasswordScreen}
         listeners={({navigation: navBottom}) => ({
           focus: () => {
             hideBottomTab(navBottom);

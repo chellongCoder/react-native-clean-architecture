@@ -26,6 +26,7 @@ export interface data {
   children: children[];
   diamond: number;
   isReported: boolean;
+  hasPassword: boolean;
 }
 
 export default interface GetUserProfileResponse {
