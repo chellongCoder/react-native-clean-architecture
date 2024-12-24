@@ -22,6 +22,7 @@ import {ChangeParentNamePayload} from 'src/authentication/application/types/Chan
 import {ChangeChildDescriptionPayload} from 'src/authentication/application/types/ChangeChildDescriptionPayload';
 import {useLoadingGlobal} from 'src/core/presentation/hooks/loading/useLoadingGlobal';
 import {LoginMethods} from '../constants/common';
+import {UpdatePasswordPayload} from 'src/authentication/application/types/UpdatePasswordPayload';
 
 const DefaultFormData = {email: '', password: ''};
 
@@ -36,6 +37,7 @@ const useLoginWithCredentials = () => {
     getUserProfile,
     removeCurrentCredentials,
     comparePassword,
+    updatePassword,
     changeParentName,
     changeChildrenDescription,
     getRefreshToken,
@@ -421,6 +423,27 @@ const useLoginWithCredentials = () => {
     [comparePassword, setErrorMessage, setIsLoading],
   );
 
+  const handleUpdatePassword = useCallback(
+    async (props: UpdatePasswordPayload) => {
+      try {
+        setIsLoading(true);
+        const res = await updatePassword(props);
+        if (res.code === 200) {
+          return res.code;
+        } else {
+          return false;
+        }
+      } catch (error) {
+        if (isAxiosError(error)) {
+          setErrorMessage('Password not match!');
+        }
+      } finally {
+        setIsLoading(false);
+      }
+    },
+    [updatePassword, setErrorMessage, setIsLoading],
+  );
+
   const handleChangeParentName = useCallback(
     async (props: ChangeParentNamePayload) => {
       try {
@@ -478,6 +501,7 @@ const useLoginWithCredentials = () => {
     clearUsernamePasswordInKeychain,
     handleLogOut,
     handleComparePassword,
+    handleUpdatePassword,
     handleChangeParentName,
     handleChangeChildDescription,
   };
