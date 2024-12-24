@@ -1,5 +1,12 @@
 import React, {useEffect} from 'react';
-import {Pressable, View, StyleSheet, Text, Image} from 'react-native';
+import {
+  Pressable,
+  View,
+  StyleSheet,
+  Text,
+  Image,
+  ImageBackground,
+} from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import Animated, {
   useSharedValue,
@@ -39,12 +46,12 @@ const activeStyles = {
 };
 
 type TPros = {
-  value: boolean;
-  onValueChange: (a: boolean) => void;
-  point: number;
+  value?: boolean;
+  onValueChange?: (a: boolean) => void;
+  point?: number;
 };
 
-const CustomSwitchNew = ({value, onValueChange, point}: TPros) => {
+const HintButton = ({value, onValueChange, point}: TPros) => {
   const animatedValue = useSharedValue(value ? 0 : 1);
 
   useEffect(() => {
@@ -60,41 +67,51 @@ const CustomSwitchNew = ({value, onValueChange, point}: TPros) => {
 
   const toggleSwitch = () => {
     const newValue = !value;
-    onValueChange(newValue);
+    onValueChange?.(newValue);
   };
 
   const currentStyles = value ? activeStyles : defaultStyles;
 
   return (
     <Pressable onPress={toggleSwitch} style={styles.pressable} disabled>
-      <LinearGradient
-        colors={currentStyles.bgGradientColors}
-        style={[styles.backgroundGradient, styles.border]}
-        start={{x: 0.5, y: 1}}
-        end={{x: 0.5, y: 0}}>
+      <ImageBackground
+        resizeMethod="scale"
+        resizeMode="cover"
+        source={assets.bg_hint}
+        style={styles.backgroundImage}>
         <LinearGradient
           colors={currentStyles.bgGradientColors}
-          style={styles.backgroundGradient}
-          start={{x: 0.5, y: 0}}
-          locations={[0, 0.3, 0.6, 0.66, 0.8, 0.84, 1]}
-          end={{x: 0.5, y: 1}}>
-          <View style={styles.innerContainer}>
-            <Animated.View style={[styles.wrapContentContainer, animatedStyle]}>
-              <Image
-                source={assets.untitled_artwork}
-                resizeMode="contain"
-                style={styles.icon}
-              />
-              <View style={styles.fillCenter}>
-                <View style={styles.wrapContent}>
-                  <View style={styles.decorate} />
-                  <Text style={styles.title}>{point}</Text>
+          style={[styles.backgroundGradient, styles.border]}
+          start={{x: 0.5, y: 1}}
+          end={{x: 0.5, y: 0}}>
+          <LinearGradient
+            colors={currentStyles.bgGradientColors}
+            style={styles.backgroundGradient}
+            start={{x: 0.5, y: 0}}
+            locations={[0, 0.3, 0.6, 0.66, 0.8, 0.84, 1]}
+            end={{x: 0.5, y: 1}}>
+            <ImageBackground
+              resizeMethod="scale"
+              resizeMode="contain"
+              source={assets.bg_hint}
+              style={styles.innerContainer}>
+              <Animated.View
+                style={[styles.wrapContentContainer, animatedStyle]}>
+                <View style={styles.fillCenter}>
+                  <View style={styles.wrapContent}>
+                    <Text style={styles.title}>{'hint'}</Text>
+                  </View>
                 </View>
-              </View>
-            </Animated.View>
-          </View>
+                <Image
+                  source={assets.untitled_artwork}
+                  resizeMode="contain"
+                  style={styles.icon}
+                />
+              </Animated.View>
+            </ImageBackground>
+          </LinearGradient>
         </LinearGradient>
-      </LinearGradient>
+      </ImageBackground>
     </Pressable>
   );
 };
@@ -102,19 +119,16 @@ const CustomSwitchNew = ({value, onValueChange, point}: TPros) => {
 const styles = StyleSheet.create({
   pressable: {
     width: scale(50),
-    height: verticalScale(20),
-    borderRadius: 16,
+    height: verticalScale(50),
   },
-  border: {
-    padding: 2,
-  },
+  border: {},
   icon: {
-    height: scale(20),
-    width: scale(20),
+    height: scale(15),
+    width: scale(25),
   },
   fillCenter: {
     flex: 1,
-    alignItems: 'center',
+    alignItems: 'flex-start',
     justifyContent: 'center',
   },
   wrapContent: {},
@@ -123,20 +137,17 @@ const styles = StyleSheet.create({
     borderRadius: 999,
   },
   backgroundGradient: {
-    flex: 1,
     borderRadius: scale(10),
     alignItems: 'center',
     justifyContent: 'center',
+    height: verticalScale(20),
+    borderWidth: 1,
+    borderColor: COLORS.GREEN_009C6F,
   },
   innerContainer: {
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-  },
-  headGradient: {
-    width: 24,
-    height: 24,
-    borderRadius: 100,
   },
   wrapContentContainer: {
     flexDirection: 'row',
@@ -149,6 +160,9 @@ const styles = StyleSheet.create({
     textTransform: 'uppercase',
     fontFamily: TYPOGRAPHY.FAMILY.SVNCherishMoment,
   },
+  backgroundImage: {
+    flex: 1,
+  },
 });
 
-export default CustomSwitchNew;
+export default HintButton;

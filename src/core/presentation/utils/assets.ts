@@ -57,4 +57,5 @@ export const assets = {
   diamond_amount: require('assets/images/diamond_amount.png'),
   feedbackImage: require('assets/images/feedbackImage.png'),
   upgradeApp: require('assets/images/upgradeApp.png'),
+  bg_hint: require('assets/images/bg_hint.gif'),
 };

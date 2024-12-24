@@ -143,10 +143,10 @@ const LessonScreen = observer(() => {
     return apiTasks.map(t => {
       return {
         ...t,
-        question: t.question.slice(0, 1),
+        // question: t.question.slice(0, 1),
         // question: t.question.slice(0, 5),
         // question: shuffleArray(t.question),
-        // question: t.question,
+        question: __DEV__ ? t.question.slice(0, 1) : t.question,
       };
     });
   }, [apiTasks]);
@@ -336,8 +336,7 @@ const LessonScreen = observer(() => {
       settings.backgroundAnswerColor,
       route.moduleName,
       route.lessonName,
-      testTask?.name,
-      testTask?.question,
+      testTask,
       lessonIndex,
       setLessonState,
     ],

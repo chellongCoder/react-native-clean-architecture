@@ -17,6 +17,7 @@ import {scale, verticalScale} from 'react-native-size-matters';
 import useGlobalStyle from 'src/core/presentation/hooks/useGlobalStyle';
 import CustomSwitchNew from 'src/home/presentation/components/CustomSwitchNew';
 import {TYPOGRAPHY} from 'src/core/presentation/constants/typography';
+import HintButton from 'src/core/components/hint/HintButton';
 
 type Props = {
   lessonName?: string;
@@ -139,17 +140,24 @@ const LessonComponent = ({
                 <Text style={styles.txtCountDown}>{txtCountDown}</Text>
               </ImageBackground>
             )}
-            <View style={{height: verticalScale(5)}} />
-            <TouchableOpacity onPress={onPressFlower}>
-              <CustomSwitchNew
-                point={score}
-                value={false}
-                onValueChange={() => {}}
-              />
-            </TouchableOpacity>
           </View>
         </View>
-
+        <View
+          style={[
+            styles.rowBetween,
+            {
+              marginHorizontal: scale(10),
+            },
+          ]}>
+          <CustomSwitchNew
+            point={score}
+            value={false}
+            onValueChange={() => {}}
+          />
+          <TouchableOpacity onPress={onPressFlower}>
+            <HintButton />
+          </TouchableOpacity>
+        </View>
         <View
           style={[
             styles.boxQuestion,
