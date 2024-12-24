@@ -43,6 +43,7 @@ import GotRewardModal from '../components/GotRewardModal';
 import WatchAddScreen from '../components/WatchAddScreen';
 import {useGoogleAdsmob} from '../hooks/ggads/useGoogleAdsmob';
 import {GoogleAdsmobProvider} from '../hooks/ggads/GoogleAdsmobProvider';
+import {Task} from 'src/home/application/types/GetListQuestionResponse';
 
 export type RouteParamsDone = {
   totalResult: TResult[];
@@ -58,6 +59,7 @@ export type RouteParamsDone = {
   partName?: string;
   noMiniTest?: boolean;
   type?: LessonTypeE | MathQuestionType;
+  module?: Task;
 };
 
 const DoneLessonScreen = ({}) => {
@@ -103,10 +105,14 @@ const DoneLessonScreen = ({}) => {
   );
 
   const isSuccess = useMemo(() => {
-    if (route.isMiniTest) {
+    const blockedModule = lessonStore.blockedModules?.find(
+      module => module.moduleId === route.module?.lessonId,
+    );
+
+    if (route.isMiniTest && blockedModule) {
       // * nếu check ra mini test
       if (
-        lessonStore.unlockPercent <=
+        blockedModule?.percent <=
         (totalCorrectAnswer / totalResultLength) * 100
       ) {
         // * nếu ko đủ điểm unlock
@@ -119,8 +125,9 @@ const DoneLessonScreen = ({}) => {
       return true;
     }
   }, [
-    lessonStore.unlockPercent,
+    lessonStore.blockedModules,
     route.isMiniTest,
+    route.module,
     totalCorrectAnswer,
     totalResultLength,
   ]);

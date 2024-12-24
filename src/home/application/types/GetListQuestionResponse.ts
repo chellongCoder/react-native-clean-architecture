@@ -23,6 +23,7 @@ export interface Task {
   stt: number;
   type: 'training' | 'mini_test';
   description: string;
+  lessonId: string;
 }
 export type LessonSettingT = {
   backgroundButtonColor: string;

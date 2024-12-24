@@ -105,7 +105,7 @@ const FeedbackPopup: React.FC<FeedbackPopupProps> = ({isVisible, onClose}) => {
           Keyboard.dismiss();
         }}
         style={styles.contentContainer}>
-        <TouchableWithoutFeedback onPress={() => null}>
+        <TouchableOpacity activeOpacity={1}>
           <View style={{marginTop: 80}}>
             <Text style={styles.title}>
               SEND US YOUR FEEDBACK{'\n'}AND RECEIVE
@@ -140,7 +140,7 @@ const FeedbackPopup: React.FC<FeedbackPopupProps> = ({isVisible, onClose}) => {
               <Text style={styles.btnTitle}>Send</Text>
             </TouchableOpacity>
           </View>
-        </TouchableWithoutFeedback>
+        </TouchableOpacity>
         <View style={styles.wrapImageContainer}>
           <Image
             source={assets.feedbackImage}

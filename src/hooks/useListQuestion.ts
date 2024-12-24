@@ -24,7 +24,7 @@ export const useListQuestions = (lessonId: string) => {
       .then(response => {
         setTasks(() => {
           setLessonSetting(response.data.lessonSetting);
-          return response.data.tasks;
+          return response.data.tasks.map(task => ({...task, lessonId}));
         });
       })
       .finally(() => {

@@ -72,7 +72,7 @@ export class LessonStore {
   @persist @observable backgroundSound = 0.8;
   @persist @observable charSound = 0.3;
 
-  @persist @observable blockedModules?: BlockedModuleSetting[] = [];
+  @persist('list') @observable blockedModules?: BlockedModuleSetting[] = [];
 
   @computed getSetting(lessonSetting?: LessonSettingT) {
     return {

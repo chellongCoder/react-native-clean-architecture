@@ -143,10 +143,10 @@ const LessonScreen = observer(() => {
     return apiTasks.map(t => {
       return {
         ...t,
-        // question: t.question.slice(0, 1),
+        question: t.question.slice(0, 1),
         // question: t.question.slice(0, 5),
         // question: shuffleArray(t.question),
-        question: t.question,
+        // question: t.question,
       };
     });
   }, [apiTasks]);
@@ -213,6 +213,7 @@ const LessonScreen = observer(() => {
               lessonName: route.lessonName,
               partName: testTask?.name,
               type: testTask?.question?.[lessonIndex]?.type,
+              module: testTask,
             },
           );
         }
@@ -230,8 +231,7 @@ const LessonScreen = observer(() => {
       route.lessonName,
       route.moduleName,
       settings.backgroundAnswerColor,
-      testTask?.name,
-      testTask?.question,
+      testTask,
     ],
   );
 
@@ -272,6 +272,7 @@ const LessonScreen = observer(() => {
               partName: testTask?.name,
               noMiniTest: !firstMiniTestTask,
               type: testTask?.question?.[lessonIndex]?.type,
+              module: testTask,
             },
           );
           // * sang lần làm tiếp theo
