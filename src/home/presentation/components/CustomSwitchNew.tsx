@@ -52,7 +52,7 @@ const CustomSwitchNew = ({value, onValueChange, point}: TPros) => {
   }, [animatedValue, value]);
 
   const animatedStyle = useAnimatedStyle(() => {
-    const translateX = interpolate(animatedValue.value, [0, 1], [4, 28]);
+    const translateX = interpolate(animatedValue.value, [0, 1], [0, 24]);
     return {
       transform: [{translateX}],
     };
@@ -109,18 +109,26 @@ const styles = StyleSheet.create({
     padding: 2,
   },
   icon: {
-    height: scale(20),
-    width: scale(20),
+    left: scale(-14),
+    position: 'absolute',
+    height: scale(28),
+    width: scale(28),
   },
   fillCenter: {
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
   },
-  wrapContent: {},
+  wrapContent: {
+    marginLeft: scale(12),
+  },
   decorate: {
-    alignSelf: 'stretch',
+    position: 'absolute',
+    right: 0,
+    left: 0,
     borderRadius: 999,
+    backgroundColor: '#b6ecb1',
+    height: 2,
   },
   backgroundGradient: {
     flex: 1,
@@ -148,6 +156,7 @@ const styles = StyleSheet.create({
     color: COLORS.WHITE_FBF8CC,
     textTransform: 'uppercase',
     fontFamily: TYPOGRAPHY.FAMILY.SVNCherishMoment,
+    marginTop: verticalScale(-1),
   },
 });
 
