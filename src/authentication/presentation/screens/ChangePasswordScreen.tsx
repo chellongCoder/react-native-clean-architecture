@@ -4,11 +4,12 @@ import {
   Text,
   ImageBackground,
   BackHandler,
+  View,
 } from 'react-native';
 import React, {useEffect, useRef, useState} from 'react';
 import {CommonInputPassword} from 'src/authentication/presentation/components/CommonInput';
 import {assets} from 'src/core/presentation/utils';
-import {scale} from 'react-native-size-matters';
+import {scale, verticalScale} from 'react-native-size-matters';
 import useLoginWithCredentials from 'src/authentication/presentation/hooks/useLoginWithCredentials';
 import {CustomTextStyle} from 'src/core/presentation/constants/typography';
 import {COLORS} from 'src/core/presentation/constants/colors';
@@ -88,6 +89,10 @@ const ChangePasswordScreen = () => {
       <ScrollView>
         <Animated.View style={[rStyle, animatedStyle]}>
           <Text style={[styles.title]}>Update password</Text>
+          <Text style={[{fontSize: scale(8), fontStyle: 'italic'}]}>
+            * Update password to access parent settings
+          </Text>
+          <View style={{height: verticalScale(30)}} />
           <CommonInputPassword
             label="Enter password"
             textInputProp={{
@@ -134,7 +139,6 @@ const styles = StyleSheet.create({
   imageStyle: {opacity: 0.3},
   title: {
     ...CustomTextStyle.h2,
-    marginBottom: 32,
   },
   btnEnter: {
     marginTop: 70,

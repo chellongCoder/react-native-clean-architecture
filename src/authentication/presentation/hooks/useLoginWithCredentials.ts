@@ -214,6 +214,8 @@ const useLoginWithCredentials = () => {
 
   const getUsernamePasswordInKeychain = useCallback(async () => {
     try {
+      globalLoading.toggleLoading?.(true, 'login');
+
       // Retrieve the credentials
       const credentials = await Keychain.getGenericPassword();
 
@@ -229,8 +231,8 @@ const useLoginWithCredentials = () => {
       } else {
         console.log('No credentials stored');
         if (loginMethod === LoginMethods.Google) {
+          await getRefreshToken(refreshToken);
           handleNavigateAuthenticationSuccess();
-          getRefreshToken(refreshToken);
           return;
         }
         replaceScreen(STACK_NAVIGATOR.AUTH.LOGIN_SCREEN);
@@ -240,7 +242,10 @@ const useLoginWithCredentials = () => {
       console.log("Keychain couldn't be accessed!", error);
       replaceScreen(STACK_NAVIGATOR.AUTH.LOGIN_SCREEN);
       return null;
+    } finally {
+      globalLoading.toggleLoading?.(false, 'login');
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     getRefreshToken,
     handleLoginWithCredentials,
