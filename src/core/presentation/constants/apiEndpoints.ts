@@ -80,6 +80,7 @@ export const API_ENDPOINTS = {
     REGISTER_CHILD: getUserEndPointServices('register-children'),
     PROFILE: getUserEndPointServices('profile'),
     COMPARE_PASSWORD: getUserEndPointServices('compare-password'),
+    UPDATE_PASSWORD: getUserEndPointServices('update-password'),
     CHANGE_PARENT_NAME: getUserEndPointServices('change-parent-name'),
     DELETE_CHILDREN: getUserEndPointServices('delete-children'),
     UPDATE_CHILDREN_DESCRIPTION: getUserEndPointServices(

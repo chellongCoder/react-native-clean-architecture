@@ -17,6 +17,7 @@ import ChangeChildDescriptionUseCase from './application/useCases/ChangeChildDes
 import LoginGoogleUserCase from './application/useCases/LoginGoogleUserCase';
 import PostReportUseCase from './application/useCases/PostReportUseCase';
 import ForceUpdateAppUseCase from './application/useCases/ForceUpdateAppUseCase';
+import UpdatePasswordUseCase from './application/useCases/UpdatePasswordUsecase';
 
 @module({
   providers: [
@@ -36,6 +37,7 @@ import ForceUpdateAppUseCase from './application/useCases/ForceUpdateAppUseCase'
     RefreshTokenUseCase,
     LogOutUseCase,
     ComparePasswordUseCase,
+    UpdatePasswordUseCase,
     ChangeParentNameUseCase,
     AssignChildrenUseCase,
     DeleteChildrenUseCase,

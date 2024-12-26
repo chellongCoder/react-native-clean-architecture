@@ -22,6 +22,7 @@ import {ChangeParentNamePayload} from 'src/authentication/application/types/Chan
 import {ChangeChildDescriptionPayload} from 'src/authentication/application/types/ChangeChildDescriptionPayload';
 import {useLoadingGlobal} from 'src/core/presentation/hooks/loading/useLoadingGlobal';
 import {LoginMethods} from '../constants/common';
+import {UpdatePasswordPayload} from 'src/authentication/application/types/UpdatePasswordPayload';
 
 const DefaultFormData = {email: '', password: ''};
 
@@ -36,6 +37,7 @@ const useLoginWithCredentials = () => {
     getUserProfile,
     removeCurrentCredentials,
     comparePassword,
+    updatePassword,
     changeParentName,
     changeChildrenDescription,
     getRefreshToken,
@@ -212,6 +214,8 @@ const useLoginWithCredentials = () => {
 
   const getUsernamePasswordInKeychain = useCallback(async () => {
     try {
+      globalLoading.toggleLoading?.(true, 'login');
+
       // Retrieve the credentials
       const credentials = await Keychain.getGenericPassword();
 
@@ -227,8 +231,8 @@ const useLoginWithCredentials = () => {
       } else {
         console.log('No credentials stored');
         if (loginMethod === LoginMethods.Google) {
+          await getRefreshToken(refreshToken);
           handleNavigateAuthenticationSuccess();
-          getRefreshToken(refreshToken);
           return;
         }
         replaceScreen(STACK_NAVIGATOR.AUTH.LOGIN_SCREEN);
@@ -238,7 +242,10 @@ const useLoginWithCredentials = () => {
       console.log("Keychain couldn't be accessed!", error);
       replaceScreen(STACK_NAVIGATOR.AUTH.LOGIN_SCREEN);
       return null;
+    } finally {
+      globalLoading.toggleLoading?.(false, 'login');
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     getRefreshToken,
     handleLoginWithCredentials,
@@ -421,6 +428,27 @@ const useLoginWithCredentials = () => {
     [comparePassword, setErrorMessage, setIsLoading],
   );
 
+  const handleUpdatePassword = useCallback(
+    async (props: UpdatePasswordPayload) => {
+      try {
+        setIsLoading(true);
+        const res = await updatePassword(props);
+        if (res.code === 200 || res.code === 201) {
+          return res.code;
+        } else {
+          return false;
+        }
+      } catch (error) {
+        if (isAxiosError(error)) {
+          setErrorMessage('Password not match!');
+        }
+      } finally {
+        setIsLoading(false);
+      }
+    },
+    [updatePassword, setErrorMessage, setIsLoading],
+  );
+
   const handleChangeParentName = useCallback(
     async (props: ChangeParentNamePayload) => {
       try {
@@ -478,6 +506,7 @@ const useLoginWithCredentials = () => {
     clearUsernamePasswordInKeychain,
     handleLogOut,
     handleComparePassword,
+    handleUpdatePassword,
     handleChangeParentName,
     handleChangeChildDescription,
   };

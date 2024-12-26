@@ -32,6 +32,8 @@ import {PostReportPayload} from 'src/authentication/application/types/PostReport
 import {PostReportResponse} from 'src/authentication/application/types/PostReportResponse';
 import {ForceUpdateAppPayload} from 'src/authentication/application/types/ForceUpdateAppPayload';
 import {ForceUpdateAppResponse} from 'src/authentication/application/types/ForceUpdateAppResponse';
+import {UpdatePasswordPayload} from 'src/authentication/application/types/UpdatePasswordPayload';
+import {UpdatePasswordResponse} from 'src/authentication/application/types/UpdatePasswordResponse';
 
 @injectable()
 class AuthenticationRepository implements IAuthenticationRepository {
@@ -128,6 +130,16 @@ class AuthenticationRepository implements IAuthenticationRepository {
   ): Promise<ComparePasswordResponse> {
     const response: ComparePasswordResponse = await this.httpClient.post(
       API_ENDPOINTS.USER.COMPARE_PASSWORD,
+      data,
+    );
+    return response;
+  }
+
+  public async updatePassword(
+    data: UpdatePasswordPayload,
+  ): Promise<UpdatePasswordResponse> {
+    const response: ComparePasswordResponse = await this.httpClient.post(
+      API_ENDPOINTS.USER.UPDATE_PASSWORD,
       data,
     );
     return response;

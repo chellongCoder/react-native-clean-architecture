@@ -83,6 +83,12 @@ const ListChildrenScreen = React.memo(() => {
     getDataFromStore();
   }, [getData, isConnected]);
 
+  useEffect(() => {
+    if (userProfile?.hasPassword === false) {
+      navigateScreen(STACK_NAVIGATOR.AUTH.CHANGE_PASSWORD, {});
+    }
+  }, [userProfile?.hasPassword]);
+
   return (
     <ImageBackground
       style={[styles.container]}
