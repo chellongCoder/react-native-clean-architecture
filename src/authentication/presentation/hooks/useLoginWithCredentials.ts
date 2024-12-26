@@ -428,7 +428,7 @@ const useLoginWithCredentials = () => {
       try {
         setIsLoading(true);
         const res = await updatePassword(props);
-        if (res.code === 200) {
+        if (res.code === 200 || res.code === 201) {
           return res.code;
         } else {
           return false;

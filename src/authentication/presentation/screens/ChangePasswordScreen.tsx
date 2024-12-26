@@ -46,12 +46,12 @@ const ChangePasswordScreen = () => {
     }
     loadingGlobal.show?.();
     const res = await handleUpdatePassword({newPassword: passwordRef.current});
-    if (res === 200) {
+    if (res === 200 || res === 201) {
       // lessonStore.setPasswordParent(passwordRef.current);
       goBack();
     } else {
       shake();
-      setError('Password not match!');
+      setError('Can not update password!');
     }
     loadingGlobal.hide?.();
   };
