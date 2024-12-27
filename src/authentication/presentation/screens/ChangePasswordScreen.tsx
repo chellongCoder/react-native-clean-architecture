@@ -45,16 +45,19 @@ const ChangePasswordScreen = () => {
     } else {
       setErrorConfirm('');
     }
-    loadingGlobal.show?.();
+    // loadingGlobal.show?.();
+    loadingGlobal.toggleLoading?.(true, 'update_password');
     const res = await handleUpdatePassword({newPassword: passwordRef.current});
-    if (res === 200 || res === 201) {
+    console.log('ChangePasswordScreen ', res);
+    if (res) {
       // lessonStore.setPasswordParent(passwordRef.current);
       goBack();
     } else {
       shake();
       setError('Can not update password!');
     }
-    loadingGlobal.hide?.();
+    loadingGlobal.toggleLoading?.(false, 'update_password');
+    // loadingGlobal.hide?.();
   };
 
   useEffect(() => {
