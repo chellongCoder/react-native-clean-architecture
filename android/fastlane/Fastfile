@@ -71,4 +71,21 @@ platform :android do
       debug: true
     )
   end
+
+
+  desc "Build AAB and upload to public testing on Play Console"
+  lane :build_and_upload_aab do
+    increment_version_code
+
+    gradle(task: "clean bundleRelease")
+
+    # supply(
+    #   track: "beta", # Use "beta" for public testing track
+    #   aab: "../app/build/outputs/bundle/release/app-release.aab",
+    #   skip_upload_metadata: true,
+    #   skip_upload_images: true,
+    #   skip_upload_screenshots: true,
+    #   release_status: "completed"
+    # )
+  end
 end

@@ -87,7 +87,6 @@ export class HomeStore implements HomeStoreState {
     });
     if (response.data) {
       this.listSubject = response.data;
-      this.subjectId = response.data[0]._id;
     }
     this.setIsLoading(false);
     return response;

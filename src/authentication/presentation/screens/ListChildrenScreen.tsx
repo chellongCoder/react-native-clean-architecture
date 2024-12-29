@@ -156,10 +156,11 @@ const ListChildrenScreen = React.memo(() => {
                 userProfile?.children.length < 5 &&
                 isConnected && (
                   <View style={styles.wrapAddChildContainer}>
-                    <View style={{alignItems: 'center'}}>
+                    <View style={{alignItems: 'center', opacity: 0.5}}>
                       <TouchableOpacity
                         style={styles.addChildContainer}
-                        onPress={onAddChild}>
+                        onPress={onAddChild}
+                        disabled>
                         <ICAddChild />
                       </TouchableOpacity>
                     </View>

@@ -9,7 +9,6 @@ import {useFonts} from '../hooks/useFonts';
 import useLoginWithCredentials from 'src/authentication/presentation/hooks/useLoginWithCredentials';
 import {useOfflineMode} from '../hooks/offline/useOfflineMode';
 import {OfflineEnum} from '../hooks/offline/OfflineEnum';
-import {replaceScreen} from './actions/RootNavigationActions';
 import {withProviders} from '../utils/withProviders';
 import {LessonStoreProvider} from 'src/lesson/presentation/stores/LessonStore/LessonStoreProvider';
 import {usePermissionApplock} from 'src/hooks/usePermissionApplock';

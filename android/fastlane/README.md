@@ -63,6 +63,14 @@ Increment versionCode
 
 Build and upload APK to Firebase App Distribution
 
+### android build_and_upload_aab
+
+```sh
+[bundle exec] fastlane android build_and_upload_aab
+```
+
+Build AAB and upload to public testing on Play Console
+
 ----
 
 This README.md is auto-generated and will be re-generated every time [_fastlane_](https://fastlane.tools) is run.

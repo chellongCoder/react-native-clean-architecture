@@ -1,9 +1,6 @@
-import {useEffect, useMemo} from 'react';
+import {useEffect} from 'react';
 import {LessonStore} from 'src/lesson/presentation/stores/LessonStore/LessonStore';
-import {
-  addToLockedApps,
-  getStateBlocking,
-} from 'react-native-alphadex-screentime';
+import {getStateBlocking} from 'react-native-alphadex-screentime';
 
 export const useGetUserSetting = (
   token: string,

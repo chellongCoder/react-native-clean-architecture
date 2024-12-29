@@ -22,7 +22,7 @@ export interface IHomeState {
 
 export const HomeProvider = ({children}: PropsWithChildren) => {
   const store = homeModuleContainer.getProvided(HomeStore);
-  const {getField, getListSubject} = useHomeStore();
+  const {getField, getListSubject, setSubjectId} = useHomeStore();
   const {storeData, getData, isConnected} = useOfflineMode();
   useLoadingGlobal();
 
@@ -57,12 +57,13 @@ export const HomeProvider = ({children}: PropsWithChildren) => {
         storeData(OfflineEnum.LIST_SUBJECT, res.data);
         if (res.data) {
           setHomeState({listSubject: res.data});
+          setSubjectId(res.data?.[0]?._id);
           navigateScreen(STACK_NAVIGATOR.HOME.SUBJECT_SCREEN, {});
         }
       }
     }
     _getListSubject();
-  }, [getListSubject, homeState?.field, setHomeState, storeData]);
+  }, [getListSubject, homeState?.field, setHomeState, setSubjectId, storeData]);
 
   useEffect(() => {
     async function fetchField() {

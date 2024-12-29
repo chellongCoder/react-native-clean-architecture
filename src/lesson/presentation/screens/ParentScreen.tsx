@@ -565,19 +565,6 @@ The blockAppsSystem function is an asynchronous function that awaits the result 
                   width={scale(100)}
                   nameIndex="name"
                 />
-                {/* <View style={[]}>
-                <Text style={[globalStyle.txtButton, styles.textColor]}>
-                  Lessons to unlock
-                </Text>
-                <View style={[styles.card]}>
-                  <Text
-                    allowFontScaling
-                    style={[globalStyle.txtButton, styles.textCard]}>
-                    Vietnamese
-                  </Text>
-                  <IconArrowDown />
-                </View>
-              </View> */}
               </View>
               <View style={[styles.fill]}>
                 <TouchableOpacity
