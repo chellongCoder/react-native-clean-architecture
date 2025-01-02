@@ -6,9 +6,6 @@ import {
   Text,
   TouchableOpacity,
   View,
-  Image,
-  FlatList,
-  ImageBackground,
 } from 'react-native';
 import React, {
   useCallback,
@@ -869,11 +866,7 @@ The blockAppsSystem function is an asynchronous function that awaits the result 
               <ChildrenDescription />
               <View>
                 <View style={[styles.fill]} />
-                <PrimaryButton
-                  text="Use"
-                  style={[styles.btnCommon]}
-                  onPress={onUseChild}
-                />
+                <PrimaryButton text="Save" style={[styles.btnCommon]} />
                 <PrimaryButton
                   text="Delete"
                   style={[styles.btnCommon, styles.btnRed]}

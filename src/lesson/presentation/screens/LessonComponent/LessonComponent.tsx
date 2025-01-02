@@ -140,24 +140,17 @@ const LessonComponent = ({
                 <Text style={styles.txtCountDown}>{txtCountDown}</Text>
               </ImageBackground>
             )}
+            <View style={{height: verticalScale(5)}} />
+            <TouchableOpacity onPress={onPressFlower}>
+              <CustomSwitchNew
+                point={score}
+                value={false}
+                onValueChange={() => {}}
+              />
+            </TouchableOpacity>
           </View>
         </View>
-        <View
-          style={[
-            styles.rowBetween,
-            {
-              marginHorizontal: scale(10),
-            },
-          ]}>
-          <CustomSwitchNew
-            point={score}
-            value={false}
-            onValueChange={() => {}}
-          />
-          <TouchableOpacity onPress={onPressFlower}>
-            <HintButton />
-          </TouchableOpacity>
-        </View>
+
         <View
           style={[
             styles.boxQuestion,
@@ -223,7 +216,19 @@ const LessonComponent = ({
           style={[styles.bookView]}
           contentStyle={[styles.content]}
           colorBg={backgroundAnswerColor}>
-          <View style={[styles.boxAnswer]}>{buildAnswer}</View>
+          <View style={[styles.boxAnswer]}>
+            <View
+              style={{
+                position: 'absolute',
+                top: scale(5),
+                left: scale(20),
+              }}>
+              <TouchableOpacity onPress={onPressFlower}>
+                <HintButton />
+              </TouchableOpacity>
+            </View>
+            {buildAnswer}
+          </View>
         </BookView>
       </View>
     </View>
@@ -370,7 +375,7 @@ const styles = StyleSheet.create({
     paddingBottom: 14,
   },
   wrapCorrectContainer: {
-    backgroundColor: '#FBF8CC',
+    backgroundColor: COLORS.CUSTOM(COLORS.WHITE_FBF8CC, 0.5),
     marginBottom: scale(8),
     padding: scale(16),
     borderTopLeftRadius: scale(36),

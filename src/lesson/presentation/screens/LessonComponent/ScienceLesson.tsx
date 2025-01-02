@@ -186,7 +186,7 @@ const ScienceLesson = ({
               justifyContent: 'space-between',
               flexDirection: 'row',
             }}>
-            <Text style={[globalStyle.txtLabel]}>Chọn đáp án đúng</Text>
+            <Text style={[globalStyle.txtLabel]}>Choice correct answer</Text>
           </View>
 
           <View

@@ -26,6 +26,7 @@ const SubjectScreen = observer((props: any) => {
               <AccountStatus
                 title={'Lessons'}
                 subject={route?.params?.subject}
+                isShowLogout
               />
             </View>
             <ListLesson />

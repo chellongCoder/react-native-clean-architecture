@@ -66,7 +66,11 @@ const SubjectItem = ({
           {backgroundColor: item.bgc},
         ]}
         onPress={() => handlePress()}>
-        <Text style={[styles.itemTitle, {color: item.textColor}]}>
+        <Text
+          allowFontScaling
+          adjustsFontSizeToFit
+          numberOfLines={1}
+          style={[styles.itemTitle, {color: item.textColor}]}>
           {item.name}
         </Text>
       </TouchableOpacity>

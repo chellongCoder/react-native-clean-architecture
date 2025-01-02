@@ -182,6 +182,9 @@ const ListSubject = () => {
               },
             ]}>
             <Text
+              adjustsFontSizeToFit
+              allowFontScaling
+              numberOfLines={1}
               style={[styles.itemTitle, {color: homeState.field.textColor}]}>
               {homeState.field.name}
             </Text>

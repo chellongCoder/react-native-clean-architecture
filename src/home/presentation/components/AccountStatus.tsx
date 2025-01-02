@@ -10,6 +10,7 @@ import ICLogout from 'src/core/components/icons/ICLogout';
 import CustomSwitchNew from './CustomSwitchNew';
 import useAuthenticationStore from 'src/authentication/presentation/stores/useAuthenticationStore';
 import Diamond from './Diamond';
+import {goBack} from 'src/core/presentation/navigation/actions/RootNavigationActions';
 
 type TProps = {
   title?: string;
@@ -28,7 +29,7 @@ const AccountStatus = (props: TProps) => {
   const [isEnabled, setIsEnabled] = useState(false);
 
   const onLogout = () => {
-    handleLogOut();
+    goBack();
   };
 
   return (
@@ -39,7 +40,7 @@ const AccountStatus = (props: TProps) => {
             style={styles.wrapLogoutContainer}
             onPress={onLogout}>
             <ICLogout />
-            <Text style={styles.logoutTitle}>Log out</Text>
+            <Text style={styles.logoutTitle}>Back</Text>
           </TouchableOpacity>
         )}
         {title ? (
