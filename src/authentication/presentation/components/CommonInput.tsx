@@ -10,10 +10,11 @@ import {
   NativeSyntheticEvent,
   TextInputKeyPressEventData,
   Pressable,
+  InteractionManager,
 } from 'react-native';
-import React, {useCallback, useRef, useState} from 'react';
+import React, {useCallback, useEffect, useRef, useState} from 'react';
 import useGlobalStyle from 'src/core/presentation/hooks/useGlobalStyle';
-import {useFocusEffect} from '@react-navigation/native';
+import {useFocusEffect, useIsFocused} from '@react-navigation/native';
 
 type Props = {
   textInputProp?: TextInputProps;
@@ -103,14 +104,27 @@ export const CommonInputPassword = (props: Props) => {
     refs[index].current?.focus();
   };
 
-  useFocusEffect(
-    useCallback(() => {
-      if (props.autofocus) {
-        setTimeout(() => refs[0].current?.focus(), 100);
-      }
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [props.autofocus]),
-  );
+  const timeout = useRef<NodeJS.Timeout>();
+  const isFocusScreen = useIsFocused();
+
+  useEffect(() => {
+    if (isFocusScreen && props.autofocus) {
+      clearTimeout(timeout.current);
+      timeout.current = setTimeout(
+        () =>
+          InteractionManager.runAfterInteractions(() => {
+            refs[0].current?.blur();
+            Keyboard.dismiss();
+            refs[0].current?.focus();
+          }),
+        200,
+      );
+    } else {
+      clearTimeout(timeout.current);
+    }
+    return () => clearTimeout(timeout.current);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isFocusScreen, props.autofocus]);
 
   return (
     <View style={styles.pb32}>
