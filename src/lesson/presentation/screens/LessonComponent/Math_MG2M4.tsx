@@ -31,6 +31,7 @@ import useAuthenticationStore from 'src/authentication/presentation/stores/useAu
 import {observer} from 'mobx-react';
 import {LessonRef} from '../../types';
 import useHomeStore from 'src/home/presentation/stores/useHomeStore';
+import SelectionAnswersQuestion from '../../components/SelectionAnswersQuestion';
 
 type Props = {
   moduleIndex: number;
@@ -47,7 +48,7 @@ type Props = {
   answer?: string[];
 };
 
-const SelectLesson = observer(
+const Math_MG2M4 = observer(
   forwardRef<LessonRef, Props>(
     (
       {
@@ -251,67 +252,25 @@ const SelectLesson = observer(
                   />
                 </TouchableOpacity>
               </View>
-              <View style={[styles.boxSelected]}>
-                <View style={styles.wrapCharContainer}>
+              <SelectionAnswersQuestion
+                question={
                   <Text
                     style={[
                       styles.fonts_SVN_Neu,
                       styles.textQuestion,
                       styles.textGreen,
                       styles.mt8,
-                      {fontSize: 24},
+                      {fontSize: scale(20)},
                     ]}>
                     {question}
                   </Text>
-                </View>
-                <View style={[styles.wapper, styles.fill, {width: '100%'}]}>
-                  {answer?.map((e, i) => {
-                    const bg =
-                      Array.isArray(answerSelected) &&
-                      answerSelected.includes(e)
-                        ? isShowCorrectContainer && !isAnswerCorrect
-                          ? '#F28759'
-                          : '#66C270'
-                        : '#F2B559';
-                    const length = answer?.length ?? 2;
-                    const size = Math.min(
-                      (WIDTH_SCREEN - 48) / Math.ceil(length / 2),
-                      verticalScale(72),
-                    );
-
-                    return (
-                      <TouchableOpacity
-                        key={i}
-                        onPress={() => onSelectAnswer(e)}
-                        style={[
-                          styles.boxVowel,
-                          {
-                            backgroundColor: bg,
-                            height: size,
-                            width: size,
-                            margin: 8, // Add spacing for clarity
-                          },
-                        ]}>
-                        <Text style={[styles.textVowel]}>{e}</Text>
-                      </TouchableOpacity>
-                    );
-                  })}
-                </View>
-                {learningTimer !== 0 && (
-                  <View
-                    style={[
-                      styles.boxSelected,
-                      {
-                        position: 'absolute',
-                        zIndex: 999,
-                        width: '100%',
-                        opacity: 0.7,
-                        height: '100%',
-                      },
-                    ]}
-                  />
-                )}
-              </View>
+                }
+                answer={answer ?? []}
+                isShowCorrectContainer={isShowCorrectContainer}
+                isAnswerCorrect={!!isAnswerCorrect}
+                onSelectAnswer={(e: string[]) => {}}
+                learningTimer={learningTimer}
+              />
 
               <PrimaryButton
                 text="Submit"
@@ -328,7 +287,7 @@ const SelectLesson = observer(
   ),
 );
 
-export default SelectLesson;
+export default Math_MG2M4;
 
 const styles = StyleSheet.create({
   fill: {
@@ -354,7 +313,7 @@ const styles = StyleSheet.create({
     color: COLORS.BLUE_258F78,
   },
   textGreen: {
-    color: '#258F78',
+    color: COLORS.BLUE_258F78,
   },
   txtWhite: {
     color: 'white',

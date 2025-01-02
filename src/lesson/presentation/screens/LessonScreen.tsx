@@ -45,7 +45,7 @@ import useHomeStore from 'src/home/presentation/stores/useHomeStore';
 import ScienceLesson from './LessonComponent/ScienceLesson';
 import {shuffleArray} from 'src/core/presentation/utils';
 import OnBoardingScreen from 'src/core/presentation/screens/OnBoardingScreen';
-import SelectLesson from './LessonComponent/SelectLesson';
+import Math_MG2M4 from './LessonComponent/Math_MG2M4';
 
 export enum MathQuestionType {
   MATH_TEXT = 'math_text',
@@ -564,30 +564,41 @@ const LessonScreen = observer(() => {
           />
         );
       case LessonTypeE.FILL_IN_BLANK:
-        // return (
-        //   <SelectLesson
-        //     moduleIndex={lessonIndex}
-        //     nextModule={nextModule}
-        //     totalModule={testTask?.question.length ?? 0}
-        //     lessonName={route.lessonName}
-        //     moduleName={route.moduleName}
-        //     firstMiniTestTask={testTask}
-        //     backgroundImage={
-        //       env.IMAGE_BACKGROUND_BASE_API_URL + lessonSetting?.backgroundImage
-        //     }
-        //     characterImageSuccess={
-        //       env.IMAGE_BACKGROUND_BASE_API_URL +
-        //       lessonSetting?.figureSuccessImage
-        //     }
-        //     characterImageFail={
-        //       env.IMAGE_BACKGROUND_BASE_API_URL + lessonSetting?.figureFailImage
-        //     }
-        //     ref={vowelRef}
-        //     isMulti={true}
-        //     question="Choose your correct answer?"
-        //     answer={['Kitten', 'Puppy', 'Calf', 'Foal']}
-        //   />
-        // );
+        return (
+          <Math_MG2M4
+            moduleIndex={lessonIndex}
+            nextModule={nextModule}
+            totalModule={testTask?.question.length ?? 0}
+            lessonName={route.lessonName}
+            moduleName={route.moduleName}
+            firstMiniTestTask={testTask}
+            backgroundImage={
+              env.IMAGE_BACKGROUND_BASE_API_URL + lessonSetting?.backgroundImage
+            }
+            characterImageSuccess={
+              env.IMAGE_BACKGROUND_BASE_API_URL +
+              lessonSetting?.figureSuccessImage
+            }
+            characterImageFail={
+              env.IMAGE_BACKGROUND_BASE_API_URL + lessonSetting?.figureFailImage
+            }
+            ref={vowelRef}
+            isMulti={true}
+            question="Choose your correct answer?"
+            answer={[
+              '12',
+              '11',
+              '10',
+              '100',
+              '200',
+              '34',
+              '35',
+              '53',
+              '45',
+              '31',
+            ]}
+          />
+        );
         return (
           <VowelsLesson
             moduleIndex={lessonIndex}
