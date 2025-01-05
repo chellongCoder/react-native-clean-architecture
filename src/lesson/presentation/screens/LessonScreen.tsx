@@ -69,6 +69,9 @@ export enum MathQuestionType {
   MATH_PRONUNCIATION = 'math_pronunciation',
   MATH_TRANSLATION = 'math_translation',
   MATH_EXPLANATION = 'math_explanation',
+
+  MathMG2M4 = 'MATH_MG2M4',
+  MathMG1M3 = 'Math_MG1M3',
 }
 export enum LessonTypeE {
   TEXT = 'text',
@@ -520,27 +523,9 @@ const LessonScreen = observer(() => {
     switch (
       testTask?.question?.[lessonIndex]?.type as LessonTypeE | MathQuestionType
     ) {
-      case LessonTypeE.ESSAY:
-        return (
-          <EssayLesson
-            moduleIndex={lessonIndex}
-            nextModule={nextModule}
-            totalModule={testTask?.question.length ?? 0}
-            lessonName={route.lessonName}
-            moduleName={route.moduleName}
-            firstMiniTestTask={testTask}
-            backgroundImage={
-              env.IMAGE_BACKGROUND_BASE_API_URL + lessonSetting?.backgroundImage
-            }
-            characterImageSuccess={
-              env.IMAGE_BACKGROUND_BASE_API_URL +
-              lessonSetting?.figureSuccessImage
-            }
-            characterImageFail={
-              env.IMAGE_BACKGROUND_BASE_API_URL + lessonSetting?.figureFailImage
-            }
-          />
-        );
+      /**
+       * * UI chung dành cho các module phát âm
+       */
       case LessonTypeE.PRONUNCIATION:
         return (
           <PronunciationLesson
@@ -563,9 +548,13 @@ const LessonScreen = observer(() => {
             ref={vowelRef}
           />
         );
-      case LessonTypeE.FILL_IN_BLANK:
+
+      /**----------------------
+       *todo    các question cho môn Tiếng Anh
+       *------------------------**/
+      case LessonTypeE.ESSAY:
         return (
-          <Math_MG2M4
+          <EssayLesson
             moduleIndex={lessonIndex}
             nextModule={nextModule}
             totalModule={testTask?.question.length ?? 0}
@@ -582,23 +571,9 @@ const LessonScreen = observer(() => {
             characterImageFail={
               env.IMAGE_BACKGROUND_BASE_API_URL + lessonSetting?.figureFailImage
             }
-            ref={vowelRef}
-            isMulti={true}
-            question="Choose your correct answer?"
-            answer={[
-              '12',
-              '11',
-              '10',
-              '100',
-              '200',
-              '34',
-              '35',
-              '53',
-              '45',
-              '31',
-            ]}
           />
         );
+      case LessonTypeE.FILL_IN_BLANK:
         return (
           <VowelsLesson
             moduleIndex={lessonIndex}
@@ -620,14 +595,10 @@ const LessonScreen = observer(() => {
             ref={vowelRef}
           />
         );
-      // case LessonTypeE.ACHIEVEMENT:
-      //   return (
-      //     <AchievementLesson
-      //       moduleIndex={lessonIndex}
-      //       nextModule={nextModule}
-      //       totalModule={lessons.length}
-      //     />
-      //   );
+
+      /**----------------------
+       *todo    các question cho môn Tiếng trung
+       *------------------------**/
       case LessonTypeE.WRITING:
         return (
           <WriteLesson
@@ -649,6 +620,9 @@ const LessonScreen = observer(() => {
             }
           />
         );
+      /**----------------------
+       *todo    các question cho môn khoa học
+       *------------------------**/
       case LessonTypeE.MIX_COLOR:
         return (
           <ScienceLesson
@@ -708,6 +682,31 @@ const LessonScreen = observer(() => {
       /**----------------------
        *todo    các question cho môn toán
        *------------------------**/
+      case MathQuestionType.MathMG2M4:
+        return (
+          <Math_MG2M4
+            moduleIndex={lessonIndex}
+            nextModule={nextModule}
+            totalModule={testTask?.question.length ?? 0}
+            lessonName={route.lessonName}
+            moduleName={route.moduleName}
+            firstMiniTestTask={testTask}
+            backgroundImage={
+              env.IMAGE_BACKGROUND_BASE_API_URL + lessonSetting?.backgroundImage
+            }
+            characterImageSuccess={
+              env.IMAGE_BACKGROUND_BASE_API_URL +
+              lessonSetting?.figureSuccessImage
+            }
+            characterImageFail={
+              env.IMAGE_BACKGROUND_BASE_API_URL + lessonSetting?.figureFailImage
+            }
+            ref={vowelRef}
+            isMulti={true}
+            question="Choose your correct answer?"
+            answer={['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']}
+          />
+        );
       case MathQuestionType.MATH_CHOOSE_CORRECT_ANSWER:
         return (
           <MathLesson

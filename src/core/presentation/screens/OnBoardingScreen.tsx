@@ -1,9 +1,8 @@
 import React, {View, Text, StyleSheet, Image} from 'react-native';
-import {RootStackScreenProps} from '../navigation/types';
 import useGlobalStyle from '../hooks/useGlobalStyle';
 import {assets} from '../utils';
 
-const OnBoardingScreen = ({navigation}) => {
+const OnBoardingScreen = ({navigation}: any) => {
   const styleHook = useGlobalStyle();
 
   return (

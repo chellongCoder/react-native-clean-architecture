@@ -115,7 +115,8 @@ const MathLesson = forwardRef<LessonRef, Props>(
       isAnswerCorrect,
       onChoiceCorrectedAnswer: () => {
         setAnswerSelected(
-          firstMiniTestTask?.question?.[moduleIndex]?.correctAnswer ?? '',
+          (firstMiniTestTask?.question?.[moduleIndex]
+            ?.correctAnswer as string) ?? '',
         );
       },
     }));

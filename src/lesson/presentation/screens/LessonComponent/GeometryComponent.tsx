@@ -79,9 +79,7 @@ const GeometryComponent = ({
       {/* Submit button container */}
       <View style={styles.wrapButtonContainer}>
         <TouchableOpacity style={styles.buttonContainer} onPress={onSubmit}>
-          <Text style={[styles.buttonTitle, globalStyle.txtLabel]}>
-            Nộp bài
-          </Text>
+          <Text style={[styles.buttonTitle, globalStyle.txtLabel]}>Submit</Text>
         </TouchableOpacity>
       </View>
     </View>
@@ -131,10 +129,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   buttonContainer: {
-    borderRadius: 52,
-    paddingVertical: 14,
-    paddingHorizontal: 24,
-    marginTop: 16,
+    borderRadius: scale(52),
+    paddingVertical: verticalScale(14),
+    paddingHorizontal: scale(24),
+    marginTop: scale(16),
     backgroundColor: '#0877B6',
   },
   buttonTitle: {

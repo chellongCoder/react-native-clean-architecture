@@ -122,22 +122,6 @@ const Math_MG2M4 = observer(
         );
       }, [firstMiniTestTask?.question, moduleIndex, ttsSpeak]);
 
-      const onSelectAnswer = useCallback(
-        (e: string) => {
-          if (isMulti) {
-            setAnswerSelected(prev => {
-              if (Array.isArray(prev) && prev.includes(e)) {
-                return prev.filter(ans => ans !== e); // Deselect
-              }
-              return Array.isArray(prev) ? [...prev, e] : [e]; // Select
-            });
-          } else {
-            setAnswerSelected(e); // Single selection
-          }
-        },
-        [isMulti],
-      );
-
       const opacity = useSharedValue(0);
       const scaleS = useSharedValue(1);
 
@@ -201,24 +185,23 @@ const Math_MG2M4 = observer(
         <LessonComponent
           backgroundImage={backgroundImage}
           characterImage={characterImage}
-          lessonName={lessonName}
           module={moduleName}
+          lessonName={lessonName}
           part={firstMiniTestTask?.name}
-          backgroundColor="#66c270"
-          backgroundAnswerColor={
-            settings.backgroundAnswerColor ?? COLORS.GREEN_DDF598
-          }
+          backgroundColor="#a3f0df"
+          backgroundAnswerColor={settings.backgroundAnswerColor}
           prompt={settings.prompt?.toString()}
-          price="Free"
           score={selectedChild?.adsPoints}
+          txtCountDown={
+            word === firstMiniTestTask?.question?.[moduleIndex].content
+              ? undefined
+              : word
+          }
           isAnswerCorrect={isAnswerCorrect}
           isShowCorrectContainer={isShowCorrectContainer}
           onPressFlower={toggleShowHint}
           buildQuestion={
             <View>
-              <Text style={[styles.fonts_SVN_Cherish, styles.textQuestion]}>
-                {word}
-              </Text>
               <Animated.Image
                 resizeMode={'contain'}
                 width={WIDTH_SCREEN}
@@ -256,13 +239,13 @@ const Math_MG2M4 = observer(
                 question={
                   <Text
                     style={[
-                      styles.fonts_SVN_Neu,
+                      styles.fonts_SVN_Cherish,
                       styles.textQuestion,
                       styles.textGreen,
                       styles.mt8,
-                      {fontSize: scale(20)},
+                      {fontSize: scale(40)},
                     ]}>
-                    {question}
+                    {firstMiniTestTask?.question?.[moduleIndex].description}
                   </Text>
                 }
                 answer={answer ?? []}
@@ -274,7 +257,10 @@ const Math_MG2M4 = observer(
 
               <PrimaryButton
                 text="Submit"
-                style={[styles.mt24]}
+                style={[
+                  styles.mt24,
+                  {backgroundColor: lessonSetting?.backgroundButtonColor},
+                ]}
                 onPress={submit}
               />
             </View>
