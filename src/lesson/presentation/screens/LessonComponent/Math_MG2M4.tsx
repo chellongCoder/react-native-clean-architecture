@@ -6,6 +6,7 @@ import React, {
   useEffect,
   useImperativeHandle,
   useMemo,
+  useRef,
   useState,
 } from 'react';
 import LessonComponent from './LessonComponent';
@@ -31,7 +32,9 @@ import useAuthenticationStore from 'src/authentication/presentation/stores/useAu
 import {observer} from 'mobx-react';
 import {LessonRef} from '../../types';
 import useHomeStore from 'src/home/presentation/stores/useHomeStore';
-import SelectionAnswersQuestion from '../../components/SelectionAnswersQuestion';
+import SelectionAnswersQuestion, {
+  SelectionAnswersQuestionRef,
+} from '../../components/SelectionAnswersQuestion';
 
 type Props = {
   moduleIndex: number;
@@ -44,7 +47,6 @@ type Props = {
   characterImageSuccess?: string;
   characterImageFail?: string;
   isMulti?: boolean;
-  question: string;
   answer?: string[];
 };
 
@@ -62,11 +64,11 @@ const Math_MG2M4 = observer(
         characterImageSuccess,
         characterImageFail,
         isMulti,
-        question,
         answer,
       },
       ref,
     ) => {
+      const answerRef = useRef<SelectionAnswersQuestionRef>(null);
       const globalStyle = useGlobalStyle();
 
       const {ttsSpeak} = useContext(TextToSpeechContext);
@@ -91,13 +93,15 @@ const Math_MG2M4 = observer(
       } = useSettingLesson({
         countDownTime: trainingCount <= 2 ? 0 : 5,
         isCorrectAnswer:
-          answerSelected ===
+          (typeof answerSelected === 'object' &&
+            (answerSelected as string[]).join('')) ===
           getCorrectAnswer(
             firstMiniTestTask?.question?.[moduleIndex]?.correctAnswer,
           ),
         onSubmit: () => {
           setAnswerSelected(isMulti ? [] : '');
-          nextModule(answerSelected);
+          answerRef.current?.resetAnswerSelected?.();
+          nextModule((answerSelected as string[]).join(''));
         },
         fullAnswer: firstMiniTestTask?.question?.[moduleIndex].fullAnswer,
       });
@@ -114,13 +118,28 @@ const Math_MG2M4 = observer(
           : characterImageFail;
       }, [characterImageFail, characterImageSuccess, isAnswerCorrect]);
 
-      const onSpeechText = useCallback(() => {
-        ttsSpeak?.(
-          firstMiniTestTask?.question?.[moduleIndex].fullAnswer
-            .toString()
-            .toLowerCase() ?? '',
+      const descriptionWithAnswers = useMemo(() => {
+        const insertAnswersIntoDescription = (
+          description: string,
+          answers: string[],
+        ) => {
+          let answerIndex = 0;
+          return description.replace(/_/g, () =>
+            answerIndex < answers.length ? answers[answerIndex++] : '_',
+          );
+        };
+        const description =
+          firstMiniTestTask?.question?.[moduleIndex].description || '';
+        const updatedDescription = insertAnswersIntoDescription(
+          description,
+          answerSelected as string[],
         );
-      }, [firstMiniTestTask?.question, moduleIndex, ttsSpeak]);
+        return updatedDescription;
+      }, [answerSelected, firstMiniTestTask?.question, moduleIndex]);
+
+      const onSpeechText = useCallback(() => {
+        ttsSpeak?.(settings.prompt?.toString().toLowerCase() ?? '');
+      }, [settings.prompt, ttsSpeak]);
 
       const opacity = useSharedValue(0);
       const scaleS = useSharedValue(1);
@@ -138,12 +157,6 @@ const Math_MG2M4 = observer(
           // Check if the component is focused
           const firstTimeout = setTimeout(() => {
             onSpeechText();
-
-            const secondTimeout = setTimeout(() => {
-              onSpeechText();
-            }, 2500);
-
-            return () => clearTimeout(secondTimeout);
           }, 1500);
 
           return () => clearTimeout(firstTimeout);
@@ -245,14 +258,17 @@ const Math_MG2M4 = observer(
                       styles.mt8,
                       {fontSize: scale(40)},
                     ]}>
-                    {firstMiniTestTask?.question?.[moduleIndex].description}
+                    {descriptionWithAnswers}
                   </Text>
                 }
                 answer={answer ?? []}
                 isShowCorrectContainer={isShowCorrectContainer}
                 isAnswerCorrect={!!isAnswerCorrect}
-                onSelectAnswer={(e: string[]) => {}}
+                onSelectAnswer={(e: string[]) => {
+                  setAnswerSelected(e);
+                }}
                 learningTimer={learningTimer}
+                ref={answerRef}
               />
 
               <PrimaryButton

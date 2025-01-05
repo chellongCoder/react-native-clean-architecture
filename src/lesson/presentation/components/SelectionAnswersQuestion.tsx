@@ -19,8 +19,9 @@ interface SelectionAnswersQuestionProps {
   learningTimer: number;
 }
 
-interface SelectionAnswersQuestionRef {
+export interface SelectionAnswersQuestionRef {
   getSelectedAnswers: () => string[];
+  resetAnswerSelected: () => void;
 }
 
 const SelectionAnswersQuestion: ForwardRefRenderFunction<
@@ -40,6 +41,7 @@ const SelectionAnswersQuestion: ForwardRefRenderFunction<
 
   useImperativeHandle(ref, () => ({
     getSelectedAnswers: () => answerSelected,
+    resetAnswerSelected: () => setAnswerSelected([]),
   }));
 
   const handleSelectAnswer = (e: string) => {

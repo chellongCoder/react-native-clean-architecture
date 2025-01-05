@@ -150,7 +150,7 @@ const LessonScreen = observer(() => {
         // question: t.question.slice(0, 1),
         // question: t.question.slice(0, 5),
         // question: shuffleArray(t.question),
-        question: __DEV__ ? t.question.slice(0, 1) : t.question,
+        question: __DEV__ ? t.question.slice(0, 3) : t.question,
       };
     });
   }, [apiTasks]);
