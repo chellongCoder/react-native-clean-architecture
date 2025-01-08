@@ -17,6 +17,7 @@ interface SelectionAnswersQuestionProps {
   isAnswerCorrect: boolean;
   onSelectAnswer: (selected: string[]) => void;
   learningTimer: number;
+  isKeyboard?: boolean;
 }
 
 export interface SelectionAnswersQuestionRef {
@@ -35,6 +36,7 @@ const SelectionAnswersQuestion: ForwardRefRenderFunction<
     isAnswerCorrect,
     onSelectAnswer,
     learningTimer,
+    isKeyboard,
   } = props;
 
   const [answerSelected, setAnswerSelected] = useState<string[]>([]);
@@ -45,13 +47,21 @@ const SelectionAnswersQuestion: ForwardRefRenderFunction<
   }));
 
   const handleSelectAnswer = (e: string) => {
-    setAnswerSelected(prev => {
-      const newSelected = prev.includes(e)
-        ? prev.filter(item => item !== e)
-        : [...prev, e];
-      onSelectAnswer(newSelected);
-      return newSelected;
-    });
+    if (isKeyboard) {
+      setAnswerSelected(prev => {
+        const newSelected = [...prev, e];
+        onSelectAnswer(newSelected);
+        return newSelected;
+      });
+    } else {
+      setAnswerSelected(prev => {
+        const newSelected = prev.includes(e)
+          ? prev.filter(item => item !== e)
+          : [...prev, e];
+        onSelectAnswer(newSelected);
+        return newSelected;
+      });
+    }
   };
 
   return (
@@ -60,7 +70,9 @@ const SelectionAnswersQuestion: ForwardRefRenderFunction<
       <View style={[styles.wapper, {width: '90%'}]}>
         {answer?.map((e, i) => {
           const bg =
-            Array.isArray(answerSelected) && answerSelected.includes(e)
+            Array.isArray(answerSelected) &&
+            answerSelected.includes(e) &&
+            !isKeyboard
               ? isShowCorrectContainer && !isAnswerCorrect
                 ? '#F28759'
                 : '#66C270'

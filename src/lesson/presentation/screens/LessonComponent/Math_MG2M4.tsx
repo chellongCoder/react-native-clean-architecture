@@ -269,6 +269,7 @@ const Math_MG2M4 = observer(
                 }}
                 learningTimer={learningTimer}
                 ref={answerRef}
+                isKeyboard={true}
               />
 
               <PrimaryButton
