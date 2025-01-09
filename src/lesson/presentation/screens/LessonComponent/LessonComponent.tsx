@@ -18,6 +18,7 @@ import useGlobalStyle from 'src/core/presentation/hooks/useGlobalStyle';
 import CustomSwitchNew from 'src/home/presentation/components/CustomSwitchNew';
 import {TYPOGRAPHY} from 'src/core/presentation/constants/typography';
 import HintButton from 'src/core/components/hint/HintButton';
+import useHomeStore from 'src/home/presentation/stores/useHomeStore';
 
 type Props = {
   lessonName?: string;
@@ -59,6 +60,8 @@ const LessonComponent = ({
   txtCountDown,
   prompt,
 }: Props) => {
+  const {lessonSetting} = useHomeStore();
+
   const insets = useSafeAreaInsets();
   const globalStyle = useGlobalStyle();
   const [isShowPrompt, setIsShowPrompt] = useState(true);
@@ -78,11 +81,7 @@ const LessonComponent = ({
   }, [moduleIndex]);
 
   return (
-    <View
-      style={[
-        styles.screen,
-        {paddingTop: 0, backgroundColor: backgroundColor},
-      ]}>
+    <View style={[styles.screen, {paddingTop: 0, backgroundColor}]}>
       <ImageBackground
         onError={handleError}
         source={source}
@@ -103,7 +102,11 @@ const LessonComponent = ({
             ]}>
             <Text
               numberOfLines={1}
-              style={[styles.fonts_SVN_Cherish, styles.textTitle]}
+              style={[
+                styles.fonts_SVN_Cherish,
+                styles.textTitle,
+                {color: lessonSetting?.backgroundButtonColor},
+              ]}
               ellipsizeMode="middle">
               {lessonName}
             </Text>
@@ -111,7 +114,7 @@ const LessonComponent = ({
               style={{
                 height: verticalScale(20),
                 width: scale(3),
-                backgroundColor: COLORS.GREEN_1C6349,
+                backgroundColor: lessonSetting?.backgroundButtonColor,
                 borderRadius: scale(10),
                 marginHorizontal: scale(8),
               }}
@@ -119,13 +122,21 @@ const LessonComponent = ({
             <View style={{maxWidth: scale(120)}}>
               <Text
                 adjustsFontSizeToFit
-                style={[globalStyle.txtButton, styles.textModule]}
+                style={[
+                  globalStyle.txtButton,
+                  styles.textModule,
+                  {color: lessonSetting?.backgroundButtonColor},
+                ]}
                 numberOfLines={1}>
                 {module}
               </Text>
               <Text
                 adjustsFontSizeToFit
-                style={[globalStyle.txtNote, styles.textPart]}
+                style={[
+                  globalStyle.txtNote,
+                  styles.textPart,
+                  {color: lessonSetting?.backgroundButtonColor},
+                ]}
                 numberOfLines={1}>
                 {part}
               </Text>

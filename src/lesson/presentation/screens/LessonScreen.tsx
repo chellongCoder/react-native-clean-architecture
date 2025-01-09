@@ -43,13 +43,12 @@ import {coreModuleContainer} from 'src/core/CoreModule';
 import {LessonRef} from '../types';
 import useHomeStore from 'src/home/presentation/stores/useHomeStore';
 import ScienceLesson from './LessonComponent/ScienceLesson';
-import {shuffleArray} from 'src/core/presentation/utils';
 import OnBoardingScreen from 'src/core/presentation/screens/OnBoardingScreen';
 import Math_MG2M4 from './LessonComponent/Math_MG2M4';
 
 export enum MathQuestionType {
   MATH_TEXT = 'math_text',
-  MATH_CHOOSE_CORRECT_ANSWER = 'math_choose_correct_answer',
+  MATH_CHOOSE_CORRECT_ANSWER = 'MATH_MG4M30',
   MATH_MULTIPLE_CHOICE = 'math_multiple_choice',
   MATH_FILL_IN_BLANK = 'math_fill_in_blank',
   MATH_TRUE_FALSE = 'math_true_false',
@@ -72,6 +71,7 @@ export enum MathQuestionType {
 
   MathMG2M4 = 'MATH_MG2M4',
   MathMG1M3 = 'Math_MG1M3',
+  MathMG3M8 = 'MATH_MG3M8',
 }
 export enum LessonTypeE {
   TEXT = 'text',
@@ -683,6 +683,31 @@ const LessonScreen = observer(() => {
        *todo    các question cho môn toán
        *------------------------**/
       case MathQuestionType.MathMG2M4:
+        return (
+          <Math_MG2M4
+            moduleIndex={lessonIndex}
+            nextModule={nextModule}
+            totalModule={testTask?.question.length ?? 0}
+            lessonName={route.lessonName}
+            moduleName={route.moduleName}
+            firstMiniTestTask={testTask}
+            backgroundImage={
+              env.IMAGE_BACKGROUND_BASE_API_URL + lessonSetting?.backgroundImage
+            }
+            characterImageSuccess={
+              env.IMAGE_BACKGROUND_BASE_API_URL +
+              lessonSetting?.figureSuccessImage
+            }
+            characterImageFail={
+              env.IMAGE_BACKGROUND_BASE_API_URL + lessonSetting?.figureFailImage
+            }
+            ref={vowelRef}
+            isMulti={true}
+            question="Choose your correct answer?"
+            answer={['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']}
+          />
+        );
+      case MathQuestionType.MathMG3M8:
         return (
           <Math_MG2M4
             moduleIndex={lessonIndex}
