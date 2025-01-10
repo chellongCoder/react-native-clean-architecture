@@ -35,6 +35,7 @@ const appConfig: ExpoConfig = {
   extra: {
     EXPO_BASE_API_DOMAIN: 'https://dev.tbd-alphadex.com',
     EXPO_BASE_API_URL: 'https://dev.tbd-alphadex.com',
+    EXPO_BASE_V1_API_DOMAIN: 'https://v1.tbd-alphadex.com',
     EXPO_IOS_CLIENT_ID:
       '827845646125-gle21suv3a6pe4tgdma4ch04h359c6ds.apps.googleusercontent.com',
     WEB_CLIENT_ID:

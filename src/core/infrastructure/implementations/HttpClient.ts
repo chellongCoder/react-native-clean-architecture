@@ -16,7 +16,7 @@ class HttpClient implements IHttpClient {
     this.axios = axios;
 
     axios.interceptors.request.use(requestConfig => {
-      requestConfig.baseURL = this.env.EXPO_BASE_API_DOMAIN;
+      requestConfig.baseURL = this.env.EXPO_BASE_V1_API_DOMAIN;
 
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
@@ -24,7 +24,7 @@ class HttpClient implements IHttpClient {
         ...requestConfig.headers,
         'Content-Type': 'application/json',
         Accept: 'application/json',
-        Origin: this.env.EXPO_BASE_API_DOMAIN,
+        Origin: this.env.EXPO_BASE_V1_API_DOMAIN,
       };
 
       requestConfig.timeout = 5000;
