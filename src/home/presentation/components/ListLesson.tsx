@@ -1,4 +1,5 @@
-import React, {useEffect, useRef, useState} from 'react';
+/* eslint-disable react-native/no-inline-styles */
+import React, {useEffect, useMemo, useState} from 'react';
 import {
   View,
   Text,
@@ -10,25 +11,23 @@ import {scale} from 'react-native-size-matters';
 import {COLORS} from 'src/core/presentation/constants/colors';
 import {CustomTextStyle} from 'src/core/presentation/constants/typography';
 import useHomeStore from '../stores/useHomeStore';
-import Carousel from 'react-native-snap-carousel';
 import {useOfflineMode} from 'src/core/presentation/hooks/offline/useOfflineMode';
 import {OfflineEnum} from 'src/core/presentation/hooks/offline/OfflineEnum';
-import {Subject} from 'src/authentication/application/types/GetListSubjectResponse';
+import {
+  Extrapolation,
+  interpolate,
+  interpolateColor,
+  SharedValue,
+} from 'react-native-reanimated';
+import Carousel from 'react-native-reanimated-carousel';
+import {Subject} from 'src/home/application/types/GetListSubjectResponse';
 
 const {width: screenWidth} = Dimensions.get('window');
 
-interface FieldData {
-  _id: string;
-  name: string;
-  description: string;
-}
 const ListLesson = () => {
   const {listSubject, setSubjectId} = useHomeStore();
   const {getData, isConnected} = useOfflineMode();
-  const [subjectIndex, setSubjectIndex] = useState<number>(0);
   const [subjects, setSubjects] = useState<Subject[]>([]);
-
-  const carouselRef = useRef<Carousel>();
 
   useEffect(() => {
     const getDataFromStore = async () => {
@@ -41,38 +40,107 @@ const ListLesson = () => {
     getDataFromStore();
   }, [getData, isConnected]);
 
-  const renderItem = ({item}: {item: FieldData}) => {
-    return (
-      <TouchableOpacity style={styles.wrapLessonContainer} activeOpacity={0.9}>
-        <Text style={styles.lessonTitle}>{item.name}</Text>
-      </TouchableOpacity>
-    );
-  };
+  const itemSize = screenWidth / 2;
+  const centerOffset = screenWidth / 2 - itemSize / 2;
 
-  const snapToPrev = () => {
-    carouselRef.current.snapToPrev();
-  };
+  const dataLength = 18;
 
-  const snapToNext = () => {
-    carouselRef.current.snapToNext();
-  };
+  const sideItemCount = 3;
+  const sideItemWidth = (screenWidth - itemSize) / (sideItemCount - 1);
+
+  const animationStyle = React.useCallback(
+    (value: number) => {
+      'worklet';
+
+      const itemOffsetInput = new Array(sideItemCount * 2 + 1)
+        .fill(null)
+        .map((_, index) => index - sideItemCount);
+
+      const itemOffset = interpolate(
+        value,
+        // e.g. [0,1,2,3,4,5,6] -> [-3,-2,-1,0,1,2,3]
+        itemOffsetInput,
+        itemOffsetInput.map(item => {
+          if (item < 0) {
+            return (-itemSize + sideItemWidth) * Math.abs(item);
+          }
+
+          if (item > 0) {
+            return (itemSize - sideItemWidth) * (Math.abs(item) - 1);
+          }
+
+          return 0;
+        }) as number[],
+      );
+
+      const translate =
+        interpolate(value, [-1, 0, 1], [-itemSize, 0, itemSize]) +
+        centerOffset -
+        itemOffset;
+
+      const width = interpolate(
+        value,
+        [-1, 0, 1],
+        [sideItemWidth, itemSize, sideItemWidth],
+        Extrapolation.CLAMP,
+      );
+
+      const backgroundColor = interpolateColor(
+        value,
+        [-3, -2, -1, 0, 1, 2, 3],
+        [
+          '#7dcf86',
+          '#7dcf86',
+          '#3ab89c',
+          '#258f78',
+          '#3ab89c',
+          '#7dcf86',
+          '#7dcf86',
+        ],
+      );
+
+      return {
+        transform: [
+          {
+            translateX: translate,
+          },
+        ],
+        width,
+        backgroundColor,
+        overflow: 'hidden',
+      };
+    },
+    [centerOffset, itemSize, sideItemWidth, sideItemCount],
+  );
+
+  const data = useMemo(
+    () =>
+      listSubject?.length !== 0 ? [...listSubject, ...listSubject] : subjects,
+    [listSubject, subjects],
+  );
 
   return (
     <View style={styles.container}>
       <Carousel
-        ref={carouselRef}
-        data={listSubject?.length !== 0 ? listSubject : subjects}
-        renderItem={renderItem}
-        sliderWidth={screenWidth}
-        itemWidth={screenWidth * 0.5}
-        itemHeight={scale(232)}
-        layout={'abeeci'}
-        loop={true}
-        centerContent={true}
-        removeClippedSubviews={false}
-        apparitionDelay={0}
-        windowSize={1}
-        horizontal={true}
+        width={itemSize}
+        height={scale(232)}
+        style={{
+          width: screenWidth,
+          height: scale(232),
+        }}
+        loop
+        windowSize={Math.round(dataLength / 2)}
+        scrollAnimationDuration={500}
+        autoPlayInterval={1200}
+        data={data}
+        renderItem={({index, animationValue}) => (
+          <Item
+            animationValue={animationValue}
+            item={data[index]}
+            key={index}
+          />
+        )}
+        customAnimation={animationStyle as any}
         onSnapToItem={(slideIndex: number) => {
           console.log(
             '🛠 LOG: 🚀 --> -----------------------------------------------------🛠 LOG: 🚀 -->',
@@ -81,12 +149,11 @@ const ListLesson = () => {
           console.log(
             '🛠 LOG: 🚀 --> -----------------------------------------------------🛠 LOG: 🚀 -->',
           );
-          setSubjectIndex(slideIndex);
-          setSubjectId(listSubject[slideIndex]?._id);
+          setSubjectId(data[slideIndex]?._id);
         }}
       />
 
-      <View style={styles.arrowContainer}>
+      {/* <View style={styles.arrowContainer}>
         <TouchableOpacity
           style={styles.arrow}
           hitSlop={styles.hitSlop}
@@ -97,7 +164,20 @@ const ListLesson = () => {
           hitSlop={styles.hitSlop}
           onPress={snapToNext}
         />
-      </View>
+      </View> */}
+    </View>
+  );
+};
+
+const Item: React.FC<{
+  item: Subject;
+  animationValue: SharedValue<number>;
+}> = ({item}) => {
+  return (
+    <View style={[{flex: 1, width: '100%', height: '100%'}]}>
+      <TouchableOpacity style={styles.wrapLessonContainer} activeOpacity={0.9}>
+        <Text style={styles.lessonTitle}>{item.name}</Text>
+      </TouchableOpacity>
     </View>
   );
 };
@@ -117,6 +197,7 @@ const styles = StyleSheet.create({
     ...CustomTextStyle.h1_SVNCherishMoment,
     color: COLORS.YELLOW_FFBF60,
     marginTop: scale(48),
+    textAlign: 'center',
   },
   arrowContainer: {
     position: 'absolute',
@@ -146,6 +227,29 @@ const styles = StyleSheet.create({
     right: 20,
     bottom: 20,
     left: 20,
+  },
+  overlay: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  overlayText: {
+    color: 'white',
+    fontSize: 20,
+    fontWeight: 'bold',
+  },
+  overlayTextContainer: {
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    padding: 10,
+    borderRadius: 10,
+    minWidth: 40,
+    minHeight: 40,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });
 
