@@ -14,6 +14,9 @@ export interface IHomeRepository {
   getListSubject: (
     fieldId: GetListSubjectPayload,
   ) => Promise<GetListSubjectResponse>;
+  getListLessonByField: ({
+    fieldId,
+  }: GetListSubjectPayload) => Promise<GetListLessonResponse>;
   getListLesson: (
     fieldId: GetListLessonPayload,
   ) => Promise<GetListLessonResponse>;

@@ -35,6 +35,15 @@ class HomeRepository implements IHomeRepository {
     return response;
   }
 
+  public async getListLessonByField({
+    fieldId,
+  }: GetListSubjectPayload): Promise<GetListLessonResponse> {
+    const response: GetListLessonResponse = await this.httpClient.get(
+      `${API_ENDPOINTS.SUBJECT.LIST_LESSON_OF_FIELD}/${fieldId}`,
+    );
+    return response;
+  }
+
   public async getListLesson({
     childrenId,
     subjectId,

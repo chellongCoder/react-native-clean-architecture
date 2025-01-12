@@ -39,6 +39,9 @@ import {LessonSettingT} from 'src/home/application/types/GetListQuestionResponse
 import PurchaseModuleUseCase from 'src/lesson/application/useCases/PurchaseModuleUseCase';
 import PurchaseModulePayload from 'src/lesson/application/types/PurchaseModulePayload';
 import GetProductUseCase from 'src/lesson/application/useCases/getProductUseCase';
+import GetListModuleByFieldUseCase from 'src/home/application/useCases/GetListModuleByFieldUseCase';
+import {GetListSubjectPayload} from 'src/home/application/types/GetListSubjectPayload';
+import {Module} from 'src/home/application/types/GetListLessonResponse';
 
 @injectable()
 export class LessonStore {
@@ -68,6 +71,8 @@ export class LessonStore {
 
   @observable isShowHint = false;
   @observable productFromBE = [];
+
+  @observable listModuleByField: Module[] = [];
 
   @persist @observable backgroundSound = 0.8;
   @persist @observable charSound = 0.3;
@@ -100,6 +105,8 @@ export class LessonStore {
     private purchaseModuleUseCase: PurchaseModuleUseCase,
     @provided(GetProductUseCase)
     private getProductUseCase: GetProductUseCase,
+    @provided(GetListModuleByFieldUseCase)
+    private getListModuleByFieldUseCase: GetListModuleByFieldUseCase,
   ) {
     makeAutoObservable(this);
     this.bottomSheetAppsRef = React.createRef<BottomSheet>();
@@ -118,6 +125,7 @@ export class LessonStore {
     this.setCurrentQuestion = this.setCurrentQuestion.bind(this);
     this.handlePurchaseModule = this.handlePurchaseModule.bind(this);
     this.handleGetProductFromBE = this.handleGetProductFromBE.bind(this);
+    this.handleGetModulesField = this.handleGetModulesField.bind(this);
   }
 
   @action
@@ -269,6 +277,13 @@ export class LessonStore {
   @action
   public async handlePostUserProgress(data: TResult[]) {
     const response = await this.postUserProgressUseCase.execute(data);
+    return response;
+  }
+
+  @action
+  public async handleGetModulesField(field: GetListSubjectPayload) {
+    const response = await this.getListModuleByFieldUseCase.execute(field);
+    this.listModuleByField = response.data;
     return response;
   }
 

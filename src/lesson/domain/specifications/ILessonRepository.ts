@@ -12,6 +12,8 @@ import {ChangeChildPointFlowerPayload} from 'src/authentication/application/type
 import {ChangeChildPointFlowerResponse} from 'src/authentication/application/types/ChangeChildPointFlowerResponse';
 import PurchaseModulePayload from 'src/lesson/application/types/PurchaseModulePayload';
 import PurchaseModuleResponse from 'src/lesson/application/types/PurchaseModuleResponse';
+import {GetListSubjectPayload} from 'src/home/application/types/GetListSubjectPayload';
+import GetListLessonResponse from 'src/home/application/types/GetListLessonResponse';
 
 export const ILessonRepositoryToken = Symbol('ILessonRepository');
 
@@ -38,4 +40,7 @@ export interface ILessonRepository {
     payload: PurchaseModulePayload,
   ) => Promise<PurchaseModuleResponse>;
   getProductFromBE: () => Promise<any>;
+  getListLessonByField: ({
+    fieldId,
+  }: GetListSubjectPayload) => Promise<GetListLessonResponse>;
 }

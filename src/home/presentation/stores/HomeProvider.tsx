@@ -13,11 +13,13 @@ import {navigateScreen} from 'src/core/presentation/navigation/actions/RootNavig
 import {STACK_NAVIGATOR} from 'src/core/presentation/navigation/ConstantNavigator';
 import {useOfflineMode} from 'src/core/presentation/hooks/offline/useOfflineMode';
 import {OfflineEnum} from 'src/core/presentation/hooks/offline/OfflineEnum';
+import {Module} from 'src/home/application/types/GetListLessonResponse';
 
 export interface IHomeState {
   listField?: FieldData[];
   field?: IMergedData;
   listSubject?: Subject[];
+  listModules?: Module[];
 }
 
 export const HomeProvider = ({children}: PropsWithChildren) => {
@@ -30,6 +32,7 @@ export const HomeProvider = ({children}: PropsWithChildren) => {
     listField: [],
     field: undefined,
     listSubject: undefined,
+    listModules: [],
   });
 
   const onSelectField = (e?: IMergedData) => {

@@ -36,7 +36,7 @@ import {
 import ICAddChild from 'src/core/components/icons/ICAddChild';
 import {COLORS} from 'src/core/presentation/constants/colors';
 import ICManIconMedium from 'src/core/components/icons/ICManIconMedium';
-import {s, scale, verticalScale} from 'react-native-size-matters';
+import {scale, verticalScale} from 'react-native-size-matters';
 import {
   pushScreen,
   resetNavigator,
@@ -88,6 +88,8 @@ import {HomeContext} from 'src/home/presentation/stores/HomeContext';
 import {FieldData} from 'src/home/application/types/GetFieldResponse';
 import {Subject} from 'src/home/application/types/GetListSubjectResponse';
 import {BlockedModuleSetting} from 'src/lesson/application/types/UserSettingPayload';
+import {GetListSubjectPayload} from 'src/home/application/types/GetListSubjectPayload';
+import {Module} from 'src/home/application/types/GetListLessonResponse';
 
 enum TabParentE {
   APP_BLOCK = 'App block',
@@ -121,6 +123,7 @@ const ParentScreen = observer(() => {
   const insets = useSafeAreaInsets();
   const globalStyle = useGlobalStyle();
   const lesson = useLessonStore();
+  const {handleGetModulesField, listModuleByField} = lesson;
   const soundHook = useSoundBackgroundGlobal();
   const {iapState, makePurchase} = useContext(IapContext);
 
@@ -141,14 +144,6 @@ const ParentScreen = observer(() => {
   const subjects = useMemo(() => {
     return homeState.listSubject;
   }, [homeState.listSubject]);
-
-  console.log(
-    '🛠 LOG: 🚀 --> -----------------------------------------------🛠 LOG: 🚀 -->',
-  );
-  console.log('🛠 LOG: 🚀 --> ~ subjects ~ subjects:', subjects);
-  console.log(
-    '🛠 LOG: 🚀 --> -----------------------------------------------🛠 LOG: 🚀 -->',
-  );
 
   useGetUserSetting(deviceToken, selectedChild?._id ?? '', lesson);
   const {isShowAuth: isAuthenSetting, changeIsShowAuth} = useAuthParent();
@@ -270,14 +265,8 @@ const ParentScreen = observer(() => {
   const points = useMemo(() => [100, 75, 50], []);
   const [point, setPoint] = useState(75);
   const [selectedField, setSelectedField] = useState<FieldData | undefined>();
-  const [selectedSubject, setSelectedSubject] = useState<Subject | undefined>();
-  console.log(
-    '🛠 LOG: 🚀 --> --------------------------------------------------🛠 LOG: 🚀 -->',
-  );
-  console.log('🛠 LOG: 🚀 --> ~ selectedSubject:', selectedSubject);
-  console.log(
-    '🛠 LOG: 🚀 --> --------------------------------------------------🛠 LOG: 🚀 -->',
-  );
+  const [selectedModule, setSelectedModule] = useState<Module | undefined>();
+
   const [backgroundSound, setBackgroundSound] = useState<number>(
     lesson.backgroundSound,
   );
@@ -334,7 +323,7 @@ const ParentScreen = observer(() => {
       ...(lesson.blockedModules ?? []),
       {
         percent: point,
-        moduleId: selectedSubject?._id ?? '',
+        moduleId: selectedModule?._id ?? '',
       },
     ];
     lesson.updateAppBlock({
@@ -364,7 +353,7 @@ const ParentScreen = observer(() => {
       },
     });
   }, [
-    selectedSubject?._id,
+    selectedModule?._id,
     lesson,
     selectedChild?._id,
     deviceToken,
@@ -460,26 +449,13 @@ The blockAppsSystem function is an asynchronous function that awaits the result 
   };
 
   const handleSelectedSubject = useCallback(
-    (field: IHomeState['field']) => {
-      fetchListSubject(field).then(v => {
-        const blockedModules = v?.filter(subject =>
-          lesson.blockedModules?.some(blockedModule => {
-            if (subject._id === blockedModule.moduleId) {
-              return {
-                ...subject,
-                percent: blockedModule.percent,
-              };
-            }
-          }),
-        );
-
-        setSelectedSubject(blockedModules?.[0] ?? v?.[0]);
-
+    (field: GetListSubjectPayload) => {
+      handleGetModulesField(field).then(v => {
         setPoint(p => lesson.blockedModules?.[0]?.percent ?? p);
+        setSelectedModule(_v => (!_v ? v.data?.[0] : _v));
       });
     },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [lesson.blockedModules],
+    [handleGetModulesField, lesson.blockedModules],
   );
 
   useEffect(() => {
@@ -510,7 +486,7 @@ The blockAppsSystem function is an asynchronous function that awaits the result 
 
   useEffect(() => {
     setSelectedField(listFields?.[0]);
-    handleSelectedSubject(listFields?.[0]);
+    handleSelectedSubject({fieldId: listFields?.[0]?._id ?? '0'});
   }, [listFields, handleSelectedSubject]);
 
   const _buildBlockView = () => {
@@ -554,10 +530,10 @@ The blockAppsSystem function is an asynchronous function that awaits the result 
                 </View>
                 <Dropdown
                   data={listFields ?? []}
-                  title={selectedField?.name ?? listFields?.[0]?.name}
+                  title={selectedField?.name ?? listFields?.[0]?.name ?? ''}
                   onSelectItem={item => {
                     setSelectedField(item);
-                    handleSelectedSubject(item);
+                    handleSelectedSubject({fieldId: item._id});
                   }}
                   width={scale(100)}
                   nameIndex="name"
@@ -586,10 +562,10 @@ The blockAppsSystem function is an asynchronous function that awaits the result 
 
                 <View style={{zIndex: 998}}>
                   <Dropdown
-                    data={subjects ?? []}
-                    title={selectedSubject?.name ?? subjects?.[0]?.name}
+                    data={listModuleByField ?? []}
+                    title={selectedModule?.name ?? listModuleByField?.[0]?.name}
                     onSelectItem={item => {
-                      setSelectedSubject(item);
+                      setSelectedModule(item);
                     }}
                     width={scale(100)}
                     nameIndex="name"

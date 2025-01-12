@@ -18,7 +18,6 @@ import {moderateScale, scale, verticalScale} from 'react-native-size-matters';
 import useGlobalStyle from 'src/core/presentation/hooks/useGlobalStyle';
 import {StyleSheet} from 'react-native';
 import {Text} from 'react-native';
-import {Switch} from 'react-native';
 import {COLORS} from 'src/core/presentation/constants/colors';
 import {
   askOverlayPermission,

@@ -17,9 +17,21 @@ import GetTopRankingUseCase from './application/useCases/GetTopRankingUseCase';
 import ChangeChildPointFlowerUsecase from 'src/authentication/application/useCases/ChangeChildPointFlowerUsecase';
 import PurchaseModuleUseCase from './application/useCases/PurchaseModuleUseCase';
 import GetProductUseCase from './application/useCases/getProductUseCase';
+import GetListModuleByFieldUseCase from 'src/home/application/useCases/GetListModuleByFieldUseCase';
+import HomeRepository from 'src/home/infrastructure/HomeRepository';
+import {IHomeRepository} from 'src/home/domain/IHomeRepository';
+import {HomeStore} from 'src/home/presentation/stores/HomeStore';
 
 @module({
   providers: [
+    {
+      useClass: LessonStore,
+      scope: 'Singleton',
+    },
+    {
+      useClass: HomeStore,
+      scope: 'Singleton',
+    },
     {
       provide: IPostRepositoryToken,
       useClass: PostRepository,
@@ -27,6 +39,10 @@ import GetProductUseCase from './application/useCases/getProductUseCase';
     {
       provide: ILessonRepositoryToken,
       useClass: LessonRepository,
+    },
+    {
+      provide: IHomeRepository,
+      useClass: HomeRepository,
     },
     FindPostUseCase,
     GetPostsUseCase,
@@ -41,16 +57,14 @@ import GetProductUseCase from './application/useCases/getProductUseCase';
       useClass: FindPostStore,
       scope: 'Transient',
     },
-    {
-      useClass: LessonStore,
-      scope: 'Singleton',
-    },
+
     GetReportProgressChildrenUseCase,
     PostUserProgressUseCase,
     GetRankingOfChildUseCase,
     GetTopRankingUseCase,
     PurchaseModuleUseCase,
     GetProductUseCase,
+    GetListModuleByFieldUseCase,
   ],
 })
 export class LessonModule {}

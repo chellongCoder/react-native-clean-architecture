@@ -91,6 +91,7 @@ export const API_ENDPOINTS = {
   SUBJECT: {
     LIST_ALL_SUBJECT: getSubjectEndPointServices('list-all-subject'),
     LIST_SUBJECT_OF_FIELD: getSubjectEndPointServices('list-subject-of-field'),
+    LIST_LESSON_OF_FIELD: getSubjectEndPointServices('list-lesson-of-field'),
   },
   LESSON: {
     LISTLESSONOFSUBJECT: getLessonSubjectEndPointServices(

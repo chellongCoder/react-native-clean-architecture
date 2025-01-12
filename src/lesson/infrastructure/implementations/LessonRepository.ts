@@ -23,6 +23,8 @@ import {ChangeChildPointFlowerPayload} from 'src/authentication/application/type
 import {ChangeChildPointFlowerResponse} from 'src/authentication/application/types/ChangeChildPointFlowerResponse';
 import PurchaseModulePayload from 'src/lesson/application/types/PurchaseModulePayload';
 import PurchaseModuleResponse from 'src/lesson/application/types/PurchaseModuleResponse';
+import {GetListSubjectPayload} from 'src/home/application/types/GetListSubjectPayload';
+import GetListLessonResponse from 'src/home/application/types/GetListLessonResponse';
 
 @injectable()
 class LessonRepository implements ILessonRepository {
@@ -132,6 +134,16 @@ class LessonRepository implements ILessonRepository {
     const response: any = await this.httpClient.get(
       API_ENDPOINTS.GET_PRODUCT.PRODUCT,
     );
+    return response;
+  }
+
+  public async getListLessonByField({
+    fieldId,
+  }: GetListSubjectPayload): Promise<GetListLessonResponse> {
+    const response: GetListLessonResponse = await this.httpClient.get(
+      `${API_ENDPOINTS.SUBJECT.LIST_LESSON_OF_FIELD}/${fieldId}`,
+    );
+
     return response;
   }
 }
