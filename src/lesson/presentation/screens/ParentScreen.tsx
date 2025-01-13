@@ -124,6 +124,7 @@ const ParentScreen = observer(() => {
   const globalStyle = useGlobalStyle();
   const lesson = useLessonStore();
   const {handleGetModulesField, listModuleByField} = lesson;
+
   const soundHook = useSoundBackgroundGlobal();
   const {iapState, makePurchase} = useContext(IapContext);
 
@@ -135,7 +136,7 @@ const ParentScreen = observer(() => {
     deleteChildren,
   } = useAuthenticationStore();
 
-  const {homeState, fetchListSubject} = useContext(HomeContext);
+  const {homeState} = useContext(HomeContext);
 
   const listFields = useMemo(() => {
     return homeState.listField;
@@ -452,7 +453,7 @@ The blockAppsSystem function is an asynchronous function that awaits the result 
     (field: GetListSubjectPayload) => {
       handleGetModulesField(field).then(v => {
         setPoint(p => lesson.blockedModules?.[0]?.percent ?? p);
-        setSelectedModule(_v => (!_v ? v.data?.[0] : _v));
+        setSelectedModule(v.data?.[0]);
       });
     },
     [handleGetModulesField, lesson.blockedModules],

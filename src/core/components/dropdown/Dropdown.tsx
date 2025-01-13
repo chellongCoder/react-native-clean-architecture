@@ -10,6 +10,7 @@ import Animated, {
   useAnimatedStyle,
   withTiming,
 } from 'react-native-reanimated';
+import * as Haptics from 'expo-haptics';
 
 type Props = {
   data: any[];
@@ -46,6 +47,7 @@ const Dropdown = ({
     maxHeight.value = withTiming(isShowLimitOption ? 0 : totalHeight, {
       duration: 300,
     });
+    Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
   };
 
   return (
@@ -85,8 +87,13 @@ const Dropdown = ({
           shadowOpacity: 0.4,
         }}>
         {isShowLimitOption && (
-          <Animated.View
-            style={[styles.dropdown, animatedStyles, width ? {width} : {}]}>
+          <Animated.ScrollView
+            style={[
+              styles.dropdown,
+              animatedStyles,
+              width ? {width} : {},
+              {maxHeight: verticalScale(100)},
+            ]}>
             {data
               .filter(e => e !== title)
               .map((p, i) => {
@@ -97,6 +104,7 @@ const Dropdown = ({
                     onPress={() => {
                       onSelectItem(p);
                       setIsShowLimitOption(false);
+                      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
                     }}
                     style={[
                       i !== data.length - 1
@@ -104,7 +112,7 @@ const Dropdown = ({
                             borderBottomWidth: 0.5,
                             borderColor: COLORS.GREEN_1C6A59,
                           }
-                        : {},
+                        : {paddingBottom: verticalScale(20)},
                     ]}>
                     <Text style={[globalStyle.txtNote, styles.option]}>
                       {typeof p === 'object' ? p[nameIndex!] : p}
@@ -113,7 +121,7 @@ const Dropdown = ({
                   </TouchableOpacity>
                 );
               })}
-          </Animated.View>
+          </Animated.ScrollView>
         )}
       </View>
     </>

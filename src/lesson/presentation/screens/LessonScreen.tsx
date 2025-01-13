@@ -73,6 +73,11 @@ export enum MathQuestionType {
   MathMG1M3 = 'Math_MG1M3',
   MathMG3M8 = 'MATH_MG3M8',
 }
+
+export enum LanguageE {
+  ENGLISHG2M12 = 'ENGLISHG2M12',
+  ENGLISH_EG1M3 = 'ENGLISH_EG1M3',
+}
 export enum LessonTypeE {
   TEXT = 'text',
   CHOOSE_CORRECT_ANSWER = 'choose_correct_answer',
@@ -521,11 +526,15 @@ const LessonScreen = observer(() => {
 
   const buildLesson = () => {
     switch (
-      testTask?.question?.[lessonIndex]?.type as LessonTypeE | MathQuestionType
+      testTask?.question?.[lessonIndex]?.type as
+        | LessonTypeE
+        | MathQuestionType
+        | LanguageE
     ) {
       /**
        * * UI chung dành cho các module phát âm
        */
+      case LanguageE.ENGLISHG2M12:
       case LessonTypeE.PRONUNCIATION:
         return (
           <PronunciationLesson
@@ -552,7 +561,7 @@ const LessonScreen = observer(() => {
       /**----------------------
        *todo    các question cho môn Tiếng Anh
        *------------------------**/
-      case LessonTypeE.ESSAY:
+      case LanguageE.ENGLISH_EG1M3:
         return (
           <EssayLesson
             moduleIndex={lessonIndex}
@@ -573,7 +582,7 @@ const LessonScreen = observer(() => {
             }
           />
         );
-      case LessonTypeE.FILL_IN_BLANK:
+      case LanguageE.ENGLISH_EG1M3:
         return (
           <VowelsLesson
             moduleIndex={lessonIndex}
