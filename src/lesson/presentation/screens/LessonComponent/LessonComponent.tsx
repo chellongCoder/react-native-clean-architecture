@@ -27,7 +27,7 @@ type Props = {
   backgroundColor?: string;
   backgroundImage?: string;
   characterImage?: string;
-  backgroundAnswerColor: string;
+  backgroundAnswerColor?: string;
   buildQuestion: React.ReactNode;
   buildAnswer: React.ReactNode;
   moduleIndex: number;
