@@ -75,17 +75,23 @@ platform :android do
 
   desc "Build AAB and upload to public testing on Play Console"
   lane :build_and_upload_aab do
-    increment_version_code
+    # increment_version_code
 
-    gradle(task: "clean bundleRelease")
+    # gradle(task: "bundleRelease")
 
-    # supply(
-    #   track: "beta", # Use "beta" for public testing track
-    #   aab: "../app/build/outputs/bundle/release/app-release.aab",
-    #   skip_upload_metadata: true,
-    #   skip_upload_images: true,
-    #   skip_upload_screenshots: true,
-    #   release_status: "completed"
-    # )
+     # Ensure the path to the AAB file is correct
+    aab_path = "/Users/mac/Workspaces/ReactNative/tbd-frontend/android/app/build/outputs/bundle/release/app-release.aab"
+    unless File.exist?(aab_path)
+      UI.user_error!("Could not find AAB file at path '#{aab_path}'")
+    end
+
+    supply(
+      track: "beta", # Use "beta" for public testing track
+      aab: aab_path,
+      skip_upload_metadata: true,
+      skip_upload_images: true,
+      skip_upload_screenshots: true,
+      release_status: "completed"
+    )
   end
 end
