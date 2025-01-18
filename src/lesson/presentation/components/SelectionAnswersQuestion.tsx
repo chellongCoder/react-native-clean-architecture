@@ -80,7 +80,7 @@ const SelectionAnswersQuestion: ForwardRefRenderFunction<
           const length = answer?.length ?? 2;
           const size = Math.min(
             (WIDTH_SCREEN - scale(160)) / Math.ceil(length / 2),
-            verticalScale(72),
+            verticalScale(60),
           );
 
           return (
@@ -163,7 +163,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignSelf: 'center',
     flexWrap: 'wrap-reverse', // Add this to enable wrapping
-    flexGrow: 0.5,
+    backgroundColor: 'red',
   },
   fill: {
     // Add your styles here

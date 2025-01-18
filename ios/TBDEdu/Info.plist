@@ -35,7 +35,7 @@
 	<key>CFBundleVersion</key>
 	<string>$(CURRENT_PROJECT_VERSION)</string>
 	<key>LSApplicationCategoryType</key>
-	<string></string>
+	<string/>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSAppTransportSecurity</key>
@@ -56,7 +56,7 @@
 	<key>NSAppleMusicUsageDescription</key>
 	<string>To select local pictures from library, and change your information photo in our application, allow us to access your Media</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string></string>
+	<string/>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>$(PRODUCT_NAME) would like to use your microphone (for searching)</string>
 	<key>NSSpeechRecognitionUsageDescription</key>
@@ -74,6 +74,8 @@
 		<string>eina-03-semibold.ttf</string>
 		<string>eina-04-regular.ttf</string>
 		<string>SVN-Cherish Moment.ttf</string>
+		<string>SVN-Neuzeit Grotesk Bold.otf</string>
+		<string>SVN-Neuzeit Grotesk Regular.otf</string>
 	</array>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>

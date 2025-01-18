@@ -38,7 +38,6 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
   },
   content: {
-    marginTop: 36,
     marginBottom: 8,
   },
 });

@@ -46,6 +46,7 @@ const AccountStatus = (props: TProps) => {
         {title ? (
           <View>
             <Text style={styles.title}>{title}</Text>
+            <Text style={styles.subTitle}>{subject}</Text>
           </View>
         ) : (
           <View style={{flex: 1}} />
@@ -58,15 +59,6 @@ const AccountStatus = (props: TProps) => {
             value={isEnabled}
             onValueChange={setIsEnabled}
           />
-        )}
-      </View>
-      <View style={styles.iconContainer}>
-        {subject ? (
-          <View>
-            <Text style={styles.subTitle}>{subject}</Text>
-          </View>
-        ) : (
-          <View style={{flex: 1}} />
         )}
       </View>
     </View>
@@ -82,7 +74,7 @@ const styles = StyleSheet.create({
   iconContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    alignItems: 'center',
+    alignItems: 'flex-start',
   },
   wrapIconContainer: {
     flexDirection: 'row',
@@ -110,6 +102,7 @@ const styles = StyleSheet.create({
   subTitle: {
     ...CustomTextStyle.h4_bold,
     color: COLORS.BLUE_258F78,
+    textAlign: 'center',
   },
   text: {
     ...CustomTextStyle.smallBold,

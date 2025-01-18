@@ -60,8 +60,9 @@ export const HomeProvider = ({children}: PropsWithChildren) => {
         storeData(OfflineEnum.LIST_SUBJECT, res.data);
         if (res.data) {
           setHomeState({listSubject: res.data});
-          setSubjectId(res.data?.[0]?._id);
-          navigateScreen(STACK_NAVIGATOR.HOME.SUBJECT_SCREEN, {});
+          navigateScreen(STACK_NAVIGATOR.HOME.SUBJECT_SCREEN, {
+            subject: homeState?.field.name,
+          });
         }
       }
     }

@@ -99,7 +99,13 @@ const HintButton = ({value, onValueChange, point}: TPros) => {
                 style={[styles.wrapContentContainer, animatedStyle]}>
                 <View style={styles.fillCenter}>
                   <View style={styles.wrapContent}>
-                    <Text style={styles.title}>{'hint'}</Text>
+                    <Text
+                      allowFontScaling
+                      numberOfLines={1}
+                      adjustsFontSizeToFit
+                      style={styles.title}>
+                      {'hint'}
+                    </Text>
                   </View>
                 </View>
                 <Image

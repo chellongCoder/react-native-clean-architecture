@@ -1,18 +1,23 @@
 import React from 'react';
 import {View, Text, StyleSheet, Dimensions, ScrollView} from 'react-native';
-import {scale} from 'react-native-size-matters';
+import {scale, verticalScale} from 'react-native-size-matters';
 import {COLORS} from 'src/core/presentation/constants/colors';
-import {CustomTextStyle} from 'src/core/presentation/constants/typography';
+import {
+  CustomTextStyle,
+  TYPOGRAPHY,
+} from 'src/core/presentation/constants/typography';
 import ModuleItem from 'src/lesson/presentation/components/LessonModule/ModuleItem';
 import {useListModule} from 'src/hooks/useListModule';
 import {observer} from 'mobx-react';
 import useHomeStore from '../stores/useHomeStore';
 import BookView from 'src/lesson/presentation/components/BookView';
+import ListGrade from 'src/lesson/presentation/components/LessonModule/ListGrade';
 
 const screenWidth = Dimensions.get('screen').width;
 
 const ListModule = observer(() => {
   const {selectedSubject} = useListModule();
+
   const {listSubject, subjectId, listModule} = useHomeStore();
 
   const totalQuestions = listModule?.reduce(
@@ -27,16 +32,9 @@ const ListModule = observer(() => {
 
   return (
     <BookView style={styles.container} contentStyle={styles.contentBg}>
-      <View style={styles.wrapHeaderContainer}>
-        <Text style={styles.headerTitle}>
-          {listSubject?.filter(item => item?._id === subjectId)[0]?.name}
-        </Text>
-        <View style={styles.wrapHeaderScore}>
-          <Text
-            style={
-              styles.headerScore
-            }>{`${totalProgressQuestions}/${totalQuestions}`}</Text>
-        </View>
+      <ListGrade />
+      <View style={styles.gradeContainer}>
+        <Text style={styles.txtGrade}>ENGLISH GRADE {1}</Text>
       </View>
       <ScrollView
         style={styles.f1}
@@ -73,18 +71,12 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
-    marginTop: scale(32),
-    // backgroundColor: COLORS.GREEN_DDF598,
+    marginTop: scale(16),
     marginHorizontal: scale(-16),
     paddingHorizontal: scale(16),
-    paddingTop: scale(24),
-    // borderTopRightRadius: scale(32),
-    // borderTopLeftRadius: scale(32),
   },
   contentBg: {
     flex: 1,
-    marginTop: 0,
-    marginBottom: 0,
   },
   square: {
     height: scale(24),
@@ -117,6 +109,18 @@ const styles = StyleSheet.create({
   },
   wrapModuleContainer: {
     marginBottom: scale(8),
+  },
+  txtGrade: {
+    ...CustomTextStyle.h4,
+    fontFamily: TYPOGRAPHY.FAMILY.SVNNeuzeitBold,
+    color: COLORS.BLUE_258F78,
+  },
+  gradeContainer: {
+    backgroundColor: COLORS.WHITE_FBF8CC,
+    alignItems: 'center',
+    paddingVertical: scale(5),
+    borderRadius: scale(20),
+    marginTop: verticalScale(12),
   },
 });
 

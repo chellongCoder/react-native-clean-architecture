@@ -21,18 +21,16 @@ const SubjectScreen = observer((props: any) => {
         imageStyle={styles.image} // Apply styles to the image
         resizeMode="cover">
         <SafeAreaView style={styles.container} edges={['top']}>
-          <View style={styles.wrapContentContainer}>
-            <View style={{paddingHorizontal: scale(16)}}>
-              <AccountStatus
-                title={'Lessons'}
-                subject={route?.params?.subject}
-                isShowLogout
-              />
-            </View>
-            <ListLesson />
-            <View style={{paddingHorizontal: scale(16), flex: 1}}>
-              <ListModule />
-            </View>
+          <View style={{paddingHorizontal: scale(16)}}>
+            <AccountStatus
+              title={'Lessons'}
+              subject={route?.params?.subject}
+              isShowLogout
+            />
+          </View>
+          <ListLesson />
+          <View style={{paddingHorizontal: scale(16), flex: 1}}>
+            <ListModule />
           </View>
         </SafeAreaView>
       </ImageBackground>
@@ -49,9 +47,6 @@ const styles = StyleSheet.create({
     opacity: 0.3, // Set the opacity here
   },
   container: {
-    flex: 1,
-  },
-  wrapContentContainer: {
     flex: 1,
   },
 });

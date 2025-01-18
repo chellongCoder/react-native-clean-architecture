@@ -713,7 +713,7 @@ const LessonScreen = observer(() => {
             ref={vowelRef}
             isMulti={true}
             question="Choose your correct answer?"
-            answer={['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']}
+            answer={['0', '1', '2', '3']}
           />
         );
       case MathQuestionType.MathMG3M8:
