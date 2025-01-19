@@ -175,13 +175,15 @@ const EssayLesson = ({
       prompt={settings.prompt?.toString()}
       price="Free"
       score={selectedChild?.adsPoints}
+      txtCountDown={
+        word === firstMiniTestTask?.question?.[moduleIndex].content
+          ? undefined
+          : word
+      }
       isAnswerCorrect={isAnswerCorrect}
       isShowCorrectContainer={isShowCorrectContainer}
       buildQuestion={
         <View>
-          <Text style={[styles.fonts_SVN_Cherish, styles.textQuestion]}>
-            {word}
-          </Text>
           <Animated.Image
             resizeMode={'contain'}
             style={[

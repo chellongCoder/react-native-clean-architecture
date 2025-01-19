@@ -5,6 +5,7 @@ import {
   StyleSheet,
   TouchableOpacity,
   Dimensions,
+  Image,
 } from 'react-native';
 import {scale} from 'react-native-size-matters';
 import {COLORS} from 'src/core/presentation/constants/colors';
@@ -17,6 +18,9 @@ import {
   Subject,
   TypeSubject,
 } from 'src/home/application/types/GetListSubjectResponse';
+import {coreModuleContainer} from 'src/core/CoreModule';
+import Env, {EnvToken} from 'src/core/domain/entities/Env';
+import {assets} from 'src/core/presentation/utils';
 
 const {width: screenWidth} = Dimensions.get('window');
 
@@ -24,19 +28,15 @@ interface FieldData {
   _id: string;
   name: string;
   description: string;
+  image: string;
 }
 const ListLesson = () => {
-  const {listSubject, setSubjectId, subjectId} = useHomeStore();
-  console.log(
-    '🛠 LOG: 🚀 --> -------------------------------------------------------🛠 LOG: 🚀 -->',
-  );
-  console.log('🛠 LOG: 🚀 --> ~ ListLesson ~ listSubject:', listSubject);
-  console.log(
-    '🛠 LOG: 🚀 --> -------------------------------------------------------🛠 LOG: 🚀 -->',
-  );
+  const {listSubject, setSubjectId, subjectId, rootSubject} = useHomeStore();
+
   const {getData, isConnected} = useOfflineMode();
   const [subjectIndex, setSubjectIndex] = useState<number>(0);
   const [subjects, setSubjects] = useState<Subject[]>([]);
+  const env = coreModuleContainer.getProvided<Env>(EnvToken); // Instantiate CoreService
 
   const carouselRef = useRef<Carousel>();
 
@@ -54,7 +54,17 @@ const ListLesson = () => {
   const renderItem = ({item}: {item: FieldData}) => {
     return (
       <TouchableOpacity style={styles.wrapLessonContainer} activeOpacity={0.9}>
-        <Text style={styles.lessonTitle}>{item.name}</Text>
+        {/* <Text style={styles.lessonTitle}>{item.name}</Text> */}
+        <Image
+          source={{uri: env.IMAGE_MODULE_BASE_API_URL + item.image}}
+          style={styles.imageSlide}
+          resizeMode="cover"
+          onError={() => {
+            // Show your default image
+            console.log('Error loading image', item.image);
+          }}
+          defaultSource={assets.onboarding}
+        />
       </TouchableOpacity>
     );
   };
@@ -73,6 +83,12 @@ const ListLesson = () => {
     );
   }, [listSubject, subjects]);
 
+  useEffect(() => {
+    if (subjectId === '') {
+      setSubjectId(data[0]?._id);
+    }
+  }, [data, setSubjectId, subjectId]);
+
   return (
     <View style={styles.container}>
       <Carousel
@@ -89,7 +105,7 @@ const ListLesson = () => {
         apparitionDelay={0}
         windowSize={1}
         horizontal={true}
-        firstItem={data.findIndex(e => e._id === subjectId)}
+        firstItem={data.findIndex(e => e._id === rootSubject?._id)}
         onSnapToItem={(slideIndex: number) => {
           console.log(
             '🛠 LOG: 🚀 --> -----------------------------------------------------🛠 LOG: 🚀 -->',
@@ -163,6 +179,15 @@ const styles = StyleSheet.create({
     right: 20,
     bottom: 20,
     left: 20,
+  },
+  imageSlide: {
+    width: '100%',
+    height: '100%',
+    resizeMode: 'cover',
+    shadowColor: '#000',
+    shadowOffset: {width: 1, height: 1},
+    shadowOpacity: 0.3,
+    shadowRadius: scale(2),
   },
 });
 

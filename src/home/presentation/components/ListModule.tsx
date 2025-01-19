@@ -34,7 +34,9 @@ const ListModule = observer(() => {
     <BookView style={styles.container} contentStyle={styles.contentBg}>
       <ListGrade />
       <View style={styles.gradeContainer}>
-        <Text style={styles.txtGrade}>ENGLISH GRADE {1}</Text>
+        <Text style={styles.txtGrade}>
+          {listSubject.find(e => e._id === subjectId)?.name}
+        </Text>
       </View>
       <ScrollView
         style={styles.f1}

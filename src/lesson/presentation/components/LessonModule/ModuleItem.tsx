@@ -1,5 +1,5 @@
 import {StyleSheet, Text, View, Image} from 'react-native';
-import React, {useCallback} from 'react';
+import React, {useCallback, useEffect} from 'react';
 import ICBook from 'src/core/components/icons/ICBook';
 import useGlobalStyle from 'src/core/presentation/hooks/useGlobalStyle';
 import {COLORS} from 'src/core/presentation/constants/colors';
@@ -11,6 +11,12 @@ import {navigateScreen} from 'src/core/presentation/navigation/actions/RootNavig
 import {STACK_NAVIGATOR} from 'src/core/presentation/navigation/ConstantNavigator';
 import {coreModuleContainer} from 'src/core/CoreModule';
 import Env, {EnvToken} from 'src/core/domain/entities/Env';
+import Animated, {
+  Easing,
+  useAnimatedStyle,
+  useSharedValue,
+  withTiming,
+} from 'react-native-reanimated';
 
 type Props = {
   isFinished: boolean;
@@ -25,6 +31,8 @@ type Props = {
 const ModuleItem = (props: Props) => {
   const globalStyle = useGlobalStyle();
   const env = coreModuleContainer.getProvided<Env>(EnvToken); // Instantiate CoreService
+  const translateX = useSharedValue(-100);
+  const opacity = useSharedValue(0);
 
   const onRevision = useCallback(() => {
     navigateScreen(STACK_NAVIGATOR.HOME.LESSON, {
@@ -53,8 +61,31 @@ const ModuleItem = (props: Props) => {
       <ICBook width={32} height={25} color={COLORS.WHITE} />
     );
 
+  useEffect(() => {
+    translateX.value = withTiming(0, {
+      duration: 500,
+      easing: Easing.out(Easing.exp),
+    });
+    opacity.value = withTiming(1, {
+      duration: 500,
+      easing: Easing.out(Easing.exp),
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [props.id]);
+
+  const animatedStyle = useAnimatedStyle(() => {
+    return {
+      transform: [{translateX: translateX.value}],
+      opacity: opacity.value,
+    };
+  });
   return !props.isFinished ? (
-    <View style={[styles.container, {backgroundColor: COLORS.WHITE_FBF8CC}]}>
+    <Animated.View
+      style={[
+        styles.container,
+        {backgroundColor: COLORS.WHITE_FBF8CC},
+        animatedStyle,
+      ]}>
       <View style={[globalStyle.rowCenter]}>
         <View
           style={[
@@ -87,9 +118,14 @@ const ModuleItem = (props: Props) => {
         <View style={{height: verticalScale(14)}} />
         <Button onPress={onStudy} color={COLORS.GREEN_66C270} title="Study" />
       </View>
-    </View>
+    </Animated.View>
   ) : (
-    <View style={[styles.container, {backgroundColor: COLORS.GREEN_66C270}]}>
+    <Animated.View
+      style={[
+        styles.container,
+        {backgroundColor: COLORS.GREEN_66C270},
+        animatedStyle,
+      ]}>
       <View style={[globalStyle.rowCenter]}>
         <View
           style={[
@@ -123,7 +159,7 @@ const ModuleItem = (props: Props) => {
           title="Revision"
         />
       </View>
-    </View>
+    </Animated.View>
   );
 };
 

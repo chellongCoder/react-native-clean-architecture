@@ -77,6 +77,7 @@ export enum MathQuestionType {
 export enum LanguageE {
   ENGLISHG2M12 = 'ENGLISHG2M12',
   ENGLISH_EG1M3 = 'ENGLISH_EG1M3',
+  ENGLISH_EG0M1 = 'ENGLISH_EG0M1',
 }
 export enum LessonTypeE {
   TEXT = 'text',

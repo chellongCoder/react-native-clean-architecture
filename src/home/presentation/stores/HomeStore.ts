@@ -1,5 +1,5 @@
 import {injectable, provided} from 'inversify-sugar';
-import {action, makeAutoObservable, observable} from 'mobx';
+import {action, computed, makeAutoObservable, observable} from 'mobx';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {create, persist} from 'mobx-persist';
 import HomeStoreState from './types/HomeStoreState';
@@ -7,7 +7,10 @@ import {FieldData} from 'src/home/application/types/GetFieldResponse';
 import GetFieldUseCase from 'src/home/application/useCases/GetFieldUseCase';
 import GetListSubjectUseCase from 'src/home/application/useCases/GetListSubjectUseCase';
 import {GetListSubjectPayload} from 'src/home/application/types/GetListSubjectPayload';
-import {Subject} from 'src/home/application/types/GetListSubjectResponse';
+import {
+  Subject,
+  TypeSubject,
+} from 'src/home/application/types/GetListSubjectResponse';
 import {GetListLessonPayload} from 'src/home/application/types/GetListLessonPayload';
 import GetListLessonUseCase from 'src/home/application/useCases/GetListLessonUseCase';
 import {Module} from 'src/home/application/types/GetListLessonResponse';
@@ -69,6 +72,17 @@ export class HomeStore implements HomeStoreState {
   @action
   public async setSubjectId(index: string) {
     this.subjectId = index;
+  }
+
+  @computed
+  public get rootSubject() {
+    const s = this.listSubject.find(e => e._id === this.subjectId);
+    const roots = this.listSubject.filter(e => e.type === TypeSubject.ROOT);
+    if (s?.parentId) {
+      return roots.find(e => e._id === s.parentId);
+    } else {
+      return s;
+    }
   }
 
   @action

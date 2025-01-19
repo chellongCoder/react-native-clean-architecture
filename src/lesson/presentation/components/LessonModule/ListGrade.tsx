@@ -1,12 +1,23 @@
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import React, {forwardRef, useImperativeHandle, useState} from 'react';
+import React, {
+  forwardRef,
+  useEffect,
+  useImperativeHandle,
+  useState,
+} from 'react';
 import {scale, verticalScale} from 'react-native-size-matters';
 import {FontFamily} from 'src/core/presentation/hooks/useFonts';
 import {COLORS} from 'src/core/presentation/constants/colors';
+import useHomeStore from 'src/home/presentation/stores/useHomeStore';
+import * as Haptics from 'expo-haptics';
 
 const ListGrade = forwardRef((_, ref) => {
-  const grades = ['K', '1', '2', '3', '4', '5', '6'];
   const [index, setIndex] = useState<number | undefined>(0);
+  const {setSubjectId, listSubject, rootSubject} = useHomeStore();
+
+  const gradeObjs = listSubject.filter(
+    subject => subject.parentId === rootSubject?._id,
+  );
 
   useImperativeHandle(ref, () => {
     return {
@@ -15,17 +26,33 @@ const ListGrade = forwardRef((_, ref) => {
     };
   });
 
+  useEffect(() => {
+    if (gradeObjs.length > 0) {
+      setIndex(gradeObjs.length - 1);
+      setSubjectId(gradeObjs[gradeObjs.length - 1]._id);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [rootSubject]);
+
   return (
     <View style={styles.container}>
-      {grades.map(grade => {
+      {gradeObjs.map(grade => {
         return (
           <TouchableOpacity
-            key={grade}
+            key={grade._id}
             style={
-              index === grades.indexOf(grade) ? styles.itemActive : styles.item
+              index === gradeObjs.indexOf(grade)
+                ? styles.itemActive
+                : styles.item
             }
-            onPress={() => setIndex(grades.indexOf(grade))}>
-            <Text style={styles.txtItem}>{grade}</Text>
+            onPress={() => {
+              setIndex(gradeObjs.indexOf(grade));
+              setSubjectId(grade._id);
+              Haptics.selectionAsync();
+            }}>
+            <Text style={styles.txtItem}>
+              {grade.name.split(' ')?.[1].charAt(0)}
+            </Text>
           </TouchableOpacity>
         );
       })}
