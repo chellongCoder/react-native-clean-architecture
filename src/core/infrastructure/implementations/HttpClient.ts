@@ -15,7 +15,7 @@ class HttpClient implements IHttpClient {
   constructor(@provided(EnvToken) private readonly env: Env) {
     this.axios = axios;
 
-    axios.interceptors.request.use(requestConfig => {
+    this.axios.interceptors.request.use(requestConfig => {
       requestConfig.baseURL = this.env.EXPO_BASE_V1_API_DOMAIN;
 
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -106,6 +106,15 @@ class HttpClient implements IHttpClient {
     config?: AxiosRequestConfig,
   ) {
     const response = await this.axios.post<ResponseType>(url, data, config);
+    return response.data;
+  }
+
+  public async upload<DataType, ResponseType>(
+    url: string,
+    data?: DataType,
+    config?: AxiosRequestConfig,
+  ) {
+    const response = await axios.post<ResponseType>(url, data, config);
     return response.data;
   }
 

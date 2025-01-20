@@ -51,7 +51,7 @@ const ListGrade = forwardRef((_, ref) => {
               Haptics.selectionAsync();
             }}>
             <Text style={styles.txtItem}>
-              {grade.name.split(' ')?.[1].charAt(0)}
+              {grade.name.split(' ')?.[1]?.charAt(0)}
             </Text>
           </TouchableOpacity>
         );
