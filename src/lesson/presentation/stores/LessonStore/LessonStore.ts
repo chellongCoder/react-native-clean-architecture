@@ -42,6 +42,7 @@ import GetProductUseCase from 'src/lesson/application/useCases/getProductUseCase
 import GetListModuleByFieldUseCase from 'src/home/application/useCases/GetListModuleByFieldUseCase';
 import {GetListSubjectPayload} from 'src/home/application/types/GetListSubjectPayload';
 import {Module} from 'src/home/application/types/GetListLessonResponse';
+import ImageToTextUsecase from 'src/authentication/application/useCases/ImageToTextUsecase';
 
 @injectable()
 export class LessonStore {
@@ -99,6 +100,8 @@ export class LessonStore {
     private postUserProgressUseCase: PostUserProgressUseCase,
     @provided(GetUserSettingUseCase)
     private getUserSettingUserCase: GetUserSettingUseCase,
+    @provided(ImageToTextUsecase)
+    private imageToTextUseCase: ImageToTextUsecase,
     @provided(ChangeChildPointFlowerUsecase)
     private changeChildPointFlowerUseCase: ChangeChildPointFlowerUsecase,
     @provided(PurchaseModuleUseCase)
@@ -126,6 +129,7 @@ export class LessonStore {
     this.handlePurchaseModule = this.handlePurchaseModule.bind(this);
     this.handleGetProductFromBE = this.handleGetProductFromBE.bind(this);
     this.handleGetModulesField = this.handleGetModulesField.bind(this);
+    this.imageToText = this.imageToText.bind(this);
   }
 
   @action
@@ -342,6 +346,14 @@ export class LessonStore {
         '🛠 LOG: 🚀 --> -------------------------------------------------------------------🛠 LOG: 🚀 -->',
       );
     }
+  }
+
+  @action
+  public async imageToText(data: FormData) {
+    this.isLoadingUserSetting = true;
+    const response = await this.imageToTextUseCase.execute(data);
+    this.isLoadingUserSetting = false;
+    return response;
   }
 
   @action

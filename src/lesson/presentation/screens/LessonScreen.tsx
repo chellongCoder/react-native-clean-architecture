@@ -45,6 +45,7 @@ import useHomeStore from 'src/home/presentation/stores/useHomeStore';
 import ScienceLesson from './LessonComponent/ScienceLesson';
 import OnBoardingScreen from 'src/core/presentation/screens/OnBoardingScreen';
 import Math_MG2M4 from './LessonComponent/Math_MG2M4';
+import LatinLesson from './LessonComponent/LatinLesson';
 
 export enum MathQuestionType {
   MATH_TEXT = 'math_text',
@@ -640,6 +641,27 @@ const LessonScreen = observer(() => {
             answers={(testTask?.question[lessonIndex]?.answers ?? []).map(
               v => '#' + v.replace('.png', ''),
             )}
+            totalModule={testTask?.question.length ?? 0}
+            lessonName={route.lessonName}
+            moduleName={route.moduleName}
+            firstMiniTestTask={testTask}
+            nextModule={nextModule}
+            backgroundImage={
+              env.IMAGE_BACKGROUND_BASE_API_URL + lessonSetting?.backgroundImage
+            }
+            characterImageSuccess={
+              env.IMAGE_BACKGROUND_BASE_API_URL +
+              lessonSetting?.figureSuccessImage
+            }
+            characterImageFail={
+              env.IMAGE_BACKGROUND_BASE_API_URL + lessonSetting?.figureFailImage
+            }
+          />
+        );
+      case LanguageE.ENGLISH_EG0M1:
+        return (
+          <LatinLesson
+            moduleIndex={lessonIndex}
             totalModule={testTask?.question.length ?? 0}
             lessonName={route.lessonName}
             moduleName={route.moduleName}
