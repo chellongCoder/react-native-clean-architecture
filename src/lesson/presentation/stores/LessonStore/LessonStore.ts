@@ -83,6 +83,7 @@ export class LessonStore {
     return {
       backgroundAnswerColor: lessonSetting?.backgroundColor,
       prompt: lessonSetting?.prompt,
+      ...lessonSetting,
     };
   }
 

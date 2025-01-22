@@ -20,13 +20,13 @@ interface SelectionAnswersQuestionProps {
   isKeyboard?: boolean;
 }
 
-export interface SelectionAnswersQuestionRef {
+export interface SelectionTextsQuestionRef {
   getSelectedAnswers: () => string[];
   resetAnswerSelected: () => void;
 }
 
-const SelectionAnswersQuestion: ForwardRefRenderFunction<
-  SelectionAnswersQuestionRef,
+const SelectionTextsQuestion: ForwardRefRenderFunction<
+  SelectionTextsQuestionRef,
   SelectionAnswersQuestionProps
 > = (props, ref) => {
   const {
@@ -84,23 +84,8 @@ const SelectionAnswersQuestion: ForwardRefRenderFunction<
             <TouchableOpacity
               key={i}
               onPress={() => handleSelectAnswer(e)}
-              style={[
-                styles.boxVowel,
-                {
-                  backgroundColor: bg,
-                  // height: size,
-                  width: size,
-                  // aspectRatio: 4 / 3,
-                  margin: scale(8), // Add spacing for clarity
-                  paddingHorizontal: scale(10),
-                },
-              ]}>
-              <Text
-                adjustsFontSizeToFit
-                numberOfLines={1}
-                style={[styles.textVowel]}>
-                {e}
-              </Text>
+              style={[styles.boxVowel, {}]}>
+              <Text style={[styles.textVowel]}>{e}</Text>
             </TouchableOpacity>
           );
         })}
@@ -169,20 +154,18 @@ const styles = StyleSheet.create({
   },
   boxVowel: {
     // Add your styles here
-    width: scale(56),
-    height: scale(56),
     borderRadius: scale(10),
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: 'flex-end',
     marginHorizontal: scale(6),
     marginVertical: scale(6),
   },
   textVowel: {
     // Add your styles here
     fontFamily: FontFamily.SVNCherishMoment,
-    color: '#FBF8CC',
+    color: COLORS.YELLOW_F2B559,
     fontSize: verticalScale(28),
+    textDecorationLine: 'underline',
   },
 });
 
-export default forwardRef(SelectionAnswersQuestion);
+export default forwardRef(SelectionTextsQuestion);

@@ -45,6 +45,8 @@ import useHomeStore from 'src/home/presentation/stores/useHomeStore';
 import ScienceLesson from './LessonComponent/ScienceLesson';
 import OnBoardingScreen from 'src/core/presentation/screens/OnBoardingScreen';
 import Math_MG2M4 from './LessonComponent/Math_MG2M4';
+import English_EG4M23 from './LessonComponent/English_EG4M23';
+import English_G5M16 from './LessonComponent/English_G5M16';
 
 export enum MathQuestionType {
   MATH_TEXT = 'math_text',
@@ -78,6 +80,8 @@ export enum LanguageE {
   ENGLISHG2M12 = 'ENGLISHG2M12',
   ENGLISH_EG1M3 = 'ENGLISH_EG1M3',
   ENGLISH_EG0M1 = 'ENGLISH_EG0M1',
+  ENGLISH_EG4M23 = 'ENGLISH_G4M23',
+  ENGLISH_G5M16 = 'ENGLISH_G5M16',
 }
 export enum LessonTypeE {
   TEXT = 'text',
@@ -562,6 +566,51 @@ const LessonScreen = observer(() => {
       /**----------------------
        *todo    các question cho môn Tiếng Anh
        *------------------------**/
+      case LanguageE.ENGLISH_G5M16:
+        return (
+          <English_G5M16
+            moduleIndex={lessonIndex}
+            nextModule={nextModule}
+            totalModule={testTask?.question.length ?? 0}
+            lessonName={route.lessonName}
+            moduleName={route.moduleName}
+            firstMiniTestTask={testTask}
+            backgroundImage={
+              env.IMAGE_BACKGROUND_BASE_API_URL + lessonSetting?.backgroundImage
+            }
+            characterImageSuccess={
+              env.IMAGE_BACKGROUND_BASE_API_URL +
+              lessonSetting?.figureSuccessImage
+            }
+            characterImageFail={
+              env.IMAGE_BACKGROUND_BASE_API_URL + lessonSetting?.figureFailImage
+            }
+            ref={vowelRef}
+            answer={['Warm', 'summer', 'day']}
+          />
+        );
+      case LanguageE.ENGLISH_EG4M23:
+        return (
+          <English_EG4M23
+            moduleIndex={lessonIndex}
+            nextModule={nextModule}
+            totalModule={testTask?.question.length ?? 0}
+            lessonName={route.lessonName}
+            moduleName={route.moduleName}
+            firstMiniTestTask={testTask}
+            backgroundImage={
+              env.IMAGE_BACKGROUND_BASE_API_URL + lessonSetting?.backgroundImage
+            }
+            characterImageSuccess={
+              env.IMAGE_BACKGROUND_BASE_API_URL +
+              lessonSetting?.figureSuccessImage
+            }
+            characterImageFail={
+              env.IMAGE_BACKGROUND_BASE_API_URL + lessonSetting?.figureFailImage
+            }
+            ref={vowelRef}
+          />
+        );
       case LanguageE.ENGLISH_EG1M3:
         return (
           <EssayLesson
@@ -657,38 +706,7 @@ const LessonScreen = observer(() => {
             }
           />
         );
-      // case LessonTypeE.VOCABULARY_LISTEN:
-      //   return (
-      //     <ListenLesson
-      //       moduleIndex={lessonIndex}
-      //       nextModule={nextModule}
-      //       totalModule={lessons.length}
-      //     />
-      //   );
-      // case LessonTypeE.VOCABULARY_FILL_BLANK:
-      //   return (
-      //     <FillBlankLesson
-      //       moduleIndex={lessonIndex}
-      //       nextModule={nextModule}
-      //       totalModule={lessons.length}
-      //     />
-      //   );
-      // case LessonTypeE.VOCABULARY_TRANSLATE:
-      //   return (
-      //     <TranslateLesson
-      //       moduleIndex={lessonIndex}
-      //       nextModule={nextModule}
-      //       totalModule={lessons.length}
-      //     />
-      //   );
-      // case LessonTypeE.GEOMETRY:
-      //   return (
-      //     <GeometryLesson
-      //       moduleIndex={lessonIndex}
-      //       nextModule={nextModule}
-      //       totalModule={lessons.length}
-      //     />
-      //   );
+
       /**----------------------
        *todo    các question cho môn toán
        *------------------------**/
