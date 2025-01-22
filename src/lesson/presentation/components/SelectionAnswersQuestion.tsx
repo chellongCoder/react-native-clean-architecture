@@ -18,6 +18,7 @@ interface SelectionAnswersQuestionProps {
   onSelectAnswer: (selected: string[]) => void;
   learningTimer: number;
   isKeyboard?: boolean;
+  isSelectOne?: boolean;
 }
 
 export interface SelectionAnswersQuestionRef {
@@ -37,6 +38,7 @@ const SelectionAnswersQuestion: ForwardRefRenderFunction<
     onSelectAnswer,
     learningTimer,
     isKeyboard,
+    isSelectOne,
   } = props;
 
   const [answerSelected, setAnswerSelected] = useState<string[]>([]);
@@ -47,6 +49,14 @@ const SelectionAnswersQuestion: ForwardRefRenderFunction<
   }));
 
   const handleSelectAnswer = (e: string) => {
+    if (isSelectOne) {
+      setAnswerSelected(_ => {
+        const newSelected: string[] = [e];
+        onSelectAnswer(newSelected);
+        return newSelected;
+      });
+      return;
+    }
     if (isKeyboard) {
       setAnswerSelected(prev => {
         const newSelected = [...prev, e];

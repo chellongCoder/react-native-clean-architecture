@@ -6,6 +6,7 @@ import React, {
   useEffect,
   useImperativeHandle,
   useMemo,
+  useRef,
   useState,
 } from 'react';
 import LessonComponent from './LessonComponent';
@@ -31,7 +32,9 @@ import useAuthenticationStore from 'src/authentication/presentation/stores/useAu
 import {observer} from 'mobx-react';
 import {LessonRef} from '../../types';
 import useHomeStore from 'src/home/presentation/stores/useHomeStore';
-import SelectionAnswersQuestion from '../../components/SelectionAnswersQuestion';
+import SelectionAnswersQuestion, {
+  SelectionAnswersQuestionRef,
+} from '../../components/SelectionAnswersQuestion';
 
 type Props = {
   moduleIndex: number;
@@ -65,8 +68,10 @@ const English_EG4M23 = observer(
 
       const {ttsSpeak} = useContext(TextToSpeechContext);
       const focus = useIsFocused();
+      const answerRef = useRef<SelectionAnswersQuestionRef>();
 
       const [answerSelected, setAnswerSelected] = useState('');
+
       const {trainingCount, getSetting} = useLessonStore();
 
       const {selectedChild} = useAuthenticationStore();
@@ -75,7 +80,6 @@ const English_EG4M23 = observer(
         isAnswerCorrect,
         isShowCorrectContainer,
         word,
-        env,
         learningTimer,
         submit,
         toggleShowHint,
@@ -90,6 +94,7 @@ const English_EG4M23 = observer(
         onSubmit: () => {
           setAnswerSelected('');
           nextModule(answerSelected);
+          answerRef.current?.resetAnswerSelected?.();
         },
         fullAnswer: firstMiniTestTask?.question?.[moduleIndex].fullAnswer,
       });
@@ -187,6 +192,12 @@ const English_EG4M23 = observer(
           prompt={settings.prompt?.toString()}
           price="Free"
           score={selectedChild?.adsPoints}
+          txtCountDown={
+            word?.toString() ===
+            firstMiniTestTask?.question?.[moduleIndex].correctAnswer
+              ? undefined
+              : word
+          }
           isAnswerCorrect={isAnswerCorrect}
           isShowCorrectContainer={isShowCorrectContainer}
           onPressFlower={toggleShowHint}
@@ -235,16 +246,20 @@ const English_EG4M23 = observer(
                   </Text>
                 }
                 answer={
-                  ['However', 'Therefore', 'Moreover', 'Consequently'] ?? []
+                  (
+                    firstMiniTestTask?.question?.[
+                      moduleIndex
+                    ].answers.toString() as string
+                  )?.split(',') ?? []
                 }
                 isShowCorrectContainer={isShowCorrectContainer}
                 isAnswerCorrect={!!isAnswerCorrect}
                 onSelectAnswer={(e: string[]) => {
-                  setAnswerSelected(e);
+                  setAnswerSelected(e.toString().trim());
                 }}
                 learningTimer={learningTimer}
-                // ref={answerRef}
-                isKeyboard={true}
+                isSelectOne
+                ref={answerRef}
               />
 
               <PrimaryButton

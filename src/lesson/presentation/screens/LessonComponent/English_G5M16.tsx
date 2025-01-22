@@ -250,18 +250,18 @@ const English_G5M16 = observer(
                 </TouchableOpacity>
               </View>
               <SelectionTextsQuestion
-                // question={
-                //   <Text
-                //     style={[
-                //       styles.fonts_SVN_Cherish,
-                //       styles.textQuestion,
-                //       styles.textGreen,
-                //       styles.mt8,
-                //       {fontSize: scale(40)},
-                //     ]}>
-                //     {descriptionWithAnswers}
-                //   </Text>
-                // }
+                question={
+                  <Text
+                    style={[
+                      styles.fonts_SVN_Neu,
+                      styles.textQuestion,
+                      styles.textGreen,
+                      styles.mt8,
+                      {fontSize: scale(16)},
+                    ]}>
+                    {descriptionWithAnswers}
+                  </Text>
+                }
                 answer={answer ?? []}
                 isShowCorrectContainer={isShowCorrectContainer}
                 isAnswerCorrect={!!isAnswerCorrect}

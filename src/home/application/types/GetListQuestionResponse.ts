@@ -11,7 +11,7 @@ export interface Question {
   type: string;
   updatedAt: string;
   _id: string;
-  answers: Answer[];
+  answers: Answer[] | string;
   fullAnswer: string;
   image: string;
   descriptionImage: string;
