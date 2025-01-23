@@ -58,6 +58,7 @@ const LatinLesson = ({
   const [answerSelected, setAnswerSelected] = useState('');
   const {trainingCount, getSetting, imageToText} = useLessonStore();
   const [isCorrect, setIscorrect] = useState(false);
+  const [countCall, setCountCall] = useState(0);
 
   const {ttsSpeak, updateDefaultVoice} = useContext(TextToSpeechContext);
   const focus = useIsFocused();
@@ -168,15 +169,22 @@ const LatinLesson = ({
             data.data.data ===
               firstMiniTestTask?.question?.[moduleIndex].fullAnswer,
         );
-        setTimeout(submit, 100);
+        setCountCall(p => p + 1);
       })
       .catch(e => console.log(e, 'ERROR'));
-  }, [firstMiniTestTask?.question, imageToText, moduleIndex, submit]);
+  }, [firstMiniTestTask?.question, imageToText, moduleIndex]);
 
   useEffect(() => {
     canvasWriteRef.current?.reset();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [firstMiniTestTask?.question?.[moduleIndex].content]);
+
+  useEffect(() => {
+    if (countCall > 0) {
+      submit();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [countCall]);
 
   return (
     <LessonComponent
