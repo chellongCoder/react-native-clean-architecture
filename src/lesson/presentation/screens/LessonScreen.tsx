@@ -49,6 +49,7 @@ import English_EG4M23 from './LessonComponent/English_EG4M23';
 import MultiPronunciationLesson from './LessonComponent/MultiPronunciationLesson';
 import LatinLesson from './LessonComponent/LatinLesson';
 import English_G5M16 from './LessonComponent/English_G5M16';
+import English_G6M26 from './LessonComponent/English_G6M26';
 
 export enum MathQuestionType {
   MATH_TEXT = 'math_text',
@@ -87,6 +88,7 @@ export enum LanguageE {
   ENGLISH_EG0M1 = 'ENGLISH_EG0M1',
   ENGLISH_EG0M2 = 'ENGLISH_EG0M2',
   ENGLISH_EG0M3 = 'ENGLISH_EG0M3',
+  ENGLISH_G6M26 = 'ENGLISH_G6M26',
 }
 export enum LessonTypeE {
   TEXT = 'text',
@@ -592,6 +594,28 @@ const LessonScreen = observer(() => {
       /**----------------------
        *todo    các question cho môn Tiếng Anh
        *------------------------**/
+      case LanguageE.ENGLISH_G6M26:
+        return (
+          <English_G6M26
+            moduleIndex={lessonIndex}
+            nextModule={nextModule}
+            totalModule={testTask?.question.length ?? 0}
+            lessonName={route.lessonName}
+            moduleName={route.moduleName}
+            firstMiniTestTask={testTask}
+            backgroundImage={
+              env.IMAGE_BACKGROUND_BASE_API_URL + lessonSetting?.backgroundImage
+            }
+            characterImageSuccess={
+              env.IMAGE_BACKGROUND_BASE_API_URL +
+              lessonSetting?.figureSuccessImage
+            }
+            characterImageFail={
+              env.IMAGE_BACKGROUND_BASE_API_URL + lessonSetting?.figureFailImage
+            }
+            ref={vowelRef}
+          />
+        );
       case LanguageE.ENGLISH_G5M16:
         return (
           <English_G5M16
@@ -760,30 +784,6 @@ const LessonScreen = observer(() => {
        *todo    các question cho môn toán
        *------------------------**/
       case MathQuestionType.MathMG2M4:
-        return (
-          <Math_MG2M4
-            moduleIndex={lessonIndex}
-            nextModule={nextModule}
-            totalModule={testTask?.question.length ?? 0}
-            lessonName={route.lessonName}
-            moduleName={route.moduleName}
-            firstMiniTestTask={testTask}
-            backgroundImage={
-              env.IMAGE_BACKGROUND_BASE_API_URL + lessonSetting?.backgroundImage
-            }
-            characterImageSuccess={
-              env.IMAGE_BACKGROUND_BASE_API_URL +
-              lessonSetting?.figureSuccessImage
-            }
-            characterImageFail={
-              env.IMAGE_BACKGROUND_BASE_API_URL + lessonSetting?.figureFailImage
-            }
-            ref={vowelRef}
-            isMulti={true}
-            question="Choose your correct answer?"
-            answer={['0', '1', '2', '3']}
-          />
-        );
       case MathQuestionType.MathMG3M8:
         return (
           <Math_MG2M4

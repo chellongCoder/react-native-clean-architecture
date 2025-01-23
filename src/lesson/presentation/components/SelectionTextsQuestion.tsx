@@ -8,7 +8,6 @@ import {View, Text, TouchableOpacity, StyleSheet} from 'react-native';
 import {s, scale, verticalScale} from 'react-native-size-matters';
 import {COLORS} from 'src/core/presentation/constants/colors';
 import {FontFamily} from 'src/core/presentation/hooks/useFonts';
-import {WIDTH_SCREEN} from 'src/core/presentation/utils';
 
 interface SelectionAnswersQuestionProps {
   question: React.ReactNode;
@@ -77,15 +76,13 @@ const SelectionTextsQuestion: ForwardRefRenderFunction<
                 ? '#F28759'
                 : '#66C270'
               : '#F2B559';
-          const length = answer?.length ?? 2;
-          const size = (WIDTH_SCREEN - scale(160)) / Math.ceil(length / 2);
 
           return (
             <TouchableOpacity
               key={i}
               onPress={() => handleSelectAnswer(e)}
               style={[styles.boxVowel, {}]}>
-              <Text style={[styles.textVowel]}>{e}</Text>
+              <Text style={[styles.textVowel, {color: bg}]}>{e}</Text>
             </TouchableOpacity>
           );
         })}

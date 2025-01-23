@@ -32,9 +32,8 @@ import useAuthenticationStore from 'src/authentication/presentation/stores/useAu
 import {observer} from 'mobx-react';
 import {LessonRef} from '../../types';
 import useHomeStore from 'src/home/presentation/stores/useHomeStore';
-import SelectionAnswersQuestion, {
-  SelectionAnswersQuestionRef,
-} from '../../components/SelectionAnswersQuestion';
+import {SelectionAnswersQuestionRef} from '../../components/SelectionAnswersQuestion';
+import KeyboardNumber from '../../components/KeyboardNumber';
 
 type Props = {
   moduleIndex: number;
@@ -248,7 +247,7 @@ const Math_MG2M4 = observer(
                   />
                 </TouchableOpacity>
               </View>
-              <SelectionAnswersQuestion
+              <KeyboardNumber
                 question={
                   <Text
                     style={[
@@ -275,7 +274,7 @@ const Math_MG2M4 = observer(
               <PrimaryButton
                 text="Submit"
                 style={[
-                  styles.mt24,
+                  styles.buttonContainer,
                   {backgroundColor: lessonSetting?.backgroundButtonColor},
                 ]}
                 onPress={submit}
@@ -410,4 +409,11 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   iconImageContainer: {height: 45, width: 40},
+  buttonContainer: {
+    borderRadius: scale(52),
+    paddingVertical: verticalScale(9),
+    paddingHorizontal: scale(24),
+    marginTop: scale(16),
+    backgroundColor: '#0877B6',
+  },
 });

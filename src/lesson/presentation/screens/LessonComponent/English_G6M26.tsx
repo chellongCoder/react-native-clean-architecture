@@ -48,7 +48,7 @@ type Props = {
   characterImageFail?: string;
 };
 
-const English_EG4M23 = observer(
+const English_G6M26 = observer(
   forwardRef<LessonRef, Props>(
     (
       {
@@ -85,7 +85,7 @@ const English_EG4M23 = observer(
         toggleShowHint,
         resetLearning,
       } = useSettingLesson({
-        countDownTime: trainingCount <= 2 ? 0 : 5,
+        countDownTime: trainingCount <= 2 ? 220 : 225,
         isCorrectAnswer:
           answerSelected ===
           getCorrectAnswer(
@@ -280,7 +280,7 @@ const English_EG4M23 = observer(
   ),
 );
 
-export default English_EG4M23;
+export default English_G6M26;
 
 const styles = StyleSheet.create({
   fill: {

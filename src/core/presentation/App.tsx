@@ -8,7 +8,6 @@ import {
 import RootNavigator from './navigation/RootNavigator';
 import RootNavigation from './navigation/actions/RootNavigationActions';
 import {screenTracking} from './utils/ScreenTracking';
-import {AuthenticationProvider} from 'src/authentication/presentation/stores/AuthenticationProvider';
 import {LoadingGlobalProvider} from './hooks/loading/LoadingGlobalProvider';
 import Toast from 'react-native-toast-message';
 import {requestScreenTime} from 'react-native-alphadex-screentime';
@@ -23,6 +22,7 @@ import {IapProvider} from './store/iapProvider';
 import FirebaseCrashlyticProvider from './hooks/firebaseCrashlytic/FirebaseCrashlyticProvider';
 import {withIAPContext} from 'react-native-iap';
 import crashlytics from '@react-native-firebase/crashlytics';
+import {AuthenticationProvider} from 'src/authentication/presentation/stores/AuthenticationProvider';
 
 LogBox.ignoreLogs(['Warning: ...']); // Ignore log notification by message
 LogBox.ignoreAllLogs(); //Ignore all log notifications

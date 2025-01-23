@@ -26,7 +26,7 @@ export interface SelectionAnswersQuestionRef {
   resetAnswerSelected: () => void;
 }
 
-const SelectionAnswersQuestion: ForwardRefRenderFunction<
+const KeyboardNumber: ForwardRefRenderFunction<
   SelectionAnswersQuestionRef,
   SelectionAnswersQuestionProps
 > = (props, ref) => {
@@ -88,7 +88,7 @@ const SelectionAnswersQuestion: ForwardRefRenderFunction<
                 : '#66C270'
               : '#F2B559';
           const length = answer?.length ?? 2;
-          const size = (WIDTH_SCREEN - scale(100)) / Math.ceil(length / 2);
+          const size = (WIDTH_SCREEN - scale(160)) / Math.ceil(length / 2);
 
           return (
             <TouchableOpacity
@@ -99,6 +99,7 @@ const SelectionAnswersQuestion: ForwardRefRenderFunction<
                 {
                   backgroundColor: bg,
                   width: size,
+                  height: size,
                   margin: scale(8), // Add spacing for clarity
                   paddingHorizontal: scale(10),
                 },
@@ -189,4 +190,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default forwardRef(SelectionAnswersQuestion);
+export default forwardRef(KeyboardNumber);

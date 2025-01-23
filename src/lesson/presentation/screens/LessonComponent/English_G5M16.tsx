@@ -15,7 +15,7 @@ import {FontFamily} from 'src/core/presentation/hooks/useFonts';
 import useGlobalStyle from 'src/core/presentation/hooks/useGlobalStyle';
 import {Task} from 'src/home/application/types/GetListQuestionResponse';
 import {COLORS} from 'src/core/presentation/constants/colors';
-import {getCorrectAnswer, WIDTH_SCREEN} from 'src/core/presentation/utils';
+import {getCorrectAnswer, isSubArray} from 'src/core/presentation/utils';
 import {scale, verticalScale} from 'react-native-size-matters';
 import Animated, {
   Easing,
@@ -36,6 +36,7 @@ import useHomeStore from 'src/home/presentation/stores/useHomeStore';
 import SelectionTextsQuestion, {
   SelectionTextsQuestionRef,
 } from '../../components/SelectionTextsQuestion';
+import {ScrollView} from 'react-native-gesture-handler';
 
 type Props = {
   moduleIndex: number;
@@ -93,15 +94,14 @@ const English_G5M16 = observer(
         resetLearning,
       } = useSettingLesson({
         countDownTime: trainingCount <= 2 ? 0 : 5,
-        isCorrectAnswer:
-          (typeof answerSelected === 'object' &&
-            (answerSelected as string[]).join('')) ===
-          getCorrectAnswer(
-            firstMiniTestTask?.question?.[moduleIndex]?.correctAnswer,
-          ),
+        isCorrectAnswer: isSubArray(
+          answerSelected as string[],
+          firstMiniTestTask?.question?.[moduleIndex]?.correctAnswer as string[],
+        ),
         onSubmit: () => {
           setAnswerSelected(isMulti ? [] : '');
           answerRef.current?.resetAnswerSelected?.();
+
           nextModule((answerSelected as string[]).join(''));
         },
         fullAnswer: firstMiniTestTask?.question?.[moduleIndex].fullAnswer,
@@ -207,7 +207,10 @@ const English_G5M16 = observer(
           prompt={settings.prompt?.toString()}
           score={selectedChild?.adsPoints}
           txtCountDown={
-            word === firstMiniTestTask?.question?.[moduleIndex].content
+            (
+              firstMiniTestTask?.question?.[moduleIndex]
+                .correctAnswer as string[]
+            ).includes((word as string)?.toLocaleLowerCase())
               ? undefined
               : word
           }
@@ -215,19 +218,28 @@ const English_G5M16 = observer(
           isShowCorrectContainer={isShowCorrectContainer}
           onPressFlower={toggleShowHint}
           buildQuestion={
-            <View>
-              <Animated.Image
-                resizeMode={'contain'}
-                width={WIDTH_SCREEN}
-                height={scale(200)}
-                style={[{}, animatedStyle]}
-                source={{
-                  uri:
-                    env.IMAGE_QUESTION_BASE_API_URL +
-                    firstMiniTestTask?.question?.[moduleIndex].image,
-                }}
-              />
-            </View>
+            <ScrollView
+              showsVerticalScrollIndicator
+              style={{
+                paddingHorizontal: scale(20),
+              }}>
+              <Text style={styles.txtParagraph}>
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do
+                eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
+                enim ad minim veniam, quis nostrud exercitation ullamco laboris
+                nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor
+                in reprehenderit in voluptate velit esse cillum dolore eu fugiat
+                nulla pariatur. Excepteur sint occaecat cupidatat non proident,
+                sunt in culpa qui officia deserunt mollit anim id est laborum.
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do
+                eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
+                enim ad minim veniam, quis nostrud exercitation ullamco laboris
+                nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor
+                in reprehenderit in voluptate velit esse cillum dolore eu fugiat
+                nulla pariatur. Excepteur sint occaecat cupidatat non proident,
+                sunt in culpa qui officia deserunt mollit anim id est laborum.
+              </Text>
+            </ScrollView>
           }
           buildAnswer={
             <View style={styles.fill}>
@@ -270,7 +282,6 @@ const English_G5M16 = observer(
                 }}
                 learningTimer={learningTimer}
                 ref={answerRef}
-                isKeyboard={true}
               />
 
               <PrimaryButton
@@ -315,6 +326,7 @@ const styles = StyleSheet.create({
     fontSize: verticalScale(34),
     textAlign: 'center',
     color: COLORS.BLUE_258F78,
+    marginHorizontal: scale(10),
   },
   textGreen: {
     color: COLORS.BLUE_258F78,
@@ -417,5 +429,10 @@ const styles = StyleSheet.create({
     paddingHorizontal: scale(24),
     marginTop: scale(16),
     backgroundColor: '#0877B6',
+  },
+  txtParagraph: {
+    fontFamily: FontFamily.SVNNeuzeitBold,
+    fontSize: scale(16),
+    color: COLORS.WHITE_FBF8CC,
   },
 });
