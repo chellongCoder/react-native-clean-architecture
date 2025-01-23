@@ -278,7 +278,14 @@ const EssayLesson = ({
             )}
           </View>
 
-          <PrimaryButton text="Submit" style={[styles.mt24]} onPress={submit} />
+          <PrimaryButton
+            text="Submit"
+            style={[
+              styles.buttonContainer,
+              {backgroundColor: settings.backgroundButtonColor},
+            ]}
+            onPress={submit}
+          />
         </View>
       }
       moduleIndex={moduleIndex}
@@ -403,5 +410,12 @@ const styles = StyleSheet.create({
   iconImageContainer: {
     height: verticalScale(45),
     width: verticalScale(40),
+  },
+  buttonContainer: {
+    borderRadius: scale(52),
+    paddingVertical: verticalScale(9),
+    paddingHorizontal: scale(24),
+    marginTop: scale(16),
+    backgroundColor: '#0877B6',
   },
 });

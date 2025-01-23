@@ -400,26 +400,27 @@ const MultiPronunciationLesson = observer(
           onPressFlower={toggleShowHint}
           buildQuestion={
             <View>
-              {firstMiniTestTask?.question?.[moduleIndex].answers.map(
-                (item, index) => {
-                  const splitAnswer = answerSelected.split(' ');
-                  return (
-                    <View
-                      style={[
-                        styles.wrapTextQuestion,
-                        item.trim() === splitAnswer[index]
-                          ? {backgroundColor: COLORS.GREEN_8DE795}
-                          : {},
-                      ]}
-                      key={index}>
-                      <Text
-                        style={[styles.fonts_SVN_Cherish, styles.textQuestion]}>
-                        {item.trim()}
-                      </Text>
-                    </View>
-                  );
-                },
-              )}
+              {(
+                firstMiniTestTask?.question?.[moduleIndex].answers as string[]
+              )?.map((item, index) => {
+                const splitAnswer = answerSelected.split(' ');
+                return (
+                  <View
+                    style={[
+                      styles.wrapTextQuestion,
+                      item.toLocaleLowerCase().trim() ===
+                      splitAnswer?.[index]?.toLocaleLowerCase()
+                        ? {backgroundColor: COLORS.GREEN_8DE795}
+                        : {},
+                    ]}
+                    key={index}>
+                    <Text
+                      style={[styles.fonts_SVN_Cherish, styles.textQuestion]}>
+                      {item.trim()}
+                    </Text>
+                  </View>
+                );
+              })}
             </View>
           }
           buildAnswer={
@@ -443,37 +444,48 @@ const MultiPronunciationLesson = observer(
                 </TouchableOpacity>
               </View>
               <View style={[styles.boxSelected]}>
-                <View style={styles.wrapCharContainer}>
-                  {isCorrectAnswer ? (
-                    <Text
-                      style={[
-                        styles.fonts_SVN_Cherish,
-                        styles.textQuestion,
-                        styles.textGreen,
-                      ]}>
-                      {typeof firstMiniTestTask?.question?.[moduleIndex] // * nếu correctAnswer là string thì hiển thị answerSelected
-                        ?.correctAnswer === 'string'
-                        ? answerSelected
-                        : firstMiniTestTask?.question?.[ // * nếu correctAnswer là mảng thì check xem correctAnswer đã là chuỗi chưa, nếu chưa thì hiển thị phần tử khác với answerSelected
-                            moduleIndex
-                          ]?.correctAnswer
-                            ?.find(e =>
-                              !Number(answerSelected)
+                {answerSelected !== '' &&
+                  (
+                    firstMiniTestTask?.question?.[moduleIndex]
+                      ?.correctAnswer as string[]
+                  ) // * nếu correctAnswer là mảng thì check xem correctAnswer đã là chuỗi chưa, nếu chưa thì hiển thị phần tử khác với answerSelected
+                    ?.map(answer => {
+                      return (
+                        <View style={styles.wrapCharContainer}>
+                          {answerSelected
+                            .toLocaleLowerCase()
+                            .includes(answer.toLocaleLowerCase()) ? (
+                            <Text
+                              style={[
+                                styles.fonts_SVN_Cherish,
+                                styles.textQuestion,
+                                styles.textGreen,
+                              ]}>
+                              {typeof firstMiniTestTask?.question?.[moduleIndex] // * nếu correctAnswer là string thì hiển thị answerSelected
+                                ?.correctAnswer === 'string'
                                 ? answerSelected
-                                : e !== answerSelected,
-                            )}
-                    </Text>
-                  ) : (
-                    <Text
-                      style={[
-                        styles.fonts_EinaBold,
-                        styles.textQuestion,
-                        styles.textRed,
-                      ]}>
-                      {answerSelected}
-                    </Text>
-                  )}
-                </View>
+                                : firstMiniTestTask?.question?.[ // * nếu correctAnswer là mảng thì check xem correctAnswer đã là chuỗi chưa, nếu chưa thì hiển thị phần tử khác với answerSelected
+                                    moduleIndex
+                                  ]?.correctAnswer
+                                    ?.find(e =>
+                                      !Number(answerSelected)
+                                        ? answerSelected
+                                        : e !== answerSelected,
+                                    )}
+                            </Text>
+                          ) : (
+                            <Text
+                              style={[
+                                styles.fonts_EinaBold,
+                                styles.textQuestion,
+                                styles.textRed,
+                              ]}>
+                              {answer}
+                            </Text>
+                          )}
+                        </View>
+                      );
+                    })}
 
                 <RecordButton
                   startRecord={startRecord}
@@ -536,7 +548,10 @@ const MultiPronunciationLesson = observer(
 
               <PrimaryButton
                 text="Submit"
-                style={[styles.mt24]}
+                style={[
+                  styles.buttonContainer,
+                  {backgroundColor: settings.backgroundButtonColor},
+                ]}
                 onPress={submit}
                 disable={!answerSelected}
               />
@@ -688,5 +703,12 @@ const styles = StyleSheet.create({
     borderWidth: 4,
     borderColor: COLORS.BLUE_258F78,
     marginBottom: 16,
+  },
+  buttonContainer: {
+    borderRadius: scale(52),
+    paddingVertical: verticalScale(9),
+    paddingHorizontal: scale(24),
+    marginTop: scale(16),
+    backgroundColor: '#0877B6',
   },
 });

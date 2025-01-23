@@ -47,6 +47,7 @@ import OnBoardingScreen from 'src/core/presentation/screens/OnBoardingScreen';
 import Math_MG2M4 from './LessonComponent/Math_MG2M4';
 import English_EG4M23 from './LessonComponent/English_EG4M23';
 import English_G5M16 from './LessonComponent/English_G5M16';
+import MultiPronunciationLesson from './LessonComponent/MultiPronunciationLesson';
 
 export enum MathQuestionType {
   MATH_TEXT = 'math_text',
@@ -82,6 +83,7 @@ export enum LanguageE {
   ENGLISH_EG0M1 = 'ENGLISH_EG0M1',
   ENGLISH_EG4M23 = 'ENGLISH_G4M23',
   ENGLISH_G5M16 = 'ENGLISH_G5M16',
+  ENGLISH_EG0M2 = 'ENGLISH_EG0M2',
 }
 export enum LessonTypeE {
   TEXT = 'text',
@@ -540,6 +542,27 @@ const LessonScreen = observer(() => {
        * * UI chung dành cho các module phát âm
        */
       case LanguageE.ENGLISHG2M12:
+        return (
+          <MultiPronunciationLesson
+            moduleIndex={lessonIndex}
+            nextModule={nextModule}
+            totalModule={testTask?.question.length ?? 0}
+            lessonName={route.lessonName}
+            moduleName={route.moduleName}
+            firstMiniTestTask={testTask}
+            backgroundImage={
+              env.IMAGE_BACKGROUND_BASE_API_URL + lessonSetting?.backgroundImage
+            }
+            characterImageSuccess={
+              env.IMAGE_BACKGROUND_BASE_API_URL +
+              lessonSetting?.figureSuccessImage
+            }
+            characterImageFail={
+              env.IMAGE_BACKGROUND_BASE_API_URL + lessonSetting?.figureFailImage
+            }
+            ref={vowelRef}
+          />
+        );
       case LessonTypeE.PRONUNCIATION:
         return (
           <PronunciationLesson
