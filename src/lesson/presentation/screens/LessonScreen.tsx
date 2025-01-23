@@ -46,8 +46,9 @@ import ScienceLesson from './LessonComponent/ScienceLesson';
 import OnBoardingScreen from 'src/core/presentation/screens/OnBoardingScreen';
 import Math_MG2M4 from './LessonComponent/Math_MG2M4';
 import English_EG4M23 from './LessonComponent/English_EG4M23';
-import English_G5M16 from './LessonComponent/English_G5M16';
 import MultiPronunciationLesson from './LessonComponent/MultiPronunciationLesson';
+import LatinLesson from './LessonComponent/LatinLesson';
+import English_G5M16 from './LessonComponent/English_G5M16';
 
 export enum MathQuestionType {
   MATH_TEXT = 'math_text',
@@ -80,10 +81,12 @@ export enum MathQuestionType {
 export enum LanguageE {
   ENGLISHG2M12 = 'ENGLISHG2M12',
   ENGLISH_EG1M3 = 'ENGLISH_EG1M3',
-  ENGLISH_EG0M1 = 'ENGLISH_EG0M1',
   ENGLISH_EG4M23 = 'ENGLISH_G4M23',
   ENGLISH_G5M16 = 'ENGLISH_G5M16',
+
+  ENGLISH_EG0M1 = 'ENGLISH_EG0M1',
   ENGLISH_EG0M2 = 'ENGLISH_EG0M2',
+  ENGLISH_EG0M3 = 'ENGLISH_EG0M3',
 }
 export enum LessonTypeE {
   TEXT = 'text',
@@ -609,7 +612,7 @@ const LessonScreen = observer(() => {
               env.IMAGE_BACKGROUND_BASE_API_URL + lessonSetting?.figureFailImage
             }
             ref={vowelRef}
-            answer={['Warm', 'summer', 'day']}
+            answer={testTask?.question?.[lessonIndex].answers ?? []}
           />
         );
       case LanguageE.ENGLISH_EG4M23:
@@ -712,6 +715,29 @@ const LessonScreen = observer(() => {
             answers={(testTask?.question[lessonIndex]?.answers ?? []).map(
               v => '#' + v.replace('.png', ''),
             )}
+            totalModule={testTask?.question.length ?? 0}
+            lessonName={route.lessonName}
+            moduleName={route.moduleName}
+            firstMiniTestTask={testTask}
+            nextModule={nextModule}
+            backgroundImage={
+              env.IMAGE_BACKGROUND_BASE_API_URL + lessonSetting?.backgroundImage
+            }
+            characterImageSuccess={
+              env.IMAGE_BACKGROUND_BASE_API_URL +
+              lessonSetting?.figureSuccessImage
+            }
+            characterImageFail={
+              env.IMAGE_BACKGROUND_BASE_API_URL + lessonSetting?.figureFailImage
+            }
+          />
+        );
+      case LanguageE.ENGLISH_EG0M1:
+      case LanguageE.ENGLISH_EG0M2:
+      case LanguageE.ENGLISH_EG0M3:
+        return (
+          <LatinLesson
+            moduleIndex={lessonIndex}
             totalModule={testTask?.question.length ?? 0}
             lessonName={route.lessonName}
             moduleName={route.moduleName}

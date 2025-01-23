@@ -19,6 +19,7 @@ import {
   Text as TextSkia,
   matchFont,
   useFonts,
+  PaintStyle,
 } from '@shopify/react-native-skia';
 
 type Props = {
@@ -38,6 +39,8 @@ type Props = {
 
 export type CanvasWriteRef = {
   reset(): void;
+  getBytes(): Uint8Array<ArrayBufferLike> | undefined;
+  getBase64(): string | undefined;
   getResult(): {
     strokesNumber: number;
     maxDistance: number;
@@ -147,7 +150,7 @@ const CanvasWrite = forwardRef<CanvasWriteRef, Props>((props: Props, ref) => {
 
   const onDrawingActive = useCallback(
     (touchInfo: TouchInfo) => {
-      findPointNear(touchInfo);
+      // findPointNear(touchInfo);
 
       setPaths(currentPaths => {
         const {x, y} = touchInfo;
@@ -156,11 +159,12 @@ const CanvasWrite = forwardRef<CanvasWriteRef, Props>((props: Props, ref) => {
         const xMid = (lastPoint.x + x) / 2;
         const yMid = (lastPoint.y + y) / 2;
 
-        currentPath.quadTo(lastPoint.x, lastPoint.y, xMid, yMid);
-        return [...currentPaths.slice(0, currentPaths.length - 1), currentPath];
+        currentPath.quadTo(lastPoint.x, lastPoint.y, x, y);
+        return [...currentPaths, currentPath];
       });
     },
-    [findPointNear],
+    // [findPointNear],
+    [],
   );
 
   const touchHandler = useTouchHandler(
@@ -186,6 +190,46 @@ const CanvasWrite = forwardRef<CanvasWriteRef, Props>((props: Props, ref) => {
     maxDistance.current = 0;
   };
 
+  const getImage = useCallback(() => {
+    const svg = paths.map(p => p.toSVGString()).join(' ');
+
+    const path = Skia.Path.MakeFromSVGString(svg);
+
+    if (!path) {
+      return null;
+    }
+
+    const surface = Skia.Surface.MakeOffscreen(size.width, size.height);
+    const canvas = surface?.getCanvas();
+
+    const paintBackground = Skia.Paint();
+    paintBackground.setColor(Skia.Color('white'));
+    canvas?.drawRect(
+      Skia.XYWHRect(0, 0, size.width, size.height),
+      paintBackground,
+    );
+
+    const paint = Skia.Paint();
+    paint.setColor(Skia.Color('black'));
+    paint.setStrokeWidth(3);
+    paint.setStyle(PaintStyle.Stroke);
+    canvas?.drawPath(path, paint);
+
+    const image = surface?.makeImageSnapshot();
+
+    return image;
+  }, [paths, size.height, size.width]);
+
+  const getBytes = useCallback(() => {
+    const image = getImage();
+    return image?.encodeToBytes();
+  }, [getImage]);
+
+  const getBase64 = useCallback(() => {
+    const image = getImage();
+    return image?.encodeToBase64();
+  }, [getImage]);
+
   useImperativeHandle(ref, () => ({
     reset,
     getResult: () => ({
@@ -194,6 +238,8 @@ const CanvasWrite = forwardRef<CanvasWriteRef, Props>((props: Props, ref) => {
       matchPointNumber: matchPointNumber.current,
       strokesNumber: strokesNumber,
     }),
+    getBytes,
+    getBase64,
   }));
 
   useEffect(() => {
@@ -243,9 +289,9 @@ const CanvasWrite = forwardRef<CanvasWriteRef, Props>((props: Props, ref) => {
           <Path
             key={'path' + index}
             path={path}
-            color={'black'}
+            color={'#BA3201'}
             style={'stroke'}
-            strokeWidth={2}
+            strokeWidth={3}
           />
         ))}
       </Canvas>
@@ -270,4 +316,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default CanvasWrite;
+export default React.memo(CanvasWrite);

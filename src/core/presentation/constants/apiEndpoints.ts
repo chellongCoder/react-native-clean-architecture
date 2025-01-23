@@ -12,6 +12,7 @@ const SERVICES = {
   PRODUCT: '/product',
   REPORT: '/report',
   APP_VERSION: '/app-version',
+  GOOGLE: '/google-api',
 };
 
 const getProduct = () => {
@@ -31,6 +32,10 @@ const getAuthEndPointServices = (path: string) => {
 
 const getUserEndPointServices = (path: string) => {
   return `/api${API_VERSION}${SERVICES.USER}/${path}`;
+};
+
+const getGoogleEndPointServices = (path: string) => {
+  return `/api${API_VERSION}${SERVICES.GOOGLE}/${path}`;
 };
 
 const getSubjectEndPointServices = (path: string) => {
@@ -87,6 +92,9 @@ export const API_ENDPOINTS = {
       'update-children-description',
     ),
     UPDATE_CHILD_POINT: getUserEndPointServices('update-child-point'),
+  },
+  GOOGLE: {
+    IMAGE_TO_TEXT: getGoogleEndPointServices('image-to-text'),
   },
   SUBJECT: {
     LIST_ALL_SUBJECT: getSubjectEndPointServices('list-all-subject'),

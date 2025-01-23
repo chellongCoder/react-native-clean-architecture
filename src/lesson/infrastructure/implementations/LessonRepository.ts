@@ -25,6 +25,7 @@ import PurchaseModulePayload from 'src/lesson/application/types/PurchaseModulePa
 import PurchaseModuleResponse from 'src/lesson/application/types/PurchaseModuleResponse';
 import {GetListSubjectPayload} from 'src/home/application/types/GetListSubjectPayload';
 import GetListLessonResponse from 'src/home/application/types/GetListLessonResponse';
+import {ImageToTextResponse} from 'src/authentication/application/types/ImageToTextResponse';
 
 @injectable()
 class LessonRepository implements ILessonRepository {
@@ -105,6 +106,19 @@ class LessonRepository implements ILessonRepository {
       {
         deviceToken: deviceToken,
         childrenId,
+      },
+    );
+    return response;
+  }
+
+  public async imageToText(data: FormData): Promise<ImageToTextResponse> {
+    const response: ImageToTextResponse = await this.httpClient.post(
+      API_ENDPOINTS.GOOGLE.IMAGE_TO_TEXT,
+      data,
+      {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
       },
     );
     return response;

@@ -21,6 +21,7 @@ import GetListModuleByFieldUseCase from 'src/home/application/useCases/GetListMo
 import HomeRepository from 'src/home/infrastructure/HomeRepository';
 import {IHomeRepository} from 'src/home/domain/IHomeRepository';
 import {HomeStore} from 'src/home/presentation/stores/HomeStore';
+import ImageToTextUsecase from 'src/authentication/application/useCases/ImageToTextUsecase';
 
 @module({
   providers: [
@@ -47,6 +48,7 @@ import {HomeStore} from 'src/home/presentation/stores/HomeStore';
     FindPostUseCase,
     GetPostsUseCase,
     UpdateUserSettingUseCase,
+    ImageToTextUsecase,
     ChangeChildPointFlowerUsecase,
     GetUserSettingUseCase,
     {
