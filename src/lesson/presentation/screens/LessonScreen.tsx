@@ -50,6 +50,7 @@ import MultiPronunciationLesson from './LessonComponent/MultiPronunciationLesson
 import LatinLesson from './LessonComponent/LatinLesson';
 import English_G5M16 from './LessonComponent/English_G5M16';
 import English_G6M26 from './LessonComponent/English_G6M26';
+import English_G3M20 from './LessonComponent/English_G3M20';
 
 export enum MathQuestionType {
   MATH_TEXT = 'math_text',
@@ -84,11 +85,12 @@ export enum LanguageE {
   ENGLISH_EG1M3 = 'ENGLISH_EG1M3',
   ENGLISH_EG4M23 = 'ENGLISH_G4M23',
   ENGLISH_G5M16 = 'ENGLISH_G5M16',
+  ENGLISH_G3M20 = 'ENGLISH_G3M20',
+  ENGLISH_G6M26 = 'ENGLISH_G6M26',
 
   ENGLISH_EG0M1 = 'ENGLISH_EG0M1',
   ENGLISH_EG0M2 = 'ENGLISH_EG0M2',
   ENGLISH_EG0M3 = 'ENGLISH_EG0M3',
-  ENGLISH_G6M26 = 'ENGLISH_G6M26',
 }
 export enum LessonTypeE {
   TEXT = 'text',
@@ -594,6 +596,28 @@ const LessonScreen = observer(() => {
       /**----------------------
        *todo    các question cho môn Tiếng Anh
        *------------------------**/
+      case LanguageE.ENGLISH_G3M20:
+        return (
+          <English_G3M20
+            moduleIndex={lessonIndex}
+            nextModule={nextModule}
+            totalModule={testTask?.question.length ?? 0}
+            lessonName={route.lessonName}
+            moduleName={route.moduleName}
+            firstMiniTestTask={testTask}
+            backgroundImage={
+              env.IMAGE_BACKGROUND_BASE_API_URL + lessonSetting?.backgroundImage
+            }
+            characterImageSuccess={
+              env.IMAGE_BACKGROUND_BASE_API_URL +
+              lessonSetting?.figureSuccessImage
+            }
+            characterImageFail={
+              env.IMAGE_BACKGROUND_BASE_API_URL + lessonSetting?.figureFailImage
+            }
+            ref={vowelRef}
+          />
+        );
       case LanguageE.ENGLISH_G6M26:
         return (
           <English_G6M26
