@@ -12,7 +12,7 @@ import {FontFamily} from 'src/core/presentation/hooks/useFonts';
 import useGlobalStyle from 'src/core/presentation/hooks/useGlobalStyle';
 import {Task} from 'src/home/application/types/GetListQuestionResponse';
 import {COLORS} from 'src/core/presentation/constants/colors';
-import {WIDTH_SCREEN} from 'src/core/presentation/utils';
+import {isMMSS, WIDTH_SCREEN} from 'src/core/presentation/utils';
 import {scale, verticalScale} from 'react-native-size-matters';
 import Animated, {
   Easing,
@@ -175,11 +175,7 @@ const EssayLesson = ({
       prompt={settings.prompt?.toString()}
       price="Free"
       score={selectedChild?.adsPoints}
-      txtCountDown={
-        word === firstMiniTestTask?.question?.[moduleIndex].content
-          ? undefined
-          : word
-      }
+      txtCountDown={!isMMSS(word ?? '') ? undefined : word}
       isAnswerCorrect={isAnswerCorrect}
       isShowCorrectContainer={isShowCorrectContainer}
       buildQuestion={

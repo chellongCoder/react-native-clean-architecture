@@ -444,48 +444,48 @@ const MultiPronunciationLesson = observer(
                 </TouchableOpacity>
               </View>
               <View style={[styles.boxSelected]}>
-                {answerSelected !== '' &&
-                  (
-                    firstMiniTestTask?.question?.[moduleIndex]
-                      ?.correctAnswer as string[]
-                  ) // * nếu correctAnswer là mảng thì check xem correctAnswer đã là chuỗi chưa, nếu chưa thì hiển thị phần tử khác với answerSelected
-                    ?.map(answer => {
-                      return (
-                        <View style={styles.wrapCharContainer}>
-                          {answerSelected
-                            .toLocaleLowerCase()
-                            .includes(answer.toLocaleLowerCase()) ? (
-                            <Text
-                              style={[
-                                styles.fonts_SVN_Cherish,
-                                styles.textQuestion,
-                                styles.textGreen,
-                              ]}>
-                              {typeof firstMiniTestTask?.question?.[moduleIndex] // * nếu correctAnswer là string thì hiển thị answerSelected
-                                ?.correctAnswer === 'string'
-                                ? answerSelected
-                                : firstMiniTestTask?.question?.[ // * nếu correctAnswer là mảng thì check xem correctAnswer đã là chuỗi chưa, nếu chưa thì hiển thị phần tử khác với answerSelected
-                                    moduleIndex
-                                  ]?.correctAnswer
-                                    ?.find(e =>
-                                      !Number(answerSelected)
-                                        ? answerSelected
-                                        : e !== answerSelected,
-                                    )}
-                            </Text>
-                          ) : (
-                            <Text
-                              style={[
-                                styles.fonts_EinaBold,
-                                styles.textQuestion,
-                                styles.textRed,
-                              ]}>
-                              {answer}
-                            </Text>
-                          )}
-                        </View>
-                      );
-                    })}
+                <View
+                  style={{
+                    height: '50%',
+                    width: '100%',
+                    alignItems: 'center',
+                  }}>
+                  {answerSelected !== '' &&
+                    answerSelected
+                      .split(' ') // * nếu correctAnswer là mảng thì check xem correctAnswer đã là chuỗi chưa, nếu chưa thì hiển thị phần tử khác với answerSelected
+                      ?.map(voicedAnswer => {
+                        return (
+                          <View style={styles.wrapCharContainer}>
+                            {(
+                              firstMiniTestTask?.question?.[moduleIndex]
+                                .correctAnswer as string[]
+                            )?.find(
+                              e =>
+                                e.toLocaleLowerCase() ===
+                                voicedAnswer.toLocaleLowerCase(),
+                            ) ? (
+                              <Text
+                                style={[
+                                  styles.fonts_SVN_Cherish,
+                                  styles.textQuestion,
+                                  styles.textGreen,
+                                ]}>
+                                {voicedAnswer}
+                              </Text>
+                            ) : (
+                              <Text
+                                style={[
+                                  styles.fonts_EinaBold,
+                                  styles.textQuestion,
+                                  styles.textRed,
+                                ]}>
+                                {voicedAnswer}
+                              </Text>
+                            )}
+                          </View>
+                        );
+                      })}
+                </View>
 
                 <RecordButton
                   startRecord={startRecord}
