@@ -1,3 +1,4 @@
+/* eslint-disable no-sparse-arrays */
 import React, {
   forwardRef,
   useCallback,
@@ -7,7 +8,7 @@ import React, {
   useRef,
   useState,
 } from 'react';
-import {StyleSheet, View} from 'react-native';
+import {StyleSheet, View, Text} from 'react-native';
 import {
   Canvas,
   Path,
@@ -21,6 +22,7 @@ import {
   useFonts,
   PaintStyle,
 } from '@shopify/react-native-skia';
+import {FontFamily} from 'src/core/presentation/hooks/useFonts';
 
 type Props = {
   text?: {
@@ -31,6 +33,7 @@ type Props = {
       name: string;
       require: number;
     };
+    show?: boolean;
   };
   matchDistance?: number;
   backgroundColor?: string;
@@ -199,19 +202,19 @@ const CanvasWrite = forwardRef<CanvasWriteRef, Props>((props: Props, ref) => {
       return null;
     }
 
-    const surface = Skia.Surface.MakeOffscreen(size.width, size.height);
+    const width = size.width * 2;
+    const height = size.height * 2;
+
+    const surface = Skia.Surface.MakeOffscreen(width, height);
     const canvas = surface?.getCanvas();
 
     const paintBackground = Skia.Paint();
     paintBackground.setColor(Skia.Color('white'));
-    canvas?.drawRect(
-      Skia.XYWHRect(0, 0, size.width, size.height),
-      paintBackground,
-    );
+    canvas?.drawRect(Skia.XYWHRect(0, 0, width, height), paintBackground);
 
     const paint = Skia.Paint();
     paint.setColor(Skia.Color('black'));
-    paint.setStrokeWidth(3);
+    paint.setStrokeWidth(8);
     paint.setStyle(PaintStyle.Stroke);
     canvas?.drawPath(path, paint);
 
@@ -256,7 +259,7 @@ const CanvasWrite = forwardRef<CanvasWriteRef, Props>((props: Props, ref) => {
     <View
       style={[
         styles.container,
-        props.backgroundColor ? {backgroundColor: props.backgroundColor} : null,
+        // props.backgroundColor ? {backgroundColor: props.backgroundColor} : null,
       ]}
       onLayout={e => {
         setSize({
@@ -264,8 +267,24 @@ const CanvasWrite = forwardRef<CanvasWriteRef, Props>((props: Props, ref) => {
           width: e.nativeEvent.layout.width,
         });
       }}>
+      {props?.text?.content && (
+        <View
+          style={[
+            styles.bgText,
+            props.backgroundColor
+              ? {backgroundColor: props.backgroundColor}
+              : null,
+            ,
+          ]}>
+          {props.text.show && (
+            <Text style={[styles.text, {color: props.text.color ?? 'green'}]}>
+              {props?.text?.content}
+            </Text>
+          )}
+        </View>
+      )}
       <Canvas style={styles.container} onTouch={touchHandler}>
-        {props?.text?.content && (
+        {/* {props?.text?.content && (
           <TextSkia
             text={props?.text?.content}
             font={font}
@@ -274,7 +293,7 @@ const CanvasWrite = forwardRef<CanvasWriteRef, Props>((props: Props, ref) => {
             color={props.text.color ?? 'green'}
             opacity={props?.text?.opacity ?? 1}
           />
-        )}
+        )} */}
         {false && //test
           points.current.map((point, index) => (
             <Circle
@@ -291,7 +310,9 @@ const CanvasWrite = forwardRef<CanvasWriteRef, Props>((props: Props, ref) => {
             path={path}
             color={'#BA3201'}
             style={'stroke'}
-            strokeWidth={3}
+            strokeWidth={8}
+            strokeCap="round"
+            strokeJoin="round"
           />
         ))}
       </Canvas>
@@ -301,7 +322,7 @@ const CanvasWrite = forwardRef<CanvasWriteRef, Props>((props: Props, ref) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#FBF8CC',
+    // backgroundColor: '#FBF8CC',
     borderRadius: 20,
     overflow: 'hidden',
   },
@@ -310,6 +331,18 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: 0,
     right: 0,
+  },
+  bgText: {
+    position: 'absolute',
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#FBF8CC',
+    width: '100%',
+    height: '100%',
+  },
+  text: {
+    fontFamily: FontFamily.SVNCherishMoment,
+    fontSize: 140,
   },
   space: {
     height: 20,
