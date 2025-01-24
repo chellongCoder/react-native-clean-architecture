@@ -388,7 +388,7 @@ const LessonScreen = observer(() => {
           questionId: firstMiniTestTask?.question?.[lessonIndex]._id,
           status:
             finalAnswer ===
-            firstMiniTestTask?.question?.[lessonIndex].correctAnswer
+            firstMiniTestTask?.question?.[lessonIndex].correctAnswer.toString()
               ? 'completed'
               : 'failed',
           point: firstMiniTestTask?.question?.[lessonIndex].point,

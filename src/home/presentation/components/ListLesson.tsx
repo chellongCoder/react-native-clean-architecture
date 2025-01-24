@@ -83,6 +83,7 @@ const ListLesson = () => {
     );
   }, [listSubject, subjects]);
 
+  // * nếu chưa có subject id nào thì lấy thằng đầu tiên
   useEffect(() => {
     if (subjectId === '') {
       setSubjectId(data[0]?._id);

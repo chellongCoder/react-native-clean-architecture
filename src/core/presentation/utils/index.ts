@@ -96,3 +96,13 @@ export const isSubArray = (answerSelected: any[], correctAnswer: any[]) => {
   }
   return answerSelected.every(answer => correctAnswer.includes(answer));
 };
+
+export const isMMSS = (str: string) => {
+  const regex = /^([0-5][0-9]):([0-5][0-9])$/;
+
+  // Example usage
+  const word = str;
+  const isMatch = regex.test(word);
+
+  return isMatch;
+};
