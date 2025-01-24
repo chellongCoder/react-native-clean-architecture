@@ -160,21 +160,22 @@ const LatinLesson = ({
       uri: url,
       name: 'file.jpeg',
       type: 'image/jpeg',
-    });
+    } as any);
 
     imageToText(formData)
       .then(data => {
-        const char = data.data.data;
+        const char = data.data?.data;
         const charAnswer =
           firstMiniTestTask?.question?.[moduleIndex].fullAnswer;
         console.log('imageToText', data, char, charAnswer);
-        const charLowerCase = char.toLocaleLowerCase();
+        const charLowerCase = char?.toLocaleLowerCase();
         const charAnswerLowerCase = charAnswer?.toLocaleLowerCase();
         console.log(
           charLowerCase,
           charAnswerLowerCase,
           charLowerCase === charAnswerLowerCase,
         );
+        setAnswerSelected(char);
         setIscorrect(
           data.success === true && charLowerCase === charAnswerLowerCase,
         );
@@ -244,11 +245,9 @@ const LatinLesson = ({
           <CanvasWrite
             ref={canvasWriteRef}
             text={{
-              content:
-                firstMiniTestTask?.question?.[
-                  moduleIndex
-                ]?.fullAnswer?.toString() ?? '',
+              content: answerSelected ?? '',
               color: COLORS.PRIMARY,
+              show: !!answerSelected,
             }}
           />
           <PrimaryButton

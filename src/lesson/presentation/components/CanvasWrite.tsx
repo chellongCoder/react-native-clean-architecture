@@ -2,9 +2,9 @@
 import React, {
   forwardRef,
   useCallback,
-  useEffect,
+  // useEffect,
   useImperativeHandle,
-  useMemo,
+  // useMemo,
   useRef,
   useState,
 } from 'react';
@@ -17,9 +17,9 @@ import {
   Circle,
   TouchInfo,
   useTouchHandler,
-  Text as TextSkia,
-  matchFont,
-  useFonts,
+  // Text as TextSkia,
+  // matchFont,
+  // useFonts,
   PaintStyle,
 } from '@shopify/react-native-skia';
 import {FontFamily} from 'src/core/presentation/hooks/useFonts';
@@ -53,38 +53,38 @@ export type CanvasWriteRef = {
 };
 
 const CanvasWrite = forwardRef<CanvasWriteRef, Props>((props: Props, ref) => {
-  const fontMgr = useFonts({
-    SVN_Cherish: [
-      props.text?.font?.require ??
-        require('assets/fonts/SVN-Cherish Moment.ttf'),
-    ],
-  });
-  const font = fontMgr
-    ? matchFont(
-        {
-          fontFamily: props?.text?.font?.name ?? 'SVN_Cherish',
-          fontSize: 140,
-        },
-        fontMgr,
-      )
-    : null;
+  // const fontMgr = useFonts({
+  //   SVN_Cherish: [
+  //     props.text?.font?.require ??
+  //       require('assets/fonts/SVN-Cherish Moment.ttf'),
+  //   ],
+  // });
+  // const font = fontMgr
+  //   ? matchFont(
+  //       {
+  //         fontFamily: props?.text?.font?.name ?? 'SVN_Cherish',
+  //         fontSize: 140,
+  //       },
+  //       fontMgr,
+  //     )
+  //   : null;
   const [size, setSize] = useState({height: 0, width: 0});
 
-  const positionText = useMemo(() => {
-    if (!props.text?.content) {
-      return;
-    }
-    const sizeText = font?.measureText(props.text?.content);
-    return (
-      sizeText && {
-        originX: size.width / 2 - sizeText?.width / 2,
-        originY: size.height / 2 - sizeText?.height / 2,
-        x: size.width / 2 - sizeText?.width / 2 - sizeText.x,
-        y: size.height / 2 - sizeText?.height / 2 - sizeText?.y,
-      }
-    );
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [fontMgr, size, props.text?.content]);
+  // const positionText = useMemo(() => {
+  //   if (!props.text?.content) {
+  //     return;
+  //   }
+  //   const sizeText = font?.measureText(props.text?.content);
+  //   return (
+  //     sizeText && {
+  //       originX: size.width / 2 - sizeText?.width / 2,
+  //       originY: size.height / 2 - sizeText?.height / 2,
+  //       x: size.width / 2 - sizeText?.width / 2 - sizeText.x,
+  //       y: size.height / 2 - sizeText?.height / 2 - sizeText?.y,
+  //     }
+  //   );
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [fontMgr, size, props.text?.content]);
   const [paths, setPaths] = useState<SkPath[]>([]);
 
   const points = useRef<{x: number; y: number; passed?: boolean}[]>([]);
@@ -93,51 +93,51 @@ const CanvasWrite = forwardRef<CanvasWriteRef, Props>((props: Props, ref) => {
 
   const maxDistance = useRef(0);
 
-  const [matchDistance] = useState(props.matchDistance ?? 10);
+  // const [matchDistance] = useState(props.matchDistance ?? 10);
   const [strokesNumber, setStrokesNumber] = useState(0);
 
-  const findPointNear = useCallback(
-    (touchInfo: TouchInfo) => {
-      const {x, y} = touchInfo;
-      const diemGanNhat = points.current.reduce<{
-        kc2: number;
-        x: number;
-        y: number;
-        index: number;
-      }>(
-        (min, value, index) => {
-          const khoangCach2 =
-            (value.x - x) * (value.x - x) + (value.y - y) * (value.y - y);
-          if (khoangCach2 < min.kc2) {
-            return {
-              ...min,
-              ...value,
-              kc2: khoangCach2,
-              index: index,
-            };
-          } else {
-            return min;
-          }
-        },
-        {x: 0, y: 0, kc2: 999999999, index: -1},
-      );
+  // const findPointNear = useCallback(
+  //   (touchInfo: TouchInfo) => {
+  //     const {x, y} = touchInfo;
+  //     const diemGanNhat = points.current.reduce<{
+  //       kc2: number;
+  //       x: number;
+  //       y: number;
+  //       index: number;
+  //     }>(
+  //       (min, value, index) => {
+  //         const khoangCach2 =
+  //           (value.x - x) * (value.x - x) + (value.y - y) * (value.y - y);
+  //         if (khoangCach2 < min.kc2) {
+  //           return {
+  //             ...min,
+  //             ...value,
+  //             kc2: khoangCach2,
+  //             index: index,
+  //           };
+  //         } else {
+  //           return min;
+  //         }
+  //       },
+  //       {x: 0, y: 0, kc2: 999999999, index: -1},
+  //     );
 
-      const kc = Math.sqrt(diemGanNhat.kc2);
+  //     const kc = Math.sqrt(diemGanNhat.kc2);
 
-      if (kc <= matchDistance && !points.current[diemGanNhat.index].passed) {
-        points.current[diemGanNhat.index] = {
-          ...points.current[diemGanNhat.index],
-          passed: true,
-        };
-        matchPointNumber.current += 1;
-      }
-      if (kc > maxDistance.current) {
-        maxDistance.current = kc;
-      }
-    },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [],
-  );
+  //     if (kc <= matchDistance && !points.current[diemGanNhat.index].passed) {
+  //       points.current[diemGanNhat.index] = {
+  //         ...points.current[diemGanNhat.index],
+  //         passed: true,
+  //       };
+  //       matchPointNumber.current += 1;
+  //     }
+  //     if (kc > maxDistance.current) {
+  //       maxDistance.current = kc;
+  //     }
+  //   },
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  //   [],
+  // );
 
   const onDrawingStart = useCallback((touchInfo: TouchInfo) => {
     // points.current = [...points.current, {x: touchInfo.x, y: touchInfo.y}];
@@ -159,8 +159,8 @@ const CanvasWrite = forwardRef<CanvasWriteRef, Props>((props: Props, ref) => {
         const {x, y} = touchInfo;
         const currentPath = currentPaths[currentPaths.length - 1];
         const lastPoint = currentPath.getLastPt();
-        const xMid = (lastPoint.x + x) / 2;
-        const yMid = (lastPoint.y + y) / 2;
+        // const xMid = (lastPoint.x + x) / 2;
+        // const yMid = (lastPoint.y + y) / 2;
 
         currentPath.quadTo(lastPoint.x, lastPoint.y, x, y);
         return [...currentPaths, currentPath];
@@ -245,15 +245,15 @@ const CanvasWrite = forwardRef<CanvasWriteRef, Props>((props: Props, ref) => {
     getBase64,
   }));
 
-  useEffect(() => {
-    if (props.matchPoints) {
-      points.current = props.matchPoints.map(e => ({
-        ...e,
-        x: e.x + (positionText?.originX ?? 0),
-        y: e.y + (positionText?.originY ?? 0),
-      }));
-    }
-  }, [positionText?.originX, positionText?.originY, props.matchPoints]);
+  // useEffect(() => {
+  //   if (props.matchPoints) {
+  //     points.current = props.matchPoints.map(e => ({
+  //       ...e,
+  //       x: e.x + (positionText?.originX ?? 0),
+  //       y: e.y + (positionText?.originY ?? 0),
+  //     }));
+  //   }
+  // }, [positionText?.originX, positionText?.originY, props.matchPoints]);
 
   return (
     <View
@@ -267,22 +267,20 @@ const CanvasWrite = forwardRef<CanvasWriteRef, Props>((props: Props, ref) => {
           width: e.nativeEvent.layout.width,
         });
       }}>
-      {props?.text?.content && (
-        <View
-          style={[
-            styles.bgText,
-            props.backgroundColor
-              ? {backgroundColor: props.backgroundColor}
-              : null,
-            ,
-          ]}>
-          {props.text.show && (
-            <Text style={[styles.text, {color: props.text.color ?? 'green'}]}>
-              {props?.text?.content}
-            </Text>
-          )}
-        </View>
-      )}
+      <View
+        style={[
+          styles.bgText,
+          props.backgroundColor
+            ? {backgroundColor: props.backgroundColor}
+            : null,
+          ,
+        ]}>
+        {props.text?.show && (
+          <Text style={[styles.text, {color: props.text.color ?? 'green'}]}>
+            {props?.text?.content}
+          </Text>
+        )}
+      </View>
       <Canvas style={styles.container} onTouch={touchHandler}>
         {/* {props?.text?.content && (
           <TextSkia
