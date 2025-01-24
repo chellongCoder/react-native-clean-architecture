@@ -147,6 +147,7 @@ const LatinLesson = ({
 
   const onSubmit = useCallback(async () => {
     const base64 = canvasWriteRef.current?.getBase64();
+    console.log('base64', base64);
     if (!base64) {
       return;
     }
@@ -163,11 +164,19 @@ const LatinLesson = ({
 
     imageToText(formData)
       .then(data => {
-        console.log('imageToText', data);
+        const char = data.data.data;
+        const charAnswer =
+          firstMiniTestTask?.question?.[moduleIndex].fullAnswer;
+        console.log('imageToText', data, char, charAnswer);
+        const charLowerCase = char.toLocaleLowerCase();
+        const charAnswerLowerCase = charAnswer?.toLocaleLowerCase();
+        console.log(
+          charLowerCase,
+          charAnswerLowerCase,
+          charLowerCase === charAnswerLowerCase,
+        );
         setIscorrect(
-          data.success === true &&
-            data.data.data ===
-              firstMiniTestTask?.question?.[moduleIndex].fullAnswer,
+          data.success === true && charLowerCase === charAnswerLowerCase,
         );
         setCountCall(p => p + 1);
       })
