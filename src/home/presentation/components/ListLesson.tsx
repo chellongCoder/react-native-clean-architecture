@@ -83,12 +83,24 @@ const ListLesson = () => {
     );
   }, [listSubject, subjects]);
 
+  const slideIndex = useMemo(
+    () => data.findIndex(e => e._id === rootSubject?._id),
+    [data, rootSubject?._id],
+  );
+
   // * nếu chưa có subject id nào thì lấy thằng đầu tiên
   useEffect(() => {
     if (subjectId === '') {
       setSubjectId(data[0]?._id);
     }
   }, [data, setSubjectId, subjectId]);
+
+  useEffect(() => {
+    setTimeout(() => {
+      const index = data.findIndex(e => e._id === rootSubject?._id);
+      carouselRef.current.snapToItem(index);
+    }, 1000);
+  }, [data, rootSubject]);
 
   return (
     <View style={styles.container}>
@@ -106,7 +118,7 @@ const ListLesson = () => {
         apparitionDelay={0}
         windowSize={1}
         horizontal={true}
-        firstItem={data.findIndex(e => e._id === rootSubject?._id)}
+        firstItem={slideIndex}
         onSnapToItem={(slideIndex: number) => {
           console.log(
             '🛠 LOG: 🚀 --> -----------------------------------------------------🛠 LOG: 🚀 -->',

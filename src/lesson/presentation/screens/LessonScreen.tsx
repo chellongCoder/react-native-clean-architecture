@@ -51,6 +51,7 @@ import LatinLesson from './LessonComponent/LatinLesson';
 import English_G5M16 from './LessonComponent/English_G5M16';
 import English_G6M26 from './LessonComponent/English_G6M26';
 import English_G3M20 from './LessonComponent/English_G3M20';
+import Mandarin_G1M5 from './LessonComponent/Mandarin_G1M5';
 
 export enum MathQuestionType {
   MATH_TEXT = 'math_text',
@@ -91,6 +92,10 @@ export enum LanguageE {
   ENGLISH_EG0M1 = 'ENGLISH_EG0M1',
   ENGLISH_EG0M2 = 'ENGLISH_EG0M2',
   ENGLISH_EG0M3 = 'ENGLISH_EG0M3',
+
+  MANDARIN_G1M4 = 'MANDARIN_G1M4',
+  MANDARIN_G1M5 = 'MANDARIN_G1M5',
+  MANDARIN_G1M6 = 'MANDARIN_G1M6',
 }
 export enum LessonTypeE {
   TEXT = 'text',
@@ -733,6 +738,7 @@ const LessonScreen = observer(() => {
        *todo    các question cho môn Tiếng trung
        *------------------------**/
       case LessonTypeE.WRITING:
+      case LanguageE.MANDARIN_G1M4:
         return (
           <WriteLesson
             moduleIndex={lessonIndex}
@@ -751,6 +757,50 @@ const LessonScreen = observer(() => {
             characterImageFail={
               env.IMAGE_BACKGROUND_BASE_API_URL + lessonSetting?.figureFailImage
             }
+          />
+        );
+      case LanguageE.MANDARIN_G1M5:
+        return (
+          <Mandarin_G1M5
+            moduleIndex={lessonIndex}
+            nextModule={nextModule}
+            totalModule={testTask?.question.length ?? 0}
+            lessonName={route.lessonName}
+            moduleName={route.moduleName}
+            firstMiniTestTask={testTask}
+            backgroundImage={
+              env.IMAGE_BACKGROUND_BASE_API_URL + lessonSetting?.backgroundImage
+            }
+            characterImageSuccess={
+              env.IMAGE_BACKGROUND_BASE_API_URL +
+              lessonSetting?.figureSuccessImage
+            }
+            characterImageFail={
+              env.IMAGE_BACKGROUND_BASE_API_URL + lessonSetting?.figureFailImage
+            }
+            ref={vowelRef}
+          />
+        );
+      case LanguageE.MANDARIN_G1M6:
+        return (
+          <PronunciationLesson
+            moduleIndex={lessonIndex}
+            nextModule={nextModule}
+            totalModule={testTask?.question.length ?? 0}
+            lessonName={route.lessonName}
+            moduleName={route.moduleName}
+            firstMiniTestTask={testTask}
+            backgroundImage={
+              env.IMAGE_BACKGROUND_BASE_API_URL + lessonSetting?.backgroundImage
+            }
+            characterImageSuccess={
+              env.IMAGE_BACKGROUND_BASE_API_URL +
+              lessonSetting?.figureSuccessImage
+            }
+            characterImageFail={
+              env.IMAGE_BACKGROUND_BASE_API_URL + lessonSetting?.figureFailImage
+            }
+            ref={vowelRef}
           />
         );
       /**----------------------

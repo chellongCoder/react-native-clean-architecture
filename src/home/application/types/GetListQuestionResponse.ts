@@ -15,6 +15,8 @@ export interface Question {
   fullAnswer: string;
   image: string;
   descriptionImage: string;
+  answerType: 'answer_pick_one' | 'answer_arrange_word';
+  paragraph: string;
 }
 
 export interface Task {

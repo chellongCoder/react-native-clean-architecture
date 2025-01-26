@@ -3,6 +3,7 @@ import React, {
   forwardRef,
   useEffect,
   useImperativeHandle,
+  useMemo,
   useState,
 } from 'react';
 import {scale, verticalScale} from 'react-native-size-matters';
@@ -15,9 +16,9 @@ const ListGrade = forwardRef((_, ref) => {
   const [index, setIndex] = useState<number | undefined>(0);
   const {setSubjectId, listSubject, rootSubject} = useHomeStore();
 
-  const gradeObjs = listSubject.filter(
-    subject => subject.parentId === rootSubject?._id,
-  );
+  const gradeObjs = useMemo(() => {
+    return listSubject.filter(subject => subject.parentId === rootSubject?._id);
+  }, [listSubject, rootSubject]);
 
   useImperativeHandle(ref, () => {
     return {

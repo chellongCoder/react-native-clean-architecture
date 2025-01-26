@@ -524,7 +524,10 @@ const PronunciationLesson = observer(
 
               <PrimaryButton
                 text="Submit"
-                style={[styles.mt24]}
+                style={[
+                  styles.buttonContainer,
+                  {backgroundColor: settings.backgroundButtonColor},
+                ]}
                 onPress={submit}
                 disable={!answerSelected}
               />
@@ -666,5 +669,12 @@ const styles = StyleSheet.create({
     fontFamily: FontFamily.SVNNeuzeitBold,
     color: COLORS.PRIMARY,
     fontSize: scale(12),
+  },
+  buttonContainer: {
+    borderRadius: scale(52),
+    paddingVertical: verticalScale(9),
+    paddingHorizontal: scale(24),
+    marginTop: scale(16),
+    backgroundColor: '#0877B6',
   },
 });

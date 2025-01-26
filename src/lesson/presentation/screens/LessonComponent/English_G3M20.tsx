@@ -39,6 +39,7 @@ import useHomeStore from 'src/home/presentation/stores/useHomeStore';
 import SelectionAnswersQuestion, {
   SelectionAnswersQuestionRef,
 } from '../../components/SelectionAnswersQuestion';
+import CharScramble, {CharScrambleRep} from '../../components/CharScramble';
 
 type Props = {
   moduleIndex: number;
@@ -77,10 +78,19 @@ const English_G3M20 = observer(
       const [answerSelected, setAnswerSelected] = useState<string | string[]>(
         '',
       );
+      console.log(
+        '🛠 LOG: 🚀 --> --------------------------------------🛠 LOG: 🚀 -->',
+      );
+      console.log('🛠 LOG: 🚀 --> ~ answerSelected:', answerSelected);
+      console.log(
+        '🛠 LOG: 🚀 --> --------------------------------------🛠 LOG: 🚀 -->',
+      );
 
       const {trainingCount, getSetting} = useLessonStore();
 
       const {selectedChild} = useAuthenticationStore();
+
+      const charScrambleRep = useRef<CharScrambleRep>(null);
 
       const {
         isAnswerCorrect,
@@ -93,14 +103,14 @@ const English_G3M20 = observer(
         resetLearning,
       } = useSettingLesson({
         countDownTime: trainingCount <= 2 ? 0 : 5,
-        isCorrectAnswer: isSubArray(
-          answerSelected as string[],
-          firstMiniTestTask?.question?.[moduleIndex]?.correctAnswer as string[],
-        ),
+        isCorrectAnswer:
+          answerSelected.toString() ===
+          (firstMiniTestTask?.question?.[moduleIndex]?.correctAnswer as string),
         onSubmit: () => {
           setAnswerSelected('');
           nextModule((answerSelected as string[]).toString());
           answerRef.current?.resetAnswerSelected?.();
+          charScrambleRep.current?.reset?.();
         },
         fullAnswer: firstMiniTestTask?.question?.[moduleIndex].fullAnswer,
       });
@@ -237,29 +247,41 @@ const English_G3M20 = observer(
                   />
                 </TouchableOpacity>
               </View>
-              <SelectionAnswersQuestion
-                question={
-                  <Text
-                    style={[
-                      styles.textQuestion,
-                      styles.textGreen,
-                      styles.mt8,
-                      {fontSize: scale(24)},
-                    ]}>
-                    {firstMiniTestTask?.question?.[moduleIndex].content}
-                  </Text>
-                }
-                answer={
-                  firstMiniTestTask?.question?.[moduleIndex].answers ?? []
-                }
-                isShowCorrectContainer={isShowCorrectContainer}
-                isAnswerCorrect={!!isAnswerCorrect}
-                onSelectAnswer={(e: string[]) => {
-                  setAnswerSelected(e);
-                }}
-                learningTimer={learningTimer}
-                ref={answerRef}
-              />
+              {firstMiniTestTask?.question?.[moduleIndex].answerType ===
+              'answer_pick_one' ? (
+                <SelectionAnswersQuestion
+                  question={
+                    <Text
+                      style={[
+                        styles.textQuestion,
+                        styles.textGreen,
+                        styles.mt8,
+                        {fontSize: scale(24)},
+                      ]}>
+                      {firstMiniTestTask?.question?.[moduleIndex].content}
+                    </Text>
+                  }
+                  answer={
+                    firstMiniTestTask?.question?.[moduleIndex].answers ?? []
+                  }
+                  isShowCorrectContainer={isShowCorrectContainer}
+                  isAnswerCorrect={!!isAnswerCorrect}
+                  onSelectAnswer={(e: string[]) => {
+                    setAnswerSelected(e);
+                  }}
+                  learningTimer={learningTimer}
+                  isSelectOne
+                  ref={answerRef}
+                />
+              ) : (
+                <CharScramble
+                  ref={charScrambleRep}
+                  content={firstMiniTestTask?.question?.[moduleIndex]?.content}
+                  listChar={firstMiniTestTask?.question?.[moduleIndex]?.answers}
+                  learningTimer={learningTimer}
+                  onAnswerChanged={setAnswerSelected}
+                />
+              )}
 
               <PrimaryButton
                 text="Submit"

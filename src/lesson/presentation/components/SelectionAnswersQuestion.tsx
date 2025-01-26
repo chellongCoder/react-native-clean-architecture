@@ -5,13 +5,13 @@ import React, {
   ForwardRefRenderFunction,
 } from 'react';
 import {View, Text, TouchableOpacity, StyleSheet} from 'react-native';
-import {s, scale, verticalScale} from 'react-native-size-matters';
+import {scale, verticalScale} from 'react-native-size-matters';
 import {COLORS} from 'src/core/presentation/constants/colors';
 import {FontFamily} from 'src/core/presentation/hooks/useFonts';
 import {WIDTH_SCREEN} from 'src/core/presentation/utils';
 
 interface SelectionAnswersQuestionProps {
-  question: React.ReactNode;
+  question?: React.ReactNode;
   answer: string[];
   isShowCorrectContainer: boolean;
   isAnswerCorrect: boolean;
@@ -24,6 +24,7 @@ interface SelectionAnswersQuestionProps {
 export interface SelectionAnswersQuestionRef {
   getSelectedAnswers: () => string[];
   resetAnswerSelected: () => void;
+  handleSelectAnswer: (e: string) => void;
 }
 
 const SelectionAnswersQuestion: ForwardRefRenderFunction<
@@ -42,11 +43,6 @@ const SelectionAnswersQuestion: ForwardRefRenderFunction<
   } = props;
 
   const [answerSelected, setAnswerSelected] = useState<string[]>([]);
-
-  useImperativeHandle(ref, () => ({
-    getSelectedAnswers: () => answerSelected,
-    resetAnswerSelected: () => setAnswerSelected([]),
-  }));
 
   const handleSelectAnswer = (e: string) => {
     if (isSelectOne) {
@@ -74,6 +70,12 @@ const SelectionAnswersQuestion: ForwardRefRenderFunction<
     }
   };
 
+  useImperativeHandle(ref, () => ({
+    getSelectedAnswers: () => answerSelected,
+    resetAnswerSelected: () => setAnswerSelected([]),
+    handleSelectAnswer,
+  }));
+
   return (
     <View style={[styles.boxSelected]}>
       <View style={styles.wrapCharContainer}>{question}</View>
@@ -81,7 +83,7 @@ const SelectionAnswersQuestion: ForwardRefRenderFunction<
         {answer?.map((e, i) => {
           const bg =
             Array.isArray(answerSelected) &&
-            answerSelected.includes(e) &&
+            answerSelected.includes(e.trim()) &&
             !isKeyboard
               ? isShowCorrectContainer && !isAnswerCorrect
                 ? '#F28759'

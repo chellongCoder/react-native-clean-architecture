@@ -35,6 +35,7 @@ import useHomeStore from 'src/home/presentation/stores/useHomeStore';
 import SelectionAnswersQuestion, {
   SelectionAnswersQuestionRef,
 } from '../../components/SelectionAnswersQuestion';
+import ImageMeaning from '../../components/ImageMeaning';
 
 type Props = {
   moduleIndex: number;
@@ -48,7 +49,7 @@ type Props = {
   characterImageFail?: string;
 };
 
-const English_EG4M23 = observer(
+const Mandarin_G1M5 = observer(
   forwardRef<LessonRef, Props>(
     (
       {
@@ -196,14 +197,17 @@ const English_EG4M23 = observer(
           isShowCorrectContainer={isShowCorrectContainer}
           onPressFlower={toggleShowHint}
           buildQuestion={
-            <View
-              style={{
-                width: scale(200),
-                marginTop: verticalScale(50),
-              }}>
+            <View>
               <Text style={[styles.fonts_SVN_Cherish, styles.textQuestion]}>
                 {firstMiniTestTask?.question?.[moduleIndex].content}
               </Text>
+
+              <ImageMeaning
+                descriptionImage={
+                  firstMiniTestTask?.question?.[moduleIndex].descriptionImage
+                }
+                image={firstMiniTestTask?.question?.[moduleIndex].image}
+              />
             </View>
           }
           buildAnswer={
@@ -262,7 +266,7 @@ const English_EG4M23 = observer(
   ),
 );
 
-export default English_EG4M23;
+export default Mandarin_G1M5;
 
 const styles = StyleSheet.create({
   fill: {
@@ -276,8 +280,9 @@ const styles = StyleSheet.create({
   },
   textQuestion: {
     fontSize: verticalScale(15),
-    textAlign: 'left',
+    textAlign: 'center',
     color: COLORS.BLUE_258F78,
+    marginVertical: verticalScale(16),
   },
   textGreen: {
     color: '#258F78',

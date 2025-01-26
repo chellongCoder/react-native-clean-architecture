@@ -160,8 +160,11 @@ const WriteLesson = ({
       isShowCorrectContainer={isShowCorrectContainer}
       buildQuestion={
         <View>
-          <Text style={[styles.fonts_SVN_Cherish, styles.textQuestion]}>
+          <Text style={[styles.fonts_NeuzeitBold, styles.textQuestion]}>
             {firstMiniTestTask?.question?.[moduleIndex].content}
+          </Text>
+          <Text style={[styles.fonts_Neuzeit, styles.textQuestion2]}>
+            {firstMiniTestTask?.question?.[moduleIndex].description}
           </Text>
 
           <ImageMeaning
@@ -224,13 +227,24 @@ const styles = StyleSheet.create({
   fonts_SVN_Cherish: {
     fontFamily: FontFamily.SVNCherishMoment,
   },
+  fonts_NeuzeitBold: {
+    fontFamily: FontFamily.SVNNeuzeitBold,
+  },
+  fonts_Neuzeit: {
+    fontFamily: FontFamily.SVNNeuzeitRegular,
+  },
   textLarge: {
     fontSize: 140,
     textAlign: 'center',
     color: 'white',
   },
   textQuestion: {
-    fontSize: scale(40),
+    fontSize: scale(32),
+    textAlign: 'center',
+    color: COLORS.RED_811010,
+  },
+  textQuestion2: {
+    fontSize: scale(20),
     textAlign: 'center',
     color: COLORS.RED_811010,
   },

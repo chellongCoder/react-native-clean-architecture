@@ -71,6 +71,22 @@ Build and upload APK to Firebase App Distribution
 
 Build AAB and upload to public testing on Play Console
 
+### android build_and_upload_aab_closed
+
+```sh
+[bundle exec] fastlane android build_and_upload_aab_closed
+```
+
+Build and upload AAB to closed testing on Play Console
+
+### android build_and_upload_aab_internal
+
+```sh
+[bundle exec] fastlane android build_and_upload_aab_internal
+```
+
+Build and upload AAB to internal testing on Play Console
+
 ----
 
 This README.md is auto-generated and will be re-generated every time [_fastlane_](https://fastlane.tools) is run.

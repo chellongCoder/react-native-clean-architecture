@@ -7,6 +7,7 @@ import {WIDTH_SCREEN} from 'src/core/presentation/utils';
 
 const ImageMeaning = ({descriptionImage, image}) => {
   const env = coreModuleContainer.getProvided<Env>(EnvToken); // Instantiate CoreService
+
   const [isShowMeaning, setIsShowMeaning] = useState(false);
   return (
     <TouchableWithoutFeedback onPress={() => setIsShowMeaning(v => !v)}>

@@ -21,13 +21,14 @@ class HttpClient implements IHttpClient {
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
       requestConfig.headers = {
-        'Content-Type': 'application/json',
+        'Content-Type': 'application/json; charset=utf-8',
         Accept: 'application/json',
         Origin: this.env.EXPO_BASE_V1_API_DOMAIN,
         ...requestConfig.headers,
       };
 
       requestConfig.timeout = 5000;
+      requestConfig.responseEncoding = 'utf-8'; // Add responseEncoding here
       return requestConfig;
     });
 

@@ -28,7 +28,7 @@ type Props = {
   backgroundImage?: string;
   characterImage?: string;
   backgroundAnswerColor?: string;
-  buildQuestion: React.ReactNode;
+  buildQuestion?: React.ReactNode;
   buildAnswer: React.ReactNode;
   moduleIndex: number;
   totalModule: number;
@@ -162,14 +162,16 @@ const LessonComponent = ({
           </View>
         </View>
 
-        <View
-          style={[
-            styles.boxQuestion,
-            styles.pb32,
-            !isShowPrompt && {zIndex: 999},
-          ]}>
-          {buildQuestion}
-        </View>
+        {buildQuestion && (
+          <View
+            style={[
+              styles.boxQuestion,
+              styles.pb32,
+              !isShowPrompt && {zIndex: 999},
+            ]}>
+            {buildQuestion}
+          </View>
+        )}
         <View style={styles.wrapDescriptionContainer}>
           <View style={styles.wrapImageContainer}>
             <Image
