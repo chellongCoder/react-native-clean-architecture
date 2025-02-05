@@ -90,6 +90,7 @@ class ViewModuleView : UIView {
       super.init(coder: coder)
     }
 
+  // MARK: - Private methods - setupView
   private func setupView(model: ScreenTimeSelectAppsModel) {
     let view = ScreenTimeSelectAppsContentView(model: model, childrenId: self.childrenId)
     let vc = UIHostingController(rootView: view)
@@ -106,6 +107,7 @@ class ViewModuleView : UIView {
     }
 }
 
+// Path: ScreenTimeSelectAppsModel.swift
 @available(iOS 16.0, *)
 struct ScreenTimeSelectAppsContentView: View {
     @State private var pickerIsPresented = false
