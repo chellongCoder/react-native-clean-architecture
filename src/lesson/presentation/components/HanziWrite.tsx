@@ -1,4 +1,4 @@
-import React, {forwardRef, useEffect, useImperativeHandle} from 'react';
+import React, {forwardRef, useEffect, useImperativeHandle, useRef} from 'react';
 import {Button, StyleSheet, View, Text} from 'react-native';
 import {HanziWriter, useHanziWriter} from '@jamsch/react-native-hanzi-writer';
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
@@ -24,6 +24,8 @@ export type HanziWriteRef = {
 };
 
 const HanziWrite = forwardRef<HanziWriteRef, Props>((props: Props, ref) => {
+  const containerRef = useRef(null);
+
   const writer = useHanziWriter({
     character: props.text?.content ?? '',
     // (Optional) This is where you would load the character data from a CDN
@@ -66,6 +68,7 @@ const HanziWrite = forwardRef<HanziWriteRef, Props>((props: Props, ref) => {
 
   return (
     <View
+      ref={containerRef}
       style={[
         styles.container,
         props.backgroundColor ? {backgroundColor: props.backgroundColor} : null,
@@ -82,7 +85,12 @@ const HanziWrite = forwardRef<HanziWriteRef, Props>((props: Props, ref) => {
               <Button title="Refetch" onPress={writer.refetch} />
             </View>
           }
-          style={{alignSelf: 'center'}}>
+          style={{
+            alignSelf: 'center',
+            alignContent: 'center',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}>
           {/** Optional, grid lines to help draw the character */}
           <HanziWriter.Outline color="#ddd" />
           <HanziWriter.GridLines color="#ddd" />
@@ -112,9 +120,6 @@ const HanziWrite = forwardRef<HanziWriteRef, Props>((props: Props, ref) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#FBF8CC',
-    borderRadius: scale(20),
-    overflow: 'hidden',
     alignItems: 'center',
     justifyContent: 'center',
   },

@@ -102,10 +102,14 @@ const SelectionAnswersQuestion: ForwardRefRenderFunction<
                   backgroundColor: bg,
                   width: size,
                   margin: scale(8), // Add spacing for clarity
-                  paddingHorizontal: scale(10),
                 },
               ]}>
-              <Text style={[styles.textVowel]}>{e}</Text>
+              <Text style={[styles.textVowel]}>
+                {e
+                  .replace(/\//g, '\n')
+                  .replace(/\s*-\s*/, ' ')
+                  .trim()}
+              </Text>
             </TouchableOpacity>
           );
         })}
@@ -175,19 +179,18 @@ const styles = StyleSheet.create({
   boxVowel: {
     // Add your styles here
     width: scale(56),
-    height: scale(56),
+    minHeight: scale(56),
     borderRadius: scale(10),
     justifyContent: 'center',
     alignItems: 'center',
-    marginHorizontal: scale(6),
-    marginVertical: scale(6),
   },
   textVowel: {
     // Add your styles here
-    fontFamily: FontFamily.SVNCherishMoment,
+    fontFamily: FontFamily.SVNNeuzeitRegular,
     color: '#FBF8CC',
     fontSize: verticalScale(14),
     flexWrap: 'wrap',
+    textAlign: 'center',
   },
 });
 

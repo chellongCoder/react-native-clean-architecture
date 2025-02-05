@@ -22,11 +22,11 @@ import {useSpeechToText} from './useSpeechToText';
 import {formatTimeMMSS} from 'src/core/presentation/utils';
 
 type Props = {
-  countDownTime: number;
-  totalTime?: number;
-  fullAnswer?: string;
-  correctAnswer?: string;
-  isCorrectAnswer?: boolean;
+  countDownTime: number; // * thời gian đếm ngược 5s
+  totalTime?: number; // * thời gian làm bài
+  fullAnswer?: string; // * thông tin câu trả lời
+  correctAnswer?: string; // * thông tin câu trả lời đúng
+  isCorrectAnswer?: boolean; // * câu trả lời đúng hay sai
   onSubmit?: (speechResult?: string) => void;
 };
 

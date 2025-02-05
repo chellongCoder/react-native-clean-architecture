@@ -15,9 +15,13 @@ import {FontFamily} from 'src/core/presentation/hooks/useFonts';
 import useGlobalStyle from 'src/core/presentation/hooks/useGlobalStyle';
 import {Task} from 'src/home/application/types/GetListQuestionResponse';
 import {COLORS} from 'src/core/presentation/constants/colors';
-import {getCorrectAnswer} from 'src/core/presentation/utils';
-import {scale, verticalScale} from 'react-native-size-matters';
 import {
+  getCorrectAnswer,
+  isMMSS,
+  isSubArray,
+} from 'src/core/presentation/utils';
+import {scale, verticalScale} from 'react-native-size-matters';
+import Animated, {
   Easing,
   ReduceMotion,
   useAnimatedStyle,
@@ -48,7 +52,7 @@ type Props = {
   characterImageFail?: string;
 };
 
-const English_EG4M23 = observer(
+const Mandarin_G3M37 = observer(
   forwardRef<LessonRef, Props>(
     (
       {
@@ -70,7 +74,9 @@ const English_EG4M23 = observer(
       const focus = useIsFocused();
       const answerRef = useRef<SelectionAnswersQuestionRef>();
 
-      const [answerSelected, setAnswerSelected] = useState('');
+      const [answerSelected, setAnswerSelected] = useState<string | string[]>(
+        '',
+      );
 
       const {trainingCount, getSetting} = useLessonStore();
 
@@ -80,20 +86,21 @@ const English_EG4M23 = observer(
         isAnswerCorrect,
         isShowCorrectContainer,
         word,
+        env,
         learningTimer,
         submit,
         toggleShowHint,
         resetLearning,
       } = useSettingLesson({
         countDownTime: trainingCount <= 2 ? 0 : 5,
-        isCorrectAnswer:
-          answerSelected ===
-          getCorrectAnswer(
-            firstMiniTestTask?.question?.[moduleIndex]?.correctAnswer,
-          ),
+        isCorrectAnswer: isSubArray(
+          answerSelected as string[],
+          firstMiniTestTask?.question?.[moduleIndex]?.correctAnswer as string[],
+        ),
+        totalTime: 30,
         onSubmit: () => {
           setAnswerSelected('');
-          nextModule(answerSelected);
+          nextModule((answerSelected as string[]).toString());
           answerRef.current?.resetAnswerSelected?.();
         },
         fullAnswer: firstMiniTestTask?.question?.[moduleIndex].fullAnswer,
@@ -166,8 +173,10 @@ const English_EG4M23 = observer(
       useImperativeHandle(ref, () => ({
         isAnswerCorrect,
         onChoiceCorrectedAnswer: () => {
-          answerRef.current?.handleSelectAnswer?.(
-            firstMiniTestTask?.question?.[moduleIndex].correctAnswer as string,
+          setAnswerSelected(
+            getCorrectAnswer(
+              firstMiniTestTask?.question?.[moduleIndex]?.correctAnswer,
+            ),
           );
         },
       }));
@@ -186,24 +195,27 @@ const English_EG4M23 = observer(
           prompt={settings.prompt?.toString()}
           price="Free"
           score={selectedChild?.adsPoints}
-          txtCountDown={
-            word?.toString() ===
-            firstMiniTestTask?.question?.[moduleIndex].correctAnswer
-              ? undefined
-              : word
-          }
+          txtCountDown={word && !isMMSS(word) ? undefined : word}
           isAnswerCorrect={isAnswerCorrect}
           isShowCorrectContainer={isShowCorrectContainer}
           onPressFlower={toggleShowHint}
           buildQuestion={
-            <View
-              style={{
-                width: scale(200),
-                marginTop: verticalScale(50),
-              }}>
-              <Text style={[styles.fonts_SVN_Cherish, styles.textQuestion]}>
-                {firstMiniTestTask?.question?.[moduleIndex].content}
-              </Text>
+            <View>
+              <Animated.Image
+                resizeMode={'contain'}
+                style={[
+                  {
+                    width: scale(200),
+                    height: verticalScale(140),
+                  },
+                  animatedStyle,
+                ]}
+                source={{
+                  uri:
+                    env.IMAGE_QUESTION_BASE_API_URL +
+                    firstMiniTestTask?.question?.[moduleIndex].image,
+                }}
+              />
             </View>
           }
           buildAnswer={
@@ -227,20 +239,27 @@ const English_EG4M23 = observer(
                 </TouchableOpacity>
               </View>
               <SelectionAnswersQuestion
+                question={
+                  <Text
+                    style={[
+                      styles.textQuestion,
+                      styles.textGreen,
+                      styles.mt8,
+                      {fontSize: scale(24)},
+                    ]}>
+                    {firstMiniTestTask?.question?.[moduleIndex].content}
+                  </Text>
+                }
                 answer={
-                  (
-                    firstMiniTestTask?.question?.[
-                      moduleIndex
-                    ].answers.toString() as string
-                  )?.split(' , ') ?? []
+                  (firstMiniTestTask?.question?.[moduleIndex]
+                    .answers as string[]) ?? []
                 }
                 isShowCorrectContainer={isShowCorrectContainer}
                 isAnswerCorrect={!!isAnswerCorrect}
                 onSelectAnswer={(e: string[]) => {
-                  setAnswerSelected(e.toString().trim());
+                  setAnswerSelected(e);
                 }}
                 learningTimer={learningTimer}
-                isSelectOne
                 ref={answerRef}
               />
 
@@ -262,7 +281,7 @@ const English_EG4M23 = observer(
   ),
 );
 
-export default English_EG4M23;
+export default Mandarin_G3M37;
 
 const styles = StyleSheet.create({
   fill: {

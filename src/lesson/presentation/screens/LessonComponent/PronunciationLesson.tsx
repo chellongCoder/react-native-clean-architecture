@@ -399,9 +399,13 @@ const PronunciationLesson = observer(
           onPressFlower={toggleShowHint}
           buildQuestion={
             <View>
-              <Text style={[styles.fonts_SVN_Cherish, styles.textQuestion]}>
+              <Text style={[styles.fonts_NeuzeitBold, styles.textQuestion]}>
                 {firstMiniTestTask?.question?.[moduleIndex].content}
               </Text>
+              <Text style={[styles.fonts_Neuzeit, styles.textQuestion2]}>
+                {firstMiniTestTask?.question?.[moduleIndex].description}
+              </Text>
+
               <ImageMeaning
                 descriptionImage={
                   firstMiniTestTask?.question?.[moduleIndex].descriptionImage
@@ -550,8 +554,11 @@ const styles = StyleSheet.create({
   fonts_SVN_Cherish: {
     fontFamily: FontFamily.SVNCherishMoment,
   },
-  fonts_EinaBold: {
+  fonts_NeuzeitBold: {
     fontFamily: FontFamily.SVNNeuzeitBold,
+  },
+  fonts_Neuzeit: {
+    fontFamily: FontFamily.SVNNeuzeitRegular,
   },
   textColor: {
     color: '#1C6349',
@@ -562,9 +569,14 @@ const styles = StyleSheet.create({
     color: 'white',
   },
   textQuestion: {
-    fontSize: verticalScale(64),
+    fontSize: verticalScale(32),
     textAlign: 'center',
-    color: COLORS.BLUE_258F78,
+    color: COLORS.WHITE,
+  },
+  textQuestion2: {
+    fontSize: scale(20),
+    textAlign: 'center',
+    color: COLORS.WHITE,
   },
   textGreen: {
     color: '#258F78',

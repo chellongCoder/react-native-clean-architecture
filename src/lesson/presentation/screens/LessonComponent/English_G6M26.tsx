@@ -250,7 +250,8 @@ const English_G6M26 = observer(
                   </Text>
                 }
                 answer={
-                  firstMiniTestTask?.question?.[moduleIndex].answers ?? []
+                  (firstMiniTestTask?.question?.[moduleIndex]
+                    .answers as string[]) ?? []
                 }
                 isShowCorrectContainer={isShowCorrectContainer}
                 isAnswerCorrect={!!isAnswerCorrect}

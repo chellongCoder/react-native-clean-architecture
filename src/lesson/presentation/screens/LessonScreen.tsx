@@ -52,6 +52,9 @@ import English_G5M16 from './LessonComponent/English_G5M16';
 import English_G6M26 from './LessonComponent/English_G6M26';
 import English_G3M20 from './LessonComponent/English_G3M20';
 import Mandarin_G1M5 from './LessonComponent/Mandarin_G1M5';
+import Mandarin_G2M25 from './LessonComponent/Mandarin_G2M25';
+import Mandarin_G3M37 from './LessonComponent/Mandarin_G3M37';
+import Mandarin_G4M27 from './LessonComponent/Mandarin_G4M27';
 
 export enum MathQuestionType {
   MATH_TEXT = 'math_text',
@@ -82,11 +85,11 @@ export enum MathQuestionType {
 }
 
 export enum LanguageE {
-  ENGLISHG2M12 = 'ENGLISHG2M12',
   ENGLISH_EG1M3 = 'ENGLISH_EG1M3',
+  ENGLISHG2M12 = 'ENGLISHG2M12',
+  ENGLISH_G3M20 = 'ENGLISH_G3M20',
   ENGLISH_EG4M23 = 'ENGLISH_G4M23',
   ENGLISH_G5M16 = 'ENGLISH_G5M16',
-  ENGLISH_G3M20 = 'ENGLISH_G3M20',
   ENGLISH_G6M26 = 'ENGLISH_G6M26',
 
   ENGLISH_EG0M1 = 'ENGLISH_EG0M1',
@@ -96,6 +99,9 @@ export enum LanguageE {
   MANDARIN_G1M4 = 'MANDARIN_G1M4',
   MANDARIN_G1M5 = 'MANDARIN_G1M5',
   MANDARIN_G1M6 = 'MANDARIN_G1M6',
+  MANDARIN_G2M25 = 'MANDARIN_G2M25',
+  MANDARIN_G3M37 = 'MANDARIN_G3M37',
+  MANDARIN_G4M27 = 'MANDARIN_G4M27',
 }
 export enum LessonTypeE {
   TEXT = 'text',
@@ -737,6 +743,71 @@ const LessonScreen = observer(() => {
       /**----------------------
        *todo    các question cho môn Tiếng trung
        *------------------------**/
+      case LanguageE.MANDARIN_G4M27:
+        return (
+          <Mandarin_G4M27
+            moduleIndex={lessonIndex}
+            nextModule={nextModule}
+            totalModule={testTask?.question.length ?? 0}
+            lessonName={route.lessonName}
+            moduleName={route.moduleName}
+            firstMiniTestTask={testTask}
+            backgroundImage={
+              env.IMAGE_BACKGROUND_BASE_API_URL + lessonSetting?.backgroundImage
+            }
+            characterImageSuccess={
+              env.IMAGE_BACKGROUND_BASE_API_URL +
+              lessonSetting?.figureSuccessImage
+            }
+            characterImageFail={
+              env.IMAGE_BACKGROUND_BASE_API_URL + lessonSetting?.figureFailImage
+            }
+            ref={vowelRef}
+          />
+        );
+      case LanguageE.MANDARIN_G3M37:
+        return (
+          <Mandarin_G3M37
+            moduleIndex={lessonIndex}
+            nextModule={nextModule}
+            totalModule={testTask?.question.length ?? 0}
+            lessonName={route.lessonName}
+            moduleName={route.moduleName}
+            firstMiniTestTask={testTask}
+            backgroundImage={
+              env.IMAGE_BACKGROUND_BASE_API_URL + lessonSetting?.backgroundImage
+            }
+            characterImageSuccess={
+              env.IMAGE_BACKGROUND_BASE_API_URL +
+              lessonSetting?.figureSuccessImage
+            }
+            characterImageFail={
+              env.IMAGE_BACKGROUND_BASE_API_URL + lessonSetting?.figureFailImage
+            }
+            ref={vowelRef}
+          />
+        );
+      case LanguageE.MANDARIN_G2M25:
+        return (
+          <Mandarin_G2M25
+            moduleIndex={lessonIndex}
+            totalModule={testTask?.question.length ?? 0}
+            lessonName={route.lessonName}
+            moduleName={route.moduleName}
+            firstMiniTestTask={testTask}
+            nextModule={nextModule}
+            backgroundImage={
+              env.IMAGE_BACKGROUND_BASE_API_URL + lessonSetting?.backgroundImage
+            }
+            characterImageSuccess={
+              env.IMAGE_BACKGROUND_BASE_API_URL +
+              lessonSetting?.figureSuccessImage
+            }
+            characterImageFail={
+              env.IMAGE_BACKGROUND_BASE_API_URL + lessonSetting?.figureFailImage
+            }
+          />
+        );
       case LessonTypeE.WRITING:
       case LanguageE.MANDARIN_G1M4:
         return (

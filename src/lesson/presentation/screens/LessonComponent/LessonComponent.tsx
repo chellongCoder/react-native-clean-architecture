@@ -259,7 +259,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   screen: {
-    paddingTop: 30,
+    paddingTop: verticalScale(30),
     flex: 1,
     backgroundColor: '#66c270',
   },
@@ -365,7 +365,7 @@ const styles = StyleSheet.create({
   boxAnswer: {
     flex: 1,
     paddingVertical: verticalScale(24),
-    paddingHorizontal: scale(24),
+    paddingHorizontal: scale(10),
   },
   textW500s16White: {
     fontWeight: '500',

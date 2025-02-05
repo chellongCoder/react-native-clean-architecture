@@ -106,3 +106,12 @@ export const isMMSS = (str: string) => {
 
   return isMatch;
 };
+
+export const splitChineseWithFilter = (sentence: string): string[] => {
+  return Array.from(sentence).filter(
+    char =>
+      /\p{Script=Han}/u.test(char) || // Keep Chinese characters
+      /\p{N}/u.test(char) || // Keep numbers
+      /\p{L}/u.test(char), // Keep letters
+  );
+};

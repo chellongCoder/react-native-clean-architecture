@@ -252,7 +252,10 @@ const LatinLesson = ({
           />
           <PrimaryButton
             text="Submit"
-            style={[styles.mt32]}
+            style={[
+              styles.buttonContainer,
+              {backgroundColor: settings.backgroundButtonColor},
+            ]}
             onPress={onSubmit}
           />
         </View>
@@ -298,4 +301,11 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
   },
   iconAIVoiceContainer: {height: scale(31), width: scale(31)},
+  buttonContainer: {
+    borderRadius: scale(52),
+    paddingVertical: verticalScale(9),
+    paddingHorizontal: scale(24),
+    marginTop: scale(16),
+    backgroundColor: '#0877B6',
+  },
 });

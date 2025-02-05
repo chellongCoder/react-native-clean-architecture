@@ -15,9 +15,13 @@ import {FontFamily} from 'src/core/presentation/hooks/useFonts';
 import useGlobalStyle from 'src/core/presentation/hooks/useGlobalStyle';
 import {Task} from 'src/home/application/types/GetListQuestionResponse';
 import {COLORS} from 'src/core/presentation/constants/colors';
-import {getCorrectAnswer} from 'src/core/presentation/utils';
-import {scale, verticalScale} from 'react-native-size-matters';
 import {
+  getCorrectAnswer,
+  isMMSS,
+  isSubArray,
+} from 'src/core/presentation/utils';
+import {scale, verticalScale} from 'react-native-size-matters';
+import Animated, {
   Easing,
   ReduceMotion,
   useAnimatedStyle,
@@ -35,6 +39,7 @@ import useHomeStore from 'src/home/presentation/stores/useHomeStore';
 import SelectionAnswersQuestion, {
   SelectionAnswersQuestionRef,
 } from '../../components/SelectionAnswersQuestion';
+import CharScramble, {CharScrambleRep} from '../../components/CharScramble';
 
 type Props = {
   moduleIndex: number;
@@ -48,7 +53,7 @@ type Props = {
   characterImageFail?: string;
 };
 
-const English_EG4M23 = observer(
+const Mandarin_G4M27 = observer(
   forwardRef<LessonRef, Props>(
     (
       {
@@ -70,16 +75,28 @@ const English_EG4M23 = observer(
       const focus = useIsFocused();
       const answerRef = useRef<SelectionAnswersQuestionRef>();
 
-      const [answerSelected, setAnswerSelected] = useState('');
+      const [answerSelected, setAnswerSelected] = useState<string | string[]>(
+        '',
+      );
+      console.log(
+        '🛠 LOG: 🚀 --> --------------------------------------🛠 LOG: 🚀 -->',
+      );
+      console.log('🛠 LOG: 🚀 --> ~ answerSelected:', answerSelected);
+      console.log(
+        '🛠 LOG: 🚀 --> --------------------------------------🛠 LOG: 🚀 -->',
+      );
 
       const {trainingCount, getSetting} = useLessonStore();
 
       const {selectedChild} = useAuthenticationStore();
 
+      const charScrambleRep = useRef<CharScrambleRep>(null);
+
       const {
         isAnswerCorrect,
         isShowCorrectContainer,
         word,
+        env,
         learningTimer,
         submit,
         toggleShowHint,
@@ -87,14 +104,13 @@ const English_EG4M23 = observer(
       } = useSettingLesson({
         countDownTime: trainingCount <= 2 ? 0 : 5,
         isCorrectAnswer:
-          answerSelected ===
-          getCorrectAnswer(
-            firstMiniTestTask?.question?.[moduleIndex]?.correctAnswer,
-          ),
+          answerSelected.toString() ===
+          (firstMiniTestTask?.question?.[moduleIndex]?.correctAnswer as string),
         onSubmit: () => {
           setAnswerSelected('');
-          nextModule(answerSelected);
+          nextModule((answerSelected as string[]).toString());
           answerRef.current?.resetAnswerSelected?.();
+          charScrambleRep.current?.reset?.();
         },
         fullAnswer: firstMiniTestTask?.question?.[moduleIndex].fullAnswer,
       });
@@ -112,8 +128,8 @@ const English_EG4M23 = observer(
       }, [characterImageFail, characterImageSuccess, isAnswerCorrect]);
 
       const onSpeechText = useCallback(() => {
-        ttsSpeak?.('');
-      }, [ttsSpeak]);
+        ttsSpeak?.(settings.prompt?.toString() ?? '');
+      }, [settings.prompt, ttsSpeak]);
 
       const opacity = useSharedValue(0);
       const scaleS = useSharedValue(1);
@@ -166,8 +182,10 @@ const English_EG4M23 = observer(
       useImperativeHandle(ref, () => ({
         isAnswerCorrect,
         onChoiceCorrectedAnswer: () => {
-          answerRef.current?.handleSelectAnswer?.(
-            firstMiniTestTask?.question?.[moduleIndex].correctAnswer as string,
+          setAnswerSelected(
+            getCorrectAnswer(
+              firstMiniTestTask?.question?.[moduleIndex]?.correctAnswer,
+            ),
           );
         },
       }));
@@ -186,24 +204,27 @@ const English_EG4M23 = observer(
           prompt={settings.prompt?.toString()}
           price="Free"
           score={selectedChild?.adsPoints}
-          txtCountDown={
-            word?.toString() ===
-            firstMiniTestTask?.question?.[moduleIndex].correctAnswer
-              ? undefined
-              : word
-          }
+          txtCountDown={word && !isMMSS(word) ? undefined : word}
           isAnswerCorrect={isAnswerCorrect}
           isShowCorrectContainer={isShowCorrectContainer}
           onPressFlower={toggleShowHint}
           buildQuestion={
-            <View
-              style={{
-                width: scale(200),
-                marginTop: verticalScale(50),
-              }}>
-              <Text style={[styles.fonts_SVN_Cherish, styles.textQuestion]}>
-                {firstMiniTestTask?.question?.[moduleIndex].content}
-              </Text>
+            <View>
+              <Animated.Image
+                resizeMode={'contain'}
+                style={[
+                  {
+                    width: scale(200),
+                    height: verticalScale(140),
+                  },
+                  animatedStyle,
+                ]}
+                source={{
+                  uri:
+                    env.IMAGE_QUESTION_BASE_API_URL +
+                    firstMiniTestTask?.question?.[moduleIndex].image,
+                }}
+              />
             </View>
           }
           buildAnswer={
@@ -226,23 +247,41 @@ const English_EG4M23 = observer(
                   />
                 </TouchableOpacity>
               </View>
-              <SelectionAnswersQuestion
-                answer={
-                  (
-                    firstMiniTestTask?.question?.[
-                      moduleIndex
-                    ].answers.toString() as string
-                  )?.split(' , ') ?? []
-                }
-                isShowCorrectContainer={isShowCorrectContainer}
-                isAnswerCorrect={!!isAnswerCorrect}
-                onSelectAnswer={(e: string[]) => {
-                  setAnswerSelected(e.toString().trim());
-                }}
-                learningTimer={learningTimer}
-                isSelectOne
-                ref={answerRef}
-              />
+              {firstMiniTestTask?.question?.[moduleIndex].answerType ===
+              'answer_arrange_word' ? (
+                <CharScramble
+                  ref={charScrambleRep}
+                  content={firstMiniTestTask?.question?.[moduleIndex]?.content}
+                  listChar={firstMiniTestTask?.question?.[moduleIndex]?.answers}
+                  learningTimer={learningTimer}
+                  onAnswerChanged={setAnswerSelected}
+                />
+              ) : (
+                <SelectionAnswersQuestion
+                  question={
+                    <Text
+                      style={[
+                        styles.textQuestion,
+                        styles.textGreen,
+                        styles.mt8,
+                        {fontSize: scale(24)},
+                      ]}>
+                      {firstMiniTestTask?.question?.[moduleIndex].content}
+                    </Text>
+                  }
+                  answer={
+                    firstMiniTestTask?.question?.[moduleIndex].answers ?? []
+                  }
+                  isShowCorrectContainer={isShowCorrectContainer}
+                  isAnswerCorrect={!!isAnswerCorrect}
+                  onSelectAnswer={(e: string[]) => {
+                    setAnswerSelected(e);
+                  }}
+                  learningTimer={learningTimer}
+                  isSelectOne
+                  ref={answerRef}
+                />
+              )}
 
               <PrimaryButton
                 text="Submit"
@@ -262,7 +301,7 @@ const English_EG4M23 = observer(
   ),
 );
 
-export default English_EG4M23;
+export default Mandarin_G4M27;
 
 const styles = StyleSheet.create({
   fill: {

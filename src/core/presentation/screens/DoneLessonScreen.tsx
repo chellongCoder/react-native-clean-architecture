@@ -58,7 +58,7 @@ export type RouteParamsDone = {
   lessonName?: string;
   partName?: string;
   noMiniTest?: boolean;
-  type?: LessonTypeE | MathQuestionType;
+  type?: LessonTypeE | MathQuestionType | string;
   module?: Task;
 };
 

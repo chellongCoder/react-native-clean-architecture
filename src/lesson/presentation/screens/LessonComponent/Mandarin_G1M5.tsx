@@ -86,17 +86,18 @@ const Mandarin_G1M5 = observer(
         toggleShowHint,
         resetLearning,
       } = useSettingLesson({
-        countDownTime: trainingCount <= 2 ? 0 : 5,
+        countDownTime: trainingCount <= 2 ? 0 : 0,
         isCorrectAnswer:
-          answerSelected ===
-          getCorrectAnswer(
-            firstMiniTestTask?.question?.[moduleIndex]?.correctAnswer,
-          ),
+          answerSelected.trim().toLocaleLowerCase() ===
+          (firstMiniTestTask?.question?.[moduleIndex]?.correctAnswer as string)
+            .trim()
+            .toLocaleLowerCase(),
         onSubmit: () => {
           setAnswerSelected('');
           nextModule(answerSelected);
           answerRef.current?.resetAnswerSelected?.();
         },
+        totalTime: 30,
         fullAnswer: firstMiniTestTask?.question?.[moduleIndex].fullAnswer,
       });
 
@@ -232,11 +233,7 @@ const Mandarin_G1M5 = observer(
               </View>
               <SelectionAnswersQuestion
                 answer={
-                  (
-                    firstMiniTestTask?.question?.[
-                      moduleIndex
-                    ].answers.toString() as string
-                  )?.split(',') ?? []
+                  firstMiniTestTask?.question?.[moduleIndex].answers as string[]
                 }
                 isShowCorrectContainer={isShowCorrectContainer}
                 isAnswerCorrect={!!isAnswerCorrect}

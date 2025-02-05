@@ -14,7 +14,12 @@ import {FontFamily} from 'src/core/presentation/hooks/useFonts';
 import useGlobalStyle from 'src/core/presentation/hooks/useGlobalStyle';
 import {Task} from 'src/home/application/types/GetListQuestionResponse';
 import {COLORS} from 'src/core/presentation/constants/colors';
-import {assets, getCorrectAnswer, isAndroid} from 'src/core/presentation/utils';
+import {
+  assets,
+  getCorrectAnswer,
+  isAndroid,
+  isMMSS,
+} from 'src/core/presentation/utils';
 import {scale, verticalScale} from 'react-native-size-matters';
 import {
   Easing,
@@ -134,13 +139,21 @@ const MultiPronunciationLesson = observer(
           typeof firstMiniTestTask?.question?.[moduleIndex]?.correctAnswer ===
           'object'
         ) {
-          return firstMiniTestTask?.question?.[
-            moduleIndex
-          ]?.correctAnswer?.some((item: string) => {
-            return (
-              answerSelected.toLocaleLowerCase() === item.toLocaleLowerCase()
-            );
-          });
+          let check = true;
+          firstMiniTestTask?.question?.[moduleIndex]?.correctAnswer?.forEach(
+            (item: string) => {
+              if (
+                answerSelected
+                  .toLocaleLowerCase()
+                  .includes(item.toLocaleLowerCase())
+              ) {
+                check = true;
+              } else {
+                check = false;
+              }
+            },
+          );
+          return check;
         }
         return (
           answerSelected.toLocaleLowerCase() ===
@@ -390,11 +403,7 @@ const MultiPronunciationLesson = observer(
           prompt={settings.prompt?.toString()}
           price="Free"
           score={selectedChild?.adsPoints}
-          txtCountDown={
-            word === firstMiniTestTask?.question?.[moduleIndex].content
-              ? undefined
-              : word
-          }
+          txtCountDown={word && !isMMSS(word) ? undefined : word}
           isAnswerCorrect={isAnswerCorrect}
           isShowCorrectContainer={isShowCorrectContainer}
           onPressFlower={toggleShowHint}
