@@ -17,9 +17,10 @@ import {Task} from 'src/home/application/types/GetListQuestionResponse';
 import {COLORS} from 'src/core/presentation/constants/colors';
 import {getCorrectAnswer} from 'src/core/presentation/utils';
 import {scale, verticalScale} from 'react-native-size-matters';
-import {
+import Animated, {
   Easing,
   ReduceMotion,
+  useAnimatedStyle,
   useSharedValue,
   withTiming,
 } from 'react-native-reanimated';
@@ -47,7 +48,7 @@ type Props = {
   characterImageFail?: string;
 };
 
-const English_EG4M23 = observer(
+const Mandarin_G6M31 = observer(
   forwardRef<LessonRef, Props>(
     (
       {
@@ -79,6 +80,7 @@ const English_EG4M23 = observer(
         isAnswerCorrect,
         isShowCorrectContainer,
         word,
+        env,
         learningTimer,
         submit,
         toggleShowHint,
@@ -95,6 +97,7 @@ const English_EG4M23 = observer(
           nextModule(answerSelected);
           answerRef.current?.resetAnswerSelected?.();
         },
+        totalTime: 30,
         fullAnswer: firstMiniTestTask?.question?.[moduleIndex].fullAnswer,
       });
 
@@ -117,6 +120,12 @@ const English_EG4M23 = observer(
       const opacity = useSharedValue(0);
       const scaleS = useSharedValue(1);
 
+      const animatedStyle = useAnimatedStyle(() => {
+        return {
+          opacity: opacity.value,
+          transform: [{scale: scaleS.value}],
+        };
+      });
       /**
        * * reset lại countdown khi lần làm thay đổi
        */
@@ -188,14 +197,22 @@ const English_EG4M23 = observer(
           isShowCorrectContainer={isShowCorrectContainer}
           onPressFlower={toggleShowHint}
           buildQuestion={
-            <View
-              style={{
-                width: scale(200),
-                marginTop: verticalScale(50),
-              }}>
-              <Text style={[styles.fonts_SVN_Cherish, styles.textQuestion]}>
-                {firstMiniTestTask?.question?.[moduleIndex].content}
-              </Text>
+            <View>
+              <Animated.Image
+                resizeMode={'contain'}
+                style={[
+                  {
+                    width: scale(200),
+                    height: verticalScale(140),
+                  },
+                  animatedStyle,
+                ]}
+                source={{
+                  uri:
+                    env.IMAGE_QUESTION_BASE_API_URL +
+                    firstMiniTestTask?.question?.[moduleIndex].image,
+                }}
+              />
             </View>
           }
           buildAnswer={
@@ -220,11 +237,8 @@ const English_EG4M23 = observer(
               </View>
               <SelectionAnswersQuestion
                 answer={
-                  (
-                    firstMiniTestTask?.question?.[
-                      moduleIndex
-                    ].answers.toString() as string
-                  )?.split(' , ') ?? []
+                  (firstMiniTestTask?.question?.[moduleIndex]
+                    .answers as string[]) ?? ['1', '2', '3']
                 }
                 isShowCorrectContainer={isShowCorrectContainer}
                 isAnswerCorrect={!!isAnswerCorrect}
@@ -233,6 +247,22 @@ const English_EG4M23 = observer(
                 }}
                 learningTimer={learningTimer}
                 isSelectOne
+                contentAnswer={(txt: string) => (
+                  <Text
+                    style={[
+                      styles.textVowel,
+                      {
+                        fontFamily: FontFamily.SVNCherishMoment,
+                        fontSize: scale(24),
+                      },
+                    ]}>
+                    {txt.slice(0, 2)}
+                    <Text style={[styles.textVowel]}>
+                      {'  '}
+                      {txt.slice(2, txt.length)}
+                    </Text>
+                  </Text>
+                )}
                 ref={answerRef}
               />
 
@@ -254,14 +284,14 @@ const English_EG4M23 = observer(
   ),
 );
 
-export default English_EG4M23;
+export default Mandarin_G6M31;
 
 const styles = StyleSheet.create({
   fill: {
     flex: 1,
   },
-  fonts_SVN_Cherish: {
-    fontFamily: FontFamily.SVNCherishMoment,
+  fontsQuestion: {
+    fontFamily: FontFamily.SVNNeuzeitBold,
   },
   textColor: {
     color: '#1C6349',
@@ -346,9 +376,10 @@ const styles = StyleSheet.create({
     marginVertical: 6,
   },
   textVowel: {
-    fontFamily: FontFamily.SVNCherishMoment,
-    color: '#FBF8CC',
-    fontSize: verticalScale(28),
+    fontFamily: FontFamily.SVNNeuzeitBold,
+    color: COLORS.WHITE_FBF8CC,
+    fontSize: verticalScale(18),
+    marginLeft: scale(28),
   },
   wapper: {
     marginTop: 8,

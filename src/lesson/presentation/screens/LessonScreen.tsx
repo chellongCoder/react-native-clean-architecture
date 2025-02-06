@@ -55,6 +55,8 @@ import Mandarin_G1M5 from './LessonComponent/Mandarin_G1M5';
 import Mandarin_G2M25 from './LessonComponent/Mandarin_G2M25';
 import Mandarin_G3M37 from './LessonComponent/Mandarin_G3M37';
 import Mandarin_G4M27 from './LessonComponent/Mandarin_G4M27';
+import Mandarin_G5M25 from './LessonComponent/Mandarin_G5M25';
+import Mandarin_G6M31 from './LessonComponent/Mandarin_G6M31';
 
 export enum MathQuestionType {
   MATH_TEXT = 'math_text',
@@ -102,6 +104,8 @@ export enum LanguageE {
   MANDARIN_G2M25 = 'MANDARIN_G2M25',
   MANDARIN_G3M37 = 'MANDARIN_G3M37',
   MANDARIN_G4M27 = 'MANDARIN_G4M27',
+  MANDARIN_G5M25 = 'MANDARIN_G5M25',
+  MANDARIN_G6M31 = 'MANDARIN_G6M31',
 }
 export enum LessonTypeE {
   TEXT = 'text',
@@ -743,6 +747,50 @@ const LessonScreen = observer(() => {
       /**----------------------
        *todo    các question cho môn Tiếng trung
        *------------------------**/
+      case LanguageE.MANDARIN_G5M25:
+        return (
+          <Mandarin_G5M25
+            moduleIndex={lessonIndex}
+            nextModule={nextModule}
+            totalModule={testTask?.question.length ?? 0}
+            lessonName={route.lessonName}
+            moduleName={route.moduleName}
+            firstMiniTestTask={testTask}
+            backgroundImage={
+              env.IMAGE_BACKGROUND_BASE_API_URL + lessonSetting?.backgroundImage
+            }
+            characterImageSuccess={
+              env.IMAGE_BACKGROUND_BASE_API_URL +
+              lessonSetting?.figureSuccessImage
+            }
+            characterImageFail={
+              env.IMAGE_BACKGROUND_BASE_API_URL + lessonSetting?.figureFailImage
+            }
+            ref={vowelRef}
+          />
+        );
+      case LanguageE.MANDARIN_G6M31:
+        return (
+          <Mandarin_G6M31
+            moduleIndex={lessonIndex}
+            nextModule={nextModule}
+            totalModule={testTask?.question.length ?? 0}
+            lessonName={route.lessonName}
+            moduleName={route.moduleName}
+            firstMiniTestTask={testTask}
+            backgroundImage={
+              env.IMAGE_BACKGROUND_BASE_API_URL + lessonSetting?.backgroundImage
+            }
+            characterImageSuccess={
+              env.IMAGE_BACKGROUND_BASE_API_URL +
+              lessonSetting?.figureSuccessImage
+            }
+            characterImageFail={
+              env.IMAGE_BACKGROUND_BASE_API_URL + lessonSetting?.figureFailImage
+            }
+            ref={vowelRef}
+          />
+        );
       case LanguageE.MANDARIN_G4M27:
         return (
           <Mandarin_G4M27

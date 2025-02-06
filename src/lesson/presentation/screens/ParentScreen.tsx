@@ -947,7 +947,7 @@ const styles = StyleSheet.create({
     marginTop: 4,
   },
   mt16: {
-    marginTop: 16,
+    paddingTop: scale(16),
   },
   mr16: {
     marginRight: 16,

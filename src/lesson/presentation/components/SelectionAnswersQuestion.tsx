@@ -19,6 +19,7 @@ interface SelectionAnswersQuestionProps {
   learningTimer: number;
   isKeyboard?: boolean;
   isSelectOne?: boolean;
+  contentAnswer?: (e: string) => React.ReactNode;
 }
 
 export interface SelectionAnswersQuestionRef {
@@ -40,6 +41,7 @@ const SelectionAnswersQuestion: ForwardRefRenderFunction<
     learningTimer,
     isKeyboard,
     isSelectOne,
+    contentAnswer,
   } = props;
 
   const [answerSelected, setAnswerSelected] = useState<string[]>([]);
@@ -90,7 +92,10 @@ const SelectionAnswersQuestion: ForwardRefRenderFunction<
                 : '#66C270'
               : '#F2B559';
           const length = answer?.length ?? 2;
-          const size = (WIDTH_SCREEN - scale(100)) / Math.ceil(length / 2);
+          const size =
+            answer.length > 3
+              ? (WIDTH_SCREEN - scale(100)) / Math.ceil(length / 2)
+              : WIDTH_SCREEN - scale(50);
 
           return (
             <TouchableOpacity
@@ -104,12 +109,14 @@ const SelectionAnswersQuestion: ForwardRefRenderFunction<
                   margin: scale(8), // Add spacing for clarity
                 },
               ]}>
-              <Text style={[styles.textVowel]}>
-                {e
-                  .replace(/\//g, '\n')
-                  .replace(/\s*-\s*/, ' ')
-                  .trim()}
-              </Text>
+              {contentAnswer?.(e) ?? (
+                <Text style={[styles.textVowel]}>
+                  {e
+                    .replace(/\s*-\s*/, '')
+                    .replace(/\s+/g, '\n')
+                    .trim()}
+                </Text>
+              )}
             </TouchableOpacity>
           );
         })}
@@ -170,7 +177,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
     alignSelf: 'center',
-    flexWrap: 'wrap-reverse', // Add this to enable wrapping
+    flexWrap: 'wrap', // Add this to enable wrapping
   },
   fill: {
     // Add your styles here
@@ -180,13 +187,13 @@ const styles = StyleSheet.create({
     // Add your styles here
     width: scale(56),
     minHeight: scale(56),
+    maxHeight: scale(76),
     borderRadius: scale(10),
     justifyContent: 'center',
-    alignItems: 'center',
   },
   textVowel: {
     // Add your styles here
-    fontFamily: FontFamily.SVNNeuzeitRegular,
+    fontFamily: FontFamily.SVNNeuzeitBold,
     color: '#FBF8CC',
     fontSize: verticalScale(14),
     flexWrap: 'wrap',

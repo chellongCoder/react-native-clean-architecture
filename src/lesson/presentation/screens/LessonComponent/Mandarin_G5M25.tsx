@@ -47,7 +47,7 @@ type Props = {
   characterImageFail?: string;
 };
 
-const English_EG4M23 = observer(
+const Mandarin_G5M25 = observer(
   forwardRef<LessonRef, Props>(
     (
       {
@@ -95,6 +95,7 @@ const English_EG4M23 = observer(
           nextModule(answerSelected);
           answerRef.current?.resetAnswerSelected?.();
         },
+        totalTime: 30,
         fullAnswer: firstMiniTestTask?.question?.[moduleIndex].fullAnswer,
       });
 
@@ -193,7 +194,12 @@ const English_EG4M23 = observer(
                 width: scale(200),
                 marginTop: verticalScale(50),
               }}>
-              <Text style={[styles.fonts_SVN_Cherish, styles.textQuestion]}>
+              <Text
+                style={[
+                  styles.fontsQuestion,
+                  styles.textQuestion,
+                  {color: settings.backgroundButtonColor},
+                ]}>
                 {firstMiniTestTask?.question?.[moduleIndex].content}
               </Text>
             </View>
@@ -220,11 +226,8 @@ const English_EG4M23 = observer(
               </View>
               <SelectionAnswersQuestion
                 answer={
-                  (
-                    firstMiniTestTask?.question?.[
-                      moduleIndex
-                    ].answers.toString() as string
-                  )?.split(' , ') ?? []
+                  (firstMiniTestTask?.question?.[moduleIndex]
+                    .answers as string[]) ?? ['1', '2', '3']
                 }
                 isShowCorrectContainer={isShowCorrectContainer}
                 isAnswerCorrect={!!isAnswerCorrect}
@@ -234,6 +237,19 @@ const English_EG4M23 = observer(
                 learningTimer={learningTimer}
                 isSelectOne
                 ref={answerRef}
+                contentAnswer={(txt: string) => (
+                  <Text
+                    style={[
+                      styles.textVowel,
+                      {fontFamily: FontFamily.SVNCherishMoment},
+                    ]}>
+                    {txt.slice(0, 2)}
+                    <Text style={[styles.textVowel]}>
+                      {'  '}
+                      {txt.slice(2, txt.length)}
+                    </Text>
+                  </Text>
+                )}
               />
 
               <PrimaryButton
@@ -254,14 +270,14 @@ const English_EG4M23 = observer(
   ),
 );
 
-export default English_EG4M23;
+export default Mandarin_G5M25;
 
 const styles = StyleSheet.create({
   fill: {
     flex: 1,
   },
-  fonts_SVN_Cherish: {
-    fontFamily: FontFamily.SVNCherishMoment,
+  fontsQuestion: {
+    fontFamily: FontFamily.SVNNeuzeitBold,
   },
   textColor: {
     color: '#1C6349',
@@ -346,9 +362,10 @@ const styles = StyleSheet.create({
     marginVertical: 6,
   },
   textVowel: {
-    fontFamily: FontFamily.SVNCherishMoment,
-    color: '#FBF8CC',
-    fontSize: verticalScale(28),
+    fontFamily: FontFamily.SVNNeuzeitBold,
+    color: COLORS.WHITE_FBF8CC,
+    fontSize: verticalScale(24),
+    marginLeft: scale(28),
   },
   wapper: {
     marginTop: 8,
