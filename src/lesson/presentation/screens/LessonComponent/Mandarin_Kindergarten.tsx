@@ -94,7 +94,7 @@ type Props = {
  *   characterImageFail="path/to/fail.png"
  * />
  */
-const PronunciationLesson = observer(
+const Mandarin_Kindergarten = observer(
   forwardRef<LessonRef, Props>(
     (
       {
@@ -396,10 +396,20 @@ const PronunciationLesson = observer(
           onPressFlower={toggleShowHint}
           buildQuestion={
             <View>
-              <Text style={[styles.fonts_NeuzeitBold, styles.textQuestion]}>
+              <Text
+                style={[
+                  styles.fonts_NeuzeitBold,
+                  styles.textQuestion,
+                  {color: settings.backgroundButtonColor},
+                ]}>
                 {firstMiniTestTask?.question?.[moduleIndex].content}
               </Text>
-              <Text style={[styles.fonts_Neuzeit, styles.textQuestion2]}>
+              <Text
+                style={[
+                  styles.fonts_Neuzeit,
+                  styles.textQuestion2,
+                  {color: settings.backgroundButtonColor},
+                ]}>
                 {firstMiniTestTask?.question?.[moduleIndex].description}
               </Text>
 
@@ -542,7 +552,7 @@ const PronunciationLesson = observer(
   ),
 );
 
-export default PronunciationLesson;
+export default Mandarin_Kindergarten;
 
 const styles = StyleSheet.create({
   fill: {

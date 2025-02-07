@@ -90,6 +90,8 @@ const HanziWrite = forwardRef<HanziWriteRef, Props>((props: Props, ref) => {
             alignContent: 'center',
             alignItems: 'center',
             justifyContent: 'center',
+            width: scale(150),
+            height: scale(150),
           }}>
           {/** Optional, grid lines to help draw the character */}
           <HanziWriter.Outline color="#ddd" />
@@ -105,7 +107,7 @@ const HanziWrite = forwardRef<HanziWriteRef, Props>((props: Props, ref) => {
               radicalColor={COLORS.RED_AF3A1B}
             />
             {/** Quiz strokes display after every correct stroke in quiz mode */}
-            <HanziWriter.QuizStrokes />
+            <HanziWriter.QuizStrokes color={COLORS.BLACK} />
             {/** The mistake highligher will animate and fade out a stroke in quiz mode */}
             <HanziWriter.QuizMistakeHighlighter
               color={COLORS.RED_AF3A1B}
