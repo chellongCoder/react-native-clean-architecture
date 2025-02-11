@@ -107,7 +107,7 @@ index 8bc774a..adaa688 100644
  export default class ParallaxImage extends Component {
  
 diff --git a/node_modules/react-native-snap-carousel/src/utils/animations.js b/node_modules/react-native-snap-carousel/src/utils/animations.js
-index bdb58b6..98a782f 100644
+index bdb58b6..c805b0c 100644
 --- a/node_modules/react-native-snap-carousel/src/utils/animations.js
 +++ b/node_modules/react-native-snap-carousel/src/utils/animations.js
 @@ -199,6 +199,92 @@ export function stackAnimatedStyles (index, animatedValue, carouselProps, cardOf
@@ -157,7 +157,7 @@ index bdb58b6..98a782f 100644
 +        }),
 +        backgroundColor: animatedValue.interpolate({
 +            inputRange: [-3, -2, -1, 0, 1, 2, 3],
-+            outputRange: ['#7dcf86', '#7dcf86', '#3ab89c', '#258f78', '#3ab89c', '#7dcf86', '#7dcf86'],
++            outputRange: ['transparent', 'transparent', 'transparent', 'transparent', 'transparent', 'transparent', 'transparent'],
 +            extrapolate: 'clamp'
 +        }),
 +        transform: [{
