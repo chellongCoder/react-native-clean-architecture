@@ -15,12 +15,10 @@ import {FontFamily} from 'src/core/presentation/hooks/useFonts';
 import useGlobalStyle from 'src/core/presentation/hooks/useGlobalStyle';
 import {Task} from 'src/home/application/types/GetListQuestionResponse';
 import {COLORS} from 'src/core/presentation/constants/colors';
-import {getCorrectAnswer} from 'src/core/presentation/utils';
 import {scale, verticalScale} from 'react-native-size-matters';
 import {
   Easing,
   ReduceMotion,
-  useAnimatedStyle,
   useSharedValue,
   withTiming,
 } from 'react-native-reanimated';
@@ -36,6 +34,8 @@ import SelectionAnswersQuestion, {
   SelectionAnswersQuestionRef,
 } from '../../components/SelectionAnswersQuestion';
 import ImageMeaning from '../../components/ImageMeaning';
+import {getCorrectAnswer} from 'src/core/presentation/utils';
+import useSpeakVoice from '../../hooks/useSpeakVoice';
 
 type Props = {
   moduleIndex: number;
@@ -69,6 +69,9 @@ const Mandarin_G1M5 = observer(
 
       const {ttsSpeak} = useContext(TextToSpeechContext);
       const focus = useIsFocused();
+
+      useSpeakVoice({lessonName});
+
       const answerRef = useRef<SelectionAnswersQuestionRef>();
 
       const [answerSelected, setAnswerSelected] = useState('');
@@ -114,8 +117,12 @@ const Mandarin_G1M5 = observer(
       }, [characterImageFail, characterImageSuccess, isAnswerCorrect]);
 
       const onSpeechText = useCallback(() => {
-        ttsSpeak?.('');
-      }, [ttsSpeak]);
+        ttsSpeak?.(
+          getCorrectAnswer(
+            firstMiniTestTask?.question?.[moduleIndex]?.description as string,
+          ),
+        );
+      }, [firstMiniTestTask?.question, moduleIndex, ttsSpeak]);
 
       const opacity = useSharedValue(0);
       const scaleS = useSharedValue(1);
@@ -157,13 +164,6 @@ const Mandarin_G1M5 = observer(
           });
         });
       }, [moduleIndex, opacity, scaleS]);
-
-      const animatedStyle = useAnimatedStyle(() => {
-        return {
-          opacity: opacity.value,
-          transform: [{scale: scaleS.value}],
-        };
-      });
 
       useImperativeHandle(ref, () => ({
         isAnswerCorrect,

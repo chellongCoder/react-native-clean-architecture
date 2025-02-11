@@ -11,6 +11,7 @@ import Animated, {
   withTiming,
 } from 'react-native-reanimated';
 import * as Haptics from 'expo-haptics';
+import {FontFamily} from 'src/core/presentation/hooks/useFonts';
 
 type Props = {
   data: any[];
@@ -98,27 +99,32 @@ const Dropdown = ({
               .filter(e => e !== title)
               .map((p, i) => {
                 return (
-                  <TouchableOpacity
-                    key={i}
-                    activeOpacity={1}
-                    onPress={() => {
-                      onSelectItem(p);
-                      setIsShowLimitOption(false);
-                      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-                    }}
-                    style={[
-                      i !== data.length - 1
-                        ? {
-                            borderBottomWidth: 0.5,
-                            borderColor: COLORS.GREEN_1C6A59,
-                          }
-                        : {paddingBottom: verticalScale(20)},
-                    ]}>
-                    <Text style={[globalStyle.txtNote, styles.option]}>
-                      {typeof p === 'object' ? p[nameIndex!] : p}
-                      {prefix}
-                    </Text>
-                  </TouchableOpacity>
+                  <>
+                    <TouchableOpacity
+                      key={i}
+                      activeOpacity={1}
+                      onPress={() => {
+                        onSelectItem(p);
+                        setIsShowLimitOption(false);
+                        Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+                      }}
+                      style={
+                        [
+                          // i !== data.length - 1
+                          //   ? {
+                          //       borderBottomWidth: 0.5,
+                          //       borderColor: COLORS.GREEN_1C6A59,
+                          //     }
+                          //   : {paddingBottom: verticalScale(20)},
+                        ]
+                      }>
+                      <Text style={styles.titleSubject}>abc</Text>
+                      <Text style={[globalStyle.txtNote, styles.option]}>
+                        {typeof p === 'object' ? p[nameIndex!] : p}
+                        {prefix}
+                      </Text>
+                    </TouchableOpacity>
+                  </>
                 );
               })}
           </Animated.ScrollView>
@@ -160,5 +166,9 @@ const styles = StyleSheet.create({
   option: {
     paddingVertical: verticalScale(6),
     color: COLORS.GREEN_1C6349,
+  },
+  titleSubject: {
+    color: COLORS.BACKGROUND,
+    fontFamily: FontFamily.SVNNeuzeitBold,
   },
 });

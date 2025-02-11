@@ -93,9 +93,8 @@ const Mandarin_G3M37 = observer(
         resetLearning,
       } = useSettingLesson({
         countDownTime: trainingCount <= 2 ? 0 : 5,
-        isCorrectAnswer: isSubArray(
-          answerSelected as string[],
-          firstMiniTestTask?.question?.[moduleIndex]?.correctAnswer as string[],
+        isCorrectAnswer: (answerSelected as string[]).includes(
+          firstMiniTestTask?.question?.[moduleIndex]?.correctAnswer as string,
         ),
         totalTime: 30,
         onSubmit: () => {

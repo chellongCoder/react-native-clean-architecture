@@ -1,22 +1,21 @@
 import React, {useContext, useEffect} from 'react';
-import {View, Text, TouchableOpacity, FlatList, StyleSheet} from 'react-native';
+import {View, Text, FlatList, StyleSheet} from 'react-native';
 import {scale, verticalScale} from 'react-native-size-matters';
 import {COLORS} from 'src/core/presentation/constants/colors';
 import {CustomTextStyle} from 'src/core/presentation/constants/typography';
 import {HomeContext} from '../../stores/HomeContext';
 import {FieldData} from 'src/home/application/types/GetFieldResponse';
 import Animated, {
+  Extrapolate,
   interpolate,
   runOnJS,
   useAnimatedStyle,
   useSharedValue,
-  withDelay,
   withSpring,
   withTiming,
 } from 'react-native-reanimated';
 import SubjectItem from './SubjectItem';
 import {HEIGHT_SCREEN, WIDTH_SCREEN} from 'src/core/presentation/utils';
-import {Extrapolate} from '@shopify/react-native-skia';
 
 export interface TDataItem {
   id: number | string;

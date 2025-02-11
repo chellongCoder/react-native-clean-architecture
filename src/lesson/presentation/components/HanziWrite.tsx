@@ -90,8 +90,8 @@ const HanziWrite = forwardRef<HanziWriteRef, Props>((props: Props, ref) => {
             alignContent: 'center',
             alignItems: 'center',
             justifyContent: 'center',
-            width: scale(150),
-            height: scale(150),
+            width: scale(250),
+            height: scale(250),
           }}>
           {/** Optional, grid lines to help draw the character */}
           <HanziWriter.Outline color="#ddd" />
