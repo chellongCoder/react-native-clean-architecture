@@ -140,19 +140,16 @@ const MultiPronunciationLesson = observer(
           'object'
         ) {
           let check = true;
-          firstMiniTestTask?.question?.[moduleIndex]?.correctAnswer?.forEach(
-            (item: string) => {
-              if (
-                answerSelected
-                  .toLocaleLowerCase()
-                  .includes(item.toLocaleLowerCase())
-              ) {
-                check = true;
-              } else {
-                check = false;
-              }
-            },
-          );
+          const correctItem =
+            firstMiniTestTask?.question?.[moduleIndex]?.correctAnswer?.[0];
+          if (
+            answerSelected?.split(' ')?.[0]?.toLocaleLowerCase() ===
+            correctItem?.toLocaleLowerCase()
+          ) {
+            check = true;
+          } else {
+            check = false;
+          }
           return check;
         }
         return (
@@ -411,25 +408,45 @@ const MultiPronunciationLesson = observer(
             <View>
               {(
                 firstMiniTestTask?.question?.[moduleIndex].answers as string[]
-              )?.map((item, index) => {
-                const splitAnswer = answerSelected.split(' ');
-                return (
-                  <View
-                    style={[
-                      styles.wrapTextQuestion,
-                      item.toLocaleLowerCase().trim() ===
-                      splitAnswer?.[index]?.toLocaleLowerCase()
-                        ? {backgroundColor: COLORS.GREEN_8DE795}
-                        : {},
-                    ]}
-                    key={index}>
-                    <Text
-                      style={[styles.fonts_SVN_Cherish, styles.textQuestion]}>
-                      {item.trim()}
-                    </Text>
-                  </View>
-                );
-              })}
+              )?.map((item, index) => (
+                <View
+                  style={[
+                    styles.wrapTextQuestion,
+                    index === 0 && {backgroundColor: COLORS.GREEN_8DE795},
+                  ]}
+                  key={index}>
+                  {item
+                    .trim()
+                    .split('')
+                    .map((char, charIndex) => {
+                      const isSpecialChar =
+                        char ===
+                        firstMiniTestTask?.question?.[moduleIndex]
+                          .pronu_character?.[index];
+
+                      return (
+                        <Text
+                          key={charIndex}
+                          style={[
+                            styles.fonts_SVN_Cherish,
+                            styles.textQuestion,
+                            {
+                              color: isSpecialChar
+                                ? COLORS.RED_BA3201
+                                : index === 0
+                                ? COLORS.WHITE_FBF8CC
+                                : COLORS.GREEN_66C270,
+                              textDecorationLine: isSpecialChar
+                                ? 'underline'
+                                : 'none',
+                            },
+                          ]}>
+                          {char}
+                        </Text>
+                      );
+                    })}
+                </View>
+              ))}
             </View>
           }
           buildAnswer={
@@ -712,6 +729,7 @@ const styles = StyleSheet.create({
     borderWidth: 4,
     borderColor: COLORS.BLUE_258F78,
     marginBottom: 16,
+    flexDirection: 'row',
   },
   buttonContainer: {
     borderRadius: scale(52),

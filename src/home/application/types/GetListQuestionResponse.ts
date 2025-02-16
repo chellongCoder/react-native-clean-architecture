@@ -17,6 +17,7 @@ export interface Question {
   descriptionImage: string;
   answerType: 'answer_pick_one' | 'answer_arrange_word';
   paragraph: string;
+  pronu_character?: string[];
 }
 
 export interface Task {

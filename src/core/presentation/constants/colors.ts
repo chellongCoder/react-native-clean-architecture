@@ -44,4 +44,5 @@ export const COLORS = {
   PINK_F9C799: '#F9C799',
   GREEN_43F656: '#43F656',
   GREEN_8DE795: '#8DE795',
+  RED_BA3201: '#BA3201',
 };
