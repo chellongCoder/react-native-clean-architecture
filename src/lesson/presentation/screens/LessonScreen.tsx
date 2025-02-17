@@ -153,7 +153,7 @@ export type TLessonState = {
 };
 
 const LessonScreen = observer(() => {
-  const vowelRef = useRef<LessonRef>();
+  const vowelRef = useRef<LessonRef | null>(null);
 
   const route =
     useRoute<
