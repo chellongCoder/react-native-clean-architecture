@@ -12,15 +12,20 @@ import Animated, {
 } from 'react-native-reanimated';
 import * as Haptics from 'expo-haptics';
 import {FontFamily} from 'src/core/presentation/hooks/useFonts';
+import {ScrollView} from 'react-native-gesture-handler';
+import {isAndroid} from 'src/core/presentation/utils';
 
 type Props = {
   data: any[];
   title: string;
   onSelectItem: (item: any) => void;
+  getTitleItem: (itemId: string) => any;
   width?: number;
   prefix?: string;
   nameIndex?: string;
 };
+
+const ScrollViewDropdown = Animated.createAnimatedComponent(ScrollView);
 
 const Dropdown = ({
   data,
@@ -28,16 +33,18 @@ const Dropdown = ({
   width,
   prefix,
   nameIndex,
+  getTitleItem,
   onSelectItem,
 }: Props) => {
   const globalStyle = useGlobalStyle();
   const [isShowLimitOption, setIsShowLimitOption] = useState(false);
   const ITEM_HEIGHT = scale(40);
   const maxHeight = useSharedValue(0);
+  const itemTitleRef = useRef('');
 
   const animatedStyles = useAnimatedStyle(() => {
     return {
-      height: maxHeight.value,
+      height: maxHeight.value + 10,
       overflow: 'hidden',
     };
   });
@@ -88,16 +95,32 @@ const Dropdown = ({
           shadowOpacity: 0.4,
         }}>
         {isShowLimitOption && (
-          <Animated.ScrollView
+          <ScrollViewDropdown
+            nestedScrollEnabled
             style={[
               styles.dropdown,
-              animatedStyles,
+              !isAndroid && animatedStyles,
               width ? {width} : {},
               {maxHeight: verticalScale(100)},
             ]}>
             {data
               .filter(e => e !== title)
               .map((p, i) => {
+                // Lấy tiêu đề của mục bằng cách sử dụng hàm getTitleItem, nếu nó tồn tại
+                let itemTitle = getTitleItem?.(p.subjectId)?.name;
+
+                // Kiểm tra xem tiêu đề của mục hiện tại có giống với tiêu đề trước đó không
+                if (
+                  itemTitleRef.current &&
+                  itemTitleRef.current === itemTitle
+                ) {
+                  // Nếu tiêu đề giống nhau, đặt tiêu đề của mục thành undefined
+                  itemTitle = undefined;
+                } else {
+                  // Nếu tiêu đề khác nhau, cập nhật tham chiếu đến tiêu đề của mục hiện tại
+                  itemTitleRef.current = itemTitle;
+                }
+
                 return (
                   <>
                     <TouchableOpacity
@@ -107,27 +130,27 @@ const Dropdown = ({
                         onSelectItem(p);
                         setIsShowLimitOption(false);
                         Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-                      }}
-                      style={
-                        [
-                          // i !== data.length - 1
-                          //   ? {
-                          //       borderBottomWidth: 0.5,
-                          //       borderColor: COLORS.GREEN_1C6A59,
-                          //     }
-                          //   : {paddingBottom: verticalScale(20)},
-                        ]
-                      }>
-                      <Text style={styles.titleSubject}>abc</Text>
+                      }}>
+                      {itemTitle && (
+                        <Text style={styles.titleSubject}>{itemTitle}</Text>
+                      )}
                       <Text style={[globalStyle.txtNote, styles.option]}>
                         {typeof p === 'object' ? p[nameIndex!] : p}
                         {prefix}
                       </Text>
+                      <View
+                        style={[
+                          styles.divide,
+                          i === data.length - 1 && {
+                            marginBottom: verticalScale(20),
+                          },
+                        ]}
+                      />
                     </TouchableOpacity>
                   </>
                 );
               })}
-          </Animated.ScrollView>
+          </ScrollViewDropdown>
         )}
       </View>
     </>
@@ -164,11 +187,15 @@ const styles = StyleSheet.create({
     marginRight: scale(8),
   },
   option: {
-    paddingVertical: verticalScale(6),
     color: COLORS.GREEN_1C6349,
   },
   titleSubject: {
     color: COLORS.BACKGROUND,
     fontFamily: FontFamily.SVNNeuzeitBold,
+  },
+  divide: {
+    height: scale(0.5),
+    backgroundColor: COLORS.GREEN_1C6349,
+    marginVertical: verticalScale(5),
   },
 });

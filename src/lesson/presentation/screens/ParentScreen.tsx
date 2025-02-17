@@ -91,6 +91,11 @@ import {BlockedModuleSetting} from 'src/lesson/application/types/UserSettingPayl
 import {GetListSubjectPayload} from 'src/home/application/types/GetListSubjectPayload';
 import {Module} from 'src/home/application/types/GetListLessonResponse';
 
+// ... existing imports ...
+
+// =============================================================================
+// CONSTANTS & ENUMS
+// =============================================================================
 enum TabParentE {
   APP_BLOCK = 'App block',
   SETTING = 'Setting',
@@ -120,14 +125,19 @@ const setingOptions = [
 ];
 
 const ParentScreen = observer(() => {
+  // ---------------------------------------------------------------------------
+  // State & Context
+  // ---------------------------------------------------------------------------
   const insets = useSafeAreaInsets();
   const globalStyle = useGlobalStyle();
   const lesson = useLessonStore();
   const {handleGetModulesField, listModuleByField} = lesson;
-
-  const soundHook = useSoundBackgroundGlobal();
   const {iapState, makePurchase} = useContext(IapContext);
+  const {homeState, fetchListSubject} = useContext(HomeContext);
 
+  // ---------------------------------------------------------------------------
+  // Store & Context Hooks
+  // ---------------------------------------------------------------------------
   const {
     getUserProfile,
     selectedChild,
@@ -136,19 +146,18 @@ const ParentScreen = observer(() => {
     deleteChildren,
   } = useAuthenticationStore();
 
-  const {homeState} = useContext(HomeContext);
+  const {isShowAuth: isAuthenSetting, changeIsShowAuth} = useAuthParent();
+  const isShowAuth = __DEV__ ? false : isAuthenSetting;
 
+  useGetUserSetting(deviceToken, selectedChild?._id ?? '', lesson);
+
+  // ---------------------------------------------------------------------------
+  // Derived Values
+  // ---------------------------------------------------------------------------
+  const points = useMemo(() => [100, 75, 50], []);
   const listFields = useMemo(() => {
     return homeState.listField;
   }, [homeState.listField]);
-
-  const subjects = useMemo(() => {
-    return homeState.listSubject;
-  }, [homeState.listSubject]);
-
-  useGetUserSetting(deviceToken, selectedChild?._id ?? '', lesson);
-  const {isShowAuth: isAuthenSetting, changeIsShowAuth} = useAuthParent();
-  const isShowAuth = __DEV__ ? false : isAuthenSetting;
 
   const hasDataServer = useMemo(
     () =>
@@ -161,14 +170,6 @@ const ParentScreen = observer(() => {
       lesson.blockedListAppsSystem.length,
     ],
   );
-
-  const {errorMessage, setErrorMessage, blocked, setBlocked} = useSaveSetting(
-    hasDataServer,
-    selectedChild?._id ?? '',
-  );
-
-  const [tabParent, setTabparent] = useState(TabParentE.APP_BLOCK);
-
   const blockOptions = useMemo(() => {
     if (isAndroid) {
       return (
@@ -217,7 +218,6 @@ const ParentScreen = observer(() => {
     lesson.blockedAnonymousListAppsSystem?.categoryTokens,
     lesson.blockedListAppsSystem,
   ]);
-
   const purchaseOptions = [
     {
       id: '4',
@@ -247,26 +247,35 @@ const ParentScreen = observer(() => {
     [],
   );
 
-  const [selectedBlock, setSelectedBlock] = useState<string>(
+  // ---------------------------------------------------------------------------
+  // State & Context
+  // ---------------------------------------------------------------------------
+  const [selectedBlock, setSelectedBlock] = useState(
     blockOptions?.[0]?.name ?? '',
   );
-
-  const [selectedSetting, setSelectedSetting] = useState<string>(
+  const [selectedSetting, setSelectedSetting] = useState(
     setingOptions[0]?.id ?? '',
   );
-
-  const [selectedPurchase, setSelectedPurchase] = useState<string>(
+  const [selectedPurchase, setSelectedPurchase] = useState(
     purchaseOptions[0]?.id ?? '',
   );
+  const [tabParent, setTabparent] = useState(TabParentE.APP_BLOCK);
   const [userProfile, setUserProfile] = useState<data>();
-  const [isChooseChildren, setIsChooseChildren] = useState<string>(
+  const [isChooseChildren, setIsChooseChildren] = useState(
     selectedChild?._id || '',
   );
-  const [isShowLimitOption, setIsShowLimitOption] = useState(false);
-  const points = useMemo(() => [100, 75, 50], []);
   const [point, setPoint] = useState(75);
+
+  const soundHook = useSoundBackgroundGlobal();
+
+  const {errorMessage, setErrorMessage, blocked, setBlocked} = useSaveSetting(
+    hasDataServer,
+    selectedChild?._id ?? '',
+  );
+
   const [selectedField, setSelectedField] = useState<FieldData | undefined>();
   const [selectedModule, setSelectedModule] = useState<Module | undefined>();
+  const [subjectsInField, setSubjectsInField] = useState<Subject[]>([]);
 
   const [backgroundSound, setBackgroundSound] = useState<number>(
     lesson.backgroundSound,
@@ -320,6 +329,7 @@ const ParentScreen = observer(() => {
   ]);
 
   const onConfigUserSetting = useCallback(() => {
+    // Tạo một mảng các module bị chặn, bao gồm các module hiện tại và module mới với phần trăm và ID module được chọn
     const modules: BlockedModuleSetting[] = [
       ...(lesson.blockedModules ?? []),
       {
@@ -327,12 +337,14 @@ const ParentScreen = observer(() => {
         moduleId: selectedModule?._id ?? '',
       },
     ];
+    // Cập nhật cài đặt chặn ứng dụng với thông tin về trẻ em, token thiết bị, điểm, các module và các ứng dụng bị chặn
     lesson.updateAppBlock({
       childrenId: selectedChild?._id ?? '',
       deviceToken,
       point,
       modules,
       appBlocked: {
+        // Nếu là Android, tạo danh sách các ứng dụng bị chặn với thông tin chi tiết
         android: isAndroid
           ? blockOptions.map(t => {
               return {
@@ -343,6 +355,7 @@ const ParentScreen = observer(() => {
               };
             })
           : [],
+        // Nếu không phải Android (iOS), tạo danh sách các ứng dụng bị chặn với thông tin chi tiết
         ios: !isAndroid
           ? blockOptions.map(t => {
               return {
@@ -428,7 +441,7 @@ The blockAppsSystem function is an asynchronous function that awaits the result 
           setSelectedBlock(id);
           break;
         case TabParentE.SETTING:
-          setSelectedSetting(id);
+          setSelectedSetting(id as TabSettingE);
           break;
         case TabParentE.PURCHASE:
           setSelectedPurchase(id);
@@ -449,16 +462,30 @@ The blockAppsSystem function is an asynchronous function that awaits the result 
     makePurchase?.(item.productId);
   };
 
+  const handleGetSubject = useCallback(
+    (subjectId: string) => {
+      return subjectsInField.find(subject => subject._id === subjectId);
+    },
+    [subjectsInField],
+  );
+
   const handleSelectedSubject = useCallback(
     (field: GetListSubjectPayload) => {
+      fetchListSubject({_id: field.fieldId} as any).then(v => {
+        setSubjectsInField(v ?? []);
+      });
+
       handleGetModulesField(field).then(v => {
         setPoint(p => lesson.blockedModules?.[0]?.percent ?? p);
         setSelectedModule(v.data?.[0]);
       });
     },
-    [handleGetModulesField, lesson.blockedModules],
+    [fetchListSubject, handleGetModulesField, lesson.blockedModules],
   );
 
+  // ---------------------------------------------------------------------------
+  // Effects & Data Fetching
+  // ---------------------------------------------------------------------------
   useEffect(() => {
     handleGetUserProfile();
   }, [handleGetUserProfile]);
@@ -541,11 +568,7 @@ The blockAppsSystem function is an asynchronous function that awaits the result 
                 />
               </View>
               <View style={[styles.fill]}>
-                <TouchableOpacity
-                  onPress={() => {
-                    setIsShowLimitOption(v => !v);
-                  }}
-                  activeOpacity={1}>
+                <TouchableOpacity activeOpacity={1}>
                   <Text style={[globalStyle.txtButton, styles.textColor]}>
                     Score to unlock
                   </Text>
@@ -568,6 +591,8 @@ The blockAppsSystem function is an asynchronous function that awaits the result 
                     onSelectItem={item => {
                       setSelectedModule(item);
                     }}
+                    // titleItem={}
+                    getTitleItem={handleGetSubject}
                     width={scale(100)}
                     nameIndex="name"
                   />
