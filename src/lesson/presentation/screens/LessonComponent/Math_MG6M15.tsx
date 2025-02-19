@@ -49,7 +49,7 @@ type Props = {
   answer?: string[];
 };
 
-const Math_MG2M4 = observer(
+const Math_MG6M15 = observer(
   forwardRef<LessonRef, Props>(
     (
       {
@@ -118,23 +118,8 @@ const Math_MG2M4 = observer(
       }, [characterImageFail, characterImageSuccess, isAnswerCorrect]);
 
       const descriptionWithAnswers = useMemo(() => {
-        const insertAnswersIntoDescription = (
-          description: string,
-          answers: string[],
-        ) => {
-          let answerIndex = 0;
-          return description.replace(/_/g, () =>
-            answerIndex < answers.length ? answers[answerIndex++] : '_',
-          );
-        };
-        const description =
-          firstMiniTestTask?.question?.[moduleIndex].description || '';
-        const updatedDescription = insertAnswersIntoDescription(
-          description,
-          answerSelected as string[],
-        );
-        return updatedDescription;
-      }, [answerSelected, firstMiniTestTask?.question, moduleIndex]);
+        return answerSelected.length > 0 ? answerSelected : '?';
+      }, [answerSelected]);
 
       const onSpeechText = useCallback(() => {
         ttsSpeak?.(settings.prompt?.toString().toLowerCase() ?? '');
@@ -237,7 +222,7 @@ const Math_MG2M4 = observer(
                     flex: 1,
                   }}>
                   <Text style={[globalStyle.txtLabel, styles.textColor]}>
-                    Choose the correct answer
+                    Type correct answer
                   </Text>
                 </View>
 
@@ -250,16 +235,16 @@ const Math_MG2M4 = observer(
               </View>
               <KeyboardNumber
                 question={
-                  <Text
-                    style={[
-                      styles.fonts_SVN_Cherish,
-                      styles.textQuestion,
-                      styles.textGreen,
-                      styles.mt8,
-                      {fontSize: scale(40)},
-                    ]}>
-                    {descriptionWithAnswers}
-                  </Text>
+                  <View style={styles.wrapAnswerContainer}>
+                    <Text
+                      style={[
+                        styles.fonts_SVN_Cherish,
+                        styles.textQuestion,
+                        {fontSize: 40},
+                      ]}>
+                      {descriptionWithAnswers}
+                    </Text>
+                  </View>
                 }
                 answer={answer ?? []}
                 isShowCorrectContainer={isShowCorrectContainer}
@@ -290,7 +275,7 @@ const Math_MG2M4 = observer(
   ),
 );
 
-export default Math_MG2M4;
+export default Math_MG6M15;
 
 const styles = StyleSheet.create({
   fill: {
@@ -313,7 +298,7 @@ const styles = StyleSheet.create({
   textQuestion: {
     fontSize: verticalScale(34),
     textAlign: 'center',
-    color: COLORS.BLUE_258F78,
+    color: COLORS.BLUE_0877B6,
   },
   textGreen: {
     color: COLORS.BLUE_258F78,
@@ -416,5 +401,12 @@ const styles = StyleSheet.create({
     paddingHorizontal: scale(24),
     marginTop: scale(16),
     backgroundColor: '#0877B6',
+  },
+  wrapAnswerContainer: {
+    backgroundColor: COLORS.BLUE_93F6E1,
+    borderRadius: 16,
+    borderWidth: 1,
+    borderColor: COLORS.BLUE_4552C8,
+    padding: 16,
   },
 });
