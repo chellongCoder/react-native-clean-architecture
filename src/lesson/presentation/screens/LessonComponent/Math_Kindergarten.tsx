@@ -49,7 +49,7 @@ type Props = {
   answer?: string[];
 };
 
-const Math_MG2M4 = observer(
+const Math_G0M2 = observer(
   forwardRef<LessonRef, Props>(
     (
       {
@@ -252,7 +252,7 @@ const Math_MG2M4 = observer(
                 question={
                   <Text
                     style={[
-                      styles.fonts_SVN_Cherish,
+                      styles.fonts_SVN_Neu,
                       styles.textQuestion,
                       styles.textGreen,
                       styles.mt8,
@@ -269,7 +269,6 @@ const Math_MG2M4 = observer(
                 }}
                 learningTimer={learningTimer}
                 ref={answerRef}
-                isKeyboard={true}
               />
 
               <PrimaryButton
@@ -290,7 +289,7 @@ const Math_MG2M4 = observer(
   ),
 );
 
-export default Math_MG2M4;
+export default Math_G0M2;
 
 const styles = StyleSheet.create({
   fill: {

@@ -88,12 +88,16 @@ const KeyboardNumber: ForwardRefRenderFunction<
                 : '#66C270'
               : '#F2B559';
           const length = answer?.length ?? 2;
-          const size = (WIDTH_SCREEN - scale(160)) / Math.ceil(length / 2);
+          const size = (WIDTH_SCREEN - scale(130)) / Math.ceil(length / 2);
 
           return (
             <TouchableOpacity
               key={i}
               onPress={() => handleSelectAnswer(e)}
+              disabled={
+                e === '.' &&
+                (answerSelected.length === 0 || answerSelected.includes('.'))
+              }
               style={[
                 styles.boxVowel,
                 {
@@ -165,7 +169,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
     alignSelf: 'center',
-    flexWrap: 'wrap-reverse', // Add this to enable wrapping
+    flexWrap: 'wrap', // Add this to enable wrapping
   },
   fill: {
     // Add your styles here
@@ -185,7 +189,7 @@ const styles = StyleSheet.create({
     // Add your styles here
     fontFamily: FontFamily.SVNCherishMoment,
     color: '#FBF8CC',
-    fontSize: verticalScale(14),
+    fontSize: verticalScale(24),
     flexWrap: 'wrap',
   },
 });

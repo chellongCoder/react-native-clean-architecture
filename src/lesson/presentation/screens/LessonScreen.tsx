@@ -58,6 +58,9 @@ import Mandarin_G4M27 from './LessonComponent/Mandarin_G4M27';
 import Mandarin_G5M25 from './LessonComponent/Mandarin_G5M25';
 import Mandarin_G6M31 from './LessonComponent/Mandarin_G6M31';
 import Mandarin_Kindergarten from './LessonComponent/Mandarin_Kindergarten';
+import Math_MG5M18 from './LessonComponent/Math_MG5M18';
+import Math_MG6M15 from './LessonComponent/Math_MG6M15';
+import Math_Kindergarten from './LessonComponent/Math_Kindergarten';
 
 export enum MathQuestionType {
   MATH_TEXT = 'math_text',
@@ -82,9 +85,15 @@ export enum MathQuestionType {
   MATH_TRANSLATION = 'math_translation',
   MATH_EXPLANATION = 'math_explanation',
 
-  MathMG2M4 = 'MATH_MG2M4',
+  MathMG0M1 = 'MATH_G0M1',
+  MathMG0M2 = 'MATH_G0M2',
+  MathMG0M3 = 'MATH_G0M3',
   MathMG1M3 = 'Math_MG1M3',
+  MathMG2M4 = 'MATH_MG2M4',
   MathMG3M8 = 'MATH_MG3M8',
+  MathMG4M30 = 'MATH_MG4M30',
+  MathMG5M18 = 'MATH_G5M18',
+  MathMG6M15 = 'MATH_G6M15',
 }
 
 export enum LanguageE {
@@ -1005,6 +1014,32 @@ const LessonScreen = observer(() => {
       /**----------------------
        *todo    các question cho môn toán
        *------------------------**/
+      case MathQuestionType.MathMG0M1:
+      case MathQuestionType.MathMG0M2:
+      case MathQuestionType.MathMG0M3:
+        return (
+          <Math_Kindergarten
+            moduleIndex={lessonIndex}
+            nextModule={nextModule}
+            totalModule={testTask?.question.length ?? 0}
+            lessonName={route.lessonName}
+            moduleName={route.moduleName}
+            firstMiniTestTask={testTask}
+            backgroundImage={
+              env.IMAGE_BACKGROUND_BASE_API_URL + lessonSetting?.backgroundImage
+            }
+            characterImageSuccess={
+              env.IMAGE_BACKGROUND_BASE_API_URL +
+              lessonSetting?.figureSuccessImage
+            }
+            characterImageFail={
+              env.IMAGE_BACKGROUND_BASE_API_URL + lessonSetting?.figureFailImage
+            }
+            ref={vowelRef}
+            isMulti={true}
+            answer={['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']}
+          />
+        );
       case MathQuestionType.MathMG2M4:
       case MathQuestionType.MathMG3M8:
         return (
@@ -1027,11 +1062,58 @@ const LessonScreen = observer(() => {
             }
             ref={vowelRef}
             isMulti={true}
-            question="Choose your correct answer?"
             answer={['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']}
           />
         );
-      case MathQuestionType.MATH_CHOOSE_CORRECT_ANSWER:
+      case MathQuestionType.MathMG5M18:
+        return (
+          <Math_MG5M18
+            moduleIndex={lessonIndex}
+            nextModule={nextModule}
+            totalModule={testTask?.question.length ?? 0}
+            lessonName={route.lessonName}
+            moduleName={route.moduleName}
+            firstMiniTestTask={testTask}
+            backgroundImage={
+              env.IMAGE_BACKGROUND_BASE_API_URL + lessonSetting?.backgroundImage
+            }
+            characterImageSuccess={
+              env.IMAGE_BACKGROUND_BASE_API_URL +
+              lessonSetting?.figureSuccessImage
+            }
+            characterImageFail={
+              env.IMAGE_BACKGROUND_BASE_API_URL + lessonSetting?.figureFailImage
+            }
+            ref={vowelRef}
+            isMulti={true}
+            answer={['4', '5', '6', '7', '8', '9', '.', '0', '1', '2', '3']}
+          />
+        );
+      case MathQuestionType.MathMG6M15:
+        return (
+          <Math_MG6M15
+            moduleIndex={lessonIndex}
+            nextModule={nextModule}
+            totalModule={testTask?.question.length ?? 0}
+            lessonName={route.lessonName}
+            moduleName={route.moduleName}
+            firstMiniTestTask={testTask}
+            backgroundImage={
+              env.IMAGE_BACKGROUND_BASE_API_URL + lessonSetting?.backgroundImage
+            }
+            characterImageSuccess={
+              env.IMAGE_BACKGROUND_BASE_API_URL +
+              lessonSetting?.figureSuccessImage
+            }
+            characterImageFail={
+              env.IMAGE_BACKGROUND_BASE_API_URL + lessonSetting?.figureFailImage
+            }
+            ref={vowelRef}
+            isMulti={true}
+            answer={['4', '5', '6', '7', '8', '9', '.', '0', '1', '2', '3']}
+          />
+        );
+      case MathQuestionType.MathMG4M30:
         return (
           <MathLesson
             moduleIndex={lessonIndex}
