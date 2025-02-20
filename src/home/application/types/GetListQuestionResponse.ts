@@ -18,6 +18,13 @@ export interface Question {
   answerType: 'answer_pick_one' | 'answer_arrange_word';
   paragraph: string;
   pronu_character?: string[];
+  instruction: Instruction;
+}
+
+export interface Instruction {
+  descrption: string;
+  number?: number;
+  content?: string;
 }
 
 export interface Task {

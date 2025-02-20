@@ -159,7 +159,11 @@ const Mandarin_G2M25 = ({
       part={firstMiniTestTask?.name}
       backgroundColor="#66c270"
       backgroundAnswerColor={settings.backgroundAnswerColor}
-      prompt={settings.prompt?.toString()}
+      prompt={
+        firstMiniTestTask?.question?.[moduleIndex]?.instruction ?? {
+          descrption: settings.prompt?.toString() ?? '',
+        }
+      }
       score={selectedChild?.adsPoints}
       isAnswerCorrect={isAnswerCorrect}
       isShowCorrectContainer={isShowCorrectContainer}

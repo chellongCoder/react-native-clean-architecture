@@ -136,7 +136,11 @@ const MathLesson = forwardRef<LessonRef, Props>(
         part={firstMiniTestTask?.name}
         backgroundColor="#a3f0df"
         backgroundAnswerColor={settings.backgroundAnswerColor}
-        prompt={settings.prompt?.toString()}
+        prompt={
+          firstMiniTestTask?.question?.[moduleIndex]?.instruction ?? {
+            descrption: settings.prompt?.toString() ?? '',
+          }
+        }
         score={selectedChild?.adsPoints}
         txtCountDown={
           word === firstMiniTestTask?.question?.[moduleIndex].content
