@@ -202,7 +202,11 @@ const Math_MG2M4 = observer(
           part={firstMiniTestTask?.name}
           backgroundColor={settings.backgroundAnswerColor}
           backgroundAnswerColor={settings.backgroundAnswerColor}
-          prompt={settings.prompt?.toString()}
+          prompt={
+            firstMiniTestTask?.question?.[moduleIndex]?.instruction ?? {
+              descrption: settings.prompt?.toString() ?? '',
+            }
+          }
           score={selectedChild?.adsPoints}
           txtCountDown={
             word === firstMiniTestTask?.question?.[moduleIndex].content

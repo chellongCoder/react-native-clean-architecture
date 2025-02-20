@@ -19,6 +19,7 @@ import CustomSwitchNew from 'src/home/presentation/components/CustomSwitchNew';
 import {TYPOGRAPHY} from 'src/core/presentation/constants/typography';
 import HintButton from 'src/core/components/hint/HintButton';
 import useHomeStore from 'src/home/presentation/stores/useHomeStore';
+import {Instruction} from 'src/home/application/types/GetListQuestionResponse';
 
 type Props = {
   lessonName?: string;
@@ -38,7 +39,7 @@ type Props = {
   isShowCorrectContainer?: boolean;
   txtCountDown?: string;
   onPressFlower?: () => void;
-  prompt?: string;
+  prompt?: Instruction;
 };
 
 const LessonComponent = ({
@@ -193,9 +194,21 @@ const LessonComponent = ({
                 </Text>
               </View>
             )}
-            {isShowPrompt && prompt && (
+            {isShowPrompt && prompt?.descrption && (
               <View style={styles.wrapCorrectContainer}>
-                <Text style={styles.promptTitle}>{prompt}</Text>
+                <View style={[{flexDirection: 'row', maxWidth: '100%'}]}>
+                  {prompt.number !== undefined && (
+                    <View style={[styles.promptNumberBg]}>
+                      <Text style={[styles.promptNumber]}>{prompt.number}</Text>
+                    </View>
+                  )}
+                  {!!prompt.content && (
+                    <Text style={[styles.promptContent]}>{prompt.content}</Text>
+                  )}
+                  <Text style={[styles.promptTitle, {flex: 1}]}>
+                    {prompt.descrption}
+                  </Text>
+                </View>
               </View>
             )}
             <View style={[styles.tabs]}>
@@ -388,9 +401,11 @@ const styles = StyleSheet.create({
     paddingBottom: 14,
   },
   wrapCorrectContainer: {
+    maxWidth: '100%',
+    marginRight: scale(8),
     backgroundColor: COLORS.CUSTOM(COLORS.WHITE_FBF8CC, 0.5),
     marginBottom: scale(8),
-    padding: scale(16),
+    padding: scale(12),
     borderTopLeftRadius: scale(36),
     borderTopRightRadius: scale(36),
     borderBottomRightRadius: scale(36),
@@ -402,6 +417,28 @@ const styles = StyleSheet.create({
     color: '#1C6A59',
     textTransform: 'uppercase',
     fontWeight: 'bold',
+  },
+  promptNumberBg: {
+    backgroundColor: COLORS.RED_FF6347,
+    marginRight: scale(6),
+    borderRadius: 100,
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: scale(32),
+    height: scale(32),
+    zIndex: 998,
+  },
+  promptNumber: {
+    color: COLORS.WHITE_FBF8CC,
+    fontFamily: FontFamily.SVNCherishMoment,
+    fontSize: 20,
+  },
+  promptContent: {
+    color: COLORS.GREEN_1C6A59,
+    fontFamily: FontFamily.SVNCherishMoment,
+    marginRight: scale(6),
+    fontSize: 18,
+    zIndex: 998,
   },
   promptTitle: {
     color: COLORS.GREEN_1C6A59,

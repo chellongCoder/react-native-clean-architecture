@@ -17,6 +17,13 @@ export interface Question {
   descriptionImage: string;
   answerType: 'answer_pick_one' | 'answer_arrange_word';
   paragraph: string;
+  instruction: Instruction;
+}
+
+export interface Instruction {
+  descrption: string;
+  number?: number;
+  content?: string;
 }
 
 export interface Task {
