@@ -118,8 +118,15 @@ const Math_MG6M15 = observer(
       }, [characterImageFail, characterImageSuccess, isAnswerCorrect]);
 
       const descriptionWithAnswers = useMemo(() => {
-        return answerSelected.length > 0 ? answerSelected : '?';
-      }, [answerSelected]);
+        const contentWords =
+          firstMiniTestTask?.question?.[moduleIndex]?.content.split(' ');
+
+        return answerSelected?.length > 0 && contentWords
+          ? (Array.isArray(answerSelected)
+              ? answerSelected.join('')
+              : answerSelected) + (contentWords[contentWords.length - 1] ?? '')
+          : firstMiniTestTask?.question?.[moduleIndex]?.content ?? '';
+      }, [answerSelected, firstMiniTestTask?.question, moduleIndex]);
 
       const onSpeechText = useCallback(() => {
         ttsSpeak?.(settings.prompt?.toString().toLowerCase() ?? '');

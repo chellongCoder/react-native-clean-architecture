@@ -92,8 +92,8 @@ export enum MathQuestionType {
   MathMG2M4 = 'MATH_MG2M4',
   MathMG3M8 = 'MATH_MG3M8',
   MathMG4M30 = 'MATH_MG4M30',
-  MathMG5M18 = 'MATH_G5M18',
-  MathMG6M15 = 'MATH_G6M15',
+  MathMG5M18 = 'MATH_MG5M18',
+  MathMG6M15 = 'MATH_MG6M15',
 }
 
 export enum LanguageE {
@@ -234,7 +234,7 @@ const LessonScreen = observer(() => {
     () => getSetting(lessonSetting),
     [getSetting, lessonSetting],
   );
-
+  console.log('settings: ', settings);
   const submitModule = useCallback(
     async (item: TResult) => {
       playSound(soundTrack.good_result);
@@ -1086,7 +1086,7 @@ const LessonScreen = observer(() => {
             }
             ref={vowelRef}
             isMulti={true}
-            answer={['4', '5', '6', '7', '8', '9', '.', '0', '1', '2', '3']}
+            answer={['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '.']}
           />
         );
       case MathQuestionType.MathMG6M15:
@@ -1110,7 +1110,7 @@ const LessonScreen = observer(() => {
             }
             ref={vowelRef}
             isMulti={true}
-            answer={['4', '5', '6', '7', '8', '9', '.', '0', '1', '2', '3']}
+            answer={['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '.']}
           />
         );
       case MathQuestionType.MathMG4M30:
