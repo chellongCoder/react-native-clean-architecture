@@ -94,7 +94,7 @@ export enum MathQuestionType {
   MathMG3M8 = 'MATH_MG3M8',
   MathMG4M30 = 'MATH_MG4M30',
   MathMG5M18 = 'MATH_MG5M18',
-  MathMG6M15 = 'MATH_G6M15',
+  MathMG6M15 = 'MATH_MG6M15',
 }
 
 export enum LanguageE {
