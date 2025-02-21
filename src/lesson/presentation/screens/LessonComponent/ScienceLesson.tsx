@@ -39,6 +39,10 @@ import Animated, {
 } from 'react-native-reanimated';
 import * as Haptics from 'expo-haptics';
 import useHomeStore from 'src/home/presentation/stores/useHomeStore';
+import LearningImage from '../../components/LearningImage';
+import SelectionImagesQuestion, {
+  SelectionAnswersQuestionRef,
+} from '../../components/SelectionImagesQuestion';
 
 type Props = {
   moduleIndex: number;
@@ -68,11 +72,12 @@ const ScienceLesson = ({
   const globalStyle = useGlobalStyle();
   const {selectedChild} = useAuthenticationStore();
   const [answerSelected, setAnswerSelected] = useState('');
+  const answerRef = useRef<SelectionAnswersQuestionRef>();
 
   const {trainingCount, getSetting} = useLessonStore();
   const isCorrectAnswer = useMemo(() => {
     return (
-      `${answerSelected.trim().toLocaleLowerCase().replace('#', '')}.png` ===
+      `${answerSelected.trim().toLocaleLowerCase()}` ===
       firstMiniTestTask?.question?.[moduleIndex]?.fullAnswer.toLocaleLowerCase()
     );
   }, [answerSelected, firstMiniTestTask?.question, moduleIndex]);
@@ -100,7 +105,7 @@ const ScienceLesson = ({
 
   const {updateDefaultVoice} = useContext(TextToSpeechContext);
 
-  const {isAnswerCorrect, isShowCorrectContainer, submit, word} =
+  const {isAnswerCorrect, isShowCorrectContainer, submit, word, learningTimer} =
     useSettingLesson({
       countDownTime: trainingCount <= 2 ? 0 : 5,
       isCorrectAnswer: !!isCorrectAnswer,
@@ -109,6 +114,7 @@ const ScienceLesson = ({
         nextModule(
           `${answerSelected.trim().toLocaleLowerCase().replace('#', '')}.png`,
         );
+        answerRef.current?.resetAnswerSelected?.();
       },
       fullAnswer: firstMiniTestTask?.question?.[moduleIndex].fullAnswer,
       totalTime: 5 * 60, // * tổng time làm 1câu
@@ -171,12 +177,15 @@ const ScienceLesson = ({
           : word
       }
       buildQuestion={
-        <ColorMixing
-          color1={colorsMix?.[0]}
-          color2={colorsMix?.[1]}
-          colorMixed={`#${(
-            firstMiniTestTask?.question?.[moduleIndex].correctAnswer as string
-          ).replace('.png', '')}`}
+        <LearningImage
+          images={
+            learningTimer !== 0
+              ? (firstMiniTestTask?.question?.[moduleIndex].image as string[])
+              : (firstMiniTestTask?.question?.[moduleIndex].image.slice(
+                  1,
+                  3,
+                ) as string[])
+          }
         />
       }
       buildAnswer={
@@ -189,78 +198,34 @@ const ScienceLesson = ({
             <Text style={[globalStyle.txtLabel]}>Choice correct answer</Text>
           </View>
 
-          <View
+          <SelectionImagesQuestion
+            question={
+              <Text style={[styles.textQuestion, {fontSize: scale(24)}]}>
+                {firstMiniTestTask?.question?.[moduleIndex].content}
+              </Text>
+            }
+            answers={
+              (firstMiniTestTask?.question?.[moduleIndex]
+                .answers as string[]) ?? []
+            }
+            isShowCorrectContainer={isShowCorrectContainer}
+            isAnswerCorrect={!!isAnswerCorrect}
+            onSelectAnswer={(e: string[]) => {
+              setAnswerSelected(e[0]);
+            }}
+            learningTimer={learningTimer}
+            isSelectOne
+            // ref={answerRef}
+          />
+
+          <PrimaryButton
+            text="Submit"
             style={[
-              {
-                backgroundColor: '#FBF8CC',
-                paddingVertical: 8,
-                borderRadius: 32,
-                marginTop: 12,
-              },
-            ]}>
-            <View
-              style={{
-                flexDirection: 'row',
-                justifyContent: 'center',
-                alignItems: 'center',
-              }}>
-              <Circle
-                bg={colorsMix?.[0]}
-                size={verticalScale(32)}
-                mh={15}
-                mv={verticalScale(12)}
-              />
-              <Text
-                style={[globalStyle.txtModule, {color: COLORS.GREEN_009C6F}]}>
-                +
-              </Text>
-              <Circle
-                bg={colorsMix?.[1]}
-                size={verticalScale(32)}
-                mh={15}
-                mv={verticalScale(12)}
-              />
-              <Text
-                style={[globalStyle.txtModule, {color: COLORS.GREEN_009C6F}]}>
-                =
-              </Text>
-              {answerSelected ? (
-                <Circle
-                  bg={answerSelected}
-                  size={verticalScale(32)}
-                  mh={15}
-                  mv={verticalScale(12)}
-                />
-              ) : (
-                <Text
-                  style={[
-                    globalStyle.txtModule,
-                    {color: COLORS.GREEN_009C6F, marginLeft: 15},
-                  ]}>
-                  ?
-                </Text>
-              )}
-            </View>
-
-            <View
-              style={{
-                flexWrap: 'wrap',
-                flexDirection: 'row',
-                justifyContent: 'space-around',
-              }}>
-              {listColors.map(e => (
-                <Circle
-                  bg={e}
-                  size={verticalScale(54)}
-                  mh={(WIDTH_SCREEN - verticalScale(54) * 3 - scale(64)) / 6}
-                  mv={verticalScale(6)}
-                  onPress={() => setAnswerSelected(e)}
-                />
-              ))}
-            </View>
-          </View>
-
-          <PrimaryButton text="Submit" style={[styles.mt32]} onPress={submit} />
+              styles.buttonContainer,
+              {backgroundColor: settings.backgroundButtonColor},
+            ]}
+            onPress={submit}
+          />
         </View>
       }
       moduleIndex={moduleIndex}
@@ -501,19 +466,12 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
   },
   iconAIVoiceContainer: {height: scale(31), width: scale(31)},
-  circleSmall: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-  },
-  circleMedium: {
-    width: 70,
-    height: 70,
-    borderRadius: 35,
-  },
-  circleLarge: {
-    width: 106,
-    height: 106,
-    borderRadius: 53,
+
+  buttonContainer: {
+    borderRadius: scale(52),
+    paddingVertical: verticalScale(9),
+    paddingHorizontal: scale(24),
+    marginTop: scale(16),
+    backgroundColor: '#0877B6',
   },
 });

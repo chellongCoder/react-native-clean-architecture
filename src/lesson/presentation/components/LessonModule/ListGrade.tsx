@@ -17,7 +17,9 @@ const ListGrade = forwardRef((_, ref) => {
   const {setSubjectId, listSubject, rootSubject} = useHomeStore();
 
   const gradeObjs = useMemo(() => {
-    return listSubject.filter(subject => subject.parentId === rootSubject?._id);
+    return listSubject
+      .filter(subject => subject.parentId === rootSubject?._id)
+      .sort((a, b) => a.level - b.level);
   }, [listSubject, rootSubject]);
 
   useImperativeHandle(ref, () => {
@@ -29,8 +31,8 @@ const ListGrade = forwardRef((_, ref) => {
 
   useEffect(() => {
     if (gradeObjs.length > 0) {
-      setIndex(gradeObjs.length - 1);
-      setSubjectId(gradeObjs[gradeObjs.length - 1]._id);
+      setIndex(0);
+      setSubjectId(gradeObjs[0]._id);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [rootSubject]);

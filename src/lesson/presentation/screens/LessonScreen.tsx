@@ -61,6 +61,7 @@ import Mandarin_Kindergarten from './LessonComponent/Mandarin_Kindergarten';
 import Math_MG5M18 from './LessonComponent/Math_MG5M18';
 import Math_MG6M15 from './LessonComponent/Math_MG6M15';
 import Math_Kindergarten from './LessonComponent/Math_Kindergarten';
+import Science_G0M1 from './LessonComponent/Science_G0M1';
 
 export enum MathQuestionType {
   MATH_TEXT = 'math_text',
@@ -93,7 +94,7 @@ export enum MathQuestionType {
   MathMG3M8 = 'MATH_MG3M8',
   MathMG4M30 = 'MATH_MG4M30',
   MathMG5M18 = 'MATH_MG5M18',
-  MathMG6M15 = 'MATH_MG6M15',
+  MathMG6M15 = 'MATH_G6M15',
 }
 
 export enum LanguageE {
@@ -119,6 +120,11 @@ export enum LanguageE {
   MANDARIN_M0G1 = 'MANDARIN_M0G1',
   MANDARIN_M0G2 = 'MANDARIN_M0G2',
   MANDARIN_M0G3 = 'MANDARIN_M0G3',
+}
+
+export enum ScienceE {
+  SCIENCE_G0M1 = 'SCIENCE_SG0M1',
+  SCIENCE_G0M2 = 'SCIENCE_SG0M2',
 }
 export enum LessonTypeE {
   TEXT = 'text',
@@ -572,6 +578,7 @@ const LessonScreen = observer(() => {
         | LessonTypeE
         | MathQuestionType
         | LanguageE
+        | ScienceE
     ) {
       /**
        * * UI chung dành cho các module phát âm
@@ -624,6 +631,29 @@ const LessonScreen = observer(() => {
       /**----------------------
        *todo    các question cho môn Tiếng Anh
        *------------------------**/
+      case LanguageE.ENGLISH_EG0M1:
+      case LanguageE.ENGLISH_EG0M2:
+      case LanguageE.ENGLISH_EG0M3:
+        return (
+          <LatinLesson
+            moduleIndex={lessonIndex}
+            totalModule={testTask?.question.length ?? 0}
+            lessonName={route.lessonName}
+            moduleName={route.moduleName}
+            firstMiniTestTask={testTask}
+            nextModule={nextModule}
+            backgroundImage={
+              env.IMAGE_BACKGROUND_BASE_API_URL + lessonSetting?.backgroundImage
+            }
+            characterImageSuccess={
+              env.IMAGE_BACKGROUND_BASE_API_URL +
+              lessonSetting?.figureSuccessImage
+            }
+            characterImageFail={
+              env.IMAGE_BACKGROUND_BASE_API_URL + lessonSetting?.figureFailImage
+            }
+          />
+        );
       case LanguageE.ENGLISH_G3M20:
         return (
           <English_G3M20
@@ -987,11 +1017,9 @@ const LessonScreen = observer(() => {
             }
           />
         );
-      case LanguageE.ENGLISH_EG0M1:
-      case LanguageE.ENGLISH_EG0M2:
-      case LanguageE.ENGLISH_EG0M3:
+      case ScienceE.SCIENCE_G0M1:
         return (
-          <LatinLesson
+          <Science_G0M1
             moduleIndex={lessonIndex}
             totalModule={testTask?.question.length ?? 0}
             lessonName={route.lessonName}
@@ -1010,7 +1038,30 @@ const LessonScreen = observer(() => {
             }
           />
         );
-
+      case ScienceE.SCIENCE_G0M2:
+        return (
+          <ScienceLesson
+            moduleIndex={lessonIndex}
+            answers={(testTask?.question[lessonIndex]?.answers ?? []).map(
+              v => '#' + v.replace('.png', ''),
+            )}
+            totalModule={testTask?.question.length ?? 0}
+            lessonName={route.lessonName}
+            moduleName={route.moduleName}
+            firstMiniTestTask={testTask}
+            nextModule={nextModule}
+            backgroundImage={
+              env.IMAGE_BACKGROUND_BASE_API_URL + lessonSetting?.backgroundImage
+            }
+            characterImageSuccess={
+              env.IMAGE_BACKGROUND_BASE_API_URL +
+              lessonSetting?.figureSuccessImage
+            }
+            characterImageFail={
+              env.IMAGE_BACKGROUND_BASE_API_URL + lessonSetting?.figureFailImage
+            }
+          />
+        );
       /**----------------------
        *todo    các question cho môn toán
        *------------------------**/

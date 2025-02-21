@@ -13,7 +13,7 @@ export interface Question {
   _id: string;
   answers: Answer[] | string;
   fullAnswer: string;
-  image: string;
+  image: string | string[];
   descriptionImage: string;
   answerType: 'answer_pick_one' | 'answer_arrange_word';
   paragraph: string;

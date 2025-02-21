@@ -8,6 +8,7 @@ export interface Subject {
   description: string;
   type: TypeSubject;
   parentId: string;
+  level: number;
 }
 
 export default interface GetListSubjectResponse {
