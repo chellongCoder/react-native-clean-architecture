@@ -1,3 +1,4 @@
+/* eslint-disable react-native/no-inline-styles */
 /* eslint-disable no-sparse-arrays */
 import React, {
   forwardRef,
@@ -8,7 +9,7 @@ import React, {
   useRef,
   useState,
 } from 'react';
-import {StyleSheet, View, Text} from 'react-native';
+import {StyleSheet, View, Text, TextStyle} from 'react-native';
 import {
   Canvas,
   Path,
@@ -27,14 +28,10 @@ import {FontFamily} from 'src/core/presentation/hooks/useFonts';
 type Props = {
   text?: {
     content: string;
-    color?: string;
-    opacity?: number;
-    font?: {
-      name: string;
-      require: number;
-    };
+    style: TextStyle;
     show?: boolean;
   };
+  disable?: boolean;
   matchDistance?: number;
   backgroundColor?: string;
   matchPoints?: {x: number; y: number; passed?: boolean}[];
@@ -159,11 +156,11 @@ const CanvasWrite = forwardRef<CanvasWriteRef, Props>((props: Props, ref) => {
         const {x, y} = touchInfo;
         const currentPath = currentPaths[currentPaths.length - 1];
         const lastPoint = currentPath.getLastPt();
-        // const xMid = (lastPoint.x + x) / 2;
-        // const yMid = (lastPoint.y + y) / 2;
+        const xMid = (lastPoint.x + x) / 2;
+        const yMid = (lastPoint.y + y) / 2;
 
-        currentPath.quadTo(lastPoint.x, lastPoint.y, x, y);
-        return [...currentPaths, currentPath];
+        currentPath.quadTo(lastPoint.x, lastPoint.y, xMid, yMid);
+        return [...currentPaths.slice(0, currentPaths.length - 1), currentPath];
       });
     },
     // [findPointNear],
@@ -257,10 +254,8 @@ const CanvasWrite = forwardRef<CanvasWriteRef, Props>((props: Props, ref) => {
 
   return (
     <View
-      style={[
-        styles.container,
-        // props.backgroundColor ? {backgroundColor: props.backgroundColor} : null,
-      ]}
+      pointerEvents={props.disable ? 'none' : 'auto'}
+      style={[styles.container, {opacity: props.disable ? 0.6 : 1}]}
       onLayout={e => {
         setSize({
           height: e.nativeEvent.layout.height,
@@ -276,7 +271,7 @@ const CanvasWrite = forwardRef<CanvasWriteRef, Props>((props: Props, ref) => {
           ,
         ]}>
         {props.text?.show && (
-          <Text style={[styles.text, {color: props.text.color ?? 'green'}]}>
+          <Text style={[styles.text, {color: 'green'}, props.text?.style]}>
             {props?.text?.content}
           </Text>
         )}

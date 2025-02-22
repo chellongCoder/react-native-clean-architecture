@@ -67,6 +67,7 @@ import Science_SG2M4 from './LessonComponent/Science_SG2M4';
 import Science_SG4M3 from './LessonComponent/Science_SG4M3';
 import Science_SG5M5 from './LessonComponent/Science_SG5M5';
 import Science_SG3M9 from './LessonComponent/Science_SG3M9';
+import VnG1M3Lesson from './LessonComponent/Vietnamese_VNG1M3_Lesson';
 
 export enum MathQuestionType {
   MATH_TEXT = 'math_text',
@@ -125,6 +126,8 @@ export enum LanguageE {
   MANDARIN_M0G1 = 'MANDARIN_M0G1',
   MANDARIN_M0G2 = 'MANDARIN_M0G2',
   MANDARIN_M0G3 = 'MANDARIN_M0G3',
+
+  VIETNAMESE_VNG1M3 = 'VIETNAMESE_VNG1M3',
 }
 
 export enum ScienceE {
@@ -1000,6 +1003,27 @@ const LessonScreen = observer(() => {
               env.IMAGE_BACKGROUND_BASE_API_URL + lessonSetting?.figureFailImage
             }
             ref={vowelRef}
+          />
+        );
+      case LanguageE.VIETNAMESE_VNG1M3:
+        return (
+          <VnG1M3Lesson
+            moduleIndex={lessonIndex}
+            totalModule={testTask?.question.length ?? 0}
+            lessonName={route.lessonName}
+            moduleName={route.moduleName}
+            firstMiniTestTask={testTask}
+            nextModule={nextModule}
+            backgroundImage={
+              env.IMAGE_BACKGROUND_BASE_API_URL + lessonSetting?.backgroundImage
+            }
+            characterImageSuccess={
+              env.IMAGE_BACKGROUND_BASE_API_URL +
+              lessonSetting?.figureSuccessImage
+            }
+            characterImageFail={
+              env.IMAGE_BACKGROUND_BASE_API_URL + lessonSetting?.figureFailImage
+            }
           />
         );
       /**----------------------

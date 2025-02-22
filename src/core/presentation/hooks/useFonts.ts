@@ -2,6 +2,7 @@ import * as Font from 'expo-font';
 import {useEffect, useState} from 'react';
 
 export enum FontFamily {
+  BorelRegular = 'BorelRegular',
   Eina01Regular = 'Eina-01-Regular',
   Eina01Bold = 'Eina-01-Bold',
   SVNCherishMoment = 'SVN-Cherish Moment',
@@ -15,6 +16,7 @@ export const useFonts = () => {
     const loadFonts = async () => {
       try {
         await Font.loadAsync({
+          [FontFamily.BorelRegular]: require('assets/fonts/borel-regular.ttf'),
           [FontFamily.Eina01Regular]: require('assets/fonts/eina-01-regular.ttf'),
           [FontFamily.Eina01Bold]: require('assets/fonts/eina-01-bold.ttf'),
           [FontFamily.SVNCherishMoment]: require('assets/fonts/SVN-Cherish Moment.ttf'),
