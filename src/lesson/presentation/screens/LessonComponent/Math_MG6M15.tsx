@@ -223,6 +223,21 @@ const Math_MG6M15 = observer(
                     firstMiniTestTask?.question?.[moduleIndex].image,
                 }}
               />
+              <View style={styles.wrapQuestionContainer}>
+                <Text
+                  style={[
+                    styles.fonts_SVN_Neu,
+                    {
+                      fontSize: 11,
+                      fontWeight: 'bold',
+                      color: COLORS.BLUE_1F78A9,
+                    },
+                  ]}>
+                  {firstMiniTestTask?.question?.[
+                    moduleIndex
+                  ].instruction.toString()}
+                </Text>
+              </View>
             </View>
           }
           buildAnswer={
@@ -297,7 +312,7 @@ const styles = StyleSheet.create({
     fontFamily: FontFamily.SVNCherishMoment,
   },
   fonts_SVN_Neu: {
-    fontFamily: FontFamily.SVNNeuzeitRegular,
+    fontFamily: FontFamily.SVNNeuzeitBold,
   },
   textColor: {
     color: '#1C6349',
@@ -420,5 +435,15 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: COLORS.BLUE_4552C8,
     padding: 16,
+  },
+  wrapQuestionContainer: {
+    padding: 16,
+    borderTopLeftRadius: 16,
+    borderTopRightRadius: 16,
+    borderBottomRightRadius: 16,
+    backgroundColor: COLORS.WHITE_FBF8CC,
+    marginTop: 16,
+    alignSelf: 'flex-start',
+    marginLeft: 110,
   },
 });
