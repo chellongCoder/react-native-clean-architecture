@@ -161,10 +161,11 @@ const LatinLesson = ({
       name: 'file.jpeg',
       type: 'image/jpeg',
     } as any);
+    formData.append('language', 'la');
 
     imageToText(formData)
       .then(data => {
-        const char = data.data?.data;
+        const char = data.data?.data ?? '';
         const charAnswer =
           firstMiniTestTask?.question?.[moduleIndex].fullAnswer;
         console.log('imageToText', data, char, charAnswer);

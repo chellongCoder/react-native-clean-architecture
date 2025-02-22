@@ -167,10 +167,11 @@ const VnG1M3Lesson = ({
       name: 'file.jpeg',
       type: 'image/jpeg',
     } as any);
+    formData.append('language', 'vi');
 
     imageToText(formData)
       .then(data => {
-        const char = data.data?.data;
+        const char = data.data?.data ?? '';
         const charAnswer = getDataString(
           firstMiniTestTask?.question?.[moduleIndex].fullAnswer,
         );
