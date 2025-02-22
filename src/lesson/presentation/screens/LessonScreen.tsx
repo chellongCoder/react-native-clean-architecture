@@ -86,9 +86,9 @@ export enum MathQuestionType {
   MATH_TRANSLATION = 'math_translation',
   MATH_EXPLANATION = 'math_explanation',
 
-  MathMG0M1 = 'MATH_G0M1',
-  MathMG0M2 = 'MATH_G0M2',
-  MathMG0M3 = 'MATH_G0M3',
+  MathMG0M1 = 'MATH_MG0M1',
+  MathMG0M2 = 'MATH_MG0M2',
+  MathMG0M3 = 'MATH_MG0M3',
   MathMG1M3 = 'Math_MG1M3',
   MathMG2M4 = 'MATH_MG2M4',
   MathMG3M8 = 'MATH_MG3M8',

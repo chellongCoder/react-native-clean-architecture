@@ -263,23 +263,39 @@ class AlphadexScreentimeModule(reactContext: ReactApplicationContext) : ReactCon
 
   @ReactMethod
   fun getInstalledApps(includeSystemApps: Boolean, includeAppIcons: Boolean, onlyAppsWithLaunchIntent: Boolean, promise: Promise) {
-    val applicationContext = reactApplicationContext.applicationContext
-    val packageManager = applicationContext.getPackageManager()
-    val apps = packageManager.getInstalledPackages(0)
+   val applicationContext = reactApplicationContext.applicationContext
+    val packageManager = applicationContext.packageManager
+
+    // Use MATCH_ALL flag to ensure all apps are returned
+    val flags = PackageManager.GET_META_DATA or
+                PackageManager.MATCH_DISABLED_COMPONENTS or
+                PackageManager.MATCH_UNINSTALLED_PACKAGES
+
+    val apps = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+        packageManager.getInstalledPackages(flags)
+    } else {
+        packageManager.getInstalledPackages(0)
+    }
+
     val installedApps = ArrayList<Map<String, Any>>(apps.size)
 
     for (packageInfo in apps) {
+        // Skip system apps only if explicitly requested
         if (!includeSystemApps && isSystemApp(packageInfo)) {
             continue
         }
-        if (onlyAppsWithLaunchIntent && packageManager.getLaunchIntentForPackage(packageInfo.packageName) == null) {
-            continue
+
+        // Only check launch intent if requested
+        if (onlyAppsWithLaunchIntent) {
+            val launchIntent = packageManager.getLaunchIntentForPackage(packageInfo.packageName)
+            if (launchIntent == null) continue
         }
 
         val map = getAppData(packageManager, packageInfo, packageInfo.applicationInfo, includeAppIcons)
         installedApps.add(map)
     }
 
+    // ... rest of your existing code to create WritableArray ...
     val installedAppsArray: WritableArray = Arguments.createArray()
 
     for (map in installedApps) {
@@ -295,7 +311,6 @@ class AlphadexScreentimeModule(reactContext: ReactApplicationContext) : ReactCon
       }
       installedAppsArray.pushMap(writableMap)
     }
-
     promise.resolve(installedAppsArray)
   }
 

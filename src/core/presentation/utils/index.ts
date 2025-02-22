@@ -1,5 +1,6 @@
 import {Dimensions, Platform} from 'react-native';
 import {check, PERMISSIONS, request, RESULTS} from 'react-native-permissions';
+import {AppEntity} from 'src/lesson/domain/entities/AppEntity';
 
 export * from './assets';
 
@@ -113,5 +114,13 @@ export const splitChineseWithFilter = (sentence: string): string[] => {
       /\p{Script=Han}/u.test(char) || // Keep Chinese characters
       /\p{N}/u.test(char) || // Keep numbers
       /\p{L}/u.test(char), // Keep letters
+  );
+};
+/**
+ * Sorts an array of AppEntity objects alphabetically by app_name (case insensitive)
+ */
+export const sortAppsByName = (apps: AppEntity[]): AppEntity[] => {
+  return [...apps].sort((a, b) =>
+    a.app_name.localeCompare(b.app_name, undefined, {sensitivity: 'base'}),
   );
 };

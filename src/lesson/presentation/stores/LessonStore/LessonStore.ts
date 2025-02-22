@@ -22,7 +22,7 @@ import Toast from 'react-native-toast-message';
 import PostUserProgressUseCase from 'src/lesson/application/useCases/PostUserProgressUseCase';
 import {TResult} from '../../screens/LessonScreen';
 import GetUserSettingUseCase from 'src/lesson/application/useCases/GetUserSettingUseCase';
-import {isAndroid} from 'src/core/presentation/utils';
+import {isAndroid, sortAppsByName} from 'src/core/presentation/utils';
 import {AppCategoryE} from 'src/core/domain/enums/AppCategoryE';
 import GetReportProgressChildrenUseCase from 'src/lesson/application/useCases/GetReportProgressChildrenUsecase';
 import ReportProgressChildrenPayload from 'src/lesson/application/types/ReportProgressChildrenPayload';
@@ -217,7 +217,7 @@ export class LessonStore {
   changeListAppSystem = async () => {
     getInstalledApps().then(apps => {
       runInAction(() => {
-        this.listAppsSystem = [...apps];
+        this.listAppsSystem = sortAppsByName([...apps]);
       });
       return apps;
     });
