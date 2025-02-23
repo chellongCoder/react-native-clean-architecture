@@ -219,7 +219,7 @@ const ScienceLesson = ({
             }}
             learningTimer={learningTimer}
             isSelectOne
-            // ref={answerRef}
+            ref={answerRef}
           />
 
           <PrimaryButton

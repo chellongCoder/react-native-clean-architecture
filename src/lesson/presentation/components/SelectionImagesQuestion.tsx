@@ -92,7 +92,7 @@ const SelectionImagesQuestion: ForwardRefRenderFunction<
             !isKeyboard
               ? isShowCorrectContainer && !isAnswerCorrect
                 ? '#F28759'
-                : '#66C270'
+                : COLORS.GREEN_66C270
               : '#F2B559';
           const length = answers?.length ?? 2;
           const size =
@@ -107,7 +107,12 @@ const SelectionImagesQuestion: ForwardRefRenderFunction<
               style={[
                 styles.boxVowel,
                 {
-                  backgroundColor: bg,
+                  borderColor: bg,
+                  backgroundColor:
+                    bg === COLORS.GREEN_66C270
+                      ? COLORS.GREEN_66C270
+                      : COLORS.TRANSPARENT,
+                  borderWidth: 2,
                   width: size,
                   margin: scale(8), // Add spacing for clarity
                 },

@@ -100,7 +100,8 @@ const ListLesson = () => {
       const index = data.findIndex(e => e._id === rootSubject?._id);
       carouselRef.current.snapToItem(index);
     }, 1000);
-  }, [data, rootSubject]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <View style={styles.container}>

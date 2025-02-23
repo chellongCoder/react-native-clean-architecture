@@ -21,7 +21,6 @@ import useAuthenticationStore from 'src/authentication/presentation/stores/useAu
 import Toast from 'react-native-toast-message';
 import {scale} from 'react-native-size-matters';
 import useGlobalStyle from 'src/core/presentation/hooks/useGlobalStyle';
-import {TouchableWithoutFeedback} from 'react-native-gesture-handler';
 import {useLoadingGlobal} from 'src/core/presentation/hooks/loading/useLoadingGlobal';
 
 interface FeedbackPopupProps {

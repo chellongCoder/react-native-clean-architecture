@@ -20,6 +20,7 @@ interface SelectionAnswersQuestionProps {
   isKeyboard?: boolean;
   isSelectOne?: boolean;
   contentAnswer?: (e: string) => React.ReactNode;
+  fontFamily?: FontFamily;
 }
 
 export interface SelectionAnswersQuestionRef {
@@ -42,6 +43,7 @@ const SelectionAnswersQuestion: ForwardRefRenderFunction<
     isKeyboard,
     isSelectOne,
     contentAnswer,
+    fontFamily,
   } = props;
 
   const [answerSelected, setAnswerSelected] = useState<string[]>([]);
@@ -110,7 +112,7 @@ const SelectionAnswersQuestion: ForwardRefRenderFunction<
                 },
               ]}>
               {contentAnswer?.(e) ?? (
-                <Text style={[styles.textVowel]}>
+                <Text style={[styles.textVowel, fontFamily && {fontFamily}]}>
                   {e
                     .replace(/\s*-\s*/, '')
                     .replace(/\s+/g, '\n')

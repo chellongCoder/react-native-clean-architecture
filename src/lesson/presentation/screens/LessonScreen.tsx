@@ -62,6 +62,8 @@ import Math_MG5M18 from './LessonComponent/Math_MG5M18';
 import Math_MG6M15 from './LessonComponent/Math_MG6M15';
 import Math_Kindergarten from './LessonComponent/Math_Kindergarten';
 import Science_G0M1 from './LessonComponent/Science_G0M1';
+import Science_SG1M2 from './LessonComponent/Science_SG1M2';
+import Science_SG2M4 from './LessonComponent/Science_SG2M4';
 
 export enum MathQuestionType {
   MATH_TEXT = 'math_text',
@@ -125,6 +127,9 @@ export enum LanguageE {
 export enum ScienceE {
   SCIENCE_G0M1 = 'SCIENCE_SG0M1',
   SCIENCE_G0M2 = 'SCIENCE_SG0M2',
+
+  SCIENCE_SG1M2 = 'SCIENCE_SG1M2',
+  SCIENCE_SG2M4 = 'SCIENCE_SG2M4',
 }
 export enum LessonTypeE {
   TEXT = 'text',
@@ -1060,6 +1065,50 @@ const LessonScreen = observer(() => {
             characterImageFail={
               env.IMAGE_BACKGROUND_BASE_API_URL + lessonSetting?.figureFailImage
             }
+          />
+        );
+      case ScienceE.SCIENCE_SG1M2:
+        return (
+          <Science_SG1M2
+            moduleIndex={lessonIndex}
+            nextModule={nextModule}
+            totalModule={testTask?.question.length ?? 0}
+            lessonName={route.lessonName}
+            moduleName={route.moduleName}
+            firstMiniTestTask={testTask}
+            backgroundImage={
+              env.IMAGE_BACKGROUND_BASE_API_URL + lessonSetting?.backgroundImage
+            }
+            characterImageSuccess={
+              env.IMAGE_BACKGROUND_BASE_API_URL +
+              lessonSetting?.figureSuccessImage
+            }
+            characterImageFail={
+              env.IMAGE_BACKGROUND_BASE_API_URL + lessonSetting?.figureFailImage
+            }
+            ref={vowelRef}
+          />
+        );
+      case ScienceE.SCIENCE_SG2M4:
+        return (
+          <Science_SG2M4
+            moduleIndex={lessonIndex}
+            nextModule={nextModule}
+            totalModule={testTask?.question.length ?? 0}
+            lessonName={route.lessonName}
+            moduleName={route.moduleName}
+            firstMiniTestTask={testTask}
+            backgroundImage={
+              env.IMAGE_BACKGROUND_BASE_API_URL + lessonSetting?.backgroundImage
+            }
+            characterImageSuccess={
+              env.IMAGE_BACKGROUND_BASE_API_URL +
+              lessonSetting?.figureSuccessImage
+            }
+            characterImageFail={
+              env.IMAGE_BACKGROUND_BASE_API_URL + lessonSetting?.figureFailImage
+            }
+            ref={vowelRef}
           />
         );
       /**----------------------
