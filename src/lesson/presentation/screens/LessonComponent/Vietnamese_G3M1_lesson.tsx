@@ -47,7 +47,7 @@ type Props = {
   characterImageFail?: string;
 };
 
-const VnG2M8Lesson = observer(
+const VnG3M1Lesson = observer(
   forwardRef<LessonRef, Props>(
     (
       {
@@ -195,8 +195,8 @@ const VnG2M8Lesson = observer(
           buildQuestion={
             <View
               style={{
-                width: scale(200),
-                marginTop: verticalScale(50),
+                width: scale(220),
+                marginTop: verticalScale(40),
               }}>
               <Text style={[styles.fonts_SVN_Cherish, styles.textQuestion]}>
                 {firstMiniTestTask?.question?.[moduleIndex].paragraph}
@@ -254,7 +254,7 @@ const VnG2M8Lesson = observer(
   ),
 );
 
-export default VnG2M8Lesson;
+export default VnG3M1Lesson;
 
 const styles = StyleSheet.create({
   fill: {
@@ -267,8 +267,8 @@ const styles = StyleSheet.create({
     color: '#1C6349',
   },
   textQuestion: {
-    fontSize: verticalScale(18),
-    textAlign: 'center',
+    fontSize: verticalScale(15),
+    textAlign: 'left',
     color: COLORS.BLUE_258F78,
   },
   textGreen: {

@@ -69,6 +69,7 @@ import Science_SG5M5 from './LessonComponent/Science_SG5M5';
 import Science_SG3M9 from './LessonComponent/Science_SG3M9';
 import VnG1M3Lesson from './LessonComponent/Vietnamese_VNG1M3_Lesson';
 import VnG2M8Lesson from './LessonComponent/Vietnamese_G2M8_lesson';
+import VnG3M1Lesson from './LessonComponent/Vietnamese_G3M1_lesson';
 
 export enum MathQuestionType {
   MATH_TEXT = 'math_text',
@@ -130,6 +131,7 @@ export enum LanguageE {
 
   VIETNAMESE_VNG1M3 = 'VIETNAMESE_VNG1M3',
   VIETNAMESE_VNG2M8 = 'VIETNAMESE_VNG2M8',
+  VIETNAMESE_VNG3M1 = 'VIETNAMESE_VNG3M1',
 }
 
 export enum ScienceE {
@@ -1032,6 +1034,28 @@ const LessonScreen = observer(() => {
       case LanguageE.VIETNAMESE_VNG2M8:
         return (
           <VnG2M8Lesson
+            moduleIndex={lessonIndex}
+            nextModule={nextModule}
+            totalModule={testTask?.question.length ?? 0}
+            lessonName={route.lessonName}
+            moduleName={route.moduleName}
+            firstMiniTestTask={testTask}
+            backgroundImage={
+              env.IMAGE_BACKGROUND_BASE_API_URL + lessonSetting?.backgroundImage
+            }
+            characterImageSuccess={
+              env.IMAGE_BACKGROUND_BASE_API_URL +
+              lessonSetting?.figureSuccessImage
+            }
+            characterImageFail={
+              env.IMAGE_BACKGROUND_BASE_API_URL + lessonSetting?.figureFailImage
+            }
+            ref={vowelRef}
+          />
+        );
+      case LanguageE.VIETNAMESE_VNG3M1:
+        return (
+          <VnG3M1Lesson
             moduleIndex={lessonIndex}
             nextModule={nextModule}
             totalModule={testTask?.question.length ?? 0}
