@@ -99,6 +99,8 @@ const SelectionAnswersQuestion: ForwardRefRenderFunction<
               ? (WIDTH_SCREEN - scale(100)) / Math.ceil(length / 2)
               : WIDTH_SCREEN - scale(50);
 
+          const minHeight = answer.length === 3 ? scale(44) : scale(56);
+
           return (
             <TouchableOpacity
               key={i}
@@ -106,6 +108,7 @@ const SelectionAnswersQuestion: ForwardRefRenderFunction<
               style={[
                 styles.boxVowel,
                 {
+                  minHeight,
                   backgroundColor: bg,
                   width: size,
                   margin: scale(8), // Add spacing for clarity

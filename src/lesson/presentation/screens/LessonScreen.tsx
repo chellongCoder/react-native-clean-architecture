@@ -132,6 +132,9 @@ export enum LanguageE {
   VIETNAMESE_VNG1M3 = 'VIETNAMESE_VNG1M3',
   VIETNAMESE_VNG2M8 = 'VIETNAMESE_VNG2M8',
   VIETNAMESE_VNG3M1 = 'VIETNAMESE_VNG3M1',
+  VIETNAMESE_VNG4M1 = 'VIETNAMESE_VNG4M1',
+  VIETNAMESE_VNG5M1 = 'VIETNAMESE_VNG5M1',
+  VIETNAMESE_VNG6M1 = 'VIETNAMESE_VNG6M1',
 }
 
 export enum ScienceE {
@@ -1054,6 +1057,72 @@ const LessonScreen = observer(() => {
           />
         );
       case LanguageE.VIETNAMESE_VNG3M1:
+        return (
+          <VnG3M1Lesson
+            moduleIndex={lessonIndex}
+            nextModule={nextModule}
+            totalModule={testTask?.question.length ?? 0}
+            lessonName={route.lessonName}
+            moduleName={route.moduleName}
+            firstMiniTestTask={testTask}
+            backgroundImage={
+              env.IMAGE_BACKGROUND_BASE_API_URL + lessonSetting?.backgroundImage
+            }
+            characterImageSuccess={
+              env.IMAGE_BACKGROUND_BASE_API_URL +
+              lessonSetting?.figureSuccessImage
+            }
+            characterImageFail={
+              env.IMAGE_BACKGROUND_BASE_API_URL + lessonSetting?.figureFailImage
+            }
+            ref={vowelRef}
+          />
+        );
+      case LanguageE.VIETNAMESE_VNG4M1:
+        return (
+          <VnG3M1Lesson
+            moduleIndex={lessonIndex}
+            nextModule={nextModule}
+            totalModule={testTask?.question.length ?? 0}
+            lessonName={route.lessonName}
+            moduleName={route.moduleName}
+            firstMiniTestTask={testTask}
+            backgroundImage={
+              env.IMAGE_BACKGROUND_BASE_API_URL + lessonSetting?.backgroundImage
+            }
+            characterImageSuccess={
+              env.IMAGE_BACKGROUND_BASE_API_URL +
+              lessonSetting?.figureSuccessImage
+            }
+            characterImageFail={
+              env.IMAGE_BACKGROUND_BASE_API_URL + lessonSetting?.figureFailImage
+            }
+            ref={vowelRef}
+          />
+        );
+      case LanguageE.VIETNAMESE_VNG5M1:
+        return (
+          <VnG3M1Lesson
+            moduleIndex={lessonIndex}
+            nextModule={nextModule}
+            totalModule={testTask?.question.length ?? 0}
+            lessonName={route.lessonName}
+            moduleName={route.moduleName}
+            firstMiniTestTask={testTask}
+            backgroundImage={
+              env.IMAGE_BACKGROUND_BASE_API_URL + lessonSetting?.backgroundImage
+            }
+            characterImageSuccess={
+              env.IMAGE_BACKGROUND_BASE_API_URL +
+              lessonSetting?.figureSuccessImage
+            }
+            characterImageFail={
+              env.IMAGE_BACKGROUND_BASE_API_URL + lessonSetting?.figureFailImage
+            }
+            ref={vowelRef}
+          />
+        );
+      case LanguageE.VIETNAMESE_VNG6M1:
         return (
           <VnG3M1Lesson
             moduleIndex={lessonIndex}

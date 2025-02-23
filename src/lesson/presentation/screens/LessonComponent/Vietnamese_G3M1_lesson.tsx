@@ -1,3 +1,5 @@
+/* eslint-disable react-native/no-inline-styles */
+/* eslint-disable react/no-unstable-nested-components */
 import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import React, {
   forwardRef,
@@ -143,6 +145,17 @@ const VnG3M1Lesson = observer(
         }
       }, [onSpeechText, focus]); // Added focus to the dependency array
 
+      const splitTextContent = (data: string) => {
+        const content = firstMiniTestTask?.question?.[moduleIndex].content;
+        const list = ` ${data} `.split(content ?? '-.-');
+        return list.flatMap((e, i) => {
+          if (i === list.length - 1) {
+            return e;
+          }
+          return [e, content];
+        });
+      };
+
       useEffect(() => {
         opacity.value = withTiming(0, {duration: 500}, () => {
           opacity.value = withTiming(1, {duration: 500});
@@ -199,7 +212,22 @@ const VnG3M1Lesson = observer(
                 marginTop: verticalScale(40),
               }}>
               <Text style={[styles.fonts_SVN_Cherish, styles.textQuestion]}>
-                {firstMiniTestTask?.question?.[moduleIndex].paragraph}
+                {splitTextContent(
+                  firstMiniTestTask?.question?.[moduleIndex].paragraph ?? '',
+                ).map(e => {
+                  return (
+                    <Text
+                      style={{
+                        textDecorationLine:
+                          e ===
+                          firstMiniTestTask?.question?.[moduleIndex]?.content
+                            ? 'underline'
+                            : 'none',
+                      }}>
+                      {e}
+                    </Text>
+                  );
+                })}
               </Text>
             </View>
           }
@@ -212,7 +240,7 @@ const VnG3M1Lesson = observer(
                     flex: 1,
                   }}>
                   <Text style={[globalStyle.txtLabel, styles.textColor]}>
-                    {firstMiniTestTask?.question?.[moduleIndex].content}
+                    Choose correct answer
                   </Text>
                 </View>
 
@@ -225,6 +253,28 @@ const VnG3M1Lesson = observer(
               </View>
               <SelectionAnswersQuestion
                 answer={firstMiniTestTask?.question?.[moduleIndex].answers}
+                question={
+                  <Text style={[styles.textQuestion]}>
+                    {splitTextContent(
+                      firstMiniTestTask?.question?.[moduleIndex]?.description ??
+                        '',
+                    ).map(e => {
+                      return (
+                        <Text
+                          style={{
+                            fontWeight:
+                              e ===
+                              firstMiniTestTask?.question?.[moduleIndex]
+                                ?.content
+                                ? 'bold'
+                                : '400',
+                          }}>
+                          {e}
+                        </Text>
+                      );
+                    })}
+                  </Text>
+                }
                 isShowCorrectContainer={isShowCorrectContainer}
                 isAnswerCorrect={!!isAnswerCorrect}
                 onSelectAnswer={(e: string[]) => {

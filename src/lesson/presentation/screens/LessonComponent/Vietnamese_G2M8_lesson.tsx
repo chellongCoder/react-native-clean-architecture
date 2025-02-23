@@ -212,7 +212,7 @@ const VnG2M8Lesson = observer(
                     flex: 1,
                   }}>
                   <Text style={[globalStyle.txtLabel, styles.textColor]}>
-                    {firstMiniTestTask?.question?.[moduleIndex].content}
+                    Choose correct answer
                   </Text>
                 </View>
 
@@ -225,6 +225,15 @@ const VnG2M8Lesson = observer(
               </View>
               <SelectionAnswersQuestion
                 answer={firstMiniTestTask?.question?.[moduleIndex].answers}
+                question={
+                  <Text
+                    style={[
+                      styles.textQuestion,
+                      {fontSize: verticalScale(15)},
+                    ]}>
+                    {firstMiniTestTask?.question?.[moduleIndex].content}
+                  </Text>
+                }
                 isShowCorrectContainer={isShowCorrectContainer}
                 isAnswerCorrect={!!isAnswerCorrect}
                 onSelectAnswer={(e: string[]) => {
