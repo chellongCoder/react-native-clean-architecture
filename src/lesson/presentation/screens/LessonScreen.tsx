@@ -70,6 +70,9 @@ import Science_SG3M9 from './LessonComponent/Science_SG3M9';
 import VnG1M3Lesson from './LessonComponent/Vietnamese_VNG1M3_Lesson';
 import VnG2M8Lesson from './LessonComponent/Vietnamese_G2M8_lesson';
 import VnG3M1Lesson from './LessonComponent/Vietnamese_G3M1_lesson';
+import VnG0M2Lesson from './LessonComponent/Vietnamese_G0M2_lesson';
+import VnG0M3Lesson from './LessonComponent/Vietnamese_G0M3_lesson';
+import VnG0M1Lesson from './LessonComponent/Vietnamese_G0M1_Leson';
 
 export enum MathQuestionType {
   MATH_TEXT = 'math_text',
@@ -129,6 +132,9 @@ export enum LanguageE {
   MANDARIN_M0G2 = 'MANDARIN_M0G2',
   MANDARIN_M0G3 = 'MANDARIN_M0G3',
 
+  VIETNAMESE_VNG0M1 = 'VIETNAMESE_VNG0M1',
+  VIETNAMESE_VNG0M2 = 'VIETNAMESE_VNG0M2',
+  VIETNAMESE_VNG0M3 = 'VIETNAMESE_VNG0M3',
   VIETNAMESE_VNG1M3 = 'VIETNAMESE_VNG1M3',
   VIETNAMESE_VNG2M8 = 'VIETNAMESE_VNG2M8',
   VIETNAMESE_VNG3M1 = 'VIETNAMESE_VNG3M1',
@@ -994,6 +1000,72 @@ const LessonScreen = observer(() => {
       case LanguageE.MANDARIN_G1M6:
         return (
           <PronunciationLesson
+            moduleIndex={lessonIndex}
+            nextModule={nextModule}
+            totalModule={testTask?.question.length ?? 0}
+            lessonName={route.lessonName}
+            moduleName={route.moduleName}
+            firstMiniTestTask={testTask}
+            backgroundImage={
+              env.IMAGE_BACKGROUND_BASE_API_URL + lessonSetting?.backgroundImage
+            }
+            characterImageSuccess={
+              env.IMAGE_BACKGROUND_BASE_API_URL +
+              lessonSetting?.figureSuccessImage
+            }
+            characterImageFail={
+              env.IMAGE_BACKGROUND_BASE_API_URL + lessonSetting?.figureFailImage
+            }
+            ref={vowelRef}
+          />
+        );
+      case LanguageE.VIETNAMESE_VNG0M1:
+        return (
+          <VnG0M1Lesson
+            moduleIndex={lessonIndex}
+            nextModule={nextModule}
+            totalModule={testTask?.question.length ?? 0}
+            lessonName={route.lessonName}
+            moduleName={route.moduleName}
+            firstMiniTestTask={testTask}
+            backgroundImage={
+              env.IMAGE_BACKGROUND_BASE_API_URL + lessonSetting?.backgroundImage
+            }
+            characterImageSuccess={
+              env.IMAGE_BACKGROUND_BASE_API_URL +
+              lessonSetting?.figureSuccessImage
+            }
+            characterImageFail={
+              env.IMAGE_BACKGROUND_BASE_API_URL + lessonSetting?.figureFailImage
+            }
+            ref={vowelRef}
+          />
+        );
+      case LanguageE.VIETNAMESE_VNG0M2:
+        return (
+          <VnG0M2Lesson
+            moduleIndex={lessonIndex}
+            nextModule={nextModule}
+            totalModule={testTask?.question.length ?? 0}
+            lessonName={route.lessonName}
+            moduleName={route.moduleName}
+            firstMiniTestTask={testTask}
+            backgroundImage={
+              env.IMAGE_BACKGROUND_BASE_API_URL + lessonSetting?.backgroundImage
+            }
+            characterImageSuccess={
+              env.IMAGE_BACKGROUND_BASE_API_URL +
+              lessonSetting?.figureSuccessImage
+            }
+            characterImageFail={
+              env.IMAGE_BACKGROUND_BASE_API_URL + lessonSetting?.figureFailImage
+            }
+            ref={vowelRef}
+          />
+        );
+      case LanguageE.VIETNAMESE_VNG0M3:
+        return (
+          <VnG0M3Lesson
             moduleIndex={lessonIndex}
             nextModule={nextModule}
             totalModule={testTask?.question.length ?? 0}
