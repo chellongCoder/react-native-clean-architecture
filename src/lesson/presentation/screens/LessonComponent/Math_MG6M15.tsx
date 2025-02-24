@@ -118,9 +118,16 @@ const Math_MG6M15 = observer(
           : characterImageFail;
       }, [characterImageFail, characterImageSuccess, isAnswerCorrect]);
 
+      const questionType = useMemo(() => {
+        const contentWords =
+          firstMiniTestTask?.question?.[moduleIndex]?.content?.split(' ');
+        return contentWords ? contentWords[contentWords.length - 1] : '';
+      }, [firstMiniTestTask?.question, moduleIndex]);
+
       const descriptionWithAnswers = useMemo(() => {
         const contentWords =
-          firstMiniTestTask?.question?.[moduleIndex]?.content.split(' ');
+          firstMiniTestTask?.question?.[moduleIndex]?.content?.split(' ');
+        firstMiniTestTask?.question?.[moduleIndex]?.content.split(' ');
 
         return answerSelected?.length > 0 && contentWords
           ? (Array.isArray(answerSelected)
@@ -223,6 +230,21 @@ const Math_MG6M15 = observer(
                     firstMiniTestTask?.question?.[moduleIndex].image,
                 }}
               />
+              <View style={styles.wrapQuestionContainer}>
+                <Text
+                  style={[
+                    styles.fonts_SVN_Neu,
+                    {
+                      fontSize: 11,
+                      fontWeight: 'bold',
+                      color: COLORS.BLUE_1F78A9,
+                    },
+                  ]}>
+                  {firstMiniTestTask?.question?.[
+                    moduleIndex
+                  ].instruction.toString()}
+                </Text>
+              </View>
             </View>
           }
           buildAnswer={
@@ -247,7 +269,12 @@ const Math_MG6M15 = observer(
               </View>
               <KeyboardNumber
                 question={
-                  <View style={styles.wrapAnswerContainer}>
+                  <View
+                    style={
+                      questionType === 'cm'
+                        ? styles.wrapAnswerContainer
+                        : styles.wrapAreaAnswerContainer
+                    }>
                     <Text
                       style={[
                         styles.fonts_SVN_Cherish,
@@ -297,7 +324,7 @@ const styles = StyleSheet.create({
     fontFamily: FontFamily.SVNCherishMoment,
   },
   fonts_SVN_Neu: {
-    fontFamily: FontFamily.SVNNeuzeitRegular,
+    fontFamily: FontFamily.SVNNeuzeitBold,
   },
   textColor: {
     color: '#1C6349',
@@ -415,10 +442,24 @@ const styles = StyleSheet.create({
     backgroundColor: '#0877B6',
   },
   wrapAnswerContainer: {
-    backgroundColor: COLORS.BLUE_93F6E1,
     borderRadius: 16,
-    borderWidth: 1,
+    borderWidth: 3,
     borderColor: COLORS.BLUE_4552C8,
     padding: 16,
+  },
+  wrapAreaAnswerContainer: {
+    backgroundColor: COLORS.BLUE_93F6E1,
+    padding: 16,
+    borderRadius: 16,
+  },
+  wrapQuestionContainer: {
+    padding: 16,
+    borderTopLeftRadius: 16,
+    borderTopRightRadius: 16,
+    borderBottomRightRadius: 16,
+    backgroundColor: COLORS.WHITE_FBF8CC,
+    marginTop: 16,
+    alignSelf: 'flex-start',
+    marginLeft: 110,
   },
 });

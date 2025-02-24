@@ -50,4 +50,5 @@ export const COLORS = {
   BLUE_0877B6: '#0877B6',
   BLUE_93F6E1: '#93F6E1',
   BLUE_4552C8: '#4552C8',
+  BLUE_1F78A9: '#1F78A9',
 };
