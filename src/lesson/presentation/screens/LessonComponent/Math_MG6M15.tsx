@@ -118,9 +118,16 @@ const Math_MG6M15 = observer(
           : characterImageFail;
       }, [characterImageFail, characterImageSuccess, isAnswerCorrect]);
 
+      const questionType = useMemo(() => {
+        const contentWords =
+          firstMiniTestTask?.question?.[moduleIndex]?.content?.split(' ');
+        return contentWords ? contentWords[contentWords.length - 1] : '';
+      }, [firstMiniTestTask?.question, moduleIndex]);
+
       const descriptionWithAnswers = useMemo(() => {
         const contentWords =
-          firstMiniTestTask?.question?.[moduleIndex]?.content.split(' ');
+          firstMiniTestTask?.question?.[moduleIndex]?.content?.split(' ');
+        firstMiniTestTask?.question?.[moduleIndex]?.content.split(' ');
 
         return answerSelected?.length > 0 && contentWords
           ? (Array.isArray(answerSelected)
@@ -262,7 +269,12 @@ const Math_MG6M15 = observer(
               </View>
               <KeyboardNumber
                 question={
-                  <View style={styles.wrapAnswerContainer}>
+                  <View
+                    style={
+                      questionType === 'cm'
+                        ? styles.wrapAnswerContainer
+                        : styles.wrapAreaAnswerContainer
+                    }>
                     <Text
                       style={[
                         styles.fonts_SVN_Cherish,
@@ -430,11 +442,15 @@ const styles = StyleSheet.create({
     backgroundColor: '#0877B6',
   },
   wrapAnswerContainer: {
-    backgroundColor: COLORS.BLUE_93F6E1,
     borderRadius: 16,
-    borderWidth: 1,
+    borderWidth: 3,
     borderColor: COLORS.BLUE_4552C8,
     padding: 16,
+  },
+  wrapAreaAnswerContainer: {
+    backgroundColor: COLORS.BLUE_93F6E1,
+    padding: 16,
+    borderRadius: 16,
   },
   wrapQuestionContainer: {
     padding: 16,
