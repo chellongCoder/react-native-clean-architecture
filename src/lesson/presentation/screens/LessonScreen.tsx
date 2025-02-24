@@ -64,6 +64,9 @@ import Math_Kindergarten from './LessonComponent/Math_Kindergarten';
 import Science_G0M1 from './LessonComponent/Science_G0M1';
 import Science_SG1M2 from './LessonComponent/Science_SG1M2';
 import Science_SG2M4 from './LessonComponent/Science_SG2M4';
+import Science_SG4M3 from './LessonComponent/Science_SG4M3';
+import Science_SG5M5 from './LessonComponent/Science_SG5M5';
+import Science_SG3M9 from './LessonComponent/Science_SG3M9';
 
 export enum MathQuestionType {
   MATH_TEXT = 'math_text',
@@ -130,6 +133,10 @@ export enum ScienceE {
 
   SCIENCE_SG1M2 = 'SCIENCE_SG1M2',
   SCIENCE_SG2M4 = 'SCIENCE_SG2M4',
+  SCIENCE_SG3M9 = 'SCIENCE_SG3M9',
+  SCIENCE_SG4M3 = 'SCIENCE_SG4M3',
+  SCIENCE_SG5M5 = 'SCIENCE_SG5M5',
+  SCIENCE_SG6M6 = 'SCIENCE_SG6M3',
 }
 export enum LessonTypeE {
   TEXT = 'text',
@@ -1111,6 +1118,74 @@ const LessonScreen = observer(() => {
             ref={vowelRef}
           />
         );
+      case ScienceE.SCIENCE_SG3M9:
+        return (
+          <Science_SG3M9
+            moduleIndex={lessonIndex}
+            nextModule={nextModule}
+            totalModule={testTask?.question.length ?? 0}
+            lessonName={route.lessonName}
+            moduleName={route.moduleName}
+            firstMiniTestTask={testTask}
+            backgroundImage={
+              env.IMAGE_BACKGROUND_BASE_API_URL + lessonSetting?.backgroundImage
+            }
+            characterImageSuccess={
+              env.IMAGE_BACKGROUND_BASE_API_URL +
+              lessonSetting?.figureSuccessImage
+            }
+            characterImageFail={
+              env.IMAGE_BACKGROUND_BASE_API_URL + lessonSetting?.figureFailImage
+            }
+            ref={vowelRef}
+          />
+        );
+      case ScienceE.SCIENCE_SG4M3:
+        return (
+          <Science_SG4M3
+            moduleIndex={lessonIndex}
+            nextModule={nextModule}
+            totalModule={testTask?.question.length ?? 0}
+            lessonName={route.lessonName}
+            moduleName={route.moduleName}
+            firstMiniTestTask={testTask}
+            backgroundImage={
+              env.IMAGE_BACKGROUND_BASE_API_URL + lessonSetting?.backgroundImage
+            }
+            characterImageSuccess={
+              env.IMAGE_BACKGROUND_BASE_API_URL +
+              lessonSetting?.figureSuccessImage
+            }
+            characterImageFail={
+              env.IMAGE_BACKGROUND_BASE_API_URL + lessonSetting?.figureFailImage
+            }
+            ref={vowelRef}
+          />
+        );
+      case ScienceE.SCIENCE_SG5M5:
+      case ScienceE.SCIENCE_SG6M6:
+        return (
+          <Science_SG5M5
+            moduleIndex={lessonIndex}
+            nextModule={nextModule}
+            totalModule={testTask?.question.length ?? 0}
+            lessonName={route.lessonName}
+            moduleName={route.moduleName}
+            firstMiniTestTask={testTask}
+            backgroundImage={
+              env.IMAGE_BACKGROUND_BASE_API_URL + lessonSetting?.backgroundImage
+            }
+            characterImageSuccess={
+              env.IMAGE_BACKGROUND_BASE_API_URL +
+              lessonSetting?.figureSuccessImage
+            }
+            characterImageFail={
+              env.IMAGE_BACKGROUND_BASE_API_URL + lessonSetting?.figureFailImage
+            }
+            ref={vowelRef}
+          />
+        );
+
       /**----------------------
        *todo    các question cho môn toán
        *------------------------**/

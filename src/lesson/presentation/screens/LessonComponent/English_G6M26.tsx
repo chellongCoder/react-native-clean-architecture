@@ -193,7 +193,7 @@ const English_G6M26 = observer(
           }
           prompt={
             firstMiniTestTask?.question?.[moduleIndex]?.instruction ?? {
-              descrption: settings.prompt?.toString() ?? '',
+              description: settings.prompt?.toString() ?? '',
             }
           }
           price="Free"

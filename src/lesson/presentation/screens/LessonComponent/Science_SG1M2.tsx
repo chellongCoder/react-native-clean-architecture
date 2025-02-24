@@ -194,7 +194,7 @@ const Science_SG1M2 = observer(
           }
           prompt={
             firstMiniTestTask?.question?.[moduleIndex]?.instruction ?? {
-              descrption: settings.prompt?.toString() ?? '',
+              description: settings.prompt?.toString() ?? '',
             }
           }
           price="Free"

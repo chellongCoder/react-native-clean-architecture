@@ -187,7 +187,7 @@ const Mandarin_G1M5 = observer(
           }
           prompt={
             firstMiniTestTask?.question?.[moduleIndex]?.instruction ?? {
-              descrption: settings.prompt?.toString() ?? '',
+              description: settings.prompt?.toString() ?? '',
             }
           }
           price="Free"

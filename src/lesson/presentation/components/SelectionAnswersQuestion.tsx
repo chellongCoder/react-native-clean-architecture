@@ -115,7 +115,7 @@ const SelectionAnswersQuestion: ForwardRefRenderFunction<
                 <Text style={[styles.textVowel, fontFamily && {fontFamily}]}>
                   {e
                     .replace(/\s*-\s*/, '')
-                    .replace(/\s+/g, '\n')
+                    .replace(/(?<!\S)\s+(?!\S)/g, '\n')
                     .trim()}
                 </Text>
               )}

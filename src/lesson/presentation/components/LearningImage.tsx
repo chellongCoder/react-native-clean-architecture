@@ -1,5 +1,11 @@
 import React, {useState, useEffect} from 'react';
-import {Image, TouchableOpacity, View} from 'react-native';
+import {
+  Image,
+  StyleProp,
+  TouchableOpacity,
+  View,
+  ViewStyle,
+} from 'react-native';
 import {scale} from 'react-native-size-matters';
 import {coreModuleContainer} from 'src/core/CoreModule';
 import Env, {EnvToken} from 'src/core/domain/entities/Env';
@@ -8,9 +14,13 @@ import {WIDTH_SCREEN} from 'src/core/presentation/utils';
 
 interface ImageCarouselProps {
   images: string[];
+  styleContainer?: StyleProp<ViewStyle>;
 }
 
-const LearningImage: React.FC<ImageCarouselProps> = ({images}) => {
+const LearningImage: React.FC<ImageCarouselProps> = ({
+  images,
+  styleContainer,
+}) => {
   const env = coreModuleContainer.getProvided<Env>(EnvToken); // Instantiate CoreService
 
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -18,7 +28,7 @@ const LearningImage: React.FC<ImageCarouselProps> = ({images}) => {
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentIndex(prevIndex => (prevIndex + 1) % images.length);
-    }, 5000 / 3); // Change image every 1 second
+    }, 5000 / images.length); // Change image every 1 second
 
     return () => clearInterval(interval); // Cleanup interval on component unmount
   }, [images.length]);
@@ -26,16 +36,19 @@ const LearningImage: React.FC<ImageCarouselProps> = ({images}) => {
   return (
     <TouchableOpacity
       activeOpacity={1}
-      style={{
-        borderWidth: 5,
-        backgroundColor: COLORS.CUSTOM(COLORS.WHITE_FBF8CC, 0.2),
-        borderStyle: 'dashed',
-        width: scale(150),
-        height: scale(150),
-        borderRadius: scale(20),
-        borderColor: COLORS.YELLOW_F2B559,
-        overflow: 'hidden',
-      }}>
+      style={[
+        {
+          borderWidth: 5,
+          backgroundColor: COLORS.CUSTOM(COLORS.WHITE_FBF8CC, 0.2),
+          borderStyle: 'dashed',
+          width: scale(150),
+          aspectRatio: 1,
+          borderRadius: scale(20),
+          borderColor: COLORS.YELLOW_F2B559,
+          overflow: 'hidden',
+        },
+        styleContainer,
+      ]}>
       <Image
         resizeMode={'contain'}
         width={WIDTH_SCREEN}

@@ -197,7 +197,7 @@ const Math_MG6M15 = observer(
           backgroundAnswerColor={settings.backgroundAnswerColor}
           prompt={
             firstMiniTestTask?.question?.[moduleIndex]?.instruction ?? {
-              descrption: settings.prompt?.toString() ?? '',
+              description: settings.prompt?.toString() ?? '',
             }
           }
           score={selectedChild?.adsPoints}

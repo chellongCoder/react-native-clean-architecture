@@ -74,9 +74,7 @@ const Science_SG2M4 = observer(
       const focus = useIsFocused();
       const answerRef = useRef<SelectionAnswersQuestionRef>();
 
-      const [answerSelected, setAnswerSelected] = useState<string | string[]>(
-        '',
-      );
+      const [answerSelected, setAnswerSelected] = useState<string>('');
 
       const {trainingCount, getSetting} = useLessonStore();
 
@@ -93,13 +91,14 @@ const Science_SG2M4 = observer(
         resetLearning,
       } = useSettingLesson({
         countDownTime: trainingCount <= 2 ? 0 : 5,
-        isCorrectAnswer: isSubArray(
-          answerSelected as string[],
-          firstMiniTestTask?.question?.[moduleIndex]?.correctAnswer as string[],
-        ),
+        isCorrectAnswer:
+          answerSelected.trim().toLocaleLowerCase() ===
+          (firstMiniTestTask?.question?.[moduleIndex]?.correctAnswer as string)
+            .trim()
+            .toLocaleLowerCase(),
         onSubmit: () => {
           setAnswerSelected('');
-          nextModule((answerSelected as string[]).toString());
+          nextModule(answerSelected.toString());
           answerRef.current?.resetAnswerSelected?.();
         },
         fullAnswer: firstMiniTestTask?.question?.[moduleIndex].fullAnswer,
@@ -193,7 +192,7 @@ const Science_SG2M4 = observer(
           }
           prompt={
             firstMiniTestTask?.question?.[moduleIndex]?.instruction ?? {
-              descrption: settings.prompt?.toString() ?? '',
+              description: settings.prompt?.toString() ?? '',
             }
           }
           price="Free"
@@ -260,7 +259,7 @@ const Science_SG2M4 = observer(
                 isShowCorrectContainer={isShowCorrectContainer}
                 isAnswerCorrect={!!isAnswerCorrect}
                 onSelectAnswer={(e: string[]) => {
-                  setAnswerSelected(e);
+                  setAnswerSelected(e?.[0]);
                 }}
                 learningTimer={learningTimer}
                 fontFamily={FontFamily.SVNCherishMoment}

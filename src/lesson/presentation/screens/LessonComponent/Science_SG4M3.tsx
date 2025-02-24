@@ -6,6 +6,7 @@ import React, {
   useEffect,
   useImperativeHandle,
   useMemo,
+  useRef,
   useState,
 } from 'react';
 import LessonComponent from './LessonComponent';
@@ -14,7 +15,12 @@ import {FontFamily} from 'src/core/presentation/hooks/useFonts';
 import useGlobalStyle from 'src/core/presentation/hooks/useGlobalStyle';
 import {Task} from 'src/home/application/types/GetListQuestionResponse';
 import {COLORS} from 'src/core/presentation/constants/colors';
-import {getCorrectAnswer, WIDTH_SCREEN} from 'src/core/presentation/utils';
+import {
+  getCorrectAnswer,
+  isMMSS,
+  isSubArray,
+  WIDTH_SCREEN,
+} from 'src/core/presentation/utils';
 import {scale, verticalScale} from 'react-native-size-matters';
 import Animated, {
   Easing,
@@ -31,6 +37,9 @@ import useAuthenticationStore from 'src/authentication/presentation/stores/useAu
 import {observer} from 'mobx-react';
 import {LessonRef} from '../../types';
 import useHomeStore from 'src/home/presentation/stores/useHomeStore';
+import SelectionAnswersQuestion, {
+  SelectionAnswersQuestionRef,
+} from '../../components/SelectionAnswersQuestion';
 
 type Props = {
   moduleIndex: number;
@@ -44,7 +53,7 @@ type Props = {
   characterImageFail?: string;
 };
 
-const VowelsLesson = observer(
+const Science_SG4M3 = observer(
   forwardRef<LessonRef, Props>(
     (
       {
@@ -64,11 +73,44 @@ const VowelsLesson = observer(
 
       const {ttsSpeak} = useContext(TextToSpeechContext);
       const focus = useIsFocused();
+      const answerRef = useRef<SelectionAnswersQuestionRef>();
 
-      const [answerSelected, setAnswerSelected] = useState('');
+      const [answerSelected, setAnswerSelected] = useState<string>('');
+
       const {trainingCount, getSetting} = useLessonStore();
 
       const {selectedChild} = useAuthenticationStore();
+
+      const isCorrectAnswer = useMemo(() => {
+        if (
+          typeof firstMiniTestTask?.question?.[moduleIndex]?.correctAnswer ===
+          'string'
+        ) {
+          return (
+            answerSelected.toLocaleLowerCase() ===
+            getCorrectAnswer(
+              firstMiniTestTask?.question?.[moduleIndex]?.correctAnswer,
+            ).toLocaleLowerCase()
+          );
+        } else if (
+          typeof firstMiniTestTask?.question?.[moduleIndex]?.correctAnswer ===
+          'object'
+        ) {
+          return firstMiniTestTask?.question?.[
+            moduleIndex
+          ]?.correctAnswer?.some((item: string) => {
+            return (
+              answerSelected.toLocaleLowerCase() === item.toLocaleLowerCase()
+            );
+          });
+        }
+        return (
+          answerSelected.toLocaleLowerCase() ===
+          getCorrectAnswer(
+            firstMiniTestTask?.question?.[moduleIndex]?.correctAnswer,
+          ).toLocaleLowerCase()
+        );
+      }, [answerSelected, firstMiniTestTask?.question, moduleIndex]);
 
       const {
         isAnswerCorrect,
@@ -81,14 +123,11 @@ const VowelsLesson = observer(
         resetLearning,
       } = useSettingLesson({
         countDownTime: trainingCount <= 2 ? 0 : 5,
-        isCorrectAnswer:
-          answerSelected ===
-          getCorrectAnswer(
-            firstMiniTestTask?.question?.[moduleIndex]?.correctAnswer,
-          ),
+        isCorrectAnswer: !!isCorrectAnswer,
         onSubmit: () => {
           setAnswerSelected('');
-          nextModule(answerSelected);
+          nextModule(answerSelected.toString());
+          answerRef.current?.resetAnswerSelected?.();
         },
         fullAnswer: firstMiniTestTask?.question?.[moduleIndex].fullAnswer,
       });
@@ -106,12 +145,8 @@ const VowelsLesson = observer(
       }, [characterImageFail, characterImageSuccess, isAnswerCorrect]);
 
       const onSpeechText = useCallback(() => {
-        ttsSpeak?.(
-          firstMiniTestTask?.question?.[moduleIndex].fullAnswer
-            .toString()
-            .toLowerCase() ?? '',
-        );
-      }, [firstMiniTestTask?.question, moduleIndex, ttsSpeak]);
+        ttsSpeak?.('');
+      }, [ttsSpeak]);
 
       const opacity = useSharedValue(0);
       const scaleS = useSharedValue(1);
@@ -190,19 +225,21 @@ const VowelsLesson = observer(
           }
           price="Free"
           score={selectedChild?.adsPoints}
+          txtCountDown={word && !isMMSS(word) ? undefined : word}
           isAnswerCorrect={isAnswerCorrect}
           isShowCorrectContainer={isShowCorrectContainer}
           onPressFlower={toggleShowHint}
           buildQuestion={
             <View>
-              <Text style={[styles.fonts_SVN_Cherish, styles.textQuestion]}>
-                {word}
-              </Text>
               <Animated.Image
                 resizeMode={'contain'}
-                width={WIDTH_SCREEN}
-                height={scale(200)}
-                style={[{}, animatedStyle]}
+                style={[
+                  {
+                    width: WIDTH_SCREEN,
+                    aspectRatio: 1.5,
+                  },
+                  animatedStyle,
+                ]}
                 source={{
                   uri:
                     env.IMAGE_QUESTION_BASE_API_URL +
@@ -231,92 +268,41 @@ const VowelsLesson = observer(
                   />
                 </TouchableOpacity>
               </View>
-              <View style={[styles.boxSelected]}>
-                <View style={styles.wrapCharContainer}>
-                  {firstMiniTestTask?.question?.[moduleIndex]?.content
-                    .split('')
-                    .map(char => {
-                      if (char === '_' && answerSelected) {
-                        return (
-                          <Text
-                            style={[
-                              styles.fonts_SVN_Cherish,
-                              styles.textQuestion,
-                              styles.textGreen,
-                              styles.mt8,
-                              {textDecorationLine: 'underline'},
-                            ]}>
-                            {answerSelected}
-                          </Text>
-                        );
-                      }
-                      return (
-                        <Text
-                          style={[
-                            styles.fonts_SVN_Cherish,
-                            styles.textQuestion,
-                            styles.textGreen,
-                            styles.mt8,
-                          ]}>
-                          {char}
-                        </Text>
-                      );
-                    })}
-                </View>
-
-                <View style={[styles.wapper, styles.fill]}>
-                  {firstMiniTestTask?.question?.[moduleIndex]?.answers?.map(
-                    (e, i) => {
-                      const bg =
-                        e === answerSelected
-                          ? !isAnswerCorrect && isShowCorrectContainer
-                            ? '#F28759'
-                            : '#66C270'
-                          : '#F2B559';
-                      const length =
-                        firstMiniTestTask?.question?.[moduleIndex]?.answers
-                          ?.length ?? 2;
-                      const size = Math.min(
-                        (WIDTH_SCREEN - 80) / (length / 2),
-                        verticalScale(48),
-                      );
-                      return (
-                        <TouchableOpacity
-                          key={i}
-                          onPress={() => setAnswerSelected(e)}
-                          style={[
-                            styles.boxVowel,
-                            {
-                              backgroundColor: bg,
-                              height: size,
-                              width: size,
-                            },
-                          ]}>
-                          <Text style={[styles.textVowel]}>{e}</Text>
-                        </TouchableOpacity>
-                      );
-                    },
-                  )}
-                </View>
-                {learningTimer !== 0 && (
-                  <View
+              <SelectionAnswersQuestion
+                question={
+                  <Text
+                    numberOfLines={2}
+                    adjustsFontSizeToFit
+                    allowFontScaling
                     style={[
-                      styles.boxSelected,
-                      {
-                        position: 'absolute',
-                        zIndex: 999,
-                        width: '100%',
-                        opacity: 0.7,
-                        height: '100%',
-                      },
-                    ]}
-                  />
-                )}
-              </View>
+                      styles.textQuestion,
+                      styles.textGreen,
+                      styles.mt8,
+                      {fontSize: scale(24)},
+                    ]}>
+                    {firstMiniTestTask?.question?.[moduleIndex].content}
+                  </Text>
+                }
+                answer={
+                  (firstMiniTestTask?.question?.[moduleIndex]
+                    .answers as string[]) ?? []
+                }
+                isShowCorrectContainer={isShowCorrectContainer}
+                isAnswerCorrect={!!isAnswerCorrect}
+                onSelectAnswer={(e: string[]) => {
+                  setAnswerSelected(e[0]);
+                }}
+                learningTimer={learningTimer}
+                fontFamily={FontFamily.SVNCherishMoment}
+                ref={answerRef}
+              />
 
               <PrimaryButton
                 text="Submit"
-                style={[styles.mt24]}
+                style={[
+                  styles.buttonContainer,
+                  {backgroundColor: settings.backgroundButtonColor},
+                ]}
                 onPress={submit}
               />
             </View>
@@ -329,7 +315,7 @@ const VowelsLesson = observer(
   ),
 );
 
-export default VowelsLesson;
+export default Science_SG4M3;
 
 const styles = StyleSheet.create({
   fill: {
@@ -341,15 +327,11 @@ const styles = StyleSheet.create({
   textColor: {
     color: '#1C6349',
   },
-  textLarge: {
-    fontSize: 140,
-    textAlign: 'center',
-    color: 'white',
-  },
   textQuestion: {
-    fontSize: verticalScale(34),
-    textAlign: 'center',
+    fontSize: verticalScale(15),
+    textAlign: 'left',
     color: COLORS.BLUE_258F78,
+    marginHorizontal: scale(10),
   },
   textGreen: {
     color: '#258F78',
@@ -448,5 +430,12 @@ const styles = StyleSheet.create({
   iconImageContainer: {
     height: verticalScale(45),
     width: verticalScale(40),
+  },
+  buttonContainer: {
+    borderRadius: scale(52),
+    paddingVertical: verticalScale(9),
+    paddingHorizontal: scale(24),
+    marginTop: scale(16),
+    backgroundColor: '#0877B6',
   },
 });

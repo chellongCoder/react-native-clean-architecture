@@ -22,7 +22,7 @@ export interface Question {
 }
 
 export interface Instruction {
-  descrption: string;
+  description: string;
   number?: number;
   content?: string;
 }

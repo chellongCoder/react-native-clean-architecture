@@ -399,7 +399,7 @@ const MultiPronunciationLesson = observer(
           backgroundAnswerColor={settings.backgroundAnswerColor}
           prompt={
             firstMiniTestTask?.question?.[moduleIndex]?.instruction ?? {
-              descrption: settings.prompt?.toString() ?? '',
+              description: settings.prompt?.toString() ?? '',
             }
           }
           price="Free"

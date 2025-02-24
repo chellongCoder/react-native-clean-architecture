@@ -194,7 +194,7 @@ const LessonComponent = ({
                 </Text>
               </View>
             )}
-            {isShowPrompt && prompt?.descrption && (
+            {isShowPrompt && prompt?.description && (
               <View style={styles.wrapCorrectContainer}>
                 <View style={[{flexDirection: 'row', maxWidth: '100%'}]}>
                   {prompt.number !== undefined && (
@@ -206,7 +206,7 @@ const LessonComponent = ({
                     <Text style={[styles.promptContent]}>{prompt.content}</Text>
                   )}
                   <Text style={[styles.promptTitle, {flex: 1}]}>
-                    {prompt.descrption}
+                    {prompt.description}
                   </Text>
                 </View>
               </View>
