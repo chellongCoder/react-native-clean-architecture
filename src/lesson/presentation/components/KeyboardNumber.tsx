@@ -105,7 +105,7 @@ const KeyboardNumber: ForwardRefRenderFunction<
                   width: size,
                   height: size,
                   margin: scale(8), // Add spacing for clarity
-                  paddingHorizontal: scale(10),
+                  paddingHorizontal: scale(8),
                 },
               ]}>
               <Text style={[styles.textVowel]}>{e}</Text>

@@ -75,6 +75,7 @@ import VnG0M3Lesson from './LessonComponent/Vietnamese_G0M3_lesson';
 import VnG0M1Lesson from './LessonComponent/Vietnamese_G0M1_Leson';
 import VnG4M1Lesson from './LessonComponent/Vietnamese_G4M1_lesson';
 import VnG5M1Lesson from './LessonComponent/Vietnamese_G5M1_lesson';
+import Math_MG1M3 from './LessonComponent/Math_MG1M3';
 
 export enum MathQuestionType {
   MATH_TEXT = 'math_text',
@@ -102,7 +103,7 @@ export enum MathQuestionType {
   MathMG0M1 = 'MATH_MG0M1',
   MathMG0M2 = 'MATH_MG0M2',
   MathMG0M3 = 'MATH_MG0M3',
-  MathMG1M3 = 'Math_MG1M3',
+  MathMG1M3 = 'MATH_MG1M3',
   MathMG2M4 = 'MATH_MG2M4',
   MathMG3M8 = 'MATH_MG3M8',
   MathMG4M30 = 'MATH_MG4M30',
@@ -1429,6 +1430,30 @@ const LessonScreen = observer(() => {
             ref={vowelRef}
             isMulti={true}
             answer={['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']}
+          />
+        );
+      case MathQuestionType.MathMG1M3:
+        return (
+          <Math_MG1M3
+            moduleIndex={lessonIndex}
+            nextModule={nextModule}
+            totalModule={testTask?.question.length ?? 0}
+            lessonName={route.lessonName}
+            moduleName={route.moduleName}
+            firstMiniTestTask={testTask}
+            backgroundImage={
+              env.IMAGE_BACKGROUND_BASE_API_URL + lessonSetting?.backgroundImage
+            }
+            characterImageSuccess={
+              env.IMAGE_BACKGROUND_BASE_API_URL +
+              lessonSetting?.figureSuccessImage
+            }
+            characterImageFail={
+              env.IMAGE_BACKGROUND_BASE_API_URL + lessonSetting?.figureFailImage
+            }
+            ref={vowelRef}
+            isMulti={false}
+            answer={['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10']}
           />
         );
       case MathQuestionType.MathMG2M4:
