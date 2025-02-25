@@ -32,7 +32,10 @@ const ListGrade = forwardRef((_, ref) => {
   useEffect(() => {
     if (gradeObjs.length > 0) {
       setIndex(0);
-      setSubjectId(gradeObjs[0]._id);
+
+      setTimeout(() => {
+        setSubjectId(gradeObjs[0]._id);
+      }, 1000);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [rootSubject]);

@@ -32,7 +32,6 @@ interface FieldData {
 }
 const ListLesson = () => {
   const {listSubject, setSubjectId, subjectId, rootSubject} = useHomeStore();
-
   const {getData, isConnected} = useOfflineMode();
   const [subjectIndex, setSubjectIndex] = useState<number>(0);
   const [subjects, setSubjects] = useState<Subject[]>([]);
@@ -91,7 +90,9 @@ const ListLesson = () => {
   // * nếu chưa có subject id nào thì lấy thằng đầu tiên
   useEffect(() => {
     if (subjectId === '') {
-      setSubjectId(data[0]?._id);
+      setTimeout(() => {
+        setSubjectId(data[0]?._id);
+      }, 1000);
     }
   }, [data, setSubjectId, subjectId]);
 

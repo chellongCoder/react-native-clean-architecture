@@ -24,7 +24,7 @@ export interface IHomeState {
 
 export const HomeProvider = ({children}: PropsWithChildren) => {
   const store = homeModuleContainer.getProvided(HomeStore);
-  const {getField, getListSubject, setSubjectId} = useHomeStore();
+  const {getField, getListSubject} = useHomeStore();
   const {storeData, getData, isConnected} = useOfflineMode();
   useLoadingGlobal();
 
@@ -67,7 +67,7 @@ export const HomeProvider = ({children}: PropsWithChildren) => {
       }
     }
     _getListSubject();
-  }, [getListSubject, homeState?.field, setHomeState, setSubjectId, storeData]);
+  }, [getListSubject, homeState?.field, setHomeState, storeData]);
 
   useEffect(() => {
     async function fetchField() {

@@ -75,7 +75,7 @@ platform :android do
 
   desc "Build AAB and upload to public testing on Play Console"
   lane :build_and_upload_aab do
-    # increment_version_code
+    increment_version_code
 
     gradle(task: "bundleRelease")
 
@@ -113,6 +113,8 @@ platform :android do
 
   desc "Build and upload AAB to internal testing on Play Console"
   lane :build_and_upload_aab_internal do
+    increment_version_code
+
     gradle(task: 'bundle', build_type: 'Release')
 
     aab_path = "/Users/mac/Workspaces/ReactNative/tbd-frontend/android/app/build/outputs/bundle/release/app-release.aab"

@@ -201,7 +201,7 @@ const VnG0M2Lesson = observer(
           }
           prompt={
             firstMiniTestTask?.question?.[moduleIndex]?.instruction ?? {
-              descrption: settings.prompt?.toString() ?? '',
+              description: settings.prompt?.toString() ?? '',
             }
           }
           price="Free"
@@ -260,7 +260,9 @@ const VnG0M2Lesson = observer(
                 </TouchableOpacity>
               </View>
               <SelectionAnswersQuestion
-                answer={firstMiniTestTask?.question?.[moduleIndex].answers}
+                answer={
+                  firstMiniTestTask?.question?.[moduleIndex].answers as string[]
+                }
                 question={
                   <Text style={[styles.textQuestion]}>
                     {splitTextContent(

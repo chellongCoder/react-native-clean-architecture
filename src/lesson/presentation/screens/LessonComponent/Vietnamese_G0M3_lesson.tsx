@@ -190,7 +190,7 @@ const VnG0M3Lesson = observer(
           }
           prompt={
             firstMiniTestTask?.question?.[moduleIndex]?.instruction ?? {
-              descrption: settings.prompt?.toString() ?? '',
+              description: settings.prompt?.toString() ?? '',
             }
           }
           price="Free"
@@ -209,8 +209,10 @@ const VnG0M3Lesson = observer(
               style={{
                 alignItems: 'center',
                 width: scale(220),
-                marginTop: verticalScale(32),
               }}>
+              <Text style={styles.txtDes}>
+                {firstMiniTestTask?.question?.[moduleIndex].description}
+              </Text>
               <Animated.Image
                 resizeMode={'contain'}
                 style={[
@@ -306,6 +308,11 @@ const styles = StyleSheet.create({
   },
   txtWhite: {
     color: 'white',
+  },
+  txtDes: {
+    fontFamily: FontFamily.BorelRegular,
+    fontSize: scale(32),
+    color: COLORS.BLUE_258F78,
   },
   rowAround: {
     flexDirection: 'row',
