@@ -118,12 +118,6 @@ const Math_MG6M15 = observer(
           : characterImageFail;
       }, [characterImageFail, characterImageSuccess, isAnswerCorrect]);
 
-      const questionType = useMemo(() => {
-        const contentWords =
-          firstMiniTestTask?.question?.[moduleIndex]?.content?.split(' ');
-        return contentWords ? contentWords[contentWords.length - 1] : '';
-      }, [firstMiniTestTask?.question, moduleIndex]);
-
       const descriptionWithAnswers = useMemo(() => {
         const contentWords =
           firstMiniTestTask?.question?.[moduleIndex]?.content?.split(' ');
@@ -271,7 +265,7 @@ const Math_MG6M15 = observer(
                 question={
                   <View
                     style={
-                      questionType === 'cm'
+                      !firstMiniTestTask?.question?.[moduleIndex].isAcreage
                         ? styles.wrapAnswerContainer
                         : styles.wrapAreaAnswerContainer
                     }>
