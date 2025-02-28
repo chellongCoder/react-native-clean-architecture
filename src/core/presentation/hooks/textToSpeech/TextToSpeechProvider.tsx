@@ -209,6 +209,7 @@ type TLanguageList = {
   'Mainland China, simplified characters': string;
   'Hong Kong, traditional characters': string;
   'Taiwan, traditional characters': string;
+  'Vie (Vietnamese)': string;
 };
 
 export const listLanguage: TLanguageList = {
@@ -265,6 +266,7 @@ export const listLanguage: TLanguageList = {
   'Mainland China, simplified characters': 'zh-CN',
   'Hong Kong, traditional characters': 'zh-HK',
   'Taiwan, traditional characters': 'zh-TW',
+  'Vie (Vietnamese)': 'vi-VN',
 };
 
 export type TLanguageKeys = keyof typeof listLanguage; // Create a union type of the keys
@@ -314,7 +316,7 @@ export const TextToSpeechProvider = ({children}: PropsWithChildren) => {
       '🛠 LOG: 🚀 --> -----------------------------------------------------------------------------------------------------------------------------------------🛠 LOG: 🚀 -->',
     );
     console.log(
-      `🛠 LOG: 🚀 --> ~ TextToSpeechProvider ~ voiceId?: string,
+      `🛠 LOG: 🚀 --> ~ TextToSpeechProvider ~ voiceId?:,
     language?: TLanguageKeys,:`,
       voiceId,
       language,

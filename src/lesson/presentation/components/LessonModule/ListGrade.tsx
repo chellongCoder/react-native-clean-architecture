@@ -31,9 +31,8 @@ const ListGrade = forwardRef((_, ref) => {
 
   useEffect(() => {
     if (gradeObjs.length > 0) {
-      setIndex(0);
-
       setTimeout(() => {
+        setIndex(0);
         setSubjectId(gradeObjs[0]._id);
       }, 1000);
     }
@@ -43,6 +42,7 @@ const ListGrade = forwardRef((_, ref) => {
   return (
     <View style={styles.container}>
       {gradeObjs.map(grade => {
+        const words = grade.name.split(' ');
         return (
           <TouchableOpacity
             key={grade._id}
@@ -57,7 +57,7 @@ const ListGrade = forwardRef((_, ref) => {
               Haptics.selectionAsync();
             }}>
             <Text style={styles.txtItem}>
-              {grade.name.split(' ')?.[1]?.charAt(0)}
+              {words?.[words.length - 1]?.charAt(0)}
             </Text>
           </TouchableOpacity>
         );

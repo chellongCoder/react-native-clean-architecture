@@ -7,6 +7,7 @@ export const SoundGlobalContext = createContext<SoundGlobalT>({
   loopSound: () => null,
   isInitSoundDone: false,
   setVolume: () => null,
+  setVolumeBackground: () => null,
 });
 
 SoundGlobalContext.displayName = 'AuthenticationContext';

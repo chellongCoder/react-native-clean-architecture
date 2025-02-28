@@ -34,6 +34,7 @@ import {LessonRef} from '../../types';
 import useHomeStore from 'src/home/presentation/stores/useHomeStore';
 import {SelectionAnswersQuestionRef} from '../../components/SelectionAnswersQuestion';
 import KeyboardNumber from '../../components/KeyboardNumber';
+import LearningImage from '../../components/LearningImage';
 
 type Props = {
   moduleIndex: number;
@@ -190,10 +191,15 @@ const Math_MG1M3 = observer(
           part={firstMiniTestTask?.name}
           backgroundColor={settings.backgroundAnswerColor}
           backgroundAnswerColor={settings.backgroundAnswerColor}
-          prompt={settings.prompt?.toString()}
+          prompt={
+            firstMiniTestTask?.question?.[moduleIndex]?.instruction ?? {
+              description: settings.prompt?.toString() ?? '',
+            }
+          }
           score={selectedChild?.adsPoints}
           txtCountDown={
-            word === firstMiniTestTask?.question?.[moduleIndex].content
+            word?.toString() ===
+            firstMiniTestTask?.question?.[moduleIndex].correctAnswer
               ? undefined
               : word
           }
@@ -201,34 +207,32 @@ const Math_MG1M3 = observer(
           isShowCorrectContainer={isShowCorrectContainer}
           onPressFlower={toggleShowHint}
           buildQuestion={
-            <View>
-              <Animated.Image
-                resizeMode={'contain'}
-                width={WIDTH_SCREEN}
-                height={scale(200)}
-                style={[{}, animatedStyle]}
-                source={{
-                  uri:
-                    env.IMAGE_QUESTION_BASE_API_URL +
-                    firstMiniTestTask?.question?.[moduleIndex].image,
+            typeof firstMiniTestTask?.question?.[moduleIndex].image ===
+            'string' ? (
+              <View>
+                <Animated.Image
+                  resizeMode={'contain'}
+                  width={scale(200)}
+                  height={scale(150)}
+                  style={[{}, animatedStyle]}
+                  source={{
+                    uri:
+                      env.IMAGE_QUESTION_BASE_API_URL +
+                      firstMiniTestTask?.question?.[moduleIndex].image,
+                  }}
+                />
+              </View>
+            ) : (
+              <LearningImage
+                images={
+                  firstMiniTestTask?.question?.[moduleIndex].image as string[]
+                }
+                styleContainer={{
+                  width: scale(150),
+                  borderWidth: 0,
                 }}
               />
-              <View style={styles.wrapQuestionContainer}>
-                <Text
-                  style={[
-                    styles.fonts_SVN_Neu,
-                    {
-                      fontSize: 11,
-                      fontWeight: 'bold',
-                      color: COLORS.BLUE_1F78A9,
-                    },
-                  ]}>
-                  {firstMiniTestTask?.question?.[
-                    moduleIndex
-                  ].instruction?.description?.toString()}
-                </Text>
-              </View>
-            </View>
+            )
           }
           buildAnswer={
             <View style={styles.fill}>

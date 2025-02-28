@@ -4,4 +4,5 @@ export interface SoundGlobalT {
   loopSound: (key: string) => void;
   isInitSoundDone: boolean;
   setVolume: (volume: number) => void;
+  setVolumeBackground: (volume: number) => void;
 }

@@ -12,8 +12,13 @@ import {STACK_NAVIGATOR} from '../../navigation/ConstantNavigator';
 export const SoundBackgroundGlobalProvider = ({
   children,
 }: PropsWithChildren) => {
-  const {loopSound, isInitSoundDone, pauseSound, setVolume} =
-    useContext(SoundGlobalContext);
+  const {
+    loopSound,
+    isInitSoundDone,
+    pauseSound,
+    setVolume: setVolumeCharacter,
+    setVolumeBackground,
+  } = useContext(SoundGlobalContext);
   const lesson = lessonModuleContainer.getProvided(LessonStore);
   const route = RootNavigation.current?.getCurrentRoute();
 
@@ -36,11 +41,11 @@ export const SoundBackgroundGlobalProvider = ({
     );
 
     return () => listener.remove();
-  }, [lesson.backgroundSound, loopSound, pauseSound, route?.name, setVolume]);
+  }, [lesson.backgroundSound, loopSound, pauseSound, route?.name]);
 
   useEffect(() => {
-    setVolume(lesson.backgroundSound);
-  }, [lesson.backgroundSound, setVolume]);
+    setVolumeBackground(lesson.backgroundSound);
+  }, [lesson.backgroundSound, setVolumeBackground]);
 
   useEffect(() => {
     if (isInitSoundDone) {
@@ -54,7 +59,8 @@ export const SoundBackgroundGlobalProvider = ({
   }, [loopSound, isInitSoundDone]);
 
   return (
-    <SoundBackgroundGlobalContext.Provider value={{isPlaying, setVolume}}>
+    <SoundBackgroundGlobalContext.Provider
+      value={{isPlaying, setVolume: setVolumeBackground, setVolumeCharacter}}>
       {children}
     </SoundBackgroundGlobalContext.Provider>
   );

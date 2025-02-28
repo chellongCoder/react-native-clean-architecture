@@ -76,6 +76,7 @@ import VnG0M1Lesson from './LessonComponent/Vietnamese_G0M1_Leson';
 import VnG4M1Lesson from './LessonComponent/Vietnamese_G4M1_lesson';
 import VnG5M1Lesson from './LessonComponent/Vietnamese_G5M1_lesson';
 import Math_MG1M3 from './LessonComponent/Math_MG1M3';
+import Math_MG1M3_P4 from './LessonComponent/Math_MG1M3_P4';
 
 export enum MathQuestionType {
   MATH_TEXT = 'math_text',
@@ -228,7 +229,7 @@ const LessonScreen = observer(() => {
   const {tasks: apiTasks} = useListQuestions(route?.lessonId);
 
   const tasks = useMemo(() => {
-    return apiTasks.map(t => {
+    return apiTasks.slice(apiTasks.length - 1, apiTasks.length).map(t => {
       return {
         ...t,
         // question: t.question.slice(0, 1),
@@ -1433,7 +1434,29 @@ const LessonScreen = observer(() => {
           />
         );
       case MathQuestionType.MathMG1M3:
-        return (
+        return testTask?.stt === 4 ? ( // * check xem có phải part 4 không
+          <Math_MG1M3_P4
+            moduleIndex={lessonIndex}
+            nextModule={nextModule}
+            totalModule={testTask?.question.length ?? 0}
+            lessonName={route.lessonName}
+            moduleName={route.moduleName}
+            firstMiniTestTask={testTask}
+            backgroundImage={
+              env.IMAGE_BACKGROUND_BASE_API_URL + lessonSetting?.backgroundImage
+            }
+            characterImageSuccess={
+              env.IMAGE_BACKGROUND_BASE_API_URL +
+              lessonSetting?.figureSuccessImage
+            }
+            characterImageFail={
+              env.IMAGE_BACKGROUND_BASE_API_URL + lessonSetting?.figureFailImage
+            }
+            ref={vowelRef}
+            isMulti={false}
+            answer={testTask.question[lessonIndex].answers as string[]}
+          />
+        ) : (
           <Math_MG1M3
             moduleIndex={lessonIndex}
             nextModule={nextModule}

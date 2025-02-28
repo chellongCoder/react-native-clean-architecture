@@ -136,25 +136,13 @@ const ScienceLesson = ({
     );
 
     Tts.voices().then(voices => {
-      if (lessonName.toLocaleLowerCase().includes('english')) {
-        const engVoice = voices.find(
-          voice => voice.language === listLanguage['US English'],
-        );
-        updateDefaultVoice?.(
-          isAndroid ? engVoice?.id : iosVoice[3].id,
-          'US English',
-        );
-      } else if (lessonName.toLocaleLowerCase().includes('mandarin')) {
-        const engVoice = voices.find(
-          voice =>
-            voice.language ===
-            listLanguage['Mainland China, simplified characters'],
-        );
-        updateDefaultVoice?.(
-          engVoice?.id,
-          'Mainland China, simplified characters',
-        );
-      }
+      const engVoice = voices.find(
+        voice => voice.language === listLanguage['US English'],
+      );
+      updateDefaultVoice?.(
+        isAndroid ? engVoice?.id : iosVoice[3].id,
+        'US English',
+      );
     });
   }, [lessonName, updateDefaultVoice]);
 

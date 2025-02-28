@@ -108,6 +108,7 @@ export class HomeStore implements HomeStoreState {
 
   @action
   public async getListModules({childrenId, subjectId}: GetListLessonPayload) {
+    this.listModule = [];
     this.setIsLoading(true);
     const response = await this.getListLessonUseCase.execute({
       childrenId,

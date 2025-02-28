@@ -37,31 +37,39 @@ interface ExtendedSound extends Sound {
 
 export const SoundGlobalProvider = ({children}: PropsWithChildren) => {
   const [sounds, setSounds] = useState<{[key: string]: ExtendedSound[]}>({});
+
   const [loopingSoundKey, setLoopingSoundKey] = useState<string | null>(null);
   const [currentPlayingSound, setCurrentPlayingSound] =
     useState<ExtendedSound | null>(null);
   const [isInitSoundDone, setIsInitSoundDone] = useState<boolean>(false);
 
   const playSound = useCallback((key: string) => {
-    const soundFile = soundResource[key as keyof typeof soundResource];
+    const isUrl = key.startsWith('http') || key.startsWith('https');
+    const soundFile = isUrl
+      ? key
+      : soundResource[key as keyof typeof soundResource];
     if (soundFile) {
       // Create a new sound instance each time
-      const sound = new Sound(soundFile, Sound.MAIN_BUNDLE, error => {
-        if (error) {
-          console.log(`Failed to load sound ${key}`, error);
-          return;
-        }
-        sound.setNumberOfLoops(0);
-        sound.play(success => {
-          if (!success) {
-            console.log(`Failed to play sound ${key}`);
+      const sound = new Sound(
+        soundFile,
+        isUrl ? '' : Sound.MAIN_BUNDLE,
+        error => {
+          if (error) {
+            console.log(`Failed to load sound ${key}`, error);
+            return;
           }
-          // After playback, the sound instance is released, so no need to manually reset `_isPlaying`
-          console.log(`Sound ${key} finished playing`);
-        });
-        // Track the playing status
-        setCurrentPlayingSound(sound);
-      });
+          sound.setNumberOfLoops(0);
+          sound.play(success => {
+            if (!success) {
+              console.log(`Failed to play sound ${key}`);
+            }
+            // After playback, the sound instance is released, so no need to manually reset `_isPlaying`
+            console.log(`Sound ${key} finished playing`);
+          });
+          // Track the playing status
+          setCurrentPlayingSound(sound);
+        },
+      );
     }
   }, []);
 
@@ -76,32 +84,46 @@ export const SoundGlobalProvider = ({children}: PropsWithChildren) => {
     }
   }, [currentPlayingSound]);
 
-  const loopSound = useCallback((key: string) => {
-    const soundFile = soundResource[key as keyof typeof soundResource];
-    if (soundFile) {
-      // Create a new sound instance each time
-      const sound = new Sound(soundFile, Sound.MAIN_BUNDLE, error => {
-        if (error) {
-          console.log(`Failed to load sound ${key}`, error);
-          return;
+  const loopSound = useCallback(
+    (key: string) => {
+      const isUrl = key.startsWith('http') || key.startsWith('https');
+      const soundFile = isUrl
+        ? key
+        : soundResource[key as keyof typeof soundResource];
+      if (soundFile) {
+        // Create a new sound instance each time
+        const soundsKeys = Object.keys(sounds);
+        const backgroundSoundName = soundsKeys.find(
+          sound => sound === soundTrack.ukulele_music,
+        );
+        if (backgroundSoundName) {
+          sounds[backgroundSoundName].forEach(sound => {
+            if (sound) {
+              sound.stop();
+              sound.setNumberOfLoops(-1);
+              sound.play(success => {
+                if (!success) {
+                  console.log(`Failed to play sound ${key}`);
+                }
+                // Log status when finished looping, if needed
+                console.log(`Sound ${key} started looping`);
+              });
+              // Track the playing status
+              setCurrentPlayingSound(sound);
+              setLoopingSoundKey(key);
+            }
+          });
+          // delete sounds[backgroundSoundName];
         }
-        sound.setNumberOfLoops(-1);
-        sound.play(success => {
-          if (!success) {
-            console.log(`Failed to play sound ${key}`);
-          }
-          // Log status when finished looping, if needed
-          console.log(`Sound ${key} started looping`);
-        });
-        // Track the playing status
-        setCurrentPlayingSound(sound);
-        setLoopingSoundKey(key);
-      });
-    }
-  }, []);
+      }
+    },
+    [sounds],
+  );
 
   const setVolume = useCallback(
     (volume: number) => {
+      const _sounds = sounds;
+      delete _sounds[soundTrack.ukulele_music];
       Object.values(sounds)
         .flat()
         .forEach(sound => {
@@ -112,6 +134,25 @@ export const SoundGlobalProvider = ({children}: PropsWithChildren) => {
         });
     },
     [currentPlayingSound, sounds],
+  );
+
+  const setVolumeBackground = useCallback(
+    (volume: number) => {
+      const soundsKeys = Object.keys(sounds);
+      const backgroundSoundName = soundsKeys.find(
+        sound => sound === soundTrack.ukulele_music,
+      );
+
+      backgroundSoundName &&
+        Object.values(sounds[backgroundSoundName])
+          .flat()
+          .forEach(sound => {
+            if (sound) {
+              sound.setVolume(volume);
+            }
+          });
+    },
+    [sounds],
   );
 
   useEffect(() => {
@@ -173,6 +214,7 @@ export const SoundGlobalProvider = ({children}: PropsWithChildren) => {
         loopSound,
         isInitSoundDone,
         setVolume,
+        setVolumeBackground,
       }}>
       {children}
     </SoundGlobalContext.Provider>

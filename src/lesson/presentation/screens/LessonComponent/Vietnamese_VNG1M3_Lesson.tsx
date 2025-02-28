@@ -143,6 +143,14 @@ const VnG1M3Lesson = ({
           engVoice?.id,
           'Mainland China, simplified characters',
         );
+      } else if (lessonName.toLocaleLowerCase().includes('tiếng việt')) {
+        const vietnameseVoices = voices.filter(
+          voice =>
+            voice.language.startsWith('vi-') ||
+            voice.name.toLowerCase().includes('vietnamese'),
+        );
+
+        updateDefaultVoice?.(vietnameseVoices[0]?.id, 'Vie (Vietnamese)');
       }
     });
   }, [lessonName, updateDefaultVoice]);

@@ -19,7 +19,7 @@ interface ImageCarouselProps {
 
 const LearningImage: React.FC<ImageCarouselProps> = ({
   images,
-  styleContainer,
+  styleContainer = {},
 }) => {
   const env = coreModuleContainer.getProvided<Env>(EnvToken); // Instantiate CoreService
 
