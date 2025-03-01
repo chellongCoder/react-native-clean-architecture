@@ -697,6 +697,7 @@ The blockAppsSystem function is an asynchronous function that awaits the result 
                   onChangValue={async v => {
                     const newVolume = (v / 100).toFixed(1);
                     setCharSound(Number(newVolume));
+                    soundHook.setVolume(+newVolume);
                   }}
                 />
               </View>

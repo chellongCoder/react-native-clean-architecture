@@ -6,6 +6,8 @@ import React, {
 } from 'react';
 import {SoundGlobalContext} from './SoundGlobalContext';
 import Sound from 'react-native-sound';
+import {lessonModuleContainer} from 'src/lesson/LessonModule';
+import {LessonStore} from 'src/lesson/presentation/stores/LessonStore/LessonStore';
 
 Sound.setCategory('Playback');
 
@@ -42,6 +44,7 @@ export const SoundGlobalProvider = ({children}: PropsWithChildren) => {
   const [currentPlayingSound, setCurrentPlayingSound] =
     useState<ExtendedSound | null>(null);
   const [isInitSoundDone, setIsInitSoundDone] = useState<boolean>(false);
+  const lesson = lessonModuleContainer.getProvided(LessonStore);
 
   const playSound = useCallback((key: string) => {
     const isUrl = key.startsWith('http') || key.startsWith('https');
@@ -99,6 +102,7 @@ export const SoundGlobalProvider = ({children}: PropsWithChildren) => {
         if (backgroundSoundName) {
           sounds[backgroundSoundName].forEach(sound => {
             if (sound) {
+              sound.setVolume(lesson.backgroundSound);
               sound.stop();
               sound.setNumberOfLoops(-1);
               sound.play(success => {
@@ -117,7 +121,7 @@ export const SoundGlobalProvider = ({children}: PropsWithChildren) => {
         }
       }
     },
-    [sounds],
+    [lesson.backgroundSound, sounds],
   );
 
   const setVolume = useCallback(
@@ -149,10 +153,11 @@ export const SoundGlobalProvider = ({children}: PropsWithChildren) => {
           .forEach(sound => {
             if (sound) {
               sound.setVolume(volume);
+              lesson.setBackgroundSound(volume);
             }
           });
     },
-    [sounds],
+    [lesson, sounds],
   );
 
   useEffect(() => {
