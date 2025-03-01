@@ -247,7 +247,11 @@ const VnG0M2Lesson = observer(
                     justifyContent: 'center',
                     flex: 1,
                   }}>
-                  <Text style={[globalStyle.txtLabel, styles.textColor]}>
+                  <Text
+                    style={[
+                      globalStyle.txtLabel,
+                      {color: settings.backgroundButtonColor},
+                    ]}>
                     Choose correct answer
                   </Text>
                 </View>

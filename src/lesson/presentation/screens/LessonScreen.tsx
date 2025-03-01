@@ -73,6 +73,8 @@ import VnG3M1Lesson from './LessonComponent/Vietnamese_G3M1_lesson';
 import VnG0M2Lesson from './LessonComponent/Vietnamese_G0M2_lesson';
 import VnG0M3Lesson from './LessonComponent/Vietnamese_G0M3_lesson';
 import VnG0M1Lesson from './LessonComponent/Vietnamese_G0M1_Leson';
+import VnG4M1Lesson from './LessonComponent/Vietnamese_G4M1_lesson';
+import VnG5M1Lesson from './LessonComponent/Vietnamese_G5M1_lesson';
 
 export enum MathQuestionType {
   MATH_TEXT = 'math_text',
@@ -1152,7 +1154,7 @@ const LessonScreen = observer(() => {
         );
       case LanguageE.VIETNAMESE_VNG4M1:
         return (
-          <VnG3M1Lesson
+          <VnG4M1Lesson
             moduleIndex={lessonIndex}
             nextModule={nextModule}
             totalModule={testTask?.question.length ?? 0}
@@ -1174,7 +1176,7 @@ const LessonScreen = observer(() => {
         );
       case LanguageE.VIETNAMESE_VNG5M1:
         return (
-          <VnG3M1Lesson
+          <VnG5M1Lesson
             moduleIndex={lessonIndex}
             nextModule={nextModule}
             totalModule={testTask?.question.length ?? 0}

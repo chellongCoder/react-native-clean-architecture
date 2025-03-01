@@ -191,7 +191,7 @@ const VnG3M1Lesson = observer(
           }
           prompt={
             firstMiniTestTask?.question?.[moduleIndex]?.instruction ?? {
-              descrption: settings.prompt?.toString() ?? '',
+              description: settings.prompt?.toString() ?? '',
             }
           }
           price="Free"
@@ -211,7 +211,7 @@ const VnG3M1Lesson = observer(
                 width: scale(220),
                 marginTop: verticalScale(40),
               }}>
-              <Text style={[styles.fonts_SVN_Cherish, styles.textQuestion]}>
+              <Text style={[styles.fonts_SVN_Cherish, styles.textParagraph]}>
                 {splitTextContent(
                   firstMiniTestTask?.question?.[moduleIndex].paragraph ?? '',
                 ).map(e => {
@@ -239,7 +239,11 @@ const VnG3M1Lesson = observer(
                     justifyContent: 'center',
                     flex: 1,
                   }}>
-                  <Text style={[globalStyle.txtLabel, styles.textColor]}>
+                  <Text
+                    style={[
+                      globalStyle.txtLabel,
+                      {color: settings.backgroundButtonColor},
+                    ]}>
                     Choose correct answer
                   </Text>
                 </View>
@@ -314,7 +318,12 @@ const styles = StyleSheet.create({
     fontFamily: FontFamily.SVNCherishMoment,
   },
   textColor: {
-    color: '#1C6349',
+    color: COLORS.RED_AF3A1B,
+  },
+  textParagraph: {
+    fontSize: verticalScale(15),
+    textAlign: 'left',
+    color: COLORS.RED_AF3A1B,
   },
   textQuestion: {
     fontSize: verticalScale(15),

@@ -445,7 +445,11 @@ const VnG0M1Lesson = observer(
                     justifyContent: 'center',
                     flex: 1,
                   }}>
-                  <Text style={[globalStyle.txtLabel, styles.textColor]}>
+                  <Text
+                    style={[
+                      globalStyle.txtLabel,
+                      {color: settings.backgroundButtonColor},
+                    ]}>
                     Listen and repeat
                   </Text>
                 </View>
