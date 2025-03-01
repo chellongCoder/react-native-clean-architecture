@@ -215,25 +215,17 @@ const VnG1M3Lesson = ({
       backgroundAnswerColor={settings.backgroundAnswerColor}
       prompt={
         firstMiniTestTask?.question?.[moduleIndex]?.instruction ?? {
-          descrption: settings.prompt?.toString() ?? '',
+          description: settings.prompt?.toString() ?? '',
         }
       }
       score={selectedChild?.adsPoints}
       isAnswerCorrect={isAnswerCorrect}
       isShowCorrectContainer={isShowCorrectContainer}
       buildQuestion={
-        <View style={styles.center}>
+        <View style={[styles.center, {marginTop: scale(30)}]}>
           <LearningText
             style={[styles.fonts_Borel, styles.textQuestion]}
-            texts={
-              learningTimer !== 0
-                ? firstMiniTestTask?.question?.[moduleIndex].content.split(
-                    /[-/]/,
-                  )
-                : firstMiniTestTask?.question?.[moduleIndex].content
-                    .split(/[-/]/)
-                    .slice(0, 2)
-            }
+            texts={[firstMiniTestTask?.question?.[moduleIndex].content ?? '']}
           />
 
           <LearningImage
@@ -241,8 +233,8 @@ const VnG1M3Lesson = ({
               learningTimer !== 0
                 ? (firstMiniTestTask?.question?.[moduleIndex].image as string[])
                 : (firstMiniTestTask?.question?.[moduleIndex].image.slice(
-                    0,
                     2,
+                    4,
                   ) as string[])
             }
           />
@@ -255,7 +247,11 @@ const VnG1M3Lesson = ({
               justifyContent: 'space-between',
               flexDirection: 'row',
             }}>
-            <Text style={[globalStyle.txtLabel]}>
+            <Text
+              style={[
+                globalStyle.txtLabel,
+                {color: settings.backgroundButtonColor},
+              ]}>
               Write the "
               {getDataString(
                 firstMiniTestTask?.question?.[moduleIndex].fullAnswer,
@@ -322,9 +318,10 @@ const styles = StyleSheet.create({
     color: 'white',
   },
   textQuestion: {
-    fontSize: scale(40),
+    fontSize: scale(20),
+    fontWeight: 'bold',
     textAlign: 'center',
-    color: COLORS.RED_811010,
+    color: COLORS.BLUE_258F78,
   },
   rowAround: {
     flexDirection: 'row',

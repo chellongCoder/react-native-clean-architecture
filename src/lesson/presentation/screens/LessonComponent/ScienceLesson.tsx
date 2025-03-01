@@ -199,7 +199,7 @@ const ScienceLesson = ({
               justifyContent: 'space-between',
               flexDirection: 'row',
             }}>
-            <Text style={[globalStyle.txtLabel]}>Choice correct answer</Text>
+            <Text style={[globalStyle.txtLabel]}>Choose correct answer</Text>
           </View>
 
           <SelectionImagesQuestion

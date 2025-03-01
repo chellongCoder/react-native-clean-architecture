@@ -1,3 +1,5 @@
+/* eslint-disable react-native/no-inline-styles */
+/* eslint-disable react/no-unstable-nested-components */
 import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import React, {
   forwardRef,
@@ -47,7 +49,7 @@ type Props = {
   characterImageFail?: string;
 };
 
-const VnG2M8Lesson = observer(
+const VnG4M1Lesson = observer(
   forwardRef<LessonRef, Props>(
     (
       {
@@ -143,6 +145,17 @@ const VnG2M8Lesson = observer(
         }
       }, [onSpeechText, focus]); // Added focus to the dependency array
 
+      const splitTextContent = (data: string) => {
+        const content = firstMiniTestTask?.question?.[moduleIndex].content;
+        const list = ` ${data} `.split(content ?? '-.-');
+        return list.flatMap((e, i) => {
+          if (i === list.length - 1) {
+            return e;
+          }
+          return [e, content];
+        });
+      };
+
       useEffect(() => {
         opacity.value = withTiming(0, {duration: 500}, () => {
           opacity.value = withTiming(1, {duration: 500});
@@ -195,11 +208,26 @@ const VnG2M8Lesson = observer(
           buildQuestion={
             <View
               style={{
-                width: scale(200),
-                marginTop: verticalScale(50),
+                width: scale(220),
+                marginTop: verticalScale(40),
               }}>
               <Text style={[styles.fonts_SVN_Cherish, styles.textParagraph]}>
-                {firstMiniTestTask?.question?.[moduleIndex].paragraph}
+                {splitTextContent(
+                  firstMiniTestTask?.question?.[moduleIndex].paragraph ?? '',
+                ).map(e => {
+                  return (
+                    <Text
+                      style={{
+                        textDecorationLine:
+                          e ===
+                          firstMiniTestTask?.question?.[moduleIndex]?.content
+                            ? 'underline'
+                            : 'none',
+                      }}>
+                      {e}
+                    </Text>
+                  );
+                })}
               </Text>
             </View>
           }
@@ -230,12 +258,25 @@ const VnG2M8Lesson = observer(
               <SelectionAnswersQuestion
                 answer={firstMiniTestTask?.question?.[moduleIndex].answers}
                 question={
-                  <Text
-                    style={[
-                      styles.textQuestion,
-                      {fontSize: verticalScale(15)},
-                    ]}>
-                    {firstMiniTestTask?.question?.[moduleIndex].content}
+                  <Text style={[styles.textQuestion]}>
+                    {splitTextContent(
+                      firstMiniTestTask?.question?.[moduleIndex]?.description ??
+                        '',
+                    ).map(e => {
+                      return (
+                        <Text
+                          style={{
+                            fontWeight:
+                              e ===
+                              firstMiniTestTask?.question?.[moduleIndex]
+                                ?.content
+                                ? 'bold'
+                                : '400',
+                          }}>
+                          {e}
+                        </Text>
+                      );
+                    })}
                   </Text>
                 }
                 isShowCorrectContainer={isShowCorrectContainer}
@@ -267,7 +308,7 @@ const VnG2M8Lesson = observer(
   ),
 );
 
-export default VnG2M8Lesson;
+export default VnG4M1Lesson;
 
 const styles = StyleSheet.create({
   fill: {
@@ -277,19 +318,16 @@ const styles = StyleSheet.create({
     fontFamily: FontFamily.SVNCherishMoment,
   },
   textColor: {
-    color: '#1C6349',
+    color: COLORS.BLUE_4552C8,
   },
   textParagraph: {
     fontSize: verticalScale(18),
-    textAlign: 'center',
-    color: COLORS.WHITE_FBF8CC,
-    textShadowColor: COLORS.YELLOW_F2B559,
-    textShadowOffset: {width: 2, height: 2},
-    textShadowRadius: 2,
+    textAlign: 'left',
+    color: COLORS.BLUE_39F5EA,
   },
   textQuestion: {
-    fontSize: verticalScale(18),
-    textAlign: 'center',
+    fontSize: verticalScale(15),
+    textAlign: 'left',
     color: COLORS.BLUE_258F78,
   },
   textGreen: {
