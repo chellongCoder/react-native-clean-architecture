@@ -129,6 +129,7 @@ const Science_SG5M5 = observer(
           answerRef.current?.resetAnswerSelected?.();
         },
         fullAnswer: firstMiniTestTask?.question?.[moduleIndex].fullAnswer,
+        totalTime: 5 * 60,
       });
 
       const {lessonSetting} = useHomeStore();
@@ -144,8 +145,8 @@ const Science_SG5M5 = observer(
       }, [characterImageFail, characterImageSuccess, isAnswerCorrect]);
 
       const onSpeechText = useCallback(() => {
-        ttsSpeak?.('');
-      }, [ttsSpeak]);
+        ttsSpeak?.(firstMiniTestTask?.question?.[moduleIndex]?.content ?? '');
+      }, [firstMiniTestTask?.question, moduleIndex, ttsSpeak]);
 
       const opacity = useSharedValue(0);
       const scaleS = useSharedValue(1);
@@ -247,6 +248,11 @@ const Science_SG5M5 = observer(
               />
             </View>
           }
+          characterStyle={{
+            height: verticalScale(300),
+            marginBottom: -verticalScale(130),
+            marginLeft: -scale(40),
+          }}
           buildAnswer={
             <View style={styles.fill}>
               <View style={styles.wrapHeaderContainer}>

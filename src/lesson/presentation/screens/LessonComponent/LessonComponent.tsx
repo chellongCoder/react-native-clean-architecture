@@ -6,6 +6,8 @@ import {
   Image,
   TouchableOpacity,
   ImageSourcePropType,
+  StyleProp,
+  ViewStyle,
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
@@ -40,6 +42,7 @@ type Props = {
   txtCountDown?: string;
   onPressFlower?: () => void;
   prompt?: Instruction;
+  characterStyle?: StyleProp<ViewStyle>;
 };
 
 const LessonComponent = ({
@@ -60,6 +63,7 @@ const LessonComponent = ({
   characterImage,
   txtCountDown,
   prompt,
+  characterStyle,
 }: Props) => {
   const {lessonSetting} = useHomeStore();
 
@@ -174,7 +178,7 @@ const LessonComponent = ({
           </View>
         )}
         <View style={styles.wrapDescriptionContainer}>
-          <View style={styles.wrapImageContainer}>
+          <View style={[styles.wrapImageContainer, characterStyle]}>
             <Image
               source={
                 characterImage
@@ -450,8 +454,8 @@ const styles = StyleSheet.create({
     alignItems: 'flex-end',
   },
   wrapImageContainer: {
-    height: verticalScale(120),
-    width: scale(100),
+    height: verticalScale(150),
+    aspectRatio: 1 / 2,
     marginBottom: -verticalScale(10),
   },
   imageContainer: {

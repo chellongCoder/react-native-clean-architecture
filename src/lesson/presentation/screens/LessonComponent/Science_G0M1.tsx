@@ -15,11 +15,7 @@ import {FontFamily} from 'src/core/presentation/hooks/useFonts';
 import useGlobalStyle from 'src/core/presentation/hooks/useGlobalStyle';
 import {Task} from 'src/home/application/types/GetListQuestionResponse';
 import {COLORS} from 'src/core/presentation/constants/colors';
-import {
-  getCorrectAnswer,
-  isMMSS,
-  isSubArray,
-} from 'src/core/presentation/utils';
+import {getCorrectAnswer, isMMSS} from 'src/core/presentation/utils';
 import {scale, verticalScale} from 'react-native-size-matters';
 import Animated, {
   Easing,
@@ -28,7 +24,6 @@ import Animated, {
   useSharedValue,
   withTiming,
 } from 'react-native-reanimated';
-import {TextToSpeechContext} from 'src/core/presentation/hooks/textToSpeech/TextToSpeechContext';
 import {useLessonStore} from '../../stores/LessonStore/useGetPostsStore';
 import {useSettingLesson} from '../../hooks/useSettingLesson';
 import {useIsFocused} from '@react-navigation/native';
@@ -72,7 +67,6 @@ const Science_G0M1 = observer(
     ) => {
       const globalStyle = useGlobalStyle();
 
-      const {ttsSpeak} = useContext(TextToSpeechContext);
       const focus = useIsFocused();
       const answerRef = useRef<SelectionAnswersQuestionRef>();
       const {playSound} = useContext(SoundGlobalContext);
@@ -108,6 +102,7 @@ const Science_G0M1 = observer(
           charScrambleRep.current?.reset?.();
         },
         fullAnswer: firstMiniTestTask?.question?.[moduleIndex].fullAnswer,
+        totalTime: 5 * 60,
       });
 
       const {lessonSetting} = useHomeStore();
@@ -123,8 +118,10 @@ const Science_G0M1 = observer(
       }, [characterImageFail, characterImageSuccess, isAnswerCorrect]);
 
       const onSpeechText = useCallback(() => {
-        playSound(env.IMAGE_QUESTION_BASE_API_URL + 'SGkM1Q1.mp3');
-      }, [env.IMAGE_QUESTION_BASE_API_URL, playSound]);
+        playSound(
+          env.IMAGE_QUESTION_BASE_API_URL + `SGkM1Q${moduleIndex + 1}.mp3`,
+        );
+      }, [env.IMAGE_QUESTION_BASE_API_URL, moduleIndex, playSound]);
 
       const opacity = useSharedValue(0);
       const scaleS = useSharedValue(1);

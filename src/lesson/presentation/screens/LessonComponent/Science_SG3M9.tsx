@@ -122,8 +122,10 @@ const Science_SG3M9 = observer(
       }, [characterImageFail, characterImageSuccess, isAnswerCorrect]);
 
       const onSpeechText = useCallback(() => {
-        ttsSpeak?.('');
-      }, [ttsSpeak]);
+        ttsSpeak?.(
+          firstMiniTestTask?.question?.[moduleIndex]?.description ?? '',
+        );
+      }, [firstMiniTestTask?.question, moduleIndex, ttsSpeak]);
 
       const opacity = useSharedValue(0);
       const scaleS = useSharedValue(1);
@@ -207,22 +209,34 @@ const Science_SG3M9 = observer(
           isShowCorrectContainer={isShowCorrectContainer}
           onPressFlower={toggleShowHint}
           buildQuestion={
-            <LearningImage
-              images={
-                learningTimer !== 0
-                  ? (firstMiniTestTask?.question?.[moduleIndex]
-                      .image as string[])
-                  : (firstMiniTestTask?.question?.[moduleIndex].image.slice(
-                      firstMiniTestTask?.question?.[moduleIndex].image.length -
-                        1,
-                      firstMiniTestTask?.question?.[moduleIndex].image.length,
-                    ) as string[])
-              }
-              styleContainer={{
-                width: scale(250),
-                borderWidth: 0,
-              }}
-            />
+            firstMiniTestTask?.type === 'training' ? (
+              <LearningImage
+                images={
+                  learningTimer !== 0
+                    ? (firstMiniTestTask?.question?.[moduleIndex]
+                        .image as string[])
+                    : (firstMiniTestTask?.question?.[moduleIndex].image.slice(
+                        firstMiniTestTask?.question?.[moduleIndex].image
+                          .length - 1,
+                        firstMiniTestTask?.question?.[moduleIndex].image.length,
+                      ) as string[])
+                }
+                styleContainer={{
+                  width: scale(250),
+                  borderWidth: 0,
+                }}
+              />
+            ) : (
+              <LearningImage
+                images={[
+                  firstMiniTestTask?.question?.[moduleIndex].image as string,
+                ]}
+                styleContainer={{
+                  width: scale(250),
+                  borderWidth: 0,
+                }}
+              />
+            )
           }
           buildAnswer={
             <View style={styles.fill}>

@@ -104,6 +104,7 @@ const Science_SG1M2 = observer(
           answerRef.current?.resetAnswerSelected?.();
         },
         fullAnswer: firstMiniTestTask?.question?.[moduleIndex].fullAnswer,
+        totalTime: 5 * 60,
       });
 
       const {lessonSetting} = useHomeStore();
@@ -119,8 +120,8 @@ const Science_SG1M2 = observer(
       }, [characterImageFail, characterImageSuccess, isAnswerCorrect]);
 
       const onSpeechText = useCallback(() => {
-        ttsSpeak?.('');
-      }, [ttsSpeak]);
+        ttsSpeak?.(firstMiniTestTask?.question?.[moduleIndex]?.content ?? '');
+      }, [firstMiniTestTask?.question, moduleIndex, ttsSpeak]);
 
       const opacity = useSharedValue(0);
       const scaleS = useSharedValue(1);

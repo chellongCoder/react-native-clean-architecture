@@ -117,8 +117,8 @@ const Science_SG2M4 = observer(
       }, [characterImageFail, characterImageSuccess, isAnswerCorrect]);
 
       const onSpeechText = useCallback(() => {
-        ttsSpeak?.('');
-      }, [ttsSpeak]);
+        ttsSpeak?.(firstMiniTestTask?.question?.[moduleIndex]?.content ?? '');
+      }, [firstMiniTestTask?.question, moduleIndex, ttsSpeak]);
 
       const opacity = useSharedValue(0);
       const scaleS = useSharedValue(1);

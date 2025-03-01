@@ -278,11 +278,13 @@ export const TextToSpeechProvider = ({children}: PropsWithChildren) => {
 
   const lesson = lessonModuleContainer.getProvided(LessonStore);
   const homeStore = homeModuleContainer.getProvided(HomeStore);
+  const [isSpeakDone, setIsSpeakDone] = useState(false);
 
   const [voices, setVoices] = useState<Voice[]>([]);
 
   const ttsSpeak = async (text: string) => {
     console.log('ttsSpeak: ', text);
+    // setIsSpeakDone(false);
     if (isInitialized) {
       await Tts.stop();
       Tts.speak(text);
@@ -370,6 +372,13 @@ export const TextToSpeechProvider = ({children}: PropsWithChildren) => {
           Tts.requestInstallEngine();
         }
       });
+
+    // Listen for the 'finish' event
+    Tts.addEventListener('tts-finish', event => {
+      console.log('Speech completed!');
+      // setIsSpeakDone(true); // Perform any action you need after speech is done
+      // Perform any action you need after speech is done
+    });
   }, []);
 
   useEffect(() => {
@@ -387,6 +396,7 @@ export const TextToSpeechProvider = ({children}: PropsWithChildren) => {
         updateSpeechPitch,
         updateDefaultVoice,
         voices,
+        isSpeakDone,
       }}>
       {children}
     </TextToSpeechContext.Provider>

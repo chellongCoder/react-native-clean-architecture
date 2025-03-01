@@ -18,7 +18,6 @@ import {COLORS} from 'src/core/presentation/constants/colors';
 import {
   getCorrectAnswer,
   isMMSS,
-  isSubArray,
   WIDTH_SCREEN,
 } from 'src/core/presentation/utils';
 import {scale, verticalScale} from 'react-native-size-matters';
@@ -71,7 +70,7 @@ const Science_SG4M3 = observer(
     ) => {
       const globalStyle = useGlobalStyle();
 
-      const {ttsSpeak} = useContext(TextToSpeechContext);
+      const {ttsSpeak, isSpeakDone} = useContext(TextToSpeechContext);
       const focus = useIsFocused();
       const answerRef = useRef<SelectionAnswersQuestionRef>();
 
@@ -130,6 +129,7 @@ const Science_SG4M3 = observer(
           answerRef.current?.resetAnswerSelected?.();
         },
         fullAnswer: firstMiniTestTask?.question?.[moduleIndex].fullAnswer,
+        totalTime: 5 * 60,
       });
 
       const {lessonSetting} = useHomeStore();
@@ -145,8 +145,8 @@ const Science_SG4M3 = observer(
       }, [characterImageFail, characterImageSuccess, isAnswerCorrect]);
 
       const onSpeechText = useCallback(() => {
-        ttsSpeak?.('');
-      }, [ttsSpeak]);
+        ttsSpeak?.(firstMiniTestTask?.question?.[moduleIndex]?.content ?? '');
+      }, [firstMiniTestTask?.question, moduleIndex, ttsSpeak]);
 
       const opacity = useSharedValue(0);
       const scaleS = useSharedValue(1);
@@ -164,17 +164,28 @@ const Science_SG4M3 = observer(
           // Check if the component is focused
           const firstTimeout = setTimeout(() => {
             onSpeechText();
-
-            const secondTimeout = setTimeout(() => {
-              onSpeechText();
-            }, 2500);
-
-            return () => clearTimeout(secondTimeout);
           }, 1500);
 
           return () => clearTimeout(firstTimeout);
         }
-      }, [onSpeechText, focus]); // Added focus to the dependency array
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+      }, [focus]); // Added focus to the dependency array
+
+      const speakCount = useRef(0);
+      useEffect(() => {
+        if (focus) {
+          // Check if the component is focused
+          const firstTimeout = setTimeout(() => {
+            if (isSpeakDone && speakCount.current === 0) {
+              onSpeechText();
+              speakCount.current += 1;
+            }
+          }, 1500);
+
+          return () => clearTimeout(firstTimeout);
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+      }, [focus, isSpeakDone]); // Added focus to the dependency array
 
       useEffect(() => {
         opacity.value = withTiming(0, {duration: 500}, () => {
@@ -229,6 +240,11 @@ const Science_SG4M3 = observer(
           isAnswerCorrect={isAnswerCorrect}
           isShowCorrectContainer={isShowCorrectContainer}
           onPressFlower={toggleShowHint}
+          characterStyle={{
+            height: verticalScale(300),
+            marginBottom: -verticalScale(130),
+            marginLeft: -scale(40),
+          }}
           buildQuestion={
             <View>
               <Animated.Image
