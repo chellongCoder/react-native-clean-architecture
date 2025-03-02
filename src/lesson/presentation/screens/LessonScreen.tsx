@@ -575,7 +575,9 @@ const LessonScreen = observer(() => {
     return () => {
       console.log('Cleanup: attempting to pause current sound');
       pauseSound(); // * pausse tất cả các sound khi làm bài
-      loopSound(soundTrack.ukulele_music); // * lặp lại bài background
+      setTimeout(() => {
+        loopSound(soundTrack.ukulele_music); // * lặp lại bài background
+      }, 1000);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);

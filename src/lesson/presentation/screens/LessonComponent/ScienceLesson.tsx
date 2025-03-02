@@ -1,4 +1,3 @@
-/* eslint-disable react-native/no-inline-styles */
 import {StyleSheet, Text, TouchableOpacity, View, Image} from 'react-native';
 import React, {
   useCallback,
@@ -43,6 +42,8 @@ import LearningImage from '../../components/LearningImage';
 import SelectionImagesQuestion, {
   SelectionAnswersQuestionRef,
 } from '../../components/SelectionImagesQuestion';
+import { SoundGlobalContext } from 'src/core/presentation/hooks/sound/SoundGlobalContext';
+import { soundTrack } from 'src/core/presentation/hooks/sound/SoundGlobalProvider';
 
 type Props = {
   moduleIndex: number;
@@ -73,6 +74,7 @@ const ScienceLesson = ({
   const {selectedChild} = useAuthenticationStore();
   const [answerSelected, setAnswerSelected] = useState('');
   const answerRef = useRef<SelectionAnswersQuestionRef>();
+  const {playSound} = useContext(SoundGlobalContext);
 
   const {trainingCount, getSetting} = useLessonStore();
   const isCorrectAnswer = useMemo(() => {
@@ -126,6 +128,13 @@ const ScienceLesson = ({
       : characterImageFail;
   }, [characterImageFail, characterImageSuccess, isAnswerCorrect]);
 
+  const onSpeechText = useCallback(() => {
+    playSound(
+      soundTrack.ukulele_music,
+    );
+  }, [playSound]);
+
+
   useEffect(() => {
     console.log(
       '🛠 LOG: 🚀 --> -----------------------------------------------------🛠 LOG: 🚀 -->',
@@ -145,6 +154,10 @@ const ScienceLesson = ({
       );
     });
   }, [lessonName, updateDefaultVoice]);
+
+  useEffect(() => {
+    onSpeechText();
+  }, [onSpeechText]); 
 
   return (
     <LessonComponent

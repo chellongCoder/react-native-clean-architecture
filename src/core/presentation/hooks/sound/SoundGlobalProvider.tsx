@@ -22,7 +22,7 @@ export const soundTrack = {
   tiktak: 'tiktak',
 };
 
-const soundResource = {
+export const soundResource = {
   oh_no_sound: `${soundTrack.oh_no_sound}.mp3`,
   menu_selection_sound: `${soundTrack.menu_selection_sound}.mp3`,
   login_splash_screen_sound: `${soundTrack.login_splash_screen_sound}.mp3`,
@@ -73,6 +73,8 @@ export const SoundGlobalProvider = ({children}: PropsWithChildren) => {
           setCurrentPlayingSound(sound);
         },
       );
+
+      return sound;
     }
   }, []);
 
@@ -89,39 +91,35 @@ export const SoundGlobalProvider = ({children}: PropsWithChildren) => {
 
   const loopSound = useCallback(
     (key: string) => {
-      const isUrl = key.startsWith('http') || key.startsWith('https');
-      const soundFile = isUrl
-        ? key
-        : soundResource[key as keyof typeof soundResource];
+      const soundFile = soundResource[key as keyof typeof soundResource];
       if (soundFile) {
         // Create a new sound instance each time
-        const soundsKeys = Object.keys(sounds);
-        const backgroundSoundName = soundsKeys.find(
-          sound => sound === soundTrack.ukulele_music,
-        );
-        if (backgroundSoundName) {
-          sounds[backgroundSoundName].forEach(sound => {
-            if (sound) {
-              sound.setVolume(lesson.backgroundSound);
-              sound.stop();
-              sound.setNumberOfLoops(-1);
-              sound.play(success => {
-                if (!success) {
-                  console.log(`Failed to play sound ${key}`);
-                }
-                // Log status when finished looping, if needed
-                console.log(`Sound ${key} started looping`);
-              });
-              // Track the playing status
-              setCurrentPlayingSound(sound);
-              setLoopingSoundKey(key);
+        const sound = new Sound(soundFile, Sound.MAIN_BUNDLE, error => {
+          if (error) {
+            console.log(`Failed to load sound ${key}`, error);
+            return;
+          }
+          sound.setVolume(lesson.backgroundSound);
+          sound.setNumberOfLoops(-1);
+          sound.play(success => {
+            if (!success) {
+              console.log(`Failed to play sound ${key}`);
             }
+            // Log status when finished looping, if needed
+            console.log(`Sound ${key} started looping`);
           });
-          // delete sounds[backgroundSoundName];
-        }
+          // Track the playing status
+          setCurrentPlayingSound(sound);
+
+          setSounds(v => {
+            v[key] = [sound];
+            return v;
+          });
+          setLoopingSoundKey(key);
+        });
       }
     },
-    [lesson.backgroundSound, sounds],
+    [lesson.backgroundSound],
   );
 
   const setVolume = useCallback(

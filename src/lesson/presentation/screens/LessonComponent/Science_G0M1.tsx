@@ -15,7 +15,11 @@ import {FontFamily} from 'src/core/presentation/hooks/useFonts';
 import useGlobalStyle from 'src/core/presentation/hooks/useGlobalStyle';
 import {Task} from 'src/home/application/types/GetListQuestionResponse';
 import {COLORS} from 'src/core/presentation/constants/colors';
-import {getCorrectAnswer, isMMSS} from 'src/core/presentation/utils';
+import {
+  getCorrectAnswer,
+  isMMSS,
+  splitTextContent,
+} from 'src/core/presentation/utils';
 import {scale, verticalScale} from 'react-native-size-matters';
 import Animated, {
   Easing,
@@ -258,7 +262,26 @@ const Science_G0M1 = observer(
                         styles.mt8,
                         {fontSize: scale(24)},
                       ]}>
-                      {firstMiniTestTask?.question?.[moduleIndex].content}
+                      {splitTextContent(
+                        firstMiniTestTask?.question?.[moduleIndex]
+                          ?.description ?? '',
+                        firstMiniTestTask?.question?.[moduleIndex]?.content ??
+                          '',
+                      ).map(e => {
+                        return (
+                          <Text
+                            style={{
+                              fontWeight:
+                                e ===
+                                firstMiniTestTask?.question?.[moduleIndex]
+                                  ?.content
+                                  ? 'bold'
+                                  : '400',
+                            }}>
+                            {e}
+                          </Text>
+                        );
+                      })}
                     </Text>
                   }
                   answer={

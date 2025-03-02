@@ -133,3 +133,14 @@ export const sortAppsByName = (apps: AppEntity[]): AppEntity[] => {
     a.app_name.localeCompare(b.app_name, undefined, {sensitivity: 'base'}),
   );
 };
+
+export const splitTextContent = (sentence: string, data: string) => {
+  const content = sentence;
+  const list = ` ${data} `.split(content ?? '-.-');
+  return list.flatMap((e, i) => {
+    if (i === list.length - 1) {
+      return e;
+    }
+    return [e, content];
+  });
+};
