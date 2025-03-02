@@ -280,7 +280,7 @@ const styles = StyleSheet.create({
     color: '#1C6349',
   },
   textParagraph: {
-    fontSize: verticalScale(18),
+    fontSize: verticalScale(22),
     textAlign: 'center',
     color: COLORS.WHITE_FBF8CC,
     textShadowColor: COLORS.YELLOW_F2B559,

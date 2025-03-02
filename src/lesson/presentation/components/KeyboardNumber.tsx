@@ -13,6 +13,7 @@ import {WIDTH_SCREEN} from 'src/core/presentation/utils';
 interface SelectionAnswersQuestionProps {
   question: React.ReactNode;
   answer: string[];
+  answerBuilder?: (text: string) => React.ReactNode;
   isShowCorrectContainer: boolean;
   isAnswerCorrect: boolean;
   onSelectAnswer: (selected: string[]) => void;
@@ -33,6 +34,7 @@ const KeyboardNumber: ForwardRefRenderFunction<
   const {
     question,
     answer,
+    answerBuilder,
     isShowCorrectContainer,
     isAnswerCorrect,
     onSelectAnswer,
@@ -102,13 +104,17 @@ const KeyboardNumber: ForwardRefRenderFunction<
                 styles.boxVowel,
                 {
                   backgroundColor: bg,
-                  width: size,
+                  width: (size * (e.length + 5)) / 6,
                   height: size,
                   margin: scale(8), // Add spacing for clarity
                   paddingHorizontal: scale(8),
                 },
               ]}>
-              <Text style={[styles.textVowel]}>{e}</Text>
+              {answerBuilder ? (
+                answerBuilder(e)
+              ) : (
+                <Text style={[styles.textVowel]}>{e}</Text>
+              )}
             </TouchableOpacity>
           );
         })}

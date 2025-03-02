@@ -75,6 +75,15 @@ export function getCorrectAnswer(answer?: string | string[]) {
   return '';
 }
 
+export function darkenColor(hex: string, percent: number) {
+  const num = parseInt(hex.slice(1), 16);
+  const r = Math.max(0, (num >> 16) - (255 * percent) / 100);
+  const g = Math.max(0, ((num >> 8) & 0x00ff) - (255 * percent) / 100);
+  const b = Math.max(0, (num & 0x0000ff) - (255 * percent) / 100);
+
+  return `#${((1 << 24) | (r << 16) | (g << 8) | b).toString(16).slice(1)}`;
+}
+
 // Function to get a random element from t.question
 export const getRandomQuestion = (questions: any[]) => {
   const randomIndex = Math.floor(Math.random() * questions.length);

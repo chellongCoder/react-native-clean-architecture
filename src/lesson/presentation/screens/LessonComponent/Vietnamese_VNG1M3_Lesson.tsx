@@ -15,7 +15,12 @@ import CanvasWrite, {CanvasWriteRef} from '../../components/CanvasWrite';
 import {Task} from 'src/home/application/types/GetListQuestionResponse';
 import useAuthenticationStore from 'src/authentication/presentation/stores/useAuthenticationStore';
 import {scale, verticalScale} from 'react-native-size-matters';
-import {assets, getCorrectAnswer, isAndroid} from 'src/core/presentation/utils';
+import {
+  assets,
+  darkenColor,
+  getCorrectAnswer,
+  isAndroid,
+} from 'src/core/presentation/utils';
 import {useLessonStore} from '../../stores/LessonStore/useGetPostsStore';
 import {useSettingLesson} from '../../hooks/useSettingLesson';
 import {COLORS} from 'src/core/presentation/constants/colors';
@@ -29,6 +34,9 @@ import {useIsFocused} from '@react-navigation/native';
 import useHomeStore from 'src/home/presentation/stores/useHomeStore';
 import LearningImage from '../../components/LearningImage';
 import LearningText from '../../components/LearningText';
+import KeyboardNumber, {
+  SelectionAnswersQuestionRef,
+} from '../../components/KeyboardNumber';
 
 type Props = {
   moduleIndex: number;
@@ -60,6 +68,7 @@ const VnG1M3Lesson = ({
   const {trainingCount, getSetting, imageToText} = useLessonStore();
   const [isCorrect, setIscorrect] = useState(false);
   const [countCall, setCountCall] = useState(0);
+  const answerRef = useRef<SelectionAnswersQuestionRef>(null);
 
   const {ttsSpeak, updateDefaultVoice} = useContext(TextToSpeechContext);
   const focus = useIsFocused();
@@ -77,6 +86,7 @@ const VnG1M3Lesson = ({
       onSubmit: () => {
         setAnswerSelected('');
         nextModule(answerSelected);
+        answerRef?.current?.resetAnswerSelected();
         setIscorrect(false);
       },
       fullAnswer: firstMiniTestTask?.question?.[moduleIndex].fullAnswer,
@@ -88,6 +98,20 @@ const VnG1M3Lesson = ({
       ? characterImageSuccess
       : characterImageFail;
   }, [characterImageFail, characterImageSuccess, isAnswerCorrect]);
+
+  const images = useMemo(() => {
+    const image = firstMiniTestTask?.question?.[moduleIndex].image;
+    if (typeof image === 'string') {
+      return [image];
+    }
+    return firstMiniTestTask?.question?.[moduleIndex].image as string[];
+  }, [firstMiniTestTask?.question, moduleIndex]);
+
+  const answerType = firstMiniTestTask?.question?.[moduleIndex].answerType;
+
+  const isDrawerType = useMemo(() => {
+    return answerType === 'draw_character';
+  }, [answerType]);
 
   const onSpeechText = useCallback(() => {
     ttsSpeak?.(
@@ -159,7 +183,7 @@ const VnG1M3Lesson = ({
     return data instanceof Array ? data?.[0].toString() ?? '' : data.toString();
   };
 
-  const onSubmit = useCallback(async () => {
+  const onSubmitDraw = useCallback(async () => {
     const base64 = canvasWriteRef.current?.getBase64();
     console.log('base64', base64);
     if (!base64) {
@@ -200,6 +224,14 @@ const VnG1M3Lesson = ({
       .catch(e => console.log(e, 'ERROR'));
   }, [firstMiniTestTask?.question, imageToText, moduleIndex]);
 
+  const onSubmit = useCallback(async () => {
+    if (isDrawerType) {
+      onSubmitDraw();
+    } else {
+      submit();
+    }
+  }, [isDrawerType, onSubmitDraw, submit]);
+
   useEffect(() => {
     canvasWriteRef.current?.reset();
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -231,21 +263,14 @@ const VnG1M3Lesson = ({
       isShowCorrectContainer={isShowCorrectContainer}
       buildQuestion={
         <View style={[styles.center, {marginTop: scale(30)}]}>
-          <LearningText
-            style={[styles.fonts_Borel, styles.textQuestion]}
-            texts={[firstMiniTestTask?.question?.[moduleIndex].content ?? '']}
-          />
+          {isDrawerType && (
+            <LearningText
+              style={[styles.fonts_Borel, styles.textQuestion]}
+              texts={[firstMiniTestTask?.question?.[moduleIndex].content ?? '']}
+            />
+          )}
 
-          <LearningImage
-            images={
-              learningTimer !== 0
-                ? (firstMiniTestTask?.question?.[moduleIndex].image as string[])
-                : (firstMiniTestTask?.question?.[moduleIndex].image.slice(
-                    2,
-                    4,
-                  ) as string[])
-            }
-          />
+          <LearningImage images={images} />
         </View>
       }
       buildAnswer={
@@ -258,13 +283,13 @@ const VnG1M3Lesson = ({
             <Text
               style={[
                 globalStyle.txtLabel,
-                {color: settings.backgroundButtonColor},
+                {color: darkenColor(settings.backgroundButtonColor ?? '', 20)},
               ]}>
-              Write the "
-              {getDataString(
-                firstMiniTestTask?.question?.[moduleIndex].fullAnswer,
-              )}
-              "
+              {isDrawerType
+                ? `Write the "${getDataString(
+                    firstMiniTestTask?.question?.[moduleIndex].fullAnswer,
+                  )}"`
+                : 'Choose correct answer'}
             </Text>
             <TouchableOpacity onPress={onSpeechText}>
               <Image
@@ -276,18 +301,43 @@ const VnG1M3Lesson = ({
           </View>
 
           <View style={{height: verticalScale(10)}} />
-          <CanvasWrite
-            ref={canvasWriteRef}
-            text={{
-              content: answerSelected ?? '',
-              style: {
-                color: COLORS.PRIMARY,
-                fontFamily: FontFamily.BorelRegular,
-              },
-              show: !!answerSelected,
-            }}
-            disable={learningTimer !== 0}
-          />
+          {isDrawerType ? (
+            <CanvasWrite
+              ref={canvasWriteRef}
+              text={{
+                content: answerSelected ?? '',
+                style: {
+                  color: COLORS.PRIMARY,
+                  fontFamily: FontFamily.BorelRegular,
+                },
+                show: !!answerSelected,
+              }}
+              disable={learningTimer !== 0}
+            />
+          ) : (
+            <KeyboardNumber
+              answer={firstMiniTestTask?.question?.[moduleIndex].answers ?? []}
+              answerBuilder={e => <Text style={[styles.textAnswer]}>{e}</Text>}
+              question={
+                <Text style={[styles.fonts_Borel, styles.textQuestion]}>
+                  {firstMiniTestTask?.question?.[moduleIndex].content ?? ''}
+                </Text>
+              }
+              isShowCorrectContainer={isShowCorrectContainer}
+              isAnswerCorrect={!!isAnswerCorrect}
+              onSelectAnswer={(e: string[]) => {
+                setIscorrect(
+                  e[0] ===
+                    firstMiniTestTask?.question?.[moduleIndex].correctAnswer,
+                );
+                setAnswerSelected(e.slice().pop() ?? '');
+              }}
+              learningTimer={learningTimer}
+              ref={answerRef}
+              isSelectOne={true}
+            />
+          )}
+
           <PrimaryButton
             text="Submit"
             style={[
@@ -330,6 +380,13 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     textAlign: 'center',
     color: COLORS.BLUE_258F78,
+  },
+  textAnswer: {
+    fontFamily: FontFamily.BorelRegular,
+    fontSize: scale(16),
+    textAlign: 'center',
+    marginBottom: scale(-8),
+    color: COLORS.WHITE_FBF8CC,
   },
   rowAround: {
     flexDirection: 'row',
