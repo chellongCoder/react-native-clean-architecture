@@ -15,7 +15,7 @@ export interface Question {
   fullAnswer: string;
   image: string | string[];
   descriptionImage: string;
-  answerType: 'answer_pick_one' | 'answer_arrange_word';
+  answerType: 'answer_pick_one' | 'answer_arrange_word' | 'draw_character';
   paragraph: string;
   pronu_character?: string[];
   instruction: Instruction;

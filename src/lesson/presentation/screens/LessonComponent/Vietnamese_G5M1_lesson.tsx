@@ -17,7 +17,7 @@ import {FontFamily} from 'src/core/presentation/hooks/useFonts';
 import useGlobalStyle from 'src/core/presentation/hooks/useGlobalStyle';
 import {Task} from 'src/home/application/types/GetListQuestionResponse';
 import {COLORS} from 'src/core/presentation/constants/colors';
-import {getCorrectAnswer} from 'src/core/presentation/utils';
+import {darkenColor, getCorrectAnswer} from 'src/core/presentation/utils';
 import {scale, verticalScale} from 'react-native-size-matters';
 import {
   Easing,
@@ -114,8 +114,12 @@ const VnG5M1Lesson = observer(
       }, [characterImageFail, characterImageSuccess, isAnswerCorrect]);
 
       const onSpeechText = useCallback(() => {
-        ttsSpeak?.('');
-      }, [ttsSpeak]);
+        ttsSpeak?.(
+          getCorrectAnswer(
+            firstMiniTestTask?.question?.[moduleIndex].description,
+          ),
+        );
+      }, [firstMiniTestTask?.question, moduleIndex, ttsSpeak]);
 
       const opacity = useSharedValue(0);
       const scaleS = useSharedValue(1);
@@ -209,6 +213,7 @@ const VnG5M1Lesson = observer(
             <View
               style={{
                 width: scale(220),
+                minHeight: scale(100),
                 marginTop: verticalScale(40),
               }}>
               <Text style={[styles.fonts_SVN_Cherish, styles.textParagraph]}>
@@ -242,7 +247,12 @@ const VnG5M1Lesson = observer(
                   <Text
                     style={[
                       globalStyle.txtLabel,
-                      {color: settings.backgroundButtonColor},
+                      {
+                        color: darkenColor(
+                          settings.backgroundButtonColor ?? '',
+                          35,
+                        ),
+                      },
                     ]}>
                     Choose correct answer
                   </Text>
@@ -321,7 +331,7 @@ const styles = StyleSheet.create({
     color: COLORS.RED_AF3A1B,
   },
   textParagraph: {
-    fontSize: verticalScale(18),
+    fontSize: verticalScale(22),
     textAlign: 'left',
     color: COLORS.BLUE_258F78,
   },

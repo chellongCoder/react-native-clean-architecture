@@ -17,7 +17,7 @@ import {FontFamily} from 'src/core/presentation/hooks/useFonts';
 import useGlobalStyle from 'src/core/presentation/hooks/useGlobalStyle';
 import {Task} from 'src/home/application/types/GetListQuestionResponse';
 import {COLORS} from 'src/core/presentation/constants/colors';
-import {getCorrectAnswer} from 'src/core/presentation/utils';
+import {darkenColor, getCorrectAnswer} from 'src/core/presentation/utils';
 import {scale, verticalScale} from 'react-native-size-matters';
 import Animated, {
   Easing,
@@ -117,8 +117,10 @@ const VnG0M3Lesson = observer(
       }, [characterImageFail, characterImageSuccess, isAnswerCorrect]);
 
       const onSpeechText = useCallback(() => {
-        ttsSpeak?.('');
-      }, [ttsSpeak]);
+        ttsSpeak?.(
+          getCorrectAnswer(firstMiniTestTask?.question?.[moduleIndex].content),
+        );
+      }, [firstMiniTestTask?.question, moduleIndex, ttsSpeak]);
 
       const opacity = useSharedValue(0);
       const scaleS = useSharedValue(1);
@@ -241,7 +243,12 @@ const VnG0M3Lesson = observer(
                   <Text
                     style={[
                       globalStyle.txtLabel,
-                      {color: settings.backgroundButtonColor},
+                      {
+                        color: darkenColor(
+                          settings.backgroundButtonColor ?? '',
+                          30,
+                        ),
+                      },
                     ]}>
                     Choose correct answer
                   </Text>
@@ -316,6 +323,7 @@ const styles = StyleSheet.create({
   txtDes: {
     fontFamily: FontFamily.BorelRegular,
     fontSize: scale(32),
+    marginBottom: scale(-14),
     color: COLORS.BLUE_258F78,
   },
   rowAround: {
