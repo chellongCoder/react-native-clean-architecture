@@ -248,11 +248,6 @@ const Science_SG5M5 = observer(
               />
             </View>
           }
-          characterStyle={{
-            height: verticalScale(300),
-            marginBottom: -verticalScale(130),
-            marginLeft: -scale(40),
-          }}
           buildAnswer={
             <View style={styles.fill}>
               <View style={styles.wrapHeaderContainer}>
