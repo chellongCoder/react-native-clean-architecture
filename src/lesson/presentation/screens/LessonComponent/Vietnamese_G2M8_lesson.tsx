@@ -15,7 +15,7 @@ import {FontFamily} from 'src/core/presentation/hooks/useFonts';
 import useGlobalStyle from 'src/core/presentation/hooks/useGlobalStyle';
 import {Task} from 'src/home/application/types/GetListQuestionResponse';
 import {COLORS} from 'src/core/presentation/constants/colors';
-import {getCorrectAnswer} from 'src/core/presentation/utils';
+import {darkenColor, getCorrectAnswer} from 'src/core/presentation/utils';
 import {scale, verticalScale} from 'react-native-size-matters';
 import {
   Easing,
@@ -112,8 +112,10 @@ const VnG2M8Lesson = observer(
       }, [characterImageFail, characterImageSuccess, isAnswerCorrect]);
 
       const onSpeechText = useCallback(() => {
-        ttsSpeak?.('');
-      }, [ttsSpeak]);
+        ttsSpeak?.(
+          getCorrectAnswer(firstMiniTestTask?.question?.[moduleIndex].content),
+        );
+      }, [firstMiniTestTask?.question, moduleIndex, ttsSpeak]);
 
       const opacity = useSharedValue(0);
       const scaleS = useSharedValue(1);
@@ -214,7 +216,12 @@ const VnG2M8Lesson = observer(
                   <Text
                     style={[
                       globalStyle.txtLabel,
-                      {color: settings.backgroundButtonColor},
+                      {
+                        color: darkenColor(
+                          settings.backgroundButtonColor ?? '',
+                          20,
+                        ),
+                      },
                     ]}>
                     Choose correct answer
                   </Text>
@@ -280,7 +287,7 @@ const styles = StyleSheet.create({
     color: '#1C6349',
   },
   textParagraph: {
-    fontSize: verticalScale(22),
+    fontSize: verticalScale(26),
     textAlign: 'center',
     color: COLORS.WHITE_FBF8CC,
     textShadowColor: COLORS.YELLOW_F2B559,
