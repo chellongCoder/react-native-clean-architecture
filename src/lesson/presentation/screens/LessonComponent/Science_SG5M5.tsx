@@ -229,6 +229,11 @@ const Science_SG5M5 = observer(
           isAnswerCorrect={isAnswerCorrect}
           isShowCorrectContainer={isShowCorrectContainer}
           onPressFlower={toggleShowHint}
+          characterStyle={{
+            height: verticalScale(300),
+            marginBottom: -verticalScale(130),
+            marginLeft: -scale(40),
+          }}
           buildQuestion={
             <View>
               <Animated.Image
