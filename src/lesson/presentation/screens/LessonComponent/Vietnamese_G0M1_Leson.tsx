@@ -289,6 +289,14 @@ const VnG0M1Lesson = observer(
             engVoice?.id,
             'Mainland China, simplified characters',
           );
+        } else if (lessonName.toLocaleLowerCase().includes('tiếng việt')) {
+          const vietnameseVoices = voices?.filter(
+            voice =>
+              voice.language.startsWith('vi-') ||
+              voice.name.toLowerCase().includes('vietnamese'),
+          );
+
+          updateDefaultVoice?.(vietnameseVoices?.[0]?.id, 'Vie (Vietnamese)');
         }
       }, [lessonName, updateDefaultVoice, voices]);
 
@@ -334,6 +342,8 @@ const VnG0M1Lesson = observer(
             handleStartRecord('unitedstates');
           } else if (lessonName.toLocaleLowerCase().includes('mandarin')) {
             handleStartRecord('china');
+          } else if (lessonName.toLocaleLowerCase().includes('tiếng việt')) {
+            handleStartRecord('vietnam');
           }
         }
       }, [setErrorSpeech, loadingRecord, lessonName, handleStartRecord]);
