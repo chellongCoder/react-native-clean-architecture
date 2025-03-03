@@ -39,6 +39,7 @@ import useHomeStore from 'src/home/presentation/stores/useHomeStore';
 import SelectionAnswersQuestion, {
   SelectionAnswersQuestionRef,
 } from '../../components/SelectionAnswersQuestion';
+import TextHighlight from '../../components/TextHighlight';
 
 type Props = {
   moduleIndex: number;
@@ -242,15 +243,15 @@ const Science_SG2M4 = observer(
               </View>
               <SelectionAnswersQuestion
                 question={
-                  <Text
-                    style={[
-                      styles.textQuestion,
-                      styles.textGreen,
-                      styles.mt8,
-                      {fontSize: scale(24)},
-                    ]}>
-                    {firstMiniTestTask?.question?.[moduleIndex].content}
-                  </Text>
+                  <TextHighlight
+                    content={
+                      firstMiniTestTask?.question?.[moduleIndex]?.content ?? ''
+                    }
+                    description={
+                      firstMiniTestTask?.question?.[moduleIndex]?.description ??
+                      ''
+                    }
+                  />
                 }
                 answer={
                   (firstMiniTestTask?.question?.[moduleIndex]

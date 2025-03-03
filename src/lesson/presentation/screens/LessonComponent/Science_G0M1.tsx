@@ -40,6 +40,7 @@ import SelectionAnswersQuestion, {
 } from '../../components/SelectionAnswersQuestion';
 import CharScramble, {CharScrambleRep} from '../../components/CharScramble';
 import {SoundGlobalContext} from 'src/core/presentation/hooks/sound/SoundGlobalContext';
+import TextHighlight from '../../components/TextHighlight';
 
 type Props = {
   moduleIndex: number;
@@ -255,34 +256,16 @@ const Science_G0M1 = observer(
               ) : (
                 <SelectionAnswersQuestion
                   question={
-                    <Text
-                      style={[
-                        styles.textQuestion,
-                        styles.textGreen,
-                        styles.mt8,
-                        {fontSize: scale(24)},
-                      ]}>
-                      {splitTextContent(
-                        firstMiniTestTask?.question?.[moduleIndex]
-                          ?.description ?? '',
+                    <TextHighlight
+                      content={
                         firstMiniTestTask?.question?.[moduleIndex]?.content ??
-                          '',
-                      ).map(e => {
-                        return (
-                          <Text
-                            style={{
-                              fontWeight:
-                                e ===
-                                firstMiniTestTask?.question?.[moduleIndex]
-                                  ?.content
-                                  ? 'bold'
-                                  : '400',
-                            }}>
-                            {e}
-                          </Text>
-                        );
-                      })}
-                    </Text>
+                        ''
+                      }
+                      description={
+                        firstMiniTestTask?.question?.[moduleIndex]
+                          ?.description ?? ''
+                      }
+                    />
                   }
                   answer={
                     firstMiniTestTask?.question?.[moduleIndex].answers ?? []
