@@ -137,8 +137,11 @@ const Math_MG2M4 = observer(
       }, [answerSelected, firstMiniTestTask?.question, moduleIndex]);
 
       const onSpeechText = useCallback(() => {
-        ttsSpeak?.(settings.prompt?.toString().toLowerCase() ?? '');
-      }, [settings.prompt, ttsSpeak]);
+        ttsSpeak?.(
+          firstMiniTestTask?.question?.[moduleIndex]?.instruction
+            ?.description ?? '',
+        );
+      }, [firstMiniTestTask?.question, moduleIndex, ttsSpeak]);
 
       const opacity = useSharedValue(0);
       const scaleS = useSharedValue(1);
