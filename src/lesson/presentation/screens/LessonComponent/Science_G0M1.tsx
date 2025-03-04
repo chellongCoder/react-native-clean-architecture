@@ -191,6 +191,7 @@ const Science_G0M1 = observer(
         <LessonComponent
           backgroundImage={backgroundImage}
           characterImage={characterImage}
+          characterStyle={{height: scale(200), marginBottom: scale(-34)}}
           lessonName={lessonName}
           module={moduleName}
           part={firstMiniTestTask?.name}
@@ -309,7 +310,7 @@ const styles = StyleSheet.create({
     fontFamily: FontFamily.SVNCherishMoment,
   },
   textColor: {
-    color: '#1C6349',
+    color: '#003C82',
   },
   textQuestion: {
     fontSize: verticalScale(15),

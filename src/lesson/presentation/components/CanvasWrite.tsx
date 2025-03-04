@@ -29,6 +29,7 @@ type Props = {
   text?: {
     content: string;
     style: TextStyle;
+    builder?: (text: string) => React.ReactNode;
     show?: boolean;
   };
   disable?: boolean;
@@ -270,11 +271,12 @@ const CanvasWrite = forwardRef<CanvasWriteRef, Props>((props: Props, ref) => {
             : null,
           ,
         ]}>
-        {props.text?.show && (
-          <Text style={[styles.text, {color: 'green'}, props.text?.style]}>
-            {props?.text?.content}
-          </Text>
-        )}
+        {props.text?.show &&
+          (props.text?.builder?.(props.text?.content) ?? (
+            <Text style={[styles.text, {color: 'green'}, props.text?.style]}>
+              {props?.text?.content}
+            </Text>
+          ))}
       </View>
       <Canvas style={styles.container} onTouch={touchHandler}>
         {/* {props?.text?.content && (

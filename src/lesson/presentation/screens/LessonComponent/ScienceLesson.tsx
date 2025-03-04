@@ -14,7 +14,12 @@ import useGlobalStyle from 'src/core/presentation/hooks/useGlobalStyle';
 import {Task} from 'src/home/application/types/GetListQuestionResponse';
 import useAuthenticationStore from 'src/authentication/presentation/stores/useAuthenticationStore';
 import {scale, verticalScale} from 'react-native-size-matters';
-import {isAndroid, WIDTH_SCREEN} from 'src/core/presentation/utils';
+import {
+  darkenColor,
+  getCorrectAnswer,
+  isAndroid,
+  WIDTH_SCREEN,
+} from 'src/core/presentation/utils';
 import {useLessonStore} from '../../stores/LessonStore/useGetPostsStore';
 import {useSettingLesson} from '../../hooks/useSettingLesson';
 import {COLORS} from 'src/core/presentation/constants/colors';
@@ -42,8 +47,10 @@ import LearningImage from '../../components/LearningImage';
 import SelectionImagesQuestion, {
   SelectionAnswersQuestionRef,
 } from '../../components/SelectionImagesQuestion';
-import { SoundGlobalContext } from 'src/core/presentation/hooks/sound/SoundGlobalContext';
-import { soundTrack } from 'src/core/presentation/hooks/sound/SoundGlobalProvider';
+import {SoundGlobalContext} from 'src/core/presentation/hooks/sound/SoundGlobalContext';
+import {soundTrack} from 'src/core/presentation/hooks/sound/SoundGlobalProvider';
+import {useIsFocused} from '@react-navigation/native';
+import TextHighlight from '../../components/TextHighlight';
 
 type Props = {
   moduleIndex: number;
@@ -74,7 +81,9 @@ const ScienceLesson = ({
   const {selectedChild} = useAuthenticationStore();
   const [answerSelected, setAnswerSelected] = useState('');
   const answerRef = useRef<SelectionAnswersQuestionRef>();
-  const {playSound} = useContext(SoundGlobalContext);
+
+  const {ttsSpeak} = useContext(TextToSpeechContext);
+  const focus = useIsFocused();
 
   const {trainingCount, getSetting} = useLessonStore();
   const isCorrectAnswer = useMemo(() => {
@@ -95,7 +104,7 @@ const ScienceLesson = ({
   const colorsMix = useMemo(() => {
     // Step 1: Split the string by commas to get an array of file names
     const fileNames =
-      firstMiniTestTask?.question?.[moduleIndex].content?.split(',');
+      firstMiniTestTask?.question?.[moduleIndex]?.content?.split?.(',');
 
     // Step 2: Remove the `.png` extension and add `#` prefix to each color code
     const colorCodes = fileNames?.map(
@@ -122,6 +131,34 @@ const ScienceLesson = ({
       totalTime: 5 * 60, // * tổng time làm 1câu
     });
 
+  const [currentIndex, setCurrentIndex] = useState(0);
+
+  const isLearning = useMemo(() => learningTimer !== 0, [learningTimer]);
+
+  const images = useMemo(
+    () =>
+      isLearning
+        ? firstMiniTestTask?.question?.[moduleIndex].image ?? []
+        : firstMiniTestTask?.question?.[moduleIndex].image.slice(1, 3) ?? [],
+    [firstMiniTestTask?.question, isLearning, moduleIndex],
+  );
+
+  const content = useMemo(
+    () =>
+      isLearning
+        ? undefined
+        : firstMiniTestTask?.question?.[moduleIndex].content[currentIndex],
+    [currentIndex, firstMiniTestTask?.question, isLearning, moduleIndex],
+  );
+
+  const description = useMemo(
+    () =>
+      isLearning
+        ? undefined
+        : firstMiniTestTask?.question?.[moduleIndex].description[currentIndex],
+    [currentIndex, firstMiniTestTask?.question, isLearning, moduleIndex],
+  );
+
   const characterImage = useMemo(() => {
     return isAnswerCorrect === true || isAnswerCorrect === undefined
       ? characterImageSuccess
@@ -129,11 +166,33 @@ const ScienceLesson = ({
   }, [characterImageFail, characterImageSuccess, isAnswerCorrect]);
 
   const onSpeechText = useCallback(() => {
-    playSound(
-      soundTrack.ukulele_music,
-    );
-  }, [playSound]);
+    ttsSpeak?.(getCorrectAnswer(content));
+  }, [content, ttsSpeak]);
 
+  useEffect(() => {
+    if (focus && !isLearning) {
+      // Check if the component is focused
+      const firstTimeout = setTimeout(() => {
+        onSpeechText();
+
+        const secondTimeout = setTimeout(() => {
+          onSpeechText();
+        }, 2500);
+
+        return () => clearTimeout(secondTimeout);
+      }, 1500);
+
+      return () => clearTimeout(firstTimeout);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isLearning, focus]); // Added focus to the dependency array
+
+  // useEffect(() => {
+  //   if (!isLearning) {
+  //     onSpeechText();
+  //   }
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [isLearning]);
 
   useEffect(() => {
     console.log(
@@ -156,13 +215,21 @@ const ScienceLesson = ({
   }, [lessonName, updateDefaultVoice]);
 
   useEffect(() => {
-    onSpeechText();
-  }, [onSpeechText]); 
+    const interval = setInterval(() => {
+      setCurrentIndex(prevIndex => (prevIndex + 1) % images.length);
+    }, 5000 / images.length); // Change image every 1 second
+
+    return () => {
+      clearInterval(interval);
+      setCurrentIndex(0);
+    }; // Cleanup interval on component unmount
+  }, [images]);
 
   return (
     <LessonComponent
       backgroundImage={backgroundImage}
       characterImage={characterImage}
+      characterStyle={{marginBottom: scale(-34)}}
       lessonName={lessonName}
       module={moduleName}
       part={firstMiniTestTask?.name}
@@ -181,33 +248,36 @@ const ScienceLesson = ({
           ? undefined
           : word
       }
-      buildQuestion={
-        <LearningImage
-          images={
-            learningTimer !== 0
-              ? (firstMiniTestTask?.question?.[moduleIndex].image as string[])
-              : (firstMiniTestTask?.question?.[moduleIndex].image.slice(
-                  1,
-                  3,
-                ) as string[])
-          }
-        />
-      }
+      buildQuestion={<LearningImage images={[images[currentIndex]]} />}
       buildAnswer={
         <View style={styles.fill}>
           <View
             style={{
               justifyContent: 'space-between',
               flexDirection: 'row',
+              alignItems: 'center',
             }}>
-            <Text style={[globalStyle.txtLabel]}>Choose correct answer</Text>
+            <Text
+              style={[
+                globalStyle.txtLabel,
+                {color: darkenColor(settings.backgroundButtonColor ?? '', 30)},
+              ]}>
+              Choose correct answer
+            </Text>
+            <TouchableOpacity onPress={onSpeechText}>
+              <Image
+                source={require('../../../../../assets/images/icon_speech.png')}
+                style={styles.iconImageContainer}
+              />
+            </TouchableOpacity>
           </View>
 
           <SelectionImagesQuestion
             question={
-              <Text style={[styles.textQuestion, {fontSize: scale(24)}]}>
-                {firstMiniTestTask?.question?.[moduleIndex].content}
-              </Text>
+              <TextHighlight
+                content={description ?? ''}
+                description={content ?? ''}
+              />
             }
             answers={
               (firstMiniTestTask?.question?.[moduleIndex]
@@ -478,5 +548,10 @@ const styles = StyleSheet.create({
     paddingHorizontal: scale(24),
     marginTop: scale(16),
     backgroundColor: '#0877B6',
+  },
+
+  iconImageContainer: {
+    height: verticalScale(45),
+    width: verticalScale(40),
   },
 });

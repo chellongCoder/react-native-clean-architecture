@@ -1,3 +1,4 @@
+/* eslint-disable react/no-unstable-nested-components */
 import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import React, {
   useCallback,
@@ -37,6 +38,7 @@ import LearningText from '../../components/LearningText';
 import KeyboardNumber, {
   SelectionAnswersQuestionRef,
 } from '../../components/KeyboardNumber';
+import Svg, {Text as TextSvg} from 'react-native-svg';
 
 type Props = {
   moduleIndex: number;
@@ -305,12 +307,39 @@ const VnG1M3Lesson = ({
             <CanvasWrite
               ref={canvasWriteRef}
               text={{
-                content: answerSelected ?? '',
+                content: answerSelected
+                  ? answerSelected
+                  : getDataString(
+                      firstMiniTestTask?.question?.[moduleIndex].fullAnswer,
+                    ),
                 style: {
-                  color: COLORS.PRIMARY,
+                  color: isCorrect ? COLORS.PRIMARY : COLORS.RED_F28759,
+                  marginBottom: -80,
                   fontFamily: FontFamily.BorelRegular,
                 },
-                show: !!answerSelected,
+                show: true,
+                builder: !answerSelected
+                  ? text => {
+                      return (
+                        <Svg>
+                          <TextSvg
+                            x="50%"
+                            y="67%"
+                            fontSize={140}
+                            fontFamily={FontFamily.BorelRegular}
+                            fontWeight="bold"
+                            textAnchor="middle"
+                            fill="transparent" // Màu chữ bên trong
+                            stroke={COLORS.PRIMARY} // Màu viền chữ
+                            strokeWidth={2}
+                            strokeDasharray="6,6" // Tạo viền nét đứt
+                          >
+                            {text}
+                          </TextSvg>
+                        </Svg>
+                      );
+                    }
+                  : undefined,
               }}
               disable={learningTimer !== 0}
             />
