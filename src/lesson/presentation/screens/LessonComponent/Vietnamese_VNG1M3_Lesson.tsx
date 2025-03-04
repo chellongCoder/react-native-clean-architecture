@@ -113,23 +113,35 @@ const VnG1M3Lesson = ({
     return answerType === 'draw_character';
   }, [answerType]);
 
-  const onSpeechText = useCallback(() => {
-    ttsSpeak?.(
-      getCorrectAnswer(
-        firstMiniTestTask?.question?.[moduleIndex].correctAnswer,
-      ),
-    );
-  }, [firstMiniTestTask?.question, moduleIndex, ttsSpeak]);
+  const onSpeechText = useCallback(
+    (text: string) => {
+      text.split('/').forEach((answer, index) => {
+        setTimeout(() => {
+          ttsSpeak?.(getCorrectAnswer(answer?.trim()));
+        }, index * 750);
+      });
+    },
+    [ttsSpeak],
+  );
 
   useEffect(() => {
     if (focus) {
       // Check if the component is focused
-
       const firstTimeout = setTimeout(() => {
-        onSpeechText();
+        onSpeechText(
+          getCorrectAnswer(
+            firstMiniTestTask?.type !== 'mini_test'
+              ? firstMiniTestTask?.question?.[moduleIndex].content
+              : firstMiniTestTask?.question?.[moduleIndex].correctAnswer,
+          ),
+        );
 
         const secondTimeout = setTimeout(() => {
-          onSpeechText();
+          onSpeechText(
+            getCorrectAnswer(
+              firstMiniTestTask?.question?.[moduleIndex].fullAnswer,
+            ),
+          );
         }, 2500);
 
         return () => clearTimeout(secondTimeout);
@@ -137,7 +149,13 @@ const VnG1M3Lesson = ({
 
       return () => clearTimeout(firstTimeout);
     }
-  }, [onSpeechText, focus]); // Added focus to the dependency array
+  }, [
+    onSpeechText,
+    focus,
+    firstMiniTestTask?.question,
+    moduleIndex,
+    firstMiniTestTask?.type,
+  ]); // Added focus to the dependency array
 
   useEffect(() => {
     console.log(
@@ -291,7 +309,16 @@ const VnG1M3Lesson = ({
                   )}"`
                 : 'Choose correct answer'}
             </Text>
-            <TouchableOpacity onPress={onSpeechText}>
+            <TouchableOpacity
+              onPress={() =>
+                onSpeechText(
+                  getCorrectAnswer(
+                    firstMiniTestTask?.type === 'mini_test'
+                      ? firstMiniTestTask?.question?.[moduleIndex].fullAnswer
+                      : firstMiniTestTask?.question?.[moduleIndex].content,
+                  ),
+                )
+              }>
               <Image
                 source={assets.icon_speech}
                 style={styles.iconAIVoiceContainer}

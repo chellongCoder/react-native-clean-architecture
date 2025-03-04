@@ -229,7 +229,7 @@ const LessonScreen = observer(() => {
   const {tasks: apiTasks} = useListQuestions(route?.lessonId);
 
   const tasks = useMemo(() => {
-    return apiTasks.slice(apiTasks.length - 1, apiTasks.length).map(t => {
+    return apiTasks.map(t => {
       return {
         ...t,
         // question: t.question.slice(0, 1),

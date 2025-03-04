@@ -19,7 +19,7 @@ type Props = {
   data: any[];
   title: string;
   onSelectItem: (item: any) => void;
-  getTitleItem: (itemId: string) => any;
+  getTitleItem?: (itemId: string) => any;
   width?: number;
   prefix?: string;
   nameIndex?: string;

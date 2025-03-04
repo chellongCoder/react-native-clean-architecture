@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {forwardRef, useImperativeHandle, useMemo} from 'react';
 import {
   StyleSheet,
   View,
@@ -17,7 +17,11 @@ import {
 } from 'src/authentication/application/types/GetUserProfileResponse';
 import useLoginWithCredentials from 'src/authentication/presentation/hooks/useLoginWithCredentials';
 
-const ChildrenDescription = () => {
+export type ChildrenDescriptionRef = {
+  onChangeName: (newName: string) => void;
+  childDescription: string;
+};
+const ChildrenDescription = forwardRef<ChildrenDescriptionRef>((props, ref) => {
   const globalStyle = useGlobalStyle();
   const {selectedChild, getUserProfile} = useAuthenticationStore();
   const {handleChangeChildDescription} = useLoginWithCredentials();
@@ -26,6 +30,19 @@ const ChildrenDescription = () => {
   const [isChangeChildDescription, setIsChangeChildDescription] =
     React.useState<boolean>(false);
   const [childDescription, setChildDescription] = React.useState<string>('');
+
+  const initValue = useMemo(() => {
+    return userProfile &&
+      userProfile?.children.filter(
+        (item: children) => item._id === selectedChild?._id,
+      )[0]?.description?.length > 0
+      ? userProfile?.children.filter(
+          (item: children) => item._id === selectedChild?._id,
+        )[0]?.description
+      : `Lorem Ipsum is simply dummy text of the printing and typesetting
+  industry. Lorem Ipsum has been the industry's standard dummy text Lorem
+  Ipsum has been....`;
+  }, [selectedChild?._id, userProfile]);
   const [changeDescriptionSuccess, setChangeDescriptionSuccess] =
     React.useState<boolean>(false);
 
@@ -51,6 +68,22 @@ const ChildrenDescription = () => {
     }
   };
 
+  const onChangeName = async (newName: string) => {
+    const res = await handleChangeChildDescription({
+      childrenId: selectedChild?._id || '',
+      description: newName,
+    });
+    if (res) {
+      setChangeDescriptionSuccess(true);
+    }
+    setIsChangeChildDescription(false);
+  };
+
+  useImperativeHandle(ref, () => ({
+    onChangeName,
+    childDescription,
+  }));
+
   const handleGetUserProfile = React.useCallback(async () => {
     const res = await getUserProfile();
     if (res.data) {
@@ -75,30 +108,19 @@ const ChildrenDescription = () => {
       {isChangeChildDescription ? (
         <TextInput
           autoFocus
-          value={childDescription}
+          defaultValue={initValue}
           onChangeText={setChildDescription}
-          onBlur={() => setIsChangeChildDescription(false)}
+          // onBlur={() => setIsChangeChildDescription(false)}
           onSubmitEditing={(
             e: NativeSyntheticEvent<TextInputSubmitEditingEventData>,
           ) => onSubmit(e)}
         />
       ) : (
-        <Text style={[globalStyle.txtNote, styles.mb12]}>
-          {userProfile &&
-          userProfile?.children.filter(
-            (item: children) => item._id === selectedChild?._id,
-          )[0]?.description?.length > 0
-            ? userProfile?.children.filter(
-                (item: children) => item._id === selectedChild?._id,
-              )[0]?.description
-            : `Lorem Ipsum is simply dummy text of the printing and typesetting
-        industry. Lorem Ipsum has been the industry's standard dummy text Lorem
-        Ipsum has been....`}
-        </Text>
+        <Text style={[globalStyle.txtNote, styles.mb12]}>{initValue}</Text>
       )}
     </View>
   );
-};
+});
 
 const styles = StyleSheet.create({
   fill: {

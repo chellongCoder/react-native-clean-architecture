@@ -270,6 +270,11 @@ const VnG5M1Lesson = observer(
               />
             </View>
           }
+          characterStyle={{
+            height: verticalScale(300),
+            marginBottom: -verticalScale(100),
+            marginLeft: -scale(40),
+          }}
           buildAnswer={
             <View style={styles.fill}>
               <View style={styles.wrapHeaderContainer}>

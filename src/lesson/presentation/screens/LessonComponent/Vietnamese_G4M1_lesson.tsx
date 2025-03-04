@@ -225,7 +225,6 @@ const VnG4M1Lesson = observer(
         <LessonComponent
           backgroundImage={backgroundImage}
           characterImage={characterImage}
-          characterStyle={{height: verticalScale(200)}}
           lessonName={lessonName}
           module={moduleName}
           part={firstMiniTestTask?.name}
@@ -249,6 +248,11 @@ const VnG4M1Lesson = observer(
           isAnswerCorrect={isAnswerCorrect}
           isShowCorrectContainer={isShowCorrectContainer}
           onPressFlower={toggleShowHint}
+          characterStyle={{
+            height: verticalScale(300),
+            marginBottom: -verticalScale(100),
+            marginLeft: -scale(40),
+          }}
           buildQuestion={
             <View
               style={{
