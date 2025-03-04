@@ -104,7 +104,7 @@ const VnG0M2Lesson = observer(
           answerSelected ===
           getCorrectAnswer(
             firstMiniTestTask?.question?.[moduleIndex]?.correctAnswer,
-          ),
+          ).trim(),
         onSubmit: () => {
           setAnswerSelected('');
           nextModule(answerSelected);
