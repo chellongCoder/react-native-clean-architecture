@@ -17,7 +17,11 @@ import {FontFamily} from 'src/core/presentation/hooks/useFonts';
 import useGlobalStyle from 'src/core/presentation/hooks/useGlobalStyle';
 import {Task} from 'src/home/application/types/GetListQuestionResponse';
 import {COLORS} from 'src/core/presentation/constants/colors';
-import {darkenColor, getCorrectAnswer} from 'src/core/presentation/utils';
+import {
+  darkenColor,
+  getCorrectAnswer,
+  isAndroid,
+} from 'src/core/presentation/utils';
 import {scale, verticalScale} from 'react-native-size-matters';
 import {
   Easing,
@@ -36,6 +40,12 @@ import useHomeStore from 'src/home/presentation/stores/useHomeStore';
 import SelectionAnswersQuestion, {
   SelectionAnswersQuestionRef,
 } from '../../components/SelectionAnswersQuestion';
+import TextHighlight from '../../components/TextHighlight';
+import Tts from 'react-native-tts';
+import {
+  iosVoice,
+  listLanguage,
+} from 'src/core/presentation/hooks/textToSpeech/TextToSpeechProvider';
 
 type Props = {
   moduleIndex: number;
@@ -67,7 +77,7 @@ const VnG3M1Lesson = observer(
     ) => {
       const globalStyle = useGlobalStyle();
 
-      const {ttsSpeak} = useContext(TextToSpeechContext);
+      const {ttsSpeak, updateDefaultVoice} = useContext(TextToSpeechContext);
       const focus = useIsFocused();
       const answerRef = useRef<SelectionAnswersQuestionRef>();
 
@@ -91,7 +101,7 @@ const VnG3M1Lesson = observer(
           answerSelected ===
           getCorrectAnswer(
             firstMiniTestTask?.question?.[moduleIndex]?.correctAnswer,
-          ),
+          ).trim(),
         onSubmit: () => {
           setAnswerSelected('');
           nextModule(answerSelected);
@@ -149,16 +159,45 @@ const VnG3M1Lesson = observer(
         }
       }, [onSpeechText, focus]); // Added focus to the dependency array
 
-      const splitTextContent = (data: string) => {
-        const content = firstMiniTestTask?.question?.[moduleIndex].content;
-        const list = ` ${data} `.split(content ?? '-.-');
-        return list.flatMap((e, i) => {
-          if (i === list.length - 1) {
-            return e;
+      useEffect(() => {
+        console.log(
+          '🛠 LOG: 🚀 --> -----------------------------------------------------🛠 LOG: 🚀 -->',
+        );
+        console.log('🛠 LOG: 🚀 --> ~ Tts.voices ~ lessonName:', lessonName);
+        console.log(
+          '🛠 LOG: 🚀 --> -----------------------------------------------------🛠 LOG: 🚀 -->',
+        );
+
+        Tts.voices().then(voices => {
+          if (lessonName.toLocaleLowerCase().includes('english')) {
+            const engVoice = voices.find(
+              voice => voice.language === listLanguage['US English'],
+            );
+            updateDefaultVoice?.(
+              isAndroid ? engVoice?.id : iosVoice[3].id,
+              'US English',
+            );
+          } else if (lessonName.toLocaleLowerCase().includes('mandarin')) {
+            const engVoice = voices.find(
+              voice =>
+                voice.language ===
+                listLanguage['Mainland China, simplified characters'],
+            );
+            updateDefaultVoice?.(
+              engVoice?.id,
+              'Mainland China, simplified characters',
+            );
+          } else if (lessonName.toLocaleLowerCase().includes('tiếng việt')) {
+            const vietnameseVoices = voices.filter(
+              voice =>
+                voice.language.startsWith('vi-') ||
+                voice.name.toLowerCase().includes('vietnamese'),
+            );
+
+            updateDefaultVoice?.(vietnameseVoices[0]?.id, 'Vie (Vietnamese)');
           }
-          return [e, content];
         });
-      };
+      }, [lessonName, updateDefaultVoice]);
 
       useEffect(() => {
         opacity.value = withTiming(0, {duration: 500}, () => {
@@ -216,24 +255,19 @@ const VnG3M1Lesson = observer(
                 minHeight: scale(100),
                 marginTop: verticalScale(40),
               }}>
-              <Text style={[styles.fonts_SVN_Cherish, styles.textParagraph]}>
-                {splitTextContent(
-                  firstMiniTestTask?.question?.[moduleIndex].paragraph ?? '',
-                ).map(e => {
-                  return (
-                    <Text
-                      style={{
-                        textDecorationLine:
-                          e ===
-                          firstMiniTestTask?.question?.[moduleIndex]?.content
-                            ? 'underline'
-                            : 'none',
-                      }}>
-                      {e}
-                    </Text>
-                  );
-                })}
-              </Text>
+              <TextHighlight
+                content={
+                  firstMiniTestTask?.question?.[moduleIndex]?.content ?? ''
+                }
+                description={
+                  firstMiniTestTask?.question?.[moduleIndex]?.paragraph ?? ''
+                }
+                style={[styles.fonts_SVN_Cherish, styles.textParagraph]}
+                styleHighlight={{
+                  textDecorationLine: 'underline',
+                  fontWeight: '400',
+                }}
+              />
             </View>
           }
           buildAnswer={
@@ -268,26 +302,15 @@ const VnG3M1Lesson = observer(
               <SelectionAnswersQuestion
                 answer={firstMiniTestTask?.question?.[moduleIndex].answers}
                 question={
-                  <Text style={[styles.textQuestion]}>
-                    {splitTextContent(
+                  <TextHighlight
+                    content={
+                      firstMiniTestTask?.question?.[moduleIndex]?.content ?? ''
+                    }
+                    description={
                       firstMiniTestTask?.question?.[moduleIndex]?.description ??
-                        '',
-                    ).map(e => {
-                      return (
-                        <Text
-                          style={{
-                            fontWeight:
-                              e ===
-                              firstMiniTestTask?.question?.[moduleIndex]
-                                ?.content
-                                ? 'bold'
-                                : '400',
-                          }}>
-                          {e}
-                        </Text>
-                      );
-                    })}
-                  </Text>
+                      ''
+                    }
+                  />
                 }
                 isShowCorrectContainer={isShowCorrectContainer}
                 isAnswerCorrect={!!isAnswerCorrect}

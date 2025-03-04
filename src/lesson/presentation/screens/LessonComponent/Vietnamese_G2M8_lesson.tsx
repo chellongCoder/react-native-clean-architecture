@@ -15,7 +15,11 @@ import {FontFamily} from 'src/core/presentation/hooks/useFonts';
 import useGlobalStyle from 'src/core/presentation/hooks/useGlobalStyle';
 import {Task} from 'src/home/application/types/GetListQuestionResponse';
 import {COLORS} from 'src/core/presentation/constants/colors';
-import {darkenColor, getCorrectAnswer} from 'src/core/presentation/utils';
+import {
+  darkenColor,
+  getCorrectAnswer,
+  isAndroid,
+} from 'src/core/presentation/utils';
 import {scale, verticalScale} from 'react-native-size-matters';
 import {
   Easing,
@@ -34,6 +38,12 @@ import useHomeStore from 'src/home/presentation/stores/useHomeStore';
 import SelectionAnswersQuestion, {
   SelectionAnswersQuestionRef,
 } from '../../components/SelectionAnswersQuestion';
+import TextHighlight from '../../components/TextHighlight';
+import Tts from 'react-native-tts';
+import {
+  iosVoice,
+  listLanguage,
+} from 'src/core/presentation/hooks/textToSpeech/TextToSpeechProvider';
 
 type Props = {
   moduleIndex: number;
@@ -65,7 +75,7 @@ const VnG2M8Lesson = observer(
     ) => {
       const globalStyle = useGlobalStyle();
 
-      const {ttsSpeak} = useContext(TextToSpeechContext);
+      const {ttsSpeak, updateDefaultVoice} = useContext(TextToSpeechContext);
       const focus = useIsFocused();
       const answerRef = useRef<SelectionAnswersQuestionRef>();
 
@@ -89,7 +99,7 @@ const VnG2M8Lesson = observer(
           answerSelected ===
           getCorrectAnswer(
             firstMiniTestTask?.question?.[moduleIndex]?.correctAnswer,
-          ),
+          ).trim(),
         onSubmit: () => {
           setAnswerSelected('');
           nextModule(answerSelected);
@@ -113,7 +123,9 @@ const VnG2M8Lesson = observer(
 
       const onSpeechText = useCallback(() => {
         ttsSpeak?.(
-          getCorrectAnswer(firstMiniTestTask?.question?.[moduleIndex].content),
+          getCorrectAnswer(
+            firstMiniTestTask?.question?.[moduleIndex].description,
+          ),
         );
       }, [firstMiniTestTask?.question, moduleIndex, ttsSpeak]);
 
@@ -144,6 +156,46 @@ const VnG2M8Lesson = observer(
           return () => clearTimeout(firstTimeout);
         }
       }, [onSpeechText, focus]); // Added focus to the dependency array
+
+      useEffect(() => {
+        console.log(
+          '🛠 LOG: 🚀 --> -----------------------------------------------------🛠 LOG: 🚀 -->',
+        );
+        console.log('🛠 LOG: 🚀 --> ~ Tts.voices ~ lessonName:', lessonName);
+        console.log(
+          '🛠 LOG: 🚀 --> -----------------------------------------------------🛠 LOG: 🚀 -->',
+        );
+
+        Tts.voices().then(voices => {
+          if (lessonName.toLocaleLowerCase().includes('english')) {
+            const engVoice = voices.find(
+              voice => voice.language === listLanguage['US English'],
+            );
+            updateDefaultVoice?.(
+              isAndroid ? engVoice?.id : iosVoice[3].id,
+              'US English',
+            );
+          } else if (lessonName.toLocaleLowerCase().includes('mandarin')) {
+            const engVoice = voices.find(
+              voice =>
+                voice.language ===
+                listLanguage['Mainland China, simplified characters'],
+            );
+            updateDefaultVoice?.(
+              engVoice?.id,
+              'Mainland China, simplified characters',
+            );
+          } else if (lessonName.toLocaleLowerCase().includes('tiếng việt')) {
+            const vietnameseVoices = voices.filter(
+              voice =>
+                voice.language.startsWith('vi-') ||
+                voice.name.toLowerCase().includes('vietnamese'),
+            );
+
+            updateDefaultVoice?.(vietnameseVoices[0]?.id, 'Vie (Vietnamese)');
+          }
+        });
+      }, [lessonName, updateDefaultVoice]);
 
       useEffect(() => {
         opacity.value = withTiming(0, {duration: 500}, () => {
@@ -198,6 +250,7 @@ const VnG2M8Lesson = observer(
             <View
               style={{
                 width: scale(200),
+                minHeight: scale(100),
                 marginTop: verticalScale(50),
               }}>
               <Text style={[styles.fonts_SVN_Cherish, styles.textParagraph]}>
@@ -237,13 +290,15 @@ const VnG2M8Lesson = observer(
               <SelectionAnswersQuestion
                 answer={firstMiniTestTask?.question?.[moduleIndex].answers}
                 question={
-                  <Text
-                    style={[
-                      styles.textQuestion,
-                      {fontSize: verticalScale(15)},
-                    ]}>
-                    {firstMiniTestTask?.question?.[moduleIndex].content}
-                  </Text>
+                  <TextHighlight
+                    content={
+                      firstMiniTestTask?.question?.[moduleIndex]?.content ?? ''
+                    }
+                    description={
+                      firstMiniTestTask?.question?.[moduleIndex]?.description ??
+                      ''
+                    }
+                  />
                 }
                 isShowCorrectContainer={isShowCorrectContainer}
                 isAnswerCorrect={!!isAnswerCorrect}
