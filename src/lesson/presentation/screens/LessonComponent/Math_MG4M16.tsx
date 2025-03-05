@@ -49,7 +49,7 @@ type Props = {
   answer?: string[];
 };
 
-const Math_MG5M18 = observer(
+const Math_MG4M16 = observer(
   forwardRef<LessonRef, Props>(
     (
       {
@@ -205,7 +205,7 @@ const Math_MG5M18 = observer(
               <Animated.Image
                 resizeMode={'contain'}
                 width={WIDTH_SCREEN}
-                height={scale(200)}
+                height={scale(180)}
                 style={[{}, animatedStyle]}
                 source={{
                   uri:
@@ -282,7 +282,7 @@ const Math_MG5M18 = observer(
   ),
 );
 
-export default Math_MG5M18;
+export default Math_MG4M16;
 
 const styles = StyleSheet.create({
   fill: {

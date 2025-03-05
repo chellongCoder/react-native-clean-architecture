@@ -78,6 +78,7 @@ import VnG5M1Lesson from './LessonComponent/Vietnamese_G5M1_lesson';
 import Math_MG1M3 from './LessonComponent/Math_MG1M3';
 import Math_MG1M3_P4 from './LessonComponent/Math_MG1M3_P4';
 import Science_SG6M3 from './LessonComponent/Science_SG6M3';
+import Math_MG4M16 from './LessonComponent/Math_MG4M16';
 
 export enum MathQuestionType {
   MATH_TEXT = 'math_text',
@@ -108,6 +109,7 @@ export enum MathQuestionType {
   MathMG1M3 = 'MATH_MG1M3',
   MathMG2M4 = 'MATH_MG2M4',
   MathMG3M8 = 'MATH_MG3M8',
+  MathMG4M16 = 'MATH_MG4M16',
   MathMG4M30 = 'MATH_MG4M30',
   MathMG5M18 = 'MATH_MG5M18',
   MathMG6M15 = 'MATH_MG6M15',
@@ -1526,6 +1528,30 @@ const LessonScreen = observer(() => {
             ref={vowelRef}
             isMulti={true}
             answer={['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']}
+          />
+        );
+      case MathQuestionType.MathMG4M16:
+        return (
+          <Math_MG4M16
+            moduleIndex={lessonIndex}
+            nextModule={nextModule}
+            totalModule={testTask?.question.length ?? 0}
+            lessonName={route.lessonName}
+            moduleName={route.moduleName}
+            firstMiniTestTask={testTask}
+            backgroundImage={
+              env.IMAGE_BACKGROUND_BASE_API_URL + lessonSetting?.backgroundImage
+            }
+            characterImageSuccess={
+              env.IMAGE_BACKGROUND_BASE_API_URL +
+              lessonSetting?.figureSuccessImage
+            }
+            characterImageFail={
+              env.IMAGE_BACKGROUND_BASE_API_URL + lessonSetting?.figureFailImage
+            }
+            ref={vowelRef}
+            isMulti={true}
+            answer={['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '.']}
           />
         );
       case MathQuestionType.MathMG5M18:
