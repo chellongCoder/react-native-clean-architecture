@@ -184,6 +184,7 @@ const Science_SG2M4 = observer(
         <LessonComponent
           backgroundImage={backgroundImage}
           characterImage={characterImage}
+          characterStyle={{marginBottom: scale(-34)}}
           lessonName={lessonName}
           module={moduleName}
           part={firstMiniTestTask?.name}
@@ -262,6 +263,7 @@ const Science_SG2M4 = observer(
                 onSelectAnswer={(e: string[]) => {
                   setAnswerSelected(e?.[0]);
                 }}
+                isSelectOne
                 learningTimer={learningTimer}
                 fontFamily={FontFamily.SVNCherishMoment}
                 ref={answerRef}

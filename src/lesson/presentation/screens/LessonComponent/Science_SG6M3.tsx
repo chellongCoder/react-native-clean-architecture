@@ -54,7 +54,7 @@ type Props = {
   characterImageFail?: string;
 };
 
-const Science_SG5M5 = observer(
+const Science_SG6M3 = observer(
   forwardRef<LessonRef, Props>(
     (
       {
@@ -241,8 +241,9 @@ const Science_SG5M5 = observer(
                 resizeMode={'contain'}
                 style={[
                   {
-                    width: WIDTH_SCREEN - scale(20),
+                    width: WIDTH_SCREEN * 0.6,
                     aspectRatio: 1.5,
+                    marginTop: verticalScale(32),
                   },
                   animatedStyle,
                 ]}
@@ -318,7 +319,7 @@ const Science_SG5M5 = observer(
   ),
 );
 
-export default Science_SG5M5;
+export default Science_SG6M3;
 
 const styles = StyleSheet.create({
   fill: {

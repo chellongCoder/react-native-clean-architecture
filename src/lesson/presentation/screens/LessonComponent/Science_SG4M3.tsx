@@ -168,8 +168,7 @@ const Science_SG4M3 = observer(
 
           return () => clearTimeout(firstTimeout);
         }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-      }, [focus]); // Added focus to the dependency array
+      }, [focus, onSpeechText]); // Added focus to the dependency array
 
       const speakCount = useRef(0);
       useEffect(() => {
@@ -184,8 +183,7 @@ const Science_SG4M3 = observer(
 
           return () => clearTimeout(firstTimeout);
         }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-      }, [focus, isSpeakDone]); // Added focus to the dependency array
+      }, [focus, isSpeakDone, onSpeechText]); // Added focus to the dependency array
 
       useEffect(() => {
         opacity.value = withTiming(0, {duration: 500}, () => {
@@ -308,6 +306,7 @@ const Science_SG4M3 = observer(
                 onSelectAnswer={(e: string[]) => {
                   setAnswerSelected(e[0]);
                 }}
+                isSelectOne
                 learningTimer={learningTimer}
                 fontFamily={FontFamily.SVNCherishMoment}
                 ref={answerRef}
