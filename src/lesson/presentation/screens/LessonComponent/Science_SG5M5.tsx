@@ -16,6 +16,7 @@ import useGlobalStyle from 'src/core/presentation/hooks/useGlobalStyle';
 import {Task} from 'src/home/application/types/GetListQuestionResponse';
 import {COLORS} from 'src/core/presentation/constants/colors';
 import {
+  darkenColor,
   getCorrectAnswer,
   isMMSS,
   isSubArray,
@@ -240,7 +241,7 @@ const Science_SG5M5 = observer(
                 resizeMode={'contain'}
                 style={[
                   {
-                    width: WIDTH_SCREEN,
+                    width: WIDTH_SCREEN - scale(20),
                     aspectRatio: 1.5,
                   },
                   animatedStyle,
@@ -261,7 +262,16 @@ const Science_SG5M5 = observer(
                     justifyContent: 'center',
                     flex: 1,
                   }}>
-                  <Text style={[globalStyle.txtLabel, styles.textColor]}>
+                  <Text
+                    style={[
+                      globalStyle.txtLabel,
+                      {
+                        color: darkenColor(
+                          settings.backgroundButtonColor ?? '',
+                          20,
+                        ),
+                      },
+                    ]}>
                     Choose the correct answer
                   </Text>
                 </View>
@@ -284,6 +294,7 @@ const Science_SG5M5 = observer(
                 onSelectAnswer={(e: string[]) => {
                   setAnswerSelected(e[0]);
                 }}
+                isSelectOne
                 learningTimer={learningTimer}
                 fontFamily={FontFamily.SVNCherishMoment}
                 ref={answerRef}

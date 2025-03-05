@@ -77,6 +77,7 @@ import VnG4M1Lesson from './LessonComponent/Vietnamese_G4M1_lesson';
 import VnG5M1Lesson from './LessonComponent/Vietnamese_G5M1_lesson';
 import Math_MG1M3 from './LessonComponent/Math_MG1M3';
 import Math_MG1M3_P4 from './LessonComponent/Math_MG1M3_P4';
+import Science_SG6M3 from './LessonComponent/Science_SG6M3';
 
 export enum MathQuestionType {
   MATH_TEXT = 'math_text',
@@ -1383,9 +1384,30 @@ const LessonScreen = observer(() => {
           />
         );
       case ScienceE.SCIENCE_SG5M5:
-      case ScienceE.SCIENCE_SG6M6:
         return (
           <Science_SG5M5
+            moduleIndex={lessonIndex}
+            nextModule={nextModule}
+            totalModule={testTask?.question.length ?? 0}
+            lessonName={route.lessonName}
+            moduleName={route.moduleName}
+            firstMiniTestTask={testTask}
+            backgroundImage={
+              env.IMAGE_BACKGROUND_BASE_API_URL + lessonSetting?.backgroundImage
+            }
+            characterImageSuccess={
+              env.IMAGE_BACKGROUND_BASE_API_URL +
+              lessonSetting?.figureSuccessImage
+            }
+            characterImageFail={
+              env.IMAGE_BACKGROUND_BASE_API_URL + lessonSetting?.figureFailImage
+            }
+            ref={vowelRef}
+          />
+        );
+      case ScienceE.SCIENCE_SG6M6:
+        return (
+          <Science_SG6M3
             moduleIndex={lessonIndex}
             nextModule={nextModule}
             totalModule={testTask?.question.length ?? 0}

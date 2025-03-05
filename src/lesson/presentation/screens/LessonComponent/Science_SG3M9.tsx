@@ -190,6 +190,7 @@ const Science_SG3M9 = observer(
         <LessonComponent
           backgroundImage={backgroundImage}
           characterImage={characterImage}
+          characterStyle={{marginBottom: scale(-34)}}
           lessonName={lessonName}
           module={moduleName}
           part={firstMiniTestTask?.name}
