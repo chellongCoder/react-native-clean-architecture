@@ -159,6 +159,19 @@ const ScienceLesson = ({
     [currentIndex, firstMiniTestTask?.question, isLearning, moduleIndex],
   );
 
+  const descriptionImage = useMemo(
+    () =>
+      isLearning
+        ? firstMiniTestTask?.question?.[moduleIndex].descriptionImage[
+            currentIndex
+          ]
+        : firstMiniTestTask?.question?.[moduleIndex].descriptionImage.slice(
+            1,
+            3,
+          )[currentIndex],
+    [currentIndex, firstMiniTestTask?.question, isLearning, moduleIndex],
+  );
+
   const characterImage = useMemo(() => {
     return isAnswerCorrect === true || isAnswerCorrect === undefined
       ? characterImageSuccess
@@ -166,26 +179,30 @@ const ScienceLesson = ({
   }, [characterImageFail, characterImageSuccess, isAnswerCorrect]);
 
   const onSpeechText = useCallback(() => {
-    ttsSpeak?.(getCorrectAnswer(content));
-  }, [content, ttsSpeak]);
+    ttsSpeak?.(
+      isLearning
+        ? firstMiniTestTask?.question?.[moduleIndex].descriptionImage[0] ?? ''
+        : getCorrectAnswer(content),
+    );
+  }, [content, ttsSpeak, isLearning, firstMiniTestTask, moduleIndex]);
 
   useEffect(() => {
-    if (focus && !isLearning) {
+    if (focus) {
       // Check if the component is focused
       const firstTimeout = setTimeout(() => {
         onSpeechText();
 
         const secondTimeout = setTimeout(() => {
           onSpeechText();
-        }, 2500);
+        }, 1500);
 
         return () => clearTimeout(secondTimeout);
-      }, 1500);
+      }, 100);
 
       return () => clearTimeout(firstTimeout);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isLearning, focus]); // Added focus to the dependency array
+  }, [firstMiniTestTask, moduleIndex, focus]); // Added focus to the dependency array
 
   // useEffect(() => {
   //   if (!isLearning) {
@@ -248,7 +265,14 @@ const ScienceLesson = ({
           ? undefined
           : word
       }
-      buildQuestion={<LearningImage images={[images[currentIndex]]} />}
+      buildQuestion={
+        <View style={{justifyContent: 'center', alignItems: 'center'}}>
+          <Text style={[styles.fonts_SVN_Cherish, styles.textQuestion]}>
+            {descriptionImage}
+          </Text>
+          <LearningImage images={[images[currentIndex]]} />
+        </View>
+      }
       buildAnswer={
         <View style={styles.fill}>
           <View
@@ -523,7 +547,7 @@ const styles = StyleSheet.create({
   textQuestion: {
     fontSize: scale(40),
     textAlign: 'center',
-    color: COLORS.RED_811010,
+    color: COLORS.BLUE_258F78,
   },
   rowAround: {
     flexDirection: 'row',

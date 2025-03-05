@@ -90,6 +90,7 @@ const Science_SG2M4 = observer(
         submit,
         toggleShowHint,
         resetLearning,
+        resetTesting,
       } = useSettingLesson({
         countDownTime: trainingCount <= 2 ? 0 : 5,
         isCorrectAnswer:
@@ -98,9 +99,19 @@ const Science_SG2M4 = observer(
             .trim()
             .toLocaleLowerCase(),
         onSubmit: () => {
-          setAnswerSelected('');
-          nextModule(answerSelected.toString());
-          answerRef.current?.resetAnswerSelected?.();
+          const prompt =
+            firstMiniTestTask?.type !== 'mini_test'
+              ? firstMiniTestTask?.question?.[moduleIndex]?.instruction
+                  ?.description ?? ''
+              : '';
+          ttsSpeak?.(prompt);
+          setTimeout(() => {
+            resetLearning();
+            resetTesting();
+            setAnswerSelected('');
+            nextModule(answerSelected.toString());
+            answerRef.current?.resetAnswerSelected?.();
+          }, prompt.length * 55);
         },
         fullAnswer: firstMiniTestTask?.question?.[moduleIndex].fullAnswer,
       });
@@ -118,7 +129,9 @@ const Science_SG2M4 = observer(
       }, [characterImageFail, characterImageSuccess, isAnswerCorrect]);
 
       const onSpeechText = useCallback(() => {
-        ttsSpeak?.(firstMiniTestTask?.question?.[moduleIndex]?.content ?? '');
+        ttsSpeak?.(
+          firstMiniTestTask?.question?.[moduleIndex]?.description ?? '',
+        );
       }, [firstMiniTestTask?.question, moduleIndex, ttsSpeak]);
 
       const opacity = useSharedValue(0);
@@ -276,6 +289,7 @@ const Science_SG2M4 = observer(
                   {backgroundColor: settings.backgroundButtonColor},
                 ]}
                 onPress={submit}
+                disable={learningTimer !== 0}
               />
             </View>
           }
