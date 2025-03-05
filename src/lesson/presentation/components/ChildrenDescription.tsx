@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {forwardRef, useImperativeHandle} from 'react';
 import {
   StyleSheet,
   View,
@@ -17,7 +17,11 @@ import {
 } from 'src/authentication/application/types/GetUserProfileResponse';
 import useLoginWithCredentials from 'src/authentication/presentation/hooks/useLoginWithCredentials';
 
-const ChildrenDescription = () => {
+export type ChildrenDescriptionRef = {
+  submit: () => void;
+};
+
+const ChildrenDescription = forwardRef<ChildrenDescriptionRef>((_, ref) => {
   const globalStyle = useGlobalStyle();
   const {selectedChild, getUserProfile} = useAuthenticationStore();
   const {handleChangeChildDescription} = useLoginWithCredentials();
@@ -62,6 +66,12 @@ const ChildrenDescription = () => {
     handleGetUserProfile();
   }, [changeDescriptionSuccess, handleGetUserProfile]);
 
+  useImperativeHandle(ref, () => ({
+    submit: () => {
+      onSubmit({nativeEvent: {text: childDescription}} as any);
+    },
+  }));
+
   return (
     <View style={[styles.fill, styles.mr16]}>
       <TouchableOpacity
@@ -98,7 +108,7 @@ const ChildrenDescription = () => {
       )}
     </View>
   );
-};
+});
 
 const styles = StyleSheet.create({
   fill: {

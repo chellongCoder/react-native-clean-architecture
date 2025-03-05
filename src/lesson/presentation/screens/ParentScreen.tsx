@@ -12,6 +12,7 @@ import React, {
   useContext,
   useEffect,
   useMemo,
+  useRef,
   useState,
 } from 'react';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
@@ -63,7 +64,9 @@ import {
   unBlockApps,
 } from 'react-native-alphadex-screentime';
 import {AppCategoryE} from 'src/core/domain/enums/AppCategoryE';
-import ChildrenDescription from '../components/ChildrenDescription';
+import ChildrenDescription, {
+  ChildrenDescriptionRef,
+} from '../components/ChildrenDescription';
 import {useGetUserSetting} from 'src/hooks/useGetUserSetting';
 import {ICabcBook, IClock, ICpurchase, ICsetting} from '../components/icons';
 import Dropdown from 'src/core/components/dropdown/Dropdown';
@@ -134,6 +137,8 @@ const ParentScreen = observer(() => {
   const {handleGetModulesField, listModuleByField} = lesson;
   const {iapState, makePurchase} = useContext(IapContext);
   const {homeState, fetchListSubject} = useContext(HomeContext);
+
+  const childrenDescriptionRef = useRef<ChildrenDescriptionRef>(null);
 
   // ---------------------------------------------------------------------------
   // Store & Context Hooks
@@ -866,10 +871,14 @@ The blockAppsSystem function is an asynchronous function that awaits the result 
               </ScrollView>
             </View>
             <View style={[styles.bodyContent, styles.rowBetween]}>
-              <ChildrenDescription />
+              <ChildrenDescription ref={childrenDescriptionRef} />
               <View>
                 <View style={[styles.fill]} />
-                <PrimaryButton text="Save" style={[styles.btnCommon]} />
+                <PrimaryButton
+                  onPress={() => childrenDescriptionRef.current?.submit()}
+                  text="Save"
+                  style={[styles.btnCommon]}
+                />
                 <PrimaryButton
                   text="Delete"
                   style={[styles.btnCommon, styles.btnRed]}
