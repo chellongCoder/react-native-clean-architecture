@@ -224,7 +224,7 @@ const Math_MG2M4 = observer(
               <Animated.Image
                 resizeMode={'contain'}
                 width={WIDTH_SCREEN}
-                height={scale(200)}
+                height={scale(180)}
                 style={[{}, animatedStyle]}
                 source={{
                   uri:
