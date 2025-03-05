@@ -135,7 +135,6 @@ const Math_MG2M4 = observer(
         );
         return updatedDescription;
       }, [answerSelected, firstMiniTestTask?.question, moduleIndex]);
-
       const onSpeechText = useCallback(() => {
         ttsSpeak?.(
           firstMiniTestTask?.question?.[moduleIndex]?.instruction
