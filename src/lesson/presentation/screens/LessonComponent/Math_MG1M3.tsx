@@ -123,8 +123,11 @@ const Math_MG1M3 = observer(
       }, [answerSelected]);
 
       const onSpeechText = useCallback(() => {
-        ttsSpeak?.(settings.prompt?.toString().toLowerCase() ?? '');
-      }, [settings.prompt, ttsSpeak]);
+        ttsSpeak?.(
+          firstMiniTestTask?.question?.[moduleIndex].instruction.description ??
+            '',
+        );
+      }, [firstMiniTestTask?.question, moduleIndex, ttsSpeak]);
 
       const opacity = useSharedValue(0);
       const scaleS = useSharedValue(1);
@@ -178,10 +181,7 @@ const Math_MG1M3 = observer(
           );
         },
       }));
-      console.log(
-        'firstMiniTestTask?.question?.[ moduleIndex]: ',
-        firstMiniTestTask?.question?.[moduleIndex],
-      );
+
       return (
         <LessonComponent
           backgroundImage={backgroundImage}
