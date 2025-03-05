@@ -90,7 +90,7 @@ const KeyboardNumber: ForwardRefRenderFunction<
                 : '#66C270'
               : '#F2B559';
           const length = answer?.length ?? 2;
-          const size = (WIDTH_SCREEN - scale(130)) / Math.ceil(length / 2);
+          const size = (WIDTH_SCREEN - scale(170)) / Math.ceil(length / 2);
 
           return (
             <TouchableOpacity
@@ -195,7 +195,7 @@ const styles = StyleSheet.create({
     // Add your styles here
     fontFamily: FontFamily.SVNCherishMoment,
     color: '#FBF8CC',
-    fontSize: verticalScale(24),
+    fontSize: verticalScale(20),
     flexWrap: 'wrap',
   },
 });
