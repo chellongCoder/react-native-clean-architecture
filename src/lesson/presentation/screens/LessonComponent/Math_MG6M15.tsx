@@ -121,18 +121,116 @@ const Math_MG6M15 = observer(
       const descriptionWithAnswers = useMemo(() => {
         const contentWords =
           firstMiniTestTask?.question?.[moduleIndex]?.content?.split(' ');
-        firstMiniTestTask?.question?.[moduleIndex]?.content.split(' ');
 
-        return answerSelected?.length > 0 && contentWords
-          ? (Array.isArray(answerSelected)
-              ? answerSelected.join('')
-              : answerSelected) + (contentWords[contentWords.length - 1] ?? '')
-          : firstMiniTestTask?.question?.[moduleIndex]?.content ?? '';
+        if (answerSelected?.length > 0 && contentWords) {
+          const lastWord = contentWords[contentWords.length - 1] ?? '';
+
+          if (firstMiniTestTask?.question?.[moduleIndex].isAcreage) {
+            const baseWord = lastWord.slice(0, -1);
+            return (
+              <View style={{flexDirection: 'row'}}>
+                <Text
+                  style={[
+                    styles.fonts_SVN_Cherish,
+                    styles.textQuestion,
+                    {fontSize: 40},
+                  ]}>
+                  {Array.isArray(answerSelected)
+                    ? answerSelected.join('')
+                    : answerSelected}
+                </Text>
+
+                <Text
+                  style={[
+                    styles.fonts_SVN_Cherish,
+                    styles.textQuestion,
+                    {fontSize: 40},
+                  ]}>
+                  {baseWord}
+                </Text>
+                <View
+                  style={{
+                    position: 'absolute',
+                    zIndex: 999,
+                    right: -10,
+                    bottom: 30,
+                  }}>
+                  <Text
+                    style={[
+                      styles.fonts_SVN_Cherish,
+                      styles.textQuestion,
+                      {fontSize: 20},
+                    ]}>
+                    2
+                  </Text>
+                </View>
+              </View>
+            );
+          }
+
+          return (
+            <>
+              {Array.isArray(answerSelected)
+                ? answerSelected.join('')
+                : answerSelected}
+              {lastWord}
+            </>
+          );
+        }
+        const content =
+          firstMiniTestTask?.question?.[moduleIndex]?.content ?? '';
+
+        if (firstMiniTestTask?.question?.[moduleIndex].isAcreage) {
+          // Use regular expression to match cm2, m2, dm2, etc.
+          const updatedContent = content.split(' ').map((word, index) => {
+            // If the word ends with '2', check if it's a unit like cm2, m2, or dm2
+            const match = word.match(/([a-zA-Z]+)(2)$/);
+            if (match) {
+              const unit = match[1]; // Get the unit part like 'cm', 'm', 'dm'
+              return (
+                <View style={{flexDirection: 'row'}}>
+                  <Text
+                    style={[
+                      styles.fonts_SVN_Cherish,
+                      styles.textQuestion,
+                      {fontSize: 40},
+                    ]}>
+                    {unit}
+                  </Text>
+                  <View
+                    style={{
+                      position: 'absolute',
+                      zIndex: 999,
+                      right: -10,
+                      bottom: 30,
+                    }}>
+                    <Text
+                      style={[
+                        styles.fonts_SVN_Cherish,
+                        styles.textQuestion,
+                        {fontSize: 20},
+                      ]}>
+                      2
+                    </Text>
+                  </View>
+                </View>
+              );
+            }
+            return <Text key={index}>{word} </Text>;
+          });
+
+          return <>{updatedContent}</>; // Return the mapped and updated content
+        } else {
+          return content;
+        }
       }, [answerSelected, firstMiniTestTask?.question, moduleIndex]);
 
       const onSpeechText = useCallback(() => {
-        ttsSpeak?.(settings.prompt?.toString().toLowerCase() ?? '');
-      }, [settings.prompt, ttsSpeak]);
+        ttsSpeak?.(
+          firstMiniTestTask?.question?.[moduleIndex]?.instruction
+            ?.description ?? '',
+        );
+      }, [firstMiniTestTask?.question, moduleIndex, ttsSpeak]);
 
       const opacity = useSharedValue(0);
       const scaleS = useSharedValue(1);
@@ -186,7 +284,10 @@ const Math_MG6M15 = observer(
           );
         },
       }));
-
+      console.log(
+        'firstMiniTestTask?.question?.[moduleIndex]: ',
+        firstMiniTestTask?.question?.[moduleIndex],
+      );
       return (
         <LessonComponent
           backgroundImage={backgroundImage}
@@ -241,7 +342,7 @@ const Math_MG6M15 = observer(
                   ]}>
                   {firstMiniTestTask?.question?.[
                     moduleIndex
-                  ].instruction.toString()}
+                  ]?.instruction?.description.toString()}
                 </Text>
               </View>
             </View>
@@ -271,8 +372,22 @@ const Math_MG6M15 = observer(
                   <View
                     style={
                       !firstMiniTestTask?.question?.[moduleIndex].isAcreage
-                        ? styles.wrapAnswerContainer
-                        : styles.wrapAreaAnswerContainer
+                        ? [
+                            styles.wrapAnswerContainer,
+                            {
+                              borderColor:
+                                firstMiniTestTask?.question?.[moduleIndex]
+                                  ?.color,
+                            },
+                          ]
+                        : [
+                            styles.wrapAreaAnswerContainer,
+                            {
+                              backgroundColor:
+                                firstMiniTestTask?.question?.[moduleIndex]
+                                  ?.color,
+                            },
+                          ]
                     }>
                     <Text
                       style={[

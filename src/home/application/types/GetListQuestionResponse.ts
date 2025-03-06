@@ -20,6 +20,7 @@ export interface Question {
   pronu_character?: string[];
   instruction: Instruction;
   isAcreage?: boolean;
+  color?: string;
 }
 
 export interface Instruction {
