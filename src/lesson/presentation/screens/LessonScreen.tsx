@@ -7,17 +7,10 @@ import React, {
   useRef,
   useState,
 } from 'react';
-import AchievementLesson from './LessonComponent/AchievementLesson';
 import WriteLesson from './LessonComponent/WriteLesson';
-import ListenLesson from './LessonComponent/ListenLesson';
-import FillBlankLesson from './LessonComponent/FillBlankLesson';
-import TranslateLesson from './LessonComponent/TranslateLesson';
-import GeometryLesson from './LessonComponent/GeometryLesson';
 import MathLesson from './LessonComponent/MathLesson';
 import {
-  goBack,
   navigateScreen,
-  pushScreen,
   resetNavigator,
 } from 'src/core/presentation/navigation/actions/RootNavigationActions';
 import {STACK_NAVIGATOR} from 'src/core/presentation/navigation/ConstantNavigator';
@@ -238,7 +231,7 @@ const LessonScreen = observer(() => {
         // question: t.question.slice(0, 1),
         // question: t.question.slice(0, 5),
         // question: shuffleArray(t.question),
-        question: __DEV__ ? t.question.slice(0, 3) : t.question,
+        question: __DEV__ ? t.question.slice(0, 10) : t.question,
       };
     });
   }, [apiTasks]);
@@ -609,6 +602,22 @@ const LessonScreen = observer(() => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  const dataProps = {
+    moduleIndex: lessonIndex,
+    nextModule,
+    totalModule: testTask?.question.length ?? 0,
+    lessonName: route.lessonName,
+    moduleName: route.moduleName,
+    firstMiniTestTask,
+    backgroundImage:
+      env.IMAGE_BACKGROUND_BASE_API_URL + lessonSetting?.backgroundImage,
+    characterImageSuccess:
+      env.IMAGE_BACKGROUND_BASE_API_URL + lessonSetting?.figureSuccessImage,
+    characterImageFail:
+      env.IMAGE_BACKGROUND_BASE_API_URL + lessonSetting?.figureFailImage,
+    answer: testTask?.question?.[lessonIndex].answers as string[],
+  };
+
   const buildLesson = () => {
     console.log(testTask?.question?.[lessonIndex]?.type, 'type lesson');
     switch (
@@ -622,49 +631,9 @@ const LessonScreen = observer(() => {
        * * UI chung dành cho các module phát âm
        */
       case LanguageE.ENGLISHG2M12:
-        return (
-          <MultiPronunciationLesson
-            moduleIndex={lessonIndex}
-            nextModule={nextModule}
-            totalModule={testTask?.question.length ?? 0}
-            lessonName={route.lessonName}
-            moduleName={route.moduleName}
-            firstMiniTestTask={testTask}
-            backgroundImage={
-              env.IMAGE_BACKGROUND_BASE_API_URL + lessonSetting?.backgroundImage
-            }
-            characterImageSuccess={
-              env.IMAGE_BACKGROUND_BASE_API_URL +
-              lessonSetting?.figureSuccessImage
-            }
-            characterImageFail={
-              env.IMAGE_BACKGROUND_BASE_API_URL + lessonSetting?.figureFailImage
-            }
-            ref={vowelRef}
-          />
-        );
+        return <MultiPronunciationLesson {...dataProps} ref={vowelRef} />;
       case LessonTypeE.PRONUNCIATION:
-        return (
-          <PronunciationLesson
-            moduleIndex={lessonIndex}
-            nextModule={nextModule}
-            totalModule={testTask?.question.length ?? 0}
-            lessonName={route.lessonName}
-            moduleName={route.moduleName}
-            firstMiniTestTask={testTask}
-            backgroundImage={
-              env.IMAGE_BACKGROUND_BASE_API_URL + lessonSetting?.backgroundImage
-            }
-            characterImageSuccess={
-              env.IMAGE_BACKGROUND_BASE_API_URL +
-              lessonSetting?.figureSuccessImage
-            }
-            characterImageFail={
-              env.IMAGE_BACKGROUND_BASE_API_URL + lessonSetting?.figureFailImage
-            }
-            ref={vowelRef}
-          />
-        );
+        return <PronunciationLesson {...dataProps} ref={vowelRef} />;
 
       /**----------------------
        *todo    các question cho môn Tiếng Anh
@@ -672,158 +641,19 @@ const LessonScreen = observer(() => {
       case LanguageE.ENGLISH_EG0M1:
       case LanguageE.ENGLISH_EG0M2:
       case LanguageE.ENGLISH_EG0M3:
-        return (
-          <LatinLesson
-            moduleIndex={lessonIndex}
-            totalModule={testTask?.question.length ?? 0}
-            lessonName={route.lessonName}
-            moduleName={route.moduleName}
-            firstMiniTestTask={testTask}
-            nextModule={nextModule}
-            backgroundImage={
-              env.IMAGE_BACKGROUND_BASE_API_URL + lessonSetting?.backgroundImage
-            }
-            characterImageSuccess={
-              env.IMAGE_BACKGROUND_BASE_API_URL +
-              lessonSetting?.figureSuccessImage
-            }
-            characterImageFail={
-              env.IMAGE_BACKGROUND_BASE_API_URL + lessonSetting?.figureFailImage
-            }
-          />
-        );
+        return <LatinLesson {...dataProps} />;
       case LanguageE.ENGLISH_G3M20:
-        return (
-          <English_G3M20
-            moduleIndex={lessonIndex}
-            nextModule={nextModule}
-            totalModule={testTask?.question.length ?? 0}
-            lessonName={route.lessonName}
-            moduleName={route.moduleName}
-            firstMiniTestTask={testTask}
-            backgroundImage={
-              env.IMAGE_BACKGROUND_BASE_API_URL + lessonSetting?.backgroundImage
-            }
-            characterImageSuccess={
-              env.IMAGE_BACKGROUND_BASE_API_URL +
-              lessonSetting?.figureSuccessImage
-            }
-            characterImageFail={
-              env.IMAGE_BACKGROUND_BASE_API_URL + lessonSetting?.figureFailImage
-            }
-            ref={vowelRef}
-          />
-        );
+        return <English_G3M20 {...dataProps} ref={vowelRef} />;
       case LanguageE.ENGLISH_G6M26:
-        return (
-          <English_G6M26
-            moduleIndex={lessonIndex}
-            nextModule={nextModule}
-            totalModule={testTask?.question.length ?? 0}
-            lessonName={route.lessonName}
-            moduleName={route.moduleName}
-            firstMiniTestTask={testTask}
-            backgroundImage={
-              env.IMAGE_BACKGROUND_BASE_API_URL + lessonSetting?.backgroundImage
-            }
-            characterImageSuccess={
-              env.IMAGE_BACKGROUND_BASE_API_URL +
-              lessonSetting?.figureSuccessImage
-            }
-            characterImageFail={
-              env.IMAGE_BACKGROUND_BASE_API_URL + lessonSetting?.figureFailImage
-            }
-            ref={vowelRef}
-          />
-        );
+        return <English_G6M26 {...dataProps} ref={vowelRef} />;
       case LanguageE.ENGLISH_G5M16:
-        return (
-          <English_G5M16
-            moduleIndex={lessonIndex}
-            nextModule={nextModule}
-            totalModule={testTask?.question.length ?? 0}
-            lessonName={route.lessonName}
-            moduleName={route.moduleName}
-            firstMiniTestTask={testTask}
-            backgroundImage={
-              env.IMAGE_BACKGROUND_BASE_API_URL + lessonSetting?.backgroundImage
-            }
-            characterImageSuccess={
-              env.IMAGE_BACKGROUND_BASE_API_URL +
-              lessonSetting?.figureSuccessImage
-            }
-            characterImageFail={
-              env.IMAGE_BACKGROUND_BASE_API_URL + lessonSetting?.figureFailImage
-            }
-            ref={vowelRef}
-            answer={testTask?.question?.[lessonIndex].answers ?? []}
-          />
-        );
+        return <English_G5M16 {...dataProps} ref={vowelRef} />;
       case LanguageE.ENGLISH_EG4M23:
-        return (
-          <English_EG4M23
-            moduleIndex={lessonIndex}
-            nextModule={nextModule}
-            totalModule={testTask?.question.length ?? 0}
-            lessonName={route.lessonName}
-            moduleName={route.moduleName}
-            firstMiniTestTask={testTask}
-            backgroundImage={
-              env.IMAGE_BACKGROUND_BASE_API_URL + lessonSetting?.backgroundImage
-            }
-            characterImageSuccess={
-              env.IMAGE_BACKGROUND_BASE_API_URL +
-              lessonSetting?.figureSuccessImage
-            }
-            characterImageFail={
-              env.IMAGE_BACKGROUND_BASE_API_URL + lessonSetting?.figureFailImage
-            }
-            ref={vowelRef}
-          />
-        );
+        return <English_EG4M23 {...dataProps} ref={vowelRef} />;
       case LanguageE.ENGLISH_EG1M3:
-        return (
-          <EssayLesson
-            moduleIndex={lessonIndex}
-            nextModule={nextModule}
-            totalModule={testTask?.question.length ?? 0}
-            lessonName={route.lessonName}
-            moduleName={route.moduleName}
-            firstMiniTestTask={testTask}
-            backgroundImage={
-              env.IMAGE_BACKGROUND_BASE_API_URL + lessonSetting?.backgroundImage
-            }
-            characterImageSuccess={
-              env.IMAGE_BACKGROUND_BASE_API_URL +
-              lessonSetting?.figureSuccessImage
-            }
-            characterImageFail={
-              env.IMAGE_BACKGROUND_BASE_API_URL + lessonSetting?.figureFailImage
-            }
-          />
-        );
+        return <EssayLesson {...dataProps} />;
       case LanguageE.ENGLISH_EG1M3:
-        return (
-          <VowelsLesson
-            moduleIndex={lessonIndex}
-            nextModule={nextModule}
-            totalModule={testTask?.question.length ?? 0}
-            lessonName={route.lessonName}
-            moduleName={route.moduleName}
-            firstMiniTestTask={testTask}
-            backgroundImage={
-              env.IMAGE_BACKGROUND_BASE_API_URL + lessonSetting?.backgroundImage
-            }
-            characterImageSuccess={
-              env.IMAGE_BACKGROUND_BASE_API_URL +
-              lessonSetting?.figureSuccessImage
-            }
-            characterImageFail={
-              env.IMAGE_BACKGROUND_BASE_API_URL + lessonSetting?.figureFailImage
-            }
-            ref={vowelRef}
-          />
-        );
+        return <VowelsLesson {...dataProps} ref={vowelRef} />;
 
       /**----------------------
        *todo    các question cho môn Tiếng trung
@@ -832,377 +662,40 @@ const LessonScreen = observer(() => {
       case LanguageE.MANDARIN_M0G1:
       case LanguageE.MANDARIN_M0G2:
       case LanguageE.MANDARIN_M0G3:
-        return (
-          <Mandarin_Kindergarten
-            moduleIndex={lessonIndex}
-            nextModule={nextModule}
-            totalModule={testTask?.question.length ?? 0}
-            lessonName={route.lessonName}
-            moduleName={route.moduleName}
-            firstMiniTestTask={testTask}
-            backgroundImage={
-              env.IMAGE_BACKGROUND_BASE_API_URL + lessonSetting?.backgroundImage
-            }
-            characterImageSuccess={
-              env.IMAGE_BACKGROUND_BASE_API_URL +
-              lessonSetting?.figureSuccessImage
-            }
-            characterImageFail={
-              env.IMAGE_BACKGROUND_BASE_API_URL + lessonSetting?.figureFailImage
-            }
-            ref={vowelRef}
-          />
-        );
+        return <Mandarin_Kindergarten {...dataProps} ref={vowelRef} />;
       case LanguageE.MANDARIN_G5M25:
-        return (
-          <Mandarin_G5M25
-            moduleIndex={lessonIndex}
-            nextModule={nextModule}
-            totalModule={testTask?.question.length ?? 0}
-            lessonName={route.lessonName}
-            moduleName={route.moduleName}
-            firstMiniTestTask={testTask}
-            backgroundImage={
-              env.IMAGE_BACKGROUND_BASE_API_URL + lessonSetting?.backgroundImage
-            }
-            characterImageSuccess={
-              env.IMAGE_BACKGROUND_BASE_API_URL +
-              lessonSetting?.figureSuccessImage
-            }
-            characterImageFail={
-              env.IMAGE_BACKGROUND_BASE_API_URL + lessonSetting?.figureFailImage
-            }
-            ref={vowelRef}
-          />
-        );
+        return <Mandarin_G5M25 {...dataProps} ref={vowelRef} />;
       case LanguageE.MANDARIN_G6M31:
-        return (
-          <Mandarin_G6M31
-            moduleIndex={lessonIndex}
-            nextModule={nextModule}
-            totalModule={testTask?.question.length ?? 0}
-            lessonName={route.lessonName}
-            moduleName={route.moduleName}
-            firstMiniTestTask={testTask}
-            backgroundImage={
-              env.IMAGE_BACKGROUND_BASE_API_URL + lessonSetting?.backgroundImage
-            }
-            characterImageSuccess={
-              env.IMAGE_BACKGROUND_BASE_API_URL +
-              lessonSetting?.figureSuccessImage
-            }
-            characterImageFail={
-              env.IMAGE_BACKGROUND_BASE_API_URL + lessonSetting?.figureFailImage
-            }
-            ref={vowelRef}
-          />
-        );
+        return <Mandarin_G6M31 {...dataProps} ref={vowelRef} />;
       case LanguageE.MANDARIN_G4M27:
-        return (
-          <Mandarin_G4M27
-            moduleIndex={lessonIndex}
-            nextModule={nextModule}
-            totalModule={testTask?.question.length ?? 0}
-            lessonName={route.lessonName}
-            moduleName={route.moduleName}
-            firstMiniTestTask={testTask}
-            backgroundImage={
-              env.IMAGE_BACKGROUND_BASE_API_URL + lessonSetting?.backgroundImage
-            }
-            characterImageSuccess={
-              env.IMAGE_BACKGROUND_BASE_API_URL +
-              lessonSetting?.figureSuccessImage
-            }
-            characterImageFail={
-              env.IMAGE_BACKGROUND_BASE_API_URL + lessonSetting?.figureFailImage
-            }
-            ref={vowelRef}
-          />
-        );
+        return <Mandarin_G4M27 {...dataProps} ref={vowelRef} />;
       case LanguageE.MANDARIN_G3M37:
-        return (
-          <Mandarin_G3M37
-            moduleIndex={lessonIndex}
-            nextModule={nextModule}
-            totalModule={testTask?.question.length ?? 0}
-            lessonName={route.lessonName}
-            moduleName={route.moduleName}
-            firstMiniTestTask={testTask}
-            backgroundImage={
-              env.IMAGE_BACKGROUND_BASE_API_URL + lessonSetting?.backgroundImage
-            }
-            characterImageSuccess={
-              env.IMAGE_BACKGROUND_BASE_API_URL +
-              lessonSetting?.figureSuccessImage
-            }
-            characterImageFail={
-              env.IMAGE_BACKGROUND_BASE_API_URL + lessonSetting?.figureFailImage
-            }
-            ref={vowelRef}
-          />
-        );
+        return <Mandarin_G3M37 {...dataProps} ref={vowelRef} />;
       case LanguageE.MANDARIN_G2M25:
-        return (
-          <Mandarin_G2M25
-            moduleIndex={lessonIndex}
-            totalModule={testTask?.question.length ?? 0}
-            lessonName={route.lessonName}
-            moduleName={route.moduleName}
-            firstMiniTestTask={testTask}
-            nextModule={nextModule}
-            backgroundImage={
-              env.IMAGE_BACKGROUND_BASE_API_URL + lessonSetting?.backgroundImage
-            }
-            characterImageSuccess={
-              env.IMAGE_BACKGROUND_BASE_API_URL +
-              lessonSetting?.figureSuccessImage
-            }
-            characterImageFail={
-              env.IMAGE_BACKGROUND_BASE_API_URL + lessonSetting?.figureFailImage
-            }
-          />
-        );
+        return <Mandarin_G2M25 {...dataProps} />;
       case LessonTypeE.WRITING:
       case LanguageE.MANDARIN_G1M4:
-        return (
-          <WriteLesson
-            moduleIndex={lessonIndex}
-            totalModule={testTask?.question.length ?? 0}
-            lessonName={route.lessonName}
-            moduleName={route.moduleName}
-            firstMiniTestTask={testTask}
-            nextModule={nextModule}
-            backgroundImage={
-              env.IMAGE_BACKGROUND_BASE_API_URL + lessonSetting?.backgroundImage
-            }
-            characterImageSuccess={
-              env.IMAGE_BACKGROUND_BASE_API_URL +
-              lessonSetting?.figureSuccessImage
-            }
-            characterImageFail={
-              env.IMAGE_BACKGROUND_BASE_API_URL + lessonSetting?.figureFailImage
-            }
-          />
-        );
+        return <WriteLesson {...dataProps} />;
       case LanguageE.MANDARIN_G1M5:
-        return (
-          <Mandarin_G1M5
-            moduleIndex={lessonIndex}
-            nextModule={nextModule}
-            totalModule={testTask?.question.length ?? 0}
-            lessonName={route.lessonName}
-            moduleName={route.moduleName}
-            firstMiniTestTask={testTask}
-            backgroundImage={
-              env.IMAGE_BACKGROUND_BASE_API_URL + lessonSetting?.backgroundImage
-            }
-            characterImageSuccess={
-              env.IMAGE_BACKGROUND_BASE_API_URL +
-              lessonSetting?.figureSuccessImage
-            }
-            characterImageFail={
-              env.IMAGE_BACKGROUND_BASE_API_URL + lessonSetting?.figureFailImage
-            }
-            ref={vowelRef}
-          />
-        );
+        return <Mandarin_G1M5 {...dataProps} ref={vowelRef} />;
       case LanguageE.MANDARIN_G1M6:
-        return (
-          <PronunciationLesson
-            moduleIndex={lessonIndex}
-            nextModule={nextModule}
-            totalModule={testTask?.question.length ?? 0}
-            lessonName={route.lessonName}
-            moduleName={route.moduleName}
-            firstMiniTestTask={testTask}
-            backgroundImage={
-              env.IMAGE_BACKGROUND_BASE_API_URL + lessonSetting?.backgroundImage
-            }
-            characterImageSuccess={
-              env.IMAGE_BACKGROUND_BASE_API_URL +
-              lessonSetting?.figureSuccessImage
-            }
-            characterImageFail={
-              env.IMAGE_BACKGROUND_BASE_API_URL + lessonSetting?.figureFailImage
-            }
-            ref={vowelRef}
-          />
-        );
+        return <PronunciationLesson {...dataProps} ref={vowelRef} />;
       case LanguageE.VIETNAMESE_VNG0M1:
-        return (
-          <VnG0M1Lesson
-            moduleIndex={lessonIndex}
-            nextModule={nextModule}
-            totalModule={testTask?.question.length ?? 0}
-            lessonName={route.lessonName}
-            moduleName={route.moduleName}
-            firstMiniTestTask={testTask}
-            backgroundImage={
-              env.IMAGE_BACKGROUND_BASE_API_URL + lessonSetting?.backgroundImage
-            }
-            characterImageSuccess={
-              env.IMAGE_BACKGROUND_BASE_API_URL +
-              lessonSetting?.figureSuccessImage
-            }
-            characterImageFail={
-              env.IMAGE_BACKGROUND_BASE_API_URL + lessonSetting?.figureFailImage
-            }
-            ref={vowelRef}
-          />
-        );
+        return <VnG0M1Lesson {...dataProps} ref={vowelRef} />;
       case LanguageE.VIETNAMESE_VNG0M2:
-        return (
-          <VnG0M2Lesson
-            moduleIndex={lessonIndex}
-            nextModule={nextModule}
-            totalModule={testTask?.question.length ?? 0}
-            lessonName={route.lessonName}
-            moduleName={route.moduleName}
-            firstMiniTestTask={testTask}
-            backgroundImage={
-              env.IMAGE_BACKGROUND_BASE_API_URL + lessonSetting?.backgroundImage
-            }
-            characterImageSuccess={
-              env.IMAGE_BACKGROUND_BASE_API_URL +
-              lessonSetting?.figureSuccessImage
-            }
-            characterImageFail={
-              env.IMAGE_BACKGROUND_BASE_API_URL + lessonSetting?.figureFailImage
-            }
-            ref={vowelRef}
-          />
-        );
+        return <VnG0M2Lesson {...dataProps} ref={vowelRef} />;
       case LanguageE.VIETNAMESE_VNG0M3:
-        return (
-          <VnG0M3Lesson
-            moduleIndex={lessonIndex}
-            nextModule={nextModule}
-            totalModule={testTask?.question.length ?? 0}
-            lessonName={route.lessonName}
-            moduleName={route.moduleName}
-            firstMiniTestTask={testTask}
-            backgroundImage={
-              env.IMAGE_BACKGROUND_BASE_API_URL + lessonSetting?.backgroundImage
-            }
-            characterImageSuccess={
-              env.IMAGE_BACKGROUND_BASE_API_URL +
-              lessonSetting?.figureSuccessImage
-            }
-            characterImageFail={
-              env.IMAGE_BACKGROUND_BASE_API_URL + lessonSetting?.figureFailImage
-            }
-            ref={vowelRef}
-          />
-        );
+        return <VnG0M3Lesson {...dataProps} ref={vowelRef} />;
       case LanguageE.VIETNAMESE_VNG1M3:
-        return (
-          <VnG1M3Lesson
-            moduleIndex={lessonIndex}
-            totalModule={testTask?.question.length ?? 0}
-            lessonName={route.lessonName}
-            moduleName={route.moduleName}
-            firstMiniTestTask={testTask}
-            nextModule={nextModule}
-            backgroundImage={
-              env.IMAGE_BACKGROUND_BASE_API_URL + lessonSetting?.backgroundImage
-            }
-            characterImageSuccess={
-              env.IMAGE_BACKGROUND_BASE_API_URL +
-              lessonSetting?.figureSuccessImage
-            }
-            characterImageFail={
-              env.IMAGE_BACKGROUND_BASE_API_URL + lessonSetting?.figureFailImage
-            }
-          />
-        );
+        return <VnG1M3Lesson {...dataProps} />;
       case LanguageE.VIETNAMESE_VNG2M8:
-        return (
-          <VnG2M8Lesson
-            moduleIndex={lessonIndex}
-            nextModule={nextModule}
-            totalModule={testTask?.question.length ?? 0}
-            lessonName={route.lessonName}
-            moduleName={route.moduleName}
-            firstMiniTestTask={testTask}
-            backgroundImage={
-              env.IMAGE_BACKGROUND_BASE_API_URL + lessonSetting?.backgroundImage
-            }
-            characterImageSuccess={
-              env.IMAGE_BACKGROUND_BASE_API_URL +
-              lessonSetting?.figureSuccessImage
-            }
-            characterImageFail={
-              env.IMAGE_BACKGROUND_BASE_API_URL + lessonSetting?.figureFailImage
-            }
-            ref={vowelRef}
-          />
-        );
+        return <VnG2M8Lesson {...dataProps} ref={vowelRef} />;
       case LanguageE.VIETNAMESE_VNG3M1:
-        return (
-          <VnG3M1Lesson
-            moduleIndex={lessonIndex}
-            nextModule={nextModule}
-            totalModule={testTask?.question.length ?? 0}
-            lessonName={route.lessonName}
-            moduleName={route.moduleName}
-            firstMiniTestTask={testTask}
-            backgroundImage={
-              env.IMAGE_BACKGROUND_BASE_API_URL + lessonSetting?.backgroundImage
-            }
-            characterImageSuccess={
-              env.IMAGE_BACKGROUND_BASE_API_URL +
-              lessonSetting?.figureSuccessImage
-            }
-            characterImageFail={
-              env.IMAGE_BACKGROUND_BASE_API_URL + lessonSetting?.figureFailImage
-            }
-            ref={vowelRef}
-          />
-        );
+        return <VnG3M1Lesson {...dataProps} ref={vowelRef} />;
       case LanguageE.VIETNAMESE_VNG4M1:
-        return (
-          <VnG4M1Lesson
-            moduleIndex={lessonIndex}
-            nextModule={nextModule}
-            totalModule={testTask?.question.length ?? 0}
-            lessonName={route.lessonName}
-            moduleName={route.moduleName}
-            firstMiniTestTask={testTask}
-            backgroundImage={
-              env.IMAGE_BACKGROUND_BASE_API_URL + lessonSetting?.backgroundImage
-            }
-            characterImageSuccess={
-              env.IMAGE_BACKGROUND_BASE_API_URL +
-              lessonSetting?.figureSuccessImage
-            }
-            characterImageFail={
-              env.IMAGE_BACKGROUND_BASE_API_URL + lessonSetting?.figureFailImage
-            }
-            ref={vowelRef}
-          />
-        );
+        return <VnG4M1Lesson {...dataProps} ref={vowelRef} />;
       case LanguageE.VIETNAMESE_VNG5M1:
-        return (
-          <VnG5M1Lesson
-            moduleIndex={lessonIndex}
-            nextModule={nextModule}
-            totalModule={testTask?.question.length ?? 0}
-            lessonName={route.lessonName}
-            moduleName={route.moduleName}
-            firstMiniTestTask={testTask}
-            backgroundImage={
-              env.IMAGE_BACKGROUND_BASE_API_URL + lessonSetting?.backgroundImage
-            }
-            characterImageSuccess={
-              env.IMAGE_BACKGROUND_BASE_API_URL +
-              lessonSetting?.figureSuccessImage
-            }
-            characterImageFail={
-              env.IMAGE_BACKGROUND_BASE_API_URL + lessonSetting?.figureFailImage
-            }
-            ref={vowelRef}
-          />
-        );
+        return <VnG5M1Lesson {...dataProps} ref={vowelRef} />;
       case LanguageE.VIETNAMESE_VNG6M1:
         return (
           <VnG3M1Lesson

@@ -289,6 +289,7 @@ const Science_G0M1 = observer(
                   {backgroundColor: settings.backgroundButtonColor},
                 ]}
                 onPress={submit}
+                disable={learningTimer > 0}
               />
             </View>
           }

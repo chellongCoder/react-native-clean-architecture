@@ -147,12 +147,6 @@ const VnG0M3Lesson = observer(
           // Check if the component is focused
           const firstTimeout = setTimeout(() => {
             onSpeechText();
-
-            const secondTimeout = setTimeout(() => {
-              onSpeechText();
-            }, 2500);
-
-            return () => clearTimeout(secondTimeout);
           }, 1500);
 
           return () => clearTimeout(firstTimeout);
@@ -255,6 +249,10 @@ const VnG0M3Lesson = observer(
           isAnswerCorrect={isAnswerCorrect}
           isShowCorrectContainer={isShowCorrectContainer}
           onPressFlower={toggleShowHint}
+          characterStyle={{
+            height: verticalScale(200),
+            marginBottom: -verticalScale(40),
+          }}
           buildQuestion={
             <View
               style={{
@@ -272,7 +270,7 @@ const VnG0M3Lesson = observer(
                 resizeMode={'contain'}
                 style={[
                   {
-                    width: scale(180),
+                    width: scale(200),
                     height: verticalScale(120),
                   },
                   animatedStyle,

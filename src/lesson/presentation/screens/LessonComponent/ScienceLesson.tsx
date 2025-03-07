@@ -132,6 +132,13 @@ const ScienceLesson = ({
     });
 
   const [currentIndex, setCurrentIndex] = useState(0);
+  console.log(
+    '🛠 LOG: 🚀 --> --------------------------------------------🛠 LOG: 🚀 -->',
+  );
+  console.log('🛠 LOG: 🚀 --> ~ currentIndex:', currentIndex);
+  console.log(
+    '🛠 LOG: 🚀 --> --------------------------------------------🛠 LOG: 🚀 -->',
+  );
 
   const isLearning = useMemo(() => learningTimer !== 0, [learningTimer]);
 
@@ -181,35 +188,31 @@ const ScienceLesson = ({
   const onSpeechText = useCallback(() => {
     ttsSpeak?.(
       isLearning
-        ? firstMiniTestTask?.question?.[moduleIndex].descriptionImage[0] ?? ''
+        ? firstMiniTestTask?.question?.[moduleIndex].descriptionImage[
+            currentIndex
+          ] ?? ''
         : getCorrectAnswer(content),
     );
-  }, [content, ttsSpeak, isLearning, firstMiniTestTask, moduleIndex]);
+  }, [
+    ttsSpeak,
+    isLearning,
+    firstMiniTestTask?.question,
+    moduleIndex,
+    currentIndex,
+    content,
+  ]);
 
   useEffect(() => {
-    if (focus) {
+    if (isLearning && focus) {
       // Check if the component is focused
       const firstTimeout = setTimeout(() => {
         onSpeechText();
-
-        const secondTimeout = setTimeout(() => {
-          onSpeechText();
-        }, 1500);
-
-        return () => clearTimeout(secondTimeout);
       }, 100);
 
       return () => clearTimeout(firstTimeout);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [firstMiniTestTask, moduleIndex, focus]); // Added focus to the dependency array
-
-  // useEffect(() => {
-  //   if (!isLearning) {
-  //     onSpeechText();
-  //   }
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, [isLearning]);
+  }, [currentIndex, isLearning, focus]); // Added focus to the dependency array
 
   useEffect(() => {
     console.log(

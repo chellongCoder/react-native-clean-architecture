@@ -249,9 +249,9 @@ const VnG3M1Lesson = observer(
           isShowCorrectContainer={isShowCorrectContainer}
           onPressFlower={toggleShowHint}
           characterStyle={{
-            height: verticalScale(300),
-            marginBottom: -verticalScale(100),
-            marginLeft: -scale(40),
+            height: verticalScale(200),
+            marginBottom: -verticalScale(50),
+            marginLeft: -scale(20),
           }}
           buildQuestion={
             <View

@@ -236,23 +236,43 @@ const Science_SG6M3 = observer(
             marginLeft: -scale(40),
           }}
           buildQuestion={
-            <View>
-              <Animated.Image
-                resizeMode={'contain'}
-                style={[
-                  {
-                    width: WIDTH_SCREEN * 0.6,
-                    aspectRatio: 1.5,
-                    marginTop: verticalScale(32),
-                  },
-                  animatedStyle,
-                ]}
-                source={{
-                  uri:
-                    env.IMAGE_QUESTION_BASE_API_URL +
-                    firstMiniTestTask?.question?.[moduleIndex].image,
-                }}
-              />
+            <View
+              style={{
+                backgroundColor: COLORS.WHITE_FBF8CC,
+                marginTop: verticalScale(32),
+                borderWidth: 5,
+                borderRadius: scale(30),
+                paddingHorizontal: scale(20),
+                borderStyle: 'dashed',
+                borderColor: COLORS.YELLOW_F2B559,
+                height: verticalScale(130),
+                flexDirection: 'column',
+                justifyContent: 'space-between',
+              }}>
+              <View>
+                <Animated.Image
+                  resizeMode={'cover'}
+                  style={[
+                    {
+                      width: WIDTH_SCREEN * 0.6,
+                      aspectRatio: 1.5,
+                      marginTop: -verticalScale(40),
+                      borderRadius: scale(30),
+                    },
+                    animatedStyle,
+                  ]}
+                  source={{
+                    uri:
+                      env.IMAGE_QUESTION_BASE_API_URL +
+                      firstMiniTestTask?.question?.[moduleIndex].image,
+                  }}
+                />
+              </View>
+              <View style={{paddingBottom: verticalScale(12)}}>
+                <Text style={[globalStyle.txtLabel, styles.textQuestion]}>
+                  {firstMiniTestTask?.question?.[moduleIndex].content}
+                </Text>
+              </View>
             </View>
           }
           buildAnswer={

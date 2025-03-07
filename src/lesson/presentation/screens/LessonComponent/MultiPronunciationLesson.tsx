@@ -230,7 +230,7 @@ const MultiPronunciationLesson = observer(
 
         correctAnswers.forEach((answer, index) => {
           setTimeout(() => {
-            ttsSpeak?.(getCorrectAnswer(answer?.trim()));
+            ttsSpeak?.(getCorrectAnswer(answer?.trim().toLocaleLowerCase()));
           }, index * 750);
         });
       }, [firstMiniTestTask?.question, moduleIndex, ttsSpeak]);

@@ -456,7 +456,7 @@ const styles = StyleSheet.create({
   wrapImageContainer: {
     height: verticalScale(150),
     aspectRatio: 1 / 2,
-    marginBottom: -verticalScale(10),
+    marginBottom: -verticalScale(30),
   },
   imageContainer: {
     height: '100%',

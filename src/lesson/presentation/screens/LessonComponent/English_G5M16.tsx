@@ -139,8 +139,12 @@ const English_G5M16 = observer(
       }, [answerSelected, firstMiniTestTask?.question, moduleIndex]);
 
       const onSpeechText = useCallback(() => {
-        ttsSpeak?.(settings.prompt?.toString().toLowerCase() ?? '');
-      }, [settings.prompt, ttsSpeak]);
+        ttsSpeak?.(
+          firstMiniTestTask?.question?.[moduleIndex]?.content
+            ?.toString()
+            .toLowerCase() ?? '',
+        );
+      }, [firstMiniTestTask?.question, moduleIndex, ttsSpeak]);
 
       const opacity = useSharedValue(0);
       const scaleS = useSharedValue(1);
