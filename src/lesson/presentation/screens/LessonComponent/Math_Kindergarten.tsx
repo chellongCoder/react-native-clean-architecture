@@ -137,8 +137,10 @@ const Math_G0M2 = observer(
       }, [answerSelected, firstMiniTestTask?.question, moduleIndex]);
 
       const onSpeechText = useCallback(() => {
-        ttsSpeak?.(settings.prompt?.toString().toLowerCase() ?? '');
-      }, [settings.prompt, ttsSpeak]);
+        ttsSpeak?.(
+          firstMiniTestTask?.question?.[moduleIndex]?.description ?? '',
+        );
+      }, [firstMiniTestTask?.question, moduleIndex, ttsSpeak]);
 
       const opacity = useSharedValue(0);
       const scaleS = useSharedValue(1);
@@ -218,7 +220,7 @@ const Math_G0M2 = observer(
               <Animated.Image
                 resizeMode={'contain'}
                 width={WIDTH_SCREEN}
-                height={scale(200)}
+                height={scale(160)}
                 style={[{}, animatedStyle]}
                 source={{
                   uri:
