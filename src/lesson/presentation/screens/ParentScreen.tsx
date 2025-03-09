@@ -83,16 +83,15 @@ import {IapContext} from 'src/core/presentation/store/iapContext';
 import {TProduct} from 'src/core/presentation/store/iapProvider';
 
 import DiamondContainer from './LessonComponent/DiamondContainer';
-import {
-  HomeProvider,
-  IHomeState,
-} from 'src/home/presentation/stores/HomeProvider';
+import {HomeProvider} from 'src/home/presentation/stores/HomeProvider';
 import {HomeContext} from 'src/home/presentation/stores/HomeContext';
 import {FieldData} from 'src/home/application/types/GetFieldResponse';
 import {Subject} from 'src/home/application/types/GetListSubjectResponse';
 import {BlockedModuleSetting} from 'src/lesson/application/types/UserSettingPayload';
 import {GetListSubjectPayload} from 'src/home/application/types/GetListSubjectPayload';
 import {Module} from 'src/home/application/types/GetListLessonResponse';
+import {useI18n} from 'src/core/presentation/hooks/useI18n';
+import ChangeLanguage from 'src/core/presentation/components/ChangeLanguage';
 
 // ... existing imports ...
 
@@ -148,6 +147,8 @@ const ParentScreen = observer(() => {
     deviceToken,
     deleteChildren,
   } = useAuthenticationStore();
+
+  const i18n = useI18n();
 
   const {isShowAuth: isAuthenSetting, changeIsShowAuth} = useAuthParent();
   const isShowAuth = __DEV__ ? false : isAuthenSetting;
@@ -717,8 +718,14 @@ The blockAppsSystem function is an asynchronous function that awaits the result 
                 <Text style={[globalStyle.txtButton, styles.textColor]}>
                   Language
                 </Text>
-                <CheckSelect name="English" isSelected />
-                <CheckSelect name="Vietnam" />
+                {/* <CheckSelect name="English" isSelected />
+                <CheckSelect
+                  onPress={() => {
+                    i18n.changeLanguage('en');
+                  }}
+                  name="Vietnam"
+                /> */}
+                <ChangeLanguage />
               </View>
             </View>
             <View>

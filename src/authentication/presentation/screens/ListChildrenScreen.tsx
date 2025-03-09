@@ -29,14 +29,17 @@ import {
 } from 'src/authentication/application/types/GetUserProfileResponse';
 import {useOfflineMode} from 'src/core/presentation/hooks/offline/useOfflineMode';
 import {OfflineEnum} from 'src/core/presentation/hooks/offline/OfflineEnum';
+import {observer} from 'mobx-react';
+import {useI18n} from 'src/core/presentation/hooks/useI18n';
 
 const screenWidth = Dimensions.get('screen').width;
 
-const ListChildrenScreen = React.memo(() => {
+const ListChildrenScreen = observer(() => {
   const {removeCurrentCredentials, getUserProfile, setSelectedChild} =
     useAuthenticationStore();
   const {storeData, getData, isConnected} = useOfflineMode();
   useLoadingGlobal();
+  const i18n = useI18n();
 
   const [userProfile, setUserProfile] = useState<data>();
   const [isChooseChildren, setIsChooseChildren] = useState<string>();

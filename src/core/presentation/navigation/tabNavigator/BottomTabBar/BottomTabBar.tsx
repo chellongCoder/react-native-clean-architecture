@@ -4,6 +4,7 @@ import styles from '../styles';
 import {BottomTabBarProps} from '@react-navigation/bottom-tabs';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import TabButton from './TabButton';
+import {observer} from 'mobx-react';
 
 export interface CustomStatusBarProps {
   backgroundColor: string;
@@ -29,70 +30,70 @@ const CustomStatusBar: FC<CustomStatusBarProps> = ({
   );
 };
 
-function BottomTabBar({
-  state,
-  descriptors,
-  navigation,
-}: BottomTabBarProps): React.ReactElement | null {
-  const focusedOptions = descriptors[state.routes[state.index].key].options;
-  const insets = useSafeAreaInsets();
+const BottomTabBar = observer(
+  ({state, descriptors, navigation}: BottomTabBarProps) => {
+    const focusedOptions = descriptors[state.routes[state.index].key].options;
+    const insets = useSafeAreaInsets();
 
-  const routesView = useRef(
-    Array.from({length: state.routes.length}, (_, i) => i),
-  );
+    const routesView = useRef(
+      Array.from({length: state.routes.length}, (_, i) => i),
+    );
 
-  if (focusedOptions.tabBarVisible === false) {
-    return null;
-  }
+    if (focusedOptions.tabBarVisible === false) {
+      return null;
+    }
 
-  return (
-    <Fragment>
-      <View style={[styles.blockRoutes, {paddingBottom: insets.bottom}]}>
-        {Platform.OS === 'android' && (
-          <View style={styles.blockRoutesContainer} />
-        )}
-        <View style={[styles.midBackground]} />
-        {state?.routes.map((route: any, index: number) => {
-          const {options} = descriptors[route.key];
+    return (
+      <Fragment>
+        <View style={[styles.blockRoutes, {paddingBottom: insets.bottom}]}>
+          {Platform.OS === 'android' && (
+            <View style={styles.blockRoutesContainer} />
+          )}
+          <View style={[styles.midBackground]} />
+          {state?.routes.map((route: any, index: number) => {
+            const {options} = descriptors[route.key];
 
-          const isFocused = state.index === index;
-          const onPress = () => {
-            const event = navigation.emit({
-              type: 'tabPress',
-              target: route.key,
-              canPreventDefault: true,
-            });
+            const isFocused = state.index === index;
+            const onPress = () => {
+              const event = navigation.emit({
+                type: 'tabPress',
+                target: route.key,
+                canPreventDefault: true,
+              });
 
-            if (!isFocused && !event.defaultPrevented) {
-              const temp =
-                routesView.current[Math.floor(state?.routes.length / 2 ?? 1)];
-              const viewIndex = routesView.current.findIndex(i => i === index);
-              routesView.current[2] = routesView.current[viewIndex];
-              routesView.current[viewIndex] = temp;
-              navigation.navigate(route.name);
-            }
-          };
+              if (!isFocused && !event.defaultPrevented) {
+                const temp =
+                  routesView.current[Math.floor(state?.routes.length / 2 ?? 1)];
+                const viewIndex = routesView.current.findIndex(
+                  i => i === index,
+                );
+                routesView.current[2] = routesView.current[viewIndex];
+                routesView.current[viewIndex] = temp;
+                navigation.navigate(route.name);
+              }
+            };
 
-          return (
-            <TabButton
-              key={index}
-              options={options}
-              onPress={onPress}
-              route={route}
-              isFocused={isFocused}
-              numberOfTab={state?.routes}
-              viewIndex={routesView.current.findIndex(i => i === index)}
-            />
-          );
-        })}
-      </View>
-      <CustomStatusBar
-        backgroundColor={'transparent'}
-        barStyle="dark-content"
-        translucent={true}
-      />
-    </Fragment>
-  );
-}
+            return (
+              <TabButton
+                key={index}
+                options={options}
+                onPress={onPress}
+                route={route}
+                isFocused={isFocused}
+                numberOfTab={state?.routes}
+                viewIndex={routesView.current.findIndex(i => i === index)}
+              />
+            );
+          })}
+        </View>
+        <CustomStatusBar
+          backgroundColor={'transparent'}
+          barStyle="dark-content"
+          translucent={true}
+        />
+      </Fragment>
+    );
+  },
+);
 
 export default BottomTabBar;
