@@ -1,0 +1,22 @@
+type GenericLocale = {
+  core: string;
+  'core.screens': string;
+  'core.screens.NotFound': string;
+  'core.screens.NotFound.goHome': string;
+  'core.errors': string;
+  'core.errors.screenNotFound': string;
+  'core.errors.contextNotProvided': string;
+  'core.bottomTab': string;
+  'core.bottomTab.home': string;
+  'core.bottomTab.parent': string;
+  'core.bottomTab.child': string;
+  'core.bottomTab.archivement': string;
+  'core.bottomTab.rank': string;
+  post: string;
+  'post.screens': string;
+  'post.screens.Posts': string;
+  'post.screens.Posts.loading': string;
+  'post.screens.Post': string;
+  'post.screens.Post.loading': string;
+};
+export type LocaleKeys = keyof GenericLocale;

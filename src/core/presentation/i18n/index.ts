@@ -1,7 +1,8 @@
 import * as Localization from 'expo-localization';
-import {I18n as I18nJs, Scope, TranslateOptions} from 'i18n-js';
+import {I18n as I18nJs, TranslateOptions} from 'i18n-js';
 import locales from './locales';
 import {injectable} from 'inversify-sugar';
+import {GenericLocale} from './locales/locales';
 
 @injectable()
 class I18n {
@@ -14,7 +15,7 @@ class I18n {
     this.i18nJs.locale = Localization.locale.substring(0, 2);
   }
 
-  public t(scope: Scope, options?: TranslateOptions) {
+  public t(scope: keyof GenericLocale, options?: TranslateOptions) {
     return this.i18nJs.t(scope, options);
   }
 }

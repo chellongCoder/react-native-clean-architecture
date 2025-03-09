@@ -74,28 +74,6 @@ import Science_SG6M3 from './LessonComponent/Science_SG6M3';
 import Math_MG4M16 from './LessonComponent/Math_MG4M16';
 
 export enum MathQuestionType {
-  MATH_TEXT = 'math_text',
-  MATH_CHOOSE_CORRECT_ANSWER = 'MATH_MG4M30',
-  MATH_MULTIPLE_CHOICE = 'math_multiple_choice',
-  MATH_FILL_IN_BLANK = 'math_fill_in_blank',
-  MATH_TRUE_FALSE = 'math_true_false',
-  MATH_MATCHING = 'math_matching',
-  MATH_ESSAY = 'math_essay',
-  MATH_AUDIO = 'math_audio',
-  MATH_IMAGE = 'math_image',
-  MATH_VIDEO = 'math_video',
-  MATH_READING = 'math_reading',
-  MATH_LISTENING = 'math_listening',
-  MATH_SPEAKING = 'math_speaking',
-  MATH_GRAMMAR = 'math_grammar',
-  MATH_VOCABULARY = 'math_vocabulary',
-  MATH_READING_COMPREHENSION = 'math_reading_comprehension',
-  MATH_WRITING = 'math_writing',
-  MATH_CONVERSATION = 'math_conversation',
-  MATH_PRONUNCIATION = 'math_pronunciation',
-  MATH_TRANSLATION = 'math_translation',
-  MATH_EXPLANATION = 'math_explanation',
-
   MathMG0M1 = 'MATH_MG0M1',
   MathMG0M2 = 'MATH_MG0M2',
   MathMG0M3 = 'MATH_MG0M3',
@@ -155,30 +133,9 @@ export enum ScienceE {
   SCIENCE_SG6M6 = 'SCIENCE_SG6M3',
 }
 export enum LessonTypeE {
-  TEXT = 'text',
-  CHOOSE_CORRECT_ANSWER = 'choose_correct_answer',
-  MULTIPLE_CHOICE = 'multiple_choice',
-  FILL_IN_BLANK = 'fill_in_blank',
-  TRUE_FALSE = 'true_false',
-  MATCHING = 'matching',
-  ESSAY = 'essay',
-  AUDIO = 'audio',
-  IMAGE = 'image',
-  VIDEO = 'video',
-  READING = 'reading',
-  LISTENING = 'listening',
-  SPEAKING = 'speaking',
-  GRAMMAR = 'grammar',
-  VOCABULARY = 'vocabulary',
-  READING_COMPREHENSION = 'reading_comprehension',
   WRITING = 'writing',
-  CONVERSATION = 'conversation',
   PRONUNCIATION = 'pronunciation',
-  TRANSLATION = 'translation',
   EXPLANATION = 'explanation',
-  MATH = 'math',
-  WRITE = 'write',
-  SCIENCE = 'science',
   MIX_COLOR = 'mix_color',
 }
 
@@ -697,121 +654,32 @@ const LessonScreen = observer(() => {
       case LanguageE.VIETNAMESE_VNG5M1:
         return <VnG5M1Lesson {...dataProps} ref={vowelRef} />;
       case LanguageE.VIETNAMESE_VNG6M1:
-        return (
-          <VnG3M1Lesson
-            moduleIndex={lessonIndex}
-            nextModule={nextModule}
-            totalModule={testTask?.question.length ?? 0}
-            lessonName={route.lessonName}
-            moduleName={route.moduleName}
-            firstMiniTestTask={testTask}
-            backgroundImage={
-              env.IMAGE_BACKGROUND_BASE_API_URL + lessonSetting?.backgroundImage
-            }
-            characterImageSuccess={
-              env.IMAGE_BACKGROUND_BASE_API_URL +
-              lessonSetting?.figureSuccessImage
-            }
-            characterImageFail={
-              env.IMAGE_BACKGROUND_BASE_API_URL + lessonSetting?.figureFailImage
-            }
-            ref={vowelRef}
-          />
-        );
+        return <VnG3M1Lesson {...dataProps} ref={vowelRef} />;
       /**----------------------
        *todo    các question cho môn khoa học
        *------------------------**/
       case LessonTypeE.MIX_COLOR:
         return (
           <ScienceLesson
-            moduleIndex={lessonIndex}
+            {...dataProps}
             answers={(testTask?.question[lessonIndex]?.answers ?? []).map(
               v => '#' + v.replace('.png', ''),
             )}
-            totalModule={testTask?.question.length ?? 0}
-            lessonName={route.lessonName}
-            moduleName={route.moduleName}
-            firstMiniTestTask={testTask}
-            nextModule={nextModule}
-            backgroundImage={
-              env.IMAGE_BACKGROUND_BASE_API_URL + lessonSetting?.backgroundImage
-            }
-            characterImageSuccess={
-              env.IMAGE_BACKGROUND_BASE_API_URL +
-              lessonSetting?.figureSuccessImage
-            }
-            characterImageFail={
-              env.IMAGE_BACKGROUND_BASE_API_URL + lessonSetting?.figureFailImage
-            }
           />
         );
       case ScienceE.SCIENCE_G0M1:
-        return (
-          <Science_G0M1
-            moduleIndex={lessonIndex}
-            totalModule={testTask?.question.length ?? 0}
-            lessonName={route.lessonName}
-            moduleName={route.moduleName}
-            firstMiniTestTask={testTask}
-            nextModule={nextModule}
-            backgroundImage={
-              env.IMAGE_BACKGROUND_BASE_API_URL + lessonSetting?.backgroundImage
-            }
-            characterImageSuccess={
-              env.IMAGE_BACKGROUND_BASE_API_URL +
-              lessonSetting?.figureSuccessImage
-            }
-            characterImageFail={
-              env.IMAGE_BACKGROUND_BASE_API_URL + lessonSetting?.figureFailImage
-            }
-          />
-        );
+        return <Science_G0M1 {...dataProps} />;
       case ScienceE.SCIENCE_G0M2:
         return (
           <ScienceLesson
-            moduleIndex={lessonIndex}
+            {...dataProps}
             answers={(testTask?.question[lessonIndex]?.answers ?? []).map(
               v => '#' + v.replace('.png', ''),
             )}
-            totalModule={testTask?.question.length ?? 0}
-            lessonName={route.lessonName}
-            moduleName={route.moduleName}
-            firstMiniTestTask={testTask}
-            nextModule={nextModule}
-            backgroundImage={
-              env.IMAGE_BACKGROUND_BASE_API_URL + lessonSetting?.backgroundImage
-            }
-            characterImageSuccess={
-              env.IMAGE_BACKGROUND_BASE_API_URL +
-              lessonSetting?.figureSuccessImage
-            }
-            characterImageFail={
-              env.IMAGE_BACKGROUND_BASE_API_URL + lessonSetting?.figureFailImage
-            }
           />
         );
       case ScienceE.SCIENCE_SG1M2:
-        return (
-          <Science_SG1M2
-            moduleIndex={lessonIndex}
-            nextModule={nextModule}
-            totalModule={testTask?.question.length ?? 0}
-            lessonName={route.lessonName}
-            moduleName={route.moduleName}
-            firstMiniTestTask={testTask}
-            backgroundImage={
-              env.IMAGE_BACKGROUND_BASE_API_URL + lessonSetting?.backgroundImage
-            }
-            characterImageSuccess={
-              env.IMAGE_BACKGROUND_BASE_API_URL +
-              lessonSetting?.figureSuccessImage
-            }
-            characterImageFail={
-              env.IMAGE_BACKGROUND_BASE_API_URL + lessonSetting?.figureFailImage
-            }
-            ref={vowelRef}
-          />
-        );
+        return <Science_SG1M2 {...dataProps} ref={vowelRef} />;
       case ScienceE.SCIENCE_SG2M4:
         return (
           <Science_SG2M4
@@ -835,27 +703,7 @@ const LessonScreen = observer(() => {
           />
         );
       case ScienceE.SCIENCE_SG3M9:
-        return (
-          <Science_SG3M9
-            moduleIndex={lessonIndex}
-            nextModule={nextModule}
-            totalModule={testTask?.question.length ?? 0}
-            lessonName={route.lessonName}
-            moduleName={route.moduleName}
-            firstMiniTestTask={testTask}
-            backgroundImage={
-              env.IMAGE_BACKGROUND_BASE_API_URL + lessonSetting?.backgroundImage
-            }
-            characterImageSuccess={
-              env.IMAGE_BACKGROUND_BASE_API_URL +
-              lessonSetting?.figureSuccessImage
-            }
-            characterImageFail={
-              env.IMAGE_BACKGROUND_BASE_API_URL + lessonSetting?.figureFailImage
-            }
-            ref={vowelRef}
-          />
-        );
+        return <Science_SG3M9 {...dataProps} ref={vowelRef} />;
       case ScienceE.SCIENCE_SG4M3:
         return (
           <Science_SG4M3

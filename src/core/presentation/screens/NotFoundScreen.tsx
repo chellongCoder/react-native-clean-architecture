@@ -3,6 +3,7 @@ import {RootStackScreenProps} from '../navigation/types';
 import {useI18n} from '../hooks/useI18n';
 import useGlobalStyle from '../hooks/useGlobalStyle';
 import ICAchievement from 'src/core/components/icons/ICAchievement';
+import {GenericLocale} from '../i18n/locales/locales';
 
 export default function NotFoundScreen({
   navigation,
@@ -12,9 +13,7 @@ export default function NotFoundScreen({
 
   return (
     <View>
-      <Text style={[styles.title, styleHook.txtWord]}>
-        {i18n.t('core.errors.screenNotFound')}
-      </Text>
+      <Text style={[styles.title, styleHook.txtWord]}>{i18n.t('')}</Text>
       <TouchableOpacity onPress={() => navigation.replace('Posts')}>
         <Text>{i18n.t('core.screens.NotFound.goHome')}</Text>
       </TouchableOpacity>

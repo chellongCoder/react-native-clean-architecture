@@ -9,6 +9,13 @@ export default {
       screenNotFound: 'Screen not found',
       contextNotProvided: '{{contextName}} is not provided.',
     },
+    bottomTab: {
+      home: 'Home',
+      parent: 'Parent',
+      child: 'Child',
+      archivement: 'Archivement',
+      rank: 'Rank',
+    },
   },
   post: {
     screens: {

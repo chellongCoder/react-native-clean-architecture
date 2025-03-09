@@ -12,6 +12,7 @@ import {scale} from 'react-native-size-matters';
 import {COLORS} from 'src/core/presentation/constants/colors';
 import {STACK_NAVIGATOR} from '../../ConstantNavigator';
 import {assets} from 'src/core/presentation/utils';
+import {useI18n} from 'src/core/presentation/hooks/useI18n';
 
 const {BOTTOM_TAB} = STACK_NAVIGATOR;
 
@@ -29,13 +30,15 @@ const BottomTabColor = {
 };
 
 const TitleTabBar = (name: string, isFocused: boolean) => {
+  const i18n = useI18n();
+
   const titles = {
-    [BOTTOM_TAB.HOME_TAB]: 'Home',
-    [BOTTOM_TAB.TARGET_TAB]: 'Target',
-    [BOTTOM_TAB.PARENT_TAB]: 'Parent',
-    [BOTTOM_TAB.CHILD_TAB]: 'Child',
-    [BOTTOM_TAB.ACHIEVEMENT_TAB]: 'Achievement',
-    [BOTTOM_TAB.RANK_TAB]: 'Rank',
+    [BOTTOM_TAB.HOME_TAB]: i18n.t('core.bottomTab.home'),
+    [BOTTOM_TAB.TARGET_TAB]: i18n.t(''),
+    [BOTTOM_TAB.PARENT_TAB]: i18n.t('core.bottomTab.parent'),
+    [BOTTOM_TAB.CHILD_TAB]: i18n.t('core.bottomTab.child'),
+    [BOTTOM_TAB.ACHIEVEMENT_TAB]: i18n.t('core.bottomTab.archivement'),
+    [BOTTOM_TAB.RANK_TAB]: i18n.t('core.bottomTab.rank'),
   };
   const title = titles[name];
   if (!title) {
