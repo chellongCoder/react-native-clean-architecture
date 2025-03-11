@@ -111,8 +111,11 @@ const English_EG4M23 = observer(
       }, [characterImageFail, characterImageSuccess, isAnswerCorrect]);
 
       const onSpeechText = useCallback(() => {
-        ttsSpeak?.('');
-      }, [ttsSpeak]);
+        ttsSpeak?.(
+          firstMiniTestTask?.question?.[moduleIndex].fullAnswer.toString() ??
+            '',
+        );
+      }, [firstMiniTestTask?.question, moduleIndex, ttsSpeak]);
 
       const opacity = useSharedValue(0);
       const scaleS = useSharedValue(1);
@@ -200,6 +203,7 @@ const English_EG4M23 = observer(
             <View
               style={{
                 width: scale(200),
+                height: verticalScale(150),
                 marginTop: verticalScale(50),
               }}>
               <Text style={[styles.fonts_SVN_Cherish, styles.textQuestion]}>
