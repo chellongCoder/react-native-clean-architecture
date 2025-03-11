@@ -168,6 +168,11 @@ const English_EG4M23 = observer(
         <LessonComponent
           backgroundImage={backgroundImage}
           characterImage={characterImage}
+          characterStyle={{
+            height: verticalScale(260),
+            marginBottom: -verticalScale(100),
+            marginLeft: -verticalScale(20),
+          }}
           lessonName={lessonName}
           module={moduleName}
           part={firstMiniTestTask?.name}
