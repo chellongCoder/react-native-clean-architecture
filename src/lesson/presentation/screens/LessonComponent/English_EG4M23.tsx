@@ -370,8 +370,8 @@ const styles = StyleSheet.create({
     marginBottom: verticalScale(8),
   },
   iconImageContainer: {
-    height: verticalScale(45),
-    width: verticalScale(40),
+    height: verticalScale(39),
+    width: verticalScale(34),
   },
   buttonContainer: {
     borderRadius: scale(52),

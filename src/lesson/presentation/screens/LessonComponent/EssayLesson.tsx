@@ -145,7 +145,12 @@ const EssayLesson = ({
       isAnswerCorrect={isAnswerCorrect}
       isShowCorrectContainer={isShowCorrectContainer}
       buildQuestion={
-        <View>
+        <View style={{alignItems: 'center'}}>
+          <Text style={[styles.fonts_SVN_Cherish, styles.textQuestion]}>
+            {firstMiniTestTask?.type !== 'mini_test'
+              ? firstMiniTestTask?.question?.[moduleIndex].correctAnswer
+              : ' '}
+          </Text>
           <Animated.Image
             resizeMode={'contain'}
             style={[
@@ -172,7 +177,7 @@ const EssayLesson = ({
                 flex: 1,
               }}>
               <Text style={[globalStyle.txtLabel, styles.textColor]}>
-                Choose the correct answer
+                Spell the words
               </Text>
             </View>
 
@@ -321,8 +326,8 @@ const styles = StyleSheet.create({
     marginBottom: verticalScale(8),
   },
   iconImageContainer: {
-    height: verticalScale(45),
-    width: verticalScale(40),
+    height: scale(39),
+    width: scale(34),
   },
   buttonContainer: {
     borderRadius: scale(52),

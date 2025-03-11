@@ -15,7 +15,12 @@ import CanvasWrite, {CanvasWriteRef} from '../../components/CanvasWrite';
 import {Task} from 'src/home/application/types/GetListQuestionResponse';
 import useAuthenticationStore from 'src/authentication/presentation/stores/useAuthenticationStore';
 import {scale, verticalScale} from 'react-native-size-matters';
-import {assets, getCorrectAnswer, isAndroid} from 'src/core/presentation/utils';
+import {
+  assets,
+  darkenColor,
+  getCorrectAnswer,
+  isAndroid,
+} from 'src/core/presentation/utils';
 import {useLessonStore} from '../../stores/LessonStore/useGetPostsStore';
 import {useSettingLesson} from '../../hooks/useSettingLesson';
 import {COLORS} from 'src/core/presentation/constants/colors';
@@ -231,9 +236,14 @@ const LatinLesson = ({
           <View
             style={{
               justifyContent: 'space-between',
+              alignItems: 'center',
               flexDirection: 'row',
             }}>
-            <Text style={[globalStyle.txtLabel]}>
+            <Text
+              style={[
+                globalStyle.txtLabel,
+                {color: darkenColor(settings.backgroundButtonColor ?? '', 20)},
+              ]}>
               Write the "{firstMiniTestTask?.question?.[moduleIndex].fullAnswer}
               "
             </Text>
@@ -305,7 +315,7 @@ const styles = StyleSheet.create({
   alignSelfCenter: {
     alignSelf: 'center',
   },
-  iconAIVoiceContainer: {height: scale(31), width: scale(31)},
+  iconAIVoiceContainer: {height: scale(39), width: scale(34)},
   buttonContainer: {
     borderRadius: scale(52),
     paddingVertical: verticalScale(9),

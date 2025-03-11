@@ -417,7 +417,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     marginBottom: 8,
   },
-  iconImageContainer: {height: 45, width: 40},
+  iconImageContainer: {height: 39, width: 34},
   buttonContainer: {
     borderRadius: scale(52),
     paddingVertical: verticalScale(9),
