@@ -111,11 +111,8 @@ const English_EG4M23 = observer(
       }, [characterImageFail, characterImageSuccess, isAnswerCorrect]);
 
       const onSpeechText = useCallback(() => {
-        ttsSpeak?.(
-          firstMiniTestTask?.question?.[moduleIndex].fullAnswer.toString() ??
-            '',
-        );
-      }, [firstMiniTestTask?.question, moduleIndex, ttsSpeak]);
+        ttsSpeak?.(settings.prompt?.toString() ?? '');
+      }, [settings.prompt, ttsSpeak]);
 
       const opacity = useSharedValue(0);
       const scaleS = useSharedValue(1);
