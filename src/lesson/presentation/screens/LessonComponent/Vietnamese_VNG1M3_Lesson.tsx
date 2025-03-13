@@ -120,7 +120,7 @@ const VnG1M3Lesson = ({
       text.split('/').forEach((answer, index) => {
         setTimeout(() => {
           ttsSpeak?.(getCorrectAnswer(answer?.trim()));
-        }, index * 750);
+        }, index * 1250);
       });
     },
     [ttsSpeak],

@@ -182,15 +182,25 @@ const LessonScreen = observer(() => {
   const {tasks: apiTasks} = useListQuestions(route?.lessonId);
 
   const tasks = useMemo(() => {
-    return apiTasks.slice(apiTasks.length - 1, apiTasks.length).map(t => {
-      return {
-        ...t,
-        // question: t.question.slice(0, 1),
-        // question: t.question.slice(0, 5),
-        // question: shuffleArray(t.question),
-        question: __DEV__ ? t.question.slice(0, 2) : t.question,
-      };
-    });
+    return __DEV__
+      ? apiTasks.slice(apiTasks.length - 1, apiTasks.length).map(t => {
+          return {
+            ...t,
+            // question: t.question.slice(0, 1),
+            // question: t.question.slice(0, 5),
+            // question: shuffleArray(t.question),
+            question: __DEV__ ? t.question.slice(0, 2) : t.question,
+          };
+        })
+      : apiTasks.map(t => {
+          return {
+            ...t,
+            // question: t.question.slice(0, 1),
+            // question: t.question.slice(0, 5),
+            // question: shuffleArray(t.question),
+            question: t.question,
+          };
+        });
   }, [apiTasks]);
 
   const [activeTaskIndex, setActiveTaskIndex] = useState(0);
@@ -565,7 +575,7 @@ const LessonScreen = observer(() => {
     totalModule: testTask?.question.length ?? 0,
     lessonName: route.lessonName,
     moduleName: route.moduleName,
-    firstMiniTestTask,
+    firstMiniTestTask: testTask,
     backgroundImage:
       env.IMAGE_BACKGROUND_BASE_API_URL + lessonSetting?.backgroundImage,
     characterImageSuccess:

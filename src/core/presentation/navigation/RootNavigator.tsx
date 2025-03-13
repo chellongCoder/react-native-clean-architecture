@@ -14,12 +14,14 @@ import {LessonStoreProvider} from 'src/lesson/presentation/stores/LessonStore/Le
 import {usePermissionApplock} from 'src/hooks/usePermissionApplock';
 import useHydration from 'src/hooks/useHydration';
 import {PopupModalGlobalProvider} from '../hooks/popup/PopupModalGlobalProvider';
+import {useI18n} from '../hooks/useI18n';
 
 export const AppStack = createStackNavigator();
 
 const RootNavigator: FC = () => {
   const {getUsernamePasswordInKeychain} = useLoginWithCredentials();
   const {isConnected, getData} = useOfflineMode();
+  const i18n = useI18n();
 
   const isHydrated = useHydration();
 
@@ -47,6 +49,11 @@ const RootNavigator: FC = () => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isConnected, isHydrated, userProfile]);
+
+  useEffect(() => {
+    i18n.changeLanguage(i18n.deviceLocale);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [i18n.deviceLocale]);
 
   return (
     <AppStack.Navigator

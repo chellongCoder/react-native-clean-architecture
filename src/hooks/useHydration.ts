@@ -10,6 +10,7 @@ import {homeModuleContainer} from 'src/home/HomeModule';
 import {HomeStore} from 'src/home/presentation/stores/HomeStore';
 import {lessonModuleContainer} from 'src/lesson/LessonModule';
 import {LessonStore} from 'src/lesson/presentation/stores/LessonStore/LessonStore';
+import I18n from 'src/core/presentation/i18n';
 
 const useHydration = () => {
   const [isHydrated, setIsHydrated] = useState(false);
@@ -23,7 +24,14 @@ const useHydration = () => {
 
   const hydrateStores = () => {
     const stores = getStoresToHydrate();
-    return Promise.all(stores.map(({key, store}) => hydrate(key, store)));
+    return Promise.all(
+      stores.map(({key, store}) =>
+        hydrate(key, store).then(e => {
+          console.log('🛠 LOG: 🚀 --> ~ e:', e);
+          return e;
+        }),
+      ),
+    );
   };
 
   const getStoresToHydrate = () => [
@@ -38,6 +46,10 @@ const useHydration = () => {
     {
       key: 'lessonStore',
       store: lessonModuleContainer.getProvided(LessonStore),
+    },
+    {
+      key: 'i18nStore',
+      store: coreModuleContainer.getProvided(I18n),
     },
   ];
 

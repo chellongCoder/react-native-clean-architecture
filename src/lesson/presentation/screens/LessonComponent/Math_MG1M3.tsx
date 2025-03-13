@@ -71,7 +71,7 @@ const Math_MG1M3 = observer(
       const answerRef = useRef<SelectionAnswersQuestionRef>(null);
       const globalStyle = useGlobalStyle();
 
-      const {ttsSpeak} = useContext(TextToSpeechContext);
+      const {ttsSpeak, init} = useContext(TextToSpeechContext);
       const focus = useIsFocused();
 
       const [answerSelected, setAnswerSelected] = useState<string | string[]>(
@@ -119,10 +119,6 @@ const Math_MG1M3 = observer(
           : characterImageFail;
       }, [characterImageFail, characterImageSuccess, isAnswerCorrect]);
 
-      const descriptionWithAnswers = useMemo(() => {
-        return answerSelected.length > 0 ? answerSelected : '?';
-      }, [answerSelected]);
-
       const onSpeechText = useCallback(() => {
         ttsSpeak?.(
           firstMiniTestTask?.question?.[moduleIndex].instruction.description ??
@@ -148,9 +144,12 @@ const Math_MG1M3 = observer(
             onSpeechText();
           }, 1500);
 
-          return () => clearTimeout(firstTimeout);
+          return () => {
+            clearTimeout(firstTimeout);
+            init?.();
+          };
         }
-      }, [onSpeechText, focus]); // Added focus to the dependency array
+      }, [onSpeechText, focus, init]); // Added focus to the dependency array
 
       useEffect(() => {
         opacity.value = withTiming(0, {duration: 500}, () => {

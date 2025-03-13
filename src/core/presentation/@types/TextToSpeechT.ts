@@ -8,4 +8,5 @@ export interface TextToSpeechT {
   updateDefaultVoice: (e?: string, i?: TLanguageKeys) => void;
   voices: Voice[];
   isSpeakDone: boolean;
+  init: () => void;
 }

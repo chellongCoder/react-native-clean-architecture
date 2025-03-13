@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {View, StyleSheet} from 'react-native';
 import {useI18n} from '../hooks/useI18n';
 import locales from '../i18n/locales';
@@ -20,7 +20,7 @@ const LanguageOption: React.FC<LanguageOptionProps> = ({
 
 const ChangeLanguage: React.FC = () => {
   const i18n = useI18n();
-  const [currentLocale, setCurrentLocale] = useState(Object.keys(locales)[0]);
+  const [currentLocale, setCurrentLocale] = useState(i18n.deviceLocale);
 
   const handleLanguageChange = (language: string) => {
     setCurrentLocale(language);
@@ -30,6 +30,7 @@ const ChangeLanguage: React.FC = () => {
       text1: 'Altered language was updated!',
     });
   };
+  
 
   return (
     <View style={styles.container}>

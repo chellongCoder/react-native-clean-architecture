@@ -1,4 +1,9 @@
-import React, {PropsWithChildren, useEffect, useState} from 'react';
+import React, {
+  PropsWithChildren,
+  useCallback,
+  useEffect,
+  useState,
+} from 'react';
 import {TextToSpeechContext} from './TextToSpeechContext';
 import Tts, {Voice} from 'react-native-tts';
 import {Platform} from 'react-native';
@@ -334,35 +339,38 @@ export const TextToSpeechProvider = ({children}: PropsWithChildren) => {
     }
   };
 
+  const init = useCallback(() => {
+    console.log('INIT TTS ✅');
+    // Tiếng nói
+    Tts.setDefaultLanguage(
+      Platform.OS === 'android'
+        ? androidVoice[0].language
+        : iosVoice[0].language,
+    );
+    // Giọng đọc
+    Tts.setDefaultVoice(
+      Platform.OS === 'android' ? androidVoice[0].id : iosVoice[3].id,
+    );
+    // Tốc độ nói
+    Tts.setDefaultRate(isAndroid ? 0.5 : 1);
+
+    // Độ ấm của giọng càng thấp giọng càng trầm ấm
+    Tts.setDefaultPitch(1.5);
+
+    // Ignore the silent switch on the device, allowing TTS to play even if the device is set to silent
+    Tts.setIgnoreSilentSwitch('ignore');
+
+    setIsInitialized(true);
+
+    Tts.voices().then(vs => {
+      setVoices(vs);
+    });
+  }, []);
+
   useEffect(() => {
     Tts.getInitStatus()
       .then(() => {
-        console.log('ALL OK TTS ✅'); // TTS is initialized successfully
-
-        // Tiếng nói
-        Tts.setDefaultLanguage(
-          Platform.OS === 'android'
-            ? androidVoice[0].language
-            : iosVoice[0].language,
-        );
-        // Giọng đọc
-        Tts.setDefaultVoice(
-          Platform.OS === 'android' ? androidVoice[0].id : iosVoice[3].id,
-        );
-        // Tốc độ nói
-        Tts.setDefaultRate(isAndroid ? 0.5 : 1);
-
-        // Độ ấm của giọng càng thấp giọng càng trầm ấm
-        Tts.setDefaultPitch(1.5);
-
-        // Ignore the silent switch on the device, allowing TTS to play even if the device is set to silent
-        Tts.setIgnoreSilentSwitch('ignore');
-
-        setIsInitialized(true);
-
-        Tts.voices().then(vs => {
-          setVoices(vs);
-        });
+        init();
       })
       .catch(error => {
         console.error('TTS initialization failed:', error);
@@ -379,7 +387,7 @@ export const TextToSpeechProvider = ({children}: PropsWithChildren) => {
       // setIsSpeakDone(true); // Perform any action you need after speech is done
       // Perform any action you need after speech is done
     });
-  }, []);
+  }, [init]);
 
   useEffect(() => {
     const setVolume = async () => {
@@ -397,6 +405,7 @@ export const TextToSpeechProvider = ({children}: PropsWithChildren) => {
         updateDefaultVoice,
         voices,
         isSpeakDone,
+        init,
       }}>
       {children}
     </TextToSpeechContext.Provider>
