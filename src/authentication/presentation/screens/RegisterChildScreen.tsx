@@ -9,6 +9,7 @@ import {
   KeyboardAvoidingView,
   TextInput,
   ImageBackground,
+  ScrollView,
 } from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {scale} from 'react-native-size-matters';
@@ -25,6 +26,7 @@ import {useLoadingGlobal} from 'src/core/presentation/hooks/loading/useLoadingGl
 import {Subject} from 'src/authentication/application/types/GetListSubjectResponse';
 import useGlobalStyle from 'src/core/presentation/hooks/useGlobalStyle';
 import Dropdown from 'src/core/components/dropdown/Dropdown';
+import {useI18n} from 'src/core/presentation/hooks/useI18n';
 
 type TRegister = {
   name?: string;
@@ -47,6 +49,7 @@ const RegisterChildScreen: React.FC = () => {
     useLoginWithCredentials();
   useLoadingGlobal();
   const commonStyle = useGlobalStyle();
+  const i18n = useI18n();
 
   const [genderOptions, setGenderOptions] = useState<ItemType[]>([
     {label: 'Male', value: 'male'},
@@ -151,15 +154,19 @@ const RegisterChildScreen: React.FC = () => {
           <KeyboardAvoidingView
             style={[styles.fill]}
             behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
-            <View style={styles.wrapBodyContainer}>
+            <ScrollView
+              style={styles.wrapBodyContainer}
+              showsVerticalScrollIndicator={false}>
               <View style={[styles.pb32]}>
                 <Text style={[commonStyle.txtLabel, styles.txtLabel]}>
-                  Child's name
+                  {i18n.t('authentication.screens.RegisterChild.childName')}
                 </Text>
                 <View style={styles.boxInput}>
                   <TextInput
                     style={[styles.input]}
-                    placeholder="Thomas"
+                    placeholder={i18n.t(
+                      'authentication.screens.RegisterChild.enterChildName',
+                    )}
                     value={registerState.name}
                     onChangeText={(e: string) => onTextInputChange('name', e)}
                     autoFocus={true}
@@ -169,7 +176,7 @@ const RegisterChildScreen: React.FC = () => {
 
               <View style={styles.genderAgeContainer}>
                 <CommonDropDown
-                  label="Gender"
+                  label={i18n.t('authentication.screens.RegisterChild.gender')}
                   open={genderOpen}
                   value={registerState.gender || genderOptions[0].value}
                   items={genderOptions}
@@ -179,7 +186,7 @@ const RegisterChildScreen: React.FC = () => {
                 />
 
                 <CommonDropDown
-                  label="Age"
+                  label={i18n.t('authentication.screens.RegisterChild.age')}
                   open={ageOpen}
                   value={registerState.age || ageOptions[0].value.toString()}
                   items={ageOptions}
@@ -190,16 +197,19 @@ const RegisterChildScreen: React.FC = () => {
               </View>
 
               <View style={styles.wrapSubjectContainer}>
-                <Text style={styles.subjectHeaderTitle}>Want to study</Text>
+                <Text style={styles.subjectHeaderTitle}>
+                  {i18n.t('authentication.screens.RegisterChild.wantToStudy')}
+                </Text>
 
                 <FlatList
                   data={registerState.listAllSubject || []}
                   renderItem={renderSubjectItem}
                   numColumns={2}
                   columnWrapperStyle={{justifyContent: 'space-between'}}
+                  showsVerticalScrollIndicator={false}
                 />
               </View>
-            </View>
+            </ScrollView>
           </KeyboardAvoidingView>
           {/* </ScrollView> */}
         </View>
@@ -207,7 +217,9 @@ const RegisterChildScreen: React.FC = () => {
           <TouchableOpacity
             style={styles.wrapButtonContainer}
             onPress={onCreateAccount}>
-            <Text style={styles.buttonTitle}>Create an account</Text>
+            <Text style={styles.buttonTitle}>
+              {i18n.t('authentication.screens.RegisterChild.createAccount')}
+            </Text>
           </TouchableOpacity>
         </View>
       </SafeAreaView>
@@ -248,7 +260,6 @@ const styles = StyleSheet.create({
   },
   wrapBodyContainer: {
     flex: 1,
-    justifyContent: 'center',
   },
   genderAgeContainer: {
     flexDirection: 'row',
@@ -263,8 +274,6 @@ const styles = StyleSheet.create({
   },
   buttonContainer: {
     alignItems: 'center',
-    marginTop: scale(32),
-    paddingBottom: scale(32),
   },
   wrapButtonContainer: {
     paddingVertical: scale(8),

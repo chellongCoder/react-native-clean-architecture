@@ -16,7 +16,7 @@ import {scale, verticalScale} from 'react-native-size-matters';
 import {TProduct} from 'src/core/presentation/store/iapProvider';
 import {IapContext} from 'src/core/presentation/store/iapContext';
 import PrimaryButton from '../../components/PrimaryButton';
-
+import {useI18n} from 'src/core/presentation/hooks/useI18n';
 type TProps = {
   onBuyDiamond: (item: TProduct) => void;
 };
@@ -24,13 +24,16 @@ type TProps = {
 const DiamondContainer = (props: TProps) => {
   const {onBuyDiamond} = props;
   const {iapState} = useContext(IapContext);
+  const i18n = useI18n();
 
   const [itemIndex, setItemIndex] = useState(-1);
 
   return (
     <View style={styles.wrapDiamondPurchaseContainer}>
       <View style={styles.diamondPurchaseContainer}>
-        <Text style={styles.purchaseHeaderTitle}>Diamonds purchase</Text>
+        <Text style={styles.purchaseHeaderTitle}>
+          {i18n.t('lesson.screens.Parent.diamondsPurchase')}
+        </Text>
       </View>
 
       <View style={styles.wrapDiamondPurchaseContentContainer}>
@@ -89,7 +92,7 @@ const DiamondContainer = (props: TProps) => {
                       styles.diamondTextSmall,
                       {color: isSecondRow ? COLORS.WHITE : COLORS.BLUE_1C6349},
                     ]}>
-                    Diamonds
+                    {i18n.t('lesson.screens.Parent.diamonds')}
                   </Text>
                 </ImageBackground>
                 <Text style={styles.priceText}>
@@ -103,7 +106,7 @@ const DiamondContainer = (props: TProps) => {
       </View>
 
       <PrimaryButton
-        text="Checkout"
+        text={i18n.t('lesson.screens.Parent.checkout')}
         style={{marginVertical: verticalScale(20), borderRadius: scale(100)}}
         onPress={() => {
           onBuyDiamond(iapState.products?.[itemIndex]);

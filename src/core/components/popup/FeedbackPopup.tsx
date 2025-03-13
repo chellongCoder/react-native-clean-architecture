@@ -22,7 +22,7 @@ import Toast from 'react-native-toast-message';
 import {scale} from 'react-native-size-matters';
 import useGlobalStyle from 'src/core/presentation/hooks/useGlobalStyle';
 import {useLoadingGlobal} from 'src/core/presentation/hooks/loading/useLoadingGlobal';
-
+import {useI18n} from 'src/core/presentation/hooks/useI18n';
 interface FeedbackPopupProps {
   isVisible: boolean;
   onClose: ({
@@ -47,6 +47,7 @@ const FeedbackPopup: React.FC<FeedbackPopupProps> = ({isVisible, onClose}) => {
   const [selectedIcon, setSelectedIcon] = useState<string | null>(icons[4]?.id);
 
   const globalStyle = useGlobalStyle();
+  const i18n = useI18n();
   const {handlePostReport} = useAuthenticationStore();
   const loading = useLoadingGlobal();
   const onSent = useCallback(async () => {
@@ -66,8 +67,8 @@ const FeedbackPopup: React.FC<FeedbackPopupProps> = ({isVisible, onClose}) => {
         console.log('post report fail: ', error);
         Toast.show({
           type: 'error',
-          text1: 'Error',
-          text2: 'Gửi phản hồi thất bại',
+          text1: i18n.t('popup.Feedback.error'),
+          text2: i18n.t('popup.Feedback.errorContent'),
         });
       } finally {
         loading.toggleLoading(false, 'LoadingFeedback');
@@ -75,9 +76,8 @@ const FeedbackPopup: React.FC<FeedbackPopupProps> = ({isVisible, onClose}) => {
     } else {
       Toast.show({
         type: 'error',
-        text1: 'Error',
-        text2:
-          'content need to be more than 10 characters long and icon need to be selected',
+        text1: i18n.t('popup.Feedback.error'),
+        text2: i18n.t('popup.Feedback.errorContent'),
       });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -107,15 +107,17 @@ const FeedbackPopup: React.FC<FeedbackPopupProps> = ({isVisible, onClose}) => {
         <TouchableOpacity activeOpacity={1}>
           <View style={{marginTop: 80}}>
             <Text style={styles.title}>
-              SEND US YOUR FEEDBACK{'\n'}AND RECEIVE
-              <Text style={{color: COLORS.RED_F28759}}> 50 DIAMONDS FREE</Text>
+              {i18n.t('popup.Feedback.title')}
+              <Text style={{color: COLORS.RED_F28759}}>
+                {i18n.t('popup.Feedback.titleBold')}
+              </Text>
             </Text>
             <Text
               style={[
                 globalStyle.txtNote,
                 {fontStyle: 'italic', color: COLORS.YELLOW_F2B559},
               ]}>
-              * Comment need to be more than 10 characters long
+              {i18n.t('popup.Feedback.comment')}
             </Text>
             <TextInput
               placeholder="Aa..."
@@ -136,7 +138,9 @@ const FeedbackPopup: React.FC<FeedbackPopupProps> = ({isVisible, onClose}) => {
               })}
             </View>
             <TouchableOpacity style={styles.sentBtnContainer} onPress={onSent}>
-              <Text style={styles.btnTitle}>Send</Text>
+              <Text style={styles.btnTitle}>
+                {i18n.t('popup.Feedback.send')}
+              </Text>
             </TouchableOpacity>
           </View>
         </TouchableOpacity>

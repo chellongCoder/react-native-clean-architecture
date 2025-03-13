@@ -4,7 +4,7 @@ import {scale, verticalScale} from 'react-native-size-matters';
 import useGlobalStyle from 'src/core/presentation/hooks/useGlobalStyle';
 import PrimaryButton from '../PrimaryButton';
 import {COLORS} from 'src/core/presentation/constants/colors';
-
+import {useI18n} from 'src/core/presentation/hooks/useI18n';
 type Props = {
   icon?: string | number;
   title: string;
@@ -22,6 +22,8 @@ const PurchaseItem = ({
 }: Props) => {
   const styleGlobal = useGlobalStyle();
   const bbt = isBorderTop ? 2 : 0;
+  const i18n = useI18n();
+
   return (
     <View style={[styles.item, {borderTopWidth: bbt}]}>
       <View style={[styles.containerIcon]}>
@@ -36,7 +38,7 @@ const PurchaseItem = ({
         <Text style={[styleGlobal.txtNote, styles.text]}>{description}</Text>
       </View>
       <PrimaryButton
-        text="Get more"
+        text={i18n.t('lesson.screens.Parent.getMore')}
         wrapContent
         style={[styles.button]}
         onPress={onPress}

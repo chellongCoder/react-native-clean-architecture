@@ -21,6 +21,7 @@ import {RegisterPayload} from 'src/authentication/application/types/RegisterPayl
 import {FontFamily} from 'src/core/presentation/hooks/useFonts';
 import Dropdown from 'src/core/components/dropdown/Dropdown';
 import {scale} from 'react-native-size-matters';
+import {useI18n} from 'src/core/presentation/hooks/useI18n';
 
 interface TRegisterError {
   emailOrPhoneError?: string;
@@ -50,6 +51,7 @@ const initialRegisterState: TRegister = {
 const RegisterScreen: React.FC = observer(() => {
   const {handleRegister} = useLoginWithCredentials();
   useLoadingGlobal();
+  const i18n = useI18n();
 
   const [registerState, setRegisterState] =
     useStateCustom<TRegister>(initialRegisterState);
@@ -155,9 +157,11 @@ const RegisterScreen: React.FC = observer(() => {
           style={[styles.fill, styles.justifyCenter]}
           behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
           <CommonInput
-            label="Email or phone number"
+            label={i18n.t('authentication.screens.Register.emailOrPhone')}
             textInputProp={{
-              placeholder: 'Enter email or phone number',
+              placeholder: i18n.t(
+                'authentication.screens.Register.enterEmailOrPhone',
+              ),
               value: registerState.emailOrPhone,
               onChangeText: (e: string) => onTextInputChange('emailOrPhone', e),
             }}
@@ -170,9 +174,11 @@ const RegisterScreen: React.FC = observer(() => {
             }
           />
           <CommonInput
-            label="User Name"
+            label={i18n.t('authentication.screens.Register.userName')}
             textInputProp={{
-              placeholder: 'Enter name',
+              placeholder: i18n.t(
+                'authentication.screens.Register.enterUserName',
+              ),
               value: registerState.userName,
               onChangeText: (e: string) => onTextInputChange('userName', e),
             }}
@@ -185,7 +191,7 @@ const RegisterScreen: React.FC = observer(() => {
             }
           />
           <CommonInputPassword
-            label="Enter password"
+            label={i18n.t('authentication.screens.Register.password')}
             textInputProp={{
               value: registerState.password,
               onChangeText: (e: string) => onTextInputChange('password', e),
@@ -199,7 +205,7 @@ const RegisterScreen: React.FC = observer(() => {
             }
           />
           <CommonInputPassword
-            label="Confirm password"
+            label={i18n.t('authentication.screens.Register.confirmPassword')}
             textInputProp={{
               value: registerState.confirmPassword,
               onChangeText: (e: string) =>
@@ -217,14 +223,19 @@ const RegisterScreen: React.FC = observer(() => {
         <View style={styles.rowAround}>
           <View style={{justifyContent: 'center', alignItems: 'center'}}>
             <PrimaryButton
-              text="Log in"
+              text={i18n.t('authentication.screens.Register.logIn')}
               onPress={goBack}
               style={{backgroundColor: '#F2B559'}}
             />
-            <Text style={styles.subTitle}>Already have account?</Text>
+            <Text style={styles.subTitle}>
+              {i18n.t('authentication.screens.Register.alreadyHaveAccount')}
+            </Text>
           </View>
 
-          <PrimaryButton text="Next" onPress={onRegister} />
+          <PrimaryButton
+            text={i18n.t('authentication.screens.Register.next')}
+            onPress={onRegister}
+          />
         </View>
       </ScrollView>
     </ImageBackground>

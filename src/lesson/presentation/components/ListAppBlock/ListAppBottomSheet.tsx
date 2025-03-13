@@ -8,9 +8,10 @@ import {COLORS} from 'src/core/presentation/constants/colors';
 import ItemApps, {AppItem} from './ItemApps';
 import {scale, verticalScale} from 'react-native-size-matters';
 import {heightItem} from 'src/core/presentation/navigation/tabNavigator/BottomTabBar/TabButton';
-
+import {useI18n} from 'src/core/presentation/hooks/useI18n';
 const ListAppBottomSheet = observer(() => {
   const lesson = useLessonStore();
+  const i18n = useI18n();
   const [apps, setApps] = useState<AppEntity[]>([]);
 
   const [isSheetOpen, setSheetOpen] = useState(false);
@@ -51,7 +52,7 @@ const ListAppBottomSheet = observer(() => {
         <BottomSheetCustom
           snapPoints={['50']}
           ref={lesson.bottomSheetAppsRef}
-          title="List Apps"
+          title={i18n.t('lesson.screens.Parent.listApps')}
           backgroundColor={COLORS.BACKGROUND}
           onChange={handleSheetChanges}
           onDone={() => {

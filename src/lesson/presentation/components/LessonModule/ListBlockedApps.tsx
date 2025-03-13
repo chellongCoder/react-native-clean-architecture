@@ -6,6 +6,7 @@ import ItemCard, {ItemCardProps} from '../ItemCard';
 import {scale} from 'react-native-size-matters';
 import {COLORS} from 'src/core/presentation/utils/colors';
 import {ScrollView} from 'react-native-gesture-handler';
+import {useI18n} from 'src/core/presentation/hooks/useI18n';
 
 const ListBlockedApps = ({
   listApp,
@@ -22,6 +23,8 @@ const ListBlockedApps = ({
   selectedApp: string;
 }) => {
   const globalStyle = useGlobalStyle();
+  const i18n = useI18n();
+
   return (
     <View style={[styles.rowBetween, styles.rowHCenter]}>
       <View style={[styles.arrowLeft]}>
@@ -54,7 +57,7 @@ const ListBlockedApps = ({
               alignItems: 'center',
             }}>
             <Text style={[globalStyle.txtNote, {color: COLORS.WHITE}]}>
-              No blocked apps!
+              {i18n.t('lesson.screens.Parent.noBlockedApps')}
             </Text>
           </View>
         )}

@@ -386,7 +386,7 @@ const ParentScreen = observer(() => {
     lesson.setCharSound(charSound);
     Toast.show({
       type: 'success',
-      text1: 'Save volume settings!',
+      text1: i18n.t('lesson.screens.Parent.saveVolumeSetting'),
     });
   };
 
@@ -412,10 +412,10 @@ The blockAppsSystem function is an asynchronous function that awaits the result 
       }
       Toast.show({
         type: 'success',
-        text1: 'Selected apps has been blocked!',
+        text1: i18n.t('lesson.screens.Parent.selectedAppsHasBeenBlocked'),
       });
     } catch (error) {}
-  }, [lesson.blockedListAppsSystem, selectedChild?._id]);
+  }, [i18n, lesson.blockedListAppsSystem, selectedChild?._id]);
 
   const listTabOptions = useMemo(() => {
     switch (tabParent) {
@@ -543,7 +543,7 @@ The blockAppsSystem function is an asynchronous function that awaits the result 
               <View style={[styles.fill, {zIndex: 999}]}>
                 <View style={[{zIndex: 999}]}>
                   <Text style={[globalStyle.txtButton, styles.textColor]}>
-                    App to lock
+                    {i18n.t('lesson.screens.Parent.appToLock')}
                   </Text>
 
                   {selectedChild && (
@@ -576,7 +576,7 @@ The blockAppsSystem function is an asynchronous function that awaits the result 
               <View style={[styles.fill]}>
                 <TouchableOpacity activeOpacity={1}>
                   <Text style={[globalStyle.txtButton, styles.textColor]}>
-                    Score to unlock
+                    {i18n.t('lesson.screens.Parent.scoreToUnlock')}
                   </Text>
                 </TouchableOpacity>
                 <View style={{zIndex: 999}}>
@@ -621,13 +621,13 @@ The blockAppsSystem function is an asynchronous function that awaits the result 
               <View style={[styles.fill]} />
               <PrimaryButton
                 onPress={onConfigUserSetting}
-                text={'Save'}
+                text={i18n.t('lesson.screens.Parent.save')}
                 style={[styles.btnCommon]}
                 isLoading={lesson.isLoadingUserSetting}
                 disable={!!errorMessage}
               />
               <PrimaryButton
-                text="Unlock"
+                text={i18n.t('lesson.screens.Parent.unlock')}
                 style={[styles.btnCommon, styles.btnRed]}
                 onPress={async () => {
                   try {
@@ -635,12 +635,16 @@ The blockAppsSystem function is an asynchronous function that awaits the result 
                       await unBlockApps(selectedChild?._id);
                       Toast.show({
                         type: 'success',
-                        text1: 'Your apps have been unlocked',
+                        text1: i18n.t(
+                          'lesson.screens.Parent.yourAppsHaveBeenUnlocked',
+                        ),
                       });
                     } else {
                       Toast.show({
                         type: 'error',
-                        text1: 'Please select a child',
+                        text1: i18n.t(
+                          'lesson.screens.Parent.pleaseSelectChild',
+                        ),
                       });
                     }
                   } catch (error) {
@@ -658,7 +662,7 @@ The blockAppsSystem function is an asynchronous function that awaits the result 
                     .reduceMotion(ReduceMotion.Never)}>
                   <PrimaryButton
                     onPress={blockAppsSystem}
-                    text={'Lock apps'}
+                    text={i18n.t('lesson.screens.Parent.lockApps')}
                     style={[styles.btnCommon]}
                     disable={!!errorMessage}
                   />
@@ -681,7 +685,7 @@ The blockAppsSystem function is an asynchronous function that awaits the result 
           <View style={[styles.rowBetween]}>
             <View style={[styles.fill, styles.mr16]}>
               <Text style={[globalStyle.txtButton, styles.textColor]}>
-                Background sound
+                {i18n.t('lesson.screens.Parent.backgroundSound')}
               </Text>
               <View style={[styles.mb12, styles.mt4]}>
                 <Volume
@@ -695,7 +699,7 @@ The blockAppsSystem function is an asynchronous function that awaits the result 
               </View>
 
               <Text style={[globalStyle.txtButton, styles.textColor]}>
-                Character sound
+                {i18n.t('lesson.screens.Parent.characterSound')}
               </Text>
               <View style={[styles.mb12, styles.mt4]}>
                 <Volume
@@ -709,14 +713,17 @@ The blockAppsSystem function is an asynchronous function that awaits the result 
               </View>
               <View style={[styles.rowBetween]}>
                 <Text style={[globalStyle.txtButton, styles.textColor]}>
-                  Mode
+                  {i18n.t('lesson.screens.Parent.mode')}
                 </Text>
-                <CheckSelect name="Light" />
-                <CheckSelect name="Dark" isSelected />
+                <CheckSelect name={i18n.t('lesson.screens.Parent.light')} />
+                <CheckSelect
+                  name={i18n.t('lesson.screens.Parent.dark')}
+                  isSelected
+                />
               </View>
               <View style={[styles.rowBetween, styles.mt16]}>
                 <Text style={[globalStyle.txtButton, styles.textColor]}>
-                  Language
+                  {i18n.t('lesson.screens.Parent.language')}
                 </Text>
                 {/* <CheckSelect name="English" isSelected />
                 <CheckSelect
@@ -731,11 +738,11 @@ The blockAppsSystem function is an asynchronous function that awaits the result 
             <View>
               <View style={[styles.fill]} />
               <PrimaryButton
-                text="Set as default"
+                text={i18n.t('lesson.screens.Parent.setAsDefault')}
                 style={[styles.btnCommon, styles.round, styles.btnOrange]}
               />
               <PrimaryButton
-                text="Save"
+                text={i18n.t('lesson.screens.Parent.save')}
                 style={[styles.btnCommon, styles.round]}
                 onPress={onSaveSoundSetting}
               />
@@ -832,7 +839,7 @@ The blockAppsSystem function is an asynchronous function that awaits the result 
             <View style={{zIndex: 999}}>{buildPage()}</View>
             <View style={[styles.bodyBookTwo]}>
               <Text style={[globalStyle.txtLabel, styles.txtTitleBookTwo]}>
-                Children accounts list
+                {i18n.t('lesson.screens.Parent.childrenAccountsList')}
               </Text>
               <ScrollView horizontal showsHorizontalScrollIndicator={false}>
                 <View style={styles.wrapAddChildContainer}>
@@ -887,11 +894,11 @@ The blockAppsSystem function is an asynchronous function that awaits the result 
                       childDescriptionRef.current.childDescription,
                     )
                   }
-                  text="Save"
+                  text={i18n.t('lesson.screens.Parent.save')}
                   style={[styles.btnCommon]}
                 />
                 <PrimaryButton
-                  text="Delete"
+                  text={i18n.t('lesson.screens.Parent.delete')}
                   style={[styles.btnCommon, styles.btnRed]}
                   onPress={onDeleteChild}
                   disable={(userProfile?.children.length || 0) < 2}

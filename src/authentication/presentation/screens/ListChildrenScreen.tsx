@@ -111,11 +111,17 @@ const ListChildrenScreen = observer(() => {
               </View>
             </View>
             <View style={styles.bodyContainer}>
-              <Text style={styles.title}>Hi, Welcome back</Text>
+              <Text style={styles.title}>
+                {i18n.t('authentication.screens.ListChildren.hiWelcomeBack')}
+              </Text>
               <Text style={styles.titleBold}>{userProfile?.username}</Text>
               {isConnected && (
                 <TouchableOpacity onPress={onLogout}>
-                  <Text style={styles.logoutTitle}>Another account?</Text>
+                  <Text style={styles.logoutTitle}>
+                    {i18n.t(
+                      'authentication.screens.ListChildren.anotherAccount',
+                    )}
+                  </Text>
                 </TouchableOpacity>
               )}
             </View>
@@ -125,7 +131,9 @@ const ListChildrenScreen = observer(() => {
           <View style={styles.square} />
 
           <View>
-            <Text style={styles.bottomTitle}>Children account</Text>
+            <Text style={styles.bottomTitle}>
+              {i18n.t('authentication.screens.ListChildren.childrenAccount')}
+            </Text>
             <ScrollView horizontal showsHorizontalScrollIndicator={false}>
               <View style={styles.wrapAddChildContainer}>
                 {userProfile?.children.map((item: children) => {
@@ -176,7 +184,9 @@ const ListChildrenScreen = observer(() => {
             <TouchableOpacity
               style={styles.wrapBottomButtonContainer}
               onPress={onEnter}>
-              <Text style={styles.bottomButtonTitle}>Enter</Text>
+              <Text style={styles.bottomButtonTitle}>
+                {i18n.t('authentication.screens.ListChildren.enter')}
+              </Text>
             </TouchableOpacity>
           </View>
         </View>

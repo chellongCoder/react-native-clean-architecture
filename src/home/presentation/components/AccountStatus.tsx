@@ -11,6 +11,7 @@ import CustomSwitchNew from './CustomSwitchNew';
 import useAuthenticationStore from 'src/authentication/presentation/stores/useAuthenticationStore';
 import Diamond from './Diamond';
 import {goBack} from 'src/core/presentation/navigation/actions/RootNavigationActions';
+import {useI18n} from 'src/core/presentation/hooks/useI18n';
 
 type TProps = {
   title?: string;
@@ -25,6 +26,7 @@ const AccountStatus = (props: TProps) => {
   const {handleLogOut} = useLoginWithCredentials();
   useLoadingGlobal();
   const {selectedChild} = useAuthenticationStore();
+  const i18n = useI18n();
 
   const [isEnabled, setIsEnabled] = useState(false);
 
@@ -40,7 +42,9 @@ const AccountStatus = (props: TProps) => {
             style={styles.wrapLogoutContainer}
             onPress={onLogout}>
             <ICLogout />
-            <Text style={styles.logoutTitle}>Back</Text>
+            <Text style={styles.logoutTitle}>
+              {i18n.t('lesson.screens.Parent.back')}
+            </Text>
           </TouchableOpacity>
         )}
         {title ? (
