@@ -111,8 +111,8 @@ const English_EG4M23 = observer(
       }, [characterImageFail, characterImageSuccess, isAnswerCorrect]);
 
       const onSpeechText = useCallback(() => {
-        ttsSpeak?.('');
-      }, [ttsSpeak]);
+        ttsSpeak?.(settings.prompt?.toString() ?? '');
+      }, [settings.prompt, ttsSpeak]);
 
       const opacity = useSharedValue(0);
       const scaleS = useSharedValue(1);
@@ -168,6 +168,11 @@ const English_EG4M23 = observer(
         <LessonComponent
           backgroundImage={backgroundImage}
           characterImage={characterImage}
+          characterStyle={{
+            height: verticalScale(260),
+            marginBottom: -verticalScale(100),
+            marginLeft: -verticalScale(20),
+          }}
           lessonName={lessonName}
           module={moduleName}
           part={firstMiniTestTask?.name}
@@ -195,6 +200,7 @@ const English_EG4M23 = observer(
             <View
               style={{
                 width: scale(200),
+                height: verticalScale(150),
                 marginTop: verticalScale(50),
               }}>
               <Text style={[styles.fonts_SVN_Cherish, styles.textQuestion]}>

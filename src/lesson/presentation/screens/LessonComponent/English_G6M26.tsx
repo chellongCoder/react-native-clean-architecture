@@ -16,6 +16,7 @@ import useGlobalStyle from 'src/core/presentation/hooks/useGlobalStyle';
 import {Task} from 'src/home/application/types/GetListQuestionResponse';
 import {COLORS} from 'src/core/presentation/constants/colors';
 import {
+  darkenColor,
   getCorrectAnswer,
   isMMSS,
   isSubArray,
@@ -39,6 +40,7 @@ import useHomeStore from 'src/home/presentation/stores/useHomeStore';
 import SelectionAnswersQuestion, {
   SelectionAnswersQuestionRef,
 } from '../../components/SelectionAnswersQuestion';
+import TextHighlight from '../../components/TextHighlight';
 
 type Props = {
   moduleIndex: number;
@@ -184,6 +186,9 @@ const English_G6M26 = observer(
         <LessonComponent
           backgroundImage={backgroundImage}
           characterImage={characterImage}
+          characterStyle={{
+            transform: [{scale: 1.5}],
+          }}
           lessonName={lessonName}
           module={moduleName}
           part={firstMiniTestTask?.name}
@@ -229,8 +234,17 @@ const English_G6M26 = observer(
                     justifyContent: 'center',
                     flex: 1,
                   }}>
-                  <Text style={[globalStyle.txtLabel, styles.textColor]}>
-                    Choose the correct answer
+                  <Text
+                    style={[
+                      globalStyle.txtLabel,
+                      {
+                        color: darkenColor(
+                          settings.backgroundButtonColor ?? '',
+                          20,
+                        ),
+                      },
+                    ]}>
+                    Choose correct answer
                   </Text>
                 </View>
 
@@ -243,15 +257,15 @@ const English_G6M26 = observer(
               </View>
               <SelectionAnswersQuestion
                 question={
-                  <Text
-                    style={[
-                      styles.textQuestion,
-                      styles.textGreen,
-                      styles.mt8,
-                      {fontSize: scale(24)},
-                    ]}>
-                    {firstMiniTestTask?.question?.[moduleIndex].content}
-                  </Text>
+                  <TextHighlight
+                    content={
+                      firstMiniTestTask?.question?.[moduleIndex].content ?? ''
+                    }
+                    description={
+                      firstMiniTestTask?.question?.[moduleIndex].description ??
+                      ''
+                    }
+                  />
                 }
                 answer={
                   (firstMiniTestTask?.question?.[moduleIndex]

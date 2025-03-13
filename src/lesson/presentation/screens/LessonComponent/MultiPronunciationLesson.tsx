@@ -16,6 +16,7 @@ import {Task} from 'src/home/application/types/GetListQuestionResponse';
 import {COLORS} from 'src/core/presentation/constants/colors';
 import {
   assets,
+  darkenColor,
   getCorrectAnswer,
   isAndroid,
   isMMSS,
@@ -461,7 +462,16 @@ const MultiPronunciationLesson = observer(
                     justifyContent: 'center',
                     flex: 1,
                   }}>
-                  <Text style={[globalStyle.txtLabel, styles.textColor]}>
+                  <Text
+                    style={[
+                      globalStyle.txtLabel,
+                      {
+                        color: darkenColor(
+                          settings.backgroundButtonColor ?? '',
+                          20,
+                        ),
+                      },
+                    ]}>
                     Listen and repeat
                   </Text>
                 </View>
@@ -718,7 +728,7 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   iconImageContainer: {height: scale(71), width: scale(71)},
-  iconAIVoiceContainer: {height: scale(31), width: scale(31)},
+  iconAIVoiceContainer: {height: scale(39), width: scale(34)},
   hintText: {
     fontFamily: FontFamily.SVNNeuzeitBold,
     color: COLORS.PRIMARY,

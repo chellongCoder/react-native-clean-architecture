@@ -15,7 +15,11 @@ import {FontFamily} from 'src/core/presentation/hooks/useFonts';
 import useGlobalStyle from 'src/core/presentation/hooks/useGlobalStyle';
 import {Task} from 'src/home/application/types/GetListQuestionResponse';
 import {COLORS} from 'src/core/presentation/constants/colors';
-import {getCorrectAnswer, isSubArray} from 'src/core/presentation/utils';
+import {
+  darkenColor,
+  getCorrectAnswer,
+  isSubArray,
+} from 'src/core/presentation/utils';
 import {scale, verticalScale} from 'react-native-size-matters';
 import Animated, {
   Easing,
@@ -37,6 +41,7 @@ import SelectionTextsQuestion, {
   SelectionTextsQuestionRef,
 } from '../../components/SelectionTextsQuestion';
 import {ScrollView} from 'react-native-gesture-handler';
+import TextHighlight from '../../components/TextHighlight';
 
 type Props = {
   moduleIndex: number;
@@ -140,7 +145,7 @@ const English_G5M16 = observer(
 
       const onSpeechText = useCallback(() => {
         ttsSpeak?.(
-          firstMiniTestTask?.question?.[moduleIndex]?.content
+          firstMiniTestTask?.question?.[moduleIndex]?.description
             ?.toString()
             .toLowerCase() ?? '',
         );
@@ -203,6 +208,11 @@ const English_G5M16 = observer(
         <LessonComponent
           backgroundImage={backgroundImage}
           characterImage={characterImage}
+          characterStyle={{
+            marginBottom: -verticalScale(60),
+            marginLeft: -verticalScale(15),
+            transform: [{scale: 1.4}],
+          }}
           module={moduleName}
           lessonName={lessonName}
           part={firstMiniTestTask?.name}
@@ -244,8 +254,17 @@ const English_G5M16 = observer(
                     justifyContent: 'center',
                     flex: 1,
                   }}>
-                  <Text style={[globalStyle.txtLabel, styles.textColor]}>
-                    Choose the correct answer
+                  <Text
+                    style={[
+                      globalStyle.txtLabel,
+                      {
+                        color: darkenColor(
+                          settings.backgroundButtonColor ?? '',
+                          20,
+                        ),
+                      },
+                    ]}>
+                    Choose the correct WORD
                   </Text>
                 </View>
 
@@ -258,16 +277,13 @@ const English_G5M16 = observer(
               </View>
               <SelectionTextsQuestion
                 question={
-                  <Text
-                    style={[
-                      styles.fonts_SVN_Neu,
-                      styles.textQuestion,
-                      styles.textGreen,
-                      styles.mt8,
-                      {fontSize: scale(16)},
-                    ]}>
-                    {descriptionWithAnswers}
-                  </Text>
+                  <TextHighlight
+                    style={{textAlign: 'center'}}
+                    content={
+                      firstMiniTestTask?.question?.[moduleIndex].content ?? ''
+                    }
+                    description={descriptionWithAnswers}
+                  />
                 }
                 answer={answer ?? []}
                 isShowCorrectContainer={isShowCorrectContainer}
@@ -427,7 +443,7 @@ const styles = StyleSheet.create({
   },
   txtParagraph: {
     fontFamily: FontFamily.SVNNeuzeitBold,
-    fontSize: scale(16),
+    fontSize: scale(14),
     color: COLORS.WHITE_FBF8CC,
   },
 });
