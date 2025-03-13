@@ -90,7 +90,7 @@ const KeyboardNumber: ForwardRefRenderFunction<
                 : '#66C270'
               : '#F2B559';
           const length = answer?.length ?? 2;
-          const size = (WIDTH_SCREEN - scale(170)) / Math.ceil(length / 2);
+          const size = (WIDTH_SCREEN - scale(120)) / Math.ceil(length / 2);
 
           return (
             <TouchableOpacity
@@ -104,7 +104,7 @@ const KeyboardNumber: ForwardRefRenderFunction<
                 styles.boxVowel,
                 {
                   backgroundColor: bg,
-                  width: (size * (e.length + 5)) / 6,
+                  width: size,
                   height: size,
                   margin: scale(8), // Add spacing for clarity
                   paddingHorizontal: scale(8),

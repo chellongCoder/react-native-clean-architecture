@@ -204,11 +204,9 @@ const Math_MG2M4 = observer(
           part={firstMiniTestTask?.name}
           backgroundColor={settings.backgroundAnswerColor}
           backgroundAnswerColor={settings.backgroundAnswerColor}
-          prompt={
-            firstMiniTestTask?.question?.[moduleIndex]?.instruction ?? {
-              description: settings.prompt?.toString() ?? '',
-            }
-          }
+          prompt={{
+            description: '',
+          }}
           score={selectedChild?.adsPoints}
           txtCountDown={
             word?.toString() ===
@@ -257,6 +255,9 @@ const Math_MG2M4 = observer(
               <KeyboardNumber
                 question={
                   <Text
+                    numberOfLines={1}
+                    adjustsFontSizeToFit
+                    allowFontScaling
                     style={[
                       styles.fonts_SVN_Cherish,
                       styles.textQuestion,

@@ -104,6 +104,7 @@ const Math_MG1M3 = observer(
           nextModule((answerSelected as string[]).join(''));
         },
         fullAnswer: firstMiniTestTask?.question?.[moduleIndex].fullAnswer,
+        totalTime: 60,
       });
 
       const {lessonSetting} = useHomeStore();

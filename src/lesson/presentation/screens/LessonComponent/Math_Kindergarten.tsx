@@ -258,7 +258,7 @@ const Math_G0M2 = observer(
                       styles.textQuestion,
                       styles.textGreen,
                       styles.mt8,
-                      {fontSize: scale(40)},
+                      {fontSize: scale(20)},
                     ]}>
                     {descriptionWithAnswers}
                   </Text>

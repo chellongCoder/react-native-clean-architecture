@@ -233,13 +233,6 @@ const Mandarin_G3M37 = observer(
                     Choose the correct answer
                   </Text>
                 </View>
-
-                <TouchableOpacity onPress={onSpeechText}>
-                  <Image
-                    source={require('../../../../../assets/images/icon_speech.png')}
-                    style={styles.iconImageContainer}
-                  />
-                </TouchableOpacity>
               </View>
               <SelectionAnswersQuestion
                 question={

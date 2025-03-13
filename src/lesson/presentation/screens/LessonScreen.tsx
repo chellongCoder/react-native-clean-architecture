@@ -182,13 +182,13 @@ const LessonScreen = observer(() => {
   const {tasks: apiTasks} = useListQuestions(route?.lessonId);
 
   const tasks = useMemo(() => {
-    return apiTasks.map(t => {
+    return apiTasks.slice(apiTasks.length - 1, apiTasks.length).map(t => {
       return {
         ...t,
         // question: t.question.slice(0, 1),
         // question: t.question.slice(0, 5),
         // question: shuffleArray(t.question),
-        question: __DEV__ ? t.question.slice(0, 10) : t.question,
+        question: __DEV__ ? t.question.slice(0, 2) : t.question,
       };
     });
   }, [apiTasks]);
@@ -681,73 +681,13 @@ const LessonScreen = observer(() => {
       case ScienceE.SCIENCE_SG1M2:
         return <Science_SG1M2 {...dataProps} ref={vowelRef} />;
       case ScienceE.SCIENCE_SG2M4:
-        return (
-          <Science_SG2M4
-            moduleIndex={lessonIndex}
-            nextModule={nextModule}
-            totalModule={testTask?.question.length ?? 0}
-            lessonName={route.lessonName}
-            moduleName={route.moduleName}
-            firstMiniTestTask={testTask}
-            backgroundImage={
-              env.IMAGE_BACKGROUND_BASE_API_URL + lessonSetting?.backgroundImage
-            }
-            characterImageSuccess={
-              env.IMAGE_BACKGROUND_BASE_API_URL +
-              lessonSetting?.figureSuccessImage
-            }
-            characterImageFail={
-              env.IMAGE_BACKGROUND_BASE_API_URL + lessonSetting?.figureFailImage
-            }
-            ref={vowelRef}
-          />
-        );
+        return <Science_SG2M4 {...dataProps} ref={vowelRef} />;
       case ScienceE.SCIENCE_SG3M9:
         return <Science_SG3M9 {...dataProps} ref={vowelRef} />;
       case ScienceE.SCIENCE_SG4M3:
-        return (
-          <Science_SG4M3
-            moduleIndex={lessonIndex}
-            nextModule={nextModule}
-            totalModule={testTask?.question.length ?? 0}
-            lessonName={route.lessonName}
-            moduleName={route.moduleName}
-            firstMiniTestTask={testTask}
-            backgroundImage={
-              env.IMAGE_BACKGROUND_BASE_API_URL + lessonSetting?.backgroundImage
-            }
-            characterImageSuccess={
-              env.IMAGE_BACKGROUND_BASE_API_URL +
-              lessonSetting?.figureSuccessImage
-            }
-            characterImageFail={
-              env.IMAGE_BACKGROUND_BASE_API_URL + lessonSetting?.figureFailImage
-            }
-            ref={vowelRef}
-          />
-        );
+        return <Science_SG4M3 {...dataProps} ref={vowelRef} />;
       case ScienceE.SCIENCE_SG5M5:
-        return (
-          <Science_SG5M5
-            moduleIndex={lessonIndex}
-            nextModule={nextModule}
-            totalModule={testTask?.question.length ?? 0}
-            lessonName={route.lessonName}
-            moduleName={route.moduleName}
-            firstMiniTestTask={testTask}
-            backgroundImage={
-              env.IMAGE_BACKGROUND_BASE_API_URL + lessonSetting?.backgroundImage
-            }
-            characterImageSuccess={
-              env.IMAGE_BACKGROUND_BASE_API_URL +
-              lessonSetting?.figureSuccessImage
-            }
-            characterImageFail={
-              env.IMAGE_BACKGROUND_BASE_API_URL + lessonSetting?.figureFailImage
-            }
-            ref={vowelRef}
-          />
-        );
+        return <Science_SG5M5 {...dataProps} ref={vowelRef} />;
       case ScienceE.SCIENCE_SG6M6:
         return (
           <Science_SG6M3
@@ -779,23 +719,7 @@ const LessonScreen = observer(() => {
       case MathQuestionType.MathMG0M3:
         return (
           <Math_Kindergarten
-            moduleIndex={lessonIndex}
-            nextModule={nextModule}
-            totalModule={testTask?.question.length ?? 0}
-            lessonName={route.lessonName}
-            moduleName={route.moduleName}
-            firstMiniTestTask={testTask}
-            backgroundImage={
-              env.IMAGE_BACKGROUND_BASE_API_URL + lessonSetting?.backgroundImage
-            }
-            characterImageSuccess={
-              env.IMAGE_BACKGROUND_BASE_API_URL +
-              lessonSetting?.figureSuccessImage
-            }
-            characterImageFail={
-              env.IMAGE_BACKGROUND_BASE_API_URL + lessonSetting?.figureFailImage
-            }
-            ref={vowelRef}
+            {...dataProps}
             isMulti={true}
             answer={['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']}
           />
@@ -843,7 +767,7 @@ const LessonScreen = observer(() => {
             }
             ref={vowelRef}
             isMulti={false}
-            answer={['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10']}
+            answer={['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']}
           />
         );
       case MathQuestionType.MathMG2M4:

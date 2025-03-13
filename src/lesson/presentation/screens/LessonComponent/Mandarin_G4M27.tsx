@@ -17,6 +17,7 @@ import {Task} from 'src/home/application/types/GetListQuestionResponse';
 import {COLORS} from 'src/core/presentation/constants/colors';
 import {
   getCorrectAnswer,
+  isAndroid,
   isMMSS,
   isSubArray,
 } from 'src/core/presentation/utils';
@@ -40,6 +41,11 @@ import SelectionAnswersQuestion, {
   SelectionAnswersQuestionRef,
 } from '../../components/SelectionAnswersQuestion';
 import CharScramble, {CharScrambleRep} from '../../components/CharScramble';
+import Tts from 'react-native-tts';
+import {
+  iosVoice,
+  listLanguage,
+} from 'src/core/presentation/hooks/textToSpeech/TextToSpeechProvider';
 
 type Props = {
   moduleIndex: number;
@@ -71,7 +77,7 @@ const Mandarin_G4M27 = observer(
     ) => {
       const globalStyle = useGlobalStyle();
 
-      const {ttsSpeak} = useContext(TextToSpeechContext);
+      const {ttsSpeak, updateDefaultVoice} = useContext(TextToSpeechContext);
       const focus = useIsFocused();
       const answerRef = useRef<SelectionAnswersQuestionRef>();
 
@@ -128,8 +134,10 @@ const Mandarin_G4M27 = observer(
       }, [characterImageFail, characterImageSuccess, isAnswerCorrect]);
 
       const onSpeechText = useCallback(() => {
-        ttsSpeak?.(settings.prompt?.toString() ?? '');
-      }, [settings.prompt, ttsSpeak]);
+        ttsSpeak?.(
+          firstMiniTestTask?.question?.[moduleIndex]?.description ?? '',
+        );
+      }, [firstMiniTestTask?.question, moduleIndex, ttsSpeak]);
 
       const opacity = useSharedValue(0);
       const scaleS = useSharedValue(1);
@@ -147,12 +155,6 @@ const Mandarin_G4M27 = observer(
           // Check if the component is focused
           const firstTimeout = setTimeout(() => {
             onSpeechText();
-
-            const secondTimeout = setTimeout(() => {
-              onSpeechText();
-            }, 2500);
-
-            return () => clearTimeout(secondTimeout);
           }, 1500);
 
           return () => clearTimeout(firstTimeout);
@@ -172,6 +174,37 @@ const Mandarin_G4M27 = observer(
         });
       }, [moduleIndex, opacity, scaleS]);
 
+      useEffect(() => {
+        console.log(
+          '🛠 LOG: 🚀 --> -----------------------------------------------------🛠 LOG: 🚀 -->',
+        );
+        console.log('🛠 LOG: 🚀 --> ~ Tts.voices ~ lessonName:', lessonName);
+        console.log(
+          '🛠 LOG: 🚀 --> -----------------------------------------------------🛠 LOG: 🚀 -->',
+        );
+
+        Tts.voices().then(voices => {
+          if (lessonName.toLocaleLowerCase().includes('english')) {
+            const engVoice = voices.find(
+              voice => voice.language === listLanguage['US English'],
+            );
+            updateDefaultVoice?.(
+              isAndroid ? engVoice?.id : iosVoice[3].id,
+              'US English',
+            );
+          } else if (lessonName.toLocaleLowerCase().includes('mandarin')) {
+            const engVoice = voices.find(
+              voice =>
+                voice.language ===
+                listLanguage['Mainland China, simplified characters'],
+            );
+            updateDefaultVoice?.(
+              engVoice?.id,
+              'Mainland China, simplified characters',
+            );
+          }
+        });
+      }, [lessonName, updateDefaultVoice]);
       const animatedStyle = useAnimatedStyle(() => {
         return {
           opacity: opacity.value,
