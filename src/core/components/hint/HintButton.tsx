@@ -17,6 +17,7 @@ import Animated, {
 import {scale, verticalScale} from 'react-native-size-matters';
 import {COLORS} from 'src/core/presentation/constants/colors';
 import {TYPOGRAPHY} from 'src/core/presentation/constants/typography';
+import {useI18n} from 'src/core/presentation/hooks/useI18n';
 import {assets} from 'src/core/presentation/utils';
 
 const defaultStyles = {
@@ -53,6 +54,8 @@ type TPros = {
 
 const HintButton = ({value, onValueChange, point}: TPros) => {
   const animatedValue = useSharedValue(value ? 0 : 1);
+
+  const i18n = useI18n();
 
   useEffect(() => {
     animatedValue.value = withTiming(value ? 1 : 0, {duration: 300});
@@ -104,7 +107,7 @@ const HintButton = ({value, onValueChange, point}: TPros) => {
                       numberOfLines={1}
                       adjustsFontSizeToFit
                       style={styles.title}>
-                      {'hint'}
+                      {i18n.t('lesson.screens.Modules.hint')}
                     </Text>
                   </View>
                 </View>

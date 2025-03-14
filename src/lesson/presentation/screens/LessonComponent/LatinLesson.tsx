@@ -33,6 +33,7 @@ import {TextToSpeechContext} from 'src/core/presentation/hooks/textToSpeech/Text
 import {useIsFocused} from '@react-navigation/native';
 import ImageMeaning from '../../components/ImageMeaning';
 import useHomeStore from 'src/home/presentation/stores/useHomeStore';
+import {useI18n} from 'src/core/presentation/hooks/useI18n';
 
 type Props = {
   moduleIndex: number;
@@ -68,6 +69,8 @@ const LatinLesson = ({
   const {ttsSpeak, updateDefaultVoice} = useContext(TextToSpeechContext);
   const focus = useIsFocused();
   const {lessonSetting} = useHomeStore();
+
+  const i18n = useI18n();
 
   const settings = useMemo(
     () => getSetting(lessonSetting),
@@ -244,8 +247,8 @@ const LatinLesson = ({
                 globalStyle.txtLabel,
                 {color: darkenColor(settings.backgroundButtonColor ?? '', 20)},
               ]}>
-              Write the "{firstMiniTestTask?.question?.[moduleIndex].fullAnswer}
-              "
+              {i18n.t('lesson.screens.Modules.writeThe')} "
+              {firstMiniTestTask?.question?.[moduleIndex].fullAnswer}"
             </Text>
             <TouchableOpacity onPress={onSpeechText}>
               <Image
@@ -266,7 +269,7 @@ const LatinLesson = ({
             }}
           />
           <PrimaryButton
-            text="Submit"
+            text={i18n.t('lesson.screens.Modules.submit')}
             style={[
               styles.buttonContainer,
               {backgroundColor: settings.backgroundButtonColor},

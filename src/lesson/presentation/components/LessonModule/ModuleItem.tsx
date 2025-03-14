@@ -17,6 +17,7 @@ import Animated, {
   useSharedValue,
   withTiming,
 } from 'react-native-reanimated';
+import {useI18n} from 'src/core/presentation/hooks/useI18n';
 
 type Props = {
   isFinished: boolean;
@@ -33,6 +34,7 @@ const ModuleItem = (props: Props) => {
   const env = coreModuleContainer.getProvided<Env>(EnvToken); // Instantiate CoreService
   const translateX = useSharedValue(-100);
   const opacity = useSharedValue(0);
+  const i18n = useI18n();
 
   const onRevision = useCallback(() => {
     navigateScreen(STACK_NAVIGATOR.HOME.LESSON, {
@@ -116,7 +118,11 @@ const ModuleItem = (props: Props) => {
           </Text>
         </TouchableOpacity>
         <View style={{height: verticalScale(14)}} />
-        <Button onPress={onStudy} color={COLORS.GREEN_66C270} title="Study" />
+        <Button
+          onPress={onStudy}
+          color={COLORS.GREEN_66C270}
+          title={i18n.t('lesson.screens.Modules.study')}
+        />
       </View>
     </Animated.View>
   ) : (
@@ -156,7 +162,7 @@ const ModuleItem = (props: Props) => {
         <Button
           onPress={onRevision}
           color={COLORS.YELLOW_F2B559}
-          title="Revision"
+          title={i18n.t('lesson.screens.Modules.revision')}
         />
       </View>
     </Animated.View>

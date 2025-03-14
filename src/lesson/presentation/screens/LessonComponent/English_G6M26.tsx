@@ -41,6 +41,7 @@ import SelectionAnswersQuestion, {
   SelectionAnswersQuestionRef,
 } from '../../components/SelectionAnswersQuestion';
 import TextHighlight from '../../components/TextHighlight';
+import {useI18n} from 'src/core/presentation/hooks/useI18n';
 
 type Props = {
   moduleIndex: number;
@@ -108,6 +109,8 @@ const English_G6M26 = observer(
       });
 
       const {lessonSetting} = useHomeStore();
+
+      const i18n = useI18n();
 
       const settings = useMemo(
         () => getSetting(lessonSetting),
@@ -244,7 +247,7 @@ const English_G6M26 = observer(
                         ),
                       },
                     ]}>
-                    Choose correct answer
+                    {i18n.t('lesson.screens.Modules.chooseCorrectAnswer')}
                   </Text>
                 </View>
 
@@ -281,7 +284,7 @@ const English_G6M26 = observer(
               />
 
               <PrimaryButton
-                text="Submit"
+                text={i18n.t('lesson.screens.Modules.submit')}
                 style={[
                   styles.buttonContainer,
                   {backgroundColor: settings.backgroundButtonColor},

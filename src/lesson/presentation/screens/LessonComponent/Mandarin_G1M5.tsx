@@ -36,6 +36,7 @@ import SelectionAnswersQuestion, {
 import ImageMeaning from '../../components/ImageMeaning';
 import {getCorrectAnswer} from 'src/core/presentation/utils';
 import useSpeakVoice from '../../hooks/useSpeakVoice';
+import {useI18n} from 'src/core/presentation/hooks/useI18n';
 
 type Props = {
   moduleIndex: number;
@@ -105,6 +106,8 @@ const Mandarin_G1M5 = observer(
       });
 
       const {lessonSetting} = useHomeStore();
+
+      const i18n = useI18n();
 
       const settings = useMemo(
         () => getSetting(lessonSetting),
@@ -224,7 +227,7 @@ const Mandarin_G1M5 = observer(
                     flex: 1,
                   }}>
                   <Text style={[globalStyle.txtLabel, styles.textColor]}>
-                    Choose the correct answer
+                    {i18n.t('lesson.screens.Modules.chooseTheCorrectAnswer')}
                   </Text>
                 </View>
 
@@ -250,7 +253,7 @@ const Mandarin_G1M5 = observer(
               />
 
               <PrimaryButton
-                text="Submit"
+                text={i18n.t('lesson.screens.Modules.submit')}
                 style={[
                   styles.buttonContainer,
                   {backgroundColor: settings.backgroundButtonColor},

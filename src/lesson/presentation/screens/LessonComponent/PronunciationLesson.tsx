@@ -39,6 +39,7 @@ import {ActionE} from 'src/home/application/types/LoggingActionPayload';
 import {homeModuleContainer} from 'src/home/HomeModule';
 import {HomeStore} from 'src/home/presentation/stores/HomeStore';
 import useSpeakVoice from '../../hooks/useSpeakVoice';
+import {useI18n} from 'src/core/presentation/hooks/useI18n';
 
 type Props = {
   moduleIndex: number;
@@ -196,6 +197,8 @@ const PronunciationLesson = observer(
       });
 
       const {lessonSetting} = useHomeStore();
+
+      const i18n = useI18n();
 
       const settings = useMemo(
         () => getSetting(lessonSetting),
@@ -399,7 +402,7 @@ const PronunciationLesson = observer(
                     flex: 1,
                   }}>
                   <Text style={[globalStyle.txtLabel, styles.textColor]}>
-                    Listen and repeat
+                    {i18n.t('lesson.screens.Modules.listenAndRepeat')}
                   </Text>
                 </View>
                 <TouchableOpacity onPress={onSpeechText}>
@@ -478,12 +481,12 @@ const PronunciationLesson = observer(
                       isError && {color: COLORS.RED_AF3A1B},
                     ]}>
                     {loadingRecord
-                      ? 'Listening...'
+                      ? `${i18n.t('lesson.screens.Modules.listening')}...`
                       : isDisabledRecord
-                      ? 'Processing voice...'
+                      ? `${i18n.t('lesson.screens.Modules.processingVoice')}...`
                       : isError
-                      ? 'Please try again'
-                      : 'Press n hold to record, release finger after record'}
+                      ? i18n.t('lesson.screens.Modules.pleaseTryAgain')
+                      : i18n.t('lesson.screens.Modules.holdToRecord')}
                   </Text>
                 </View>
                 {learningTimer !== 0 && (
@@ -503,7 +506,7 @@ const PronunciationLesson = observer(
               </View>
 
               <PrimaryButton
-                text="Submit"
+                text={i18n.t('lesson.screens.Modules.submit')}
                 style={[
                   styles.buttonContainer,
                   {backgroundColor: settings.backgroundButtonColor},

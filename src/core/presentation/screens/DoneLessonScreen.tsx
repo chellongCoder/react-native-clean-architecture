@@ -44,6 +44,7 @@ import WatchAddScreen from '../components/WatchAddScreen';
 import {useGoogleAdsmob} from '../hooks/ggads/useGoogleAdsmob';
 import {GoogleAdsmobProvider} from '../hooks/ggads/GoogleAdsmobProvider';
 import {Task} from 'src/home/application/types/GetListQuestionResponse';
+import {useI18n} from '../hooks/useI18n';
 
 export type RouteParamsDone = {
   totalResult: TResult[];
@@ -77,6 +78,8 @@ const DoneLessonScreen = ({}) => {
   const [isShowWatchAds, setIsShowWatchAds] = useState(false);
   const [isShowGotReward, setIsShowGotReward] = useState(false);
   const [isShowOnBoard, setIsShowOnBoard] = useState(false);
+
+  const i18n = useI18n();
 
   useGetUserSetting(deviceToken, selectedChild?._id ?? '', lessonStore);
   const ggadsHook = useGoogleAdsmob();
@@ -139,15 +142,15 @@ const DoneLessonScreen = ({}) => {
       lessonStore.resetListAppSystem();
       Toast.show({
         type: 'success',
-        text1: 'Your apps have been unlocked',
+        text1: i18n.t('lesson.screens.Modules.appsUnlocked'),
       });
     } else {
       Toast.show({
         type: 'error',
-        text1: 'Your result is not enough to open app lock',
+        text1: i18n.t('lesson.screens.Modules.resultNotEnough'),
       });
     }
-  }, [isSuccess, lessonStore]);
+  }, [i18n, isSuccess, lessonStore]);
 
   const onSubmit = useCallback(() => {
     if (route.noMiniTest) {
@@ -295,8 +298,7 @@ const DoneLessonScreen = ({}) => {
               <Text
                 style={[styleHook.txtNote, styles.contentDescription]}
                 textBreakStrategy="balanced">
-                SORRY. You can not pass the test. You need to start all over
-                again. You can do it !
+                {i18n.t('lesson.screens.Modules.sorryMobilize')}
               </Text>
             </View>
           </View>
@@ -307,7 +309,9 @@ const DoneLessonScreen = ({}) => {
                 styles.button,
                 !isSuccess && {backgroundColor: COLORS.GREEN_66C270},
               ]}>
-              <Text style={[styleHook.txtButton, styles.textBtn]}>Next</Text>
+              <Text style={[styleHook.txtButton, styles.textBtn]}>
+                {i18n.t('lesson.screens.Modules.next')}
+              </Text>
             </TouchableOpacity>
           </View>
         </BookView>
@@ -364,7 +368,7 @@ const DoneLessonScreen = ({}) => {
               <Text
                 style={[styleHook.txtNote, styles.contentDescription]}
                 textBreakStrategy="balanced">
-                Good job!!! Now let’s practice again{' '}
+                {i18n.t('lesson.screens.Modules.goodJobAgain')}{' '}
                 {route.countTime && (
                   <Text style={[{fontFamily: FontFamily.SVNNeuzeitBold}]}>
                     {route.countTime ?? ''} {'\n'}
@@ -389,7 +393,9 @@ const DoneLessonScreen = ({}) => {
               disabled={ggadsHook.isFetching}
               onPress={onNext}
               style={styles.button}>
-              <Text style={[styleHook.txtButton, styles.textBtn]}>Next</Text>
+              <Text style={[styleHook.txtButton, styles.textBtn]}>
+                {i18n.t('lesson.screens.Modules.next')}
+              </Text>
               {ggadsHook.isFetching && <ActivityIndicator />}
             </TouchableOpacity>
           </View>
