@@ -38,6 +38,7 @@ import {LessonRef} from '../../types';
 import useHomeStore from 'src/home/presentation/stores/useHomeStore';
 import {SelectionAnswersQuestionRef} from '../../components/SelectionAnswersQuestion';
 import SelectionImagesQuestion from '../../components/SelectionImagesQuestion';
+import {useI18n} from 'src/core/presentation/hooks/useI18n';
 
 type Props = {
   moduleIndex: number;
@@ -112,6 +113,8 @@ const Science_SG1M2 = observer(
       });
 
       const {lessonSetting} = useHomeStore();
+
+      const i18n = useI18n();
 
       const settings = useMemo(
         () => getSetting(lessonSetting),
@@ -246,7 +249,7 @@ const Science_SG1M2 = observer(
                         ),
                       },
                     ]}>
-                    Choose the correct answer
+                    {i18n.t('lesson.screens.Modules.chooseTheCorrectAnswer')}
                   </Text>
                 </View>
 
@@ -283,7 +286,7 @@ const Science_SG1M2 = observer(
               />
 
               <PrimaryButton
-                text="Submit"
+                text={i18n.t('lesson.screens.Modules.submit')}
                 style={[
                   styles.buttonContainer,
                   {backgroundColor: settings.backgroundButtonColor},

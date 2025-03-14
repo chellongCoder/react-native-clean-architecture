@@ -39,6 +39,7 @@ import KeyboardNumber, {
   SelectionAnswersQuestionRef,
 } from '../../components/KeyboardNumber';
 import Svg, {Text as TextSvg} from 'react-native-svg';
+import {useI18n} from 'src/core/presentation/hooks/useI18n';
 
 type Props = {
   moduleIndex: number;
@@ -75,6 +76,8 @@ const VnG1M3Lesson = ({
   const {ttsSpeak, updateDefaultVoice} = useContext(TextToSpeechContext);
   const focus = useIsFocused();
   const {lessonSetting} = useHomeStore();
+
+  const i18n = useI18n();
 
   const settings = useMemo(
     () => getSetting(lessonSetting),
@@ -306,10 +309,12 @@ const VnG1M3Lesson = ({
                 {color: darkenColor(settings.backgroundButtonColor ?? '', 20)},
               ]}>
               {isDrawerType
-                ? `Write the "${getDataString(
+                ? `${i18n.t(
+                    'lesson.screens.Modules.writeThe',
+                  )} "${getDataString(
                     firstMiniTestTask?.question?.[moduleIndex].fullAnswer,
                   )}"`
-                : 'Choose correct answer'}
+                : i18n.t('lesson.screens.Modules.chooseCorrectAnswer')}
             </Text>
             <TouchableOpacity
               onPress={() =>
@@ -395,7 +400,7 @@ const VnG1M3Lesson = ({
           )}
 
           <PrimaryButton
-            text="Submit"
+            text={i18n.t('lesson.screens.Modules.submit')}
             style={[
               styles.buttonContainer,
               {backgroundColor: settings.backgroundButtonColor},

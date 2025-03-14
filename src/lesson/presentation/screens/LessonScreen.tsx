@@ -72,6 +72,7 @@ import Math_MG1M3 from './LessonComponent/Math_MG1M3';
 import Math_MG1M3_P4 from './LessonComponent/Math_MG1M3_P4';
 import Science_SG6M3 from './LessonComponent/Science_SG6M3';
 import Math_MG4M16 from './LessonComponent/Math_MG4M16';
+import {useI18n} from 'src/core/presentation/hooks/useI18n';
 
 export enum MathQuestionType {
   MathMG0M1 = 'MATH_MG0M1',
@@ -179,6 +180,8 @@ const LessonScreen = observer(() => {
 
   const {lessonSetting} = useHomeStore();
 
+  const i18n = useI18n();
+
   const {tasks: apiTasks} = useListQuestions(route?.lessonId);
 
   const tasks = useMemo(() => {
@@ -258,8 +261,8 @@ const LessonScreen = observer(() => {
                 env.IMAGE_BACKGROUND_BASE_API_URL +
                 lessonSetting?.backgroundImage,
               colorBgBookView: settings.backgroundAnswerColor,
-              title: 'you did great',
-              note: 'Good job!!! You pass the Minitest, \n now app is unlocked and you recieved 1 Sunflower. Check it in Achievement.',
+              title: i18n.t('lesson.screens.Modules.youDidGreat'),
+              note: i18n.t('lesson.screens.Modules.goodjobMinitest'),
               isMiniTest: true,
               moduleName: route.moduleName,
               lessonName: route.lessonName,
@@ -274,6 +277,7 @@ const LessonScreen = observer(() => {
     [
       env.IMAGE_BACKGROUND_BASE_API_URL,
       handlePostUserProgress,
+      i18n,
       lessonIndex,
       lessonSetting?.backgroundImage,
       lessonSetting?.figureFailImage,
@@ -317,8 +321,8 @@ const LessonScreen = observer(() => {
                 env.IMAGE_BACKGROUND_BASE_API_URL +
                 lessonSetting?.backgroundImage,
               colorBgBookView: settings.backgroundAnswerColor,
-              title: 'you did great',
-              note: 'Good job!!! Now it’s time for MINITEST. \nTry your best !',
+              title: i18n.t('lesson.screens.Modules.youDidGreat'),
+              note: i18n.t('lesson.screens.Modules.goodJobTraining'),
               moduleName: route.moduleName,
               lessonName: route.lessonName,
               partName: testTask?.name,
@@ -338,12 +342,12 @@ const LessonScreen = observer(() => {
         let note = '';
         if (trainingCount === TRAINING_COUNT) {
           // * nếu làm xong lần 1
-          title = 'amazing'; // * title của câu cảm xúc ở màn done screen
-          note = 'You’re doing great.'; // * câu note ở dưới
+          title = i18n.t('lesson.screens.Modules.amazing'); // * title của câu cảm xúc ở màn done screen
+          note = i18n.t('lesson.screens.Modules.youDoingGreat'); // * câu note ở dưới
         } else if (trainingCount === 2) {
           // * nếu làm xong lần 2
-          title = 'excellent';
-          note = 'You can do it !!';
+          title = i18n.t('lesson.screens.Modules.excellent');
+          note = i18n.t('lesson.screens.Modules.youCanDoIt');
         }
 
         navigateScreen<RouteParamsDone>(
@@ -358,7 +362,9 @@ const LessonScreen = observer(() => {
               lessonSetting?.backgroundImage,
             colorBgBookView: settings.backgroundAnswerColor,
             title,
-            countTime: `${trainingCount - 1} more time`,
+            countTime: `${trainingCount - 1} ${i18n.t(
+              'lesson.screens.Modules.moreTime',
+            )}`,
             note,
             moduleName: route.moduleName,
             lessonName: route.lessonName,
@@ -386,6 +392,7 @@ const LessonScreen = observer(() => {
       lessonSetting?.figureSuccessImage,
       lessonSetting?.backgroundImage,
       settings.backgroundAnswerColor,
+      i18n,
       route.moduleName,
       route.lessonName,
       testTask,

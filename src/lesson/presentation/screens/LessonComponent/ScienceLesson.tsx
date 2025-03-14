@@ -51,6 +51,7 @@ import {SoundGlobalContext} from 'src/core/presentation/hooks/sound/SoundGlobalC
 import {soundTrack} from 'src/core/presentation/hooks/sound/SoundGlobalProvider';
 import {useIsFocused} from '@react-navigation/native';
 import TextHighlight from '../../components/TextHighlight';
+import {useI18n} from 'src/core/presentation/hooks/useI18n';
 
 type Props = {
   moduleIndex: number;
@@ -96,6 +97,8 @@ const ScienceLesson = ({
   const listColors = answers;
 
   const {lessonSetting} = useHomeStore();
+
+  const i18n = useI18n();
 
   const settings = useMemo(
     () => getSetting(lessonSetting),
@@ -289,7 +292,7 @@ const ScienceLesson = ({
                 globalStyle.txtLabel,
                 {color: darkenColor(settings.backgroundButtonColor ?? '', 30)},
               ]}>
-              Choose correct answer
+              {i18n.t('lesson.screens.Modules.chooseCorrectAnswer')}
             </Text>
             <TouchableOpacity onPress={onSpeechText}>
               <Image
@@ -321,7 +324,7 @@ const ScienceLesson = ({
           />
 
           <PrimaryButton
-            text="Submit"
+            text={i18n.t('lesson.screens.Modules.submit')}
             style={[
               styles.buttonContainer,
               {backgroundColor: settings.backgroundButtonColor},

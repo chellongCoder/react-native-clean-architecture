@@ -22,6 +22,7 @@ import {TYPOGRAPHY} from 'src/core/presentation/constants/typography';
 import HintButton from 'src/core/components/hint/HintButton';
 import useHomeStore from 'src/home/presentation/stores/useHomeStore';
 import {Instruction} from 'src/home/application/types/GetListQuestionResponse';
+import {useI18n} from 'src/core/presentation/hooks/useI18n';
 
 type Props = {
   lessonName?: string;
@@ -66,6 +67,8 @@ const LessonComponent = ({
   characterStyle,
 }: Props) => {
   const {lessonSetting} = useHomeStore();
+
+  const i18n = useI18n();
 
   const insets = useSafeAreaInsets();
   const globalStyle = useGlobalStyle();
@@ -194,7 +197,9 @@ const LessonComponent = ({
             {isShowCorrectContainer && (
               <View style={styles.wrapCorrectContainer}>
                 <Text style={styles.correctTitle}>
-                  {isAnswerCorrect ? 'Correct !!' : 'Incorrect !!'}
+                  {isAnswerCorrect
+                    ? `${i18n.t('lesson.screens.Modules.correct')} !!`
+                    : `${i18n.t('lesson.screens.Modules.incorrect')} !!`}
                 </Text>
               </View>
             )}

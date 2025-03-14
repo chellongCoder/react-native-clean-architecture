@@ -49,6 +49,7 @@ import {ActionE} from 'src/home/application/types/LoggingActionPayload';
 import {homeModuleContainer} from 'src/home/HomeModule';
 import {HomeStore} from 'src/home/presentation/stores/HomeStore';
 import LearningImage from '../../components/LearningImage';
+import {useI18n} from 'src/core/presentation/hooks/useI18n';
 
 type Props = {
   moduleIndex: number;
@@ -210,6 +211,8 @@ const VnG0M1Lesson = observer(
       });
 
       const {lessonSetting} = useHomeStore();
+
+      const i18n = useI18n();
 
       const settings = useMemo(
         () => getSetting(lessonSetting),
@@ -460,7 +463,7 @@ const VnG0M1Lesson = observer(
                       globalStyle.txtLabel,
                       {color: settings.backgroundButtonColor},
                     ]}>
-                    Listen and repeat
+                    {i18n.t('lesson.screens.Modules.listenAndRepeat')}
                   </Text>
                 </View>
                 <TouchableOpacity onPress={onSpeechText}>
@@ -550,12 +553,12 @@ const VnG0M1Lesson = observer(
                       isError && {color: COLORS.RED_AF3A1B},
                     ]}>
                     {loadingRecord
-                      ? 'Listening...'
+                      ? `${i18n.t('lesson.screens.Modules.listening')}...`
                       : isDisabledRecord
-                      ? 'Processing voice...'
+                      ? `${i18n.t('lesson.screens.Modules.processingVoice')}...`
                       : isError
-                      ? 'Please try again'
-                      : 'Press n hold to record, release finger after record'}
+                      ? i18n.t('lesson.screens.Modules.pleaseTryAgain')
+                      : i18n.t('lesson.screens.Modules.holdToRecord')}
                   </Text>
                 </View>
                 {learningTimer !== 0 && (
@@ -575,7 +578,7 @@ const VnG0M1Lesson = observer(
               </View>
 
               <PrimaryButton
-                text="Submit"
+                text={i18n.t('lesson.screens.Modules.submit')}
                 style={[
                   styles.buttonContainer,
                   {backgroundColor: settings.backgroundButtonColor},

@@ -42,6 +42,7 @@ import SelectionTextsQuestion, {
 } from '../../components/SelectionTextsQuestion';
 import {ScrollView} from 'react-native-gesture-handler';
 import TextHighlight from '../../components/TextHighlight';
+import {useI18n} from 'src/core/presentation/hooks/useI18n';
 
 type Props = {
   moduleIndex: number;
@@ -113,6 +114,8 @@ const English_G5M16 = observer(
       });
 
       const {lessonSetting} = useHomeStore();
+
+      const i18n = useI18n();
 
       const settings = useMemo(
         () => getSetting(lessonSetting),
@@ -264,7 +267,7 @@ const English_G5M16 = observer(
                         ),
                       },
                     ]}>
-                    Choose the correct WORD
+                    {i18n.t('lesson.screens.Modules.chooseTheCorrectWord')}
                   </Text>
                 </View>
 
@@ -296,7 +299,7 @@ const English_G5M16 = observer(
               />
 
               <PrimaryButton
-                text="Submit"
+                text={i18n.t('lesson.screens.Modules.submit')}
                 style={[
                   styles.buttonContainer,
                   {backgroundColor: settings.backgroundButtonColor},

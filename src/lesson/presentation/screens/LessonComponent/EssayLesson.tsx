@@ -28,6 +28,7 @@ import {useLessonStore} from '../../stores/LessonStore/useGetPostsStore';
 import useAuthenticationStore from 'src/authentication/presentation/stores/useAuthenticationStore';
 import {TextToSpeechContext} from 'src/core/presentation/hooks/textToSpeech/TextToSpeechContext';
 import CharScramble, {CharScrambleRep} from '../../components/CharScramble';
+import {useI18n} from 'src/core/presentation/hooks/useI18n';
 
 type Props = {
   moduleIndex: number;
@@ -61,6 +62,8 @@ const EssayLesson = ({
   const {getSetting} = useLessonStore();
   const {selectedChild} = useAuthenticationStore();
   const {lessonSetting} = useHomeStore();
+
+  const i18n = useI18n();
 
   const settings = useMemo(
     () => getSetting(lessonSetting),
@@ -177,7 +180,7 @@ const EssayLesson = ({
                 flex: 1,
               }}>
               <Text style={[globalStyle.txtLabel, styles.textColor]}>
-                Spell the words
+                {i18n.t('lesson.screens.Modules.spellTheWords')}
               </Text>
             </View>
 
@@ -197,7 +200,7 @@ const EssayLesson = ({
           />
 
           <PrimaryButton
-            text="Submit"
+            text={i18n.t('lesson.screens.Modules.submit')}
             style={[
               styles.buttonContainer,
               {backgroundColor: settings.backgroundButtonColor},
