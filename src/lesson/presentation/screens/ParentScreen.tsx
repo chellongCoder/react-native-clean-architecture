@@ -92,6 +92,8 @@ import {GetListSubjectPayload} from 'src/home/application/types/GetListSubjectPa
 import {Module} from 'src/home/application/types/GetListLessonResponse';
 import {useI18n} from 'src/core/presentation/hooks/useI18n';
 import ChangeLanguage from 'src/core/presentation/components/ChangeLanguage';
+import {coreModuleContainer} from 'src/core/CoreModule';
+import I18n from 'src/core/presentation/i18n';
 
 // ... existing imports ...
 
@@ -99,9 +101,16 @@ import ChangeLanguage from 'src/core/presentation/components/ChangeLanguage';
 // CONSTANTS & ENUMS
 // =============================================================================
 enum TabParentE {
-  APP_BLOCK = 'App block',
-  SETTING = 'Setting',
-  PURCHASE = 'Purchase',
+  APP_BLOCK = coreModuleContainer
+    .getProvided(I18n)
+    .t('lesson.screens.Parent.appBlock')
+    .toString(),
+  SETTING = coreModuleContainer
+    .getProvided(I18n)
+    .t('lesson.screens.Parent.setting'),
+  PURCHASE = coreModuleContainer
+    .getProvided(I18n)
+    .t('lesson.screens.Parent.purchase'),
 }
 
 enum TabSettingE {

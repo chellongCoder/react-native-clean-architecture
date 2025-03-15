@@ -132,8 +132,10 @@ const English_G3M20 = observer(
       }, [characterImageFail, characterImageSuccess, isAnswerCorrect]);
 
       const onSpeechText = useCallback(() => {
-        ttsSpeak?.(settings.prompt?.toString() ?? '');
-      }, [settings.prompt, ttsSpeak]);
+        ttsSpeak?.(
+          firstMiniTestTask?.question?.[moduleIndex]?.description ?? '',
+        );
+      }, [firstMiniTestTask?.question, moduleIndex, ttsSpeak]);
 
       const opacity = useSharedValue(0);
       const scaleS = useSharedValue(1);
@@ -199,11 +201,9 @@ const English_G3M20 = observer(
           backgroundAnswerColor={
             settings.backgroundAnswerColor ?? COLORS.GREEN_DDF598
           }
-          prompt={
-            firstMiniTestTask?.question?.[moduleIndex]?.instruction ?? {
-              description: settings.prompt?.toString() ?? '',
-            }
-          }
+          prompt={{
+            description: '',
+          }}
           price="Free"
           score={selectedChild?.adsPoints}
           txtCountDown={word && !isMMSS(word) ? undefined : word}

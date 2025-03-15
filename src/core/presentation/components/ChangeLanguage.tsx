@@ -30,7 +30,6 @@ const ChangeLanguage: React.FC = () => {
       text1: 'Altered language was updated!',
     });
   };
-  
 
   return (
     <View style={styles.container}>

@@ -53,7 +53,10 @@ const ItemCard = ({
         <ImageBackground
           source={assets.hexagon_frame}
           tintColor={bg}
-          style={{padding: size / 12}}
+          style={{
+            padding: size / 12,
+            alignItems: 'center',
+          }}
           resizeMode="contain">
           <Icon height={size - size / 6} width={size - size / 6} />
         </ImageBackground>

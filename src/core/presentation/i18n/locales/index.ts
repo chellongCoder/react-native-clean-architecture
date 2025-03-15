@@ -4,7 +4,6 @@ import vi from './vi';
 
 const locales = {
   en,
-  es,
   vi,
 };
 
