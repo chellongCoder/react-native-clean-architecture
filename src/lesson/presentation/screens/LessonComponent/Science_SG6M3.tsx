@@ -156,6 +156,13 @@ const Science_SG6M3 = observer(
       const opacity = useSharedValue(0);
       const scaleS = useSharedValue(1);
 
+      const isContentLarge = useMemo(() => {
+        return (
+          (firstMiniTestTask?.question?.[moduleIndex]?.content?.split(' ')
+            .length ?? 1) > 16
+        );
+      }, [firstMiniTestTask?.question, moduleIndex]);
+
       /**
        * * reset lại countdown khi lần làm thay đổi
        */
@@ -246,11 +253,13 @@ const Science_SG6M3 = observer(
                 marginTop: verticalScale(32),
                 borderWidth: 5,
                 borderRadius: scale(30),
-                paddingHorizontal: scale(20),
+                // paddingHorizontal: scale(20),
                 borderStyle: 'dashed',
                 borderColor: COLORS.YELLOW_F2B559,
-                height: verticalScale(130),
+                height: verticalScale(isContentLarge ? 150 : 130),
+                width: WIDTH_SCREEN * (isContentLarge ? 0.75 : 0.7),
                 flexDirection: 'column',
+                alignItems: 'center',
                 justifyContent: 'space-between',
               }}>
               <View>
@@ -258,7 +267,7 @@ const Science_SG6M3 = observer(
                   resizeMode={'cover'}
                   style={[
                     {
-                      width: WIDTH_SCREEN * 0.6,
+                      width: WIDTH_SCREEN * 0.5,
                       aspectRatio: 1.5,
                       marginTop: -verticalScale(40),
                       borderRadius: scale(30),
@@ -273,8 +282,19 @@ const Science_SG6M3 = observer(
                 />
               </View>
               <View style={{paddingBottom: verticalScale(12)}}>
-                <Text style={[globalStyle.txtLabel, styles.textQuestion]}>
-                  {firstMiniTestTask?.question?.[moduleIndex].content}
+                <Text
+                  style={[
+                    globalStyle.txtLabel,
+                    styles.textQuestion,
+                    {
+                      fontSize: scale(isContentLarge ? 12 : 15),
+                      color: darkenColor(
+                        settings.backgroundButtonColor ?? '',
+                        20,
+                      ),
+                    },
+                  ]}>
+                  {firstMiniTestTask?.question?.[moduleIndex].content}{' '}
                 </Text>
               </View>
             </View>
@@ -351,7 +371,7 @@ const styles = StyleSheet.create({
     color: '#1C6349',
   },
   textQuestion: {
-    fontSize: verticalScale(15),
+    fontSize: scale(15),
     textAlign: 'left',
     color: COLORS.BLUE_258F78,
     marginHorizontal: scale(10),
