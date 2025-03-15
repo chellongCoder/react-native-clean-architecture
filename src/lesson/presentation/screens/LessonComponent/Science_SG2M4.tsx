@@ -222,6 +222,9 @@ const Science_SG2M4 = observer(
           onPressFlower={toggleShowHint}
           buildQuestion={
             <View>
+              <Text style={[styles.fonts_SVN_Cherish, styles.textQuestion]}>
+                {firstMiniTestTask?.question?.[moduleIndex].descriptionImage}
+              </Text>
               <Animated.Image
                 resizeMode={'contain'}
                 style={[
@@ -313,8 +316,9 @@ const styles = StyleSheet.create({
     color: '#1C6349',
   },
   textQuestion: {
-    fontSize: verticalScale(15),
-    textAlign: 'left',
+    marginTop: verticalScale(24),
+    fontSize: verticalScale(24),
+    textAlign: 'center',
     color: COLORS.BLUE_258F78,
   },
   textGreen: {
