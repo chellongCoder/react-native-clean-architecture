@@ -5,11 +5,12 @@ import {scale} from 'react-native-size-matters';
 
 type Props = {
   onPress: () => void;
+  disabled?: boolean;
 };
 
-const VoiceButton = ({onPress}: Props) => {
+const VoiceButton = ({onPress, disabled}: Props) => {
   return (
-    <TouchableOpacity onPress={onPress}>
+    <TouchableOpacity onPress={onPress} disabled={disabled}>
       <Image
         source={assets.icon_speech}
         style={{
