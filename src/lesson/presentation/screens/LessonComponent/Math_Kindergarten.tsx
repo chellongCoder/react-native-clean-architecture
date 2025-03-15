@@ -35,6 +35,7 @@ import useHomeStore from 'src/home/presentation/stores/useHomeStore';
 import {SelectionAnswersQuestionRef} from '../../components/SelectionAnswersQuestion';
 import KeyboardNumber from '../../components/KeyboardNumber';
 import {useI18n} from 'src/core/presentation/hooks/useI18n';
+import VoiceButton from '../../components/VoiceButton';
 
 type Props = {
   moduleIndex: number;
@@ -246,12 +247,7 @@ const Math_G0M2 = observer(
                   </Text>
                 </View>
 
-                <TouchableOpacity onPress={onSpeechText}>
-                  <Image
-                    source={require('../../../../../assets/images/icon_speech.png')}
-                    style={styles.iconImageContainer}
-                  />
-                </TouchableOpacity>
+                <VoiceButton onPress={onSpeechText} />
               </View>
               <KeyboardNumber
                 question={

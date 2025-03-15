@@ -52,6 +52,7 @@ import {soundTrack} from 'src/core/presentation/hooks/sound/SoundGlobalProvider'
 import {useIsFocused} from '@react-navigation/native';
 import TextHighlight from '../../components/TextHighlight';
 import {useI18n} from 'src/core/presentation/hooks/useI18n';
+import VoiceButton from '../../components/VoiceButton';
 
 type Props = {
   moduleIndex: number;
@@ -294,12 +295,7 @@ const ScienceLesson = ({
               ]}>
               {i18n.t('lesson.screens.Modules.chooseCorrectAnswer')}
             </Text>
-            <TouchableOpacity onPress={onSpeechText}>
-              <Image
-                source={require('../../../../../assets/images/icon_speech.png')}
-                style={styles.iconImageContainer}
-              />
-            </TouchableOpacity>
+            <VoiceButton onPress={onSpeechText} />
           </View>
 
           <SelectionImagesQuestion

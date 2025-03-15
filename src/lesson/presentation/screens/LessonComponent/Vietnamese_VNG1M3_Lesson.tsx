@@ -40,6 +40,7 @@ import KeyboardNumber, {
 } from '../../components/KeyboardNumber';
 import Svg, {Text as TextSvg} from 'react-native-svg';
 import {useI18n} from 'src/core/presentation/hooks/useI18n';
+import VoiceButton from '../../components/VoiceButton';
 
 type Props = {
   moduleIndex: number;
@@ -316,7 +317,7 @@ const VnG1M3Lesson = ({
                   )}"`
                 : i18n.t('lesson.screens.Modules.chooseCorrectAnswer')}
             </Text>
-            <TouchableOpacity
+            <VoiceButton
               onPress={() =>
                 onSpeechText(
                   getCorrectAnswer(
@@ -325,13 +326,8 @@ const VnG1M3Lesson = ({
                       : firstMiniTestTask?.question?.[moduleIndex].content,
                   ),
                 )
-              }>
-              <Image
-                source={assets.icon_speech}
-                style={styles.iconAIVoiceContainer}
-                resizeMode="contain"
-              />
-            </TouchableOpacity>
+              }
+            />
           </View>
 
           <View style={{height: verticalScale(10)}} />

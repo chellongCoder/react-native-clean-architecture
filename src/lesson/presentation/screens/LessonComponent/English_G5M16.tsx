@@ -43,6 +43,7 @@ import SelectionTextsQuestion, {
 import {ScrollView} from 'react-native-gesture-handler';
 import TextHighlight from '../../components/TextHighlight';
 import {useI18n} from 'src/core/presentation/hooks/useI18n';
+import VoiceButton from '../../components/VoiceButton';
 
 type Props = {
   moduleIndex: number;
@@ -271,12 +272,7 @@ const English_G5M16 = observer(
                   </Text>
                 </View>
 
-                <TouchableOpacity onPress={onSpeechText}>
-                  <Image
-                    source={require('../../../../../assets/images/icon_speech.png')}
-                    style={styles.iconImageContainer}
-                  />
-                </TouchableOpacity>
+                <VoiceButton onPress={onSpeechText} />
               </View>
               <SelectionTextsQuestion
                 question={

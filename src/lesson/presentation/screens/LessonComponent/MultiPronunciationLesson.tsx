@@ -49,6 +49,7 @@ import {ActionE} from 'src/home/application/types/LoggingActionPayload';
 import {homeModuleContainer} from 'src/home/HomeModule';
 import {HomeStore} from 'src/home/presentation/stores/HomeStore';
 import {useI18n} from 'src/core/presentation/hooks/useI18n';
+import VoiceButton from '../../components/VoiceButton';
 
 type Props = {
   moduleIndex: number;
@@ -478,13 +479,7 @@ const MultiPronunciationLesson = observer(
                     {i18n.t('lesson.screens.Modules.listenAndRepeat')}
                   </Text>
                 </View>
-                <TouchableOpacity onPress={onSpeechText}>
-                  <Image
-                    source={assets.icon_speech}
-                    style={styles.iconAIVoiceContainer}
-                    resizeMode="contain"
-                  />
-                </TouchableOpacity>
+                <VoiceButton onPress={onSpeechText} />
               </View>
               <View style={[styles.boxSelected]}>
                 <View
