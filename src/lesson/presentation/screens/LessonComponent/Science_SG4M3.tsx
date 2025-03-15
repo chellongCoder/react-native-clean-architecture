@@ -243,9 +243,10 @@ const Science_SG4M3 = observer(
           isShowCorrectContainer={isShowCorrectContainer}
           onPressFlower={toggleShowHint}
           characterStyle={{
-            height: verticalScale(300),
-            marginBottom: -verticalScale(130),
-            marginLeft: -scale(40),
+            height: verticalScale(200),
+            marginBottom: -verticalScale(80),
+            marginLeft: -scale(14),
+            transform: [{scale: 1.5}],
           }}
           buildQuestion={
             <View>
@@ -253,7 +254,7 @@ const Science_SG4M3 = observer(
                 resizeMode={'contain'}
                 style={[
                   {
-                    width: WIDTH_SCREEN,
+                    width: WIDTH_SCREEN * 0.85,
                     aspectRatio: 1.5,
                   },
                   animatedStyle,
