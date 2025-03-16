@@ -15,23 +15,37 @@ import {WIDTH_SCREEN} from 'src/core/presentation/utils';
 interface ImageCarouselProps {
   images: string[];
   styleContainer?: StyleProp<ViewStyle>;
+  totalSeconds?: number;
+  onChangeIndex?: (index: number) => void;
 }
 
 const LearningImage: React.FC<ImageCarouselProps> = ({
   images,
   styleContainer = {},
+  totalSeconds = 5,
+  onChangeIndex,
 }) => {
   const env = coreModuleContainer.getProvided<Env>(EnvToken); // Instantiate CoreService
 
   const [currentIndex, setCurrentIndex] = useState(0);
 
+  console.log(currentIndex, 'ooooo');
+
   useEffect(() => {
     const interval = setInterval(() => {
-      setCurrentIndex(prevIndex => (prevIndex + 1) % images.length);
-    }, 5000 / images.length); // Change image every 1 second
+      setCurrentIndex(prevIndex => {
+        const nextIndex = (prevIndex + 1) % images.length;
+        onChangeIndex?.(nextIndex);
+        return nextIndex;
+      });
+    }, (totalSeconds * 1000) / images.length); // Change image every 1 second
 
     return () => clearInterval(interval); // Cleanup interval on component unmount
-  }, [images.length]);
+  }, [images.length, onChangeIndex, totalSeconds]);
+
+  useEffect(() => {
+    setCurrentIndex(0);
+  }, [images]);
 
   return (
     <TouchableOpacity

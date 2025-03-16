@@ -29,6 +29,7 @@ import useAuthenticationStore from 'src/authentication/presentation/stores/useAu
 import {TextToSpeechContext} from 'src/core/presentation/hooks/textToSpeech/TextToSpeechContext';
 import CharScramble, {CharScrambleRep} from '../../components/CharScramble';
 import {useI18n} from 'src/core/presentation/hooks/useI18n';
+import VoiceButton from '../../components/VoiceButton';
 
 type Props = {
   moduleIndex: number;
@@ -184,12 +185,7 @@ const EssayLesson = ({
               </Text>
             </View>
 
-            <TouchableOpacity onPress={onSpeechText}>
-              <Image
-                source={require('../../../../../assets/images/icon_speech.png')}
-                style={styles.iconImageContainer}
-              />
-            </TouchableOpacity>
+            <VoiceButton onPress={onSpeechText} />
           </View>
           <CharScramble
             ref={charScrambleRep}

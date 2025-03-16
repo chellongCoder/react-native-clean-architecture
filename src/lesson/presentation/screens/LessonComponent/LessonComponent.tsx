@@ -412,7 +412,7 @@ const styles = StyleSheet.create({
   wrapCorrectContainer: {
     maxWidth: '100%',
     marginRight: scale(8),
-    backgroundColor: COLORS.CUSTOM(COLORS.WHITE_FBF8CC, 0.5),
+    backgroundColor: COLORS.CUSTOM(COLORS.WHITE_FBF8CC, 0.4),
     marginBottom: scale(8),
     padding: scale(12),
     borderTopLeftRadius: scale(36),
@@ -440,17 +440,19 @@ const styles = StyleSheet.create({
   promptNumber: {
     color: COLORS.WHITE_FBF8CC,
     fontFamily: FontFamily.SVNCherishMoment,
-    fontSize: 20,
+    fontSize: scale(18),
   },
   promptContent: {
     color: COLORS.GREEN_1C6A59,
     fontFamily: FontFamily.SVNCherishMoment,
+    maxWidth: '38%',
     marginRight: scale(6),
-    fontSize: 18,
+    fontSize: scale(15),
     zIndex: 998,
   },
   promptTitle: {
     color: COLORS.GREEN_1C6A59,
+    fontSize: scale(10),
     fontWeight: 'bold',
     zIndex: 998,
   },

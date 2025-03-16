@@ -35,6 +35,7 @@ import {useIsFocused} from '@react-navigation/native';
 import ImageMeaning from '../../components/ImageMeaning';
 import useHomeStore from 'src/home/presentation/stores/useHomeStore';
 import {useI18n} from 'src/core/presentation/hooks/useI18n';
+import VoiceButton from '../../components/VoiceButton';
 
 type Props = {
   moduleIndex: number;
@@ -198,13 +199,7 @@ const Mandarin_G2M25 = ({
               {i18n.t('lesson.screens.Modules.writeThe')} "
               {firstMiniTestTask?.question?.[moduleIndex].answers}"
             </Text>
-            <TouchableOpacity onPress={onSpeechText}>
-              <Image
-                source={assets.icon_speech}
-                style={styles.iconAIVoiceContainer}
-                resizeMode="contain"
-              />
-            </TouchableOpacity>
+            <VoiceButton onPress={onSpeechText} />
           </View>
 
           <View style={{height: verticalScale(10)}} />

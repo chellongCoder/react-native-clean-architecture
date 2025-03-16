@@ -41,6 +41,7 @@ import SelectionAnswersQuestion, {
 } from '../../components/SelectionAnswersQuestion';
 import LearningImage from '../../components/LearningImage';
 import {useI18n} from 'src/core/presentation/hooks/useI18n';
+import VoiceButton from '../../components/VoiceButton';
 
 type Props = {
   moduleIndex: number;
@@ -86,6 +87,12 @@ const Science_SG3M9 = observer(
 
       const {selectedChild} = useAuthenticationStore();
 
+      const imageLength = useMemo(() => {
+        return firstMiniTestTask?.type === 'mini_test'
+          ? 1
+          : firstMiniTestTask?.question?.[moduleIndex].image.length ?? 1;
+      }, [firstMiniTestTask, moduleIndex]);
+
       const {
         isAnswerCorrect,
         isShowCorrectContainer,
@@ -96,7 +103,7 @@ const Science_SG3M9 = observer(
         toggleShowHint,
         resetLearning,
       } = useSettingLesson({
-        countDownTime: trainingCount <= 2 ? 0 : 5,
+        countDownTime: trainingCount <= 2 ? 0 : (imageLength - 1) * 5 - 2,
         isCorrectAnswer:
           answerSelected.trim().toLocaleLowerCase() ===
           (firstMiniTestTask?.question?.[moduleIndex]?.correctAnswer as string)
@@ -124,11 +131,30 @@ const Science_SG3M9 = observer(
           : characterImageFail;
       }, [characterImageFail, characterImageSuccess, isAnswerCorrect]);
 
-      const onSpeechText = useCallback(() => {
-        ttsSpeak?.(
-          firstMiniTestTask?.question?.[moduleIndex]?.description ?? '',
+      const voices = useMemo(() => {
+        return [''].concat(
+          firstMiniTestTask?.question?.[moduleIndex]?.description?.split('→') ??
+            [],
         );
-      }, [firstMiniTestTask?.question, moduleIndex, ttsSpeak]);
+      }, [firstMiniTestTask, moduleIndex]);
+
+      const onSpeechText = useCallback(
+        (text?: string) => {
+          ttsSpeak?.(
+            text ??
+              firstMiniTestTask?.question?.[moduleIndex]?.description ??
+              '',
+          );
+        },
+        [firstMiniTestTask?.question, moduleIndex, ttsSpeak],
+      );
+
+      const onChangeIndex = useCallback(
+        (index: number) => {
+          onSpeechText(voices?.[index] ?? '');
+        },
+        [onSpeechText, voices],
+      );
 
       const opacity = useSharedValue(0);
       const scaleS = useSharedValue(1);
@@ -142,7 +168,7 @@ const Science_SG3M9 = observer(
       }, [trainingCount]);
 
       useEffect(() => {
-        if (focus) {
+        if (focus && firstMiniTestTask?.type === 'mini_test') {
           // Check if the component is focused
           const firstTimeout = setTimeout(() => {
             onSpeechText();
@@ -156,7 +182,7 @@ const Science_SG3M9 = observer(
 
           return () => clearTimeout(firstTimeout);
         }
-      }, [onSpeechText, focus]); // Added focus to the dependency array
+      }, [onSpeechText, focus, firstMiniTestTask?.type]); // Added focus to the dependency array
 
       useEffect(() => {
         opacity.value = withTiming(0, {duration: 500}, () => {
@@ -226,9 +252,11 @@ const Science_SG3M9 = observer(
                       ) as string[])
                 }
                 styleContainer={{
-                  width: scale(250),
+                  width: scale(200),
                   borderWidth: 0,
                 }}
+                onChangeIndex={onChangeIndex}
+                totalSeconds={imageLength * 5}
               />
             ) : (
               <LearningImage
@@ -236,7 +264,7 @@ const Science_SG3M9 = observer(
                   firstMiniTestTask?.question?.[moduleIndex].image as string,
                 ]}
                 styleContainer={{
-                  width: scale(250),
+                  width: scale(200),
                   borderWidth: 0,
                 }}
               />
@@ -255,12 +283,10 @@ const Science_SG3M9 = observer(
                   </Text>
                 </View>
 
-                <TouchableOpacity onPress={onSpeechText}>
-                  <Image
-                    source={require('../../../../../assets/images/icon_speech.png')}
-                    style={styles.iconImageContainer}
-                  />
-                </TouchableOpacity>
+                <VoiceButton
+                  onPress={() => onSpeechText()}
+                  disabled={learningTimer !== 0}
+                />
               </View>
               <SelectionAnswersQuestion
                 question={

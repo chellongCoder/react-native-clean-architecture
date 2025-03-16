@@ -42,6 +42,7 @@ import SelectionAnswersQuestion, {
 } from '../../components/SelectionAnswersQuestion';
 import CharScramble, {CharScrambleRep} from '../../components/CharScramble';
 import {useI18n} from 'src/core/presentation/hooks/useI18n';
+import VoiceButton from '../../components/VoiceButton';
 
 type Props = {
   moduleIndex: number;
@@ -251,12 +252,7 @@ const English_G3M20 = observer(
                   </Text>
                 </View>
 
-                <TouchableOpacity onPress={onSpeechText}>
-                  <Image
-                    source={require('../../../../../assets/images/icon_speech.png')}
-                    style={styles.iconImageContainer}
-                  />
-                </TouchableOpacity>
+                <VoiceButton onPress={onSpeechText} />
               </View>
               {firstMiniTestTask?.question?.[moduleIndex].answerType ===
               'answer_pick_one' ? (

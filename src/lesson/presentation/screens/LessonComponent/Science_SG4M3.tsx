@@ -40,6 +40,7 @@ import SelectionAnswersQuestion, {
   SelectionAnswersQuestionRef,
 } from '../../components/SelectionAnswersQuestion';
 import {useI18n} from 'src/core/presentation/hooks/useI18n';
+import VoiceButton from '../../components/VoiceButton';
 
 type Props = {
   moduleIndex: number;
@@ -242,9 +243,10 @@ const Science_SG4M3 = observer(
           isShowCorrectContainer={isShowCorrectContainer}
           onPressFlower={toggleShowHint}
           characterStyle={{
-            height: verticalScale(300),
-            marginBottom: -verticalScale(130),
-            marginLeft: -scale(40),
+            height: verticalScale(200),
+            marginBottom: -verticalScale(80),
+            marginLeft: -scale(14),
+            transform: [{scale: 1.5}],
           }}
           buildQuestion={
             <View>
@@ -252,7 +254,7 @@ const Science_SG4M3 = observer(
                 resizeMode={'contain'}
                 style={[
                   {
-                    width: WIDTH_SCREEN,
+                    width: WIDTH_SCREEN * 0.85,
                     aspectRatio: 1.5,
                   },
                   animatedStyle,
@@ -278,12 +280,7 @@ const Science_SG4M3 = observer(
                   </Text>
                 </View>
 
-                <TouchableOpacity onPress={onSpeechText}>
-                  <Image
-                    source={require('../../../../../assets/images/icon_speech.png')}
-                    style={styles.iconImageContainer}
-                  />
-                </TouchableOpacity>
+                <VoiceButton onPress={onSpeechText} />
               </View>
               <SelectionAnswersQuestion
                 question={

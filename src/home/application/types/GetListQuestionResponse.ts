@@ -14,7 +14,7 @@ export interface Question {
   answers: Answer[] | string;
   fullAnswer: string;
   image: string | string[];
-  descriptionImage: string;
+  descriptionImage: string | string[];
   answerType: 'answer_pick_one' | 'answer_arrange_word' | 'draw_character';
   paragraph: string;
   pronu_character?: string[];

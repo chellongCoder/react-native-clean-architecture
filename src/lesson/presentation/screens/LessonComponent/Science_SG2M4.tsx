@@ -41,6 +41,7 @@ import SelectionAnswersQuestion, {
 } from '../../components/SelectionAnswersQuestion';
 import TextHighlight from '../../components/TextHighlight';
 import {useI18n} from 'src/core/presentation/hooks/useI18n';
+import VoiceButton from '../../components/VoiceButton';
 
 type Props = {
   moduleIndex: number;
@@ -221,6 +222,9 @@ const Science_SG2M4 = observer(
           onPressFlower={toggleShowHint}
           buildQuestion={
             <View>
+              <Text style={[styles.fonts_SVN_Cherish, styles.textQuestion]}>
+                {firstMiniTestTask?.question?.[moduleIndex].descriptionImage}
+              </Text>
               <Animated.Image
                 resizeMode={'contain'}
                 style={[
@@ -251,12 +255,7 @@ const Science_SG2M4 = observer(
                   </Text>
                 </View>
 
-                <TouchableOpacity onPress={onSpeechText}>
-                  <Image
-                    source={require('../../../../../assets/images/icon_speech.png')}
-                    style={styles.iconImageContainer}
-                  />
-                </TouchableOpacity>
+                <VoiceButton onPress={onSpeechText} />
               </View>
               <SelectionAnswersQuestion
                 question={
@@ -317,8 +316,9 @@ const styles = StyleSheet.create({
     color: '#1C6349',
   },
   textQuestion: {
-    fontSize: verticalScale(15),
-    textAlign: 'left',
+    marginTop: verticalScale(24),
+    fontSize: verticalScale(24),
+    textAlign: 'center',
     color: COLORS.BLUE_258F78,
   },
   textGreen: {

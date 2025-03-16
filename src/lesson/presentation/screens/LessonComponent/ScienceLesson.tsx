@@ -52,6 +52,7 @@ import {soundTrack} from 'src/core/presentation/hooks/sound/SoundGlobalProvider'
 import {useIsFocused} from '@react-navigation/native';
 import TextHighlight from '../../components/TextHighlight';
 import {useI18n} from 'src/core/presentation/hooks/useI18n';
+import VoiceButton from '../../components/VoiceButton';
 
 type Props = {
   moduleIndex: number;
@@ -145,41 +146,42 @@ const ScienceLesson = ({
 
   const isLearning = useMemo(() => learningTimer !== 0, [learningTimer]);
 
-  const images = useMemo(
-    () =>
-      isLearning
-        ? firstMiniTestTask?.question?.[moduleIndex].image ?? []
-        : firstMiniTestTask?.question?.[moduleIndex].image.slice(1, 3) ?? [],
-    [firstMiniTestTask?.question, isLearning, moduleIndex],
+  const isMinitest = useMemo(
+    () => firstMiniTestTask?.type === 'mini_test',
+    [firstMiniTestTask?.type],
   );
 
-  const content = useMemo(
-    () =>
-      isLearning
-        ? undefined
-        : firstMiniTestTask?.question?.[moduleIndex].content[currentIndex],
-    [currentIndex, firstMiniTestTask?.question, isLearning, moduleIndex],
-  );
+  const dataMapping = useMemo(() => {
+    const map = {
+      images:
+        (firstMiniTestTask?.question?.[moduleIndex].image as string[]) ?? [],
+      descriptionImage:
+        (firstMiniTestTask?.question?.[moduleIndex]
+          .descriptionImage as string[]) ?? [],
+      content: [
+        '',
+        ...(firstMiniTestTask?.question?.[moduleIndex].content ?? []),
+      ],
+      description: [
+        '',
+        ...(firstMiniTestTask?.question?.[moduleIndex].description ?? []),
+      ],
+    };
+    return Object.keys(map).reduce((acc, key) => {
+      const keyMap = key as keyof typeof map;
+      map[keyMap].forEach((item, i) => {
+        if (!acc[i]) {
+          acc[i] = {};
+        }
+        acc[i][keyMap] = item;
+      });
+      return acc;
+    }, [] as Partial<Record<keyof typeof map, string>>[]);
+  }, [firstMiniTestTask?.question, moduleIndex]);
 
-  const description = useMemo(
-    () =>
-      isLearning
-        ? undefined
-        : firstMiniTestTask?.question?.[moduleIndex].description[currentIndex],
-    [currentIndex, firstMiniTestTask?.question, isLearning, moduleIndex],
-  );
-
-  const descriptionImage = useMemo(
-    () =>
-      isLearning
-        ? firstMiniTestTask?.question?.[moduleIndex].descriptionImage[
-            currentIndex
-          ]
-        : firstMiniTestTask?.question?.[moduleIndex].descriptionImage.slice(
-            1,
-            3,
-          )[currentIndex],
-    [currentIndex, firstMiniTestTask?.question, isLearning, moduleIndex],
+  const currentData = useMemo(
+    () => dataMapping[currentIndex],
+    [currentIndex, dataMapping],
   );
 
   const characterImage = useMemo(() => {
@@ -190,20 +192,11 @@ const ScienceLesson = ({
 
   const onSpeechText = useCallback(() => {
     ttsSpeak?.(
-      isLearning
-        ? firstMiniTestTask?.question?.[moduleIndex].descriptionImage[
-            currentIndex
-          ] ?? ''
-        : getCorrectAnswer(content),
+      isLearning && !isMinitest
+        ? currentData?.descriptionImage ?? ''
+        : currentData?.content ?? '',
     );
-  }, [
-    ttsSpeak,
-    isLearning,
-    firstMiniTestTask?.question,
-    moduleIndex,
-    currentIndex,
-    content,
-  ]);
+  }, [ttsSpeak, isLearning, isMinitest, currentData]);
 
   useEffect(() => {
     if (isLearning && focus) {
@@ -215,7 +208,7 @@ const ScienceLesson = ({
       return () => clearTimeout(firstTimeout);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentIndex, isLearning, focus]); // Added focus to the dependency array
+  }, [currentData, focus]); // Added focus to the dependency array
 
   useEffect(() => {
     console.log(
@@ -238,15 +231,26 @@ const ScienceLesson = ({
   }, [lessonName, updateDefaultVoice]);
 
   useEffect(() => {
+    const length = dataMapping?.length ?? 2;
+    if (isMinitest && isLearning) {
+      setCurrentIndex(Math.floor(Math.random() * (length - 1)) + 1);
+      return;
+    }
     const interval = setInterval(() => {
-      setCurrentIndex(prevIndex => (prevIndex + 1) % images.length);
-    }, 5000 / images.length); // Change image every 1 second
+      if (isLearning) {
+        setCurrentIndex(prevIndex => (prevIndex + 1) % length);
+        return;
+      }
+      setCurrentIndex(prevIndex => (prevIndex % (length - 1)) + 1);
+    }, 5000 / length); // Change image every 1 second
 
     return () => {
       clearInterval(interval);
-      setCurrentIndex(0);
+      if (!isMinitest && isLearning) {
+        setCurrentIndex(0);
+      }
     }; // Cleanup interval on component unmount
-  }, [images]);
+  }, [dataMapping, isLearning, isMinitest]);
 
   return (
     <LessonComponent
@@ -274,9 +278,9 @@ const ScienceLesson = ({
       buildQuestion={
         <View style={{justifyContent: 'center', alignItems: 'center'}}>
           <Text style={[styles.fonts_SVN_Cherish, styles.textQuestion]}>
-            {descriptionImage}
+            {currentData?.descriptionImage}
           </Text>
-          <LearningImage images={[images[currentIndex]]} />
+          <LearningImage images={[currentData?.images ?? '']} />
         </View>
       }
       buildAnswer={
@@ -294,19 +298,14 @@ const ScienceLesson = ({
               ]}>
               {i18n.t('lesson.screens.Modules.chooseCorrectAnswer')}
             </Text>
-            <TouchableOpacity onPress={onSpeechText}>
-              <Image
-                source={require('../../../../../assets/images/icon_speech.png')}
-                style={styles.iconImageContainer}
-              />
-            </TouchableOpacity>
+            <VoiceButton onPress={onSpeechText} />
           </View>
 
           <SelectionImagesQuestion
             question={
               <TextHighlight
-                content={description ?? ''}
-                description={content ?? ''}
+                content={currentData?.description ?? ''}
+                description={currentData?.content ?? ''}
               />
             }
             answers={
