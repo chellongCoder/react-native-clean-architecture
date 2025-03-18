@@ -254,7 +254,8 @@ const VnG3M1Lesson = observer(
           onPressFlower={toggleShowHint}
           characterStyle={{
             height: verticalScale(200),
-            marginBottom: -verticalScale(50),
+            width: scale(100),
+            marginBottom: -verticalScale(20),
             marginLeft: -scale(20),
           }}
           buildQuestion={

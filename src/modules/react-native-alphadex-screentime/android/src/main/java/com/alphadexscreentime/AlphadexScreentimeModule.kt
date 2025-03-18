@@ -11,9 +11,11 @@ import android.content.SharedPreferences
 import android.content.pm.ApplicationInfo
 import android.content.pm.PackageInfo
 import android.content.pm.PackageManager
+import android.content.pm.ResolveInfo
 import android.graphics.Bitmap
 import android.os.Build
 import android.provider.Settings
+import androidx.annotation.RequiresApi
 import androidx.core.app.ActivityCompat
 import com.facebook.react.bridge.ActivityEventListener
 import com.facebook.react.bridge.Arguments
@@ -25,6 +27,7 @@ import com.facebook.react.bridge.ReadableArray
 import com.facebook.react.bridge.ReadableType
 import com.facebook.react.bridge.WritableArray
 import com.facebook.react.modules.core.PermissionListener
+
 
 
 class AlphadexScreentimeModule(reactContext: ReactApplicationContext) : ReactContextBaseJavaModule(reactContext), ActivityEventListener, PermissionListener {
@@ -261,21 +264,31 @@ class AlphadexScreentimeModule(reactContext: ReactApplicationContext) : ReactCon
     }
   }
 
+  @RequiresApi(Build.VERSION_CODES.Q)
   @ReactMethod
   fun getInstalledApps(includeSystemApps: Boolean, includeAppIcons: Boolean, onlyAppsWithLaunchIntent: Boolean, promise: Promise) {
    val applicationContext = reactApplicationContext.applicationContext
-    val packageManager = applicationContext.packageManager
+    val packageManager = reactApplicationContext.packageManager
 
     // Use MATCH_ALL flag to ensure all apps are returned
     val flags = PackageManager.GET_META_DATA or
                 PackageManager.MATCH_DISABLED_COMPONENTS or
                 PackageManager.MATCH_UNINSTALLED_PACKAGES
+    // Intent to query apps with a launcher icon
+    val intent = Intent(Intent.ACTION_MAIN, null)
+    intent.addCategory(Intent.CATEGORY_LAUNCHER)
 
-    val apps = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-        packageManager.getInstalledPackages(flags)
-    } else {
-        packageManager.getInstalledPackages(0)
-    }
+    val pm: PackageManager = this.reactApplicationContext.packageManager
+    val apps = packageManager.queryIntentActivities(intent, 0)
+    val modules = pm.getInstalledModules(PackageManager.MATCH_ALL)
+
+
+
+//    val apps = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+//        packageManager.getInstalledPackages(flags)
+//    } else {
+//        packageManager.getInstalledPackages(0)
+//    }
 
     val installedApps = ArrayList<Map<String, Any>>(apps.size)
 
@@ -287,11 +300,11 @@ class AlphadexScreentimeModule(reactContext: ReactApplicationContext) : ReactCon
 
         // Only check launch intent if requested
         if (onlyAppsWithLaunchIntent) {
-            val launchIntent = packageManager.getLaunchIntentForPackage(packageInfo.packageName)
+            val launchIntent = packageManager.getLaunchIntentForPackage(packageInfo.activityInfo.packageName)
             if (launchIntent == null) continue
         }
 
-        val map = getAppData(packageManager, packageInfo, packageInfo.applicationInfo, includeAppIcons)
+        val map = getAppData(packageManager, packageInfo, packageInfo.activityInfo.applicationInfo, includeAppIcons)
         installedApps.add(map)
     }
 
@@ -315,34 +328,32 @@ class AlphadexScreentimeModule(reactContext: ReactApplicationContext) : ReactCon
   }
 
 
-  private fun isSystemApp(pInfo: PackageInfo): Boolean {
-    return (pInfo.applicationInfo.flags and SYSTEM_APP_MASK) !== 0
+  private fun isSystemApp(pInfo: ResolveInfo): Boolean {
+    return pInfo.activityInfo.applicationInfo.flags and SYSTEM_APP_MASK != 0
   }
   private fun getAppData(
     packageManager: PackageManager,
-    pInfo: PackageInfo,
+    pInfo: ResolveInfo,
     applicationInfo: ApplicationInfo,
     includeAppIcon: Boolean
 ): Map<String, Any> {
     return mutableMapOf<String, Any>().apply {
-        this[AppDataConstants.APP_NAME] = pInfo.applicationInfo.loadLabel(packageManager).toString()
+        this[AppDataConstants.APP_NAME] = pInfo.loadLabel(packageManager).toString()
         this[AppDataConstants.APK_FILE_PATH] = applicationInfo.sourceDir
-        this[AppDataConstants.PACKAGE_NAME] = pInfo.packageName
-        this[AppDataConstants.VERSION_CODE] = pInfo.versionCode
-        this[AppDataConstants.VERSION_NAME] = pInfo.versionName
-        this[AppDataConstants.DATA_DIR] = applicationInfo.dataDir
+        this[AppDataConstants.PACKAGE_NAME] = pInfo.activityInfo.packageName
+      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S)
+        this[AppDataConstants.VERSION_NAME] = pInfo.activityInfo.applicationInfo.compileSdkVersionCodename ?: "UNKNOWN"
+      this[AppDataConstants.DATA_DIR] = applicationInfo.dataDir
         this[AppDataConstants.SYSTEM_APP] = isSystemApp(pInfo)
-        this[AppDataConstants.INSTALL_TIME] = pInfo.firstInstallTime
-        this[AppDataConstants.UPDATE_TIME] = pInfo.lastUpdateTime
         this[AppDataConstants.IS_ENABLED] = applicationInfo.enabled
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            this[AppDataConstants.CATEGORY] = pInfo.applicationInfo.category
+            this[AppDataConstants.CATEGORY] = applicationInfo.category
         }
 
         if (includeAppIcon) {
             try {
-                val icon = packageManager.getApplicationIcon(pInfo.packageName)
+                val icon = packageManager.getApplicationIcon(applicationInfo)
                 val encodedImage = Base64Utils.encodeToBase64(DrawableUtils.getBitmapFromDrawable(icon), Bitmap.CompressFormat.PNG, 100)
                 this[AppDataConstants.APP_ICON] = encodedImage
             } catch (e: PackageManager.NameNotFoundException) {

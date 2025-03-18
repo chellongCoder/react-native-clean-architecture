@@ -100,30 +100,12 @@ import I18n from 'src/core/presentation/i18n';
 // =============================================================================
 // CONSTANTS & ENUMS
 // =============================================================================
-enum TabParentE {
-  APP_BLOCK = coreModuleContainer
-    .getProvided(I18n)
-    .t('lesson.screens.Parent.appBlock')
-    .toString(),
-  SETTING = coreModuleContainer
-    .getProvided(I18n)
-    .t('lesson.screens.Parent.setting'),
-  PURCHASE = coreModuleContainer
-    .getProvided(I18n)
-    .t('lesson.screens.Parent.purchase'),
-}
 
 enum TabSettingE {
   SOUND = 'Sound',
   BRIGHTNESS = 'Brightness',
   THEME = 'Theme',
 }
-
-const tabsParent = [
-  {id: TabParentE.APP_BLOCK, name: TabParentE.APP_BLOCK, icon: IClock},
-  {id: TabParentE.SETTING, name: TabParentE.SETTING, icon: ICsetting},
-  {id: TabParentE.PURCHASE, name: TabParentE.PURCHASE, icon: ICpurchase},
-];
 
 const setingOptions = [
   {id: TabSettingE.SOUND, name: TabSettingE.SOUND, icon: IconListen},
@@ -136,6 +118,24 @@ const setingOptions = [
 ];
 
 const ParentScreen = observer(() => {
+  enum TabParentE {
+    APP_BLOCK = coreModuleContainer
+      .getProvided(I18n)
+      .t('lesson.screens.Parent.appBlock')
+      .toString(),
+    SETTING = coreModuleContainer
+      .getProvided(I18n)
+      .t('lesson.screens.Parent.setting'),
+    PURCHASE = coreModuleContainer
+      .getProvided(I18n)
+      .t('lesson.screens.Parent.purchase'),
+  }
+
+  const tabsParent = [
+    {id: TabParentE.APP_BLOCK, name: TabParentE.APP_BLOCK, icon: IClock},
+    {id: TabParentE.SETTING, name: TabParentE.SETTING, icon: ICsetting},
+    {id: TabParentE.PURCHASE, name: TabParentE.PURCHASE, icon: ICpurchase},
+  ];
   // ---------------------------------------------------------------------------
   // State & Context
   // ---------------------------------------------------------------------------
