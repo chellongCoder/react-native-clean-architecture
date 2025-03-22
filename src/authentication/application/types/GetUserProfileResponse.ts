@@ -27,6 +27,9 @@ export interface data {
   diamond: number;
   isReported: boolean;
   hasPassword: boolean;
+  isTrial: boolean;
+  startFreeTrial?: string;
+  endFreeTrial?: string;
 }
 
 export default interface GetUserProfileResponse {

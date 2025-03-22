@@ -44,6 +44,7 @@ import {ForceUpdateAppPayload} from 'src/authentication/application/types/ForceU
 import {ForceUpdateAppResponse} from 'src/authentication/application/types/ForceUpdateAppResponse';
 import UpdatePasswordUseCase from 'src/authentication/application/useCases/UpdatePasswordUsecase';
 import {UpdatePasswordPayload} from 'src/authentication/application/types/UpdatePasswordPayload';
+import UpdateTrialModuleUsecase from 'src/authentication/application/useCases/UpdateTrialModuleUsecase';
 @injectable()
 export class AuthenticationStore implements AuthenticationStoreState {
   isLoading = false;
@@ -105,6 +106,9 @@ export class AuthenticationStore implements AuthenticationStoreState {
 
     @provided(ForceUpdateAppUseCase)
     private forceUpdateAppUseCase: ForceUpdateAppUseCase,
+
+    @provided(UpdateTrialModuleUsecase)
+    private updateTrialModuleUsecase: UpdateTrialModuleUsecase,
 
     @provided(IHttpClientToken) private readonly httpClient: IHttpClient, // @provided(CoreStore) private coreStore: CoreStore,
   ) {
@@ -337,6 +341,14 @@ export class AuthenticationStore implements AuthenticationStoreState {
   public async handleGetForceUpdateApp(args: ForceUpdateAppPayload) {
     this.setIsLoading(true);
     const response = await this.forceUpdateAppUseCase.execute(args);
+    this.setIsLoading(false);
+    return response;
+  }
+
+  @action
+  public async updateTrialModules(args: any) {
+    this.setIsLoading(true);
+    const response = await this.updateTrialModuleUsecase.execute(args);
     this.setIsLoading(false);
     return response;
   }

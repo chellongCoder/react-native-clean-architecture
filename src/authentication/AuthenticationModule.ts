@@ -18,6 +18,7 @@ import LoginGoogleUserCase from './application/useCases/LoginGoogleUserCase';
 import PostReportUseCase from './application/useCases/PostReportUseCase';
 import ForceUpdateAppUseCase from './application/useCases/ForceUpdateAppUseCase';
 import UpdatePasswordUseCase from './application/useCases/UpdatePasswordUsecase';
+import UpdateTrialModuleUsecase from './application/useCases/UpdateTrialModuleUsecase';
 
 @module({
   providers: [
@@ -45,6 +46,7 @@ import UpdatePasswordUseCase from './application/useCases/UpdatePasswordUsecase'
     ChangeChildDescriptionUseCase,
     PostReportUseCase,
     ForceUpdateAppUseCase,
+    UpdateTrialModuleUsecase,
   ],
 })
 export class AuthenticationModule {}

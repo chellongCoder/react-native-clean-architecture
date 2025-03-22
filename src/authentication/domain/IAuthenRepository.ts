@@ -73,4 +73,6 @@ export interface IAuthenticationRepository {
   forceUpdateApp: (
     data: ForceUpdateAppPayload,
   ) => Promise<ForceUpdateAppResponse>;
+
+  updateTrialModules: (data: any) => Promise<any>;
 }

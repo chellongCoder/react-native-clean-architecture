@@ -529,7 +529,8 @@ The blockAppsSystem function is an asynchronous function that awaits the result 
 
   useEffect(() => {
     setSelectedField(listFields?.[0]);
-    handleSelectedSubject({fieldId: listFields?.[0]?._id ?? '0'});
+    listFields?.[0]?._id &&
+      handleSelectedSubject({fieldId: listFields?.[0]?._id});
   }, [listFields, handleSelectedSubject]);
 
   const _buildBlockView = () => {

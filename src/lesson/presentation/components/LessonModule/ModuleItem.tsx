@@ -18,6 +18,8 @@ import Animated, {
   withTiming,
 } from 'react-native-reanimated';
 import {useI18n} from 'src/core/presentation/hooks/useI18n';
+import {usePopupTrialMode} from 'src/core/presentation/hooks/popup/usePopupTrialMode';
+import useAuthenStore from 'src/authentication/presentation/hooks/useAuthenStore';
 
 type Props = {
   isFinished: boolean;
@@ -35,22 +37,43 @@ const ModuleItem = (props: Props) => {
   const translateX = useSharedValue(-100);
   const opacity = useSharedValue(0);
   const i18n = useI18n();
+  const popupHook = usePopupTrialMode();
+  const authStore = useAuthenStore();
 
-  const onRevision = useCallback(() => {
-    navigateScreen(STACK_NAVIGATOR.HOME.LESSON, {
-      lessonId: props.id,
-      lessonName: props.lessonName,
-      moduleName: props.title,
-    });
-  }, [props.id, props.lessonName, props.title]);
-
-  const onStudy = useCallback(() => {
-    navigateScreen(STACK_NAVIGATOR.HOME.LESSON, {
-      lessonId: props.id,
-      lessonName: props.lessonName,
-      moduleName: props.title,
-    });
-  }, [props.id, props.lessonName, props.title]);
+  const onStartDoing = useCallback(() => {
+    if (authStore.userProfile?.isTrial) {
+      navigateScreen(STACK_NAVIGATOR.HOME.LESSON, {
+        lessonId: props.id,
+        lessonName: props.lessonName,
+        moduleName: props.title,
+      });
+    } else {
+      if (
+        !authStore.userProfile?.startFreeTrial ||
+        !authStore.userProfile?.endFreeTrial
+      ) {
+        popupHook.handleCloseTrialPopup(() => {
+          navigateScreen(STACK_NAVIGATOR.HOME.LESSON, {
+            lessonId: props.id,
+            lessonName: props.lessonName,
+            moduleName: props.title,
+          });
+        });
+      } else if (new Date() > new Date(authStore.userProfile?.endFreeTrial)) {
+        popupHook.handleCloseTrialPopup(() => {
+          navigateScreen(STACK_NAVIGATOR.BOTTOM_TAB.PARENT_TAB, {});
+        });
+      }
+    }
+  }, [
+    authStore.userProfile?.endFreeTrial,
+    authStore.userProfile?.isTrial,
+    authStore.userProfile?.startFreeTrial,
+    popupHook,
+    props.id,
+    props.lessonName,
+    props.title,
+  ]);
 
   const renderIcon = () =>
     props?.image ? (
@@ -119,7 +142,7 @@ const ModuleItem = (props: Props) => {
         </TouchableOpacity>
         <View style={{height: verticalScale(14)}} />
         <Button
-          onPress={onStudy}
+          onPress={onStartDoing}
           color={COLORS.GREEN_66C270}
           title={i18n.t('lesson.screens.Modules.study')}
         />
@@ -160,7 +183,7 @@ const ModuleItem = (props: Props) => {
         <View style={{height: verticalScale(10)}} />
 
         <Button
-          onPress={onRevision}
+          onPress={onStartDoing}
           color={COLORS.YELLOW_F2B559}
           title={i18n.t('lesson.screens.Modules.revision')}
         />

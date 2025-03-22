@@ -186,7 +186,7 @@ const LessonScreen = observer(() => {
 
   const tasks = useMemo(() => {
     return __DEV__
-      ? apiTasks.slice(apiTasks.length - 1, apiTasks.length).map(t => {
+      ? apiTasks.map(t => {
           return {
             ...t,
             // question: t.question.slice(0, 1),
@@ -654,6 +654,10 @@ const LessonScreen = observer(() => {
         return <Mandarin_G1M5 {...dataProps} ref={vowelRef} />;
       case LanguageE.MANDARIN_G1M6:
         return <PronunciationLesson {...dataProps} ref={vowelRef} />;
+
+      /**----------------------
+       *todo    các question cho môn Tiếng việt
+       *------------------------**/
       case LanguageE.VIETNAMESE_VNG0M1:
         return <VnG0M1Lesson {...dataProps} ref={vowelRef} />;
       case LanguageE.VIETNAMESE_VNG0M2:
@@ -744,44 +748,14 @@ const LessonScreen = observer(() => {
       case MathQuestionType.MathMG1M3:
         return testTask?.stt === 4 ? ( // * check xem có phải part 4 không
           <Math_MG1M3_P4
-            moduleIndex={lessonIndex}
-            nextModule={nextModule}
-            totalModule={testTask?.question.length ?? 0}
-            lessonName={route.lessonName}
-            moduleName={route.moduleName}
-            firstMiniTestTask={testTask}
-            backgroundImage={
-              env.IMAGE_BACKGROUND_BASE_API_URL + lessonSetting?.backgroundImage
-            }
-            characterImageSuccess={
-              env.IMAGE_BACKGROUND_BASE_API_URL +
-              lessonSetting?.figureSuccessImage
-            }
-            characterImageFail={
-              env.IMAGE_BACKGROUND_BASE_API_URL + lessonSetting?.figureFailImage
-            }
+            {...dataProps}
+            isMulti={true}
             ref={vowelRef}
-            isMulti={false}
             answer={testTask.question[lessonIndex].answers as string[]}
           />
         ) : (
           <Math_MG1M3
-            moduleIndex={lessonIndex}
-            nextModule={nextModule}
-            totalModule={testTask?.question.length ?? 0}
-            lessonName={route.lessonName}
-            moduleName={route.moduleName}
-            firstMiniTestTask={testTask}
-            backgroundImage={
-              env.IMAGE_BACKGROUND_BASE_API_URL + lessonSetting?.backgroundImage
-            }
-            characterImageSuccess={
-              env.IMAGE_BACKGROUND_BASE_API_URL +
-              lessonSetting?.figureSuccessImage
-            }
-            characterImageFail={
-              env.IMAGE_BACKGROUND_BASE_API_URL + lessonSetting?.figureFailImage
-            }
+            {...dataProps}
             ref={vowelRef}
             isMulti={false}
             answer={['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']}

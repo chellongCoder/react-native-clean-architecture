@@ -11,22 +11,33 @@ import PropTypes from 'prop-types';
 import {COLORS} from 'src/core/presentation/constants/colors';
 import {TYPOGRAPHY} from 'src/core/presentation/constants/typography';
 import {assets} from 'src/core/presentation/utils';
-import { scale } from 'react-native-size-matters';
+import {scale} from 'react-native-size-matters';
 
 const ReceivedDiamondPopup = ({
   isVisible,
   onClose,
 }: {
   isVisible: boolean;
-  onClose: ({isShowFeedBack, isShowReceived} : {isShowFeedBack: boolean, isShowReceived: boolean}) => void;
+  onClose: ({
+    isShowFeedBack,
+    isShowReceived,
+  }: {
+    isShowFeedBack: boolean;
+    isShowReceived: boolean;
+  }) => void;
 }) => {
   return (
     <Modal
       animationType="slide"
       transparent={true}
       visible={isVisible}
-      onRequestClose={() => onClose({isShowFeedBack: false, isShowReceived: false})}>
-      <TouchableOpacity activeOpacity={1} onPress={() => onClose({isShowFeedBack: false, isShowReceived: false})} style={styles.centeredView}>
+      onRequestClose={() =>
+        onClose({isShowFeedBack: false, isShowReceived: false})
+      }>
+      <TouchableOpacity
+        activeOpacity={1}
+        onPress={() => onClose({isShowFeedBack: false, isShowReceived: false})}
+        style={styles.centeredView}>
         <View style={styles.modalView}>
           <View style={styles.wrapImageContainer}>
             <Image
@@ -40,12 +51,15 @@ const ReceivedDiamondPopup = ({
               style={{
                 fontFamily: TYPOGRAPHY.FAMILY.SVNNeuzeitRegular,
                 textAlign: 'center',
-                color: COLORS.BLUE_1C6349
+                color: COLORS.BLUE_1C6349,
               }}>
-              Thank you for your feedback.
-              You received 50 diamonds.
+              Thank you for your feedback. You received 50 diamonds.
             </Text>
-            <TouchableOpacity style={styles.sentBtnContainer} onPress={() => onClose({isShowFeedBack: false, isShowReceived: false})}>
+            <TouchableOpacity
+              style={styles.sentBtnContainer}
+              onPress={() =>
+                onClose({isShowFeedBack: false, isShowReceived: false})
+              }>
               <Text style={styles.btnTitle}>Close</Text>
             </TouchableOpacity>
           </View>

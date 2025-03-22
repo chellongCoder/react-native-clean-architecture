@@ -208,6 +208,14 @@ class AuthenticationRepository implements IAuthenticationRepository {
     );
     return response;
   }
+
+  public async updateTrialModules(data: any): Promise<any> {
+    const response: any = await this.httpClient.post(
+      API_ENDPOINTS.USER.UPDATE_TRIAL,
+      data,
+    );
+    return response;
+  }
 }
 
 export default AuthenticationRepository;

@@ -92,6 +92,7 @@ export const API_ENDPOINTS = {
       'update-children-description',
     ),
     UPDATE_CHILD_POINT: getUserEndPointServices('update-child-point'),
+    UPDATE_TRIAL: getUserEndPointServices('update-trial'),
   },
   GOOGLE: {
     IMAGE_TO_TEXT: getGoogleEndPointServices('image-to-text'),
