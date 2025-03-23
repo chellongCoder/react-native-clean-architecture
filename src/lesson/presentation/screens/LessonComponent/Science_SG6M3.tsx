@@ -150,7 +150,9 @@ const Science_SG6M3 = observer(
       }, [characterImageFail, characterImageSuccess, isAnswerCorrect]);
 
       const onSpeechText = useCallback(() => {
-        ttsSpeak?.(firstMiniTestTask?.question?.[moduleIndex]?.content ?? '');
+        ttsSpeak?.(
+          firstMiniTestTask?.question?.[moduleIndex]?.description ?? '',
+        );
       }, [firstMiniTestTask?.question, moduleIndex, ttsSpeak]);
 
       const opacity = useSharedValue(0);
