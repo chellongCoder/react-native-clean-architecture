@@ -2,7 +2,7 @@ import {injectable, provided} from 'inversify-sugar';
 import {action, computed, makeAutoObservable, observable} from 'mobx';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {create, persist} from 'mobx-persist';
-import HomeStoreState from './types/HomeStoreState';
+import HomeStoreState, {ModuleItemProps} from './types/HomeStoreState';
 import {FieldData} from 'src/home/application/types/GetFieldResponse';
 import GetFieldUseCase from 'src/home/application/useCases/GetFieldUseCase';
 import GetListSubjectUseCase from 'src/home/application/useCases/GetListSubjectUseCase';
@@ -17,10 +17,8 @@ import {Module} from 'src/home/application/types/GetListLessonResponse';
 import GetListQuestionUseCase from 'src/home/application/useCases/GetListQuestionUseCase';
 import {LessonSettingT} from 'src/home/application/types/GetListQuestionResponse';
 import LoggingActionUseCase from 'src/home/application/useCases/LoggingActionUseCase';
-import {
-  ActionE,
-  LoggingActionPayload,
-} from 'src/home/application/types/LoggingActionPayload';
+import {LoggingActionPayload} from 'src/home/application/types/LoggingActionPayload';
+import GetUserProfileResponse from 'src/authentication/application/types/GetUserProfileResponse';
 
 @injectable()
 export class HomeStore implements HomeStoreState {
@@ -37,6 +35,7 @@ export class HomeStore implements HomeStoreState {
   @persist('list') @observable listSubject: Subject[] = [];
   @persist('list') @observable listModule: Module[] = [];
   @persist subjectId = '';
+  moduleItem?: ModuleItemProps;
 
   @observable lessonSetting?: LessonSettingT;
 
@@ -135,6 +134,24 @@ export class HomeStore implements HomeStoreState {
   public async putLoggingAction(log: LoggingActionPayload) {
     const response = await this.loggingActionUseCase.execute(log);
     return response;
+  }
+
+  @action
+  public async checkDoingModule(
+    userProfile?: GetUserProfileResponse['data'],
+    moduleItem?: ModuleItemProps,
+  ) {
+    if (userProfile?.isTrial) {
+      this.moduleItem = moduleItem;
+      return 'being_trial';
+    } else {
+      if (!userProfile?.startFreeTrial || !userProfile?.endFreeTrial) {
+        this.moduleItem = moduleItem;
+        return 'no_trial';
+      } else if (new Date() > new Date(userProfile?.endFreeTrial)) {
+        return 'end_trial';
+      }
+    }
   }
 }
 

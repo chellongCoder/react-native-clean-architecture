@@ -115,8 +115,8 @@ export const PopupModalGlobalProvider = observer(
     };
 
     const handleCloseTrialPopup = async (callback?: () => void) => {
-      setPopupState({isShowTrial: !popupState.isShowTrial});
       callback?.();
+      setPopupState({isShowTrial: !popupState.isShowTrial});
     };
 
     useAsyncEffect(async () => {

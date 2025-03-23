@@ -12,6 +12,9 @@ import {TYPOGRAPHY} from 'src/core/presentation/constants/typography';
 import {assets} from 'src/core/presentation/utils';
 import {scale, verticalScale} from 'react-native-size-matters';
 import useAuthenStore from 'src/authentication/presentation/hooks/useAuthenStore';
+import useHomeStore from 'src/home/presentation/stores/useHomeStore';
+import {navigateScreen} from 'src/core/presentation/navigation/actions/RootNavigationActions';
+import {STACK_NAVIGATOR} from 'src/core/presentation/navigation/ConstantNavigator';
 
 interface TrialModulePopupProps {
   isVisible: boolean;
@@ -25,9 +28,22 @@ const TrialModulePopup: React.FC<TrialModulePopupProps> = ({
   handleCloseTrialPopup,
 }) => {
   const authStore = useAuthenStore();
+  const homeStore = useHomeStore();
+
   const onUpdate = async () => {
-    handleCloseTrialPopup();
-    authStore.updateTrialModules({});
+    if (homeStore.moduleItem) {
+      handleCloseTrialPopup(() => {
+        navigateScreen(STACK_NAVIGATOR.HOME.LESSON, {
+          lessonId: homeStore.moduleItem?.id,
+          lessonName: homeStore.moduleItem?.lessonName,
+          moduleName: homeStore.moduleItem?.title,
+        });
+      });
+      authStore.updateTrialModules({});
+    } else {
+      handleCloseTrialPopup();
+      navigateScreen(STACK_NAVIGATOR.BOTTOM_TAB.PARENT_TAB, {});
+    }
   };
 
   return (
@@ -62,7 +78,9 @@ const TrialModulePopup: React.FC<TrialModulePopupProps> = ({
               styles.wrapBtnContainer,
               {backgroundColor: COLORS.RED_E1460E},
             ]}
-            onPress={onUpdate}>
+            onPress={() => {
+              handleCloseTrialPopup();
+            }}>
             <Text style={[styles.subTitle, {color: COLORS.WHITE_FBF8CC}]}>
               Chưa sẵn sàng
             </Text>

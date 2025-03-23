@@ -35,7 +35,7 @@ import {useI18n} from 'src/core/presentation/hooks/useI18n';
 const screenWidth = Dimensions.get('screen').width;
 
 const ListChildrenScreen = observer(() => {
-  const {removeCurrentCredentials, getUserProfile, setSelectedChild} =
+  const {handleUserLogOut, getUserProfile, setSelectedChild} =
     useAuthenticationStore();
   const {storeData, getData, isConnected} = useOfflineMode();
   useLoadingGlobal();
@@ -45,7 +45,7 @@ const ListChildrenScreen = observer(() => {
   const [isChooseChildren, setIsChooseChildren] = useState<string>();
 
   const onLogout = () => {
-    navigateScreen(STACK_NAVIGATOR.AUTH.LOGIN_SCREEN, {});
+    handleUserLogOut();
   };
 
   const onAddChild = () => {

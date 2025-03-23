@@ -20,18 +20,10 @@ import Animated, {
 import {useI18n} from 'src/core/presentation/hooks/useI18n';
 import {usePopupTrialMode} from 'src/core/presentation/hooks/popup/usePopupTrialMode';
 import useAuthenStore from 'src/authentication/presentation/hooks/useAuthenStore';
+import useHomeStore from 'src/home/presentation/stores/useHomeStore';
+import {ModuleItemProps} from 'src/home/presentation/stores/types/HomeStoreState';
 
-type Props = {
-  isFinished: boolean;
-  title: string;
-  subTitle: string;
-  progress: number;
-  totalQuestion: number;
-  id: string;
-  lessonName?: string;
-  image?: string;
-};
-const ModuleItem = (props: Props) => {
+const ModuleItem = (props: ModuleItemProps) => {
   const globalStyle = useGlobalStyle();
   const env = coreModuleContainer.getProvided<Env>(EnvToken); // Instantiate CoreService
   const translateX = useSharedValue(-100);
@@ -39,41 +31,32 @@ const ModuleItem = (props: Props) => {
   const i18n = useI18n();
   const popupHook = usePopupTrialMode();
   const authStore = useAuthenStore();
+  const homeStore = useHomeStore();
 
-  const onStartDoing = useCallback(() => {
-    if (authStore.userProfile?.isTrial) {
-      navigateScreen(STACK_NAVIGATOR.HOME.LESSON, {
-        lessonId: props.id,
-        lessonName: props.lessonName,
-        moduleName: props.title,
-      });
+  const gotoLesson = useCallback(() => {
+    navigateScreen(STACK_NAVIGATOR.HOME.LESSON, {
+      lessonId: props.id,
+      lessonName: props.lessonName,
+      moduleName: props.title,
+    });
+  }, [props.id, props.lessonName, props.title]);
+
+  const onStartDoing = useCallback(async () => {
+    const trialStatus = await homeStore.checkDoingModule(
+      authStore.userProfile,
+      props,
+    );
+
+    if (trialStatus === 'being_trial') {
+      gotoLesson();
     } else {
-      if (
-        !authStore.userProfile?.startFreeTrial ||
-        !authStore.userProfile?.endFreeTrial
-      ) {
-        popupHook.handleCloseTrialPopup(() => {
-          navigateScreen(STACK_NAVIGATOR.HOME.LESSON, {
-            lessonId: props.id,
-            lessonName: props.lessonName,
-            moduleName: props.title,
-          });
-        });
-      } else if (new Date() > new Date(authStore.userProfile?.endFreeTrial)) {
-        popupHook.handleCloseTrialPopup(() => {
-          navigateScreen(STACK_NAVIGATOR.BOTTOM_TAB.PARENT_TAB, {});
-        });
+      if (trialStatus === 'no_trial') {
+        popupHook.handleCloseTrialPopup();
+      } else if (trialStatus === 'end_trial') {
+        popupHook.handleCloseTrialPopup();
       }
     }
-  }, [
-    authStore.userProfile?.endFreeTrial,
-    authStore.userProfile?.isTrial,
-    authStore.userProfile?.startFreeTrial,
-    popupHook,
-    props.id,
-    props.lessonName,
-    props.title,
-  ]);
+  }, [homeStore, authStore.userProfile, gotoLesson, popupHook, props]);
 
   const renderIcon = () =>
     props?.image ? (

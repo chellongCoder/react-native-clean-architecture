@@ -8,3 +8,14 @@ type HomeStoreState = {
 };
 
 export default HomeStoreState;
+
+export type ModuleItemProps = {
+  isFinished: boolean;
+  title: string;
+  subTitle?: string;
+  progress: number;
+  totalQuestion: number;
+  id: string;
+  lessonName?: string;
+  image?: string;
+};
