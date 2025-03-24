@@ -1,4 +1,4 @@
-import React, {FC, Fragment, useRef} from 'react';
+import React, {FC, Fragment, useEffect, useRef} from 'react';
 import {Platform, View, StatusBar} from 'react-native';
 import styles from '../styles';
 import {BottomTabBarProps} from '@react-navigation/bottom-tabs';
@@ -39,6 +39,15 @@ const BottomTabBar = observer(
       Array.from({length: state.routes.length}, (_, i) => i),
     );
 
+    useEffect(() => {
+      const temp =
+        routesView.current[Math.floor(state?.routes.length / 2 ?? 1)];
+      const viewIndex = routesView.current.findIndex(i => i === state.index);
+      routesView.current[2] = routesView.current[viewIndex];
+      routesView.current[viewIndex] = temp;
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [state.index]);
+
     if (focusedOptions.tabBarVisible === false) {
       return null;
     }
@@ -62,13 +71,6 @@ const BottomTabBar = observer(
               });
 
               if (!isFocused && !event.defaultPrevented) {
-                const temp =
-                  routesView.current[Math.floor(state?.routes.length / 2 ?? 1)];
-                const viewIndex = routesView.current.findIndex(
-                  i => i === index,
-                );
-                routesView.current[2] = routesView.current[viewIndex];
-                routesView.current[viewIndex] = temp;
                 navigation.navigate(route.name);
               }
             };
