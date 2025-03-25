@@ -5,6 +5,13 @@ export default {
         goHome: 'Go to home screen',
       },
     },
+    PurchaseSuccessScreen: {
+      paymentSuccess: 'Payment\nSuccess',
+      paymentFailed: 'Payment\nFailed',
+      paymentSuccessDescription: 'You have successfully paid',
+      paymentFailedDescription: 'Your payment transaction has failed',
+      close: 'Close',
+    },
     errors: {
       screenNotFound: 'Screen not found',
       contextNotProvided: '{{contextName}} is not provided.',
@@ -151,6 +158,8 @@ export default {
         checkout: 'Checkout',
         back: 'Back',
         listApps: 'List apps',
+        showMore: 'Show more',
+        showLess: 'Show less',
       },
       Modules: {
         study: 'Study',
@@ -188,6 +197,18 @@ export default {
         sorryMobilize:
           'SORRY. You can not pass the test. You need to start all over again. You can do it !',
         next: 'Next',
+      },
+      NewMoreScreen: {
+        parentName: "Parent's Name",
+        parentEmail: "Parent's email",
+        logout: 'Log out',
+        checkout: 'Checkout',
+        addToCart: 'Add to cart',
+        module: 'Module',
+        newMoreModulesList: 'New more modules list',
+        noModulesAvailable: 'No modules available',
+        buyModule: 'Buy module',
+        loading: 'Loading...',
       },
     },
   },

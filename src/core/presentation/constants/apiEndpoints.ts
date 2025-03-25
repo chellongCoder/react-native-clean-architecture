@@ -13,6 +13,7 @@ const SERVICES = {
   REPORT: '/report',
   APP_VERSION: '/app-version',
   GOOGLE: '/google-api',
+  USER_MODULE: '/user-module',
 };
 
 const getProduct = () => {
@@ -72,6 +73,14 @@ const getUserProgressEndPointServices = (path?: string) => {
 
 const getAppVersion = () => {
   return `/api${API_VERSION}${SERVICES.APP_VERSION}`;
+};
+
+const getUserModuleEndPointServices = (path?: string) => {
+  if (path) {
+    return `/api${API_VERSION}${SERVICES.USER_MODULE}/${path}`;
+  } else {
+    return `/api${API_VERSION}${SERVICES.USER_MODULE}`;
+  }
 };
 
 export const API_ENDPOINTS = {
@@ -136,5 +145,8 @@ export const API_ENDPOINTS = {
   },
   APP_VERSION: {
     APP_VERSION: getAppVersion(),
+  },
+  USER_MODULE: {
+    USER_MODULE: getUserModuleEndPointServices(),
   },
 };

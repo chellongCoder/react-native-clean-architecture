@@ -22,6 +22,8 @@ import HomeRepository from 'src/home/infrastructure/HomeRepository';
 import {IHomeRepository} from 'src/home/domain/IHomeRepository';
 import {HomeStore} from 'src/home/presentation/stores/HomeStore';
 import ImageToTextUsecase from 'src/authentication/application/useCases/ImageToTextUsecase';
+import GetUserModuleUseCase from './application/useCases/GetUserModuleUseCase';
+import BuyUserModuleUseCase from './application/useCases/BuyUserModuleUseCase.ts';
 
 @module({
   providers: [
@@ -67,6 +69,8 @@ import ImageToTextUsecase from 'src/authentication/application/useCases/ImageToT
     PurchaseModuleUseCase,
     GetProductUseCase,
     GetListModuleByFieldUseCase,
+    GetUserModuleUseCase,
+    BuyUserModuleUseCase,
   ],
 })
 export class LessonModule {}

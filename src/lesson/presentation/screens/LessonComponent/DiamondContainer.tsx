@@ -97,7 +97,7 @@ const DiamondContainer = (props: TProps) => {
                 </ImageBackground>
                 <Text style={styles.priceText}>
                   {item.price}
-                  {item.currency}
+                  {/* {item.currency} */}
                 </Text>
               </View>
             );

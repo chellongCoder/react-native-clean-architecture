@@ -11,6 +11,7 @@ import {Dispatch} from 'react';
 import {TIapState} from '../store/iapProvider';
 import {TYPOGRAPHY} from '../constants/typography';
 import {COLORS} from '../constants/colors';
+import {useI18n} from '../hooks/useI18n';
 
 type TPros = {
   isSuccess: boolean;
@@ -19,6 +20,8 @@ type TPros = {
 
 const PurchaseSuccessScreen = (props: TPros) => {
   const {isSuccess, setIapState} = props;
+
+  const i18n = useI18n();
 
   return (
     <View style={styles.container}>
@@ -41,14 +44,20 @@ const PurchaseSuccessScreen = (props: TPros) => {
         />
         {isSuccess ? (
           <>
-            <Text style={styles.title}>{'Thanh toán\nthành công!'}</Text>
-            <Text style={styles.subTitle}>Bạn đã thanh toán thành công</Text>
+            <Text style={styles.title}>
+              {i18n.t('core.PurchaseSuccessScreen.paymentSuccess')}
+            </Text>
+            <Text style={styles.subTitle}>
+              {i18n.t('core.PurchaseSuccessScreen.paymentSuccessDescription')}
+            </Text>
           </>
         ) : (
           <>
-            <Text style={styles.title}>{'Thanh toán\nkhông thành công!'}</Text>
+            <Text style={styles.title}>
+              {i18n.t('core.PurchaseSuccessScreen.paymentFailed')}
+            </Text>
             <Text style={styles.subTitle}>
-              {'Giao dịch thanh toán của bạn\nkhông thành công'}
+              {i18n.t('core.PurchaseSuccessScreen.paymentFailedDescription')}
             </Text>
           </>
         )}
@@ -57,7 +66,9 @@ const PurchaseSuccessScreen = (props: TPros) => {
           onPress={() => {
             setIapState({isShowModal: false, isPurchaseSuccess: false});
           }}>
-          <Text style={styles.closeBtnTitle}>Close</Text>
+          <Text style={styles.closeBtnTitle}>
+            {i18n.t('core.PurchaseSuccessScreen.close')}
+          </Text>
         </TouchableOpacity>
       </ImageBackground>
     </View>

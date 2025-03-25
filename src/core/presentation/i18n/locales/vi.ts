@@ -109,7 +109,6 @@ export default {
         theme: 'Chủ đề',
         appBlock: 'Khóa ứng dụng',
         purchaseModule: 'Mua module',
-        purchaseDiamond: 'Mua kim cương',
         purchaseSuccess: 'Mua thành công',
         purchaseFailed: 'Mua thất bại',
         purchaseCancel: 'Hủy mua',

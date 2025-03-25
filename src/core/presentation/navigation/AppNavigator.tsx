@@ -225,7 +225,7 @@ export const ParentStackScreens = (): React.ReactElement => {
         component={NewMoreScreen}
         listeners={({navigation: navBottom}) => ({
           focus: () => {
-            showBottomTab(navBottom);
+            hideBottomTab(navBottom);
           },
         })}
       />

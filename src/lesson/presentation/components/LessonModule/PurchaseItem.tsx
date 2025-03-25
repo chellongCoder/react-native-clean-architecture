@@ -5,6 +5,10 @@ import useGlobalStyle from 'src/core/presentation/hooks/useGlobalStyle';
 import PrimaryButton from '../PrimaryButton';
 import {COLORS} from 'src/core/presentation/constants/colors';
 import {useI18n} from 'src/core/presentation/hooks/useI18n';
+import ICBook from 'src/core/components/icons/ICBook';
+import Env, {EnvToken} from 'src/core/domain/entities/Env';
+import {coreModuleContainer} from 'src/core/CoreModule';
+
 type Props = {
   icon?: string | number;
   title: string;
@@ -23,16 +27,22 @@ const PurchaseItem = ({
   const styleGlobal = useGlobalStyle();
   const bbt = isBorderTop ? 2 : 0;
   const i18n = useI18n();
+  const env = coreModuleContainer.getProvided<Env>(EnvToken); // Instantiate CoreService
+
+  const renderIcon = () =>
+    icon ? (
+      <Image
+        source={{uri: env.IMAGE_MODULE_BASE_API_URL + icon}}
+        style={styles.icon}
+        resizeMode="center"
+      />
+    ) : (
+      <ICBook color={COLORS.WHITE} style={[styles.icon]} />
+    );
 
   return (
     <View style={[styles.item, {borderTopWidth: bbt}]}>
-      <View style={[styles.containerIcon]}>
-        <Image
-          source={typeof icon === 'string' ? {uri: icon} : icon}
-          style={[styles.icon]}
-          resizeMode="contain"
-        />
-      </View>
+      <View style={[styles.containerIcon]}>{renderIcon()}</View>
       <View style={[styles.content]}>
         <Text style={[styleGlobal.txtLabel, styles.text]}>{title}</Text>
         <Text style={[styleGlobal.txtNote, styles.text]}>{description}</Text>

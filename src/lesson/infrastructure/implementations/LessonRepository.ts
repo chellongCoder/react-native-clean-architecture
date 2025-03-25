@@ -26,6 +26,9 @@ import PurchaseModuleResponse from 'src/lesson/application/types/PurchaseModuleR
 import {GetListSubjectPayload} from 'src/home/application/types/GetListSubjectPayload';
 import GetListLessonResponse from 'src/home/application/types/GetListLessonResponse';
 import {ImageToTextResponse} from 'src/authentication/application/types/ImageToTextResponse';
+import GetUserModuleResponse from 'src/lesson/application/types/GetUserModuleResponse';
+import BuyUserModulePayload from 'src/lesson/application/types/BuyUserModulePayload';
+import BuyUserModuleResponse from 'src/lesson/application/types/BuyUserModuleResponse';
 
 @injectable()
 class LessonRepository implements ILessonRepository {
@@ -156,6 +159,25 @@ class LessonRepository implements ILessonRepository {
   }: GetListSubjectPayload): Promise<GetListLessonResponse> {
     const response: GetListLessonResponse = await this.httpClient.get(
       `${API_ENDPOINTS.SUBJECT.LIST_LESSON_OF_FIELD}/${fieldId}`,
+    );
+
+    return response;
+  }
+
+  public async getUserModule(): Promise<GetUserModuleResponse> {
+    const response: GetUserModuleResponse = await this.httpClient.get(
+      `${API_ENDPOINTS.USER_MODULE.USER_MODULE}`,
+    );
+
+    return response;
+  }
+
+  public async buyUserModule(
+    payload: BuyUserModulePayload,
+  ): Promise<BuyUserModuleResponse> {
+    const response: BuyUserModuleResponse = await this.httpClient.post(
+      `${API_ENDPOINTS.USER_MODULE.USER_MODULE}`,
+      payload,
     );
 
     return response;

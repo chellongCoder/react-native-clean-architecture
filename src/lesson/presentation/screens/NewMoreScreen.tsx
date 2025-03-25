@@ -1,133 +1,236 @@
-import {
-  ScrollView,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native';
-import React from 'react';
+import {FlatList, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import React, {useEffect, useState} from 'react';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
-import IconLogout from 'assets/svg/IconLogout';
 import useGlobalStyle from 'src/core/presentation/hooks/useGlobalStyle';
 import IconUser from 'assets/svg/IconUser';
-import IconEdit from 'assets/svg/IconEdit';
-import Price from '../components/Price';
 import BookView from '../components/BookView';
 import {observer} from 'mobx-react';
 import {withProviders} from 'src/core/presentation/utils/withProviders';
 import {LessonStoreProvider} from '../stores/LessonStore/LessonStoreProvider';
-import IconCloseCircle from 'assets/svg/IconCloseCircle';
 import IconBook from 'assets/svg/IconBook';
 import IconCheckout from 'assets/svg/IconCheckout';
 import {scale, verticalScale} from 'react-native-size-matters';
-import {HEIGHT_SCREEN} from 'src/core/presentation/utils';
 import {COLORS} from 'src/core/presentation/constants/colors';
-import {goBack} from 'src/core/presentation/navigation/actions/RootNavigationActions';
+import {useI18n} from 'src/core/presentation/hooks/useI18n';
+import {RouteProp, ParamListBase} from '@react-navigation/native';
+import {Subject} from 'src/home/application/types/GetListSubjectResponse';
+import GetUserProfileResponse from 'src/authentication/application/types/GetUserProfileResponse';
+import useHomeStore from 'src/home/presentation/stores/useHomeStore';
+import useAuthenStore from 'src/authentication/presentation/hooks/useAuthenStore';
+import {Module} from 'src/home/application/types/GetListLessonResponse';
+import AccountStatus from 'src/home/presentation/components/AccountStatus';
+import {useLessonStore} from '../stores/LessonStore/useGetPostsStore';
+import PurchaseSuccessScreen from 'src/core/presentation/screens/PurchaseSuccessScreen';
+import {UserModule} from 'src/lesson/application/types/GetUserModuleResponse';
+import useGetUserProfile from '../hooks/useGetUserProfile';
+import useAuthenticationStore from 'src/authentication/presentation/stores/useAuthenticationStore';
 
-const NewMoreScreen = observer(() => {
+interface Props {
+  route: RouteProp<ParamListBase>;
+}
+
+const NewMoreScreen = observer((props: Props) => {
+  const {route} = props;
+  const {subject} = route?.params as {
+    subject: Subject;
+  };
+
   const insets = useSafeAreaInsets();
   const globalStyle = useGlobalStyle();
+  const i18n = useI18n();
+  const homeStore = useHomeStore();
+  const authStore = useAuthenStore();
+  const lessonStore = useLessonStore();
+  const {handleGetUserProfile} = useGetUserProfile();
+  const {userProfile} = useAuthenticationStore();
+
+  const [modules, setModules] = useState<Module[]>([]);
+  const [userModule, setUserModule] = useState<UserModule[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [loadingModuleId, setLoadingModuleId] = useState<string | null>(null);
+  const [purchaseState, setPurchaseState] = useState<{
+    isShowModal?: boolean;
+    isPurchaseSuccess?: boolean;
+  }>({
+    isShowModal: false,
+    isPurchaseSuccess: false,
+  });
+
+  const onCheckout = () => {
+    console.log('onCheckout');
+  };
+
+  const onBuyModule = async (item: Module) => {
+    try {
+      setLoadingModuleId(item._id);
+      const res = await lessonStore.handleBuyUserModule({
+        lessonId: item._id,
+      });
+      if (res) {
+        handleGetUserProfile();
+        setPurchaseState({
+          isShowModal: true,
+          isPurchaseSuccess: true,
+        });
+      }
+    } catch (error) {
+      setPurchaseState({
+        isShowModal: true,
+        isPurchaseSuccess: false,
+      });
+    } finally {
+      setLoadingModuleId(null);
+    }
+  };
+
+  useEffect(() => {
+    const handleGetUserModule = async () => {
+      try {
+        const res = await lessonStore.handleGetUserModule();
+        setUserModule(res);
+      } catch (error) {
+        console.log('error', error);
+      }
+    };
+    handleGetUserModule();
+  }, [lessonStore, purchaseState.isPurchaseSuccess]);
+
+  useEffect(() => {
+    setIsLoading(true);
+    homeStore
+      .getListModules({
+        subjectId: subject._id,
+        childrenId: authStore.selectedChild?._id ?? '',
+      })
+      .then(response => {
+        setModules(response.data);
+      })
+      .finally(() => setIsLoading(false));
+  }, [
+    authStore.selectedChild?._id,
+    homeStore,
+    homeStore.subjectId,
+    subject._id,
+    subject.fieldId,
+  ]);
+
+  const renderModule = ({item}: {item: Module}) => {
+    return (
+      <View style={styles.item}>
+        <View
+          style={{
+            flex: 1,
+            flexDirection: 'row',
+            gap: 16,
+          }}>
+          <View style={styles.iconBook}>
+            <IconBook />
+          </View>
+          <View style={styles.itemContent}>
+            <Text style={[globalStyle.txtLabel, styles.textColor]}>
+              {item.name}
+            </Text>
+            <Text style={[globalStyle.txtNote, styles.textColor]}>
+              {item.description}
+            </Text>
+          </View>
+        </View>
+
+        <View
+          style={{
+            alignItems: 'center',
+            flexDirection: 'column',
+            justifyContent: 'space-between',
+          }}>
+          <Text style={[globalStyle.txtLabel, styles.textColor]}>
+            10 Diamond
+          </Text>
+          <View style={{flex: 1}} />
+          <TouchableOpacity
+            style={[styles.button, styles.w70]}
+            onPress={() => onBuyModule(item)}
+            disabled={loadingModuleId === item._id}>
+            <Text style={[globalStyle.txtButton, styles.textBtn]}>
+              {loadingModuleId === item._id
+                ? 'Loading...'
+                : i18n.t('lesson.screens.NewMoreScreen.buyModule')}
+            </Text>
+          </TouchableOpacity>
+        </View>
+      </View>
+    );
+  };
 
   return (
     <View style={[styles.fill, styles.bg, {paddingTop: insets.top}]}>
       <View style={[styles.head]}>
         <View style={[styles.rowBetween]}>
-          <TouchableOpacity style={[styles.btnLogout, styles.rowHCenter]}>
-            <IconLogout />
-            <Text style={[globalStyle.txtButton, styles.txtLogout]}>
-              Log out
-            </Text>
-          </TouchableOpacity>
-
-          <Price price="100" />
+          <AccountStatus
+            isShowDiamond={true}
+            isShowLogout={true}
+            diamond={userProfile?.diamond ?? 0}
+          />
         </View>
         <TouchableOpacity style={[styles.profile]}>
           <IconUser width={70} height={70} />
         </TouchableOpacity>
         <TouchableOpacity style={[styles.pt16, styles.rowHCenter]}>
           <Text style={[globalStyle.txtLabel, styles.txtParentName]}>
-            Parent's Name
+            {userProfile?.username}
           </Text>
-          <IconEdit />
         </TouchableOpacity>
         <Text style={[globalStyle.txtNote, styles.textColor]}>
-          Parent’s email
+          {userProfile?.emailOrPhoneNumber}
         </Text>
       </View>
-      <TouchableOpacity
-        onPress={goBack}
-        style={[styles.center, styles.iconClose]}>
-        <IconCloseCircle />
-      </TouchableOpacity>
-      <BookView style={[styles.mt16, styles.fill]} colorBg="#FFE699">
+
+      <BookView
+        style={[styles.mt16, styles.fill, {paddingHorizontal: 16}]}
+        colorBg={COLORS.WHITE_FFE699}
+        contentStyle={styles.fill}>
         <View style={styles.title}>
           <Text style={[globalStyle.txtLabel, styles.txtTitle]}>
-            Vietnamese{'\n'}New more modules list
+            {`${subject.name}\n${i18n.t(
+              'lesson.screens.NewMoreScreen.newMoreModulesList',
+            )}`}
           </Text>
         </View>
-        <ScrollView
-          style={{height: HEIGHT_SCREEN / 4}}
-          contentContainerStyle={[styles.bookContent]}>
-          <View style={styles.lstItem}>
-            <View style={styles.item}>
-              <View style={styles.iconBook}>
-                <IconBook />
-              </View>
-              <View style={styles.itemContent}>
-                <Text style={[globalStyle.txtLabel, styles.textColor]}>
-                  Module 1
-                </Text>
-                <Text style={[globalStyle.txtNote, styles.textColor]}>
-                  Lorem Ipsum is simply dummy text of the printing and
-                  typesetting industry. Lorem
-                </Text>
-              </View>
-              <View style={{gap: verticalScale(14), alignItems: 'center'}}>
-                <Text style={[globalStyle.txtLabel, styles.textColor]}>
-                  100$
-                </Text>
-                <TouchableOpacity style={[styles.button, styles.w70]}>
-                  <Text style={[globalStyle.txtButton, styles.textBtn]}>
-                    Add to cart
-                  </Text>
-                </TouchableOpacity>
-              </View>
+        <FlatList
+          data={modules.filter(
+            module =>
+              !userModule.some(userMod => userMod.lessonId === module._id),
+          )}
+          renderItem={renderModule}
+          keyExtractor={item => item._id}
+          contentContainerStyle={[styles.bookContent]}
+          showsVerticalScrollIndicator={false}
+          ListEmptyComponent={
+            <View style={styles.emptyContainer}>
+              <Text style={[globalStyle.txtWord, styles.textColor]}>
+                {isLoading
+                  ? 'Loading...'
+                  : i18n.t('lesson.screens.NewMoreScreen.noModulesAvailable')}
+              </Text>
             </View>
-            <View style={styles.item}>
-              <View style={styles.iconBook}>
-                <IconBook />
-              </View>
-              <View style={styles.itemContent}>
-                <Text style={[globalStyle.txtLabel, styles.textColor]}>
-                  Module 1
-                </Text>
-                <Text style={[globalStyle.txtNote, styles.textColor]}>
-                  Lorem Ipsum is simply dummy text of the printing and
-                  typesetting industry. Lorem
-                </Text>
-              </View>
-              <View style={{gap: verticalScale(14), alignItems: 'center'}}>
-                <Text style={[globalStyle.txtLabel, styles.textColor]}>
-                  100$
-                </Text>
-                <TouchableOpacity style={[styles.button, styles.w70]}>
-                  <Text style={[globalStyle.txtButton, styles.textBtn]}>
-                    Add to cart
-                  </Text>
-                </TouchableOpacity>
-              </View>
-            </View>
-          </View>
-        </ScrollView>
-        <View style={styles.checkout}>
-          <View style={styles.iconCheckout}>
+          }
+        />
+        {/* <View style={styles.checkout}>
+          <TouchableOpacity style={styles.iconCheckout} onPress={onCheckout}>
             <View style={styles.dot}>
               <Text style={[globalStyle.txtButton, styles.textDot]}>2</Text>
             </View>
             <IconCheckout />
-          </View>
-        </View>
+          </TouchableOpacity>
+        </View> */}
       </BookView>
+      {purchaseState.isShowModal ? (
+        <View style={styles.absoluteContent}>
+          <PurchaseSuccessScreen
+            isSuccess={purchaseState.isPurchaseSuccess ?? false}
+            setIapState={state => setPurchaseState(state)}
+          />
+        </View>
+      ) : null}
     </View>
   );
 });
@@ -142,7 +245,7 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.WHITE_FBF8CC,
   },
   btnLogout: {
-    backgroundColor: '#66C270',
+    backgroundColor: COLORS.GREEN_66C270,
     marginTop: 8,
     paddingVertical: 10,
     paddingHorizontal: 16,
@@ -150,8 +253,7 @@ const styles = StyleSheet.create({
     borderRadius: 50,
   },
   txtLogout: {
-    color: '#1C6349',
-    paddingLeft: 8,
+    color: COLORS.GREEN_1C6349,
   },
   rowHCenter: {
     flexDirection: 'row',
@@ -160,10 +262,10 @@ const styles = StyleSheet.create({
   profile: {
     height: 120,
     width: 120,
-    backgroundColor: '#FFE699',
+    backgroundColor: COLORS.YELLOW_FFE699,
     borderRadius: 60,
     borderWidth: 6,
-    borderColor: '#F2B559',
+    borderColor: COLORS.YELLOW_F2B559,
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -177,10 +279,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   textColor: {
-    color: '#1C6349',
+    color: COLORS.GREEN_1C6349,
   },
   txtParentName: {
-    color: '#1C6349',
+    color: COLORS.GREEN_1C6349,
     marginRight: 12,
   },
   pt16: {
@@ -194,11 +296,11 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    paddingHorizontal: 30,
-    marginBottom: verticalScale(20),
+    marginVertical: 16,
+    paddingLeft: 8,
   },
   txtTitle: {
-    color: '#1C6349',
+    color: COLORS.GREEN_1C6349,
     fontSize: 16,
   },
   bodyContent: {
@@ -221,13 +323,13 @@ const styles = StyleSheet.create({
     gap: 16,
   },
   item: {
-    height: verticalScale(94.87),
     backgroundColor: COLORS.WHITE_FBF8CC,
-    borderRadius: scale(30),
+    borderRadius: scale(32),
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'center',
-    gap: scale(16),
+    justifyContent: 'space-between',
+    marginBottom: 16,
+    padding: 16,
   },
   itemContent: {
     flexDirection: 'column',
@@ -240,17 +342,15 @@ const styles = StyleSheet.create({
     width: 60,
     height: 60,
     borderRadius: 15,
-    backgroundColor: '#F2B559',
+    backgroundColor: COLORS.YELLOW_F2B559,
     justifyContent: 'center',
     alignItems: 'center',
   },
   button: {
-    backgroundColor: '#66C270',
-    paddingVertical: verticalScale(8),
+    backgroundColor: COLORS.GREEN_66C270,
+    padding: 8,
     borderRadius: scale(10),
     alignItems: 'center',
-    height: verticalScale(28),
-    width: scale(90),
   },
   w70: {
     width: 70,
@@ -265,6 +365,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     marginTop: 16,
+    marginBottom: 16,
   },
   iconCheckout: {
     width: 60,
@@ -272,9 +373,8 @@ const styles = StyleSheet.create({
     borderRadius: 15,
     justifyContent: 'center',
     borderWidth: 3,
-    borderColor: '#66C270',
+    borderColor: COLORS.GREEN_66C270,
     alignItems: 'center',
-    position: 'relative',
   },
   dot: {
     width: 16,
@@ -284,12 +384,26 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: 2,
     right: 2,
-    backgroundColor: '#DD2424',
+    backgroundColor: COLORS.RED_DD2424,
     borderRadius: 15,
     zIndex: 2,
   },
   textDot: {
     fontSize: 8,
     color: COLORS.WHITE_FBF8CC,
+  },
+  emptyContainer: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: verticalScale(20),
+  },
+  absoluteContent: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: 'rgba(0,0,0,0.5)',
   },
 });

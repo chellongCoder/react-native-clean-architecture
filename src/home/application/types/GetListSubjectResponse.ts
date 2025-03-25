@@ -9,6 +9,8 @@ export interface Subject {
   type: TypeSubject;
   parentId: string;
   level: number;
+  fieldId: string;
+  image: string;
 }
 
 export default interface GetListSubjectResponse {

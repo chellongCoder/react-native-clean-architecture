@@ -43,7 +43,10 @@ import GetListModuleByFieldUseCase from 'src/home/application/useCases/GetListMo
 import {GetListSubjectPayload} from 'src/home/application/types/GetListSubjectPayload';
 import {Module} from 'src/home/application/types/GetListLessonResponse';
 import ImageToTextUsecase from 'src/authentication/application/useCases/ImageToTextUsecase';
-
+import GetUserModuleUseCase from 'src/lesson/application/useCases/GetUserModuleUseCase';
+import BuyUserModuleUseCase from 'src/lesson/application/useCases/BuyUserModuleUseCase.ts';
+import UserModuleEntity from 'src/lesson/domain/entities/UserModuleEntity';
+import BuyUserModulePayload from 'src/lesson/application/types/BuyUserModulePayload';
 @injectable()
 export class LessonStore {
   point: {value: number; isShow: boolean} = {value: 0, isShow: false};
@@ -80,6 +83,8 @@ export class LessonStore {
 
   @persist('list') @observable blockedModules?: BlockedModuleSetting[] = [];
 
+  @observable userModule: UserModuleEntity[] = [];
+
   @computed getSetting(lessonSetting?: LessonSettingT) {
     return {
       backgroundAnswerColor: lessonSetting?.backgroundColor,
@@ -111,6 +116,10 @@ export class LessonStore {
     private getProductUseCase: GetProductUseCase,
     @provided(GetListModuleByFieldUseCase)
     private getListModuleByFieldUseCase: GetListModuleByFieldUseCase,
+    @provided(GetUserModuleUseCase)
+    private getUserModuleUseCase: GetUserModuleUseCase,
+    @provided(BuyUserModuleUseCase)
+    private buyUserModuleUseCase: BuyUserModuleUseCase,
   ) {
     makeAutoObservable(this);
     this.bottomSheetAppsRef = React.createRef<BottomSheet>();
@@ -382,6 +391,19 @@ export class LessonStore {
   toggleUseHint = () => {
     this.isShowHint = !this.isShowHint;
   };
+
+  @action
+  public async handleGetUserModule() {
+    const response = await this.getUserModuleUseCase.execute();
+    this.userModule = response;
+    return response;
+  }
+
+  @action
+  public async handleBuyUserModule(data: BuyUserModulePayload) {
+    const response = await this.buyUserModuleUseCase.execute(data);
+    return response;
+  }
 }
 
 export const hydrate = create({

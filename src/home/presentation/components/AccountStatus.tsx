@@ -17,12 +17,12 @@ type TProps = {
   title?: string;
   subject?: string;
   isShowLogout?: boolean;
-  isParentScreen?: boolean;
+  isShowDiamond?: boolean;
   diamond?: number;
 };
 
 const AccountStatus = (props: TProps) => {
-  const {title, subject, isShowLogout, isParentScreen, diamond} = props;
+  const {title, subject, isShowLogout, isShowDiamond, diamond} = props;
   const {handleLogOut} = useLoginWithCredentials();
   useLoadingGlobal();
   const {selectedChild} = useAuthenticationStore();
@@ -55,7 +55,7 @@ const AccountStatus = (props: TProps) => {
         ) : (
           <View style={{flex: 1}} />
         )}
-        {isParentScreen ? (
+        {isShowDiamond ? (
           <Diamond diamond={diamond} />
         ) : (
           <CustomSwitchNew
@@ -73,7 +73,7 @@ const styles = StyleSheet.create({
   container: {
     justifyContent: 'flex-end',
     width: '100%',
-    paddingTop: scale(16),
+    alignContent: 'center',
   },
   iconContainer: {
     flexDirection: 'row',
@@ -87,8 +87,8 @@ const styles = StyleSheet.create({
     marginRight: scale(8),
   },
   wrapLogoutContainer: {
-    paddingHorizontal: scale(12),
-    paddingVertical: scale(8),
+    paddingHorizontal: scale(8),
+    paddingVertical: scale(4),
     backgroundColor: COLORS.GREEN_66C270,
     borderRadius: scale(30),
     flexDirection: 'row',

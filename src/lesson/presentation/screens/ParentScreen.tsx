@@ -94,6 +94,7 @@ import {useI18n} from 'src/core/presentation/hooks/useI18n';
 import ChangeLanguage from 'src/core/presentation/components/ChangeLanguage';
 import {coreModuleContainer} from 'src/core/CoreModule';
 import I18n from 'src/core/presentation/i18n';
+import useHomeStore from 'src/home/presentation/stores/useHomeStore';
 
 // ... existing imports ...
 
@@ -150,13 +151,14 @@ const ParentScreen = observer(() => {
   // Store & Context Hooks
   // ---------------------------------------------------------------------------
   const {
+    userProfile,
     getUserProfile,
     selectedChild,
     setSelectedChild,
     deviceToken,
     deleteChildren,
   } = useAuthenticationStore();
-
+  const {listSubject, rootSubject} = useHomeStore();
   const i18n = useI18n();
 
   const {isShowAuth: isAuthenSetting, changeIsShowAuth} = useAuthParent();
@@ -231,26 +233,22 @@ const ParentScreen = observer(() => {
     lesson.blockedAnonymousListAppsSystem?.categoryTokens,
     lesson.blockedListAppsSystem,
   ]);
-  const purchaseOptions = [
-    {
-      id: '4',
-      name: 'Language',
-      icon: <ICabcBook />,
-      itemCardProps: {backgroundColor: '#EFC73A'},
-    },
-    {
-      id: '5',
-      name: 'Science',
-      icon: <ICabcBook />,
-      itemCardProps: {backgroundColor: '#EF9D23'},
-    },
-    {
-      id: '6',
-      name: 'Mathematics',
-      icon: <ICabcBook />,
-      itemCardProps: {backgroundColor: '#E3643C'},
-    },
-  ];
+  const purchaseOptions = useMemo(() => {
+    return (
+      listFields?.map(field => ({
+        id: field._id,
+        name: field.name,
+        icon: <ICabcBook />,
+        itemCardProps: {backgroundColor: COLORS.RED_E3643C},
+      })) ?? []
+    );
+  }, [listFields]);
+
+  const gradeObjs = useMemo(() => {
+    return listSubject
+      .filter(subject => subject.parentId === rootSubject?.fieldId)
+      .sort((a, b) => a.level - b.level);
+  }, [listSubject, rootSubject]);
 
   const dataPurchase = useMemo(
     () => [
@@ -270,13 +268,17 @@ const ParentScreen = observer(() => {
     setingOptions[0]?.id ?? '',
   );
   const [selectedPurchase, setSelectedPurchase] = useState(
-    purchaseOptions[0]?.id ?? '',
+    purchaseOptions[0] ?? '',
   );
   const [tabParent, setTabparent] = useState(TabParentE.APP_BLOCK);
-  const [userProfile, setUserProfile] = useState<data>();
+  // const [userProfile, setUserProfile] = useState<data>();
   const [isChooseChildren, setIsChooseChildren] = useState(
     selectedChild?._id || '',
   );
+  const [subjectInSelectedPurchaseField, setSubjectInSelectedPurchaseField] =
+    useState<Subject[]>([]);
+  const [showAll, setShowAll] = useState<boolean>(false);
+
   const [point, setPoint] = useState(75);
 
   const soundHook = useSoundBackgroundGlobal();
@@ -323,7 +325,7 @@ const ParentScreen = observer(() => {
   const handleGetUserProfile = useCallback(async () => {
     const res = await getUserProfile();
     if (res.data) {
-      setUserProfile(res.data);
+      // setUserProfile(res.data);
     }
     return res.data;
   }, [getUserProfile]);
@@ -447,7 +449,15 @@ The blockAppsSystem function is an asynchronous function that awaits the result 
       case TabParentE.PURCHASE:
         return selectedPurchase;
     }
-  }, [selectedBlock, tabParent, selectedPurchase, selectedSetting]);
+  }, [
+    tabParent,
+    TabParentE.APP_BLOCK,
+    TabParentE.SETTING,
+    TabParentE.PURCHASE,
+    selectedBlock,
+    selectedSetting,
+    selectedPurchase,
+  ]);
 
   const setSelectedOption = useCallback(
     (id: string) => {
@@ -459,18 +469,28 @@ The blockAppsSystem function is an asynchronous function that awaits the result 
           setSelectedSetting(id as TabSettingE);
           break;
         case TabParentE.PURCHASE:
-          setSelectedPurchase(id);
+          const selectedItem = purchaseOptions.find(item => item.name === id);
+          setSelectedPurchase(selectedItem);
           break;
       }
     },
-    [tabParent],
+    [
+      TabParentE.APP_BLOCK,
+      TabParentE.PURCHASE,
+      TabParentE.SETTING,
+      purchaseOptions,
+      tabParent,
+    ],
   );
 
-  const onPurchaseModule = () => {
+  const onPurchaseModule = (item: Subject) => {
     // if (iapState?.products) {
     //   makePurchase?.(iapState?.products?.[0]?.productId);
     // }
-    pushScreen(STACK_NAVIGATOR.PARENT.MORE_MODULE_SCREEN, {});
+    pushScreen(STACK_NAVIGATOR.PARENT.MORE_MODULE_SCREEN, {
+      subject: item,
+      userProfile: userProfile,
+    });
   };
 
   const onBuyDiamond = (item: TProduct) => {
@@ -496,6 +516,15 @@ The blockAppsSystem function is an asynchronous function that awaits the result 
       });
     },
     [fetchListSubject, handleGetModulesField, lesson.blockedModules],
+  );
+
+  const handleGetListSubjectInField = useCallback(
+    (field: GetListSubjectPayload) => {
+      fetchListSubject({_id: field.fieldId} as any).then(v => {
+        setSubjectInSelectedPurchaseField(v ?? []);
+      });
+    },
+    [fetchListSubject],
   );
 
   // ---------------------------------------------------------------------------
@@ -533,6 +562,10 @@ The blockAppsSystem function is an asynchronous function that awaits the result 
       handleSelectedSubject({fieldId: listFields?.[0]?._id});
   }, [listFields, handleSelectedSubject]);
 
+  useEffect(() => {
+    handleGetListSubjectInField({fieldId: selectedPurchase.id});
+  }, [handleGetListSubjectInField, selectedPurchase.id]);
+
   const _buildBlockView = () => {
     return (
       <>
@@ -543,7 +576,11 @@ The blockAppsSystem function is an asynchronous function that awaits the result 
 
           <ListBlockedApps
             setTabBody={setSelectedOption}
-            selectedApp={selectedOption}
+            selectedApp={
+              typeof selectedOption === 'string'
+                ? selectedOption
+                : selectedOption.name
+            }
             listApp={listTabOptions}
           />
         </View>
@@ -773,22 +810,44 @@ The blockAppsSystem function is an asynchronous function that awaits the result 
 
           <ListBlockedApps
             setTabBody={setSelectedOption}
-            selectedApp={selectedOption}
+            selectedApp={
+              typeof selectedOption === 'string'
+                ? selectedOption
+                : selectedOption.name
+            }
             listApp={listTabOptions}
           />
         </View>
         <View style={[styles.bodyContent, styles.rowBetween]}>
           <View style={[styles.fill]}>
-            {dataPurchase.map((item, i) => (
-              <PurchaseItem
-                key={i}
-                isBorderTop={i !== 0}
-                title={item.title}
-                description={item.description}
-                icon={assets.book}
-                onPress={onPurchaseModule}
-              />
-            ))}
+            {subjectInSelectedPurchaseField
+              .sort((a, b) => a.level - b.level)
+              .slice(0, showAll ? undefined : 5)
+              .map((item, i) => {
+                if (item.type === 'child') {
+                  return (
+                    <PurchaseItem
+                      key={i}
+                      isBorderTop={i !== 0}
+                      title={item.name}
+                      description={item.description}
+                      icon={item.image}
+                      onPress={() => onPurchaseModule(item)}
+                    />
+                  );
+                }
+              })}
+            {subjectInSelectedPurchaseField.length > 5 && (
+              <TouchableOpacity
+                style={styles.showMoreButton}
+                onPress={() => setShowAll(!showAll)}>
+                <Text style={[globalStyle.txtButton, styles.textColor]}>
+                  {showAll
+                    ? i18n.t('lesson.screens.Parent.showLess')
+                    : i18n.t('lesson.screens.Parent.showMore')}
+                </Text>
+              </TouchableOpacity>
+            )}
           </View>
         </View>
 
@@ -813,7 +872,7 @@ The blockAppsSystem function is an asynchronous function that awaits the result 
         <View style={[styles.rowBetween]}>
           <AccountStatus
             isShowLogout={true}
-            isParentScreen={true}
+            isShowDiamond={true}
             diamond={userProfile?.diamond ?? 0}
           />
         </View>
@@ -1167,5 +1226,9 @@ const styles = StyleSheet.create({
   },
   wrapDiamondPurchaseContentContainer: {
     padding: 16,
+  },
+  showMoreButton: {
+    alignItems: 'center',
+    marginTop: verticalScale(8),
   },
 });
