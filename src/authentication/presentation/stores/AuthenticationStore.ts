@@ -350,6 +350,7 @@ export class AuthenticationStore implements AuthenticationStoreState {
     this.setIsLoading(true);
     const response = await this.updateTrialModuleUsecase.execute(args);
     this.setIsLoading(false);
+    this.getUserProfile();
     return response;
   }
 }
