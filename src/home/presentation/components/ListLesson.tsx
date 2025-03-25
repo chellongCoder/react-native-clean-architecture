@@ -21,6 +21,7 @@ import {
 import {coreModuleContainer} from 'src/core/CoreModule';
 import Env, {EnvToken} from 'src/core/domain/entities/Env';
 import {assets} from 'src/core/presentation/utils';
+import {useLessonStore} from 'src/lesson/presentation/stores/LessonStore/useGetPostsStore';
 
 const {width: screenWidth} = Dimensions.get('window');
 
@@ -31,7 +32,9 @@ interface FieldData {
   image: string;
 }
 const ListLesson = () => {
-  const {listSubject, setSubjectId, subjectId, rootSubject} = useHomeStore();
+  const {listSubject, setSubjectId, subjectId, rootSubject, listModule} =
+    useHomeStore();
+  const lessonStore = useLessonStore();
   const {getData, isConnected} = useOfflineMode();
   const [subjectIndex, setSubjectIndex] = useState<number>(0);
   const [subjects, setSubjects] = useState<Subject[]>([]);
@@ -99,10 +102,21 @@ const ListLesson = () => {
   useEffect(() => {
     setTimeout(() => {
       const index = data.findIndex(e => e._id === rootSubject?._id);
-      carouselRef.current.snapToItem(index);
+      carouselRef?.current?.snapToItem(index);
     }, 1000);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  useEffect(() => {
+    const handleGetUserModule = async () => {
+      try {
+        await lessonStore.handleGetUserModule(listModule);
+      } catch (error) {
+        console.log('error', error);
+      }
+    };
+    handleGetUserModule();
+  }, [lessonStore, listModule]);
 
   return (
     <View style={styles.container}>

@@ -1,5 +1,5 @@
 import {StyleSheet, Text, View, Image} from 'react-native';
-import React, {useCallback, useEffect} from 'react';
+import React, {useCallback, useEffect, useMemo, useState} from 'react';
 import ICBook from 'src/core/components/icons/ICBook';
 import useGlobalStyle from 'src/core/presentation/hooks/useGlobalStyle';
 import {COLORS} from 'src/core/presentation/constants/colors';
@@ -22,6 +22,8 @@ import {usePopupTrialMode} from 'src/core/presentation/hooks/popup/usePopupTrial
 import useAuthenStore from 'src/authentication/presentation/hooks/useAuthenStore';
 import useHomeStore from 'src/home/presentation/stores/useHomeStore';
 import {ModuleItemProps} from 'src/home/presentation/stores/types/HomeStoreState';
+import {useLessonStore} from '../../stores/LessonStore/useGetPostsStore';
+import {IClock} from '../icons';
 
 const ModuleItem = (props: ModuleItemProps) => {
   const globalStyle = useGlobalStyle();
@@ -32,6 +34,15 @@ const ModuleItem = (props: ModuleItemProps) => {
   const popupHook = usePopupTrialMode();
   const authStore = useAuthenStore();
   const homeStore = useHomeStore();
+  const lessonStore = useLessonStore();
+  const [trialStatus, setTrialStatus] = useState<string>();
+
+  const isLocked = useMemo(() => {
+    return (
+      trialStatus === 'end_trial' &&
+      lessonStore.userModule?.some(module => module.id === props.id)
+    );
+  }, [lessonStore.userModule, props.id, trialStatus]);
 
   const gotoLesson = useCallback(() => {
     navigateScreen(STACK_NAVIGATOR.HOME.LESSON, {
@@ -42,18 +53,18 @@ const ModuleItem = (props: ModuleItemProps) => {
   }, [props.id, props.lessonName, props.title]);
 
   const onStartDoing = useCallback(async () => {
-    const trialStatus = await homeStore.checkDoingModule(
+    const _trialStatus = await homeStore.checkDoingModule(
       authStore.userProfile,
       props,
     );
-
-    if (trialStatus === 'being_trial') {
+    setTrialStatus(_trialStatus);
+    if (_trialStatus === 'being_trial') {
       gotoLesson();
     } else {
-      if (trialStatus === 'no_trial') {
-        popupHook.handleCloseTrialPopup();
-      } else if (trialStatus === 'end_trial') {
-        popupHook.handleCloseTrialPopup();
+      if (_trialStatus === 'no_trial') {
+        popupHook.handleToggleTrialPopup();
+      } else if (_trialStatus === 'end_trial') {
+        popupHook.handleToggleTrialPopup();
       }
     }
   }, [homeStore, authStore.userProfile, gotoLesson, popupHook, props]);
@@ -128,6 +139,11 @@ const ModuleItem = (props: ModuleItemProps) => {
           onPress={onStartDoing}
           color={COLORS.GREEN_66C270}
           title={i18n.t('lesson.screens.Modules.study')}
+          icon={
+            isLocked ? (
+              <IClock width={scale(16)} height={scale(16)} />
+            ) : undefined
+          }
         />
       </View>
     </Animated.View>
@@ -169,6 +185,11 @@ const ModuleItem = (props: ModuleItemProps) => {
           onPress={onStartDoing}
           color={COLORS.YELLOW_F2B559}
           title={i18n.t('lesson.screens.Modules.revision')}
+          icon={
+            isLocked ? (
+              <IClock width={scale(16)} height={scale(16)} />
+            ) : undefined
+          }
         />
       </View>
     </Animated.View>

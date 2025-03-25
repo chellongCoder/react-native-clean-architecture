@@ -19,20 +19,20 @@ import {STACK_NAVIGATOR} from 'src/core/presentation/navigation/ConstantNavigato
 interface TrialModulePopupProps {
   isVisible: boolean;
   onClose: () => void;
-  handleCloseTrialPopup: (callback?: () => void) => void;
+  handleToggleTrialPopup: (callback?: () => void) => void;
 }
 
 const TrialModulePopup: React.FC<TrialModulePopupProps> = ({
   isVisible,
   onClose,
-  handleCloseTrialPopup,
+  handleToggleTrialPopup,
 }) => {
   const authStore = useAuthenStore();
   const homeStore = useHomeStore();
 
   const onUpdate = async () => {
     if (homeStore.moduleItem) {
-      handleCloseTrialPopup(() => {
+      handleToggleTrialPopup(() => {
         navigateScreen(STACK_NAVIGATOR.HOME.LESSON, {
           lessonId: homeStore.moduleItem?.id,
           lessonName: homeStore.moduleItem?.lessonName,
@@ -41,7 +41,7 @@ const TrialModulePopup: React.FC<TrialModulePopupProps> = ({
       });
       authStore.updateTrialModules({});
     } else {
-      handleCloseTrialPopup();
+      handleToggleTrialPopup();
       navigateScreen(STACK_NAVIGATOR.BOTTOM_TAB.PARENT_TAB, {});
     }
   };
@@ -79,7 +79,7 @@ const TrialModulePopup: React.FC<TrialModulePopupProps> = ({
               {backgroundColor: COLORS.RED_E1460E},
             ]}
             onPress={() => {
-              handleCloseTrialPopup();
+              handleToggleTrialPopup();
             }}>
             <Text style={[styles.subTitle, {color: COLORS.WHITE_FBF8CC}]}>
               Chưa sẵn sàng

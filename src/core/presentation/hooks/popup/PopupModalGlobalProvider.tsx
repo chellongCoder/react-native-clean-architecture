@@ -25,7 +25,7 @@ type PopupModalContextType = {
   show: () => void;
   hide: () => void;
   isShown: boolean;
-  handleCloseTrialPopup: (callback?: () => void) => void;
+  handleToggleTrialPopup: (callback?: () => void) => void;
 };
 
 // Create the context
@@ -33,7 +33,7 @@ export const PopupModalContext = createContext<PopupModalContextType>({
   show: () => {},
   hide: () => {},
   isShown: false,
-  handleCloseTrialPopup: () => {},
+  handleToggleTrialPopup: () => {},
 });
 
 type TPopupState = {
@@ -114,7 +114,7 @@ export const PopupModalGlobalProvider = observer(
       }
     };
 
-    const handleCloseTrialPopup = async (callback?: () => void) => {
+    const handleToggleTrialPopup = async (callback?: () => void) => {
       callback?.();
       setPopupState({isShowTrial: !popupState.isShowTrial});
     };
@@ -132,7 +132,7 @@ export const PopupModalGlobalProvider = observer(
 
     return (
       <PopupModalContext.Provider
-        value={{show, hide, isShown, handleCloseTrialPopup}}>
+        value={{show, hide, isShown, handleToggleTrialPopup}}>
         {children}
         <ReceivedDiamondPopup
           isVisible={popupState.isShowReceived || false}
@@ -156,7 +156,7 @@ export const PopupModalGlobalProvider = observer(
         <TrialModulePopup
           isVisible={popupState.isShowTrial || false}
           onClose={() => {}}
-          handleCloseTrialPopup={handleCloseTrialPopup}
+          handleToggleTrialPopup={handleToggleTrialPopup}
         />
         {/* Optionally, you can include the modal component here if it should be global */}
       </PopupModalContext.Provider>

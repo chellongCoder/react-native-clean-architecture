@@ -15,9 +15,9 @@ import PurchaseModuleResponse from 'src/lesson/application/types/PurchaseModuleR
 import {GetListSubjectPayload} from 'src/home/application/types/GetListSubjectPayload';
 import GetListLessonResponse from 'src/home/application/types/GetListLessonResponse';
 import {ImageToTextResponse} from 'src/authentication/application/types/ImageToTextResponse';
-import GetUserModuleResponse from 'src/lesson/application/types/GetUserModuleResponse';
 import BuyUserModulePayload from 'src/lesson/application/types/BuyUserModulePayload';
 import BuyUserModuleResponse from 'src/lesson/application/types/BuyUserModuleResponse';
+import {GetUserModuleResponse} from 'src/lesson/application/types/GetUserModuleResponse';
 
 export const ILessonRepositoryToken = Symbol('ILessonRepository');
 

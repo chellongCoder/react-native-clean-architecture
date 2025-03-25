@@ -393,9 +393,18 @@ export class LessonStore {
   };
 
   @action
-  public async handleGetUserModule() {
+  public async handleGetUserModule(modules: Module[]) {
     const response = await this.getUserModuleUseCase.execute();
-    this.userModule = response;
+    this.userModule = response.map(module => {
+      const moduleItem = modules.find(m => m._id === module.lessonId);
+      return {
+        id: module.lessonId,
+        name: moduleItem?.title ?? '',
+        description: moduleItem?.description ?? '',
+        price: 10,
+        isPurchased: true,
+      };
+    });
     return response;
   }
 

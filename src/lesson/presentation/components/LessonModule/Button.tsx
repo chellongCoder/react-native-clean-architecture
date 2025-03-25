@@ -3,6 +3,7 @@ import {
   StyleSheet,
   Text,
   TouchableOpacity,
+  View,
 } from 'react-native';
 import React from 'react';
 import {scale, verticalScale} from 'react-native-size-matters';
@@ -13,6 +14,7 @@ type ButtonProps = {
   color: string;
   title: string;
   onPress: (event: GestureResponderEvent) => void;
+  icon?: React.ReactNode;
 };
 const Button = (props: Partial<ButtonProps>) => {
   const globalStyle = useGlobalStyle();
@@ -23,6 +25,12 @@ const Button = (props: Partial<ButtonProps>) => {
       <Text style={[globalStyle.txtButton, {color: COLORS.WHITE}]}>
         {props.title}
       </Text>
+      {props?.icon && (
+        <>
+          <View style={{width: scale(10)}} />
+          {props?.icon}
+        </>
+      )}
     </TouchableOpacity>
   );
 };
@@ -36,5 +44,6 @@ const styles = StyleSheet.create({
     borderRadius: scale(10),
     alignItems: 'center',
     justifyContent: 'center',
+    flexDirection: 'row',
   },
 });

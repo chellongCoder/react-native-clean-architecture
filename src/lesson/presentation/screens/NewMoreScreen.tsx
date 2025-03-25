@@ -86,14 +86,14 @@ const NewMoreScreen = observer((props: Props) => {
   useEffect(() => {
     const handleGetUserModule = async () => {
       try {
-        const res = await lessonStore.handleGetUserModule();
+        const res = await lessonStore.handleGetUserModule(modules);
         setUserModule(res);
       } catch (error) {
         console.log('error', error);
       }
     };
     handleGetUserModule();
-  }, [lessonStore, purchaseState.isPurchaseSuccess]);
+  }, [lessonStore, modules, purchaseState.isPurchaseSuccess]);
 
   useEffect(() => {
     setIsLoading(true);
