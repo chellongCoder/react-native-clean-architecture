@@ -128,7 +128,8 @@ const Math_MG1M3 = observer(
           firstMiniTestTask?.question?.[moduleIndex].instruction.description ??
             '',
         );
-      }, [firstMiniTestTask?.question, moduleIndex, ttsSpeak]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+      }, [firstMiniTestTask?.question, moduleIndex]);
 
       const opacity = useSharedValue(0);
       const scaleS = useSharedValue(1);
@@ -153,7 +154,8 @@ const Math_MG1M3 = observer(
             init?.();
           };
         }
-      }, [onSpeechText, focus, init]); // Added focus to the dependency array
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+      }, [onSpeechText, focus]); // Added focus to the dependency array
 
       useEffect(() => {
         opacity.value = withTiming(0, {duration: 500}, () => {

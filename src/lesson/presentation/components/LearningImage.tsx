@@ -29,8 +29,6 @@ const LearningImage: React.FC<ImageCarouselProps> = ({
 
   const [currentIndex, setCurrentIndex] = useState(0);
 
-  console.log(currentIndex, 'ooooo');
-
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentIndex(prevIndex => {
