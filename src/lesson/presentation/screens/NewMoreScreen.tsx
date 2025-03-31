@@ -1,4 +1,11 @@
-import {FlatList, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {
+  FlatList,
+  Image,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import useGlobalStyle from 'src/core/presentation/hooks/useGlobalStyle';
@@ -24,6 +31,8 @@ import PurchaseSuccessScreen from 'src/core/presentation/screens/PurchaseSuccess
 import {UserModule} from 'src/lesson/application/types/GetUserModuleResponse';
 import useGetUserProfile from '../hooks/useGetUserProfile';
 import useAuthenticationStore from 'src/authentication/presentation/stores/useAuthenticationStore';
+import Diamond from 'src/home/presentation/components/Diamond';
+import {assets} from 'src/core/presentation/utils';
 
 interface Props {
   route: RouteProp<ParamListBase>;
@@ -121,16 +130,20 @@ const NewMoreScreen = observer((props: Props) => {
           style={{
             flex: 1,
             flexDirection: 'row',
-            gap: 16,
+            gap: scale(16),
           }}>
           <View style={styles.iconBook}>
             <IconBook />
           </View>
           <View style={styles.itemContent}>
-            <Text style={[globalStyle.txtLabel, styles.textColor]}>
+            <Text
+              numberOfLines={2}
+              style={[globalStyle.txtLabel, styles.textColor]}>
               {item.name}
             </Text>
-            <Text style={[globalStyle.txtNote, styles.textColor]}>
+            <Text
+              numberOfLines={2}
+              style={[globalStyle.txtNote, styles.textColor]}>
               {item.description}
             </Text>
           </View>
@@ -138,13 +151,19 @@ const NewMoreScreen = observer((props: Props) => {
 
         <View
           style={{
-            alignItems: 'center',
+            alignItems: 'flex-end',
             flexDirection: 'column',
             justifyContent: 'space-between',
           }}>
-          <Text style={[globalStyle.txtLabel, styles.textColor]}>
-            10 Diamond
-          </Text>
+          <View
+            style={{flexDirection: 'row', alignItems: 'center', gap: scale(2)}}>
+            <Text style={[globalStyle.txtLabel, styles.textColor]}>10</Text>
+            <Image
+              source={assets.diamond}
+              resizeMode="contain"
+              style={{width: scale(16), height: scale(16)}}
+            />
+          </View>
           <View style={{flex: 1}} />
           <TouchableOpacity
             style={[styles.button, styles.w70]}
@@ -335,6 +354,7 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     justifyContent: 'space-between',
     alignItems: 'flex-start',
+    flexWrap: 'wrap',
     maxWidth: scale(152),
     gap: verticalScale(4),
   },

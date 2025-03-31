@@ -74,6 +74,7 @@ import Science_SG6M3 from './LessonComponent/Science_SG6M3';
 import Math_MG4M16 from './LessonComponent/Math_MG4M16';
 import {useI18n} from 'src/core/presentation/hooks/useI18n';
 import VnG2M6Lesson from './LessonComponent/Vietnamese_G2M6_lesson';
+// import VietnameseLetterQuyLesson from './LessonComponent/Vietnamese_Lesson_Quy';
 
 export enum MathQuestionType {
   MathMG0M1 = 'MATH_MG0M1',
@@ -714,27 +715,7 @@ const LessonScreen = observer(() => {
       case ScienceE.SCIENCE_SG5M5:
         return <Science_SG5M5 {...dataProps} ref={vowelRef} />;
       case ScienceE.SCIENCE_SG6M6:
-        return (
-          <Science_SG6M3
-            moduleIndex={lessonIndex}
-            nextModule={nextModule}
-            totalModule={testTask?.question.length ?? 0}
-            lessonName={route.lessonName}
-            moduleName={route.moduleName}
-            firstMiniTestTask={testTask}
-            backgroundImage={
-              env.IMAGE_BACKGROUND_BASE_API_URL + lessonSetting?.backgroundImage
-            }
-            characterImageSuccess={
-              env.IMAGE_BACKGROUND_BASE_API_URL +
-              lessonSetting?.figureSuccessImage
-            }
-            characterImageFail={
-              env.IMAGE_BACKGROUND_BASE_API_URL + lessonSetting?.figureFailImage
-            }
-            ref={vowelRef}
-          />
-        );
+        return <Science_SG6M3 {...dataProps} ref={vowelRef} />;
 
       /**----------------------
        *todo    các question cho môn toán
@@ -769,22 +750,7 @@ const LessonScreen = observer(() => {
       case MathQuestionType.MathMG3M8:
         return (
           <Math_MG2M4
-            moduleIndex={lessonIndex}
-            nextModule={nextModule}
-            totalModule={testTask?.question.length ?? 0}
-            lessonName={route.lessonName}
-            moduleName={route.moduleName}
-            firstMiniTestTask={testTask}
-            backgroundImage={
-              env.IMAGE_BACKGROUND_BASE_API_URL + lessonSetting?.backgroundImage
-            }
-            characterImageSuccess={
-              env.IMAGE_BACKGROUND_BASE_API_URL +
-              lessonSetting?.figureSuccessImage
-            }
-            characterImageFail={
-              env.IMAGE_BACKGROUND_BASE_API_URL + lessonSetting?.figureFailImage
-            }
+            {...dataProps}
             ref={vowelRef}
             isMulti={true}
             answer={['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']}
@@ -793,22 +759,7 @@ const LessonScreen = observer(() => {
       case MathQuestionType.MathMG4M16:
         return (
           <Math_MG4M16
-            moduleIndex={lessonIndex}
-            nextModule={nextModule}
-            totalModule={testTask?.question.length ?? 0}
-            lessonName={route.lessonName}
-            moduleName={route.moduleName}
-            firstMiniTestTask={testTask}
-            backgroundImage={
-              env.IMAGE_BACKGROUND_BASE_API_URL + lessonSetting?.backgroundImage
-            }
-            characterImageSuccess={
-              env.IMAGE_BACKGROUND_BASE_API_URL +
-              lessonSetting?.figureSuccessImage
-            }
-            characterImageFail={
-              env.IMAGE_BACKGROUND_BASE_API_URL + lessonSetting?.figureFailImage
-            }
+            {...dataProps}
             ref={vowelRef}
             isMulti={true}
             answer={['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '.']}
