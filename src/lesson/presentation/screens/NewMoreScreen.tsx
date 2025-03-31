@@ -149,33 +149,45 @@ const NewMoreScreen = observer((props: Props) => {
           </View>
         </View>
 
-        <View
-          style={{
-            alignItems: 'flex-end',
-            flexDirection: 'column',
-            justifyContent: 'space-between',
-          }}>
+        {userModule.some(userMod => userMod.lessonId === item._id) ? (
+          <Text style={[globalStyle.txtLabel, styles.textColor]}>
+            Purchased
+          </Text>
+        ) : (
           <View
-            style={{flexDirection: 'row', alignItems: 'center', gap: scale(2)}}>
-            <Text style={[globalStyle.txtLabel, styles.textColor]}>10</Text>
-            <Image
-              source={assets.diamond}
-              resizeMode="contain"
-              style={{width: scale(16), height: scale(16)}}
-            />
+            style={{
+              alignItems: 'flex-end',
+              flexDirection: 'column',
+              justifyContent: 'space-between',
+            }}>
+            <View
+              style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+                gap: scale(2),
+              }}>
+              <Text style={[globalStyle.txtLabel, styles.textColor]}>
+                {item.price} Diamond
+              </Text>
+              <Image
+                source={assets.diamond}
+                resizeMode="contain"
+                style={{width: scale(16), height: scale(16)}}
+              />
+            </View>
+            <View style={{flex: 1}} />
+            <TouchableOpacity
+              style={[styles.button, styles.w70]}
+              onPress={() => onBuyModule(item)}
+              disabled={loadingModuleId === item._id}>
+              <Text style={[globalStyle.txtButton, styles.textBtn]}>
+                {loadingModuleId === item._id
+                  ? 'Loading...'
+                  : i18n.t('lesson.screens.NewMoreScreen.buyModule')}
+              </Text>
+            </TouchableOpacity>
           </View>
-          <View style={{flex: 1}} />
-          <TouchableOpacity
-            style={[styles.button, styles.w70]}
-            onPress={() => onBuyModule(item)}
-            disabled={loadingModuleId === item._id}>
-            <Text style={[globalStyle.txtButton, styles.textBtn]}>
-              {loadingModuleId === item._id
-                ? 'Loading...'
-                : i18n.t('lesson.screens.NewMoreScreen.buyModule')}
-            </Text>
-          </TouchableOpacity>
-        </View>
+        )}
       </View>
     );
   };
@@ -215,10 +227,7 @@ const NewMoreScreen = observer((props: Props) => {
           </Text>
         </View>
         <FlatList
-          data={modules.filter(
-            module =>
-              !userModule.some(userMod => userMod.lessonId === module._id),
-          )}
+          data={modules}
           renderItem={renderModule}
           keyExtractor={item => item._id}
           contentContainerStyle={[styles.bookContent]}

@@ -11,6 +11,7 @@ export interface Module {
   progressOfChildren: number;
   image: string;
   tasks?: Task[];
+  price: number;
 }
 
 export default interface GetListLessonResponse {
