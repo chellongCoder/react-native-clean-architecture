@@ -55,6 +55,7 @@
 		4FCB67C8425E01E44C954846 /* ExpoModulesProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AAFB858B6B5AC2A1F3AD8C8 /* ExpoModulesProvider.swift */; };
 		52C9676916B24BD897B48BB1 /* eina-03-bold.woff2 in Resources */ = {isa = PBXBuildFile; fileRef = 1C015D7CCAA649DBA33AFA1A /* eina-03-bold.woff2 */; };
 		59B91A63D70D20617D98C65F /* ExpoModulesProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5EE91539602E692C2E1304D0 /* ExpoModulesProvider.swift */; };
+		63E91EC7248B41B58FFACCE0 /* borel-regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 3FE1854FA53D48B08057CD63 /* borel-regular.ttf */; };
 		6C4020404BB643488B693F14 /* eina-01-semibold.eot in Resources */ = {isa = PBXBuildFile; fileRef = 4033DA54B0C140EC91752DA5 /* eina-01-semibold.eot */; };
 		785B557C06744EC9A3E945A8 /* eina-04-regular.eot in Resources */ = {isa = PBXBuildFile; fileRef = 11F4508FE7514703BE149006 /* eina-04-regular.eot */; };
 		7A7ACD34762E443F9C1E0EF2 /* eina-01-light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = C1C0F4D8C18A43EABCB23725 /* eina-01-light.ttf */; };
@@ -171,10 +172,11 @@
 		3DD8AF332C516CF6004F09A9 /* login_splash_screen_sound.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = login_splash_screen_sound.mp3; path = ../assets/sounds/login_splash_screen_sound.mp3; sourceTree = "<group>"; };
 		3DD8AF342C516CF6004F09A9 /* good_result.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = good_result.mp3; path = ../assets/sounds/good_result.mp3; sourceTree = "<group>"; };
 		3DD8AF362C516CF6004F09A9 /* oh_no_sound.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = oh_no_sound.mp3; path = ../assets/sounds/oh_no_sound.mp3; sourceTree = "<group>"; };
+		3FE1854FA53D48B08057CD63 /* borel-regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "borel-regular.ttf"; path = "../assets/fonts/borel-regular.ttf"; sourceTree = "<group>"; };
 		4033DA54B0C140EC91752DA5 /* eina-01-semibold.eot */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "eina-01-semibold.eot"; path = "../assets/fonts/eina-01-semibold.eot"; sourceTree = "<group>"; };
 		416C6E9D04FDCD10E13D775C /* libPods-TBDEdu-TBDEduTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-TBDEdu-TBDEduTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		41B612AAAB274F88B8C06903 /* eina-01-semibold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "eina-01-semibold.ttf"; path = "../assets/fonts/eina-01-semibold.ttf"; sourceTree = "<group>"; };
-		51856871381D4D49B6C8DC13 /* SVN-Neuzeit Grotesk Regular.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "SVN-Neuzeit Grotesk Regular.otf"; path = "../assets/fonts/SVN-Neuzeit Grotesk Regular.otf"; sourceTree = "<group>"; };
+		51856871381D4D49B6C8DC13 /* SVN-Neuzeit Grotesk Regular.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "SVN-Neuzeit Grotesk Regular.otf"; path = "../assets/fonts/SVN-Neuzeit Grotesk Regular.otf"; sourceTree = "<group>"; };
 		5352AB7566A74471A0F0C10C /* eina-01-bold.woff2 */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "eina-01-bold.woff2"; path = "../assets/fonts/eina-01-bold.woff2"; sourceTree = "<group>"; };
 		567A11D4C3804455A4EF370D /* eina-03-regular.eot */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "eina-03-regular.eot"; path = "../assets/fonts/eina-03-regular.eot"; sourceTree = "<group>"; };
 		5AAFB858B6B5AC2A1F3AD8C8 /* ExpoModulesProvider.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ExpoModulesProvider.swift; path = "Pods/Target Support Files/Pods-TBDEdu/ExpoModulesProvider.swift"; sourceTree = "<group>"; };
@@ -203,7 +205,7 @@
 		EE0A0B073F2E47F5B33C1FEB /* eina-03-semibold.eot */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "eina-03-semibold.eot"; path = "../assets/fonts/eina-03-semibold.eot"; sourceTree = "<group>"; };
 		EFAEDC7BAD9144F8821EFF9A /* eina-03-semibold.woff2 */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "eina-03-semibold.woff2"; path = "../assets/fonts/eina-03-semibold.woff2"; sourceTree = "<group>"; };
 		F5CA4C3C8BA44666AAC3121D /* eina-01-semibold.woff2 */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "eina-01-semibold.woff2"; path = "../assets/fonts/eina-01-semibold.woff2"; sourceTree = "<group>"; };
-		F5F2691DE5D34A83B995FBEA /* SVN-Neuzeit Grotesk Bold.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "SVN-Neuzeit Grotesk Bold.otf"; path = "../assets/fonts/SVN-Neuzeit Grotesk Bold.otf"; sourceTree = "<group>"; };
+		F5F2691DE5D34A83B995FBEA /* SVN-Neuzeit Grotesk Bold.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "SVN-Neuzeit Grotesk Bold.otf"; path = "../assets/fonts/SVN-Neuzeit Grotesk Bold.otf"; sourceTree = "<group>"; };
 		F74AF6930A6C04BF3EF6D79C /* libPods-TBDEdu.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-TBDEdu.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -349,6 +351,7 @@
 				34C1DAF331CC46669408A6F2 /* SVN-Cherish Moment.ttf */,
 				F5F2691DE5D34A83B995FBEA /* SVN-Neuzeit Grotesk Bold.otf */,
 				51856871381D4D49B6C8DC13 /* SVN-Neuzeit Grotesk Regular.otf */,
+				3FE1854FA53D48B08057CD63 /* borel-regular.ttf */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -631,6 +634,7 @@
 				3DD8AF3A2C516CF6004F09A9 /* login_splash_screen_sound.mp3 in Resources */,
 				49AEB8A9CDBD4DAEB43471B6 /* SVN-Neuzeit Grotesk Bold.otf in Resources */,
 				08321C79479C45509B5ECEC0 /* SVN-Neuzeit Grotesk Regular.otf in Resources */,
+				63E91EC7248B41B58FFACCE0 /* borel-regular.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1007,7 +1011,7 @@
 				INFOPLIST_FILE = TBDEdu/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "TBD-Edu";
 				INFOPLIST_KEY_NSSupportsLiveActivities = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 16.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.6;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -1022,8 +1026,11 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.hisoft.tbd.app;
 				PRODUCT_NAME = TBDEdu;
 				PROVISIONING_PROFILE_SPECIFIER = "";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Debug;
@@ -1043,7 +1050,7 @@
 				INFOPLIST_FILE = TBDEdu/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "TBD-Edu";
 				INFOPLIST_KEY_NSSupportsLiveActivities = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 16.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.6;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -1058,7 +1065,10 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.hisoft.tbd.app;
 				PRODUCT_NAME = TBDEdu;
 				PROVISIONING_PROFILE_SPECIFIER = "";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
 				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Release;
@@ -1321,10 +1331,7 @@
 					"-DFOLLY_CFG_NO_COROUTINES=1",
 					"-DFOLLY_HAVE_CLOCK_GETTIME=1",
 				);
-				OTHER_LDFLAGS = (
-					"$(inherited)",
-					" ",
-				);
+				OTHER_LDFLAGS = "$(inherited)  ";
 				REACT_NATIVE_PATH = "${PODS_ROOT}/../../node_modules/react-native";
 				SDKROOT = iphoneos;
 				USE_HERMES = true;
@@ -1397,10 +1404,7 @@
 					"-DFOLLY_CFG_NO_COROUTINES=1",
 					"-DFOLLY_HAVE_CLOCK_GETTIME=1",
 				);
-				OTHER_LDFLAGS = (
-					"$(inherited)",
-					" ",
-				);
+				OTHER_LDFLAGS = "$(inherited)  ";
 				REACT_NATIVE_PATH = "${PODS_ROOT}/../../node_modules/react-native";
 				SDKROOT = iphoneos;
 				USE_HERMES = true;
