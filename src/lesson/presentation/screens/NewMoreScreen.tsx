@@ -167,7 +167,7 @@ const NewMoreScreen = observer((props: Props) => {
                 gap: scale(2),
               }}>
               <Text style={[globalStyle.txtLabel, styles.textColor]}>
-                {item.price} Diamond
+                {item.price}
               </Text>
               <Image
                 source={assets.diamond}
@@ -364,13 +364,13 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'flex-start',
     flexWrap: 'wrap',
-    maxWidth: scale(152),
+    maxWidth: scale(130),
     gap: verticalScale(4),
   },
   iconBook: {
-    width: 60,
-    height: 60,
-    borderRadius: 15,
+    width: scale(60),
+    height: scale(60),
+    borderRadius: scale(15),
     backgroundColor: COLORS.YELLOW_F2B559,
     justifyContent: 'center',
     alignItems: 'center',

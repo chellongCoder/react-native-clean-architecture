@@ -1,9 +1,11 @@
 /* eslint-disable react/no-unstable-nested-components */
 import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import React, {
+  forwardRef,
   useCallback,
   useContext,
   useEffect,
+  useImperativeHandle,
   useMemo,
   useRef,
   useState,
@@ -41,6 +43,7 @@ import KeyboardNumber, {
 import Svg, {Text as TextSvg} from 'react-native-svg';
 import {useI18n} from 'src/core/presentation/hooks/useI18n';
 import VoiceButton from '../../components/VoiceButton';
+import {LessonRef} from '../../types';
 
 type Props = {
   moduleIndex: number;
@@ -54,362 +57,379 @@ type Props = {
   characterImageFail?: string;
 };
 
-const VnG1M3Lesson = ({
-  moduleIndex,
-  nextModule,
-  totalModule,
-  lessonName,
-  moduleName,
-  firstMiniTestTask,
-  backgroundImage,
-  characterImageFail,
-  characterImageSuccess,
-}: Props) => {
-  const globalStyle = useGlobalStyle();
-  const canvasWriteRef = useRef<CanvasWriteRef>(null);
-  const {selectedChild} = useAuthenticationStore();
-  const [answerSelected, setAnswerSelected] = useState('');
-  const {trainingCount, getSetting, imageToText} = useLessonStore();
-  const [isCorrect, setIscorrect] = useState(false);
-  const [countCall, setCountCall] = useState(0);
-  const answerRef = useRef<SelectionAnswersQuestionRef>(null);
+const VnG1M3Lesson = forwardRef<LessonRef, Props>(
+  (
+    {
+      moduleIndex,
+      nextModule,
+      totalModule,
+      lessonName,
+      moduleName,
+      firstMiniTestTask,
+      backgroundImage,
+      characterImageFail,
+      characterImageSuccess,
+    }: Props,
+    ref,
+  ) => {
+    const globalStyle = useGlobalStyle();
+    const canvasWriteRef = useRef<CanvasWriteRef>(null);
+    const {selectedChild} = useAuthenticationStore();
+    const [answerSelected, setAnswerSelected] = useState('');
+    const {trainingCount, getSetting, imageToText} = useLessonStore();
+    const [isCorrect, setIscorrect] = useState(false);
+    const [countCall, setCountCall] = useState(0);
+    const answerRef = useRef<SelectionAnswersQuestionRef>(null);
 
-  const {ttsSpeak, updateDefaultVoice} = useContext(TextToSpeechContext);
-  const focus = useIsFocused();
-  const {lessonSetting} = useHomeStore();
+    const {ttsSpeak, updateDefaultVoice} = useContext(TextToSpeechContext);
+    const focus = useIsFocused();
+    const {lessonSetting} = useHomeStore();
 
-  const i18n = useI18n();
+    const i18n = useI18n();
 
-  const settings = useMemo(
-    () => getSetting(lessonSetting),
-    [getSetting, lessonSetting],
-  );
+    const settings = useMemo(
+      () => getSetting(lessonSetting),
+      [getSetting, lessonSetting],
+    );
 
-  const {isAnswerCorrect, isShowCorrectContainer, submit, learningTimer} =
-    useSettingLesson({
-      countDownTime: trainingCount <= 2 ? 0 : 5,
-      isCorrectAnswer: !!isCorrect,
-      onSubmit: () => {
-        setAnswerSelected('');
-        nextModule(answerSelected);
-        answerRef?.current?.resetAnswerSelected();
-        setIscorrect(false);
-      },
-      fullAnswer: firstMiniTestTask?.question?.[moduleIndex].fullAnswer,
-      totalTime: 5 * 60, // * tổng time làm 1câu
-    });
-
-  const characterImage = useMemo(() => {
-    return isAnswerCorrect === true || isAnswerCorrect === undefined
-      ? characterImageSuccess
-      : characterImageFail;
-  }, [characterImageFail, characterImageSuccess, isAnswerCorrect]);
-
-  const images = useMemo(() => {
-    const image = firstMiniTestTask?.question?.[moduleIndex].image;
-    if (typeof image === 'string') {
-      return [image];
-    }
-    return firstMiniTestTask?.question?.[moduleIndex].image as string[];
-  }, [firstMiniTestTask?.question, moduleIndex]);
-
-  const answerType = firstMiniTestTask?.question?.[moduleIndex].answerType;
-
-  const isDrawerType = useMemo(() => {
-    return answerType === 'draw_character';
-  }, [answerType]);
-
-  const onSpeechText = useCallback(
-    (text: string) => {
-      text.split('/').forEach((answer, index) => {
-        setTimeout(() => {
-          ttsSpeak?.(getCorrectAnswer(answer?.trim()));
-        }, index * 1250);
+    const {isAnswerCorrect, isShowCorrectContainer, submit, learningTimer} =
+      useSettingLesson({
+        countDownTime: trainingCount <= 2 ? 0 : 5,
+        isCorrectAnswer: !!isCorrect,
+        onSubmit: () => {
+          setAnswerSelected('');
+          nextModule(answerSelected);
+          answerRef?.current?.resetAnswerSelected();
+          setIscorrect(false);
+        },
+        fullAnswer: firstMiniTestTask?.question?.[moduleIndex].fullAnswer,
+        totalTime: 5 * 60, // * tổng time làm 1câu
       });
-    },
-    [ttsSpeak],
-  );
 
-  useEffect(() => {
-    if (focus) {
-      // Check if the component is focused
-      const firstTimeout = setTimeout(() => {
-        onSpeechText(
-          getCorrectAnswer(
-            firstMiniTestTask?.type !== 'mini_test'
-              ? firstMiniTestTask?.question?.[moduleIndex].content
-              : firstMiniTestTask?.question?.[moduleIndex].correctAnswer,
-          ),
-        );
+    const characterImage = useMemo(() => {
+      return isAnswerCorrect === true || isAnswerCorrect === undefined
+        ? characterImageSuccess
+        : characterImageFail;
+    }, [characterImageFail, characterImageSuccess, isAnswerCorrect]);
 
-        const secondTimeout = setTimeout(() => {
+    const images = useMemo(() => {
+      const image = firstMiniTestTask?.question?.[moduleIndex].image;
+      if (typeof image === 'string') {
+        return [image];
+      }
+      return firstMiniTestTask?.question?.[moduleIndex].image as string[];
+    }, [firstMiniTestTask?.question, moduleIndex]);
+
+    const answerType = firstMiniTestTask?.question?.[moduleIndex].answerType;
+
+    const isDrawerType = useMemo(() => {
+      return answerType === 'draw_character';
+    }, [answerType]);
+
+    const onSpeechText = useCallback(
+      (text: string) => {
+        text.split('/').forEach((answer, index) => {
+          setTimeout(() => {
+            ttsSpeak?.(getCorrectAnswer(answer?.trim()));
+          }, index * 1250);
+        });
+      },
+      [ttsSpeak],
+    );
+
+    useEffect(() => {
+      if (focus) {
+        // Check if the component is focused
+        const firstTimeout = setTimeout(() => {
           onSpeechText(
             getCorrectAnswer(
-              firstMiniTestTask?.question?.[moduleIndex].fullAnswer,
+              firstMiniTestTask?.type !== 'mini_test'
+                ? firstMiniTestTask?.question?.[moduleIndex].content
+                : firstMiniTestTask?.question?.[moduleIndex].correctAnswer,
             ),
           );
-        }, 2500);
 
-        return () => clearTimeout(secondTimeout);
-      }, 1500);
+          const secondTimeout = setTimeout(() => {
+            onSpeechText(
+              getCorrectAnswer(
+                firstMiniTestTask?.question?.[moduleIndex].fullAnswer,
+              ),
+            );
+          }, 2500);
 
-      return () => clearTimeout(firstTimeout);
-    }
-  }, [
-    onSpeechText,
-    focus,
-    firstMiniTestTask?.question,
-    moduleIndex,
-    firstMiniTestTask?.type,
-  ]); // Added focus to the dependency array
+          return () => clearTimeout(secondTimeout);
+        }, 1500);
 
-  useEffect(() => {
-    console.log(
-      '🛠 LOG: 🚀 --> -----------------------------------------------------🛠 LOG: 🚀 -->',
-    );
-    console.log('🛠 LOG: 🚀 --> ~ Tts.voices ~ lessonName:', lessonName);
-    console.log(
-      '🛠 LOG: 🚀 --> -----------------------------------------------------🛠 LOG: 🚀 -->',
-    );
-
-    Tts.voices().then(voices => {
-      if (lessonName.toLocaleLowerCase().includes('english')) {
-        const engVoice = voices.find(
-          voice => voice.language === listLanguage['US English'],
-        );
-        updateDefaultVoice?.(
-          isAndroid ? engVoice?.id : iosVoice[3].id,
-          'US English',
-        );
-      } else if (lessonName.toLocaleLowerCase().includes('mandarin')) {
-        const engVoice = voices.find(
-          voice =>
-            voice.language ===
-            listLanguage['Mainland China, simplified characters'],
-        );
-        updateDefaultVoice?.(
-          engVoice?.id,
-          'Mainland China, simplified characters',
-        );
-      } else if (lessonName.toLocaleLowerCase().includes('tiếng việt')) {
-        const vietnameseVoices = voices.filter(
-          voice =>
-            voice.language.startsWith('vi-') ||
-            voice.name.toLowerCase().includes('vietnamese'),
-        );
-
-        updateDefaultVoice?.(vietnameseVoices[0]?.id, 'Vie (Vietnamese)');
+        return () => clearTimeout(firstTimeout);
       }
-    });
-  }, [lessonName, updateDefaultVoice]);
+    }, [
+      onSpeechText,
+      focus,
+      firstMiniTestTask?.question,
+      moduleIndex,
+      firstMiniTestTask?.type,
+    ]); // Added focus to the dependency array
 
-  const getDataString = (data: any): string => {
-    return data instanceof Array ? data?.[0].toString() ?? '' : data.toString();
-  };
+    useEffect(() => {
+      Tts.voices().then(voices => {
+        if (lessonName.toLocaleLowerCase().includes('english')) {
+          const engVoice = voices.find(
+            voice => voice.language === listLanguage['US English'],
+          );
+          updateDefaultVoice?.(
+            isAndroid ? engVoice?.id : iosVoice[3].id,
+            'US English',
+          );
+        } else if (lessonName.toLocaleLowerCase().includes('mandarin')) {
+          const engVoice = voices.find(
+            voice =>
+              voice.language ===
+              listLanguage['Mainland China, simplified characters'],
+          );
+          updateDefaultVoice?.(
+            engVoice?.id,
+            'Mainland China, simplified characters',
+          );
+        } else if (lessonName.toLocaleLowerCase().includes('tiếng việt')) {
+          const vietnameseVoices = voices.filter(
+            voice =>
+              voice.language.startsWith('vi-') ||
+              voice.name.toLowerCase().includes('vietnamese'),
+          );
 
-  const onSubmitDraw = useCallback(async () => {
-    const base64 = canvasWriteRef.current?.getBase64();
-    console.log('base64', base64);
-    if (!base64) {
-      return;
-    }
-
-    const formData = new FormData();
-
-    const url = `data:image/png;base64,${base64}`;
-
-    formData.append('file', {
-      uri: url,
-      name: 'file.jpeg',
-      type: 'image/jpeg',
-    } as any);
-    formData.append('language', 'vi');
-
-    imageToText(formData)
-      .then(data => {
-        const char = data.data?.data ?? '';
-        const charAnswer = getDataString(
-          firstMiniTestTask?.question?.[moduleIndex].fullAnswer,
-        );
-        console.log('imageToText', data, char, charAnswer);
-        const charLowerCase = char?.toLocaleLowerCase();
-        const charAnswerLowerCase = charAnswer?.toLocaleLowerCase();
-        console.log(
-          charLowerCase,
-          charAnswerLowerCase,
-          charLowerCase === charAnswerLowerCase,
-        );
-        setAnswerSelected(char);
-        setIscorrect(
-          data.success === true && charLowerCase === charAnswerLowerCase,
-        );
-        setCountCall(p => p + 1);
-      })
-      .catch(e => console.log(e, 'ERROR'));
-  }, [firstMiniTestTask?.question, imageToText, moduleIndex]);
-
-  const onSubmit = useCallback(async () => {
-    if (isDrawerType) {
-      onSubmitDraw();
-    } else {
-      submit();
-    }
-  }, [isDrawerType, onSubmitDraw, submit]);
-
-  useEffect(() => {
-    canvasWriteRef.current?.reset();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [firstMiniTestTask?.question?.[moduleIndex].content]);
-
-  useEffect(() => {
-    if (countCall > 0) {
-      submit();
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [countCall]);
-
-  return (
-    <LessonComponent
-      backgroundImage={backgroundImage}
-      characterImage={characterImage}
-      lessonName={lessonName}
-      module={moduleName}
-      part={firstMiniTestTask?.name}
-      backgroundColor="#66c270"
-      backgroundAnswerColor={settings.backgroundAnswerColor}
-      prompt={
-        firstMiniTestTask?.question?.[moduleIndex]?.instruction ?? {
-          description: settings.prompt?.toString() ?? '',
+          updateDefaultVoice?.(vietnameseVoices[0]?.id, 'Vie (Vietnamese)');
         }
-      }
-      score={selectedChild?.adsPoints}
-      isAnswerCorrect={isAnswerCorrect}
-      isShowCorrectContainer={isShowCorrectContainer}
-      buildQuestion={
-        <View style={[styles.center, {marginTop: scale(30)}]}>
-          {isDrawerType && (
-            <LearningText
-              style={[styles.fonts_Borel, styles.textQuestion]}
-              texts={[firstMiniTestTask?.question?.[moduleIndex].content ?? '']}
-            />
-          )}
+      });
+    }, [lessonName, updateDefaultVoice]);
 
-          <LearningImage images={images} />
-        </View>
+    const getDataString = (data: any): string => {
+      return data instanceof Array
+        ? data?.[0].toString() ?? ''
+        : data.toString();
+    };
+
+    const onSubmitDraw = useCallback(async () => {
+      const base64 = canvasWriteRef.current?.getBase64();
+      console.log('base64', base64);
+      if (!base64) {
+        return;
       }
-      buildAnswer={
-        <View style={styles.fill}>
-          <View
-            style={{
-              justifyContent: 'space-between',
-              flexDirection: 'row',
-            }}>
-            <Text
+
+      const formData = new FormData();
+
+      const url = `data:image/png;base64,${base64}`;
+
+      formData.append('file', {
+        uri: url,
+        name: 'file.jpeg',
+        type: 'image/jpeg',
+      } as any);
+      formData.append('language', 'vi');
+
+      imageToText(formData)
+        .then(data => {
+          const char = data.data?.data ?? '';
+          const charAnswer = getDataString(
+            firstMiniTestTask?.question?.[moduleIndex].fullAnswer,
+          );
+          console.log('imageToText', data, char, charAnswer);
+          const charLowerCase = char?.toLocaleLowerCase();
+          const charAnswerLowerCase = charAnswer?.toLocaleLowerCase();
+          console.log(
+            charLowerCase,
+            charAnswerLowerCase,
+            charLowerCase === charAnswerLowerCase,
+          );
+          setAnswerSelected(char);
+          setIscorrect(
+            data.success === true && charLowerCase === charAnswerLowerCase,
+          );
+          setCountCall(p => p + 1);
+        })
+        .catch(e => console.log(e, 'ERROR'));
+    }, [firstMiniTestTask?.question, imageToText, moduleIndex]);
+
+    const onSubmit = useCallback(async () => {
+      if (isDrawerType) {
+        onSubmitDraw();
+      } else {
+        submit();
+      }
+    }, [isDrawerType, onSubmitDraw, submit]);
+
+    useEffect(() => {
+      canvasWriteRef.current?.reset();
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [firstMiniTestTask?.question?.[moduleIndex].content]);
+
+    useEffect(() => {
+      if (countCall > 0) {
+        submit();
+      }
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [countCall]);
+
+    useImperativeHandle(ref, () => ({
+      onSubmit: onSubmit,
+      onChoiceCorrectedAnswer: () => {
+        onSubmit();
+      },
+    }));
+
+    return (
+      <LessonComponent
+        backgroundImage={backgroundImage}
+        characterImage={characterImage}
+        lessonName={lessonName}
+        module={moduleName}
+        part={firstMiniTestTask?.name}
+        backgroundColor="#66c270"
+        backgroundAnswerColor={settings.backgroundAnswerColor}
+        prompt={
+          firstMiniTestTask?.question?.[moduleIndex]?.instruction ?? {
+            description: settings.prompt?.toString() ?? '',
+          }
+        }
+        score={selectedChild?.adsPoints}
+        isAnswerCorrect={isAnswerCorrect}
+        isShowCorrectContainer={isShowCorrectContainer}
+        buildQuestion={
+          <View style={[styles.center, {marginTop: scale(30)}]}>
+            {isDrawerType && (
+              <LearningText
+                style={[styles.fonts_Borel, styles.textQuestion]}
+                texts={[
+                  firstMiniTestTask?.question?.[moduleIndex].content ?? '',
+                ]}
+              />
+            )}
+
+            <LearningImage images={images} />
+          </View>
+        }
+        buildAnswer={
+          <View style={styles.fill}>
+            <View
+              style={{
+                justifyContent: 'space-between',
+                flexDirection: 'row',
+              }}>
+              <Text
+                style={[
+                  globalStyle.txtLabel,
+                  {
+                    color: darkenColor(
+                      settings.backgroundButtonColor ?? '',
+                      20,
+                    ),
+                  },
+                ]}>
+                {isDrawerType
+                  ? `${i18n.t(
+                      'lesson.screens.Modules.writeThe',
+                    )} "${getDataString(
+                      firstMiniTestTask?.question?.[moduleIndex].fullAnswer,
+                    )}"`
+                  : i18n.t('lesson.screens.Modules.chooseCorrectAnswer')}
+              </Text>
+              <VoiceButton
+                onPress={() =>
+                  onSpeechText(
+                    getCorrectAnswer(
+                      firstMiniTestTask?.type === 'mini_test'
+                        ? firstMiniTestTask?.question?.[moduleIndex].fullAnswer
+                        : firstMiniTestTask?.question?.[moduleIndex].content,
+                    ),
+                  )
+                }
+              />
+            </View>
+
+            <View style={{height: verticalScale(10)}} />
+            {isDrawerType ? (
+              <CanvasWrite
+                ref={canvasWriteRef}
+                text={{
+                  content: answerSelected
+                    ? answerSelected
+                    : getDataString(
+                        firstMiniTestTask?.question?.[moduleIndex].fullAnswer,
+                      ),
+                  style: {
+                    color: isCorrect ? COLORS.PRIMARY : COLORS.RED_F28759,
+                    marginBottom: -80,
+                    fontFamily: FontFamily.BorelRegular,
+                  },
+                  show: true,
+                  builder: !answerSelected
+                    ? text => {
+                        return (
+                          <Svg>
+                            <TextSvg
+                              x="50%"
+                              y="67%"
+                              fontSize={140}
+                              fontFamily={FontFamily.BorelRegular}
+                              fontWeight="bold"
+                              textAnchor="middle"
+                              fill="transparent" // Màu chữ bên trong
+                              stroke={COLORS.PRIMARY} // Màu viền chữ
+                              strokeWidth={2}
+                              strokeDasharray="6,6" // Tạo viền nét đứt
+                            >
+                              {text}
+                            </TextSvg>
+                          </Svg>
+                        );
+                      }
+                    : undefined,
+                }}
+                disable={learningTimer !== 0}
+              />
+            ) : (
+              <KeyboardNumber
+                answer={
+                  firstMiniTestTask?.question?.[moduleIndex].answers ?? []
+                }
+                answerBuilder={e => (
+                  <Text style={[styles.textAnswer]}>{e}</Text>
+                )}
+                question={
+                  <Text style={[styles.fonts_Borel, styles.textQuestion]}>
+                    {firstMiniTestTask?.question?.[moduleIndex].content ?? ''}
+                  </Text>
+                }
+                isShowCorrectContainer={isShowCorrectContainer}
+                isAnswerCorrect={!!isAnswerCorrect}
+                onSelectAnswer={(e: string[]) => {
+                  setIscorrect(
+                    e[0] ===
+                      firstMiniTestTask?.question?.[moduleIndex].correctAnswer,
+                  );
+                  setAnswerSelected(e.slice().pop() ?? '');
+                }}
+                learningTimer={learningTimer}
+                ref={answerRef}
+                isSelectOne={true}
+              />
+            )}
+
+            <PrimaryButton
+              text={i18n.t('lesson.screens.Modules.submit')}
               style={[
-                globalStyle.txtLabel,
-                {color: darkenColor(settings.backgroundButtonColor ?? '', 20)},
-              ]}>
-              {isDrawerType
-                ? `${i18n.t(
-                    'lesson.screens.Modules.writeThe',
-                  )} "${getDataString(
-                    firstMiniTestTask?.question?.[moduleIndex].fullAnswer,
-                  )}"`
-                : i18n.t('lesson.screens.Modules.chooseCorrectAnswer')}
-            </Text>
-            <VoiceButton
-              onPress={() =>
-                onSpeechText(
-                  getCorrectAnswer(
-                    firstMiniTestTask?.type === 'mini_test'
-                      ? firstMiniTestTask?.question?.[moduleIndex].fullAnswer
-                      : firstMiniTestTask?.question?.[moduleIndex].content,
-                  ),
-                )
-              }
+                styles.buttonContainer,
+                {backgroundColor: settings.backgroundButtonColor},
+              ]}
+              onPress={onSubmit}
             />
           </View>
-
-          <View style={{height: verticalScale(10)}} />
-          {isDrawerType ? (
-            <CanvasWrite
-              ref={canvasWriteRef}
-              text={{
-                content: answerSelected
-                  ? answerSelected
-                  : getDataString(
-                      firstMiniTestTask?.question?.[moduleIndex].fullAnswer,
-                    ),
-                style: {
-                  color: isCorrect ? COLORS.PRIMARY : COLORS.RED_F28759,
-                  marginBottom: -80,
-                  fontFamily: FontFamily.BorelRegular,
-                },
-                show: true,
-                builder: !answerSelected
-                  ? text => {
-                      return (
-                        <Svg>
-                          <TextSvg
-                            x="50%"
-                            y="67%"
-                            fontSize={140}
-                            fontFamily={FontFamily.BorelRegular}
-                            fontWeight="bold"
-                            textAnchor="middle"
-                            fill="transparent" // Màu chữ bên trong
-                            stroke={COLORS.PRIMARY} // Màu viền chữ
-                            strokeWidth={2}
-                            strokeDasharray="6,6" // Tạo viền nét đứt
-                          >
-                            {text}
-                          </TextSvg>
-                        </Svg>
-                      );
-                    }
-                  : undefined,
-              }}
-              disable={learningTimer !== 0}
-            />
-          ) : (
-            <KeyboardNumber
-              answer={firstMiniTestTask?.question?.[moduleIndex].answers ?? []}
-              answerBuilder={e => <Text style={[styles.textAnswer]}>{e}</Text>}
-              question={
-                <Text style={[styles.fonts_Borel, styles.textQuestion]}>
-                  {firstMiniTestTask?.question?.[moduleIndex].content ?? ''}
-                </Text>
-              }
-              isShowCorrectContainer={isShowCorrectContainer}
-              isAnswerCorrect={!!isAnswerCorrect}
-              onSelectAnswer={(e: string[]) => {
-                setIscorrect(
-                  e[0] ===
-                    firstMiniTestTask?.question?.[moduleIndex].correctAnswer,
-                );
-                setAnswerSelected(e.slice().pop() ?? '');
-              }}
-              learningTimer={learningTimer}
-              ref={answerRef}
-              isSelectOne={true}
-            />
-          )}
-
-          <PrimaryButton
-            text={i18n.t('lesson.screens.Modules.submit')}
-            style={[
-              styles.buttonContainer,
-              {backgroundColor: settings.backgroundButtonColor},
-            ]}
-            onPress={onSubmit}
-          />
-        </View>
-      }
-      moduleIndex={moduleIndex}
-      totalModule={totalModule}
-    />
-  );
-};
+        }
+        moduleIndex={moduleIndex}
+        totalModule={totalModule}
+      />
+    );
+  },
+);
 
 export default VnG1M3Lesson;
 
