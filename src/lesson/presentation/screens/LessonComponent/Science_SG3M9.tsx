@@ -142,7 +142,9 @@ const Science_SG3M9 = observer(
         (text?: string) => {
           ttsSpeak?.(
             text ??
-              firstMiniTestTask?.question?.[moduleIndex]?.description ??
+              firstMiniTestTask?.question?.[
+                moduleIndex
+              ]?.correctAnswer.toString() ??
               '',
           );
         },

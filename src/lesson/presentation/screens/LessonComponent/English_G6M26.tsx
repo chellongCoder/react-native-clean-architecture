@@ -43,6 +43,12 @@ import SelectionAnswersQuestion, {
 import TextHighlight from '../../components/TextHighlight';
 import {useI18n} from 'src/core/presentation/hooks/useI18n';
 import VoiceButton from '../../components/VoiceButton';
+import Tts from 'react-native-tts';
+import {
+  iosVoice,
+  listLanguage,
+} from 'src/core/presentation/hooks/textToSpeech/TextToSpeechProvider';
+import {isAndroid} from 'src/core/presentation/utils';
 
 type Props = {
   moduleIndex: number;
@@ -74,7 +80,7 @@ const English_G6M26 = observer(
     ) => {
       const globalStyle = useGlobalStyle();
 
-      const {ttsSpeak} = useContext(TextToSpeechContext);
+      const {ttsSpeak, updateDefaultVoice} = useContext(TextToSpeechContext);
       const focus = useIsFocused();
       const answerRef = useRef<SelectionAnswersQuestionRef>();
 
@@ -174,6 +180,30 @@ const English_G6M26 = observer(
           transform: [{scale: scaleS.value}],
         };
       });
+
+      useEffect(() => {
+        Tts.voices().then(voices => {
+          if (lessonName.toLocaleLowerCase().includes('english')) {
+            const engVoice = voices.find(
+              voice => voice.language === listLanguage['US English'],
+            );
+            updateDefaultVoice?.(
+              isAndroid ? engVoice?.id : iosVoice[3].id,
+              'US English',
+            );
+          } else if (lessonName.toLocaleLowerCase().includes('mandarin')) {
+            const engVoice = voices.find(
+              voice =>
+                voice.language ===
+                listLanguage['Mainland China, simplified characters'],
+            );
+            updateDefaultVoice?.(
+              engVoice?.id,
+              'Mainland China, simplified characters',
+            );
+          }
+        });
+      }, [lessonName, updateDefaultVoice]);
 
       useImperativeHandle(ref, () => ({
         isAnswerCorrect,
