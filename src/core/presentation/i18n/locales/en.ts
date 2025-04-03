@@ -197,6 +197,8 @@ export default {
         sorryMobilize:
           'SORRY. You can not pass the test. You need to start all over again. You can do it !',
         next: 'Next',
+        combineWordSuccess: 'Combine the word successfully!',
+        combineWord: 'Combine the parts to make a word',
       },
       NewMoreScreen: {
         parentName: "Parent's Name",

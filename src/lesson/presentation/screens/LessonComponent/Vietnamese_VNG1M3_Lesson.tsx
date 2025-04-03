@@ -389,7 +389,8 @@ const VnG1M3Lesson = forwardRef<LessonRef, Props>(
             ) : (
               <KeyboardNumber
                 answer={
-                  firstMiniTestTask?.question?.[moduleIndex].answers ?? []
+                  (firstMiniTestTask?.question?.[moduleIndex]
+                    .answers as string[]) ?? []
                 }
                 answerBuilder={e => (
                   <Text style={[styles.textAnswer]}>{e}</Text>

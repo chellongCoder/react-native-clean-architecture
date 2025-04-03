@@ -219,8 +219,8 @@ const VietnameseLetterQuyLesson = observer(
                       },
                     ]}>
                     {isCombined
-                      ? 'Chữ đã ghép thành công!'
-                      : 'Ghép các phần để tạo chữ'}
+                      ? i18n.t('lesson.screens.Modules.combineWordSuccess')
+                      : i18n.t('lesson.screens.Modules.combineWord')}
                   </Text>
                 </View>
 
@@ -318,18 +318,11 @@ const VietnameseLetterQuyLesson = observer(
                       </TouchableOpacity>
                     </View>
                   </View>
-                  {/* {selectedParts.length === 3 && (
-                    <TouchableOpacity
-                      style={styles.combineButton}
-                      onPress={handleCombine}>
-                      <Text style={styles.combineButtonText}>Ghép</Text>
-                    </TouchableOpacity>
-                  )} */}
                 </>
               )}
 
               <PrimaryButton
-                text="Nộp bài"
+                text={i18n.t('lesson.screens.Modules.submit')}
                 disable={selectedParts.length !== 3}
                 style={[
                   styles.buttonContainer,

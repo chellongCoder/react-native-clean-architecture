@@ -171,7 +171,7 @@ const ListChildrenScreen = observer(() => {
                       <TouchableOpacity
                         style={styles.addChildContainer}
                         onPress={onAddChild}
-                        disabled>
+                        disabled={userProfile?.children.length > 0}>
                         <ICAddChild />
                       </TouchableOpacity>
                     </View>
