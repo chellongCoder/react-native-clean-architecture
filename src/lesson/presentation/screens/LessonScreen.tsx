@@ -73,8 +73,10 @@ import Math_MG1M3_P4 from './LessonComponent/Math_MG1M3_P4';
 import Science_SG6M3 from './LessonComponent/Science_SG6M3';
 import Math_MG4M16 from './LessonComponent/Math_MG4M16';
 import {useI18n} from 'src/core/presentation/hooks/useI18n';
-import VnG2M6Lesson from './LessonComponent/Vietnamese_G2M6_lesson';
+import VnG2M6Lesson from './LessonComponent/Vietnamese_G4M3_lesson';
 import VnG1M4Lesson from './LessonComponent/Vietnamese_VNG1M4_Lesson';
+import VnG4M3Lesson from './LessonComponent/Vietnamese_G4M3_lesson';
+import DragProvider from '../components/Drag/DragProvider';
 
 export enum MathQuestionType {
   MathMG0M1 = 'MATH_MG0M1',
@@ -122,6 +124,7 @@ export enum LanguageE {
   VIETNAMESE_VNG2M8 = 'VIETNAMESE_VNG2M8',
   VIETNAMESE_VNG3M1 = 'VIETNAMESE_VNG3M1',
   VIETNAMESE_VNG4M1 = 'VIETNAMESE_VNG4M1',
+  VIETNAMESE_VNG4M3 = 'VIETNAMESE_VNG4M3',
   VIETNAMESE_VNG5M1 = 'VIETNAMESE_VNG5M1',
   VIETNAMESE_VNG6M1 = 'VIETNAMESE_VNG6M1',
 }
@@ -196,7 +199,7 @@ const LessonScreen = observer(() => {
             // question: t.question.slice(0, 1),
             // question: t.question.slice(0, 5),
             // question: shuffleArray(t.question),
-            question: __DEV__ ? t.question.slice(0, 2) : t.question,
+            question: __DEV__ ? t.question.slice(0, 10) : t.question,
           };
         })
       : apiTasks.map(t => {
@@ -684,6 +687,12 @@ const LessonScreen = observer(() => {
         return <VnG5M1Lesson {...dataProps} ref={vowelRef} />;
       case LanguageE.VIETNAMESE_VNG6M1:
         return <VnG3M1Lesson {...dataProps} ref={vowelRef} />;
+      case LanguageE.VIETNAMESE_VNG4M3:
+        return (
+          <DragProvider>
+            <VnG4M3Lesson {...dataProps} ref={vowelRef} />
+          </DragProvider>
+        );
       /**----------------------
        *todo    các question cho môn khoa học
        *------------------------**/

@@ -63,7 +63,7 @@ type Props = {
   characterImageFail?: string;
 };
 
-const VnG2M6Lesson = observer(
+const VnG4M3Lesson = observer(
   forwardRef<LessonRef, Props>(
     (
       {
@@ -85,7 +85,7 @@ const VnG2M6Lesson = observer(
       const focus = useIsFocused();
       const answerRef = useRef<SelectionAnswersQuestionRef>();
 
-      const {clear} = useDragContext();
+      const {clear, listDragItem} = useDragContext();
 
       const [answerSelected, setAnswerSelected] = useState('');
 
@@ -93,6 +93,14 @@ const VnG2M6Lesson = observer(
 
       const {selectedChild} = useAuthenticationStore();
 
+      const [isCorrectAnswer, setIsCorrectAnswer] = useState(false);
+      console.log(
+        '🛠 LOG: 🚀 --> --------------------------------------------------🛠 LOG: 🚀 -->',
+      );
+      console.log('🛠 LOG: 🚀 --> ~ isCorrectAnswer:', isCorrectAnswer);
+      console.log(
+        '🛠 LOG: 🚀 --> --------------------------------------------------🛠 LOG: 🚀 -->',
+      );
       const {
         isAnswerCorrect,
         isShowCorrectContainer,
@@ -103,11 +111,7 @@ const VnG2M6Lesson = observer(
         resetLearning,
       } = useSettingLesson({
         countDownTime: trainingCount <= 2 ? 0 : 5,
-        isCorrectAnswer:
-          answerSelected ===
-          getCorrectAnswer(
-            firstMiniTestTask?.question?.[moduleIndex]?.correctAnswer,
-          ).trim(),
+        isCorrectAnswer,
         onSubmit: () => {
           clear();
           setAnswerSelected('');
@@ -143,6 +147,63 @@ const VnG2M6Lesson = observer(
       const opacity = useSharedValue(0);
       const scaleS = useSharedValue(1);
 
+      useEffect(() => {
+        const selectedFeature = (() => {
+          const listFeature = Object.keys(listDragItem).filter(
+            (index: string) => listDragItem[+index].parentId > 0,
+          );
+
+          return listFeature
+            .filter(e => +e >= 100 && +e < 200)
+            .map(item => {
+              return listDragItem[listDragItem[+item].parentId];
+            });
+        })();
+
+        const selectedActivity = (() => {
+          const listFeature = Object.keys(listDragItem).filter(
+            (index: string) => listDragItem[+index].parentId > 0,
+          );
+          return listFeature
+            .filter(e => +e >= 200)
+            .map(item => {
+              return listDragItem[listDragItem[+item].parentId];
+            });
+        })();
+
+        console.log(
+          '🛠 LOG: 🚀 --> --------------------------------------------🛠 LOG: 🚀 -->',
+        );
+        console.log('🛠 LOG: 🚀 --> ~ listDragItem:', listDragItem);
+        console.log(
+          '🛠 LOG: 🚀 --> --------------------------------------------🛠 LOG: 🚀 -->',
+        );
+        console.log(
+          '🛠 LOG: 🚀 --> -----------------------------------------------------------------------🛠 LOG: 🚀 -->',
+        );
+        console.log(
+          '🛠 LOG: 🚀 --> ~ selectedActivity ~ selectedActivity:',
+          selectedActivity,
+          selectedFeature,
+        );
+        console.log(
+          '🛠 LOG: 🚀 --> -----------------------------------------------------------------------🛠 LOG: 🚀 -->',
+        );
+        const correctAnswers = (
+          firstMiniTestTask?.question?.[moduleIndex].correctAnswer as string[][]
+        ).flat();
+        const selectedAnswers = [...selectedFeature, ...selectedActivity].map(
+          item => item.value,
+        );
+        const correctAnswersCount = correctAnswers.filter(answer =>
+          selectedAnswers.includes(answer),
+        ).length;
+        const isCorrect = correctAnswersCount > correctAnswers.length / 2;
+
+        setIsCorrectAnswer(isCorrect);
+        // submit();
+      }, [listDragItem, firstMiniTestTask?.question, moduleIndex]);
+
       /**
        * * reset lại countdown khi lần làm thay đổi
        */
@@ -169,14 +230,6 @@ const VnG2M6Lesson = observer(
       }, [onSpeechText, focus]); // Added focus to the dependency array
 
       useEffect(() => {
-        console.log(
-          '🛠 LOG: 🚀 --> -----------------------------------------------------🛠 LOG: 🚀 -->',
-        );
-        console.log('🛠 LOG: 🚀 --> ~ Tts.voices ~ lessonName:', lessonName);
-        console.log(
-          '🛠 LOG: 🚀 --> -----------------------------------------------------🛠 LOG: 🚀 -->',
-        );
-
         Tts.voices().then(voices => {
           if (lessonName.toLocaleLowerCase().includes('english')) {
             const engVoice = voices.find(
@@ -230,163 +283,230 @@ const VnG2M6Lesson = observer(
         },
       }));
 
-      const buildItemAnswer = useCallback((item: string, index: number) => {
-        return (
-          <DragItem
-            index={100 + index}
-            value={item}
-            createItem={({value}) => {
-              return (
-                <View
-                  style={{
-                    backgroundColor: value?.trim()
-                      ? COLORS.YELLOW_F2B559
-                      : COLORS.WHITE_FBF8CC,
-                    borderRadius: scale(10),
-                    borderWidth: 2,
-                    borderColor: COLORS.YELLOW_F2B559,
-                    alignSelf: 'flex-start',
-                    padding: scale(8),
-                    width: scale(110),
-                    marginBottom: scale(4),
-                  }}>
-                  <Text
-                    style={{
-                      fontSize: scale(13),
-                      color: COLORS.WHITE_FBF8CC,
-                      textAlign: 'center',
-                      fontFamily: FontFamily.SVNCherishMoment,
-                    }}>
-                    {value}
-                  </Text>
-                </View>
-              );
-            }}
-          />
-        );
-      }, []);
-
-      return (
-        <DragProvider>
-          <LessonComponent
-            backgroundImage={backgroundImage}
-            characterImage={characterImage}
-            lessonName={lessonName}
-            module={moduleName}
-            part={firstMiniTestTask?.name}
-            backgroundColor="#66c270"
-            backgroundAnswerColor={
-              settings.backgroundAnswerColor ?? COLORS.GREEN_DDF598
-            }
-            prompt={
-              firstMiniTestTask?.question?.[moduleIndex]?.instruction ?? {
-                description: settings.prompt?.toString() ?? '',
-              }
-            }
-            price="Free"
-            score={selectedChild?.adsPoints}
-            txtCountDown={
-              word?.toString() ===
-              firstMiniTestTask?.question?.[moduleIndex].correctAnswer
-                ? undefined
-                : word
-            }
-            isAnswerCorrect={isAnswerCorrect}
-            isShowCorrectContainer={isShowCorrectContainer}
-            onPressFlower={toggleShowHint}
-            buildQuestion={
-              <View
-                style={{
-                  width: scale(200),
-                  minHeight: scale(100),
-                  marginTop: verticalScale(10),
-                  flexDirection: 'row',
-                  flexWrap: 'wrap',
-                  justifyContent: 'space-between',
-                }}>
-                {[
-                  'Cần cù',
-                  'Nghiên cứu',
-                  'Khát khao',
-                  'Đăng ký',
-                  'Siêng năng',
-                  'Dành dụm',
-                  'Giảng dạy',
-                  'Lạnh lẽo',
-                ].map((item, index) => {
-                  return (
-                    <DragItem
-                      key={index}
-                      index={index}
-                      value={item}
-                      canSwap={false}
-                      createItem={({value}) => {
-                        return (
-                          <View
-                            style={{
-                              backgroundColor: COLORS.WHITE_FBF8CC,
-                              borderRadius: scale(10),
-                              borderWidth: 2,
-                              borderStyle: 'dashed',
-                              borderColor: COLORS.YELLOW_F2B559,
-                              alignSelf: 'flex-start',
-                              padding: scale(8),
-                              width: scale(98),
-                              marginBottom: scale(4),
-                            }}>
-                            <Text
-                              style={{
-                                fontSize: scale(13),
-                                color: COLORS.BLUE_4552C8,
-                                textAlign: 'center',
-                                fontFamily: FontFamily.SVNCherishMoment,
-                              }}>
-                              {value}
-                            </Text>
-                          </View>
-                        );
-                      }}
-                    />
-                  );
-                })}
-              </View>
-            }
-            buildAnswer={
-              <View style={styles.fill}>
-                <View style={styles.wrapHeaderContainer}>
+      const buildItemAnswer = useCallback(
+        (items: string[], item: string, index: number) => {
+          console.log('🛠 LOG: 🚀 --> ~ item:', item);
+          return (
+            <DragItem
+              index={100 + index}
+              value={item}
+              createItem={({value}) => {
+                // console.log(
+                //   '🛠 LOG: 🚀 --> ~ value:',
+                //   value,
+                //   index,
+                //   selectedFeature,
+                //   selectedActivity,
+                // );
+                // if (index >= 100 && index < 200) {
+                //   const indexFeature = selectedFeature.current.findIndex(
+                //     item => item.index === index,
+                //   );
+                //   if (
+                //     indexFeature === -1 &&
+                //     value !== ' ' &&
+                //     value !== undefined
+                //   ) {
+                //     selectedFeature.current.push({
+                //       feature: value,
+                //       index: index,
+                //     });
+                //   }
+                // } else if (index >= 200) {
+                //   const indexActivity = selectedActivity.current.findIndex(
+                //     item => item.index === index,
+                //   );
+                //   if (
+                //     indexActivity === -1 &&
+                //     value !== ' ' &&
+                //     value !== undefined
+                //   ) {
+                //     selectedActivity.current.push({
+                //       activity: value,
+                //       index: index,
+                //     });
+                //   }
+                // }
+                return (
                   <View
                     style={{
-                      justifyContent: 'center',
-                      flex: 1,
+                      backgroundColor: value?.trim()
+                        ? COLORS.YELLOW_F2B559
+                        : COLORS.WHITE_FBF8CC,
+                      borderRadius: scale(10),
+                      borderWidth: 2,
+                      borderColor: COLORS.YELLOW_F2B559,
+                      alignSelf: 'flex-start',
+                      padding: items.length > 4 ? scale(4) : scale(8),
+                      width: scale(110),
+                      marginBottom: scale(4),
                     }}>
                     <Text
-                      style={[
-                        globalStyle.txtLabel,
-                        {
-                          color: darkenColor(
-                            settings.backgroundButtonColor ?? '',
-                            20,
-                          ),
-                        },
-                      ]}>
-                      {i18n.t('lesson.screens.Modules.chooseCorrectAnswer')}
+                      style={{
+                        fontSize: scale(13),
+                        color: COLORS.WHITE_FBF8CC,
+                        textAlign: 'center',
+                        fontFamily: FontFamily.SVNCherishMoment,
+                      }}>
+                      {value}
                     </Text>
                   </View>
+                );
+              }}
+            />
+          );
+        },
+        [],
+      );
 
-                  <VoiceButton onPress={onSpeechText} />
-                </View>
-
+      return (
+        <LessonComponent
+          backgroundImage={backgroundImage}
+          characterImage={characterImage}
+          lessonName={lessonName}
+          module={moduleName}
+          part={firstMiniTestTask?.name}
+          backgroundColor="#66c270"
+          backgroundAnswerColor={
+            settings.backgroundAnswerColor ?? COLORS.GREEN_DDF598
+          }
+          prompt={
+            firstMiniTestTask?.question?.[moduleIndex]?.instruction ?? {
+              description: settings.prompt?.toString() ?? '',
+            }
+          }
+          price="Free"
+          score={selectedChild?.adsPoints}
+          txtCountDown={
+            word?.toString() ===
+            firstMiniTestTask?.question?.[moduleIndex].correctAnswer
+              ? undefined
+              : word
+          }
+          isAnswerCorrect={isAnswerCorrect}
+          isShowCorrectContainer={isShowCorrectContainer}
+          onPressFlower={toggleShowHint}
+          buildQuestion={
+            <View
+              style={{
+                width: scale(200),
+                minHeight: scale(100),
+                marginTop: verticalScale(10),
+                flexDirection: 'row',
+                flexWrap: 'wrap',
+                justifyContent: 'space-between',
+              }}>
+              {(
+                (
+                  firstMiniTestTask?.question?.[moduleIndex]
+                    .correctAnswer as string[][]
+                )?.flat() || []
+              ).map((item, index) => {
+                return (
+                  <DragItem
+                    key={index}
+                    index={index}
+                    value={item}
+                    canSwap={false}
+                    createItem={({value}) => {
+                      return (
+                        <View
+                          style={{
+                            backgroundColor: COLORS.WHITE_FBF8CC,
+                            borderRadius: scale(10),
+                            borderWidth: 2,
+                            borderStyle: 'dashed',
+                            borderColor: COLORS.YELLOW_F2B559,
+                            alignSelf: 'flex-start',
+                            padding: scale(8),
+                            width: scale(98),
+                            marginBottom: scale(4),
+                          }}>
+                          <Text
+                            style={{
+                              fontSize: scale(13),
+                              color: COLORS.BLUE_4552C8,
+                              textAlign: 'center',
+                              fontFamily: FontFamily.SVNCherishMoment,
+                            }}>
+                            {value}
+                          </Text>
+                        </View>
+                      );
+                    }}
+                  />
+                );
+              })}
+            </View>
+          }
+          buildAnswer={
+            <View style={styles.fill}>
+              <View style={styles.wrapHeaderContainer}>
                 <View
                   style={{
-                    flexDirection: 'row',
-                    justifyContent: 'space-around',
-                    flexWrap: 'wrap',
-                    alignItems: 'center',
-                    backgroundColor: COLORS.WHITE_FBF8CC,
-                    borderRadius: scale(10),
-                    padding: scale(10),
+                    justifyContent: 'center',
+                    flex: 1,
                   }}>
-                  <View
+                  <Text
+                    style={[
+                      globalStyle.txtLabel,
+                      {
+                        color: darkenColor(
+                          settings.backgroundButtonColor ?? '',
+                          20,
+                        ),
+                      },
+                    ]}>
+                    {i18n.t('lesson.screens.Modules.chooseCorrectAnswer')}
+                  </Text>
+                </View>
+
+                <VoiceButton onPress={onSpeechText} />
+              </View>
+
+              <View
+                style={{
+                  flexDirection: 'row',
+                  justifyContent: 'space-around',
+                  flexWrap: 'wrap',
+                  alignItems: 'center',
+                  backgroundColor: COLORS.WHITE_FBF8CC,
+                  borderRadius: scale(10),
+                  padding: scale(10),
+                }}>
+                {(
+                  firstMiniTestTask?.question?.[moduleIndex]
+                    .correctAnswer as string[][]
+                ).map((item, index) => {
+                  return (
+                    <View
+                      key={index}
+                      style={{
+                        alignItems: 'center',
+                        borderColor: COLORS.YELLOW_F2B559,
+                        borderWidth: 2,
+                        padding: scale(10),
+                        borderRadius: scale(4),
+                      }}>
+                      <Text
+                        style={{
+                          fontFamily: FontFamily.SVNCherishMoment,
+                          fontSize: scale(14),
+                          color: COLORS.BLUE_258F78,
+                          marginBottom: scale(4),
+                        }}>
+                        {index === 0 ? 'Từ chỉ đặc điểm' : 'Từ chỉ hoạt động'}
+                      </Text>
+                      {item
+                        .map(() => ' ')
+                        .map((it, i) => {
+                          return buildItemAnswer(item, it, i + index * 100);
+                        })}
+                    </View>
+                  );
+                })}
+
+                {/* <View
                     style={{
                       alignItems: 'center',
                       borderColor: COLORS.YELLOW_F2B559,
@@ -428,29 +548,28 @@ const VnG2M6Lesson = observer(
                     {[' ', ' ', ' ', ' '].map((item, index) => {
                       return buildItemAnswer(item, index + 200);
                     })}
-                  </View>
-                </View>
-
-                <PrimaryButton
-                  text={i18n.t('lesson.screens.Modules.submit')}
-                  style={[
-                    styles.buttonContainer,
-                    {backgroundColor: settings.backgroundButtonColor},
-                  ]}
-                  onPress={submit}
-                />
+                  </View> */}
               </View>
-            }
-            moduleIndex={moduleIndex}
-            totalModule={totalModule}
-          />
-        </DragProvider>
+
+              <PrimaryButton
+                text={i18n.t('lesson.screens.Modules.submit')}
+                style={[
+                  styles.buttonContainer,
+                  {backgroundColor: settings.backgroundButtonColor},
+                ]}
+                onPress={submit}
+              />
+            </View>
+          }
+          moduleIndex={moduleIndex}
+          totalModule={totalModule}
+        />
       );
     },
   ),
 );
 
-export default VnG2M6Lesson;
+export default VnG4M3Lesson;
 
 const styles = StyleSheet.create({
   fill: {
