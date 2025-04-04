@@ -253,7 +253,6 @@ const VnG2M8Lesson = observer(
           buildQuestion={
             <View
               style={{
-                width: scale(200),
                 minHeight: scale(100),
                 marginTop: verticalScale(50),
               }}>
@@ -342,6 +341,7 @@ const styles = StyleSheet.create({
   },
   textParagraph: {
     fontSize: verticalScale(26),
+    lineHeight: verticalScale(38),
     textAlign: 'center',
     color: COLORS.WHITE_FBF8CC,
     textShadowColor: COLORS.YELLOW_F2B559,

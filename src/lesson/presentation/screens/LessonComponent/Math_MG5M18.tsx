@@ -15,7 +15,11 @@ import {FontFamily} from 'src/core/presentation/hooks/useFonts';
 import useGlobalStyle from 'src/core/presentation/hooks/useGlobalStyle';
 import {Task} from 'src/home/application/types/GetListQuestionResponse';
 import {COLORS} from 'src/core/presentation/constants/colors';
-import {getCorrectAnswer, WIDTH_SCREEN} from 'src/core/presentation/utils';
+import {
+  getCorrectAnswer,
+  isAndroid,
+  WIDTH_SCREEN,
+} from 'src/core/presentation/utils';
 import {scale, verticalScale} from 'react-native-size-matters';
 import Animated, {
   Easing,
@@ -36,6 +40,11 @@ import {SelectionAnswersQuestionRef} from '../../components/SelectionAnswersQues
 import KeyboardNumber from '../../components/KeyboardNumber';
 import {useI18n} from 'src/core/presentation/hooks/useI18n';
 import VoiceButton from '../../components/VoiceButton';
+import {
+  listLanguage,
+  iosVoice,
+} from 'src/core/presentation/hooks/textToSpeech/TextToSpeechProvider';
+import Tts from 'react-native-tts';
 
 type Props = {
   moduleIndex: number;
@@ -72,7 +81,7 @@ const Math_MG5M18 = observer(
       const answerRef = useRef<SelectionAnswersQuestionRef>(null);
       const globalStyle = useGlobalStyle();
 
-      const {ttsSpeak} = useContext(TextToSpeechContext);
+      const {ttsSpeak, updateDefaultVoice} = useContext(TextToSpeechContext);
       const focus = useIsFocused();
 
       const [answerSelected, setAnswerSelected] = useState<string | string[]>(
@@ -173,6 +182,30 @@ const Math_MG5M18 = observer(
           transform: [{scale: scaleS.value}],
         };
       });
+
+      useEffect(() => {
+        Tts.voices().then(voices => {
+          if (lessonName.toLocaleLowerCase().includes('english')) {
+            const engVoice = voices.find(
+              voice => voice.language === listLanguage['US English'],
+            );
+            updateDefaultVoice?.(
+              isAndroid ? engVoice?.id : iosVoice[3].id,
+              'US English',
+            );
+          } else if (lessonName.toLocaleLowerCase().includes('mandarin')) {
+            const engVoice = voices.find(
+              voice =>
+                voice.language ===
+                listLanguage['Mainland China, simplified characters'],
+            );
+            updateDefaultVoice?.(
+              engVoice?.id,
+              'Mainland China, simplified characters',
+            );
+          }
+        });
+      }, [lessonName, updateDefaultVoice]);
 
       useImperativeHandle(ref, () => ({
         isAnswerCorrect,
