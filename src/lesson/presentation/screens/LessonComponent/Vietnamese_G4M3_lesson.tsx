@@ -111,7 +111,7 @@ const VnG4M3Lesson = observer(
         resetLearning,
       } = useSettingLesson({
         countDownTime: trainingCount <= 2 ? 0 : 5,
-        isCorrectAnswer,
+        isCorrectAnswer: isCorrectAnswer,
         onSubmit: () => {
           clear();
           setAnswerSelected('');
@@ -147,7 +147,7 @@ const VnG4M3Lesson = observer(
       const opacity = useSharedValue(0);
       const scaleS = useSharedValue(1);
 
-      useEffect(() => {
+      const onSubmit = useCallback(() => {
         const selectedFeature = (() => {
           const listFeature = Object.keys(listDragItem).filter(
             (index: string) => listDragItem[+index].parentId > 0,
@@ -201,8 +201,18 @@ const VnG4M3Lesson = observer(
         const isCorrect = correctAnswersCount > correctAnswers.length / 2;
 
         setIsCorrectAnswer(isCorrect);
-        // submit();
       }, [listDragItem, firstMiniTestTask?.question, moduleIndex]);
+
+      /**
+       * * submit khi đúng
+       */
+      const isSubmitRef = useRef(false);
+      useEffect(() => {
+        if (isCorrectAnswer && !isSubmitRef.current) {
+          isSubmitRef.current = true;
+          submit();
+        }
+      }, [isCorrectAnswer, submit]);
 
       /**
        * * reset lại countdown khi lần làm thay đổi
@@ -557,7 +567,7 @@ const VnG4M3Lesson = observer(
                   styles.buttonContainer,
                   {backgroundColor: settings.backgroundButtonColor},
                 ]}
-                onPress={submit}
+                onPress={onSubmit}
               />
             </View>
           }
