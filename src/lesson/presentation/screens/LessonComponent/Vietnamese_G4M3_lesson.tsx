@@ -49,7 +49,10 @@ import {
 import {useI18n} from 'src/core/presentation/hooks/useI18n';
 import VoiceButton from '../../components/VoiceButton';
 import DragItem from '../../components/Drag/DragSendItem';
-import DragProvider, {useDragContext} from '../../components/Drag/DragProvider';
+import DragProvider, {
+  DragItemT,
+  useDragContext,
+} from '../../components/Drag/DragProvider';
 
 type Props = {
   moduleIndex: number;
@@ -147,61 +150,66 @@ const VnG4M3Lesson = observer(
       const opacity = useSharedValue(0);
       const scaleS = useSharedValue(1);
 
-      const onSubmit = useCallback(() => {
-        const selectedFeature = (() => {
-          const listFeature = Object.keys(listDragItem).filter(
-            (index: string) => listDragItem[+index].parentId > 0,
+      const onSubmit = useCallback(
+        (listDragItem: Record<number, DragItemT>) => {
+          const selectedFeature = (() => {
+            const listFeature = Object.keys(listDragItem).filter(
+              (index: string) => listDragItem[+index].parentId > 0,
+            );
+
+            return listFeature
+              .filter(e => +e >= 100 && +e < 200)
+              .map(item => {
+                return listDragItem[listDragItem[+item].parentId];
+              });
+          })();
+
+          const selectedActivity = (() => {
+            const listFeature = Object.keys(listDragItem).filter(
+              (index: string) => listDragItem[+index].parentId > 0,
+            );
+            return listFeature
+              .filter(e => +e >= 200)
+              .map(item => {
+                return listDragItem[listDragItem[+item].parentId];
+              });
+          })();
+
+          console.log(
+            '🛠 LOG: 🚀 --> --------------------------------------------🛠 LOG: 🚀 -->',
           );
-
-          return listFeature
-            .filter(e => +e >= 100 && +e < 200)
-            .map(item => {
-              return listDragItem[listDragItem[+item].parentId];
-            });
-        })();
-
-        const selectedActivity = (() => {
-          const listFeature = Object.keys(listDragItem).filter(
-            (index: string) => listDragItem[+index].parentId > 0,
+          console.log('🛠 LOG: 🚀 --> ~ listDragItem:', listDragItem);
+          console.log(
+            '🛠 LOG: 🚀 --> --------------------------------------------🛠 LOG: 🚀 -->',
           );
-          return listFeature
-            .filter(e => +e >= 200)
-            .map(item => {
-              return listDragItem[listDragItem[+item].parentId];
-            });
-        })();
+          console.log(
+            '🛠 LOG: 🚀 --> -----------------------------------------------------------------------🛠 LOG: 🚀 -->',
+          );
+          console.log(
+            '🛠 LOG: 🚀 --> ~ selectedActivity ~ selectedActivity:',
+            selectedActivity,
+            selectedFeature,
+          );
+          console.log(
+            '🛠 LOG: 🚀 --> -----------------------------------------------------------------------🛠 LOG: 🚀 -->',
+          );
+          const correctAnswers = (
+            firstMiniTestTask?.question?.[moduleIndex]
+              .correctAnswer as string[][]
+          ).flat();
+          const selectedAnswers = [...selectedFeature, ...selectedActivity].map(
+            item => item.value,
+          );
+          const correctAnswersCount = correctAnswers.filter(answer =>
+            selectedAnswers.includes(answer),
+          ).length;
+          const isCorrect = correctAnswersCount > correctAnswers.length / 2;
 
-        console.log(
-          '🛠 LOG: 🚀 --> --------------------------------------------🛠 LOG: 🚀 -->',
-        );
-        console.log('🛠 LOG: 🚀 --> ~ listDragItem:', listDragItem);
-        console.log(
-          '🛠 LOG: 🚀 --> --------------------------------------------🛠 LOG: 🚀 -->',
-        );
-        console.log(
-          '🛠 LOG: 🚀 --> -----------------------------------------------------------------------🛠 LOG: 🚀 -->',
-        );
-        console.log(
-          '🛠 LOG: 🚀 --> ~ selectedActivity ~ selectedActivity:',
-          selectedActivity,
-          selectedFeature,
-        );
-        console.log(
-          '🛠 LOG: 🚀 --> -----------------------------------------------------------------------🛠 LOG: 🚀 -->',
-        );
-        const correctAnswers = (
-          firstMiniTestTask?.question?.[moduleIndex].correctAnswer as string[][]
-        ).flat();
-        const selectedAnswers = [...selectedFeature, ...selectedActivity].map(
-          item => item.value,
-        );
-        const correctAnswersCount = correctAnswers.filter(answer =>
-          selectedAnswers.includes(answer),
-        ).length;
-        const isCorrect = correctAnswersCount > correctAnswers.length / 2;
-
-        setIsCorrectAnswer(isCorrect);
-      }, [listDragItem, firstMiniTestTask?.question, moduleIndex]);
+          isSubmitRef.current = false;
+          setIsCorrectAnswer(isCorrect);
+        },
+        [firstMiniTestTask?.question, moduleIndex],
+      );
 
       /**
        * * submit khi đúng
@@ -567,7 +575,7 @@ const VnG4M3Lesson = observer(
                   styles.buttonContainer,
                   {backgroundColor: settings.backgroundButtonColor},
                 ]}
-                onPress={onSubmit}
+                onPress={() => onSubmit(listDragItem)}
               />
             </View>
           }
