@@ -93,7 +93,9 @@ const VnG4M3Lesson = observer(
 
       const {selectedChild} = useAuthenticationStore();
 
-      const [isCorrectAnswer, setIsCorrectAnswer] = useState(false);
+      const [isCorrectAnswer, setIsCorrectAnswer] = useState<
+        boolean | undefined
+      >(undefined);
       console.log(
         '🛠 LOG: 🚀 --> --------------------------------------------------🛠 LOG: 🚀 -->',
       );
@@ -150,7 +152,7 @@ const VnG4M3Lesson = observer(
       const onSubmit = useCallback(() => {
         const selectedFeature = (() => {
           const listFeature = Object.keys(listDragItem).filter(
-            (index: string) => listDragItem[+index].parentId > 0,
+            (index: string) => listDragItem[+index].parentId >= 0,
           );
 
           return listFeature
@@ -162,7 +164,7 @@ const VnG4M3Lesson = observer(
 
         const selectedActivity = (() => {
           const listFeature = Object.keys(listDragItem).filter(
-            (index: string) => listDragItem[+index].parentId > 0,
+            (index: string) => listDragItem[+index].parentId >= 0,
           );
           return listFeature
             .filter(e => +e >= 200)
@@ -198,7 +200,7 @@ const VnG4M3Lesson = observer(
         const correctAnswersCount = correctAnswers.filter(answer =>
           selectedAnswers.includes(answer),
         ).length;
-        const isCorrect = correctAnswersCount > correctAnswers.length / 2;
+        const isCorrect = correctAnswersCount === correctAnswers.length;
 
         setIsCorrectAnswer(isCorrect);
       }, [listDragItem, firstMiniTestTask?.question, moduleIndex]);
@@ -208,7 +210,7 @@ const VnG4M3Lesson = observer(
        */
       const isSubmitRef = useRef(false);
       useEffect(() => {
-        if (isCorrectAnswer && !isSubmitRef.current) {
+        if (isCorrectAnswer !== undefined && !isSubmitRef.current) {
           isSubmitRef.current = true;
           submit();
         }
@@ -301,42 +303,6 @@ const VnG4M3Lesson = observer(
               index={100 + index}
               value={item}
               createItem={({value}) => {
-                // console.log(
-                //   '🛠 LOG: 🚀 --> ~ value:',
-                //   value,
-                //   index,
-                //   selectedFeature,
-                //   selectedActivity,
-                // );
-                // if (index >= 100 && index < 200) {
-                //   const indexFeature = selectedFeature.current.findIndex(
-                //     item => item.index === index,
-                //   );
-                //   if (
-                //     indexFeature === -1 &&
-                //     value !== ' ' &&
-                //     value !== undefined
-                //   ) {
-                //     selectedFeature.current.push({
-                //       feature: value,
-                //       index: index,
-                //     });
-                //   }
-                // } else if (index >= 200) {
-                //   const indexActivity = selectedActivity.current.findIndex(
-                //     item => item.index === index,
-                //   );
-                //   if (
-                //     indexActivity === -1 &&
-                //     value !== ' ' &&
-                //     value !== undefined
-                //   ) {
-                //     selectedActivity.current.push({
-                //       activity: value,
-                //       index: index,
-                //     });
-                //   }
-                // }
                 return (
                   <View
                     style={{
@@ -515,50 +481,6 @@ const VnG4M3Lesson = observer(
                     </View>
                   );
                 })}
-
-                {/* <View
-                    style={{
-                      alignItems: 'center',
-                      borderColor: COLORS.YELLOW_F2B559,
-                      borderWidth: 2,
-                      padding: scale(10),
-                      borderRadius: scale(4),
-                    }}>
-                    <Text
-                      style={{
-                        fontFamily: FontFamily.SVNCherishMoment,
-                        fontSize: scale(14),
-                        color: COLORS.BLUE_258F78,
-                        marginBottom: scale(4),
-                      }}>
-                      Từ chỉ đặc điểm
-                    </Text>
-                    {[' ', ' ', ' ', ' '].map((item, index) => {
-                      return buildItemAnswer(item, index + 100);
-                    })}
-                  </View>
-
-                  <View
-                    style={{
-                      alignItems: 'center',
-                      borderColor: COLORS.YELLOW_F2B559,
-                      borderWidth: 2,
-                      padding: scale(10),
-                      borderRadius: scale(4),
-                    }}>
-                    <Text
-                      style={{
-                        fontFamily: FontFamily.SVNCherishMoment,
-                        fontSize: scale(14),
-                        color: COLORS.BLUE_258F78,
-                        marginBottom: scale(4),
-                      }}>
-                      Từ chỉ hoạt động
-                    </Text>
-                    {[' ', ' ', ' ', ' '].map((item, index) => {
-                      return buildItemAnswer(item, index + 200);
-                    })}
-                  </View> */}
               </View>
 
               <PrimaryButton
