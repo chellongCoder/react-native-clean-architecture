@@ -77,6 +77,7 @@ import VnG2M6Lesson from './LessonComponent/Vietnamese_G4M3_lesson';
 import VnG1M4Lesson from './LessonComponent/Vietnamese_VNG1M4_Lesson';
 import VnG4M3Lesson from './LessonComponent/Vietnamese_G4M3_lesson';
 import DragProvider from '../components/Drag/DragProvider';
+import VNG5M1NLesson from './LessonComponent/Vietnamese_G5M1_N_Leson';
 
 export enum MathQuestionType {
   MathMG0M1 = 'MATH_MG0M1',
@@ -127,6 +128,8 @@ export enum LanguageE {
   VIETNAMESE_VNG4M3 = 'VIETNAMESE_VNG4M3',
   VIETNAMESE_VNG5M1 = 'VIETNAMESE_VNG5M1',
   VIETNAMESE_VNG6M1 = 'VIETNAMESE_VNG6M1',
+  VIETNAMESE_VNG5M1N = 'VIETNAMESE_VNG5M1_N',
+  VIETNAMESE_VNG5M2 = 'VIETNAMESE_VNG5M2',
 }
 
 export enum ScienceE {
@@ -693,6 +696,9 @@ const LessonScreen = observer(() => {
             <VnG4M3Lesson {...dataProps} ref={vowelRef} />
           </DragProvider>
         );
+      case LanguageE.VIETNAMESE_VNG5M1N:
+      case LanguageE.VIETNAMESE_VNG5M2:
+        return <VNG5M1NLesson {...dataProps} ref={vowelRef} />;
       /**----------------------
        *todo    các question cho môn khoa học
        *------------------------**/

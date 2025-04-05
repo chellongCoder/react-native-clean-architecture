@@ -96,7 +96,7 @@ type Props = {
  *   characterImageFail="path/to/fail.png"
  * />
  */
-const VnG0M1Lesson = observer(
+const VNG5M1NLesson = observer(
   forwardRef<LessonRef, Props>(
     (
       {
@@ -587,7 +587,7 @@ const VnG0M1Lesson = observer(
   ),
 );
 
-export default VnG0M1Lesson;
+export default VNG5M1NLesson;
 
 const styles = StyleSheet.create({
   fill: {
