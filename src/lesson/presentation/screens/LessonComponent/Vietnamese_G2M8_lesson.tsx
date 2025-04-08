@@ -100,7 +100,8 @@ const VnG2M8Lesson = observer(
         isCorrectAnswer:
           answerSelected ===
           getCorrectAnswer(
-            firstMiniTestTask?.question?.[moduleIndex]?.correctAnswer,
+            firstMiniTestTask?.question?.[moduleIndex]
+              ?.correctAnswer as string[],
           ).trim(),
         onSubmit: () => {
           setAnswerSelected('');
@@ -286,7 +287,9 @@ const VnG2M8Lesson = observer(
                 <VoiceButton onPress={onSpeechText} />
               </View>
               <SelectionAnswersQuestion
-                answer={firstMiniTestTask?.question?.[moduleIndex].answers}
+                answer={
+                  firstMiniTestTask?.question?.[moduleIndex].answers as string[]
+                }
                 question={
                   <TextHighlight
                     content={

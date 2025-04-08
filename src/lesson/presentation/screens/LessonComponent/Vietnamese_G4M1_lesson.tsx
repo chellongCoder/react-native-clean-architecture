@@ -59,6 +59,7 @@ type Props = {
   backgroundImage?: string;
   characterImageSuccess?: string;
   characterImageFail?: string;
+  txtDescription?: string;
 };
 
 const VnG4M1Lesson = observer(
@@ -74,6 +75,7 @@ const VnG4M1Lesson = observer(
         backgroundImage,
         characterImageSuccess,
         characterImageFail,
+        txtDescription,
       },
       ref,
     ) => {
@@ -81,7 +83,7 @@ const VnG4M1Lesson = observer(
 
       const {ttsSpeak, updateDefaultVoice} = useContext(TextToSpeechContext);
       const focus = useIsFocused();
-      const answerRef = useRef<SelectionAnswersQuestionRef>();
+      const answerRef = useRef<SelectionAnswersQuestionRef>(null);
 
       const [answerSelected, setAnswerSelected] = useState('');
 
@@ -102,7 +104,8 @@ const VnG4M1Lesson = observer(
         isCorrectAnswer:
           answerSelected ===
           getCorrectAnswer(
-            firstMiniTestTask?.question?.[moduleIndex]?.correctAnswer,
+            firstMiniTestTask?.question?.[moduleIndex]
+              ?.correctAnswer as string[],
           ).trim(),
         onSubmit: () => {
           setAnswerSelected('');
@@ -271,7 +274,11 @@ const VnG4M1Lesson = observer(
                 description={
                   firstMiniTestTask?.question?.[moduleIndex]?.paragraph ?? ''
                 }
-                style={[styles.fonts_SVN_Cherish, styles.textParagraph]}
+                style={[
+                  styles.fonts_SVN_Cherish,
+                  styles.textParagraph,
+                  txtDescription && {color: txtDescription},
+                ].flat()}
                 styleHighlight={{
                   textDecorationLine: 'underline',
                   fontWeight: '400',
@@ -304,7 +311,9 @@ const VnG4M1Lesson = observer(
                 <VoiceButton onPress={onSpeechText} />
               </View>
               <SelectionAnswersQuestion
-                answer={firstMiniTestTask?.question?.[moduleIndex].answers}
+                answer={
+                  firstMiniTestTask?.question?.[moduleIndex].answers as string[]
+                }
                 question={
                   <TextHighlight
                     content={
