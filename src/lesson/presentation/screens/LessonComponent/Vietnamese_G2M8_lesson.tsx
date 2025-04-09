@@ -21,7 +21,7 @@ import {
   isAndroid,
 } from 'src/core/presentation/utils';
 import {scale, verticalScale} from 'react-native-size-matters';
-import {
+import Animated, {
   Easing,
   ReduceMotion,
   useSharedValue,
@@ -88,6 +88,7 @@ const VnG2M8Lesson = observer(
       const {selectedChild} = useAuthenticationStore();
 
       const {
+        env,
         isAnswerCorrect,
         isShowCorrectContainer,
         word,
@@ -150,12 +151,6 @@ const VnG2M8Lesson = observer(
           // Check if the component is focused
           const firstTimeout = setTimeout(() => {
             onSpeechText();
-
-            const secondTimeout = setTimeout(() => {
-              onSpeechText();
-            }, 2500);
-
-            return () => clearTimeout(secondTimeout);
           }, 1500);
 
           return () => clearTimeout(firstTimeout);
@@ -231,7 +226,7 @@ const VnG2M8Lesson = observer(
           lessonName={lessonName}
           module={moduleName}
           part={firstMiniTestTask?.name}
-          backgroundColor="#66c270"
+          backgroundColor={settings.backgroundColor ?? COLORS.GREEN_DDF598}
           backgroundAnswerColor={
             settings.backgroundAnswerColor ?? COLORS.GREEN_DDF598
           }
@@ -252,14 +247,21 @@ const VnG2M8Lesson = observer(
           isShowCorrectContainer={isShowCorrectContainer}
           onPressFlower={toggleShowHint}
           buildQuestion={
-            <View
-              style={{
-                minHeight: scale(100),
-                marginTop: verticalScale(50),
-              }}>
-              <Text style={[styles.fonts_SVN_Cherish, styles.textParagraph]}>
-                {firstMiniTestTask?.question?.[moduleIndex].paragraph}
-              </Text>
+            <View>
+              <Animated.Image
+                resizeMode={'contain'}
+                style={[
+                  {
+                    width: scale(200),
+                    height: verticalScale(140),
+                  },
+                ]}
+                source={{
+                  uri:
+                    env.IMAGE_QUESTION_BASE_API_URL +
+                    firstMiniTestTask?.question?.[moduleIndex].image,
+                }}
+              />
             </View>
           }
           buildAnswer={
@@ -288,7 +290,8 @@ const VnG2M8Lesson = observer(
               </View>
               <SelectionAnswersQuestion
                 answer={
-                  firstMiniTestTask?.question?.[moduleIndex].answers as string[]
+                  firstMiniTestTask?.question?.[moduleIndex]
+                    ?.answers as string[]
                 }
                 question={
                   <TextHighlight

@@ -134,6 +134,9 @@ export enum LanguageE {
   VIETNAMESE_VNG5M5 = 'VIETNAMESE_VNG5M5',
   VIETNAMESE_VNG5M6 = 'VIETNAMESE_VNG5M6',
   VIETNAMESE_VNG5M7 = 'VIETNAMESE_VNG5M7',
+  VIETNAMESE_VNG5M8 = 'VIETNAMESE_VNG5M8',
+  VIETNAMESE_VNG5M9 = 'VIETNAMESE_VNG5M9',
+  VIETNAMESE_VNG5M10 = 'VIETNAMESE_VNG5M10',
 
   VIETNAMESE_VNG6M1 = 'VIETNAMESE_VNG6M1',
 }
@@ -729,6 +732,13 @@ const LessonScreen = observer(() => {
           ref: vowelRef,
         });
         return VG5M67;
+      case LanguageE.VIETNAMESE_VNG5M8:
+        const VG5M8 = React.cloneElement(VnG2M8Lesson, {
+          ...dataProps,
+          ref: vowelRef,
+        });
+        return VG5M8;
+
       /**----------------------
        *todo    các question cho môn khoa học
        *------------------------**/
