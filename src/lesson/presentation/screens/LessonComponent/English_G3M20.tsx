@@ -43,6 +43,12 @@ import SelectionAnswersQuestion, {
 import CharScramble, {CharScrambleRep} from '../../components/CharScramble';
 import {useI18n} from 'src/core/presentation/hooks/useI18n';
 import VoiceButton from '../../components/VoiceButton';
+import Tts from 'react-native-tts';
+import {
+  iosVoice,
+  listLanguage,
+} from 'src/core/presentation/hooks/textToSpeech/TextToSpeechProvider';
+import {isAndroid} from 'src/core/presentation/utils';
 
 type Props = {
   moduleIndex: number;
@@ -74,19 +80,12 @@ const English_G3M20 = observer(
     ) => {
       const globalStyle = useGlobalStyle();
 
-      const {ttsSpeak} = useContext(TextToSpeechContext);
+      const {ttsSpeak, updateDefaultVoice} = useContext(TextToSpeechContext);
       const focus = useIsFocused();
       const answerRef = useRef<SelectionAnswersQuestionRef>();
 
       const [answerSelected, setAnswerSelected] = useState<string | string[]>(
         '',
-      );
-      console.log(
-        '🛠 LOG: 🚀 --> --------------------------------------🛠 LOG: 🚀 -->',
-      );
-      console.log('🛠 LOG: 🚀 --> ~ answerSelected:', answerSelected);
-      console.log(
-        '🛠 LOG: 🚀 --> --------------------------------------🛠 LOG: 🚀 -->',
       );
 
       const {trainingCount, getSetting} = useLessonStore();
@@ -134,7 +133,9 @@ const English_G3M20 = observer(
 
       const onSpeechText = useCallback(() => {
         ttsSpeak?.(
-          firstMiniTestTask?.question?.[moduleIndex]?.description ?? '',
+          firstMiniTestTask?.question?.[moduleIndex].content
+            .toString()
+            .toLowerCase() ?? '',
         );
       }, [firstMiniTestTask?.question, moduleIndex, ttsSpeak]);
 
@@ -172,6 +173,38 @@ const English_G3M20 = observer(
           });
         });
       }, [moduleIndex, opacity, scaleS]);
+
+      useEffect(() => {
+        Tts.voices().then(voices => {
+          if (lessonName.toLocaleLowerCase().includes('english')) {
+            const engVoice = voices.find(
+              voice => voice.language === listLanguage['US English'],
+            );
+            updateDefaultVoice?.(
+              isAndroid ? engVoice?.id : iosVoice[3].id,
+              'US English',
+            );
+          } else if (lessonName.toLocaleLowerCase().includes('mandarin')) {
+            const engVoice = voices.find(
+              voice =>
+                voice.language ===
+                listLanguage['Mainland China, simplified characters'],
+            );
+            updateDefaultVoice?.(
+              engVoice?.id,
+              'Mainland China, simplified characters',
+            );
+          } else if (lessonName.toLocaleLowerCase().includes('tiếng việt')) {
+            const vietnameseVoices = voices.filter(
+              voice =>
+                voice.language.startsWith('vi-') ||
+                voice.name.toLowerCase().includes('vietnamese'),
+            );
+
+            updateDefaultVoice?.(vietnameseVoices[0]?.id, 'Vie (Vietnamese)');
+          }
+        });
+      }, [lessonName, updateDefaultVoice]);
 
       const animatedStyle = useAnimatedStyle(() => {
         return {

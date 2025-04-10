@@ -30,6 +30,7 @@ import {TextToSpeechContext} from 'src/core/presentation/hooks/textToSpeech/Text
 import CharScramble, {CharScrambleRep} from '../../components/CharScramble';
 import {useI18n} from 'src/core/presentation/hooks/useI18n';
 import VoiceButton from '../../components/VoiceButton';
+import {useIsFocused} from '@react-navigation/native';
 
 type Props = {
   moduleIndex: number;
@@ -93,6 +94,8 @@ const EssayLesson = ({
     fullAnswer: firstMiniTestTask?.question?.[moduleIndex].fullAnswer,
   });
 
+  const focus = useIsFocused();
+
   const onSpeechText = useCallback(() => {
     ttsSpeak?.(
       firstMiniTestTask?.question?.[moduleIndex].fullAnswer
@@ -106,6 +109,17 @@ const EssayLesson = ({
       ? characterImageSuccess
       : characterImageFail;
   }, [characterImageFail, characterImageSuccess, isAnswerCorrect]);
+
+  useEffect(() => {
+    if (focus) {
+      // Check if the component is focused
+      const firstTimeout = setTimeout(() => {
+        onSpeechText();
+      }, 1500);
+
+      return () => clearTimeout(firstTimeout);
+    }
+  }, [onSpeechText, focus]); // Added focus to the dependency array
 
   useEffect(() => {
     opacity.value = withTiming(0, {duration: 500}, () => {

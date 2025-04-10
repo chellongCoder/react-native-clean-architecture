@@ -78,6 +78,7 @@ import VnG1M4Lesson from './LessonComponent/Vietnamese_VNG1M4_Lesson';
 import VnG4M3Lesson from './LessonComponent/Vietnamese_G4M3_lesson';
 import DragProvider from '../components/Drag/DragProvider';
 import VNG5M1NLesson from './LessonComponent/Vietnamese_G5M1_N_Leson';
+import VnG4M5Lesson from './LessonComponent/Vietnamese_G4M5_lesson';
 
 export enum MathQuestionType {
   MathMG0M1 = 'MATH_MG0M1',
@@ -126,6 +127,7 @@ export enum LanguageE {
   VIETNAMESE_VNG3M1 = 'VIETNAMESE_VNG3M1',
   VIETNAMESE_VNG4M1 = 'VIETNAMESE_VNG4M1',
   VIETNAMESE_VNG4M3 = 'VIETNAMESE_VNG4M3',
+  VIETNAMESE_VNG4M5 = 'VIETNAMESE_VNG4M5',
   VIETNAMESE_VNG5M1 = 'VIETNAMESE_VNG5M1',
   VIETNAMESE_VNG5M1N = 'VIETNAMESE_VNG5M1_N',
   VIETNAMESE_VNG5M2 = 'VIETNAMESE_VNG5M2',
@@ -695,6 +697,8 @@ const LessonScreen = observer(() => {
         return <VnG3M1Lesson {...dataProps} ref={vowelRef} />;
       case LanguageE.VIETNAMESE_VNG4M1:
         return <VnG4M1Lesson {...dataProps} ref={vowelRef} />;
+      case LanguageE.VIETNAMESE_VNG4M5:
+        return <VnG4M5Lesson {...dataProps} ref={vowelRef} />;
       case LanguageE.VIETNAMESE_VNG5M1:
         return <VnG5M1Lesson {...dataProps} ref={vowelRef} />;
       case LanguageE.VIETNAMESE_VNG6M1:
