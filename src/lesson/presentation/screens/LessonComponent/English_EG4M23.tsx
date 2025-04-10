@@ -36,6 +36,12 @@ import SelectionAnswersQuestion, {
 } from '../../components/SelectionAnswersQuestion';
 import {useI18n} from 'src/core/presentation/hooks/useI18n';
 import VoiceButton from '../../components/VoiceButton';
+import Tts from 'react-native-tts';
+import {
+  iosVoice,
+  listLanguage,
+} from 'src/core/presentation/hooks/textToSpeech/TextToSpeechProvider';
+import {isAndroid} from 'src/core/presentation/utils';
 
 type Props = {
   moduleIndex: number;
@@ -67,7 +73,7 @@ const English_EG4M23 = observer(
     ) => {
       const globalStyle = useGlobalStyle();
 
-      const {ttsSpeak} = useContext(TextToSpeechContext);
+      const {ttsSpeak, updateDefaultVoice} = useContext(TextToSpeechContext);
       const focus = useIsFocused();
       const answerRef = useRef<SelectionAnswersQuestionRef>();
 
@@ -90,7 +96,9 @@ const English_EG4M23 = observer(
         isCorrectAnswer:
           answerSelected ===
           getCorrectAnswer(
-            firstMiniTestTask?.question?.[moduleIndex]?.correctAnswer,
+            firstMiniTestTask?.question?.[moduleIndex]?.correctAnswer
+              .toString()
+              .toLowerCase(),
           ),
         onSubmit: () => {
           setAnswerSelected('');
@@ -115,8 +123,12 @@ const English_EG4M23 = observer(
       }, [characterImageFail, characterImageSuccess, isAnswerCorrect]);
 
       const onSpeechText = useCallback(() => {
-        ttsSpeak?.(settings.prompt?.toString() ?? '');
-      }, [settings.prompt, ttsSpeak]);
+        ttsSpeak?.(
+          firstMiniTestTask?.question?.[moduleIndex].fullAnswer
+            .toString()
+            .toLowerCase() ?? '',
+        );
+      }, [firstMiniTestTask?.question, moduleIndex, ttsSpeak]);
 
       const opacity = useSharedValue(0);
       const scaleS = useSharedValue(1);
@@ -132,17 +144,11 @@ const English_EG4M23 = observer(
       useEffect(() => {
         if (focus) {
           // Check if the component is focused
-          const firstTimeout = setTimeout(() => {
+          const timeout = setTimeout(() => {
             onSpeechText();
-
-            const secondTimeout = setTimeout(() => {
-              onSpeechText();
-            }, 2500);
-
-            return () => clearTimeout(secondTimeout);
           }, 1500);
 
-          return () => clearTimeout(firstTimeout);
+          return () => clearTimeout(timeout);
         }
       }, [onSpeechText, focus]); // Added focus to the dependency array
 
@@ -158,6 +164,38 @@ const English_EG4M23 = observer(
           });
         });
       }, [moduleIndex, opacity, scaleS]);
+
+      useEffect(() => {
+        Tts.voices().then(voices => {
+          if (lessonName.toLocaleLowerCase().includes('english')) {
+            const engVoice = voices.find(
+              voice => voice.language === listLanguage['US English'],
+            );
+            updateDefaultVoice?.(
+              isAndroid ? engVoice?.id : iosVoice[3].id,
+              'US English',
+            );
+          } else if (lessonName.toLocaleLowerCase().includes('mandarin')) {
+            const engVoice = voices.find(
+              voice =>
+                voice.language ===
+                listLanguage['Mainland China, simplified characters'],
+            );
+            updateDefaultVoice?.(
+              engVoice?.id,
+              'Mainland China, simplified characters',
+            );
+          } else if (lessonName.toLocaleLowerCase().includes('tiếng việt')) {
+            const vietnameseVoices = voices.filter(
+              voice =>
+                voice.language.startsWith('vi-') ||
+                voice.name.toLowerCase().includes('vietnamese'),
+            );
+
+            updateDefaultVoice?.(vietnameseVoices[0]?.id, 'Vie (Vietnamese)');
+          }
+        });
+      }, [lessonName, updateDefaultVoice]);
 
       useImperativeHandle(ref, () => ({
         isAnswerCorrect,

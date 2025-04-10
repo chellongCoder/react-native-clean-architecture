@@ -99,7 +99,9 @@ const LatinLesson = ({
   const onSpeechText = useCallback(() => {
     ttsSpeak?.(
       getCorrectAnswer(
-        firstMiniTestTask?.question?.[moduleIndex].correctAnswer,
+        firstMiniTestTask?.question?.[moduleIndex].correctAnswer
+          .toString()
+          .toLowerCase(),
       ),
     );
   }, [firstMiniTestTask?.question, moduleIndex, ttsSpeak]);

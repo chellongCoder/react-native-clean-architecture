@@ -1,4 +1,6 @@
-import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+/* eslint-disable react-native/no-inline-styles */
+
+import {ScrollView, StyleSheet, Text, View} from 'react-native';
 import React, {
   forwardRef,
   useCallback,
@@ -18,13 +20,13 @@ import {COLORS} from 'src/core/presentation/constants/colors';
 import {
   darkenColor,
   getCorrectAnswer,
+  isAndroid,
   isSubArray,
 } from 'src/core/presentation/utils';
 import {scale, verticalScale} from 'react-native-size-matters';
-import Animated, {
+import {
   Easing,
   ReduceMotion,
-  useAnimatedStyle,
   useSharedValue,
   withTiming,
 } from 'react-native-reanimated';
@@ -36,20 +38,16 @@ import useAuthenticationStore from 'src/authentication/presentation/stores/useAu
 import {observer} from 'mobx-react';
 import {LessonRef} from '../../types';
 import useHomeStore from 'src/home/presentation/stores/useHomeStore';
-
-import SelectionTextsQuestion, {
-  SelectionTextsQuestionRef,
-} from '../../components/SelectionTextsQuestion';
-import {ScrollView} from 'react-native-gesture-handler';
-import TextHighlight from '../../components/TextHighlight';
-import {useI18n} from 'src/core/presentation/hooks/useI18n';
-import VoiceButton from '../../components/VoiceButton';
+import {SelectionAnswersQuestionRef} from '../../components/SelectionAnswersQuestion';
 import Tts from 'react-native-tts';
 import {
   iosVoice,
   listLanguage,
 } from 'src/core/presentation/hooks/textToSpeech/TextToSpeechProvider';
-import {isAndroid} from 'src/core/presentation/utils';
+import {useI18n} from 'src/core/presentation/hooks/useI18n';
+import VoiceButton from '../../components/VoiceButton';
+import TextHighlight from '../../components/TextHighlight';
+import SelectionTextsQuestion from '../../components/SelectionTextsQuestion';
 
 type Props = {
   moduleIndex: number;
@@ -65,7 +63,7 @@ type Props = {
   answer?: string[];
 };
 
-const English_G5M16 = observer(
+const VnG4M5Lesson = observer(
   forwardRef<LessonRef, Props>(
     (
       {
@@ -83,7 +81,7 @@ const English_G5M16 = observer(
       },
       ref,
     ) => {
-      const answerRef = useRef<SelectionTextsQuestionRef>(null);
+      const answerRef = useRef<SelectionAnswersQuestionRef>(null);
       const globalStyle = useGlobalStyle();
 
       const {ttsSpeak, updateDefaultVoice} = useContext(TextToSpeechContext);
@@ -92,6 +90,7 @@ const English_G5M16 = observer(
       const [answerSelected, setAnswerSelected] = useState<string | string[]>(
         '',
       );
+
       const {trainingCount, getSetting} = useLessonStore();
 
       const {selectedChild} = useAuthenticationStore();
@@ -100,7 +99,6 @@ const English_G5M16 = observer(
         isAnswerCorrect,
         isShowCorrectContainer,
         word,
-        env,
         learningTimer,
         submit,
         toggleShowHint,
@@ -118,6 +116,7 @@ const English_G5M16 = observer(
           nextModule((answerSelected as string[]).join(''));
         },
         fullAnswer: firstMiniTestTask?.question?.[moduleIndex].fullAnswer,
+        totalTime: 5 * 60,
       });
 
       const {lessonSetting} = useHomeStore();
@@ -184,26 +183,6 @@ const English_G5M16 = observer(
       }, [onSpeechText, focus]); // Added focus to the dependency array
 
       useEffect(() => {
-        opacity.value = withTiming(0, {duration: 500}, () => {
-          opacity.value = withTiming(1, {duration: 500});
-        });
-        scaleS.value = withTiming(0, {duration: 500}, () => {
-          scaleS.value = withTiming(1, {
-            duration: 500,
-            easing: Easing.elastic(2),
-            reduceMotion: ReduceMotion.System,
-          });
-        });
-      }, [moduleIndex, opacity, scaleS]);
-
-      const animatedStyle = useAnimatedStyle(() => {
-        return {
-          opacity: opacity.value,
-          transform: [{scale: scaleS.value}],
-        };
-      });
-
-      useEffect(() => {
         Tts.voices().then(voices => {
           if (lessonName.toLocaleLowerCase().includes('english')) {
             const engVoice = voices.find(
@@ -235,13 +214,31 @@ const English_G5M16 = observer(
         });
       }, [lessonName, updateDefaultVoice]);
 
+      useEffect(() => {
+        opacity.value = withTiming(0, {duration: 500}, () => {
+          opacity.value = withTiming(1, {duration: 500});
+        });
+        scaleS.value = withTiming(0, {duration: 500}, () => {
+          scaleS.value = withTiming(1, {
+            duration: 500,
+            easing: Easing.elastic(2),
+            reduceMotion: ReduceMotion.System,
+          });
+        });
+      }, [moduleIndex, opacity, scaleS]);
+
       useImperativeHandle(ref, () => ({
         isAnswerCorrect,
         onChoiceCorrectedAnswer: () => {
+          const correctAnswer =
+            firstMiniTestTask?.question?.[moduleIndex]?.correctAnswer;
+          const flattenedAnswer = Array.isArray(correctAnswer)
+            ? Array.isArray(correctAnswer[0])
+              ? correctAnswer.flat()
+              : correctAnswer
+            : correctAnswer;
           setAnswerSelected(
-            getCorrectAnswer(
-              firstMiniTestTask?.question?.[moduleIndex]?.correctAnswer,
-            ),
+            getCorrectAnswer(flattenedAnswer as string | string[] | undefined),
           );
         },
       }));
@@ -250,27 +247,23 @@ const English_G5M16 = observer(
         <LessonComponent
           backgroundImage={backgroundImage}
           characterImage={characterImage}
-          characterStyle={{
-            marginBottom: -verticalScale(60),
-            marginLeft: -verticalScale(15),
-            transform: [{scale: 1.4}],
-          }}
-          module={moduleName}
           lessonName={lessonName}
+          module={moduleName}
           part={firstMiniTestTask?.name}
-          backgroundColor={settings.backgroundAnswerColor}
-          backgroundAnswerColor={settings.backgroundAnswerColor}
+          backgroundColor="#66c270"
+          backgroundAnswerColor={
+            settings.backgroundAnswerColor ?? COLORS.GREEN_DDF598
+          }
           prompt={
             firstMiniTestTask?.question?.[moduleIndex]?.instruction ?? {
               description: settings.prompt?.toString() ?? '',
             }
           }
+          price="Free"
           score={selectedChild?.adsPoints}
           txtCountDown={
-            (
-              firstMiniTestTask?.question?.[moduleIndex]
-                .correctAnswer as string[]
-            ).includes((word as string)?.toLocaleLowerCase())
+            word?.toString() ===
+            firstMiniTestTask?.question?.[moduleIndex].correctAnswer
               ? undefined
               : word
           }
@@ -306,12 +299,13 @@ const English_G5M16 = observer(
                         ),
                       },
                     ]}>
-                    {i18n.t('lesson.screens.Modules.chooseTheCorrectWord')}
+                    {i18n.t('lesson.screens.Modules.chooseCorrectAnswer')}
                   </Text>
                 </View>
 
                 <VoiceButton onPress={onSpeechText} />
               </View>
+
               <SelectionTextsQuestion
                 question={
                   <TextHighlight
@@ -350,7 +344,7 @@ const English_G5M16 = observer(
   ),
 );
 
-export default English_G5M16;
+export default VnG4M5Lesson;
 
 const styles = StyleSheet.create({
   fill: {
@@ -359,25 +353,24 @@ const styles = StyleSheet.create({
   fonts_SVN_Cherish: {
     fontFamily: FontFamily.SVNCherishMoment,
   },
-  fonts_SVN_Neu: {
-    fontFamily: FontFamily.SVNNeuzeitRegular,
-  },
   textColor: {
     color: '#1C6349',
   },
-  textLarge: {
-    fontSize: 140,
+  textParagraph: {
+    fontSize: verticalScale(26),
     textAlign: 'center',
-    color: 'white',
+    color: COLORS.WHITE_FBF8CC,
+    textShadowColor: COLORS.YELLOW_F2B559,
+    textShadowOffset: {width: 2, height: 2},
+    textShadowRadius: 2,
   },
   textQuestion: {
-    fontSize: verticalScale(34),
+    fontSize: verticalScale(18),
     textAlign: 'center',
     color: COLORS.BLUE_258F78,
-    marginHorizontal: scale(10),
   },
   textGreen: {
-    color: COLORS.BLUE_258F78,
+    color: '#258F78',
   },
   txtWhite: {
     color: 'white',
@@ -453,14 +446,15 @@ const styles = StyleSheet.create({
   textVowel: {
     fontFamily: FontFamily.SVNCherishMoment,
     color: '#FBF8CC',
-    fontSize: verticalScale(28),
+    fontSize: verticalScale(14),
+    textAlign: 'center',
   },
   wapper: {
     marginTop: 8,
     flexDirection: 'row',
+    flexWrap: 'wrap',
     justifyContent: 'center',
     alignContent: 'center',
-    flexWrap: 'wrap', // Add this to enable wrapping
   },
   wrapCharContainer: {
     flexDirection: 'row',
@@ -468,9 +462,12 @@ const styles = StyleSheet.create({
   wrapHeaderContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginBottom: 8,
+    marginBottom: verticalScale(8),
   },
-  iconImageContainer: {height: 39, width: 34},
+  iconImageContainer: {
+    height: verticalScale(45),
+    width: verticalScale(40),
+  },
   buttonContainer: {
     borderRadius: scale(52),
     paddingVertical: verticalScale(9),
