@@ -23,6 +23,7 @@ import FirebaseCrashlyticProvider from './hooks/firebaseCrashlytic/FirebaseCrash
 import {withIAPContext} from 'react-native-iap';
 import crashlytics from '@react-native-firebase/crashlytics';
 import {AuthenticationProvider} from 'src/authentication/presentation/stores/AuthenticationProvider';
+import ErrorBoundary from './components/ErrorBoundary';
 
 LogBox.ignoreLogs(['Warning: ...']); // Ignore log notification by message
 LogBox.ignoreAllLogs(); //Ignore all log notifications
@@ -71,7 +72,9 @@ const App = () => {
                     <TextToSpeechProvider>
                       <AuthenticationProvider>
                         <IapProvider>
-                          <RootNavigator />
+                          <ErrorBoundary>
+                            <RootNavigator />
+                          </ErrorBoundary>
                           <Toast />
                         </IapProvider>
                       </AuthenticationProvider>

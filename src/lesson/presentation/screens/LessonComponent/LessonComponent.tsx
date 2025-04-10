@@ -127,7 +127,7 @@ const LessonComponent = ({
                 marginHorizontal: scale(8),
               }}
             />
-            <View style={{maxWidth: scale(120)}}>
+            <View style={{maxWidth: scale(110)}}>
               <Text
                 adjustsFontSizeToFit
                 style={[
@@ -135,7 +135,7 @@ const LessonComponent = ({
                   styles.textModule,
                   {color: lessonSetting?.backgroundButtonColor},
                 ]}
-                numberOfLines={1}>
+                numberOfLines={2}>
                 {module}
               </Text>
               <Text
@@ -145,7 +145,7 @@ const LessonComponent = ({
                   styles.textPart,
                   {color: lessonSetting?.backgroundButtonColor},
                 ]}
-                numberOfLines={1}>
+                numberOfLines={2}>
                 {part}
               </Text>
             </View>
