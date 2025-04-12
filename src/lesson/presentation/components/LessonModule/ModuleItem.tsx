@@ -46,6 +46,20 @@ const ModuleItem = observer((props: ModuleItemProps) => {
     );
   }, [lessonStore.userModule, props.id, trialStatus]);
 
+  console.log(
+    '🛠 LOG: 🚀 --> ---------------------------------------------------------------------------🛠 LOG: 🚀 -->',
+  );
+  console.log(
+    '🛠 LOG: 🚀 --> ~ isLocked ~ lessonStore.userModule:',
+    lessonStore.userModule,
+    props.id,
+    isLocked,
+    trialStatus,
+  );
+  console.log(
+    '🛠 LOG: 🚀 --> ---------------------------------------------------------------------------🛠 LOG: 🚀 -->',
+  );
+
   const gotoLesson = useCallback(() => {
     navigateScreen(STACK_NAVIGATOR.HOME.LESSON, {
       lessonId: props.id,
