@@ -79,6 +79,7 @@ import VnG4M3Lesson from './LessonComponent/Vietnamese_G4M3_lesson';
 import DragProvider from '../components/Drag/DragProvider';
 import VNG5M1NLesson from './LessonComponent/Vietnamese_G5M1_N_Leson';
 import VnG4M5Lesson from './LessonComponent/Vietnamese_G4M5_lesson';
+import VietnameseLessonScreen from '../components/ModuleDetail';
 
 export enum MathQuestionType {
   MathMG0M1 = 'MATH_MG0M1',

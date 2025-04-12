@@ -137,7 +137,7 @@ export class HomeStore implements HomeStoreState {
   }
 
   @action
-  public async checkDoingModule(
+  public checkDoingModule(
     userProfile?: GetUserProfileResponse['data'],
     moduleItem?: ModuleItemProps,
   ) {
