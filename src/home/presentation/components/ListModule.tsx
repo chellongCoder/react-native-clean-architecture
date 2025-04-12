@@ -35,7 +35,7 @@ const ListModule = observer(() => {
       <ListGrade />
       <View style={styles.gradeContainer}>
         <Text style={styles.txtGrade}>
-          {listSubject.find(e => e._id === subjectId)?.name}
+          {listSubject.find(e => e._id === subjectId)?.description}
         </Text>
       </View>
       <ScrollView
@@ -55,7 +55,7 @@ const ListModule = observer(() => {
                   ?.join('\n\n')
                   ?.toString()}
                 id={module._id}
-                lessonName={selectedSubject?.name}
+                lessonName={selectedSubject?.description}
                 image={module.image}
               />
             </View>

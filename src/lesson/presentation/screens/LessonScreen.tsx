@@ -85,6 +85,7 @@ import VnG1M7Lesson from './LessonComponent/Vietnamese_VNG1M7_Lesson';
 import VnG1M8Lesson from './LessonComponent/Vietnamese_VNG1M8_Lesson';
 import VnG1M9Lesson from './LessonComponent/Vietnamese_VNG1M9_Lesson';
 import VnG1M10Lesson from './LessonComponent/Vietnamese_VNG1M10_Lesson';
+import VietnameseLessonScreen from '../components/ModuleDetail';
 
 export enum MathQuestionType {
   MathMG0M1 = 'MATH_MG0M1',

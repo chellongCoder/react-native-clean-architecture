@@ -24,8 +24,10 @@ import useHomeStore from 'src/home/presentation/stores/useHomeStore';
 import {ModuleItemProps} from 'src/home/presentation/stores/types/HomeStoreState';
 import {useLessonStore} from '../../stores/LessonStore/useGetPostsStore';
 import {IClock} from '../icons';
+import {useAsyncEffect} from 'src/core/presentation/hooks';
+import {observer} from 'mobx-react';
 
-const ModuleItem = (props: ModuleItemProps) => {
+const ModuleItem = observer((props: ModuleItemProps) => {
   const globalStyle = useGlobalStyle();
   const env = coreModuleContainer.getProvided<Env>(EnvToken); // Instantiate CoreService
   const translateX = useSharedValue(-100);
@@ -40,9 +42,23 @@ const ModuleItem = (props: ModuleItemProps) => {
   const isLocked = useMemo(() => {
     return (
       trialStatus === 'end_trial' &&
-      lessonStore.userModule?.some(module => module.id === props.id)
+      !lessonStore.userModule?.find(module => module.id === props.id)
     );
   }, [lessonStore.userModule, props.id, trialStatus]);
+
+  console.log(
+    '🛠 LOG: 🚀 --> ---------------------------------------------------------------------------🛠 LOG: 🚀 -->',
+  );
+  console.log(
+    '🛠 LOG: 🚀 --> ~ isLocked ~ lessonStore.userModule:',
+    lessonStore.userModule,
+    props.id,
+    isLocked,
+    trialStatus,
+  );
+  console.log(
+    '🛠 LOG: 🚀 --> ---------------------------------------------------------------------------🛠 LOG: 🚀 -->',
+  );
 
   const gotoLesson = useCallback(() => {
     navigateScreen(STACK_NAVIGATOR.HOME.LESSON, {
@@ -53,21 +69,20 @@ const ModuleItem = (props: ModuleItemProps) => {
   }, [props.id, props.lessonName, props.title]);
 
   const onStartDoing = useCallback(async () => {
-    const _trialStatus = await homeStore.checkDoingModule(
-      authStore.userProfile,
-      props,
-    );
-    setTrialStatus(_trialStatus);
-    if (_trialStatus === 'being_trial') {
+    if (trialStatus === 'being_trial') {
       gotoLesson();
     } else {
-      if (_trialStatus === 'no_trial') {
+      if (trialStatus === 'no_trial') {
         popupHook.handleToggleTrialPopup();
-      } else if (_trialStatus === 'end_trial') {
-        popupHook.handleToggleTrialPopup();
+      } else if (trialStatus === 'end_trial') {
+        if (isLocked) {
+          popupHook.handleToggleTrialPopup();
+        } else {
+          gotoLesson();
+        }
       }
     }
-  }, [homeStore, authStore.userProfile, gotoLesson, popupHook, props]);
+  }, [trialStatus, gotoLesson, isLocked, popupHook]);
 
   const renderIcon = () =>
     props?.image ? (
@@ -91,6 +106,14 @@ const ModuleItem = (props: ModuleItemProps) => {
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [props.id]);
+
+  useAsyncEffect(async () => {
+    const _trialStatus = homeStore.checkDoingModule(
+      authStore.userProfile,
+      props,
+    );
+    setTrialStatus(_trialStatus);
+  }, [homeStore, authStore.userProfile, props]);
 
   const animatedStyle = useAnimatedStyle(() => {
     return {
@@ -194,7 +217,7 @@ const ModuleItem = (props: ModuleItemProps) => {
       </View>
     </Animated.View>
   );
-};
+});
 
 export default ModuleItem;
 
