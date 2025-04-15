@@ -155,6 +155,7 @@ type GenericLocale = {
   'lesson.screens.Modules.chooseTheCorrectWord': string;
   'lesson.screens.Modules.chooseCorrectAnswer': string;
   'lesson.screens.Modules.typeCorrectAnswer': string;
+  'lesson.screens.Modules.chooseALigagAsOn': string;
   'lesson.screens.Modules.listening': string;
   'lesson.screens.Modules.processingVoice': string;
   'lesson.screens.Modules.pleaseTryAgain': string;
