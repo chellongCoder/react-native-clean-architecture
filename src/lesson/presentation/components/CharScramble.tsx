@@ -1,5 +1,12 @@
 /* eslint-disable react-native/no-inline-styles */
-import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {
+  StyleProp,
+  StyleSheet,
+  Text,
+  TextStyle,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import React, {
   forwardRef,
   useCallback,
@@ -18,6 +25,8 @@ type Props = {
   listChar?: string | string[];
   learningTimer?: number;
   onAnswerChanged?: (answer: string) => void;
+  questionStyle?: StyleProp<TextStyle>;
+  answerStyle?: StyleProp<TextStyle>;
 };
 
 export type CharScrambleRep = {
@@ -25,7 +34,17 @@ export type CharScrambleRep = {
 };
 
 const CharScramble = forwardRef<CharScrambleRep, Props>(
-  ({content, listChar, learningTimer, onAnswerChanged}, ref) => {
+  (
+    {
+      content,
+      listChar,
+      learningTimer,
+      onAnswerChanged,
+      questionStyle,
+      answerStyle,
+    },
+    ref,
+  ) => {
     const [answerSelectedChars, setAnswerSelectedChars] = useState<string[]>(
       [],
     );
@@ -92,6 +111,7 @@ const CharScramble = forwardRef<CharScrambleRep, Props>(
             styles.textQuestion,
             styles.textGreen,
             styles.mt8,
+            questionStyle,
           ]}>
           {answerSelected}
         </Text>
@@ -117,7 +137,7 @@ const CharScramble = forwardRef<CharScrambleRep, Props>(
                     width: size,
                   },
                 ]}>
-                <Text style={[styles.textVowel]}>{e}</Text>
+                <Text style={[styles.textVowel, answerStyle]}>{e}</Text>
               </TouchableOpacity>
             );
           })}
@@ -194,6 +214,8 @@ const styles = StyleSheet.create({
   textVowel: {
     fontFamily: FontFamily.SVNCherishMoment,
     color: '#FBF8CC',
-    fontSize: verticalScale(28),
+    fontSize: 24,
+    fontWeight: '400',
+    paddingTop: 8,
   },
 });

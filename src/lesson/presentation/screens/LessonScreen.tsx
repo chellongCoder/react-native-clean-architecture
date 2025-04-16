@@ -79,6 +79,12 @@ import VnG4M3Lesson from './LessonComponent/Vietnamese_G4M3_lesson';
 import DragProvider from '../components/Drag/DragProvider';
 import VNG5M1NLesson from './LessonComponent/Vietnamese_G5M1_N_Leson';
 import VnG4M5Lesson from './LessonComponent/Vietnamese_G4M5_lesson';
+import VnG1M1Lesson from './LessonComponent/Vietnamese_VNG1M1_Lesson';
+import VnG1M5Lesson from './LessonComponent/Vietnamese_VNG1M5_Lesson';
+import VnG1M7Lesson from './LessonComponent/Vietnamese_VNG1M7_Lesson';
+import VnG1M8Lesson from './LessonComponent/Vietnamese_VNG1M8_Lesson';
+import VnG1M9Lesson from './LessonComponent/Vietnamese_VNG1M9_Lesson';
+import VnG1M10Lesson from './LessonComponent/Vietnamese_VNG1M10_Lesson';
 
 export enum MathQuestionType {
   MathMG0M1 = 'MATH_MG0M1',
@@ -120,8 +126,14 @@ export enum LanguageE {
   VIETNAMESE_VNG0M1 = 'VIETNAMESE_VNG0M1',
   VIETNAMESE_VNG0M2 = 'VIETNAMESE_VNG0M2',
   VIETNAMESE_VNG0M3 = 'VIETNAMESE_VNG0M3',
+  VIETNAMESE_VNG1M1 = 'VIETNAMESE_VNG1M1',
   VIETNAMESE_VNG1M3 = 'VIETNAMESE_VNG1M3',
   VIETNAMESE_VNG1M4 = 'VIETNAMESE_VNG1M4',
+  VIETNAMESE_VNG1M5 = 'VIETNAMESE_VNG1M5',
+  VIETNAMESE_VNG1M7 = 'VIETNAMESE_VNG1M7',
+  VIETNAMESE_VNG1M8 = 'VIETNAMESE_VNG1M8',
+  VIETNAMESE_VNG1M9 = 'VIETNAMESE_VNG1M9',
+  VIETNAMESE_VNG1M10 = 'VIETNAMESE_VNG1M10',
   VIETNAMESE_VNG2M6 = 'VIETNAMESE_VNG2M6',
   VIETNAMESE_VNG2M8 = 'VIETNAMESE_VNG2M8',
   VIETNAMESE_VNG3M1 = 'VIETNAMESE_VNG3M1',
@@ -618,7 +630,7 @@ const LessonScreen = observer(() => {
   const buildLesson = () => {
     console.log(testTask?.question?.[lessonIndex]?.type, 'type lesson');
     switch (
-      testTask?.question?.[lessonIndex]?.type as
+      testTask?.question?.[lessonIndex]?.type.trim() as
         | LessonTypeE
         | MathQuestionType
         | LanguageE
@@ -687,10 +699,22 @@ const LessonScreen = observer(() => {
         return <VnG0M2Lesson {...dataProps} ref={vowelRef} />;
       case LanguageE.VIETNAMESE_VNG0M3:
         return <VnG0M3Lesson {...dataProps} ref={vowelRef} />;
+      case LanguageE.VIETNAMESE_VNG1M1:
+        return <VnG1M1Lesson {...dataProps} ref={vowelRef} />;
       case LanguageE.VIETNAMESE_VNG1M3:
         return <VnG1M3Lesson {...dataProps} ref={vowelRef} />;
       case LanguageE.VIETNAMESE_VNG1M4:
         return <VnG1M4Lesson {...dataProps} ref={vowelRef} />;
+      case LanguageE.VIETNAMESE_VNG1M5:
+        return <VnG1M5Lesson {...dataProps} ref={vowelRef} />;
+      case LanguageE.VIETNAMESE_VNG1M7:
+        return <VnG1M7Lesson {...dataProps} ref={vowelRef} />;
+      case LanguageE.VIETNAMESE_VNG1M8:
+        return <VnG1M8Lesson {...dataProps} ref={vowelRef} />;
+      case LanguageE.VIETNAMESE_VNG1M9:
+        return <VnG1M9Lesson {...dataProps} ref={vowelRef} />;
+      case LanguageE.VIETNAMESE_VNG1M10:
+        return <VnG1M10Lesson {...dataProps} ref={vowelRef} />;
       case LanguageE.VIETNAMESE_VNG2M6:
         return <VnG2M6Lesson {...dataProps} ref={vowelRef} />;
       case LanguageE.VIETNAMESE_VNG2M8:
