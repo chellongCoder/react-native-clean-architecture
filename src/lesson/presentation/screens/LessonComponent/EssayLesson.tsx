@@ -1,8 +1,10 @@
-import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {StyleSheet, Text, View} from 'react-native';
 import React, {
+  forwardRef,
   useCallback,
   useContext,
   useEffect,
+  useImperativeHandle,
   useMemo,
   useRef,
   useState,
@@ -31,6 +33,7 @@ import CharScramble, {CharScrambleRep} from '../../components/CharScramble';
 import {useI18n} from 'src/core/presentation/hooks/useI18n';
 import VoiceButton from '../../components/VoiceButton';
 import {useIsFocused} from '@react-navigation/native';
+import {observer} from 'mobx-react';
 
 type Props = {
   moduleIndex: number;
@@ -44,186 +47,197 @@ type Props = {
   characterImageFail?: string;
 };
 
-const EssayLesson = ({
-  moduleIndex,
-  nextModule,
-  totalModule,
-  lessonName,
-  moduleName,
-  firstMiniTestTask,
-  backgroundImage,
-  characterImageSuccess,
-  characterImageFail,
-}: Props) => {
-  const globalStyle = useGlobalStyle();
+const EssayLesson = observer(
+  forwardRef(
+    (
+      {
+        moduleIndex,
+        nextModule,
+        totalModule,
+        lessonName,
+        moduleName,
+        firstMiniTestTask,
+        backgroundImage,
+        characterImageSuccess,
+        characterImageFail,
+      }: Props,
+      ref: React.Ref<any>,
+    ) => {
+      const globalStyle = useGlobalStyle();
 
-  const [answerSelected, setAnswerSelected] = useState('');
+      const [answerSelected, setAnswerSelected] = useState('');
 
-  const opacity = useSharedValue(1);
-  const scaleS = useSharedValue(1);
-  const {getSetting} = useLessonStore();
-  const {selectedChild} = useAuthenticationStore();
-  const {lessonSetting} = useHomeStore();
+      const opacity = useSharedValue(1);
+      const scaleS = useSharedValue(1);
+      const {getSetting} = useLessonStore();
+      const {selectedChild} = useAuthenticationStore();
+      const {lessonSetting} = useHomeStore();
 
-  const i18n = useI18n();
+      const i18n = useI18n();
 
-  const settings = useMemo(
-    () => getSetting(lessonSetting),
-    [getSetting, lessonSetting],
-  );
-  const {ttsSpeak} = useContext(TextToSpeechContext);
+      const settings = useMemo(
+        () => getSetting(lessonSetting),
+        [getSetting, lessonSetting],
+      );
+      const {ttsSpeak} = useContext(TextToSpeechContext);
 
-  const charScrambleRep = useRef<CharScrambleRep>(null);
+      const charScrambleRep = useRef<CharScrambleRep>(null);
 
-  const {
-    isAnswerCorrect,
-    isShowCorrectContainer,
-    word,
-    env,
-    learningTimer,
-    submit,
-  } = useSettingLesson({
-    countDownTime: 5,
-    isCorrectAnswer:
-      answerSelected ===
-      firstMiniTestTask?.question?.[moduleIndex]?.correctAnswer,
-    onSubmit: () => {
-      charScrambleRep.current?.reset();
-      nextModule(answerSelected);
-    },
-    fullAnswer: firstMiniTestTask?.question?.[moduleIndex].fullAnswer,
-  });
-
-  const focus = useIsFocused();
-
-  const onSpeechText = useCallback(() => {
-    ttsSpeak?.(
-      firstMiniTestTask?.question?.[moduleIndex].fullAnswer
-        .toString()
-        .toLowerCase() ?? '',
-    );
-  }, [firstMiniTestTask?.question, moduleIndex, ttsSpeak]);
-
-  const characterImage = useMemo(() => {
-    return isAnswerCorrect === true || isAnswerCorrect === undefined
-      ? characterImageSuccess
-      : characterImageFail;
-  }, [characterImageFail, characterImageSuccess, isAnswerCorrect]);
-
-  useEffect(() => {
-    if (focus) {
-      // Check if the component is focused
-      const firstTimeout = setTimeout(() => {
-        onSpeechText();
-      }, 1500);
-
-      return () => clearTimeout(firstTimeout);
-    }
-  }, [onSpeechText, focus]); // Added focus to the dependency array
-
-  useEffect(() => {
-    opacity.value = withTiming(0, {duration: 500}, () => {
-      opacity.value = withTiming(1, {duration: 500});
-    });
-    opacity.value = withTiming(0, {duration: 500}, () => {
-      opacity.value = withTiming(1, {duration: 500});
-    });
-    scaleS.value = withTiming(0, {duration: 500}, () => {
-      scaleS.value = withTiming(1, {
-        duration: 500,
-        easing: Easing.elastic(2),
-        reduceMotion: ReduceMotion.System,
+      const {
+        isAnswerCorrect,
+        isShowCorrectContainer,
+        word,
+        env,
+        learningTimer,
+        submit,
+      } = useSettingLesson({
+        countDownTime: 5,
+        isCorrectAnswer:
+          answerSelected ===
+          firstMiniTestTask?.question?.[moduleIndex]?.correctAnswer,
+        onSubmit: () => {
+          charScrambleRep.current?.reset();
+          nextModule(answerSelected);
+        },
+        fullAnswer: firstMiniTestTask?.question?.[moduleIndex].fullAnswer,
       });
-    });
-  }, [moduleIndex, opacity, scaleS]);
 
-  const animatedStyle = useAnimatedStyle(() => {
-    return {
-      opacity: opacity.value,
-      transform: [{scale: scaleS.value}],
-    };
-  });
-  return (
-    <LessonComponent
-      backgroundImage={backgroundImage}
-      characterImage={characterImage}
-      lessonName={lessonName}
-      module={moduleName}
-      part={firstMiniTestTask?.name}
-      backgroundColor="#66c270"
-      backgroundAnswerColor={settings.backgroundAnswerColor}
-      prompt={
-        firstMiniTestTask?.question?.[moduleIndex]?.instruction ?? {
-          description: settings.prompt?.toString() ?? '',
+      const focus = useIsFocused();
+
+      const onSpeechText = useCallback(() => {
+        ttsSpeak?.(
+          firstMiniTestTask?.question?.[moduleIndex].fullAnswer
+            .toString()
+            .toLowerCase() ?? '',
+        );
+      }, [firstMiniTestTask?.question, moduleIndex, ttsSpeak]);
+
+      const characterImage = useMemo(() => {
+        return isAnswerCorrect === true || isAnswerCorrect === undefined
+          ? characterImageSuccess
+          : characterImageFail;
+      }, [characterImageFail, characterImageSuccess, isAnswerCorrect]);
+
+      useEffect(() => {
+        if (focus) {
+          // Check if the component is focused
+          const firstTimeout = setTimeout(() => {
+            onSpeechText();
+          }, 1500);
+
+          return () => clearTimeout(firstTimeout);
         }
-      }
-      price="Free"
-      score={selectedChild?.adsPoints}
-      txtCountDown={!isMMSS(word ?? '') ? undefined : word}
-      isAnswerCorrect={isAnswerCorrect}
-      isShowCorrectContainer={isShowCorrectContainer}
-      buildQuestion={
-        <View style={{alignItems: 'center'}}>
-          <Text style={[styles.fonts_SVN_Cherish, styles.textQuestion]}>
-            {firstMiniTestTask?.type !== 'mini_test'
-              ? firstMiniTestTask?.question?.[moduleIndex].correctAnswer
-              : ' '}
-          </Text>
-          <Animated.Image
-            resizeMode={'contain'}
-            style={[
-              {
-                width: scale(200),
-                height: verticalScale(140),
-              },
-              animatedStyle,
-            ]}
-            source={{
-              uri:
-                env.IMAGE_QUESTION_BASE_API_URL +
-                firstMiniTestTask?.question?.[moduleIndex].image,
-            }}
-          />
-        </View>
-      }
-      buildAnswer={
-        <View style={styles.fill}>
-          <View style={styles.wrapHeaderContainer}>
-            <View
-              style={{
-                justifyContent: 'center',
-                flex: 1,
-              }}>
-              <Text style={[globalStyle.txtLabel, styles.textColor]}>
-                {i18n.t('lesson.screens.Modules.spellTheWords')}
+      }, [onSpeechText, focus]); // Added focus to the dependency array
+
+      useEffect(() => {
+        opacity.value = withTiming(0, {duration: 500}, () => {
+          opacity.value = withTiming(1, {duration: 500});
+        });
+        opacity.value = withTiming(0, {duration: 500}, () => {
+          opacity.value = withTiming(1, {duration: 500});
+        });
+        scaleS.value = withTiming(0, {duration: 500}, () => {
+          scaleS.value = withTiming(1, {
+            duration: 500,
+            easing: Easing.elastic(2),
+            reduceMotion: ReduceMotion.System,
+          });
+        });
+      }, [moduleIndex, opacity, scaleS]);
+
+      useImperativeHandle(ref, () => ({
+        onSpeechText,
+      }));
+
+      const animatedStyle = useAnimatedStyle(() => {
+        return {
+          opacity: opacity.value,
+          transform: [{scale: scaleS.value}],
+        };
+      });
+      return (
+        <LessonComponent
+          backgroundImage={backgroundImage}
+          characterImage={characterImage}
+          lessonName={lessonName}
+          module={moduleName}
+          part={firstMiniTestTask?.name}
+          backgroundColor="#66c270"
+          backgroundAnswerColor={settings.backgroundAnswerColor}
+          prompt={
+            firstMiniTestTask?.question?.[moduleIndex]?.instruction ?? {
+              description: settings.prompt?.toString() ?? '',
+            }
+          }
+          price="Free"
+          score={selectedChild?.adsPoints}
+          txtCountDown={!isMMSS(word ?? '') ? undefined : word}
+          isAnswerCorrect={isAnswerCorrect}
+          isShowCorrectContainer={isShowCorrectContainer}
+          buildQuestion={
+            <View style={{alignItems: 'center'}}>
+              <Text style={[styles.fonts_SVN_Cherish, styles.textQuestion]}>
+                {firstMiniTestTask?.type !== 'mini_test'
+                  ? firstMiniTestTask?.question?.[moduleIndex].correctAnswer
+                  : ' '}
               </Text>
+              <Animated.Image
+                resizeMode={'contain'}
+                style={[
+                  {
+                    width: scale(200),
+                    height: verticalScale(140),
+                  },
+                  animatedStyle,
+                ]}
+                source={{
+                  uri:
+                    env.IMAGE_QUESTION_BASE_API_URL +
+                    firstMiniTestTask?.question?.[moduleIndex].image,
+                }}
+              />
             </View>
+          }
+          buildAnswer={
+            <View style={styles.fill}>
+              <View style={styles.wrapHeaderContainer}>
+                <View
+                  style={{
+                    justifyContent: 'center',
+                    flex: 1,
+                  }}>
+                  <Text style={[globalStyle.txtLabel, styles.textColor]}>
+                    {i18n.t('lesson.screens.Modules.spellTheWords')}
+                  </Text>
+                </View>
 
-            <VoiceButton onPress={onSpeechText} />
-          </View>
-          <CharScramble
-            ref={charScrambleRep}
-            content={firstMiniTestTask?.question?.[moduleIndex]?.content}
-            listChar={firstMiniTestTask?.question?.[moduleIndex]?.answers}
-            learningTimer={learningTimer}
-            onAnswerChanged={setAnswerSelected}
-          />
+                <VoiceButton onPress={onSpeechText} />
+              </View>
+              <CharScramble
+                ref={charScrambleRep}
+                content={firstMiniTestTask?.question?.[moduleIndex]?.content}
+                listChar={firstMiniTestTask?.question?.[moduleIndex]?.answers}
+                learningTimer={learningTimer}
+                onAnswerChanged={setAnswerSelected}
+              />
 
-          <PrimaryButton
-            text={i18n.t('lesson.screens.Modules.submit')}
-            style={[
-              styles.buttonContainer,
-              {backgroundColor: settings.backgroundButtonColor},
-            ]}
-            onPress={submit}
-          />
-        </View>
-      }
-      moduleIndex={moduleIndex}
-      totalModule={totalModule}
-    />
-  );
-};
+              <PrimaryButton
+                text={i18n.t('lesson.screens.Modules.submit')}
+                style={[
+                  styles.buttonContainer,
+                  {backgroundColor: settings.backgroundButtonColor},
+                ]}
+                onPress={submit}
+              />
+            </View>
+          }
+          moduleIndex={moduleIndex}
+          totalModule={totalModule}
+        />
+      );
+    },
+  ),
+);
 
 export default EssayLesson;
 
@@ -235,104 +249,20 @@ const styles = StyleSheet.create({
     fontFamily: FontFamily.SVNCherishMoment,
   },
   textColor: {
-    color: '#1C6349',
+    color: COLORS.BLUE_1C6349,
   },
-  textLarge: {
-    fontSize: 140,
-    textAlign: 'center',
-    color: 'white',
-  },
+
   textQuestion: {
     fontSize: verticalScale(34),
     textAlign: 'center',
     color: COLORS.BLUE_258F78,
   },
-  textGreen: {
-    color: '#258F78',
-  },
-  txtWhite: {
-    color: 'white',
-  },
-  rowAround: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-  },
-  rowAlignCenter: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  rowBetween: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-  },
-  pr16: {
-    paddingRight: 16,
-  },
-  ph24: {
-    paddingHorizontal: 24,
-  },
-  pb8: {
-    paddingBottom: verticalScale(8),
-  },
-  pb16: {
-    paddingBottom: verticalScale(16),
-  },
-  pb32: {
-    paddingBottom: verticalScale(32),
-  },
-  mt8: {
-    marginTop: verticalScale(8),
-  },
-  mt16: {
-    marginTop: verticalScale(16),
-  },
-  mt24: {
-    marginTop: verticalScale(24),
-  },
-  mt32: {
-    marginTop: verticalScale(32),
-  },
-  alignSelfCenter: {
-    alignSelf: 'center',
-  },
+
   center: {
     justifyContent: 'center',
     alignItems: 'center',
   },
-  boxItemAnswer: {
-    height: 94,
-    backgroundColor: '#F2B559',
-    borderRadius: 30,
-  },
-  boxSelected: {
-    backgroundColor: COLORS.WHITE_FBF8CC,
-    height: verticalScale(220),
-    flex: 1,
-    borderRadius: scale(30),
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  boxVowel: {
-    width: 56,
-    height: 56,
-    borderRadius: 10,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginHorizontal: 6,
-    marginVertical: 6,
-  },
-  textVowel: {
-    fontFamily: FontFamily.SVNCherishMoment,
-    color: '#FBF8CC',
-    fontSize: verticalScale(28),
-  },
-  wapper: {
-    marginTop: 8,
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    justifyContent: 'center',
-    alignContent: 'center',
-  },
+
   wrapHeaderContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',

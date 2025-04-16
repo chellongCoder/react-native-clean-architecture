@@ -77,7 +77,7 @@ export const useSettingLesson = ({
     }
     // * nếu đang ở tgian học thì hiển thị câu trl
     return 'get ready';
-  }, [fullAnswer, learningTimer, time]);
+  }, [learningTimer, time]);
 
   /**
    * Checks the correctness of the answer and provides feedback.

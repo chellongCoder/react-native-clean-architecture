@@ -1,4 +1,4 @@
-import React, {useEffect, useMemo, useRef, useState} from 'react';
+import React, {useContext, useEffect, useMemo, useRef, useState} from 'react';
 import {
   View,
   Text,
@@ -20,8 +20,12 @@ import {
 } from 'src/home/application/types/GetListSubjectResponse';
 import {coreModuleContainer} from 'src/core/CoreModule';
 import Env, {EnvToken} from 'src/core/domain/entities/Env';
-import {assets} from 'src/core/presentation/utils';
+import {assets, isAndroid} from 'src/core/presentation/utils';
 import {useLessonStore} from 'src/lesson/presentation/stores/LessonStore/useGetPostsStore';
+import {listLanguage} from 'src/core/presentation/hooks/textToSpeech/TextToSpeechProvider';
+import Tts from 'react-native-tts';
+import {iosVoice} from 'src/core/presentation/hooks/textToSpeech/TextToSpeechProvider';
+import {TextToSpeechContext} from 'src/core/presentation/hooks/textToSpeech/TextToSpeechContext';
 
 const {width: screenWidth} = Dimensions.get('window');
 
@@ -36,9 +40,9 @@ const ListLesson = () => {
     useHomeStore();
   const lessonStore = useLessonStore();
   const {getData, isConnected} = useOfflineMode();
-  const [subjectIndex, setSubjectIndex] = useState<number>(0);
   const [subjects, setSubjects] = useState<Subject[]>([]);
   const env = coreModuleContainer.getProvided<Env>(EnvToken); // Instantiate CoreService
+  const {updateDefaultVoice} = useContext(TextToSpeechContext);
 
   const carouselRef = useRef<Carousel>();
 
@@ -90,6 +94,42 @@ const ListLesson = () => {
     [data, rootSubject?._id],
   );
 
+  const changeSpeakLanguage = (index: number) => {
+    Tts.voices().then(voices => {
+      if (data[index].description.toLocaleLowerCase().includes('english')) {
+        const engVoice = voices.find(
+          voice => voice.language === listLanguage['US English'],
+        );
+        updateDefaultVoice?.(
+          isAndroid ? engVoice?.id : iosVoice[3].id,
+          'US English',
+        );
+      } else if (
+        data[index].description.toLocaleLowerCase().includes('mandarin')
+      ) {
+        const engVoice = voices.find(
+          voice =>
+            voice.language ===
+            listLanguage['Mainland China, simplified characters'],
+        );
+        updateDefaultVoice?.(
+          engVoice?.id,
+          'Mainland China, simplified characters',
+        );
+      } else if (
+        data[index].description.toLocaleLowerCase().includes('vietnamese')
+      ) {
+        const vietnameseVoices = voices.filter(
+          voice =>
+            voice.language.startsWith('vi-') ||
+            voice.name.toLowerCase().includes('vietnamese'),
+        );
+
+        updateDefaultVoice?.(vietnameseVoices[0]?.id, 'Vie (Vietnamese)');
+      }
+    });
+  };
+
   // * nếu chưa có subject id nào thì lấy thằng đầu tiên
   useEffect(() => {
     if (subjectId === '') {
@@ -103,6 +143,7 @@ const ListLesson = () => {
     setTimeout(() => {
       const index = data.findIndex(e => e._id === rootSubject?._id);
       carouselRef?.current?.snapToItem(index);
+      changeSpeakLanguage(index);
     }, 1000);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -143,8 +184,8 @@ const ListLesson = () => {
           console.log(
             '🛠 LOG: 🚀 --> -----------------------------------------------------🛠 LOG: 🚀 -->',
           );
-          setSubjectIndex(slideIndex);
           setSubjectId(data[slideIndex]?._id);
+          changeSpeakLanguage(slideIndex);
         }}
       />
 

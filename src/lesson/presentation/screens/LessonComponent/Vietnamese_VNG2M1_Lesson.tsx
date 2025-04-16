@@ -45,7 +45,7 @@ type Props = {
   characterImageFail?: string;
 };
 
-const VnG1M7Lesson = forwardRef<LessonRef, Props>(
+const VnG2M1Lesson = forwardRef<LessonRef, Props>(
   ({
     moduleIndex,
     nextModule,
@@ -87,10 +87,10 @@ const VnG1M7Lesson = forwardRef<LessonRef, Props>(
     } = useSettingLesson({
       countDownTime: 5,
       isCorrectAnswer:
-        answerSelected ===
-        (
-          firstMiniTestTask?.question?.[moduleIndex]?.correctAnswer as string
-        ).replace(/ /g, ''),
+        answerSelected.trim() ===
+        (firstMiniTestTask?.question?.[moduleIndex]?.correctAnswer as string)
+          .replace(/ /g, '')
+          .trim(),
       onSubmit: () => {
         charScrambleRep.current?.reset();
         nextModule(answerSelected);
@@ -208,10 +208,10 @@ const VnG1M7Lesson = forwardRef<LessonRef, Props>(
               learningTimer={learningTimer}
               onAnswerChanged={setAnswerSelected}
               questionStyle={[
-                styles.fonts_BorelRegular,
+                styles.fonts_SVN_Cherish,
                 {fontSize: scale(36), color: COLORS.BLUE_0877B6},
               ]}
-              answerStyle={[styles.fonts_BorelRegular, {fontSize: scale(28)}]}
+              answerStyle={[styles.fonts_SVN_Cherish, {fontSize: scale(28)}]}
             />
 
             <PrimaryButton
@@ -231,7 +231,7 @@ const VnG1M7Lesson = forwardRef<LessonRef, Props>(
   },
 );
 
-export default VnG1M7Lesson;
+export default VnG2M1Lesson;
 
 const styles = StyleSheet.create({
   fill: {

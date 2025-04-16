@@ -46,20 +46,6 @@ const ModuleItem = observer((props: ModuleItemProps) => {
     );
   }, [lessonStore.userModule, props.id, trialStatus]);
 
-  console.log(
-    '🛠 LOG: 🚀 --> ---------------------------------------------------------------------------🛠 LOG: 🚀 -->',
-  );
-  console.log(
-    '🛠 LOG: 🚀 --> ~ isLocked ~ lessonStore.userModule:',
-    lessonStore.userModule,
-    props.id,
-    isLocked,
-    trialStatus,
-  );
-  console.log(
-    '🛠 LOG: 🚀 --> ---------------------------------------------------------------------------🛠 LOG: 🚀 -->',
-  );
-
   const gotoLesson = useCallback(() => {
     navigateScreen(STACK_NAVIGATOR.HOME.LESSON, {
       lessonId: props.id,
@@ -69,6 +55,7 @@ const ModuleItem = observer((props: ModuleItemProps) => {
   }, [props.id, props.lessonName, props.title]);
 
   const onStartDoing = useCallback(async () => {
+    // gotoLesson();
     if (trialStatus === 'being_trial') {
       gotoLesson();
     } else {

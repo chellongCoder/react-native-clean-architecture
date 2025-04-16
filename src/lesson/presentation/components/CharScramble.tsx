@@ -134,7 +134,6 @@ const CharScramble = forwardRef<CharScrambleRep, Props>(
                   {
                     backgroundColor: bg,
                     height: size,
-                    width: size,
                   },
                 ]}>
                 <Text style={[styles.textVowel, answerStyle]}>{e}</Text>

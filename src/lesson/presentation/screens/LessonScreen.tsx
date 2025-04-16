@@ -91,6 +91,7 @@ import VnG1M6Lesson from './LessonComponent/Vietnamese_G1M6_lesson';
 import {FontFamily} from 'src/core/presentation/hooks/useFonts';
 import {scale} from 'react-native-size-matters';
 import {COLORS} from 'src/core/presentation/constants/colors';
+import VnG2M1Lesson from './LessonComponent/Vietnamese_VNG2M1_Lesson';
 
 export enum MathQuestionType {
   MathMG0M1 = 'MATH_MG0M1',
@@ -143,8 +144,15 @@ export enum LanguageE {
   VIETNAMESE_VNG1M2 = 'VIETNAMESE_VNG1M2',
   VIETNAMESE_VNG1M6 = 'VIETNAMESE_VNG1M6',
 
+  VIETNAMESE_VNG2M1 = 'VIETNAMESE_VNG2M1',
+  VIETNAMESE_VNG2M2 = 'VIETNAMESE_VNG2M2',
+  VIETNAMESE_VNG2M3 = 'VIETNAMESE_VNG2M3',
+  VIETNAMESE_VNG2M4 = 'VIETNAMESE_VNG2M4',
+  VIETNAMESE_VNG2M5 = 'VIETNAMESE_VNG2M5',
   VIETNAMESE_VNG2M6 = 'VIETNAMESE_VNG2M6',
+  VIETNAMESE_VNG2M7 = 'VIETNAMESE_VNG2M7',
   VIETNAMESE_VNG2M8 = 'VIETNAMESE_VNG2M8',
+
   VIETNAMESE_VNG3M1 = 'VIETNAMESE_VNG3M1',
   VIETNAMESE_VNG4M1 = 'VIETNAMESE_VNG4M1',
   VIETNAMESE_VNG4M3 = 'VIETNAMESE_VNG4M3',
@@ -662,9 +670,9 @@ const LessonScreen = observer(() => {
         return <LatinLesson {...dataProps} />;
       case LanguageE.ENGLISH_G3M20:
         return (
-          <VietnameseLessonScreen
+          <English_G3M20
             {...dataProps}
-            descriptionType="image"
+            // descriptionType="image"
             ref={vowelRef}
           />
         );
@@ -674,19 +682,19 @@ const LessonScreen = observer(() => {
         return <English_G5M16 {...dataProps} ref={vowelRef} />;
       case LanguageE.ENGLISH_EG4M23:
         return (
-          <VietnameseLessonScreen
+          <English_EG4M23
             {...dataProps}
-            descriptionType="text-blank"
-            textDescriptionProps={{
-              fontName: FontFamily.SVNCherishMoment,
-              fontSize: scale(25),
-              color: COLORS.RED_AF3A1B,
-            }}
+            // descriptionType="text-blank"
+            // textDescriptionProps={{
+            //   fontName: FontFamily.SVNCherishMoment,
+            //   fontSize: scale(25),
+            //   color: COLORS.RED_AF3A1B,
+            // }}
             ref={vowelRef}
           />
         );
       case LanguageE.ENGLISH_EG1M3:
-        return <EssayLesson {...dataProps} />;
+        return <EssayLesson {...dataProps} ref={vowelRef} />;
       case LanguageE.ENGLISH_EG1M3:
         return <VowelsLesson {...dataProps} ref={vowelRef} />;
 
@@ -746,9 +754,10 @@ const LessonScreen = observer(() => {
       case LanguageE.VIETNAMESE_VNG1M10:
         return <VnG1M10Lesson {...dataProps} ref={vowelRef} />;
 
+      case LanguageE.VIETNAMESE_VNG2M1:
+        return <VnG2M1Lesson {...dataProps} ref={vowelRef} />;
+
       case LanguageE.VIETNAMESE_VNG2M6:
-        return <VnG2M6Lesson {...dataProps} ref={vowelRef} />;
-      case LanguageE.VIETNAMESE_VNG2M8:
         return <VnG2M8Lesson {...dataProps} ref={vowelRef} />;
       case LanguageE.VIETNAMESE_VNG3M1:
         return <VnG3M1Lesson {...dataProps} ref={vowelRef} />;
@@ -758,14 +767,14 @@ const LessonScreen = observer(() => {
         return <VnG4M5Lesson {...dataProps} ref={vowelRef} />;
       case LanguageE.VIETNAMESE_VNG5M1:
         return (
-          <VietnameseLessonScreen
+          <VnG5M1Lesson
             {...dataProps}
-            descriptionType="text-highlight"
-            textDescriptionProps={{
-              fontName: FontFamily.SVNCherishMoment,
-              fontSize: scale(25),
-              color: COLORS.RED_AF3A1B,
-            }}
+            // descriptionType="text-highlight"
+            // textDescriptionProps={{
+            //   fontName: FontFamily.SVNCherishMoment,
+            //   fontSize: scale(25),
+            //   color: COLORS.RED_AF3A1B,
+            // }}
             ref={vowelRef}
           />
         );
@@ -789,11 +798,10 @@ const LessonScreen = observer(() => {
       case LanguageE.VIETNAMESE_VNG5M10:
       case LanguageE.VIETNAMESE_VNG5M11:
       case LanguageE.VIETNAMESE_VNG5M12:
-        const component = React.cloneElement(VnG2M8Lesson, {
+        return React.cloneElement(VnG2M8Lesson, {
           ...dataProps,
           ref: vowelRef,
         });
-        return component;
 
       /**----------------------
        *todo    các question cho môn khoa học
