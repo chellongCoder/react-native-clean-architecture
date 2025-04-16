@@ -82,6 +82,9 @@ import VnG4M5Lesson from './LessonComponent/Vietnamese_G4M5_lesson';
 import VietnameseLessonScreen from '../components/ModuleDetail';
 import VnG1M2Lesson from './LessonComponent/Vietnamese_VNG1M2_Lesson';
 import VnG1M6Lesson from './LessonComponent/Vietnamese_G1M6_lesson';
+import {FontFamily} from 'src/core/presentation/hooks/useFonts';
+import {scale} from 'react-native-size-matters';
+import {COLORS} from 'src/core/presentation/constants/colors';
 
 export enum MathQuestionType {
   MathMG0M1 = 'MATH_MG0M1',
@@ -645,13 +648,30 @@ const LessonScreen = observer(() => {
       case LanguageE.ENGLISH_EG0M3:
         return <LatinLesson {...dataProps} />;
       case LanguageE.ENGLISH_G3M20:
-        return <English_G3M20 {...dataProps} ref={vowelRef} />;
+        return (
+          <VietnameseLessonScreen
+            {...dataProps}
+            descriptionType="image"
+            ref={vowelRef}
+          />
+        );
       case LanguageE.ENGLISH_G6M26:
         return <English_G6M26 {...dataProps} ref={vowelRef} />;
       case LanguageE.ENGLISH_G5M16:
         return <English_G5M16 {...dataProps} ref={vowelRef} />;
       case LanguageE.ENGLISH_EG4M23:
-        return <English_EG4M23 {...dataProps} ref={vowelRef} />;
+        return (
+          <VietnameseLessonScreen
+            {...dataProps}
+            descriptionType="text-blank"
+            textDescriptionProps={{
+              fontName: FontFamily.SVNCherishMoment,
+              fontSize: scale(25),
+              color: COLORS.RED_AF3A1B,
+            }}
+            ref={vowelRef}
+          />
+        );
       case LanguageE.ENGLISH_EG1M3:
         return <EssayLesson {...dataProps} />;
       case LanguageE.ENGLISH_EG1M3:
@@ -711,7 +731,18 @@ const LessonScreen = observer(() => {
       case LanguageE.VIETNAMESE_VNG4M5:
         return <VnG4M5Lesson {...dataProps} ref={vowelRef} />;
       case LanguageE.VIETNAMESE_VNG5M1:
-        return <VnG5M1Lesson {...dataProps} ref={vowelRef} />;
+        return (
+          <VietnameseLessonScreen
+            {...dataProps}
+            descriptionType="text-highlight"
+            textDescriptionProps={{
+              fontName: FontFamily.SVNCherishMoment,
+              fontSize: scale(25),
+              color: COLORS.RED_AF3A1B,
+            }}
+            ref={vowelRef}
+          />
+        );
       case LanguageE.VIETNAMESE_VNG6M1:
         return <VnG3M1Lesson {...dataProps} ref={vowelRef} />;
       case LanguageE.VIETNAMESE_VNG4M3:
@@ -825,22 +856,7 @@ const LessonScreen = observer(() => {
       case MathQuestionType.MathMG5M18:
         return (
           <Math_MG5M18
-            moduleIndex={lessonIndex}
-            nextModule={nextModule}
-            totalModule={testTask?.question.length ?? 0}
-            lessonName={route.lessonName}
-            moduleName={route.moduleName}
-            firstMiniTestTask={testTask}
-            backgroundImage={
-              env.IMAGE_BACKGROUND_BASE_API_URL + lessonSetting?.backgroundImage
-            }
-            characterImageSuccess={
-              env.IMAGE_BACKGROUND_BASE_API_URL +
-              lessonSetting?.figureSuccessImage
-            }
-            characterImageFail={
-              env.IMAGE_BACKGROUND_BASE_API_URL + lessonSetting?.figureFailImage
-            }
+            {...dataProps}
             ref={vowelRef}
             isMulti={true}
             answer={['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '.']}

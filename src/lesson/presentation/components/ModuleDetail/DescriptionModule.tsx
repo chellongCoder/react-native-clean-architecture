@@ -12,14 +12,10 @@ import Animated, {
 import {EnvToken} from 'src/core/domain/entities/Env';
 import {coreModuleContainer} from 'src/core/CoreModule';
 import Env from 'src/core/domain/entities/Env';
+import TextHighlight from '../TextHighlight';
+import {FontFamily} from 'src/core/presentation/hooks/useFonts';
 
-type DescriptionModuleProps = {
-  text: string | string[];
-  textColor?: string;
-  textSize?: number;
-  lineHeight?: number;
-  fontWeight?: TextStyle['fontWeight'];
-};
+type DescriptionModuleProps = {};
 
 // type Module = 'text' | 'paragraph' | 'image' | 'images'
 const DescriptionModule = ({}: DescriptionModuleProps) => {
@@ -28,27 +24,6 @@ const DescriptionModule = ({}: DescriptionModuleProps) => {
   const hook = useModuleDetail();
   const opacity = useSharedValue(0);
   const scaleS = useSharedValue(1);
-
-  const descriptionType = useMemo(() => {
-    if (hook.firstMiniTestTask?.question?.[hook.moduleIndex]?.description) {
-      return 'text';
-    } else if (
-      typeof hook.firstMiniTestTask?.question?.[hook.moduleIndex]?.image ===
-      'string'
-    ) {
-      return 'image';
-    } else if (
-      Array.isArray(hook.firstMiniTestTask?.question?.[hook.moduleIndex]?.image)
-    ) {
-      return 'images';
-    } else if (
-      Array.isArray(
-        hook.firstMiniTestTask?.question?.[hook.moduleIndex]?.paragraph,
-      )
-    ) {
-      return 'paragraph';
-    }
-  }, [hook.firstMiniTestTask?.question, hook.moduleIndex]);
 
   const animatedStyle = useAnimatedStyle(() => {
     return {
@@ -70,18 +45,53 @@ const DescriptionModule = ({}: DescriptionModuleProps) => {
     });
   }, [hook.moduleIndex, opacity, scaleS]);
 
-  switch (descriptionType) {
-    case 'text':
+  switch (hook.descriptionType) {
+    case 'text-blank':
       return (
         <View style={styles.mainContent}>
-          <Text style={styles.descriptionText}>
-            {hook.firstMiniTestTask?.question?.[hook.moduleIndex]?.description}
+          <Text
+            style={[
+              styles.descriptionText,
+              hook.textDescriptionProps && {
+                fontFamily: hook.textDescriptionProps?.fontName,
+                color: hook.textDescriptionProps?.color,
+                fontSize: hook.textDescriptionProps?.fontSize,
+              },
+            ].flat()}>
+            {hook.firstMiniTestTask?.question?.[hook.moduleIndex]?.content}
           </Text>
+        </View>
+      );
+    case 'text-highlight':
+      return (
+        <View style={styles.mainContent}>
+          <TextHighlight
+            content={
+              hook.firstMiniTestTask?.question?.[hook.moduleIndex]?.content ??
+              ''
+            }
+            description={
+              hook.firstMiniTestTask?.question?.[hook.moduleIndex]
+                ?.description ?? ''
+            }
+            style={[
+              styles.descriptionText,
+              {
+                fontFamily: hook.textDescriptionProps?.fontName,
+                color: hook.textDescriptionProps?.color,
+                fontSize: hook.textDescriptionProps?.fontSize,
+              },
+            ].flat()}
+            styleHighlight={styles.styleHighlight}
+          />
         </View>
       );
     case 'image':
       return (
-        <View style={{alignItems: 'center'}}>
+        <View
+          style={{
+            alignItems: 'center',
+          }}>
           <Animated.Image
             resizeMode={'contain'}
             style={[
@@ -129,6 +139,12 @@ const styles = StyleSheet.create({
   },
   descriptionText: {
     textAlign: 'center',
+    fontFamily: FontFamily.SVNCherishMoment,
+    fontSize: scale(32),
+    lineHeight: verticalScale(44.8),
+  },
+  styleHighlight: {
+    textDecorationLine: 'underline',
   },
 });
 

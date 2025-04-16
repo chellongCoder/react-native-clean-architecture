@@ -13,7 +13,10 @@ import {assets} from 'src/core/presentation/utils';
 import {scale, verticalScale} from 'react-native-size-matters';
 import useAuthenStore from 'src/authentication/presentation/hooks/useAuthenStore';
 import useHomeStore from 'src/home/presentation/stores/useHomeStore';
-import {navigateScreen} from 'src/core/presentation/navigation/actions/RootNavigationActions';
+import {
+  navigateScreen,
+  resetNavigator,
+} from 'src/core/presentation/navigation/actions/RootNavigationActions';
 import {STACK_NAVIGATOR} from 'src/core/presentation/navigation/ConstantNavigator';
 
 interface TrialModulePopupProps {
@@ -42,6 +45,7 @@ const TrialModulePopup: React.FC<TrialModulePopupProps> = ({
       authStore.updateTrialModules({});
     } else {
       handleToggleTrialPopup();
+      resetNavigator(STACK_NAVIGATOR.HOME.HOME_SCREEN, {});
       navigateScreen(STACK_NAVIGATOR.BOTTOM_TAB.PARENT_TAB, {});
     }
   };
