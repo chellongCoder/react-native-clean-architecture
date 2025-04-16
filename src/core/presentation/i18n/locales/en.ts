@@ -175,6 +175,7 @@ export default {
         chooseTheCorrectWord: 'Choose the correct WORD',
         chooseCorrectAnswer: 'Choose correct answer',
         typeCorrectAnswer: 'Type correct answer',
+        chooseALigagAsOn: 'Please choose a ligag as on',
         listening: 'Listening',
         processingVoice: 'Processing voice',
         pleaseTryAgain: 'Please try again',

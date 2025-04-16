@@ -164,6 +164,7 @@ export default {
         chooseTheCorrectWord: 'Chọn từ đúng',
         chooseCorrectAnswer: 'Chọn câu trả lời đúng',
         typeCorrectAnswer: 'Nhập câu trả lời đúng',
+        chooseALigagAsOn: 'Hãy chọn chữ cái ghép như từ trên',
         listening: 'Nghe',
         processingVoice: 'Xử lý giọng nói',
         pleaseTryAgain: 'Vui lòng thử lại',
