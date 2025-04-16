@@ -4,7 +4,14 @@ import React, {
   forwardRef,
   ForwardRefRenderFunction,
 } from 'react';
-import {View, Text, TouchableOpacity, StyleSheet} from 'react-native';
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  StyleSheet,
+  TextStyle,
+  StyleProp,
+} from 'react-native';
 import {scale, verticalScale} from 'react-native-size-matters';
 import {COLORS} from 'src/core/presentation/constants/colors';
 import {FontFamily} from 'src/core/presentation/hooks/useFonts';
@@ -21,6 +28,8 @@ interface SelectionAnswersQuestionProps {
   isSelectOne?: boolean;
   contentAnswer?: (e: string) => React.ReactNode;
   fontFamily?: FontFamily;
+  questionStyle?: StyleProp<TextStyle>;
+  answerStyle?: StyleProp<TextStyle>;
 }
 
 export interface SelectionAnswersQuestionRef {
@@ -44,6 +53,7 @@ const SelectionAnswersQuestion: ForwardRefRenderFunction<
     isSelectOne,
     contentAnswer,
     fontFamily,
+    answerStyle,
   } = props;
 
   const [answerSelected, setAnswerSelected] = useState<string[]>([]);
@@ -82,7 +92,7 @@ const SelectionAnswersQuestion: ForwardRefRenderFunction<
 
   return (
     <View style={[styles.boxSelected]}>
-      <View style={styles.wrapCharContainer}>{question}</View>
+      <View style={[styles.wrapCharContainer]}>{question}</View>
       <View style={[styles.wapper, {width: '100%'}]}>
         {answer?.map((e, i) => {
           const bg =
@@ -97,7 +107,7 @@ const SelectionAnswersQuestion: ForwardRefRenderFunction<
           const size =
             answer.length > 3
               ? (WIDTH_SCREEN - scale(100)) / Math.ceil(length / 2)
-              : WIDTH_SCREEN - scale(50);
+              : (WIDTH_SCREEN - scale(100)) / 2;
 
           const minHeight = answer.length === 3 ? scale(44) : scale(56);
 
@@ -115,7 +125,12 @@ const SelectionAnswersQuestion: ForwardRefRenderFunction<
                 },
               ]}>
               {contentAnswer?.(e) ?? (
-                <Text style={[styles.textVowel, fontFamily && {fontFamily}]}>
+                <Text
+                  style={[
+                    styles.textVowel,
+                    fontFamily && {fontFamily},
+                    answerStyle,
+                  ]}>
                   {e
                     .replace(/\s*-\s*/, '')
                     .replace(/(?<!\S)\s+(?!\S)/g, '\n')
