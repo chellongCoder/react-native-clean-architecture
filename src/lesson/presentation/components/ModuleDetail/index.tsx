@@ -27,6 +27,18 @@ const ModuleDetail = () => {
   const handleError = () => {
     setSource(assets.background_vowels);
   };
+  const renderQuestion = () => {
+    switch (hook.questionType) {
+      case 'text':
+        return (
+          <Text style={styles.instructionText}>
+            {hook.firstMiniTestTask?.question?.[hook.moduleIndex]?.content}
+          </Text>
+        );
+      default:
+        return null;
+    }
+  };
   return (
     <View style={[styles.container]}>
       {/* Background and content section */}
@@ -40,18 +52,13 @@ const ModuleDetail = () => {
             lessonTitle={hook.lessonName}
             moduleTitle={hook.moduleName}
             modulePart={hook.partName}
-            timer="00:09"
+            timer={hook.word}
             score={0}
             scoreIcon={assets.abcBook}
           />
 
           {/* Main content - Vietnamese text */}
-          <DescriptionModule
-            text="DƯỚI ÁNH TRĂNG
-              DÒNG SÔNG SÁNG RỰC LÊN
-              NHỮNG CON SÓNG NHỎ
-              VỖ NHẸ VÀO HAI BỜ CÁT."
-          />
+          <DescriptionModule />
 
           {/* Character Module */}
           <CharacterModule imageSource={assets.andie_1} />
@@ -70,14 +77,14 @@ const ModuleDetail = () => {
         <View style={styles.selectionContainer}>
           <SelectionAnswersQuestion
             ref={hook.selectionRef}
-            question={
-              <Text style={styles.instructionText}>
-                Tìm chủ ngữ{'\n'}trong câu trên
-              </Text>
+            question={renderQuestion()}
+            answer={
+              hook.firstMiniTestTask?.question?.[hook.moduleIndex]?.answers
+                ?.toString()
+                ?.split(' , ') as string[]
             }
-            answer={hook.answerOptions}
             isShowCorrectContainer={hook.isShowCorrectContainer}
-            isAnswerCorrect={hook.isAnswerCorrect}
+            isAnswerCorrect={!!hook.isAnswerCorrect}
             onSelectAnswer={hook.handleSelectAnswer}
             learningTimer={hook.learningTimer}
             isSelectOne={true}
@@ -90,6 +97,8 @@ const ModuleDetail = () => {
           onPress={hook.handleSubmit}>
           <Text style={styles.submitText}>Submit</Text>
         </TouchableOpacity>
+
+        <View style={{paddingBottom: insets.bottom}} />
       </View>
     </View>
   );
@@ -105,6 +114,18 @@ export interface ModuleDetailProps {
   backgroundImage?: string;
   characterImageSuccess?: string;
   characterImageFail?: string;
+  textDescriptionProps?: {
+    color?: string;
+    fontSize?: number;
+    fontName?: string;
+  };
+  descriptionType?:
+    | 'text-blank'
+    | 'text-highlight'
+    | 'image'
+    | 'images'
+    | 'paragraph';
+  questionType?: 'text';
 }
 // The wrapper component that provides the context
 const VietnameseLessonScreen = (props: ModuleDetailProps) => {
@@ -128,7 +149,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: scale(16),
   },
   selectionContainer: {
-    height: HEIGHT_SCREEN / 3,
+    flex: 1,
     width: '100%',
   },
   answerSection: {
@@ -137,10 +158,10 @@ const styles = StyleSheet.create({
     borderTopRightRadius: scale(30),
     paddingHorizontal: scale(20),
     paddingTop: scale(10),
-    paddingBottom: scale(30),
     marginTop: -scale(20),
     flexDirection: 'column',
     gap: scale(20),
+    flex: 1,
   },
   answerHeaderRow: {
     flexDirection: 'row',

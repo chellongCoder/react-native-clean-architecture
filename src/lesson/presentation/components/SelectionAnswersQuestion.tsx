@@ -92,7 +92,7 @@ const SelectionAnswersQuestion: ForwardRefRenderFunction<
 
   return (
     <View style={[styles.boxSelected]}>
-      <View style={[styles.wrapCharContainer]}>{question}</View>
+      {question && <View style={styles.wrapCharContainer}>{question}</View>}
       <View style={[styles.wapper, {width: '100%'}]}>
         {answer?.map((e, i) => {
           const bg =

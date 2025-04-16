@@ -8,22 +8,13 @@ import React, {
 } from 'react';
 import {SelectionAnswersQuestionRef} from '../SelectionAnswersQuestion';
 import {ModuleDetailProps} from '.';
+import {useLessonStore} from '../../stores/LessonStore/useGetPostsStore';
+import {useSettingLesson} from '../../hooks/useSettingLesson';
 
 // Define the context shape
-interface ModuleDetailContextType extends ModuleDetailProps {
-  selectedAnswers: string[];
-  isShowCorrectContainer: boolean;
-  isAnswerCorrect: boolean;
-  learningTimer: number;
-  answerOptions: string[];
-  partName: string;
-  handleSelectAnswer: (selected: string[]) => void;
-  handleSubmit: () => void;
-  selectionRef: React.RefObject<SelectionAnswersQuestionRef>;
-  setLearningTimer: (e: number) => void;
-  setIsAnswerCorrect: (e: boolean) => void;
-  setIsShowCorrectContainer: (e: boolean) => void;
-}
+interface ModuleDetailContextType
+  extends ReturnType<typeof useSelectionAnswers>,
+    ModuleDetailProps {}
 
 // Create the context with default values
 const ModuleDetailContext = createContext<ModuleDetailContextType | undefined>(
@@ -35,58 +26,100 @@ interface ModuleDetailProviderProps extends ModuleDetailProps {
   children: ReactNode;
 }
 
-// Create the provider component
-export const ModuleDetailProvider = ({
-  children,
-  ...props
-}: ModuleDetailProviderProps) => {
-  const [selectedAnswers, setSelectedAnswers] = useState<string[]>([]);
-  const [isShowCorrectContainer, setIsShowCorrectContainer] = useState(false);
-  const [isAnswerCorrect, setIsAnswerCorrect] = useState(false);
-  const [learningTimer, setLearningTimer] = useState(0);
-  const selectionRef = useRef<SelectionAnswersQuestionRef>(null);
-  const partName = useMemo(() => {
-    return props.firstMiniTestTask?.name ?? '';
-  }, [props.firstMiniTestTask]);
+// Hook for handling selection answers
+interface UseSelectionAnswersProps {
+  firstMiniTestTask?: any;
+  moduleIndex?: number;
+  nextModule?: (answerSelected: string) => void;
+  answerRef?: React.RefObject<any>;
+  answerSelected?: string;
+  getCorrectAnswer?: (answer: string) => string;
+}
 
-  const answerOptions = [
-    'DƯỚI ÁNH TRĂNG',
-    'DÒNG SÔNG NHỮNG CON SÓNG NHỎ',
-    'SÁNG RỰC LÊN',
-    'VỖ NHẸ VÀO HAI BỜ CÁT.',
-  ];
+export const useSelectionAnswers = (props: UseSelectionAnswersProps = {}) => {
+  const {trainingCount, getSetting} = useLessonStore();
+  const {
+    firstMiniTestTask,
+    moduleIndex = 0,
+    nextModule = () => {},
+    answerRef,
+    answerSelected = '',
+    getCorrectAnswer = (answer: string) => answer,
+  } = props;
+
+  const [selectedAnswers, setSelectedAnswers] = useState<string[]>([]);
+  const selectionRef = useRef<SelectionAnswersQuestionRef>(null);
+
+  const {
+    isAnswerCorrect,
+    isShowCorrectContainer,
+    word,
+    learningTimer,
+    submit,
+    toggleShowHint,
+    resetLearning,
+  } = useSettingLesson({
+    countDownTime: trainingCount <= 2 ? 0 : 5,
+    isCorrectAnswer:
+      answerSelected ===
+      getCorrectAnswer(
+        firstMiniTestTask?.question?.[moduleIndex]?.correctAnswer
+          .toString()
+          .toLowerCase(),
+      ),
+    onSubmit: () => {
+      setSelectedAnswers([]);
+      nextModule(answerSelected);
+      answerRef?.current?.resetAnswerSelected?.();
+    },
+    fullAnswer: firstMiniTestTask?.question?.[moduleIndex].fullAnswer,
+  });
+  const partName = useMemo(() => {
+    return firstMiniTestTask?.name ?? '';
+  }, [firstMiniTestTask]);
 
   const handleSelectAnswer = (selected: string[]) => {
     setSelectedAnswers(selected);
   };
 
   const handleSubmit = () => {
-    // Check if answer is correct (example logic)
-    const correctAnswer = 'DÒNG SÔNG NHỮNG CON SÓNG NHỎ';
+    // This is an example logic - you should replace with your actual logic
+    const correctAnswer =
+      firstMiniTestTask?.question?.[moduleIndex]?.correctAnswer?.toString() ||
+      'DÒNG SÔNG NHỮNG CON SÓNG NHỎ';
     const isCorrect = selectedAnswers.includes(correctAnswer);
-
-    setIsAnswerCorrect(isCorrect);
-    setIsShowCorrectContainer(true);
   };
 
-  // Provide the context value
-  const value = {
+  return {
     selectedAnswers,
     isShowCorrectContainer,
     isAnswerCorrect,
     learningTimer,
-    answerOptions,
     partName,
+    word,
     handleSelectAnswer,
     handleSubmit,
     selectionRef,
-    setLearningTimer,
-    setIsAnswerCorrect,
-    setIsShowCorrectContainer,
+    resetLearning,
+    toggleShowHint,
   };
+};
+
+// Create the provider component
+export const ModuleDetailProvider = ({
+  children,
+  ...props
+}: ModuleDetailProviderProps) => {
+  const values = useSelectionAnswers({
+    firstMiniTestTask: props.firstMiniTestTask,
+    moduleIndex: props.moduleIndex,
+    nextModule: props.nextModule,
+  });
+
+  // Provide the context value
 
   return (
-    <ModuleDetailContext.Provider value={{...value, ...props}}>
+    <ModuleDetailContext.Provider value={{...values, ...props}}>
       {children}
     </ModuleDetailContext.Provider>
   );
