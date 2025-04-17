@@ -92,6 +92,14 @@ import {FontFamily} from 'src/core/presentation/hooks/useFonts';
 import {scale} from 'react-native-size-matters';
 import {COLORS} from 'src/core/presentation/constants/colors';
 import VnG2M1Lesson from './LessonComponent/Vietnamese_VNG2M1_Lesson';
+import VnG3M2Lesson from './LessonComponent/Vietnamese_G3M2_lesson';
+import VnG3M3Lesson from './LessonComponent/Vietnamese_G3M3_lesson';
+import VnG3M4Lesson from './LessonComponent/Vietnamese_G3M4_lesson';
+import VnG3M5Lesson from './LessonComponent/Vietnamese_G3M5_lesson';
+import VnG3M6Lesson from './LessonComponent/Vietnamese_G3M6_lesson';
+import VnG3M7Lesson from './LessonComponent/Vietnamese_G3M7_lesson';
+import VnG3M8Lesson from './LessonComponent/Vietnamese_G3M8_lesson';
+import VnG3M10Lesson from './LessonComponent/Vietnamese_G3M10_lesson';
 
 export enum MathQuestionType {
   MathMG0M1 = 'MATH_MG0M1',
@@ -154,6 +162,14 @@ export enum LanguageE {
   VIETNAMESE_VNG2M8 = 'VIETNAMESE_VNG2M8',
 
   VIETNAMESE_VNG3M1 = 'VIETNAMESE_VNG3M1',
+  VIETNAMESE_VNG3M2 = 'VIETNAMESE_VNG3M2',
+  VIETNAMESE_VNG3M3 = 'VIETNAMESE_VNG3M3',
+  VIETNAMESE_VNG3M4 = 'VIETNAMESE_VNG3M4',
+  VIETNAMESE_VNG3M5 = 'VIETNAMESE_VNG3M5',
+  VIETNAMESE_VNG3M6 = 'VIETNAMESE_VNG3M6',
+  VIETNAMESE_VNG3M7 = 'VIETNAMESE_VNG3M7',
+  VIETNAMESE_VNG3M8 = 'VIETNAMESE_VNG3M8',
+  VIETNAMESE_VNG3M10 = 'VIETNAMESE_VNG3M10',
   VIETNAMESE_VNG4M1 = 'VIETNAMESE_VNG4M1',
   VIETNAMESE_VNG4M3 = 'VIETNAMESE_VNG4M3',
   VIETNAMESE_VNG4M5 = 'VIETNAMESE_VNG4M5',
@@ -290,7 +306,7 @@ const LessonScreen = observer(() => {
     () => getSetting(lessonSetting),
     [getSetting, lessonSetting],
   );
-  console.log('settings: ', settings);
+
   const submitModule = useCallback(
     async (item: TResult) => {
       playSound(soundTrack.good_result);
@@ -761,6 +777,23 @@ const LessonScreen = observer(() => {
         return <VnG2M8Lesson {...dataProps} ref={vowelRef} />;
       case LanguageE.VIETNAMESE_VNG3M1:
         return <VnG3M1Lesson {...dataProps} ref={vowelRef} />;
+      case LanguageE.VIETNAMESE_VNG3M2:
+        return <VnG3M2Lesson {...dataProps} ref={vowelRef} />;
+      case LanguageE.VIETNAMESE_VNG3M3:
+        return <VnG3M3Lesson {...dataProps} ref={vowelRef} />;
+      case LanguageE.VIETNAMESE_VNG3M4:
+        return <VnG3M4Lesson {...dataProps} ref={vowelRef} />;
+      case LanguageE.VIETNAMESE_VNG3M5:
+        return <VnG3M5Lesson {...dataProps} ref={vowelRef} />;
+      case LanguageE.VIETNAMESE_VNG3M6:
+        return <VnG3M6Lesson {...dataProps} ref={vowelRef} />;
+      case LanguageE.VIETNAMESE_VNG3M7:
+        return <VnG3M7Lesson {...dataProps} ref={vowelRef} />;
+      case LanguageE.VIETNAMESE_VNG3M8:
+        return <VnG3M8Lesson {...dataProps} ref={vowelRef} />;
+      case LanguageE.VIETNAMESE_VNG3M10:
+        return <VnG3M10Lesson {...dataProps} ref={vowelRef} />;
+
       case LanguageE.VIETNAMESE_VNG4M1:
         return <VnG4M1Lesson {...dataProps} ref={vowelRef} />;
       case LanguageE.VIETNAMESE_VNG4M5:

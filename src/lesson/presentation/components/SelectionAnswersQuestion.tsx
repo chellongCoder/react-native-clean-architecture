@@ -105,9 +105,10 @@ const SelectionAnswersQuestion: ForwardRefRenderFunction<
               : '#F2B559';
           const length = answer?.length ?? 2;
           const size =
-            answer.length > 3
-              ? (WIDTH_SCREEN - scale(100)) / Math.ceil(length / 2)
-              : (WIDTH_SCREEN - scale(100)) / 2;
+            answer.length === 3
+              ? WIDTH_SCREEN - scale(100)
+              : (WIDTH_SCREEN - scale(100)) /
+                (answer.length > 3 ? Math.ceil(length / 2) : 2);
 
           const minHeight = answer.length === 3 ? scale(44) : scale(56);
 
@@ -214,7 +215,7 @@ const styles = StyleSheet.create({
   textVowel: {
     // Add your styles here
     fontFamily: FontFamily.SVNNeuzeitBold,
-    color: '#FBF8CC',
+    color: COLORS.WHITE_FBF8CC,
     fontSize: verticalScale(14),
     flexWrap: 'wrap',
     textAlign: 'center',
