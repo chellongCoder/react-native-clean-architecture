@@ -1,6 +1,10 @@
-/* eslint-disable react-native/no-inline-styles */
-/* eslint-disable react/no-unstable-nested-components */
-import {StyleSheet, Text, View} from 'react-native';
+import {
+  ImageBackground,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+} from 'react-native';
 import React, {
   forwardRef,
   useCallback,
@@ -17,11 +21,7 @@ import {FontFamily} from 'src/core/presentation/hooks/useFonts';
 import useGlobalStyle from 'src/core/presentation/hooks/useGlobalStyle';
 import {Task} from 'src/home/application/types/GetListQuestionResponse';
 import {COLORS} from 'src/core/presentation/constants/colors';
-import {
-  darkenColor,
-  getCorrectAnswer,
-  isAndroid,
-} from 'src/core/presentation/utils';
+import {darkenColor, getCorrectAnswer} from 'src/core/presentation/utils';
 import {scale, verticalScale} from 'react-native-size-matters';
 import {
   Easing,
@@ -41,11 +41,6 @@ import SelectionAnswersQuestion, {
   SelectionAnswersQuestionRef,
 } from '../../components/SelectionAnswersQuestion';
 import TextHighlight from '../../components/TextHighlight';
-import Tts from 'react-native-tts';
-import {
-  iosVoice,
-  listLanguage,
-} from 'src/core/presentation/hooks/textToSpeech/TextToSpeechProvider';
 import {useI18n} from 'src/core/presentation/hooks/useI18n';
 import VoiceButton from '../../components/VoiceButton';
 
@@ -61,7 +56,7 @@ type Props = {
   characterImageFail?: string;
 };
 
-const VnG3M1Lesson = observer(
+const VnG2M12Lesson = observer(
   forwardRef<LessonRef, Props>(
     (
       {
@@ -79,9 +74,9 @@ const VnG3M1Lesson = observer(
     ) => {
       const globalStyle = useGlobalStyle();
 
-      const {ttsSpeak, updateDefaultVoice} = useContext(TextToSpeechContext);
+      const {ttsSpeak} = useContext(TextToSpeechContext);
       const focus = useIsFocused();
-      const answerRef = useRef<SelectionAnswersQuestionRef>(null);
+      const answerRef = useRef<SelectionAnswersQuestionRef>();
 
       const [answerSelected, setAnswerSelected] = useState('');
 
@@ -90,6 +85,7 @@ const VnG3M1Lesson = observer(
       const {selectedChild} = useAuthenticationStore();
 
       const {
+        env,
         isAnswerCorrect,
         isShowCorrectContainer,
         word,
@@ -102,7 +98,8 @@ const VnG3M1Lesson = observer(
         isCorrectAnswer:
           answerSelected ===
           getCorrectAnswer(
-            firstMiniTestTask?.question?.[moduleIndex]?.correctAnswer as string,
+            firstMiniTestTask?.question?.[moduleIndex]
+              ?.correctAnswer as string[],
           ).trim(),
         onSubmit: () => {
           setAnswerSelected('');
@@ -158,38 +155,6 @@ const VnG3M1Lesson = observer(
       }, [onSpeechText, focus]); // Added focus to the dependency array
 
       useEffect(() => {
-        Tts.voices().then(voices => {
-          if (lessonName.toLocaleLowerCase().includes('english')) {
-            const engVoice = voices.find(
-              voice => voice.language === listLanguage['US English'],
-            );
-            updateDefaultVoice?.(
-              isAndroid ? engVoice?.id : iosVoice[3].id,
-              'US English',
-            );
-          } else if (lessonName.toLocaleLowerCase().includes('mandarin')) {
-            const engVoice = voices.find(
-              voice =>
-                voice.language ===
-                listLanguage['Mainland China, simplified characters'],
-            );
-            updateDefaultVoice?.(
-              engVoice?.id,
-              'Mainland China, simplified characters',
-            );
-          } else if (lessonName.toLocaleLowerCase().includes('tiếng việt')) {
-            const vietnameseVoices = voices.filter(
-              voice =>
-                voice.language.startsWith('vi-') ||
-                voice.name.toLowerCase().includes('vietnamese'),
-            );
-
-            updateDefaultVoice?.(vietnameseVoices[0]?.id, 'Vie (Vietnamese)');
-          }
-        });
-      }, [lessonName, updateDefaultVoice]);
-
-      useEffect(() => {
         opacity.value = withTiming(0, {duration: 500}, () => {
           opacity.value = withTiming(1, {duration: 500});
         });
@@ -218,7 +183,7 @@ const VnG3M1Lesson = observer(
           lessonName={lessonName}
           module={moduleName}
           part={firstMiniTestTask?.name}
-          backgroundColor="#66c270"
+          backgroundColor={settings.backgroundColor ?? COLORS.GREEN_DDF598}
           backgroundAnswerColor={
             settings.backgroundAnswerColor ?? COLORS.GREEN_DDF598
           }
@@ -238,32 +203,32 @@ const VnG3M1Lesson = observer(
           isAnswerCorrect={isAnswerCorrect}
           isShowCorrectContainer={isShowCorrectContainer}
           onPressFlower={toggleShowHint}
-          characterStyle={{
-            height: verticalScale(200),
-            width: scale(150),
-            marginBottom: -verticalScale(80),
-            marginLeft: -scale(40),
-          }}
           buildQuestion={
-            <View
-              style={{
-                width: scale(220),
-                minHeight: scale(100),
-                marginTop: verticalScale(40),
-              }}>
-              <TextHighlight
-                content={
-                  firstMiniTestTask?.question?.[moduleIndex]?.content ?? ''
-                }
-                description={
-                  firstMiniTestTask?.question?.[moduleIndex]?.paragraph ?? ''
-                }
-                style={[styles.fonts_SVN_Cherish, styles.textParagraph]}
-                styleHighlight={{
-                  textDecorationLine: 'underline',
-                  fontWeight: '400',
-                }}
-              />
+            <View>
+              <ImageBackground
+                resizeMode={'cover'}
+                style={[
+                  {
+                    width: scale(170),
+                    aspectRatio: 0.7,
+                  },
+                ]}
+                source={{
+                  uri:
+                    env.IMAGE_QUESTION_BASE_API_URL +
+                    firstMiniTestTask?.question?.[moduleIndex].image,
+                }}>
+                <View style={styles.boxName}>
+                  <Text style={styles.textParagraph}>
+                    {firstMiniTestTask?.name}
+                  </Text>
+                </View>
+                <ScrollView style={styles.boxParagraph}>
+                  <Text style={styles.textParagraph}>
+                    {firstMiniTestTask?.question?.[moduleIndex].paragraph}
+                  </Text>
+                </ScrollView>
+              </ImageBackground>
             </View>
           }
           buildAnswer={
@@ -292,7 +257,8 @@ const VnG3M1Lesson = observer(
               </View>
               <SelectionAnswersQuestion
                 answer={
-                  firstMiniTestTask?.question?.[moduleIndex].answers as string[]
+                  firstMiniTestTask?.question?.[moduleIndex]
+                    ?.answers as string[]
                 }
                 question={
                   <TextHighlight
@@ -334,7 +300,7 @@ const VnG3M1Lesson = observer(
   ),
 );
 
-export default VnG3M1Lesson;
+export default VnG2M12Lesson;
 
 const styles = StyleSheet.create({
   fill: {
@@ -344,16 +310,35 @@ const styles = StyleSheet.create({
     fontFamily: FontFamily.SVNCherishMoment,
   },
   textColor: {
-    color: COLORS.RED_AF3A1B,
+    color: '#1C6349',
+  },
+  boxParagraph: {
+    height: verticalScale(100),
+    alignSelf: 'center',
+    position: 'absolute',
+    bottom: verticalScale(0),
+    left: 0,
+    right: 0,
+    paddingHorizontal: scale(10),
+  },
+  boxName: {
+    position: 'absolute',
+    top: verticalScale(0),
+    left: 0,
+    right: 0,
+    alignItems: 'center',
+    height: verticalScale(30),
+    justifyContent: 'center',
   },
   textParagraph: {
-    fontSize: verticalScale(18),
-    textAlign: 'left',
-    color: COLORS.RED_AF3A1B,
+    fontFamily: FontFamily.SVNNeuzeitRegular,
+    fontSize: verticalScale(14),
+    color: COLORS.GREEN_258F78,
+    letterSpacing: 0.1,
   },
   textQuestion: {
-    fontSize: verticalScale(15),
-    textAlign: 'left',
+    fontSize: verticalScale(18),
+    textAlign: 'center',
     color: COLORS.BLUE_258F78,
   },
   textGreen: {

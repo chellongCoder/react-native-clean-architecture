@@ -87,10 +87,10 @@ const VnG1M7Lesson = forwardRef<LessonRef, Props>(
     } = useSettingLesson({
       countDownTime: 5,
       isCorrectAnswer:
-        answerSelected ===
-        (
-          firstMiniTestTask?.question?.[moduleIndex]?.correctAnswer as string
-        ).replace(/ /g, ''),
+        answerSelected.replace(/ /g, '').trim() ===
+        (firstMiniTestTask?.question?.[moduleIndex]?.fullAnswer as string)
+          .replace(/ /g, '')
+          .trim(),
       onSubmit: () => {
         charScrambleRep.current?.reset();
         nextModule(answerSelected);
@@ -98,8 +98,6 @@ const VnG1M7Lesson = forwardRef<LessonRef, Props>(
       fullAnswer: firstMiniTestTask?.question?.[moduleIndex].fullAnswer,
       totalTime: 60,
     });
-
-    const focus = useIsFocused();
 
     const onSpeechText = useCallback(() => {
       ttsSpeak?.(

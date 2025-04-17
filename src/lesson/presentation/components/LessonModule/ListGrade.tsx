@@ -19,7 +19,7 @@ const ListGrade = forwardRef((_, ref) => {
   const gradeObjs = useMemo(() => {
     return listSubject
       .filter(subject => subject.parentId === rootSubject?._id)
-      .sort((a, b) => a.level - b.level);
+      .sort((a, b) => a.level - b.level); // * sắp xếp theo level
   }, [listSubject, rootSubject]);
 
   useImperativeHandle(ref, () => {

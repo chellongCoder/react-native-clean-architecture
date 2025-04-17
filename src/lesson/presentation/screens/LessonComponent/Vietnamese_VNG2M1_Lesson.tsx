@@ -87,7 +87,7 @@ const VnG2M1Lesson = forwardRef<LessonRef, Props>(
     } = useSettingLesson({
       countDownTime: 5,
       isCorrectAnswer:
-        answerSelected.trim() ===
+        answerSelected.replace(/ /g, '').trim() ===
         (firstMiniTestTask?.question?.[moduleIndex]?.correctAnswer as string)
           .replace(/ /g, '')
           .trim(),
@@ -212,6 +212,7 @@ const VnG2M1Lesson = forwardRef<LessonRef, Props>(
                 {fontSize: scale(36), color: COLORS.BLUE_0877B6},
               ]}
               answerStyle={[styles.fonts_SVN_Cherish, {fontSize: scale(28)}]}
+              isCharacter
             />
 
             <PrimaryButton

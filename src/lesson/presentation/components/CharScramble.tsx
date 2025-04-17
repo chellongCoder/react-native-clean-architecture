@@ -1,5 +1,6 @@
 /* eslint-disable react-native/no-inline-styles */
 import {
+  ScrollView,
   StyleProp,
   StyleSheet,
   Text,
@@ -27,6 +28,7 @@ type Props = {
   onAnswerChanged?: (answer: string) => void;
   questionStyle?: StyleProp<TextStyle>;
   answerStyle?: StyleProp<TextStyle>;
+  isCharacter?: boolean;
 };
 
 export type CharScrambleRep = {
@@ -42,6 +44,7 @@ const CharScramble = forwardRef<CharScrambleRep, Props>(
       onAnswerChanged,
       questionStyle,
       answerStyle,
+      isCharacter = true,
     },
     ref,
   ) => {
@@ -73,13 +76,13 @@ const CharScramble = forwardRef<CharScrambleRep, Props>(
           );
         } else {
           const indexEmpty = answerSelectedChars.findIndex(v => v === '_');
-          answerSelectedChars[indexEmpty] = char;
+          answerSelectedChars[indexEmpty] = isCharacter ? char : char + ' ';
           setAnswerSelectedChars([...answerSelectedChars]);
           selectedStack.push({index: index, indexFill: indexEmpty});
           setSelectedStack([...selectedStack]);
         }
       },
-      [selectedStack, answerSelectedChars],
+      [selectedStack, answerSelectedChars, isCharacter],
     );
 
     useImperativeHandle(ref, () => ({
@@ -115,7 +118,7 @@ const CharScramble = forwardRef<CharScrambleRep, Props>(
           ]}>
           {answerSelected}
         </Text>
-        <View style={[styles.wapper, styles.fill]}>
+        <ScrollView contentContainerStyle={[styles.wapper, styles.fill]}>
           {listCharArray?.map((e, i) => {
             const bg = selectedStack.find(v => v.index === i)
               ? '#66C270'
@@ -140,7 +143,7 @@ const CharScramble = forwardRef<CharScrambleRep, Props>(
               </TouchableOpacity>
             );
           })}
-        </View>
+        </ScrollView>
         {!!learningTimer && (
           <View
             style={[
@@ -171,9 +174,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  fill: {
-    flex: 1,
-  },
+  fill: {},
   fonts_SVN_Cherish: {
     fontFamily: FontFamily.SVNCherishMoment,
   },
@@ -195,26 +196,25 @@ const styles = StyleSheet.create({
     color: 'white',
   },
   wapper: {
-    marginTop: 8,
     flexDirection: 'row',
     flexWrap: 'wrap',
     justifyContent: 'center',
     alignContent: 'center',
   },
   boxVowel: {
-    width: 56,
-    height: 56,
-    borderRadius: 10,
+    width: scale(56),
+    height: scale(56),
+    borderRadius: scale(10),
     justifyContent: 'center',
     alignItems: 'center',
-    marginHorizontal: 6,
-    marginVertical: 6,
+    marginHorizontal: scale(6),
+    marginVertical: scale(6),
   },
   textVowel: {
     fontFamily: FontFamily.SVNCherishMoment,
     color: '#FBF8CC',
-    fontSize: 24,
+    fontSize: scale(24),
     fontWeight: '400',
-    paddingTop: 8,
+    paddingTop: scale(8),
   },
 });

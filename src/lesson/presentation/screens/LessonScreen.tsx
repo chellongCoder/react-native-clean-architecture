@@ -100,6 +100,7 @@ import VnG3M6Lesson from './LessonComponent/Vietnamese_G3M6_lesson';
 import VnG3M7Lesson from './LessonComponent/Vietnamese_G3M7_lesson';
 import VnG3M8Lesson from './LessonComponent/Vietnamese_G3M8_lesson';
 import VnG3M10Lesson from './LessonComponent/Vietnamese_G3M10_lesson';
+import VnG2M12Lesson from './LessonComponent/Vietnamese_G2M12_lesson';
 
 export enum MathQuestionType {
   MathMG0M1 = 'MATH_MG0M1',
@@ -160,6 +161,10 @@ export enum LanguageE {
   VIETNAMESE_VNG2M6 = 'VIETNAMESE_VNG2M6',
   VIETNAMESE_VNG2M7 = 'VIETNAMESE_VNG2M7',
   VIETNAMESE_VNG2M8 = 'VIETNAMESE_VNG2M8',
+  VIETNAMESE_VNG2M9 = 'VIETNAMESE_VNG2M9',
+  VIETNAMESE_VNG2M10 = 'VIETNAMESE_VNG2M10',
+  VIETNAMESE_VNG2M11 = 'VIETNAMESE_VNG2M11',
+  VIETNAMESE_VNG2M12 = 'VIETNAMESE_VNG2M12',
 
   VIETNAMESE_VNG3M1 = 'VIETNAMESE_VNG3M1',
   VIETNAMESE_VNG3M2 = 'VIETNAMESE_VNG3M2',
@@ -169,10 +174,20 @@ export enum LanguageE {
   VIETNAMESE_VNG3M6 = 'VIETNAMESE_VNG3M6',
   VIETNAMESE_VNG3M7 = 'VIETNAMESE_VNG3M7',
   VIETNAMESE_VNG3M8 = 'VIETNAMESE_VNG3M8',
+  VIETNAMESE_VNG3M9 = 'VIETNAMESE_VNG3M9',
   VIETNAMESE_VNG3M10 = 'VIETNAMESE_VNG3M10',
+
   VIETNAMESE_VNG4M1 = 'VIETNAMESE_VNG4M1',
+  VIETNAMESE_VNG4M2 = 'VIETNAMESE_VNG4M2',
   VIETNAMESE_VNG4M3 = 'VIETNAMESE_VNG4M3',
+  VIETNAMESE_VNG4M4 = 'VIETNAMESE_VNG4M4',
   VIETNAMESE_VNG4M5 = 'VIETNAMESE_VNG4M5',
+  VIETNAMESE_VNG4M6 = 'VIETNAMESE_VNG4M6',
+  VIETNAMESE_VNG4M7 = 'VIETNAMESE_VNG4M7',
+  VIETNAMESE_VNG4M8 = 'VIETNAMESE_VNG4M8',
+  VIETNAMESE_VNG4M9 = 'VIETNAMESE_VNG4M9',
+  VIETNAMESE_VNG4M10 = 'VIETNAMESE_VNG4M10',
+
   VIETNAMESE_VNG5M1 = 'VIETNAMESE_VNG5M1',
   VIETNAMESE_VNG5M1N = 'VIETNAMESE_VNG5M1_N',
   VIETNAMESE_VNG5M2 = 'VIETNAMESE_VNG5M2',
@@ -188,6 +203,16 @@ export enum LanguageE {
   VIETNAMESE_VNG5M12 = 'VIETNAMESE_VNG5M12',
 
   VIETNAMESE_VNG6M1 = 'VIETNAMESE_VNG6M1',
+  VIETNAMESE_VNG6M1_N = 'VIETNAMESE_VNG6M1_N',
+  VIETNAMESE_VNG6M2 = 'VIETNAMESE_VNG6M2',
+  VIETNAMESE_VNG6M3 = 'VIETNAMESE_VNG6M3',
+  VIETNAMESE_VNG6M4 = 'VIETNAMESE_VNG6M4',
+  VIETNAMESE_VNG6M5 = 'VIETNAMESE_VNG6M5',
+  VIETNAMESE_VNG6M6 = 'VIETNAMESE_VNG6M6',
+  VIETNAMESE_VNG6M7 = 'VIETNAMESE_VNG6M7',
+  VIETNAMESE_VNG6M8 = 'VIETNAMESE_VNG6M8',
+  VIETNAMESE_VNG6M9 = 'VIETNAMESE_VNG6M9',
+  VIETNAMESE_VNG6M10 = 'VIETNAMESE_VNG6M10',
 }
 
 export enum ScienceE {
@@ -744,12 +769,12 @@ const LessonScreen = observer(() => {
        *todo    các question cho môn Tiếng việt
        *------------------------**/
       case LanguageE.VIETNAMESE_VNG0M1:
-      case LanguageE.VIETNAMESE_VNG3M9:
         return <VnG0M1Lesson {...dataProps} ref={vowelRef} />;
       case LanguageE.VIETNAMESE_VNG0M2:
         return <VnG0M2Lesson {...dataProps} ref={vowelRef} />;
       case LanguageE.VIETNAMESE_VNG0M3:
         return <VnG0M3Lesson {...dataProps} ref={vowelRef} />;
+
       case LanguageE.VIETNAMESE_VNG1M1:
         return <VnG1M1Lesson {...dataProps} ref={vowelRef} />;
       case LanguageE.VIETNAMESE_VNG1M2:
@@ -773,6 +798,27 @@ const LessonScreen = observer(() => {
 
       case LanguageE.VIETNAMESE_VNG2M1:
         return <VnG2M1Lesson {...dataProps} ref={vowelRef} />;
+      case LanguageE.VIETNAMESE_VNG2M2:
+        return <VnG0M1Lesson {...dataProps} ref={vowelRef} />;
+      case LanguageE.VIETNAMESE_VNG2M3:
+      case LanguageE.VIETNAMESE_VNG2M4:
+      case LanguageE.VIETNAMESE_VNG2M5:
+      case LanguageE.VIETNAMESE_VNG2M6:
+      case LanguageE.VIETNAMESE_VNG2M9:
+      case LanguageE.VIETNAMESE_VNG2M10:
+        return React.cloneElement(VnG2M8Lesson, {
+          ...dataProps,
+          ref: vowelRef,
+        });
+      case LanguageE.VIETNAMESE_VNG2M7:
+      case LanguageE.VIETNAMESE_VNG2M8:
+        return React.cloneElement(VnG1M7Lesson, {
+          ...dataProps,
+          ref: vowelRef,
+        });
+      case LanguageE.VIETNAMESE_VNG2M11:
+      case LanguageE.VIETNAMESE_VNG2M12:
+        return <VnG2M12Lesson {...dataProps} ref={vowelRef} />;
 
       case LanguageE.VIETNAMESE_VNG2M6:
         return <VnG2M8Lesson {...dataProps} ref={vowelRef} />;
@@ -792,13 +838,34 @@ const LessonScreen = observer(() => {
         return <VnG3M7Lesson {...dataProps} ref={vowelRef} />;
       case LanguageE.VIETNAMESE_VNG3M8:
         return <VnG3M8Lesson {...dataProps} ref={vowelRef} />;
+      case LanguageE.VIETNAMESE_VNG3M9:
+        return <VnG0M1Lesson {...dataProps} ref={vowelRef} />;
       case LanguageE.VIETNAMESE_VNG3M10:
         return <VnG3M10Lesson {...dataProps} ref={vowelRef} />;
 
       case LanguageE.VIETNAMESE_VNG4M1:
         return <VnG4M1Lesson {...dataProps} ref={vowelRef} />;
+      case LanguageE.VIETNAMESE_VNG4M2:
+        return <VnG0M1Lesson {...dataProps} ref={vowelRef} />;
+      case LanguageE.VIETNAMESE_VNG4M3:
+        return (
+          <DragProvider>
+            <VnG4M3Lesson {...dataProps} ref={vowelRef} />
+          </DragProvider>
+        );
+      case LanguageE.VIETNAMESE_VNG4M4:
+      case LanguageE.VIETNAMESE_VNG4M6:
+      case LanguageE.VIETNAMESE_VNG4M7:
+      case LanguageE.VIETNAMESE_VNG4M8:
+      case LanguageE.VIETNAMESE_VNG4M9:
+      case LanguageE.VIETNAMESE_VNG4M10:
+        return React.cloneElement(VnG2M8Lesson, {
+          ...dataProps,
+          ref: vowelRef,
+        });
       case LanguageE.VIETNAMESE_VNG4M5:
         return <VnG4M5Lesson {...dataProps} ref={vowelRef} />;
+
       case LanguageE.VIETNAMESE_VNG5M1:
         return (
           <VnG5M1Lesson
@@ -814,12 +881,21 @@ const LessonScreen = observer(() => {
         );
       case LanguageE.VIETNAMESE_VNG6M1:
         return <VnG3M1Lesson {...dataProps} ref={vowelRef} />;
-      case LanguageE.VIETNAMESE_VNG4M3:
-        return (
-          <DragProvider>
-            <VnG4M3Lesson {...dataProps} ref={vowelRef} />
-          </DragProvider>
-        );
+      case LanguageE.VIETNAMESE_VNG6M1_N:
+      case LanguageE.VIETNAMESE_VNG6M2:
+      case LanguageE.VIETNAMESE_VNG6M3:
+      case LanguageE.VIETNAMESE_VNG6M4:
+      case LanguageE.VIETNAMESE_VNG6M5:
+      case LanguageE.VIETNAMESE_VNG6M6:
+      case LanguageE.VIETNAMESE_VNG6M7:
+      case LanguageE.VIETNAMESE_VNG6M8:
+      case LanguageE.VIETNAMESE_VNG6M9:
+      case LanguageE.VIETNAMESE_VNG6M10:
+        return React.cloneElement(VnG2M8Lesson, {
+          ...dataProps,
+          ref: vowelRef,
+        });
+
       case LanguageE.VIETNAMESE_VNG5M1N:
       case LanguageE.VIETNAMESE_VNG5M2:
         return <VNG5M1NLesson {...dataProps} ref={vowelRef} />;

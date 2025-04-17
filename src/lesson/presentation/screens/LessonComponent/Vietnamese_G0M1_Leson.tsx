@@ -33,10 +33,6 @@ import {observer} from 'mobx-react';
 import * as Haptics from 'expo-haptics';
 import {LessonRef} from '../../types';
 
-import {
-  iosVoice,
-  listLanguage,
-} from 'src/core/presentation/hooks/textToSpeech/TextToSpeechProvider';
 import {usePronunciation} from '../../hooks/usePronunciation';
 import RecordButton from '../../components/RecordButton';
 import useHomeStore from 'src/home/presentation/stores/useHomeStore';
@@ -114,8 +110,7 @@ const VnG0M1Lesson = observer(
     ) => {
       const globalStyle = useGlobalStyle();
 
-      const {ttsSpeak, updateDefaultVoice, voices} =
-        useContext(TextToSpeechContext);
+      const {ttsSpeak} = useContext(TextToSpeechContext);
       const focus = useIsFocused();
 
       const [answerSelected, setAnswerSelected] = useState('');
@@ -268,36 +263,6 @@ const VnG0M1Lesson = observer(
         resetLearning();
         // eslint-disable-next-line react-hooks/exhaustive-deps
       }, [trainingCount]);
-
-      useEffect(() => {
-        if (lessonName.toLocaleLowerCase().includes('english')) {
-          const engVoice = voices?.find(
-            voice => voice.language === listLanguage['US English'],
-          );
-          updateDefaultVoice?.(
-            isAndroid ? engVoice?.id : iosVoice[3].id,
-            'US English',
-          );
-        } else if (lessonName.toLocaleLowerCase().includes('mandarin')) {
-          const engVoice = voices?.find(
-            voice =>
-              voice.language ===
-              listLanguage['Mainland China, simplified characters'],
-          );
-          updateDefaultVoice?.(
-            engVoice?.id,
-            'Mainland China, simplified characters',
-          );
-        } else if (lessonName.toLocaleLowerCase().includes('tiếng việt')) {
-          const vietnameseVoices = voices?.filter(
-            voice =>
-              voice.language.startsWith('vi-') ||
-              voice.name.toLowerCase().includes('vietnamese'),
-          );
-
-          updateDefaultVoice?.(vietnameseVoices?.[0]?.id, 'Vie (Vietnamese)');
-        }
-      }, [lessonName, updateDefaultVoice, voices]);
 
       useEffect(() => {
         opacity.value = withTiming(0, {duration: 500}, () => {

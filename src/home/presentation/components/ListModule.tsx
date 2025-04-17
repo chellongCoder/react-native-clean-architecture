@@ -55,7 +55,9 @@ const ListModule = observer(() => {
                   ?.join('\n\n')
                   ?.toString()}
                 id={module._id}
-                lessonName={selectedSubject?.description}
+                lessonName={
+                  selectedSubject?.description + ' ' + selectedSubject?.level
+                }
                 image={module.image}
               />
             </View>

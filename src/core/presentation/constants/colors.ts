@@ -58,4 +58,5 @@ export const COLORS = {
   RED_E3643C: '#E3643C',
   RED_DD2424: '#DD2424',
   YELLOW_FFE699: '#FFE699',
+  GREEN_258F78: '#258F78',
 };
