@@ -48,6 +48,7 @@ import {
 } from 'src/core/presentation/hooks/textToSpeech/TextToSpeechProvider';
 import {useI18n} from 'src/core/presentation/hooks/useI18n';
 import VoiceButton from '../../components/VoiceButton';
+import TextImage from '../../components/TextImage';
 
 type Props = {
   moduleIndex: number;
@@ -61,7 +62,7 @@ type Props = {
   characterImageFail?: string;
 };
 
-const VnG3M1Lesson = observer(
+const VnG3M6Lesson = observer(
   forwardRef<LessonRef, Props>(
     (
       {
@@ -249,20 +250,12 @@ const VnG3M1Lesson = observer(
               style={{
                 width: scale(220),
                 minHeight: scale(100),
-                marginTop: verticalScale(40),
+                marginTop: 24,
               }}>
-              <TextHighlight
-                content={
-                  firstMiniTestTask?.question?.[moduleIndex]?.content ?? ''
+              <TextImage
+                image={
+                  firstMiniTestTask?.question?.[moduleIndex].image as string
                 }
-                description={
-                  firstMiniTestTask?.question?.[moduleIndex]?.paragraph ?? ''
-                }
-                style={[styles.fonts_SVN_Cherish, styles.textParagraph]}
-                styleHighlight={{
-                  textDecorationLine: 'underline',
-                  fontWeight: '400',
-                }}
               />
             </View>
           }
@@ -334,7 +327,7 @@ const VnG3M1Lesson = observer(
   ),
 );
 
-export default VnG3M1Lesson;
+export default VnG3M6Lesson;
 
 const styles = StyleSheet.create({
   fill: {
