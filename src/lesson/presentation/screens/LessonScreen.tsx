@@ -744,6 +744,7 @@ const LessonScreen = observer(() => {
        *todo    các question cho môn Tiếng việt
        *------------------------**/
       case LanguageE.VIETNAMESE_VNG0M1:
+      case LanguageE.VIETNAMESE_VNG3M9:
         return <VnG0M1Lesson {...dataProps} ref={vowelRef} />;
       case LanguageE.VIETNAMESE_VNG0M2:
         return <VnG0M2Lesson {...dataProps} ref={vowelRef} />;
