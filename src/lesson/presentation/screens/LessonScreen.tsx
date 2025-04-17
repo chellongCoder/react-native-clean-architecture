@@ -133,6 +133,7 @@ export enum LanguageE {
   VIETNAMESE_VNG2M6 = 'VIETNAMESE_VNG2M6',
   VIETNAMESE_VNG2M8 = 'VIETNAMESE_VNG2M8',
   VIETNAMESE_VNG3M1 = 'VIETNAMESE_VNG3M1',
+  VIETNAMESE_VNG3M9 = 'VIETNAMESE_VNG3M9',
   VIETNAMESE_VNG4M1 = 'VIETNAMESE_VNG4M1',
   VIETNAMESE_VNG4M3 = 'VIETNAMESE_VNG4M3',
   VIETNAMESE_VNG4M5 = 'VIETNAMESE_VNG4M5',
@@ -707,6 +708,7 @@ const LessonScreen = observer(() => {
        *todo    các question cho môn Tiếng việt
        *------------------------**/
       case LanguageE.VIETNAMESE_VNG0M1:
+      case LanguageE.VIETNAMESE_VNG3M9:
         return <VnG0M1Lesson {...dataProps} ref={vowelRef} />;
       case LanguageE.VIETNAMESE_VNG0M2:
         return <VnG0M2Lesson {...dataProps} ref={vowelRef} />;
