@@ -854,6 +854,7 @@ const LessonScreen = observer(() => {
           </DragProvider>
         );
       case LanguageE.VIETNAMESE_VNG4M4:
+      case LanguageE.VIETNAMESE_VNG4M5:
       case LanguageE.VIETNAMESE_VNG4M6:
       case LanguageE.VIETNAMESE_VNG4M7:
       case LanguageE.VIETNAMESE_VNG4M8:
@@ -863,8 +864,6 @@ const LessonScreen = observer(() => {
           ...dataProps,
           ref: vowelRef,
         });
-      case LanguageE.VIETNAMESE_VNG4M5:
-        return <VnG4M5Lesson {...dataProps} ref={vowelRef} />;
 
       case LanguageE.VIETNAMESE_VNG5M1:
         return (
