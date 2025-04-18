@@ -78,9 +78,28 @@ Props) => {
     };
   });
 
+  const attachView = (x: number, y: number) => {
+    if (canDrag) {
+      attachSendView({
+        id: index,
+        value: getValue(index) || value,
+        posX: x,
+        posY: y,
+        translateX: translateX,
+        translateY: translateY,
+        isFocus: listDragItem[index]?.isFocus ?? false,
+        isSelected: listDragItem[index]?.isSelected ?? false,
+        isMatch: listDragItem[index]?.isMatch ?? false,
+        parentId: listDragItem[index]?.parentId ?? -1,
+        canSwap: canSwap,
+        createItem: createItem,
+      });
+    }
+  };
+
   return (
     <GestureHandlerRootView
-      style={{zIndex: 100000}}
+      // style={{zIndex: 100000}}
       pointerEvents={canDrag ? 'auto' : 'none'}>
       {canDrag && (
         <View
@@ -112,7 +131,7 @@ Props) => {
           !listDragItem[index]?.isSelected && !canSwap ? pan : Gesture.Pan()
         }>
         <Animated.View
-          style={[animatedStyles, {opacity: canDrag ? 0 : 1}]}
+          style={[animatedStyles]}
           pointerEvents={
             listDragItem[index]?.parentId > -1 ? 'none' : 'box-only'
           }
@@ -120,24 +139,13 @@ Props) => {
             if (canDrag) {
               e.target.measureInWindow((x, y, width, height) => {
                 console.log('measureInWindow ', value, x, y, width, height);
-                attachSendView({
-                  id: index,
-                  value: getValue(index) || value,
-                  posX: x,
-                  posY: y,
-                  translateX: translateX,
-                  translateY: translateY,
-                  isFocus: listDragItem[index]?.isFocus ?? false,
-                  isSelected: listDragItem[index]?.isSelected ?? false,
-                  isMatch: listDragItem[index]?.isMatch ?? false,
-                  parentId: listDragItem[index]?.parentId ?? -1,
-                  canSwap: canSwap,
-                  createItem: createItem,
-                });
+                attachView(x, y);
               });
             }
           }}>
-          {createItem({value: listDragItem[index]?.value, isFocus: false})}
+          <View style={{opacity: canDrag ? 0 : 1}}>
+            {createItem({value: listDragItem[index]?.value, isFocus: false})}
+          </View>
         </Animated.View>
       </GestureDetector>
     </GestureHandlerRootView>
