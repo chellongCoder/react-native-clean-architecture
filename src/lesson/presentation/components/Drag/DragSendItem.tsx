@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react-native/no-inline-styles */
 import {TouchableOpacity, View} from 'react-native';
-import React, {useMemo} from 'react';
+import React, {useEffect, useMemo, useRef} from 'react';
 import {
   Gesture,
   GestureDetector,
@@ -46,6 +46,8 @@ Props) => {
   } = useDragContext();
 
   const canDrag = useMemo(() => !tX && !tY, [tX, tY]);
+
+  const ref = useRef<View>(null);
 
   const isFocus = useMemo(
     () => canDrag && listDragItem[index]?.isFocus,
@@ -97,6 +99,15 @@ Props) => {
     }
   };
 
+  useEffect(() => {
+    setTimeout(() => {
+      ref.current?.measureInWindow((x, y, width, height) => {
+        console.log('measureInWindow ', value, x, y, width, height);
+        attachView(x, y);
+      });
+    }, 300);
+  }, [value]);
+
   return (
     <GestureHandlerRootView
       // style={{zIndex: 100000}}
@@ -131,6 +142,7 @@ Props) => {
           !listDragItem[index]?.isSelected && !canSwap ? pan : Gesture.Pan()
         }>
         <Animated.View
+          ref={ref}
           style={[animatedStyles]}
           pointerEvents={
             listDragItem[index]?.parentId > -1 ? 'none' : 'box-only'
