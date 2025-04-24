@@ -88,9 +88,6 @@ import VnG1M10Lesson from './LessonComponent/Vietnamese_VNG1M10_Lesson';
 import VietnameseLessonScreen from '../components/ModuleDetail';
 import VnG1M2Lesson from './LessonComponent/Vietnamese_VNG1M2_Lesson';
 import VnG1M6Lesson from './LessonComponent/Vietnamese_G1M6_lesson';
-import {FontFamily} from 'src/core/presentation/hooks/useFonts';
-import {scale} from 'react-native-size-matters';
-import {COLORS} from 'src/core/presentation/constants/colors';
 import VnG2M1Lesson from './LessonComponent/Vietnamese_VNG2M1_Lesson';
 import VnG3M2Lesson from './LessonComponent/Vietnamese_G3M2_lesson';
 import VnG3M3Lesson from './LessonComponent/Vietnamese_G3M3_lesson';
@@ -101,6 +98,7 @@ import VnG3M7Lesson from './LessonComponent/Vietnamese_G3M7_lesson';
 import VnG3M8Lesson from './LessonComponent/Vietnamese_G3M8_lesson';
 import VnG3M10Lesson from './LessonComponent/Vietnamese_G3M10_lesson';
 import VnG2M12Lesson from './LessonComponent/Vietnamese_G2M12_lesson';
+import Mandarin_G4M_DrawCharacter from './LessonComponent/Mandarin_G4M_DrawCharacter';
 
 export enum MathQuestionType {
   MathMG0M1 = 'MATH_MG0M1',
@@ -132,7 +130,16 @@ export enum LanguageE {
   MANDARIN_G1M6 = 'MANDARIN_G1M6',
   MANDARIN_G2M25 = 'MANDARIN_G2M25',
   MANDARIN_G3M37 = 'MANDARIN_G3M37',
+
   MANDARIN_G4M27 = 'MANDARIN_G4M27',
+  MANDARIN_MDG4M1 = 'MANDARIN_MDG4M1',
+  MANDARIN_MDG4M2 = 'MANDARIN_MDG4M2',
+  MANDARIN_MDG4M3 = 'MANDARIN_MDG4M3',
+  MANDARIN_MDG4M4 = 'MANDARIN_MDG4M4',
+  MANDARIN_MDG4M5 = 'MANDARIN_MDG4M5',
+  MANDARIN_MDG4M6 = 'MANDARIN_MDG4M6',
+  MANDARIN_MDG4M7 = 'MANDARIN_MDG4M7',
+
   MANDARIN_G5M25 = 'MANDARIN_G5M25',
   MANDARIN_G6M31 = 'MANDARIN_G6M31',
   MANDARIN_M0G1 = 'MANDARIN_M0G1',
@@ -751,12 +758,14 @@ const LessonScreen = observer(() => {
         return <Mandarin_G5M25 {...dataProps} ref={vowelRef} />;
       case LanguageE.MANDARIN_G6M31:
         return <Mandarin_G6M31 {...dataProps} ref={vowelRef} />;
+      case LanguageE.MANDARIN_MDG4M1:
+        return <Mandarin_G4M_DrawCharacter {...dataProps} ref={vowelRef} />;
       case LanguageE.MANDARIN_G4M27:
         return <Mandarin_G4M27 {...dataProps} ref={vowelRef} />;
       case LanguageE.MANDARIN_G3M37:
         return <Mandarin_G3M37 {...dataProps} ref={vowelRef} />;
       case LanguageE.MANDARIN_G2M25:
-        return <Mandarin_G2M25 {...dataProps} />;
+        return <Mandarin_G2M25 {...dataProps} ref={vowelRef} />;
       case LessonTypeE.WRITING:
       case LanguageE.MANDARIN_G1M4:
         return <WriteLesson {...dataProps} />;

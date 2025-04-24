@@ -30,7 +30,7 @@ const ListGrade = forwardRef((_, ref) => {
   });
 
   useEffect(() => {
-    if (gradeObjs.length > 0) {
+    if (gradeObjs.length > 0 && gradeObjs) {
       setTimeout(() => {
         setIndex(0);
         setSubjectId(gradeObjs[0]._id);

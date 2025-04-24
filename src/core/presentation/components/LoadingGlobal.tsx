@@ -7,7 +7,7 @@ const DIMENSION = Dimensions.get('window');
 const LoadingGlobal = () => {
   return (
     <View style={styles.container}>
-      <ActivityIndicator color={COLORS.PRIMARY} />
+      <ActivityIndicator color={COLORS.GREEN_1C6A59} size={'large'} />
     </View>
   );
 };

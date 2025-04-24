@@ -177,6 +177,7 @@ type GenericLocale = {
   'lesson.screens.Modules.next': string;
   'lesson.screens.Modules.combineWordSuccess': string;
   'lesson.screens.Modules.combineWord': string;
+  'lesson.screens.Modules.writeTheCharacter': string;
   'lesson.screens.NewMoreScreen': string;
   'lesson.screens.NewMoreScreen.parentName': string;
   'lesson.screens.NewMoreScreen.parentEmail': string;

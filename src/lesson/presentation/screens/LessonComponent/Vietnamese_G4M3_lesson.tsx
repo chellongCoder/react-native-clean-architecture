@@ -127,6 +127,7 @@ const VnG4M3Lesson = observer(
       const {lessonSetting} = useHomeStore();
 
       const i18n = useI18n();
+      const isSubmitRef = useRef(false);
 
       const settings = useMemo(
         () => getSetting(lessonSetting),
@@ -203,12 +204,12 @@ const VnG4M3Lesson = observer(
         const isCorrect = correctAnswersCount === correctAnswers.length;
 
         setIsCorrectAnswer(isCorrect);
+        isSubmitRef.current = false;
       }, [listDragItem, firstMiniTestTask?.question, moduleIndex]);
 
       /**
        * * submit khi đúng
        */
-      const isSubmitRef = useRef(false);
       useEffect(() => {
         if (isCorrectAnswer !== undefined && !isSubmitRef.current) {
           isSubmitRef.current = true;

@@ -101,19 +101,27 @@ const LessonComponent = ({
         <View
           style={[
             styles.rowBetween,
-            {alignItems: 'flex-start', marginHorizontal: scale(10)},
+            {
+              alignItems: 'flex-start',
+              marginHorizontal: scale(10),
+            },
           ]}>
           <View
             style={[
               styles.rowBetween,
-              {alignItems: 'center', maxWidth: scale(150)},
+              {
+                alignItems: 'center',
+              },
             ]}>
             <Text
               numberOfLines={1}
               style={[
                 styles.fonts_SVN_Cherish,
                 styles.textTitle,
-                {color: lessonSetting?.backgroundButtonColor},
+                {
+                  color: lessonSetting?.backgroundButtonColor,
+                  maxWidth: module.length > 20 ? WIDTH_SCREEN / 4 : '100%',
+                },
               ]}
               ellipsizeMode="middle">
               {lessonName}
@@ -127,7 +135,7 @@ const LessonComponent = ({
                 marginHorizontal: scale(8),
               }}
             />
-            <View style={{maxWidth: scale(110)}}>
+            <View style={{maxWidth: WIDTH_SCREEN / 2}}>
               <Text
                 adjustsFontSizeToFit
                 style={[

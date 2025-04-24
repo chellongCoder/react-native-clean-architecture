@@ -189,6 +189,7 @@ export default {
         next: 'Tiếp theo',
         combineWordSuccess: 'Ghép chữ thành công!',
         combineWord: 'Ghép các phần để tạo chữ',
+        writeTheCharacter: 'Viết theo thứ tự và dấu',
       },
       NewMoreScreen: {
         parentName: 'Tên phụ huynh',

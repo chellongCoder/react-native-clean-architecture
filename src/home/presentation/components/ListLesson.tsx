@@ -46,17 +46,24 @@ const ListLesson = () => {
 
   const carouselRef = useRef<Carousel>();
 
-  useEffect(() => {
-    const getDataFromStore = async () => {
-      if (!isConnected) {
-        const res = await getData(OfflineEnum.LIST_SUBJECT);
-        setSubjects(res);
-      }
-    };
+  // Debounced navigation functions
+  const [isButtonDisabled, setIsButtonDisabled] = useState(false);
 
-    getDataFromStore();
-  }, [getData, isConnected]);
+  const debouncedSnapToPrev = () => {
+    if (!isButtonDisabled) {
+      setIsButtonDisabled(true);
+      snapToPrev();
+      setTimeout(() => setIsButtonDisabled(false), 1000); // 500ms debounce time
+    }
+  };
 
+  const debouncedSnapToNext = () => {
+    if (!isButtonDisabled) {
+      setIsButtonDisabled(true);
+      snapToNext();
+      setTimeout(() => setIsButtonDisabled(false), 1000); // 500ms debounce time
+    }
+  };
   const renderItem = ({item}: {item: FieldData}) => {
     return (
       <TouchableOpacity style={styles.wrapLessonContainer} activeOpacity={0.9}>
@@ -130,14 +137,16 @@ const ListLesson = () => {
     });
   };
 
-  // * nếu chưa có subject id nào thì lấy thằng đầu tiên
   useEffect(() => {
-    if (subjectId === '') {
-      setTimeout(() => {
-        setSubjectId(data[0]?._id);
-      }, 1000);
-    }
-  }, [data, setSubjectId, subjectId]);
+    const getDataFromStore = async () => {
+      if (!isConnected) {
+        const res = await getData(OfflineEnum.LIST_SUBJECT);
+        setSubjects(res);
+      }
+    };
+
+    getDataFromStore();
+  }, [getData, isConnected]);
 
   useEffect(() => {
     setTimeout(() => {
@@ -158,6 +167,12 @@ const ListLesson = () => {
     };
     handleGetUserModule();
   }, [lessonStore, listModule]);
+
+  useEffect(() => {
+    return () => {
+      setSubjectId('');
+    };
+  }, [setSubjectId]);
 
   return (
     <View style={styles.container}>
@@ -193,12 +208,12 @@ const ListLesson = () => {
         <TouchableOpacity
           style={styles.arrow}
           hitSlop={styles.hitSlop}
-          onPress={snapToPrev}
+          onPress={debouncedSnapToPrev}
         />
         <TouchableOpacity
           style={[styles.arrow, styles.arrowRight]}
           hitSlop={styles.hitSlop}
-          onPress={snapToNext}
+          onPress={debouncedSnapToNext}
         />
       </View>
     </View>

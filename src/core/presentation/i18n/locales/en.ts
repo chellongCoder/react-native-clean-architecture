@@ -200,6 +200,7 @@ export default {
         next: 'Next',
         combineWordSuccess: 'Combine the word successfully!',
         combineWord: 'Combine the parts to make a word',
+        writeTheCharacter: 'Write follows strokes and sequence',
       },
       NewMoreScreen: {
         parentName: "Parent's Name",

@@ -54,7 +54,7 @@ export const LoadingGlobalProvider = ({children}: PropsWithChildren) => {
       opacity: withDelay(
         0,
         withTiming(opacity.value, {
-          duration: 1000,
+          duration: 500,
         }),
       ),
     };

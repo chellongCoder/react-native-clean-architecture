@@ -27,10 +27,16 @@ import {useSettingLesson} from '../../hooks/useSettingLesson';
 import {COLORS} from 'src/core/presentation/constants/colors';
 import {TextToSpeechContext} from 'src/core/presentation/hooks/textToSpeech/TextToSpeechContext';
 import {useIsFocused} from '@react-navigation/native';
-import ImageMeaning from '../../components/ImageMeaning';
 import useHomeStore from 'src/home/presentation/stores/useHomeStore';
 import {useI18n} from 'src/core/presentation/hooks/useI18n';
 import VoiceButton from '../../components/VoiceButton';
+import Animated, {
+  Easing,
+  ReduceMotion,
+  useAnimatedStyle,
+  useSharedValue,
+  withTiming,
+} from 'react-native-reanimated';
 
 type Props = {
   moduleIndex: number;
@@ -44,11 +50,14 @@ type Props = {
   characterImageFail?: string;
 };
 
-type Mandarin_G2M25Ref = {
+type Mandarin_G4M_DrawCharacterRef = {
   onChoiceCorrectedAnswer: () => void;
 };
 
-const Mandarin_G2M25 = forwardRef<Mandarin_G2M25Ref, Props>(
+const Mandarin_G4M_DrawCharacter = forwardRef<
+  Mandarin_G4M_DrawCharacterRef,
+  Props
+>(
   (
     {
       moduleIndex,
@@ -76,22 +85,32 @@ const Mandarin_G2M25 = forwardRef<Mandarin_G2M25Ref, Props>(
     const focus = useIsFocused();
     const {lessonSetting} = useHomeStore();
 
+    const opacity = useSharedValue(0);
+    const scaleS = useSharedValue(1);
+
+    const animatedStyle = useAnimatedStyle(() => {
+      return {
+        opacity: opacity.value,
+        transform: [{scale: scaleS.value}],
+      };
+    });
     const settings = useMemo(
       () => getSetting(lessonSetting),
       [getSetting, lessonSetting],
     );
 
-    const {isAnswerCorrect, isShowCorrectContainer, submit} = useSettingLesson({
-      countDownTime: trainingCount <= 2 ? 0 : 5,
-      isCorrectAnswer: !!isCorrect,
-      onSubmit: () => {
-        setAnswerSelected('');
-        nextModule(answerSelected);
-        setIscorrect(false);
-      },
-      fullAnswer: firstMiniTestTask?.question?.[moduleIndex].fullAnswer,
-      totalTime: 5 * 60, // * tổng time làm 1câu
-    });
+    const {isAnswerCorrect, isShowCorrectContainer, submit, env} =
+      useSettingLesson({
+        countDownTime: trainingCount <= 2 ? 0 : 5,
+        isCorrectAnswer: !!isCorrect,
+        onSubmit: () => {
+          setAnswerSelected('');
+          nextModule(answerSelected);
+          setIscorrect(false);
+        },
+        fullAnswer: firstMiniTestTask?.question?.[moduleIndex].fullAnswer,
+        totalTime: 5 * 60, // * tổng time làm 1câu
+      });
 
     const characterImage = useMemo(() => {
       return isAnswerCorrect === true || isAnswerCorrect === undefined
@@ -108,6 +127,19 @@ const Mandarin_G2M25 = forwardRef<Mandarin_G2M25Ref, Props>(
         ),
       );
     }, [firstMiniTestTask?.question, moduleIndex, ttsSpeak]);
+
+    useEffect(() => {
+      opacity.value = withTiming(0, {duration: 500}, () => {
+        opacity.value = withTiming(1, {duration: 500});
+      });
+      scaleS.value = withTiming(0, {duration: 500}, () => {
+        scaleS.value = withTiming(1, {
+          duration: 500,
+          easing: Easing.elastic(2),
+          reduceMotion: ReduceMotion.System,
+        });
+      });
+    }, [moduleIndex, opacity, scaleS]);
 
     useEffect(() => {
       if (focus) {
@@ -153,21 +185,28 @@ const Mandarin_G2M25 = forwardRef<Mandarin_G2M25Ref, Props>(
         isShowCorrectContainer={isShowCorrectContainer}
         buildQuestion={
           <View>
-            <Text style={[styles.fonts_NeuzeitBold, styles.textQuestion]}>
-              {firstMiniTestTask?.question?.[moduleIndex].content}
-            </Text>
-            <Text style={[styles.fonts_Neuzeit, styles.textQuestion2]}>
-              {firstMiniTestTask?.question?.[moduleIndex].description}
-            </Text>
-
-            <ImageMeaning
-              descriptionImage={
-                firstMiniTestTask?.question?.[moduleIndex].descriptionImage
-              }
-              image={firstMiniTestTask?.question?.[moduleIndex].image}
+            <Animated.Image
+              resizeMode={'contain'}
+              style={[
+                {
+                  width: scale(280),
+                  height: verticalScale(140),
+                },
+                animatedStyle,
+              ]}
+              source={{
+                uri:
+                  env.IMAGE_QUESTION_BASE_API_URL +
+                  firstMiniTestTask?.question?.[moduleIndex].image,
+              }}
             />
           </View>
         }
+        characterStyle={{
+          height: verticalScale(300),
+          marginBottom: -verticalScale(130),
+          marginLeft: -scale(40),
+        }}
         buildAnswer={
           <View style={styles.fill}>
             <View
@@ -175,9 +214,12 @@ const Mandarin_G2M25 = forwardRef<Mandarin_G2M25Ref, Props>(
                 justifyContent: 'space-between',
                 flexDirection: 'row',
               }}>
-              <Text style={[globalStyle.txtLabel]}>
-                {i18n.t('lesson.screens.Modules.writeThe')} "
-                {firstMiniTestTask?.question?.[moduleIndex].answers}"
+              <Text
+                style={[
+                  globalStyle.txtLabel,
+                  {color: settings.backgroundButtonColor},
+                ]}>
+                {i18n.t('lesson.screens.Modules.writeTheCharacter')}
               </Text>
               <VoiceButton onPress={onSpeechText} />
             </View>
@@ -226,7 +268,7 @@ const Mandarin_G2M25 = forwardRef<Mandarin_G2M25Ref, Props>(
   },
 );
 
-export default Mandarin_G2M25;
+export default Mandarin_G4M_DrawCharacter;
 
 const styles = StyleSheet.create({
   fill: {

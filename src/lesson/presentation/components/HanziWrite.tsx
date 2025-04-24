@@ -3,7 +3,6 @@ import {Button, StyleSheet, View, Text} from 'react-native';
 import {HanziWriter, useHanziWriter} from '@jamsch/react-native-hanzi-writer';
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
 import {COLORS} from 'src/core/presentation/constants/colors';
-import {scale} from 'react-native-size-matters';
 
 type Props = {
   text?: {
