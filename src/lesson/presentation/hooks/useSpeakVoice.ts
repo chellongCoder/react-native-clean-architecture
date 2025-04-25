@@ -32,6 +32,14 @@ const useSpeakVoice = ({lessonName}: UseSpeakVoiceProps) => {
         engVoice?.id,
         'Mainland China, simplified characters',
       );
+    } else if (lessonName.toLocaleLowerCase().includes('vietnamese')) {
+      const vietnameseVoices = voices?.filter(
+        voice =>
+          voice.language.startsWith('vi-') ||
+          voice.name.toLowerCase().includes('vietnamese'),
+      );
+
+      updateDefaultVoice?.(vietnameseVoices?.[0]?.id, 'Vie (Vietnamese)');
     }
   }, [lessonName, updateDefaultVoice, voices]);
 };

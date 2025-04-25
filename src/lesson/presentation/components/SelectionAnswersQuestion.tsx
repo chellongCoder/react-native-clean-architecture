@@ -127,6 +127,9 @@ const SelectionAnswersQuestion: ForwardRefRenderFunction<
               ]}>
               {contentAnswer?.(e) ?? (
                 <Text
+                  allowFontScaling
+                  adjustsFontSizeToFit
+                  numberOfLines={1}
                   style={[
                     styles.textVowel,
                     fontFamily && {fontFamily},

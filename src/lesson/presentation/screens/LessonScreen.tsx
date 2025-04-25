@@ -99,6 +99,8 @@ import VnG3M8Lesson from './LessonComponent/Vietnamese_G3M8_lesson';
 import VnG3M10Lesson from './LessonComponent/Vietnamese_G3M10_lesson';
 import VnG2M12Lesson from './LessonComponent/Vietnamese_G2M12_lesson';
 import Mandarin_G4M_DrawCharacter from './LessonComponent/Mandarin_G4M_DrawCharacter';
+import Mandarin_G4M_SelectAnswer from './LessonComponent/Mandarin_G4M_SelectAnswer';
+import Mandarin_G4_Pronunciation from './LessonComponent/Mandarin_G4_Pronunciation';
 
 export enum MathQuestionType {
   MathMG0M1 = 'MATH_MG0M1',
@@ -760,6 +762,11 @@ const LessonScreen = observer(() => {
         return <Mandarin_G6M31 {...dataProps} ref={vowelRef} />;
       case LanguageE.MANDARIN_MDG4M1:
         return <Mandarin_G4M_DrawCharacter {...dataProps} ref={vowelRef} />;
+      case LanguageE.MANDARIN_MDG4M2:
+        return <Mandarin_G4M_SelectAnswer {...dataProps} ref={vowelRef} />;
+      case LanguageE.MANDARIN_MDG4M3:
+        return <Mandarin_G4_Pronunciation {...dataProps} ref={vowelRef} />;
+
       case LanguageE.MANDARIN_G4M27:
         return <Mandarin_G4M27 {...dataProps} ref={vowelRef} />;
       case LanguageE.MANDARIN_G3M37:
