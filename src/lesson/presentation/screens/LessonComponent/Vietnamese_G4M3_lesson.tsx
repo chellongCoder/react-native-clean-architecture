@@ -117,6 +117,7 @@ const VnG4M3Lesson = observer(
         onSubmit: () => {
           clear();
           setAnswerSelected('');
+          setIsCorrectAnswer(undefined);
           nextModule(answerSelected);
           answerRef.current?.resetAnswerSelected?.();
         },
@@ -211,8 +212,7 @@ const VnG4M3Lesson = observer(
        * * submit khi đúng
        */
       useEffect(() => {
-        if (isCorrectAnswer !== undefined && !isSubmitRef.current) {
-          isSubmitRef.current = true;
+        if (isCorrectAnswer !== undefined) {
           submit();
         }
       }, [isCorrectAnswer, submit]);
@@ -298,7 +298,7 @@ const VnG4M3Lesson = observer(
 
       const buildItemAnswer = useCallback(
         (items: string[], item: string, index: number) => {
-          console.log('🛠 LOG: 🚀 --> ~ item:', item);
+          // console.log('🛠 LOG: 🚀 --> ~ item:', item);
           return (
             <DragItem
               index={100 + index}
