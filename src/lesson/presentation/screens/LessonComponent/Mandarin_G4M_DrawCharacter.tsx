@@ -1,4 +1,4 @@
-import {StyleSheet, Text, View} from 'react-native';
+import {StyleSheet, Text, View, FlatList} from 'react-native';
 import React, {
   forwardRef,
   useCallback,
@@ -37,6 +37,7 @@ import Animated, {
   useSharedValue,
   withTiming,
 } from 'react-native-reanimated';
+import {ScrollView} from 'react-native-gesture-handler';
 
 type Props = {
   moduleIndex: number;
@@ -235,31 +236,38 @@ const Mandarin_G4M_DrawCharacter = forwardRef<
             </View>
 
             <View style={{height: verticalScale(10)}} />
-            <View
-              style={{
-                flex: 1,
-                flexDirection: 'row',
-                backgroundColor: COLORS.WHITE_FBF8CC,
-                borderRadius: scale(30),
-              }}>
-              {splitChineseWithFilter(
-                firstMiniTestTask?.question?.[moduleIndex]?.answers
-                  ?.slice(0, 2)
-                  ?.toString() ?? '',
-              )?.map((item, index) => (
-                <HanziWrite
-                  key={index}
-                  ref={canvasWriteRef}
-                  text={{
-                    content: item,
-                    color: COLORS.PRIMARY,
-                  }}
-                  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-                  onComplete={totalMistakes => {
-                    setStatusCharacter(prev => [...prev, true]);
-                  }}
-                />
-              ))}
+            <View style={styles.ctnCharacter}>
+              <FlatList
+                data={splitChineseWithFilter(
+                  firstMiniTestTask?.question?.[
+                    moduleIndex
+                  ]?.answers?.toString() ?? '',
+                )}
+                numColumns={2}
+                keyExtractor={(item, index) => index.toString()}
+                contentContainerStyle={{
+                  flexGrow: 1,
+                  padding: scale(10),
+                }}
+                columnWrapperStyle={{
+                  justifyContent: 'space-between',
+                  paddingHorizontal: scale(10),
+                  marginBottom: verticalScale(10),
+                }}
+                renderItem={({item, index}) => (
+                  <HanziWrite
+                    key={index}
+                    ref={canvasWriteRef}
+                    text={{
+                      content: item,
+                      color: COLORS.PRIMARY,
+                    }}
+                    onComplete={totalMistakes => {
+                      setStatusCharacter(prev => [...prev, true]);
+                    }}
+                  />
+                )}
+              />
             </View>
             <PrimaryButton
               text={i18n.t('lesson.screens.Modules.submit')}
@@ -315,5 +323,11 @@ const styles = StyleSheet.create({
     paddingHorizontal: scale(24),
     marginTop: scale(16),
     backgroundColor: '#0877B6',
+  },
+  ctnCharacter: {
+    flex: 1,
+    flexDirection: 'row',
+    backgroundColor: COLORS.WHITE_FBF8CC,
+    borderRadius: scale(30),
   },
 });
