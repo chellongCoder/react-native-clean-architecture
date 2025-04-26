@@ -78,6 +78,7 @@ const Mandarin_G4M_DrawCharacter = forwardRef<
     const [answerSelected, setAnswerSelected] = useState('');
     const {trainingCount, getSetting} = useLessonStore();
     const [isCorrect, setIscorrect] = useState(false);
+    const [statusCharacter, setStatusCharacter] = useState<boolean[]>([]);
 
     const i18n = useI18n();
 
@@ -159,6 +160,15 @@ const Mandarin_G4M_DrawCharacter = forwardRef<
       }
     }, [onSpeechText, focus]); // Added focus to the dependency array
 
+    useEffect(() => {
+      if (
+        statusCharacter.length ===
+        firstMiniTestTask?.question?.[moduleIndex]?.answers.length
+      ) {
+        setIscorrect(true);
+      }
+    }, [firstMiniTestTask?.question, moduleIndex, statusCharacter]);
+
     useImperativeHandle(ref, () => ({
       //
       onChoiceCorrectedAnswer: () => {
@@ -203,9 +213,9 @@ const Mandarin_G4M_DrawCharacter = forwardRef<
           </View>
         }
         characterStyle={{
-          height: verticalScale(300),
-          marginBottom: -verticalScale(130),
-          marginLeft: -scale(40),
+          height: verticalScale(250),
+          marginBottom: -verticalScale(80),
+          marginLeft: -scale(30),
         }}
         buildAnswer={
           <View style={styles.fill}>
@@ -233,9 +243,9 @@ const Mandarin_G4M_DrawCharacter = forwardRef<
                 borderRadius: scale(30),
               }}>
               {splitChineseWithFilter(
-                firstMiniTestTask?.question?.[
-                  moduleIndex
-                ]?.answers?.toString() ?? '',
+                firstMiniTestTask?.question?.[moduleIndex]?.answers
+                  ?.slice(0, 2)
+                  ?.toString() ?? '',
               )?.map((item, index) => (
                 <HanziWrite
                   key={index}
@@ -246,7 +256,7 @@ const Mandarin_G4M_DrawCharacter = forwardRef<
                   }}
                   // eslint-disable-next-line @typescript-eslint/no-unused-vars
                   onComplete={totalMistakes => {
-                    setIscorrect(true);
+                    setStatusCharacter(prev => [...prev, true]);
                   }}
                 />
               ))}
