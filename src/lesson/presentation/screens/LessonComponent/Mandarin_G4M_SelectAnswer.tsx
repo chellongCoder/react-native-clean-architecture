@@ -1,4 +1,4 @@
-import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {StyleSheet, Text, View} from 'react-native';
 import React, {
   forwardRef,
   useCallback,
@@ -35,7 +35,7 @@ import useHomeStore from 'src/home/presentation/stores/useHomeStore';
 import SelectionAnswersQuestion, {
   SelectionAnswersQuestionRef,
 } from '../../components/SelectionAnswersQuestion';
-import CharScramble, {CharScrambleRep} from '../../components/CharScramble';
+import {CharScrambleRep} from '../../components/CharScramble';
 import {useI18n} from 'src/core/presentation/hooks/useI18n';
 import VoiceButton from '../../components/VoiceButton';
 
@@ -71,17 +71,10 @@ const Mandarin_G4M_SelectAnswer = observer(
 
       const {ttsSpeak} = useContext(TextToSpeechContext);
       const focus = useIsFocused();
-      const answerRef = useRef<SelectionAnswersQuestionRef>();
+      const answerRef = useRef<SelectionAnswersQuestionRef>(null);
 
       const [answerSelected, setAnswerSelected] = useState<string | string[]>(
         '',
-      );
-      console.log(
-        '🛠 LOG: 🚀 --> --------------------------------------🛠 LOG: 🚀 -->',
-      );
-      console.log('🛠 LOG: 🚀 --> ~ answerSelected:', answerSelected);
-      console.log(
-        '🛠 LOG: 🚀 --> --------------------------------------🛠 LOG: 🚀 -->',
       );
 
       const {trainingCount, getSetting} = useLessonStore();
@@ -128,12 +121,19 @@ const Mandarin_G4M_SelectAnswer = observer(
       }, [characterImageFail, characterImageSuccess, isAnswerCorrect]);
 
       const onSpeechText = useCallback(() => {
-        ttsSpeak?.(
-          firstMiniTestTask?.question?.[moduleIndex]?.content ?? '',
-          () => {
-            console.log('🛠 LOG: 🚀 --> ~ onSpeechText:', 'done');
-          },
-        );
+        if (
+          typeof firstMiniTestTask?.question?.[moduleIndex]?.instruction ===
+          'string'
+        ) {
+          ttsSpeak?.(
+            firstMiniTestTask?.question?.[moduleIndex]?.instruction ?? '',
+          );
+        } else {
+          ttsSpeak?.(
+            firstMiniTestTask?.question?.[moduleIndex]?.instruction
+              ?.description ?? '',
+          );
+        }
       }, [firstMiniTestTask?.question, moduleIndex, ttsSpeak]);
 
       const opacity = useSharedValue(0);
