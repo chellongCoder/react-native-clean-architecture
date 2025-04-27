@@ -776,17 +776,17 @@ const LessonScreen = observer(() => {
       case LanguageE.MANDARIN_G6M31:
         return <Mandarin_G6M31 {...dataProps} ref={vowelRef} />;
       case LanguageE.MANDARIN_MDG4M1:
-      case LanguageE.MANDARIN_MDG4M9:
       case LanguageE.MANDARIN_MDG4M10:
-      case LanguageE.MANDARIN_MDG4M12:
       case LanguageE.MANDARIN_MDG4M13:
-      case LanguageE.MANDARIN_MDG4M15:
         return <Mandarin_G4M_DrawCharacter {...dataProps} ref={vowelRef} />;
       case LanguageE.MANDARIN_MDG4M2:
       case LanguageE.MANDARIN_MDG4M11:
       case LanguageE.MANDARIN_MDG4M14:
         return <Mandarin_G4M_SelectAnswer {...dataProps} ref={vowelRef} />;
       case LanguageE.MANDARIN_MDG4M3:
+      case LanguageE.MANDARIN_MDG4M9:
+      case LanguageE.MANDARIN_MDG4M12:
+      case LanguageE.MANDARIN_MDG4M15:
         return <Mandarin_G4_Pronunciation {...dataProps} ref={vowelRef} />;
 
       case LanguageE.MANDARIN_MDG5M1:
