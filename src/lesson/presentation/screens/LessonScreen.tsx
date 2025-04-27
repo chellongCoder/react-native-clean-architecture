@@ -142,6 +142,14 @@ export enum LanguageE {
   MANDARIN_MDG4M6 = 'MANDARIN_MDG4M6',
   MANDARIN_MDG4M7 = 'MANDARIN_MDG4M7',
 
+  MANDARIN_MDG4M9 = 'MANDARIN_MDG4M9',
+  MANDARIN_MDG4M10 = 'MANDARIN_MDG4M10',
+  MANDARIN_MDG4M11 = 'MANDARIN_MDG4M11',
+  MANDARIN_MDG4M12 = 'MANDARIN_MDG4M12',
+  MANDARIN_MDG4M13 = 'MANDARIN_MDG4M13',
+  MANDARIN_MDG4M14 = 'MANDARIN_MDG4M14',
+  MANDARIN_MDG4M15 = 'MANDARIN_MDG4M15',
+
   MANDARIN_MDG5M1 = 'MANDARIN_MDG5M1',
   MANDARIN_MDG5M2 = 'MANDARIN_MDG5M2',
   MANDARIN_MDG5M3 = 'MANDARIN_MDG5M3',
@@ -768,8 +776,15 @@ const LessonScreen = observer(() => {
       case LanguageE.MANDARIN_G6M31:
         return <Mandarin_G6M31 {...dataProps} ref={vowelRef} />;
       case LanguageE.MANDARIN_MDG4M1:
+      case LanguageE.MANDARIN_MDG4M9:
+      case LanguageE.MANDARIN_MDG4M10:
+      case LanguageE.MANDARIN_MDG4M12:
+      case LanguageE.MANDARIN_MDG4M13:
+      case LanguageE.MANDARIN_MDG4M15:
         return <Mandarin_G4M_DrawCharacter {...dataProps} ref={vowelRef} />;
       case LanguageE.MANDARIN_MDG4M2:
+      case LanguageE.MANDARIN_MDG4M11:
+      case LanguageE.MANDARIN_MDG4M14:
         return <Mandarin_G4M_SelectAnswer {...dataProps} ref={vowelRef} />;
       case LanguageE.MANDARIN_MDG4M3:
         return <Mandarin_G4_Pronunciation {...dataProps} ref={vowelRef} />;
