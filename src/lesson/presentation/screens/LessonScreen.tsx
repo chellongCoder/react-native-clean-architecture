@@ -148,6 +148,31 @@ export enum LanguageE {
   MANDARIN_MDG5M4 = 'MANDARIN_MDG5M4',
   MANDARIN_MDG5M5 = 'MANDARIN_MDG5M5',
   MANDARIN_MDG5M6 = 'MANDARIN_MDG5M6',
+  MANDARIN_MDG5M7 = 'MANDARIN_MDG5M7',
+  MANDARIN_MDG5M8 = 'MANDARIN_MDG5M8',
+  MANDARIN_MDG5M9 = 'MANDARIN_MDG5M9',
+  MANDARIN_MDG5M10 = 'MANDARIN_MDG5M10',
+  MANDARIN_MDG5M11 = 'MANDARIN_MDG5M11',
+  MANDARIN_MDG5M12 = 'MANDARIN_MDG5M12',
+  MANDARIN_MDG5M13 = 'MANDARIN_MDG5M13',
+  MANDARIN_MDG5M14 = 'MANDARIN_MDG5M14',
+  MANDARIN_MDG5M15 = 'MANDARIN_MDG5M15',
+
+  MANDARIN_MDG6M1 = 'MANDARIN_MDG6M1',
+  MANDARIN_MDG6M2 = 'MANDARIN_MDG6M2',
+  MANDARIN_MDG6M3 = 'MANDARIN_MDG6M3',
+  MANDARIN_MDG6M4 = 'MANDARIN_MDG6M4',
+  MANDARIN_MDG6M5 = 'MANDARIN_MDG6M5',
+  MANDARIN_MDG6M6 = 'MANDARIN_MDG6M6',
+  MANDARIN_MDG6M7 = 'MANDARIN_MDG6M7',
+  MANDARIN_MDG6M8 = 'MANDARIN_MDG6M8',
+  MANDARIN_MDG6M9 = 'MANDARIN_MDG6M9',
+  MANDARIN_MDG6M10 = 'MANDARIN_MDG6M10',
+  MANDARIN_MDG6M11 = 'MANDARIN_MDG6M11',
+  MANDARIN_MDG6M12 = 'MANDARIN_MDG6M12',
+  MANDARIN_MDG6M13 = 'MANDARIN_MDG6M13',
+  MANDARIN_MDG6M14 = 'MANDARIN_MDG6M14',
+  MANDARIN_MDG6M15 = 'MANDARIN_MDG6M15',
 
   MANDARIN_G5M25 = 'MANDARIN_G5M25',
   MANDARIN_G6M31 = 'MANDARIN_G6M31',
@@ -775,7 +800,42 @@ const LessonScreen = observer(() => {
         return <Mandarin_G4_Pronunciation {...dataProps} ref={vowelRef} />;
 
       case LanguageE.MANDARIN_MDG5M1:
+      case LanguageE.MANDARIN_MDG5M4:
+      case LanguageE.MANDARIN_MDG5M7:
+      case LanguageE.MANDARIN_MDG5M10:
+      case LanguageE.MANDARIN_MDG5M13:
         return <Mandarin_G4M_DrawCharacter {...dataProps} ref={vowelRef} />;
+      case LanguageE.MANDARIN_MDG5M2:
+      case LanguageE.MANDARIN_MDG5M5:
+      case LanguageE.MANDARIN_MDG5M8:
+      case LanguageE.MANDARIN_MDG5M11:
+      case LanguageE.MANDARIN_MDG5M14:
+        return <Mandarin_G4M_SelectAnswer {...dataProps} ref={vowelRef} />;
+      case LanguageE.MANDARIN_MDG5M3:
+      case LanguageE.MANDARIN_MDG5M6:
+      case LanguageE.MANDARIN_MDG5M9:
+      case LanguageE.MANDARIN_MDG5M12:
+      case LanguageE.MANDARIN_MDG5M15:
+        return <Mandarin_G4_Pronunciation {...dataProps} ref={vowelRef} />;
+
+      case LanguageE.MANDARIN_MDG6M1:
+      case LanguageE.MANDARIN_MDG6M4:
+      case LanguageE.MANDARIN_MDG6M7:
+      case LanguageE.MANDARIN_MDG6M10:
+      case LanguageE.MANDARIN_MDG6M13:
+        return <Mandarin_G4M_DrawCharacter {...dataProps} ref={vowelRef} />;
+      case LanguageE.MANDARIN_MDG6M2:
+      case LanguageE.MANDARIN_MDG6M5:
+      case LanguageE.MANDARIN_MDG6M8:
+      case LanguageE.MANDARIN_MDG6M11:
+      case LanguageE.MANDARIN_MDG6M14:
+        return <Mandarin_G4M_SelectAnswer {...dataProps} ref={vowelRef} />;
+      case LanguageE.MANDARIN_MDG6M3:
+      case LanguageE.MANDARIN_MDG6M6:
+      case LanguageE.MANDARIN_MDG6M9:
+      case LanguageE.MANDARIN_MDG6M12:
+      case LanguageE.MANDARIN_MDG6M15:
+        return <Mandarin_G4_Pronunciation {...dataProps} ref={vowelRef} />;
 
       case LanguageE.MANDARIN_G4M27:
         return <Mandarin_G4M27 {...dataProps} ref={vowelRef} />;

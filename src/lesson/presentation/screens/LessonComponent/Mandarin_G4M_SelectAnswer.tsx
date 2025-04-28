@@ -129,7 +129,10 @@ const Mandarin_G4M_SelectAnswer = observer(
 
       const onSpeechText = useCallback(() => {
         ttsSpeak?.(
-          firstMiniTestTask?.question?.[moduleIndex]?.description ?? '',
+          firstMiniTestTask?.question?.[moduleIndex]?.content ?? '',
+          () => {
+            console.log('🛠 LOG: 🚀 --> ~ onSpeechText:', 'done');
+          },
         );
       }, [firstMiniTestTask?.question, moduleIndex, ttsSpeak]);
 

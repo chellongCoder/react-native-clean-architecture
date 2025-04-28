@@ -37,7 +37,6 @@ import Animated, {
   useSharedValue,
   withTiming,
 } from 'react-native-reanimated';
-import {ScrollView} from 'react-native-gesture-handler';
 
 type Props = {
   moduleIndex: number;
@@ -211,6 +210,9 @@ const Mandarin_G4M_DrawCharacter = forwardRef<
                   firstMiniTestTask?.question?.[moduleIndex].image,
               }}
             />
+            <Text style={styles.textQuestion}>
+              {firstMiniTestTask?.question?.[moduleIndex].description}
+            </Text>
           </View>
         }
         characterStyle={{
@@ -262,7 +264,7 @@ const Mandarin_G4M_DrawCharacter = forwardRef<
                       content: item,
                       color: COLORS.PRIMARY,
                     }}
-                    onComplete={totalMistakes => {
+                    onComplete={_ => {
                       setStatusCharacter(prev => [...prev, true]);
                     }}
                   />
@@ -307,9 +309,10 @@ const styles = StyleSheet.create({
     color: 'white',
   },
   textQuestion: {
-    fontSize: scale(32),
+    fontSize: scale(36),
     textAlign: 'center',
     color: COLORS.RED_811010,
+    fontFamily: FontFamily.SVNNeuzeitBold,
   },
   textQuestion2: {
     fontSize: scale(20),

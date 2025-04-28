@@ -286,13 +286,15 @@ export const TextToSpeechProvider = ({children}: PropsWithChildren) => {
   const [isSpeakDone, setIsSpeakDone] = useState(false);
 
   const [voices, setVoices] = useState<Voice[]>([]);
+  const [onFinish, setOnFinish] = useState<() => void>();
 
-  const ttsSpeak = async (text: string) => {
+  const ttsSpeak = async (text: string, callback?: () => void) => {
     console.log('ttsSpeak: ', text);
     // setIsSpeakDone(false);
     if (isInitialized) {
       await Tts.stop();
       Tts.speak(text);
+      setOnFinish(callback);
     } else {
       console.log('TTS not initialized yet.');
     }
@@ -384,10 +386,12 @@ export const TextToSpeechProvider = ({children}: PropsWithChildren) => {
     // Listen for the 'finish' event
     Tts.addEventListener('tts-finish', event => {
       console.log('Speech completed!');
+      onFinish?.();
+      setOnFinish(undefined);
       // setIsSpeakDone(true); // Perform any action you need after speech is done
       // Perform any action you need after speech is done
     });
-  }, [init]);
+  }, [init, onFinish]);
 
   useEffect(() => {
     const setVolume = async () => {

@@ -176,7 +176,7 @@ const Mandarin_G4_Pronunciation = observer(
         },
         fullAnswer: firstMiniTestTask?.question?.[moduleIndex].fullAnswer,
         correctAnswer: getCorrectAnswer(
-          firstMiniTestTask?.question?.[moduleIndex].correctAnswer,
+          firstMiniTestTask?.question?.[moduleIndex].correctAnswer as string,
         ),
         totalTime: 5 * 60, // * tổng time làm 1câu
       });
@@ -193,7 +193,7 @@ const Mandarin_G4_Pronunciation = observer(
         checkEmpty,
       } = usePronunciation({
         correctAnswer: getCorrectAnswer(
-          firstMiniTestTask?.question?.[moduleIndex].correctAnswer,
+          firstMiniTestTask?.question?.[moduleIndex].correctAnswer as string,
         ),
       });
 
@@ -217,7 +217,7 @@ const Mandarin_G4_Pronunciation = observer(
       const onSpeechText = useCallback(() => {
         ttsSpeak?.(
           getCorrectAnswer(
-            firstMiniTestTask?.question?.[moduleIndex].correctAnswer as string,
+            firstMiniTestTask?.question?.[moduleIndex].fullAnswer as string,
           ),
         );
       }, [firstMiniTestTask?.question, moduleIndex, ttsSpeak]);
@@ -382,6 +382,11 @@ const Mandarin_G4_Pronunciation = observer(
               ? undefined
               : word
           }
+          characterStyle={{
+            height: verticalScale(250),
+            marginBottom: -verticalScale(80),
+            marginLeft: -scale(30),
+          }}
           isAnswerCorrect={isAnswerCorrect}
           isShowCorrectContainer={isShowCorrectContainer}
           onPressFlower={toggleShowHint}

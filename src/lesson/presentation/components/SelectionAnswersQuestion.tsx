@@ -129,7 +129,6 @@ const SelectionAnswersQuestion: ForwardRefRenderFunction<
                 <Text
                   allowFontScaling
                   adjustsFontSizeToFit
-                  numberOfLines={1}
                   style={[
                     styles.textVowel,
                     fontFamily && {fontFamily},
