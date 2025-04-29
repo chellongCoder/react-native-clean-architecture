@@ -40,7 +40,6 @@ import useHomeStore from 'src/home/presentation/stores/useHomeStore';
 import SelectionTextsQuestion, {
   SelectionTextsQuestionRef,
 } from '../../components/SelectionTextsQuestion';
-import {ScrollView} from 'react-native-gesture-handler';
 import TextHighlight from '../../components/TextHighlight';
 import {useI18n} from 'src/core/presentation/hooks/useI18n';
 import VoiceButton from '../../components/VoiceButton';
@@ -50,6 +49,7 @@ import {
   listLanguage,
 } from 'src/core/presentation/hooks/textToSpeech/TextToSpeechProvider';
 import {isAndroid} from 'src/core/presentation/utils';
+import ScrollIndicator from '../../components/ScrollIndicator';
 
 type Props = {
   moduleIndex: number;
@@ -278,15 +278,13 @@ const English_G5M16 = observer(
           isShowCorrectContainer={isShowCorrectContainer}
           onPressFlower={toggleShowHint}
           buildQuestion={
-            <ScrollView
-              showsVerticalScrollIndicator
-              style={{
-                paddingHorizontal: scale(20),
-              }}>
+            <ScrollIndicator
+              horizontal={false}
+              scrollViewStyle={{paddingHorizontal: scale(20)}}>
               <Text style={styles.txtParagraph}>
                 {firstMiniTestTask?.question?.[moduleIndex].paragraph}
               </Text>
-            </ScrollView>
+            </ScrollIndicator>
           }
           buildAnswer={
             <View style={styles.fill}>
