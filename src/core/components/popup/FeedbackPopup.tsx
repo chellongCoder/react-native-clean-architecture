@@ -100,7 +100,7 @@ const FeedbackPopup: React.FC<FeedbackPopupProps> = ({isVisible, onClose}) => {
         style={styles.centeredView}
       />
       <View
-        onTouchMove={e => {
+        onTouchMove={_ => {
           Keyboard.dismiss();
         }}
         style={styles.contentContainer}>

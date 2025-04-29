@@ -101,6 +101,8 @@ import VnG2M12Lesson from './LessonComponent/Vietnamese_G2M12_lesson';
 import Mandarin_G4M_DrawCharacter from './LessonComponent/Mandarin_G4M_DrawCharacter';
 import Mandarin_G4M_SelectAnswer from './LessonComponent/Mandarin_G4M_SelectAnswer';
 import Mandarin_G4_Pronunciation from './LessonComponent/Mandarin_G4_Pronunciation';
+import {scale} from 'react-native-size-matters';
+import {verticalScale} from 'react-native-size-matters';
 
 export enum MathQuestionType {
   MathMG0M1 = 'MATH_MG0M1',
@@ -1088,7 +1090,18 @@ const LessonScreen = observer(() => {
       case LanguageE.VIETNAMESE_VNG4M1:
         return <VnG4M1Lesson {...dataProps} ref={vowelRef} />;
       case LanguageE.VIETNAMESE_VNG4M2:
-        return <VnG0M1Lesson {...dataProps} ref={vowelRef} />;
+        return (
+          <VnG0M1Lesson
+            {...dataProps}
+            characterStyle={{
+              height: verticalScale(150),
+              width: scale(150),
+              marginBottom: -verticalScale(60),
+              marginLeft: -scale(40),
+            }}
+            ref={vowelRef}
+          />
+        );
       case LanguageE.VIETNAMESE_VNG4M3:
         return (
           <DragProvider>

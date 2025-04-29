@@ -18,6 +18,7 @@ import {
   resetNavigator,
 } from 'src/core/presentation/navigation/actions/RootNavigationActions';
 import {STACK_NAVIGATOR} from 'src/core/presentation/navigation/ConstantNavigator';
+import {useI18n} from 'src/core/presentation/hooks/useI18n';
 
 interface TrialModulePopupProps {
   isVisible: boolean;
@@ -30,6 +31,7 @@ const TrialModulePopup: React.FC<TrialModulePopupProps> = ({
   onClose,
   handleToggleTrialPopup,
 }) => {
+  const i18n = useI18n();
   const authStore = useAuthenStore();
   const homeStore = useHomeStore();
 
@@ -65,10 +67,10 @@ const TrialModulePopup: React.FC<TrialModulePopupProps> = ({
       <View style={styles.contentContainer}>
         <View style={styles.wrapContentContainer}>
           <Text style={[styles.title, {marginVertical: 24, marginTop: 64}]}>
-            Bắt đầu chương trình trải nghiệm!!
+            {i18n.t('popup.TrialModule.title')}
           </Text>
           <Text style={styles.subTitle}>
-            Bạn có 2 tuần để trải nghiệm phiên bản này.
+            {i18n.t('popup.TrialModule.description')}
           </Text>
           <Text style={styles.description}>
             {
@@ -86,12 +88,12 @@ const TrialModulePopup: React.FC<TrialModulePopupProps> = ({
               handleToggleTrialPopup();
             }}>
             <Text style={[styles.subTitle, {color: COLORS.WHITE_FBF8CC}]}>
-              Chưa sẵn sàng
+              {i18n.t('popup.TrialModule.notReady')}
             </Text>
           </TouchableOpacity>
           <TouchableOpacity style={styles.wrapBtnContainer} onPress={onUpdate}>
             <Text style={[styles.subTitle, {color: COLORS.WHITE_FBF8CC}]}>
-              Bắt đầu
+              {i18n.t('popup.TrialModule.start')}
             </Text>
           </TouchableOpacity>
         </View>

@@ -177,6 +177,8 @@ const styles = StyleSheet.create({
   wrapCharContainer: {
     // Add your styles here
     flexDirection: 'row',
+    paddingHorizontal: scale(16),
+    paddingTop: scale(8),
   },
   fonts_SVN_Neu: {
     // Add your styles here

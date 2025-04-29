@@ -1,4 +1,4 @@
-import {StyleSheet, Text, View} from 'react-native';
+import {StyleProp, StyleSheet, Text, View, ViewStyle} from 'react-native';
 import React, {
   forwardRef,
   useCallback,
@@ -14,7 +14,7 @@ import {FontFamily} from 'src/core/presentation/hooks/useFonts';
 import useGlobalStyle from 'src/core/presentation/hooks/useGlobalStyle';
 import {Task} from 'src/home/application/types/GetListQuestionResponse';
 import {COLORS} from 'src/core/presentation/constants/colors';
-import {getCorrectAnswer, isAndroid, isMMSS} from 'src/core/presentation/utils';
+import {getCorrectAnswer, isMMSS} from 'src/core/presentation/utils';
 import {scale, verticalScale} from 'react-native-size-matters';
 import Animated, {
   Easing,
@@ -52,6 +52,7 @@ type Props = {
   backgroundImage?: string;
   characterImageSuccess?: string;
   characterImageFail?: string;
+  characterStyle?: StyleProp<ViewStyle>;
 };
 
 /**
@@ -105,6 +106,7 @@ const VnG0M1Lesson = observer(
         backgroundImage,
         characterImageSuccess,
         characterImageFail,
+        characterStyle,
       },
       ref,
     ) => {
@@ -387,6 +389,7 @@ const VnG0M1Lesson = observer(
               description: settings.prompt?.toString() ?? '',
             }
           }
+          characterStyle={characterStyle}
           price="Free"
           score={selectedChild?.adsPoints}
           txtCountDown={word && !isMMSS(word) ? undefined : word}

@@ -146,7 +146,9 @@ export const PopupModalGlobalProvider = observer(
         />
         <ForceUpdateAppPopup
           isVisible={popupState.isShowForceUpdateApp || false}
-          onClose={() => {}}
+          onClose={() => {
+            setPopupState({isShowForceUpdateApp: false});
+          }}
           storeLink={
             Platform.OS === 'ios'
               ? popupState.appInfo?.appStoreLink

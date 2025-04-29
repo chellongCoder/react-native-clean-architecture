@@ -86,6 +86,16 @@ type GenericLocale = {
   'popup.Feedback.love': string;
   'popup.Feedback.error': string;
   'popup.Feedback.errorContent': string;
+  'popup.TrialModule': string;
+  'popup.TrialModule.title': string;
+  'popup.TrialModule.description': string;
+  'popup.TrialModule.start': string;
+  'popup.TrialModule.notReady': string;
+  'popup.ForceUpdateApp': string;
+  'popup.ForceUpdateApp.title': string;
+  'popup.ForceUpdateApp.description': string;
+  'popup.ForceUpdateApp.update': string;
+  'popup.ForceUpdateApp.descriptionUpdate': string;
   'lesson': string;
   'lesson.screens': string;
   'lesson.screens.Parent': string;

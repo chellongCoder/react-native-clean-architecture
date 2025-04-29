@@ -104,6 +104,19 @@ export default {
       errorContent:
         'Content need to be more than 10 characters long and icon need to be selected',
     },
+    TrialModule: {
+      title: 'Start the experience program!!',
+      description:
+        'You have 3 days to experience this version. After 2 weeks, you will not be able to continue the exercises. To continue the process, you need to use diamonds to unlock the lessons.',
+      start: 'Start',
+      notReady: 'Not ready',
+    },
+    ForceUpdateApp: {
+      title: 'You need to update the app!!',
+      description: 'This version has expired',
+      update: 'Update',
+      descriptionUpdate: 'You need to update the app \n to continue using',
+    },
   },
   lesson: {
     screens: {

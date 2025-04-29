@@ -96,6 +96,20 @@ export default {
       error: 'Lỗi',
       errorContent: 'Nội dung cần hơn 10 ký tự và cần chọn biểu tượng',
     },
+    TrialModule: {
+      title: 'Bắt đầu chương trình trải nghiệm!!',
+      description:
+        'Bạn có 3 ngày để trải nghiệm phiên bản này. Sau 2 tuần, bạn sẽ không thể tiếp tục làm bài tập. Để tiếp tục quá trình, bạn cần dùng kim cương để mở khoá các bài học.',
+      start: 'Bắt đầu',
+      notReady: 'Chưa sẵn sàng',
+    },
+    ForceUpdateApp: {
+      title: 'Bạn cần cập nhật ứng dụng!!',
+      description: 'Phiên bản này đã hết hạn',
+      update: 'Cập nhật',
+      descriptionUpdate:
+        'Bạn cần cập nhật phiên bản \n mới để tiếp tục sử dụng',
+    },
   },
   lesson: {
     screens: {

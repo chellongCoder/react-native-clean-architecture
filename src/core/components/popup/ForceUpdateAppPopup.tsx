@@ -12,6 +12,7 @@ import {COLORS} from 'src/core/presentation/constants/colors';
 import {TYPOGRAPHY} from 'src/core/presentation/constants/typography';
 import {assets} from 'src/core/presentation/utils';
 import {scale} from 'react-native-size-matters';
+import {useI18n} from 'src/core/presentation/hooks/useI18n';
 
 interface ForceUpdateAppPopupProps {
   isVisible: boolean;
@@ -24,6 +25,8 @@ const ForceUpdateAppPopup: React.FC<ForceUpdateAppPopupProps> = ({
   onClose,
   storeLink,
 }) => {
+  const i18n = useI18n();
+
   const onUpdate = async () => {
     await Linking.openURL(storeLink);
   };
@@ -43,15 +46,17 @@ const ForceUpdateAppPopup: React.FC<ForceUpdateAppPopupProps> = ({
       <View style={styles.contentContainer}>
         <View style={styles.wrapContentContainer}>
           <Text style={[styles.title, {marginVertical: 24, marginTop: 64}]}>
-            Bạn cần cập nhật ứng dụng!!
+            {i18n.t('popup.ForceUpdateApp.title')}
           </Text>
-          <Text style={styles.subTitle}>Phiên bản này đã hết hạn</Text>
+          <Text style={styles.subTitle}>
+            {i18n.t('popup.ForceUpdateApp.description')}
+          </Text>
           <Text style={styles.description}>
-            {'Bạn cần cập nhật phiên bản\nmới để tiếp tục sử dụng'}
+            {i18n.t('popup.ForceUpdateApp.descriptionUpdate')}
           </Text>
           <TouchableOpacity style={styles.wrapBtnContainer} onPress={onUpdate}>
             <Text style={[styles.subTitle, {color: COLORS.WHITE_FBF8CC}]}>
-              Cập nhật
+              {i18n.t('popup.ForceUpdateApp.update')}
             </Text>
           </TouchableOpacity>
         </View>

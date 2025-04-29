@@ -204,7 +204,7 @@ const VnG2M8Lesson = observer(
           characterStyle={{
             height: verticalScale(260),
             marginBottom: -verticalScale(80),
-            marginLeft: -verticalScale(40),
+            marginLeft: -verticalScale(30),
           }}
           buildQuestion={
             <View>

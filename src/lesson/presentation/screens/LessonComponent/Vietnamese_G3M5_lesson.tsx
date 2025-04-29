@@ -242,7 +242,7 @@ const VnG3M5Lesson = observer(
           characterStyle={{
             height: verticalScale(200),
             width: scale(100),
-            marginBottom: -verticalScale(20),
+            marginBottom: -verticalScale(40),
             marginLeft: -scale(20),
           }}
           buildQuestion={
