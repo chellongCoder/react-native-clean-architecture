@@ -1,4 +1,4 @@
-import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {StyleProp, StyleSheet, Text, View, ViewStyle} from 'react-native';
 import React, {
   forwardRef,
   useCallback,
@@ -14,7 +14,7 @@ import {FontFamily} from 'src/core/presentation/hooks/useFonts';
 import useGlobalStyle from 'src/core/presentation/hooks/useGlobalStyle';
 import {Task} from 'src/home/application/types/GetListQuestionResponse';
 import {COLORS} from 'src/core/presentation/constants/colors';
-import {assets, getCorrectAnswer} from 'src/core/presentation/utils';
+import {getCorrectAnswer} from 'src/core/presentation/utils';
 import {scale, verticalScale} from 'react-native-size-matters';
 import Animated, {
   Easing,
@@ -41,6 +41,7 @@ import {HomeStore} from 'src/home/presentation/stores/HomeStore';
 import useSpeakVoice from '../../hooks/useSpeakVoice';
 import {useI18n} from 'src/core/presentation/hooks/useI18n';
 import VoiceButton from '../../components/VoiceButton';
+import LearningImage from '../../components/LearningImage';
 
 type Props = {
   moduleIndex: number;
@@ -52,6 +53,7 @@ type Props = {
   backgroundImage?: string;
   characterImageSuccess?: string;
   characterImageFail?: string;
+  characterStyle?: StyleProp<ViewStyle>;
 };
 
 /**
@@ -105,6 +107,7 @@ const Mandarin_G4_Pronunciation = observer(
         backgroundImage,
         characterImageSuccess,
         characterImageFail,
+        characterStyle,
       },
       ref,
     ) => {
@@ -134,9 +137,10 @@ const Mandarin_G4_Pronunciation = observer(
           typeof firstMiniTestTask?.question?.[moduleIndex]?.correctAnswer ===
           'object'
         ) {
-          return firstMiniTestTask?.question?.[
-            moduleIndex
-          ]?.correctAnswer?.some((item: string) => {
+          return (
+            firstMiniTestTask?.question?.[moduleIndex]
+              ?.correctAnswer as string[]
+          )?.some((item: string) => {
             return (
               answerSelected.toLocaleLowerCase() === item.toLocaleLowerCase()
             );
@@ -217,7 +221,7 @@ const Mandarin_G4_Pronunciation = observer(
       const onSpeechText = useCallback(() => {
         ttsSpeak?.(
           getCorrectAnswer(
-            firstMiniTestTask?.question?.[moduleIndex].fullAnswer as string,
+            firstMiniTestTask?.question?.[moduleIndex].correctAnswer as string,
           ),
         );
       }, [firstMiniTestTask?.question, moduleIndex, ttsSpeak]);
@@ -382,11 +386,13 @@ const Mandarin_G4_Pronunciation = observer(
               ? undefined
               : word
           }
-          characterStyle={{
-            height: verticalScale(250),
-            marginBottom: -verticalScale(80),
-            marginLeft: -scale(30),
-          }}
+          characterStyle={
+            characterStyle ?? {
+              height: verticalScale(250),
+              marginBottom: -verticalScale(80),
+              marginLeft: -scale(30),
+            }
+          }
           isAnswerCorrect={isAnswerCorrect}
           isShowCorrectContainer={isShowCorrectContainer}
           onPressFlower={toggleShowHint}
@@ -399,23 +405,36 @@ const Mandarin_G4_Pronunciation = observer(
                 {firstMiniTestTask?.question?.[moduleIndex].description}
               </Text>
 
-              <View>
-                <Animated.Image
-                  resizeMode={'cover'}
-                  style={[
-                    {
-                      width: scale(200),
-                      aspectRatio: 2,
-                    },
-                    animatedStyle,
-                  ]}
-                  source={{
-                    uri:
-                      env.IMAGE_QUESTION_BASE_API_URL +
-                      firstMiniTestTask?.question?.[moduleIndex].image,
+              {typeof firstMiniTestTask?.question?.[moduleIndex].image ===
+              'string' ? (
+                <View>
+                  <Animated.Image
+                    resizeMode={'cover'}
+                    style={[
+                      {
+                        width: scale(200),
+                        aspectRatio: 1.5,
+                      },
+                      animatedStyle,
+                    ]}
+                    source={{
+                      uri:
+                        env.IMAGE_QUESTION_BASE_API_URL +
+                        firstMiniTestTask?.question?.[moduleIndex].image,
+                    }}
+                  />
+                </View>
+              ) : (
+                <LearningImage
+                  images={
+                    firstMiniTestTask?.question?.[moduleIndex].image as string[]
+                  }
+                  styleContainer={{
+                    width: scale(200),
+                    aspectRatio: 1.5,
                   }}
                 />
-              </View>
+              )}
             </View>
           }
           buildAnswer={

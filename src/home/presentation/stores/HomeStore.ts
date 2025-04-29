@@ -19,6 +19,8 @@ import {LessonSettingT} from 'src/home/application/types/GetListQuestionResponse
 import LoggingActionUseCase from 'src/home/application/useCases/LoggingActionUseCase';
 import {LoggingActionPayload} from 'src/home/application/types/LoggingActionPayload';
 import GetUserProfileResponse from 'src/authentication/application/types/GetUserProfileResponse';
+import {StyleProp, ViewStyle} from 'react-native';
+import {scale, verticalScale} from 'react-native-size-matters';
 
 @injectable()
 export class HomeStore implements HomeStoreState {
@@ -38,6 +40,12 @@ export class HomeStore implements HomeStoreState {
   moduleItem?: ModuleItemProps;
 
   @observable lessonSetting?: LessonSettingT;
+
+  characterStyle: StyleProp<ViewStyle> = {
+    height: verticalScale(170),
+    marginBottom: -verticalScale(40),
+    marginLeft: -scale(20),
+  };
 
   constructor(
     @provided(GetFieldUseCase)

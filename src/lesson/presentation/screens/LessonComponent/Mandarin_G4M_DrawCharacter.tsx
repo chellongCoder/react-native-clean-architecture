@@ -1,4 +1,11 @@
-import {StyleSheet, Text, View, FlatList} from 'react-native';
+import {
+  StyleSheet,
+  Text,
+  View,
+  FlatList,
+  StyleProp,
+  ViewStyle,
+} from 'react-native';
 import React, {
   forwardRef,
   useCallback,
@@ -37,6 +44,7 @@ import Animated, {
   useSharedValue,
   withTiming,
 } from 'react-native-reanimated';
+import LearningImage from '../../components/LearningImage';
 
 type Props = {
   moduleIndex: number;
@@ -48,6 +56,7 @@ type Props = {
   backgroundImage?: string;
   characterImageSuccess?: string;
   characterImageFail?: string;
+  characterStyle?: StyleProp<ViewStyle>;
 };
 
 type Mandarin_G4M_DrawCharacterRef = {
@@ -69,6 +78,7 @@ const Mandarin_G4M_DrawCharacter = forwardRef<
       backgroundImage,
       characterImageFail,
       characterImageSuccess,
+      characterStyle,
     }: Props,
     ref,
   ) => {
@@ -194,32 +204,46 @@ const Mandarin_G4M_DrawCharacter = forwardRef<
         isAnswerCorrect={isAnswerCorrect}
         isShowCorrectContainer={isShowCorrectContainer}
         buildQuestion={
-          <View>
-            <Animated.Image
-              resizeMode={'contain'}
-              style={[
-                {
-                  width: scale(280),
-                  height: verticalScale(140),
-                },
-                animatedStyle,
-              ]}
-              source={{
-                uri:
-                  env.IMAGE_QUESTION_BASE_API_URL +
-                  firstMiniTestTask?.question?.[moduleIndex].image,
-              }}
-            />
+          <>
+            {typeof firstMiniTestTask?.question?.[moduleIndex].image ===
+            'string' ? (
+              <View>
+                <Animated.Image
+                  resizeMode={'contain'}
+                  width={scale(200)}
+                  height={scale(150)}
+                  style={[{}, animatedStyle]}
+                  source={{
+                    uri:
+                      env.IMAGE_QUESTION_BASE_API_URL +
+                      firstMiniTestTask?.question?.[moduleIndex].image,
+                  }}
+                />
+              </View>
+            ) : (
+              <LearningImage
+                images={
+                  firstMiniTestTask?.question?.[moduleIndex].image as string[]
+                }
+                styleContainer={{
+                  width: scale(150),
+                  aspectRatio: 1.5,
+                  borderWidth: 0,
+                }}
+              />
+            )}
             <Text style={styles.textQuestion}>
               {firstMiniTestTask?.question?.[moduleIndex].description}
             </Text>
-          </View>
+          </>
         }
-        characterStyle={{
-          height: verticalScale(250),
-          marginBottom: -verticalScale(80),
-          marginLeft: -scale(30),
-        }}
+        characterStyle={
+          characterStyle ?? {
+            height: verticalScale(250),
+            marginBottom: -verticalScale(80),
+            marginLeft: -scale(30),
+          }
+        }
         buildAnswer={
           <View style={styles.fill}>
             <View

@@ -57,6 +57,7 @@ const SelectionAnswersQuestion: ForwardRefRenderFunction<
   } = props;
 
   const [answerSelected, setAnswerSelected] = useState<string[]>([]);
+  const isOneWord = !answer.some(item => item.includes('/'));
 
   const handleSelectAnswer = (e: string) => {
     if (isSelectOne) {
@@ -129,6 +130,7 @@ const SelectionAnswersQuestion: ForwardRefRenderFunction<
                 <Text
                   allowFontScaling
                   adjustsFontSizeToFit
+                  numberOfLines={isOneWord ? 1 : undefined}
                   style={[
                     styles.textVowel,
                     fontFamily && {fontFamily},

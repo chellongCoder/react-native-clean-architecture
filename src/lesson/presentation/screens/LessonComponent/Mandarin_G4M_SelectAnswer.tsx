@@ -1,4 +1,4 @@
-import {StyleSheet, Text, View} from 'react-native';
+import {StyleProp, StyleSheet, Text, View, ViewStyle} from 'react-native';
 import React, {
   forwardRef,
   useCallback,
@@ -38,6 +38,7 @@ import SelectionAnswersQuestion, {
 import {CharScrambleRep} from '../../components/CharScramble';
 import {useI18n} from 'src/core/presentation/hooks/useI18n';
 import VoiceButton from '../../components/VoiceButton';
+import LearningImage from '../../components/LearningImage';
 
 type Props = {
   moduleIndex: number;
@@ -49,6 +50,7 @@ type Props = {
   backgroundImage?: string;
   characterImageSuccess?: string;
   characterImageFail?: string;
+  characterStyle?: StyleProp<ViewStyle>;
 };
 
 const Mandarin_G4M_SelectAnswer = observer(
@@ -64,6 +66,7 @@ const Mandarin_G4M_SelectAnswer = observer(
         backgroundImage,
         characterImageSuccess,
         characterImageFail,
+        characterStyle,
       },
       ref,
     ) => {
@@ -213,7 +216,34 @@ const Mandarin_G4M_SelectAnswer = observer(
           isShowCorrectContainer={isShowCorrectContainer}
           onPressFlower={toggleShowHint}
           buildQuestion={
-            <View>
+            <>
+              {typeof firstMiniTestTask?.question?.[moduleIndex].image ===
+              'string' ? (
+                <View>
+                  <Animated.Image
+                    resizeMode={'contain'}
+                    width={scale(200)}
+                    height={scale(150)}
+                    style={[{}, animatedStyle]}
+                    source={{
+                      uri:
+                        env.IMAGE_QUESTION_BASE_API_URL +
+                        firstMiniTestTask?.question?.[moduleIndex].image,
+                    }}
+                  />
+                </View>
+              ) : (
+                <LearningImage
+                  images={
+                    firstMiniTestTask?.question?.[moduleIndex].image as string[]
+                  }
+                  styleContainer={{
+                    width: scale(150),
+                    aspectRatio: 1.5,
+                    borderWidth: 0,
+                  }}
+                />
+              )}
               <Text
                 style={[
                   styles.fonts_NeuzeitBold,
@@ -222,28 +252,15 @@ const Mandarin_G4M_SelectAnswer = observer(
                 ]}>
                 {firstMiniTestTask?.question?.[moduleIndex].description}
               </Text>
-              <Animated.Image
-                resizeMode={'cover'}
-                style={[
-                  {
-                    width: scale(200),
-                    aspectRatio: 2.1,
-                  },
-                  animatedStyle,
-                ]}
-                source={{
-                  uri:
-                    env.IMAGE_QUESTION_BASE_API_URL +
-                    firstMiniTestTask?.question?.[moduleIndex].image,
-                }}
-              />
-            </View>
+            </>
           }
-          characterStyle={{
-            height: verticalScale(300),
-            marginBottom: -verticalScale(130),
-            marginLeft: -scale(40),
-          }}
+          characterStyle={
+            characterStyle ?? {
+              height: verticalScale(300),
+              marginBottom: -verticalScale(130),
+              marginLeft: -scale(40),
+            }
+          }
           buildAnswer={
             <View style={styles.fill}>
               <View style={styles.wrapHeaderContainer}>

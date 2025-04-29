@@ -78,16 +78,19 @@ export const SoundGlobalProvider = ({children}: PropsWithChildren) => {
     }
   }, []);
 
-  const pauseSound = useCallback(() => {
-    if (currentPlayingSound) {
-      console.log('Pausing current playing sound');
-      currentPlayingSound.pause();
-      console.log('currentPlayingSound: ', currentPlayingSound);
-      setCurrentPlayingSound(null); // Clear reference to the sound
-    } else {
-      console.log('No sound is currently playing');
-    }
-  }, [currentPlayingSound]);
+  const pauseSound = useCallback(
+    (callback?: () => void) => {
+      if (currentPlayingSound) {
+        console.log('Pausing current playing sound');
+        currentPlayingSound.pause(callback);
+        console.log('currentPlayingSound: ', currentPlayingSound);
+        setCurrentPlayingSound(null); // Clear reference to the sound
+      } else {
+        console.log('No sound is currently playing');
+      }
+    },
+    [currentPlayingSound],
+  );
 
   const loopSound = useCallback(
     (key: string) => {

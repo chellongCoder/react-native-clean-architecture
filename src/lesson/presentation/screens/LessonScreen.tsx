@@ -127,11 +127,55 @@ export enum LanguageE {
   ENGLISH_EG0M2 = 'ENGLISH_EG0M2',
   ENGLISH_EG0M3 = 'ENGLISH_EG0M3',
 
+  MANDARIN_MDG1M1 = 'MANDARIN_MDG1M1',
+  MANDARIN_MDG1M2 = 'MANDARIN_MDG1M2',
+  MANDARIN_MDG1M3 = 'MANDARIN_MDG1M3',
+  MANDARIN_MDG1M7 = 'MANDARIN_MDG1M7',
+  MANDARIN_MDG1M8 = 'MANDARIN_MDG1M8',
+  MANDARIN_MDG1M9 = 'MANDARIN_MDG1M9',
+  MANDARIN_MDG1M10 = 'MANDARIN_MDG1M10',
+  MANDARIN_MDG1M11 = 'MANDARIN_MDG1M11',
+  MANDARIN_MDG1M12 = 'MANDARIN_MDG1M12',
+  MANDARIN_MDG1M13 = 'MANDARIN_MDG1M13',
+  MANDARIN_MDG1M14 = 'MANDARIN_MDG1M14',
+  MANDARIN_MDG1M15 = 'MANDARIN_MDG1M15',
   MANDARIN_G1M4 = 'MANDARIN_G1M4',
   MANDARIN_G1M5 = 'MANDARIN_G1M5',
   MANDARIN_G1M6 = 'MANDARIN_G1M6',
+
   MANDARIN_G2M25 = 'MANDARIN_G2M25',
+  MANDARIN_MDG2M1 = 'MANDARIN_MDG2M1',
+  MANDARIN_MDG2M2 = 'MANDARIN_MDG2M2',
+  MANDARIN_MDG2M3 = 'MANDARIN_MDG2M3',
+  MANDARIN_MDG2M4 = 'MANDARIN_MDG2M4',
+  MANDARIN_MDG2M5 = 'MANDARIN_MDG2M5',
+  MANDARIN_MDG2M6 = 'MANDARIN_MDG2M6',
+  MANDARIN_MDG2M7 = 'MANDARIN_MDG2M7',
+  MANDARIN_MDG2M8 = 'MANDARIN_MDG2M8',
+  MANDARIN_MDG2M9 = 'MANDARIN_MDG2M9',
+  MANDARIN_MDG2M10 = 'MANDARIN_MDG2M10',
+  MANDARIN_MDG2M11 = 'MANDARIN_MDG2M11',
+  MANDARIN_MDG2M12 = 'MANDARIN_MDG2M12',
+  MANDARIN_MDG2M13 = 'MANDARIN_MDG2M13',
+  MANDARIN_MDG2M14 = 'MANDARIN_MDG2M14',
+  MANDARIN_MDG2M15 = 'MANDARIN_MDG2M15',
+
   MANDARIN_G3M37 = 'MANDARIN_G3M37',
+  MANDARIN_MDG3M1 = 'MANDARIN_MDG3M1',
+  MANDARIN_MDG3M2 = 'MANDARIN_MDG3M2',
+  MANDARIN_MDG3M3 = 'MANDARIN_MDG3M3',
+  MANDARIN_MDG3M4 = 'MANDARIN_MDG3M4',
+  MANDARIN_MDG3M5 = 'MANDARIN_MDG3M5',
+  MANDARIN_MDG3M6 = 'MANDARIN_MDG3M6',
+  MANDARIN_MDG3M7 = 'MANDARIN_MDG3M7',
+  MANDARIN_MDG3M8 = 'MANDARIN_MDG3M8',
+  MANDARIN_MDG3M9 = 'MANDARIN_MDG3M9',
+  MANDARIN_MDG3M10 = 'MANDARIN_MDG3M10',
+  MANDARIN_MDG3M11 = 'MANDARIN_MDG3M11',
+  MANDARIN_MDG3M12 = 'MANDARIN_MDG3M12',
+  MANDARIN_MDG3M13 = 'MANDARIN_MDG3M13',
+  MANDARIN_MDG3M14 = 'MANDARIN_MDG3M14',
+  MANDARIN_MDG3M15 = 'MANDARIN_MDG3M15',
 
   MANDARIN_G4M27 = 'MANDARIN_G4M27',
   MANDARIN_MDG4M1 = 'MANDARIN_MDG4M1',
@@ -142,7 +186,6 @@ export enum LanguageE {
   MANDARIN_MDG4M6 = 'MANDARIN_MDG4M6',
   MANDARIN_MDG4M7 = 'MANDARIN_MDG4M7',
   MANDARIN_MDG4M8 = 'MANDARIN_MDG4M8',
-
   MANDARIN_MDG4M9 = 'MANDARIN_MDG4M9',
   MANDARIN_MDG4M10 = 'MANDARIN_MDG4M10',
   MANDARIN_MDG4M11 = 'MANDARIN_MDG4M11',
@@ -321,7 +364,7 @@ const LessonScreen = observer(() => {
     getSetting,
   } = lessonStore;
 
-  const {lessonSetting} = useHomeStore();
+  const {lessonSetting, characterStyle} = useHomeStore();
 
   const i18n = useI18n();
 
@@ -678,19 +721,19 @@ const LessonScreen = observer(() => {
   useEffect(() => {
     const enterMiniTest = () => {
       console.log('Attempting to pause current sound');
-      pauseSound();
-      console.log('Attempting to play big bell sound');
-      playSound(soundTrack.big_bell_sound);
+      pauseSound(() => {
+        console.log('Attempting to play big bell sound');
+        playSound(soundTrack.big_bell_sound);
+      });
     };
 
     enterMiniTest();
 
     return () => {
       console.log('Cleanup: attempting to pause current sound');
-      pauseSound(); // * pausse tất cả các sound khi làm bài
-      setTimeout(() => {
+      pauseSound(() => {
         loopSound(soundTrack.ukulele_music); // * lặp lại bài background
-      }, 1000);
+      }); // * pausse tất cả các sound khi làm bài
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -799,8 +842,109 @@ const LessonScreen = observer(() => {
         return <Mandarin_Kindergarten {...dataProps} ref={vowelRef} />;
       case LanguageE.MANDARIN_G5M25:
         return <Mandarin_G5M25 {...dataProps} ref={vowelRef} />;
-      case LanguageE.MANDARIN_G6M31:
-        return <Mandarin_G6M31 {...dataProps} ref={vowelRef} />;
+
+      case LessonTypeE.WRITING:
+      case LanguageE.MANDARIN_MDG1M1:
+      case LanguageE.MANDARIN_MDG1M7:
+      case LanguageE.MANDARIN_MDG1M10:
+      case LanguageE.MANDARIN_MDG1M13:
+        return (
+          <Mandarin_G4M_DrawCharacter
+            characterStyle={characterStyle}
+            {...dataProps}
+            ref={vowelRef}
+          />
+        );
+
+      case LanguageE.MANDARIN_MDG1M2:
+      case LanguageE.MANDARIN_MDG1M8:
+      case LanguageE.MANDARIN_MDG1M11:
+      case LanguageE.MANDARIN_MDG1M14:
+        return (
+          <Mandarin_G4M_SelectAnswer
+            characterStyle={characterStyle}
+            {...dataProps}
+            ref={vowelRef}
+          />
+        );
+      case LanguageE.MANDARIN_MDG1M3:
+      case LanguageE.MANDARIN_MDG1M9:
+      case LanguageE.MANDARIN_MDG1M12:
+      case LanguageE.MANDARIN_MDG1M15:
+        return (
+          <Mandarin_G4_Pronunciation
+            characterStyle={characterStyle}
+            {...dataProps}
+            ref={vowelRef}
+          />
+        );
+      case LanguageE.MANDARIN_G1M4:
+        return <WriteLesson {...dataProps} />;
+      case LanguageE.MANDARIN_G1M5:
+        return <Mandarin_G1M5 {...dataProps} ref={vowelRef} />;
+      case LanguageE.MANDARIN_G1M6:
+        return <PronunciationLesson {...dataProps} ref={vowelRef} />;
+
+      case LanguageE.MANDARIN_G2M25:
+        return <Mandarin_G2M25 {...dataProps} ref={vowelRef} />;
+      case LanguageE.MANDARIN_MDG2M1:
+      case LanguageE.MANDARIN_MDG2M4:
+      case LanguageE.MANDARIN_MDG2M7:
+      case LanguageE.MANDARIN_MDG2M10:
+      case LanguageE.MANDARIN_MDG2M13:
+        return (
+          <Mandarin_G4M_DrawCharacter
+            characterStyle={characterStyle}
+            {...dataProps}
+            ref={vowelRef}
+          />
+        );
+      case LanguageE.MANDARIN_MDG2M2:
+      case LanguageE.MANDARIN_MDG2M5:
+      case LanguageE.MANDARIN_MDG2M8:
+      case LanguageE.MANDARIN_MDG2M11:
+      case LanguageE.MANDARIN_MDG2M14:
+        return (
+          <Mandarin_G4M_SelectAnswer
+            characterStyle={characterStyle}
+            {...dataProps}
+            ref={vowelRef}
+          />
+        );
+      case LanguageE.MANDARIN_MDG2M3:
+      case LanguageE.MANDARIN_MDG2M6:
+      case LanguageE.MANDARIN_MDG2M9:
+      case LanguageE.MANDARIN_MDG2M12:
+      case LanguageE.MANDARIN_MDG2M15:
+        return (
+          <Mandarin_G4_Pronunciation
+            characterStyle={characterStyle}
+            {...dataProps}
+            ref={vowelRef}
+          />
+        );
+
+      case LanguageE.MANDARIN_G3M37:
+        return <Mandarin_G3M37 {...dataProps} ref={vowelRef} />;
+      case LanguageE.MANDARIN_MDG3M1:
+      case LanguageE.MANDARIN_MDG3M4:
+      case LanguageE.MANDARIN_MDG3M7:
+      case LanguageE.MANDARIN_MDG3M10:
+      case LanguageE.MANDARIN_MDG3M13:
+        return <Mandarin_G4M_DrawCharacter {...dataProps} ref={vowelRef} />;
+      case LanguageE.MANDARIN_MDG3M2:
+      case LanguageE.MANDARIN_MDG3M5:
+      case LanguageE.MANDARIN_MDG3M8:
+      case LanguageE.MANDARIN_MDG3M11:
+      case LanguageE.MANDARIN_MDG3M14:
+        return <Mandarin_G4M_SelectAnswer {...dataProps} ref={vowelRef} />;
+      case LanguageE.MANDARIN_MDG3M3:
+      case LanguageE.MANDARIN_MDG3M6:
+      case LanguageE.MANDARIN_MDG3M9:
+      case LanguageE.MANDARIN_MDG3M12:
+      case LanguageE.MANDARIN_MDG3M15:
+        return <Mandarin_G4_Pronunciation {...dataProps} ref={vowelRef} />;
+
       case LanguageE.MANDARIN_MDG4M1:
       case LanguageE.MANDARIN_MDG4M4:
       case LanguageE.MANDARIN_MDG4M7:
@@ -857,20 +1001,11 @@ const LessonScreen = observer(() => {
       case LanguageE.MANDARIN_MDG6M12:
       case LanguageE.MANDARIN_MDG6M15:
         return <Mandarin_G4_Pronunciation {...dataProps} ref={vowelRef} />;
+      case LanguageE.MANDARIN_G6M31:
+        return <Mandarin_G6M31 {...dataProps} ref={vowelRef} />;
 
       case LanguageE.MANDARIN_G4M27:
         return <Mandarin_G4M27 {...dataProps} ref={vowelRef} />;
-      case LanguageE.MANDARIN_G3M37:
-        return <Mandarin_G3M37 {...dataProps} ref={vowelRef} />;
-      case LanguageE.MANDARIN_G2M25:
-        return <Mandarin_G2M25 {...dataProps} ref={vowelRef} />;
-      case LessonTypeE.WRITING:
-      case LanguageE.MANDARIN_G1M4:
-        return <WriteLesson {...dataProps} />;
-      case LanguageE.MANDARIN_G1M5:
-        return <Mandarin_G1M5 {...dataProps} ref={vowelRef} />;
-      case LanguageE.MANDARIN_G1M6:
-        return <PronunciationLesson {...dataProps} ref={vowelRef} />;
 
       /**----------------------
        *todo    các question cho môn Tiếng việt
