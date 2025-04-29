@@ -122,10 +122,7 @@ const Mandarin_G4M_SelectAnswer = observer(
           ? characterImageSuccess
           : characterImageFail;
       }, [characterImageFail, characterImageSuccess, isAnswerCorrect]);
-      console.log(
-        'firstMiniTestTask?.question?.[moduleIndex]: ',
-        firstMiniTestTask?.question?.[moduleIndex],
-      );
+
       const onSpeechText = useCallback(() => {
         if (
           typeof firstMiniTestTask?.question?.[moduleIndex]?.instruction ===
