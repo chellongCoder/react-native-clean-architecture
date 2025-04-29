@@ -43,6 +43,7 @@ import SelectionAnswersQuestion, {
 import TextHighlight from '../../components/TextHighlight';
 import {useI18n} from 'src/core/presentation/hooks/useI18n';
 import VoiceButton from '../../components/VoiceButton';
+import ParagraphImage from '../../components/ParagraphImage';
 
 type Props = {
   moduleIndex: number;
@@ -204,32 +205,16 @@ const VnG2M12Lesson = observer(
           isShowCorrectContainer={isShowCorrectContainer}
           onPressFlower={toggleShowHint}
           buildQuestion={
-            <View>
-              <ImageBackground
-                resizeMode={'cover'}
-                style={[
-                  {
-                    width: scale(170),
-                    aspectRatio: 0.7,
-                  },
-                ]}
-                source={{
-                  uri:
-                    env.IMAGE_QUESTION_BASE_API_URL +
-                    firstMiniTestTask?.question?.[moduleIndex].image,
-                }}>
-                <View style={styles.boxName}>
-                  <Text style={styles.textParagraph}>
-                    {firstMiniTestTask?.name}
-                  </Text>
-                </View>
-                <ScrollView style={styles.boxParagraph}>
-                  <Text style={styles.textParagraph}>
-                    {firstMiniTestTask?.question?.[moduleIndex].paragraph}
-                  </Text>
-                </ScrollView>
-              </ImageBackground>
-            </View>
+            <ParagraphImage
+              imageUrl={
+                env.IMAGE_QUESTION_BASE_API_URL +
+                firstMiniTestTask?.question?.[moduleIndex].image
+              }
+              name={firstMiniTestTask?.name ?? ''}
+              paragraph={
+                firstMiniTestTask?.question?.[moduleIndex].paragraph ?? ''
+              }
+            />
           }
           buildAnswer={
             <View style={styles.fill}>

@@ -16,10 +16,9 @@ import {Task} from 'src/home/application/types/GetListQuestionResponse';
 import {COLORS} from 'src/core/presentation/constants/colors';
 import {isMMSS} from 'src/core/presentation/utils';
 import {scale, verticalScale} from 'react-native-size-matters';
-import Animated, {
+import {
   Easing,
   ReduceMotion,
-  useAnimatedStyle,
   useSharedValue,
   withTiming,
 } from 'react-native-reanimated';
@@ -33,6 +32,8 @@ import {useI18n} from 'src/core/presentation/hooks/useI18n';
 import VoiceButton from '../../components/VoiceButton';
 import {useIsFocused} from '@react-navigation/native';
 import {LessonRef} from '../../types';
+import ParagraphImage from '../../components/ParagraphImage';
+
 type Props = {
   moduleIndex: number;
   totalModule: number;
@@ -142,12 +143,6 @@ const VnG2M1Lesson = forwardRef<LessonRef, Props>(
       });
     }, [moduleIndex, opacity, scaleS]);
 
-    const animatedStyle = useAnimatedStyle(() => {
-      return {
-        opacity: opacity.value,
-        transform: [{scale: scaleS.value}],
-      };
-    });
     return (
       <LessonComponent
         backgroundImage={backgroundImage}
@@ -168,23 +163,16 @@ const VnG2M1Lesson = forwardRef<LessonRef, Props>(
         isAnswerCorrect={isAnswerCorrect}
         isShowCorrectContainer={isShowCorrectContainer}
         buildQuestion={
-          <View style={{alignItems: 'center'}}>
-            <Animated.Image
-              resizeMode={'contain'}
-              style={[
-                {
-                  width: scale(200),
-                  height: verticalScale(140),
-                },
-                animatedStyle,
-              ]}
-              source={{
-                uri:
-                  env.IMAGE_QUESTION_BASE_API_URL +
-                  firstMiniTestTask?.question?.[moduleIndex].image,
-              }}
-            />
-          </View>
+          <ParagraphImage
+            imageUrl={
+              env.IMAGE_QUESTION_BASE_API_URL +
+              firstMiniTestTask?.question?.[moduleIndex].image
+            }
+            name={firstMiniTestTask?.name ?? ''}
+            paragraph={
+              firstMiniTestTask?.question?.[moduleIndex].paragraph ?? ''
+            }
+          />
         }
         buildAnswer={
           <View style={styles.fill}>

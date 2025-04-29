@@ -58,6 +58,7 @@ const VnG1M7Lesson = forwardRef<LessonRef, Props>(
     characterImageFail,
   }: Props) => {
     const globalStyle = useGlobalStyle();
+    const focus = useIsFocused();
 
     const [answerSelected, setAnswerSelected] = useState('');
 
