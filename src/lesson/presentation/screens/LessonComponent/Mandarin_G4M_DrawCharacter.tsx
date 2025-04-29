@@ -130,13 +130,19 @@ const Mandarin_G4M_DrawCharacter = forwardRef<
     }, [characterImageFail, characterImageSuccess, isAnswerCorrect]);
 
     const onSpeechText = useCallback(() => {
-      ttsSpeak?.(
-        getCorrectAnswer(
-          firstMiniTestTask?.question?.[
-            moduleIndex
-          ].correctAnswer?.toString() ?? '',
-        ),
-      );
+      if (
+        typeof firstMiniTestTask?.question?.[moduleIndex]?.instruction ===
+        'string'
+      ) {
+        ttsSpeak?.(
+          firstMiniTestTask?.question?.[moduleIndex]?.instruction ?? '',
+        );
+      } else {
+        ttsSpeak?.(
+          firstMiniTestTask?.question?.[moduleIndex]?.instruction
+            ?.description ?? '',
+        );
+      }
     }, [firstMiniTestTask?.question, moduleIndex, ttsSpeak]);
 
     useEffect(() => {

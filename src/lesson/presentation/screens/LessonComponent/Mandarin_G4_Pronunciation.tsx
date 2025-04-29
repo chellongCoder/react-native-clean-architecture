@@ -219,11 +219,19 @@ const Mandarin_G4_Pronunciation = observer(
       const scaleLP = useSharedValue(1);
 
       const onSpeechText = useCallback(() => {
-        ttsSpeak?.(
-          getCorrectAnswer(
-            firstMiniTestTask?.question?.[moduleIndex].correctAnswer as string,
-          ),
-        );
+        if (
+          typeof firstMiniTestTask?.question?.[moduleIndex]?.instruction ===
+          'string'
+        ) {
+          ttsSpeak?.(
+            firstMiniTestTask?.question?.[moduleIndex]?.instruction ?? '',
+          );
+        } else {
+          ttsSpeak?.(
+            firstMiniTestTask?.question?.[moduleIndex]?.instruction
+              ?.description ?? '',
+          );
+        }
       }, [firstMiniTestTask?.question, moduleIndex, ttsSpeak]);
 
       const opacity = useSharedValue(0);
@@ -409,10 +417,10 @@ const Mandarin_G4_Pronunciation = observer(
               'string' ? (
                 <View>
                   <Animated.Image
-                    resizeMode={'cover'}
+                    resizeMode={'contain'}
                     style={[
                       {
-                        width: scale(200),
+                        width: scale(150),
                         aspectRatio: 1.5,
                       },
                       animatedStyle,
@@ -430,7 +438,7 @@ const Mandarin_G4_Pronunciation = observer(
                     firstMiniTestTask?.question?.[moduleIndex].image as string[]
                   }
                   styleContainer={{
-                    width: scale(200),
+                    width: scale(150),
                     aspectRatio: 1.5,
                   }}
                 />
