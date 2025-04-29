@@ -381,9 +381,7 @@ const styles = StyleSheet.create({
     borderRadius: scale(10),
     alignItems: 'center',
   },
-  w70: {
-    width: 70,
-  },
+  w70: {},
   textBtn: {
     fontSize: 10,
     fontWeight: 'bold',
