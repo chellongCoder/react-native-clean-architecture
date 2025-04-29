@@ -15,7 +15,11 @@ import {FontFamily} from 'src/core/presentation/hooks/useFonts';
 import useGlobalStyle from 'src/core/presentation/hooks/useGlobalStyle';
 import {Task} from 'src/home/application/types/GetListQuestionResponse';
 import {COLORS} from 'src/core/presentation/constants/colors';
-import {getCorrectAnswer, isMMSS} from 'src/core/presentation/utils';
+import {
+  getCorrectAnswer,
+  isMMSS,
+  WIDTH_SCREEN,
+} from 'src/core/presentation/utils';
 import {scale, verticalScale} from 'react-native-size-matters';
 import Animated, {
   Easing,
@@ -223,8 +227,8 @@ const Mandarin_G4M_SelectAnswer = observer(
                   <Animated.Image
                     resizeMode={'contain'}
                     width={scale(200)}
-                    height={scale(150)}
-                    style={[{}, animatedStyle]}
+                    height={scale(100)}
+                    style={[animatedStyle]}
                     source={{
                       uri:
                         env.IMAGE_QUESTION_BASE_API_URL +
@@ -245,10 +249,16 @@ const Mandarin_G4M_SelectAnswer = observer(
                 />
               )}
               <Text
+                numberOfLines={2}
+                adjustsFontSizeToFit
+                allowFontScaling
                 style={[
                   styles.fonts_NeuzeitBold,
                   styles.textQuestion,
-                  {color: settings.backgroundButtonColor},
+                  {
+                    color: settings.backgroundButtonColor,
+                    maxWidth: WIDTH_SCREEN / 2,
+                  },
                 ]}>
                 {firstMiniTestTask?.question?.[moduleIndex].description}
               </Text>
@@ -332,7 +342,6 @@ const styles = StyleSheet.create({
     textAlign: 'left',
     color: COLORS.BLUE_258F78,
     alignSelf: 'center',
-    marginVertical: verticalScale(10),
   },
   textGreen: {
     color: '#258F78',

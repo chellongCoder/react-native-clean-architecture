@@ -279,12 +279,10 @@ const Mandarin_G4M_DrawCharacter = forwardRef<
                 keyExtractor={(item, index) => index.toString()}
                 contentContainerStyle={{
                   flexGrow: 1,
-                  padding: scale(10),
                 }}
                 columnWrapperStyle={{
                   justifyContent: 'space-between',
                   paddingHorizontal: scale(10),
-                  marginBottom: verticalScale(10),
                 }}
                 renderItem={({item, index}) => (
                   <HanziWrite
