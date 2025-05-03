@@ -1,15 +1,10 @@
 import React, {useState} from 'react';
-import {
-  Image,
-  TouchableOpacity,
-  TouchableWithoutFeedback,
-  View,
-} from 'react-native';
+import {TouchableOpacity} from 'react-native';
+import FastImage from 'react-native-fast-image';
 import {scale} from 'react-native-size-matters';
 import {coreModuleContainer} from 'src/core/CoreModule';
 import Env, {EnvToken} from 'src/core/domain/entities/Env';
 import {COLORS} from 'src/core/presentation/constants/colors';
-import {WIDTH_SCREEN} from 'src/core/presentation/utils';
 
 const ImageMeaning = ({descriptionImage, image}) => {
   const env = coreModuleContainer.getProvided<Env>(EnvToken); // Instantiate CoreService
@@ -29,9 +24,8 @@ const ImageMeaning = ({descriptionImage, image}) => {
         overflow: 'hidden',
       }}
       onPress={() => setIsShowMeaning(v => !v)}>
-      <Image
+      <FastImage
         resizeMode={'contain'}
-        width={WIDTH_SCREEN}
         style={[
           {
             width: '100%',

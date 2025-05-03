@@ -1,12 +1,5 @@
 import React, {useContext, useEffect, useMemo, useRef, useState} from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  TouchableOpacity,
-  Dimensions,
-  Image,
-} from 'react-native';
+import {View, StyleSheet, TouchableOpacity, Dimensions} from 'react-native';
 import {scale} from 'react-native-size-matters';
 import {COLORS} from 'src/core/presentation/constants/colors';
 import {CustomTextStyle} from 'src/core/presentation/constants/typography';
@@ -26,6 +19,7 @@ import {listLanguage} from 'src/core/presentation/hooks/textToSpeech/TextToSpeec
 import Tts from 'react-native-tts';
 import {iosVoice} from 'src/core/presentation/hooks/textToSpeech/TextToSpeechProvider';
 import {TextToSpeechContext} from 'src/core/presentation/hooks/textToSpeech/TextToSpeechContext';
+import FastImage from 'react-native-fast-image';
 
 const {width: screenWidth} = Dimensions.get('window');
 
@@ -68,7 +62,7 @@ const ListLesson = () => {
     return (
       <TouchableOpacity style={styles.wrapLessonContainer} activeOpacity={0.9}>
         {/* <Text style={styles.lessonTitle}>{item.name}</Text> */}
-        <Image
+        <FastImage
           source={{uri: env.IMAGE_MODULE_BASE_API_URL + item.image}}
           style={styles.imageSlide}
           resizeMode="cover"

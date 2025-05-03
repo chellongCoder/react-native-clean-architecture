@@ -1,16 +1,10 @@
 import React, {useState, useEffect} from 'react';
-import {
-  Image,
-  StyleProp,
-  TouchableOpacity,
-  View,
-  ViewStyle,
-} from 'react-native';
+import {StyleProp, TouchableOpacity, ViewStyle} from 'react-native';
+import FastImage from 'react-native-fast-image';
 import {scale} from 'react-native-size-matters';
 import {coreModuleContainer} from 'src/core/CoreModule';
 import Env, {EnvToken} from 'src/core/domain/entities/Env';
 import {COLORS} from 'src/core/presentation/constants/colors';
-import {WIDTH_SCREEN} from 'src/core/presentation/utils';
 
 interface ImageCarouselProps {
   images: string[];
@@ -61,9 +55,8 @@ const LearningImage: React.FC<ImageCarouselProps> = ({
         },
         styleContainer,
       ]}>
-      <Image
+      <FastImage
         resizeMode={'contain'}
-        width={WIDTH_SCREEN}
         style={{
           width: '100%',
           height: '100%',

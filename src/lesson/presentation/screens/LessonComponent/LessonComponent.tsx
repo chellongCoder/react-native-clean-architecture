@@ -2,12 +2,11 @@ import {
   View,
   Text,
   StyleSheet,
-  ImageBackground,
   Image,
   TouchableOpacity,
-  ImageSourcePropType,
   StyleProp,
   ViewStyle,
+  ImageBackground,
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
@@ -23,6 +22,7 @@ import HintButton from 'src/core/components/hint/HintButton';
 import useHomeStore from 'src/home/presentation/stores/useHomeStore';
 import {Instruction} from 'src/home/application/types/GetListQuestionResponse';
 import {useI18n} from 'src/core/presentation/hooks/useI18n';
+import FastImage, {Source} from 'react-native-fast-image';
 
 type Props = {
   lessonName?: string;
@@ -73,7 +73,7 @@ const LessonComponent = ({
   const insets = useSafeAreaInsets();
   const globalStyle = useGlobalStyle();
   const [isShowPrompt, setIsShowPrompt] = useState(true);
-  const [source, setSource] = useState<ImageSourcePropType | undefined>({
+  const [source, setSource] = useState<number | Source | undefined>({
     uri: backgroundImage,
   });
 
@@ -90,13 +90,13 @@ const LessonComponent = ({
 
   return (
     <View style={[styles.screen, {paddingTop: 0, backgroundColor}]}>
-      <ImageBackground
-        onError={handleError}
-        source={source}
-        width={WIDTH_SCREEN}
-        imageStyle={{marginBottom: -verticalScale(30)}}
-        resizeMode="cover"
-        style={[styles.fill]}>
+      <View style={styles.fill}>
+        <FastImage
+          onError={handleError}
+          source={source}
+          style={[StyleSheet.absoluteFill, {marginBottom: -verticalScale(30)}]}
+          resizeMode={FastImage.resizeMode.cover}
+        />
         <View style={{height: insets.top}} />
         <View
           style={[
@@ -253,7 +253,7 @@ const LessonComponent = ({
             </View>
           </View>
         </View>
-      </ImageBackground>
+      </View>
       <View style={[styles.h450]}>
         <BookView
           style={[styles.bookView]}

@@ -1,4 +1,4 @@
-import {StyleSheet, Text, View, Image} from 'react-native';
+import {StyleSheet, Text, View} from 'react-native';
 import React, {useCallback, useEffect, useMemo, useState} from 'react';
 import ICBook from 'src/core/components/icons/ICBook';
 import useGlobalStyle from 'src/core/presentation/hooks/useGlobalStyle';
@@ -26,6 +26,7 @@ import {useLessonStore} from '../../stores/LessonStore/useGetPostsStore';
 import {IClock} from '../icons';
 import {useAsyncEffect} from 'src/core/presentation/hooks';
 import {observer} from 'mobx-react';
+import FastImage from 'react-native-fast-image';
 
 const ModuleItem = observer((props: ModuleItemProps) => {
   const globalStyle = useGlobalStyle();
@@ -87,7 +88,7 @@ const ModuleItem = observer((props: ModuleItemProps) => {
 
   const renderIcon = () =>
     props?.image ? (
-      <Image
+      <FastImage
         source={{uri: env.IMAGE_MODULE_BASE_API_URL + props?.image}}
         style={styles.icon}
         resizeMode="contain"

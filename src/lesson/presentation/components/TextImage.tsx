@@ -1,5 +1,6 @@
 import React from 'react';
-import {Image, StyleSheet, View} from 'react-native';
+import {StyleSheet, View} from 'react-native';
+import FastImage from 'react-native-fast-image';
 import {scale} from 'react-native-size-matters';
 import {coreModuleContainer} from 'src/core/CoreModule';
 import {EnvToken} from 'src/core/domain/entities/Env';
@@ -14,7 +15,7 @@ const TextImage = ({image}: Props) => {
 
   return (
     <View>
-      <Image
+      <FastImage
         source={{uri: env.IMAGE_QUESTION_BASE_API_URL + image}}
         style={styles.image}
         resizeMode="contain"
