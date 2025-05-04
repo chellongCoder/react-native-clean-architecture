@@ -12,13 +12,14 @@ import {observer} from 'mobx-react';
 import useHomeStore from '../stores/useHomeStore';
 import BookView from 'src/lesson/presentation/components/BookView';
 import ListGrade from 'src/lesson/presentation/components/LessonModule/ListGrade';
+import LoadingItem from 'src/lesson/presentation/components/Loading/LoadingItem';
 
 const screenWidth = Dimensions.get('screen').width;
 
 const ListModule = observer(() => {
   const {selectedSubject} = useListModule();
 
-  const {listSubject, subjectId, listModule} = useHomeStore();
+  const {listSubject, subjectId, listModule, isLoading} = useHomeStore();
 
   const totalQuestions = listModule?.reduce(
     (acc, item) => acc + item.totalQuestion,
@@ -42,25 +43,31 @@ const ListModule = observer(() => {
         style={styles.f1}
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{paddingBottom: scale(54)}}>
-        {listModule?.map(module => {
-          return (
-            <View style={styles.wrapModuleContainer}>
-              <ModuleItem
-                progress={module.progressOfChildren}
-                totalQuestion={module.totalQuestion}
-                isFinished={module.progressOfChildren > 0}
-                title={module.name}
-                subTitle={module.tasks
-                  ?.map(item => item.description)
-                  ?.join('\n\n')
-                  ?.toString()}
-                id={module._id}
-                lessonName={selectedSubject?.description}
-                image={module.image}
-              />
-            </View>
-          );
-        })}
+        {isLoading
+          ? Array.from({length: 3}).map((_, index) => (
+              <View style={styles.wrapModuleContainer}>
+                <LoadingItem key={index} />
+              </View>
+            ))
+          : listModule?.map(module => {
+              return (
+                <View style={styles.wrapModuleContainer}>
+                  <ModuleItem
+                    progress={module.progressOfChildren}
+                    totalQuestion={module.totalQuestion}
+                    isFinished={module.progressOfChildren > 0}
+                    title={module.name}
+                    subTitle={module.tasks
+                      ?.map(item => item.description)
+                      ?.join('\n\n')
+                      ?.toString()}
+                    id={module._id}
+                    lessonName={selectedSubject?.description}
+                    image={module.image}
+                  />
+                </View>
+              );
+            })}
       </ScrollView>
     </BookView>
   );
