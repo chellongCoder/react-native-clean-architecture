@@ -14,6 +14,7 @@ interface ScrollIndicatorProps {
   indicatorStyle?: ViewStyle;
   scrollViewStyle?: ViewStyle;
   indicatorColor?: string;
+  indicatorContainerColor?: string;
   horizontal?: boolean;
   children: React.ReactNode;
 }
@@ -23,7 +24,8 @@ const ScrollIndicator: React.FC<ScrollIndicatorProps> = ({
   indicatorStyle,
   scrollViewStyle,
   indicatorColor = '#003c82',
-  horizontal = true,
+  indicatorContainerColor = '#003c82',
+  horizontal = false,
   children,
 }) => {
   const scrollIndicator = useRef(new Animated.Value(0)).current;
@@ -94,8 +96,8 @@ const ScrollIndicator: React.FC<ScrollIndicatorProps> = ({
           styles.scrollView,
           scrollViewStyle,
           {
-            marginRight: horizontal ? 0 : 12,
-            marginBottom: horizontal ? 12 : 0,
+            paddingRight: horizontal ? 0 : 10,
+            paddingBottom: horizontal ? 10 : 0,
           },
         ]}>
         {children}
@@ -103,18 +105,21 @@ const ScrollIndicator: React.FC<ScrollIndicatorProps> = ({
 
       {contentDimension - viewportDimension > 0 && ( // Only show the indicator if there's scrollable content
         <View
+          pointerEvents="none"
           style={[
             styles.indicatorContainer,
             horizontal ? styles.horizontalIndicator : styles.verticalIndicator,
             indicatorStyle,
+            {backgroundColor: indicatorContainerColor},
           ]}>
           <Animated.View
             style={[
               styles.indicator,
-              {},
               {
                 width: horizontal ? indicatorSize : 4,
                 height: horizontal ? 4 : indicatorSize,
+                marginLeft: horizontal ? 0 : -1,
+                marginTop: horizontal ? -1 : 0,
                 backgroundColor: indicatorColor,
                 transform: [
                   horizontal
@@ -151,24 +156,22 @@ const styles = StyleSheet.create({
   },
   indicatorContainer: {
     backgroundColor: '#003c82',
-    margin: 8,
     borderRadius: 10,
   },
   horizontalIndicator: {
     height: 2,
     width: '100%',
-    marginHorizontal: 16,
+    position: 'absolute',
+    bottom: 0,
   },
   verticalIndicator: {
     width: 2,
     height: '100%',
     position: 'absolute',
-    right: 2,
+    right: 0,
     top: 0,
   },
   indicator: {
-    marginLeft: -1,
-    backgroundColor: '#003c82',
     borderRadius: 10,
   },
 });
