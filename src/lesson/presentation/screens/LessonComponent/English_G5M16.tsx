@@ -280,7 +280,7 @@ const English_G5M16 = observer(
           buildQuestion={
             <ScrollIndicator
               horizontal={false}
-              scrollViewStyle={{paddingHorizontal: scale(20)}}>
+              containerStyle={{marginHorizontal: scale(20)}}>
               <Text style={styles.txtParagraph}>
                 {firstMiniTestTask?.question?.[moduleIndex].paragraph}
               </Text>

@@ -37,6 +37,7 @@ import Animated, {
   useSharedValue,
   withTiming,
 } from 'react-native-reanimated';
+import ScrollIndicator from '../../components/ScrollIndicator';
 
 type Props = {
   moduleIndex: number;
@@ -239,37 +240,43 @@ const Mandarin_G4M_DrawCharacter = forwardRef<
 
             <View style={{height: verticalScale(10)}} />
             <View style={styles.ctnCharacter}>
-              <FlatList
-                data={splitChineseWithFilter(
-                  firstMiniTestTask?.question?.[
-                    moduleIndex
-                  ]?.answers?.toString() ?? '',
-                )}
-                numColumns={2}
-                keyExtractor={(item, index) => index.toString()}
-                contentContainerStyle={{
-                  flexGrow: 1,
-                  padding: scale(10),
-                }}
-                columnWrapperStyle={{
-                  justifyContent: 'space-between',
-                  paddingHorizontal: scale(10),
-                  marginBottom: verticalScale(10),
-                }}
-                renderItem={({item, index}) => (
-                  <HanziWrite
-                    key={index}
-                    ref={canvasWriteRef}
-                    text={{
-                      content: item,
-                      color: COLORS.PRIMARY,
-                    }}
-                    onComplete={_ => {
-                      setStatusCharacter(prev => [...prev, true]);
-                    }}
-                  />
-                )}
-              />
+              <ScrollIndicator
+                indicatorColor={settings.backgroundButtonColor}
+                indicatorContainerColor={settings.backgroundButtonColor}
+                indicatorStyle={{marginRight: scale(6)}}>
+                <FlatList
+                  scrollEnabled={false}
+                  data={splitChineseWithFilter(
+                    firstMiniTestTask?.question?.[
+                      moduleIndex
+                    ]?.answers?.toString() ?? '',
+                  )}
+                  numColumns={2}
+                  keyExtractor={(item, index) => index.toString()}
+                  contentContainerStyle={{
+                    flexGrow: 1,
+                    padding: scale(10),
+                  }}
+                  columnWrapperStyle={{
+                    justifyContent: 'space-between',
+                    paddingHorizontal: scale(10),
+                    marginBottom: verticalScale(10),
+                  }}
+                  renderItem={({item, index}) => (
+                    <HanziWrite
+                      key={index}
+                      ref={canvasWriteRef}
+                      text={{
+                        content: item,
+                        color: COLORS.PRIMARY,
+                      }}
+                      onComplete={_ => {
+                        setStatusCharacter(prev => [...prev, true]);
+                      }}
+                    />
+                  )}
+                />
+              </ScrollIndicator>
             </View>
             <PrimaryButton
               text={i18n.t('lesson.screens.Modules.submit')}
