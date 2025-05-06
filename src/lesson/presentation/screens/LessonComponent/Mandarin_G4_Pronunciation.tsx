@@ -131,7 +131,9 @@ const Mandarin_G4_Pronunciation = observer(
             answerSelected.toLocaleLowerCase() ===
             getCorrectAnswer(
               firstMiniTestTask?.question?.[moduleIndex]?.correctAnswer,
-            ).toLocaleLowerCase()
+            )
+              .toLocaleLowerCase()
+              .trim()
           );
         } else if (
           typeof firstMiniTestTask?.question?.[moduleIndex]?.correctAnswer ===
@@ -142,7 +144,8 @@ const Mandarin_G4_Pronunciation = observer(
               ?.correctAnswer as string[]
           )?.some((item: string) => {
             return (
-              answerSelected.toLocaleLowerCase() === item.toLocaleLowerCase()
+              answerSelected.toLocaleLowerCase() ===
+              item.toLocaleLowerCase().trim()
             );
           });
         }

@@ -933,19 +933,37 @@ const LessonScreen = observer(() => {
       case LanguageE.MANDARIN_MDG3M7:
       case LanguageE.MANDARIN_MDG3M10:
       case LanguageE.MANDARIN_MDG3M13:
-        return <Mandarin_G4M_DrawCharacter {...dataProps} ref={vowelRef} />;
+        return (
+          <Mandarin_G4M_DrawCharacter
+            characterStyle={characterStyle}
+            {...dataProps}
+            ref={vowelRef}
+          />
+        );
       case LanguageE.MANDARIN_MDG3M2:
       case LanguageE.MANDARIN_MDG3M5:
       case LanguageE.MANDARIN_MDG3M8:
       case LanguageE.MANDARIN_MDG3M11:
       case LanguageE.MANDARIN_MDG3M14:
-        return <Mandarin_G4M_SelectAnswer {...dataProps} ref={vowelRef} />;
+        return (
+          <Mandarin_G4M_SelectAnswer
+            characterStyle={characterStyle}
+            {...dataProps}
+            ref={vowelRef}
+          />
+        );
       case LanguageE.MANDARIN_MDG3M3:
       case LanguageE.MANDARIN_MDG3M6:
       case LanguageE.MANDARIN_MDG3M9:
       case LanguageE.MANDARIN_MDG3M12:
       case LanguageE.MANDARIN_MDG3M15:
-        return <Mandarin_G4_Pronunciation {...dataProps} ref={vowelRef} />;
+        return (
+          <Mandarin_G4_Pronunciation
+            characterStyle={characterStyle}
+            {...dataProps}
+            ref={vowelRef}
+          />
+        );
 
       case LanguageE.MANDARIN_MDG4M1:
       case LanguageE.MANDARIN_MDG4M4:
