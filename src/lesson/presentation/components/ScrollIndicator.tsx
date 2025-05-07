@@ -8,6 +8,7 @@ import {
   ViewStyle,
   LayoutChangeEvent,
 } from 'react-native';
+import {COLORS} from 'src/core/presentation/constants/colors';
 
 interface ScrollIndicatorProps {
   containerStyle?: ViewStyle;
@@ -23,8 +24,8 @@ const ScrollIndicator: React.FC<ScrollIndicatorProps> = ({
   containerStyle,
   indicatorStyle,
   scrollViewStyle,
-  indicatorColor = '#003c82',
-  indicatorContainerColor = '#003c82',
+  indicatorColor = COLORS.PRIMARY,
+  indicatorContainerColor = COLORS.PRIMARY,
   horizontal = false,
   children,
 }) => {
@@ -155,7 +156,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   indicatorContainer: {
-    backgroundColor: '#003c82',
+    backgroundColor: COLORS.PRIMARY,
     borderRadius: 10,
   },
   horizontalIndicator: {

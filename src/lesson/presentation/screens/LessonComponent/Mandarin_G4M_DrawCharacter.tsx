@@ -25,10 +25,7 @@ import HanziWrite from '../../components/HanziWrite';
 import {Task} from 'src/home/application/types/GetListQuestionResponse';
 import useAuthenticationStore from 'src/authentication/presentation/stores/useAuthenticationStore';
 import {scale, verticalScale} from 'react-native-size-matters';
-import {
-  getCorrectAnswer,
-  splitChineseWithFilter,
-} from 'src/core/presentation/utils';
+import {splitChineseWithFilter} from 'src/core/presentation/utils';
 import {useLessonStore} from '../../stores/LessonStore/useGetPostsStore';
 import {useSettingLesson} from '../../hooks/useSettingLesson';
 import {COLORS} from 'src/core/presentation/constants/colors';

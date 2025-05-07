@@ -57,7 +57,7 @@ type Props = {
   characterStyle?: StyleProp<ViewStyle>;
 };
 
-const Mandarin_G4M_SelectAnswer = observer(
+const Math_G3M_SelectAnswer = observer(
   forwardRef<LessonRef, Props>(
     (
       {
@@ -327,7 +327,7 @@ const Mandarin_G4M_SelectAnswer = observer(
   ),
 );
 
-export default Mandarin_G4M_SelectAnswer;
+export default Math_G3M_SelectAnswer;
 
 const styles = StyleSheet.create({
   fill: {

@@ -1,14 +1,9 @@
 import React from 'react';
-import {
-  ImageBackground,
-  ScrollView,
-  StyleSheet,
-  Text,
-  View,
-} from 'react-native';
+import {ImageBackground, StyleSheet, Text, View} from 'react-native';
 import {scale, verticalScale} from 'react-native-size-matters';
 import {FontFamily} from 'src/core/presentation/hooks/useFonts';
 import {COLORS} from 'src/core/presentation/constants/colors';
+import ScrollIndicator from './ScrollIndicator';
 
 type ParagraphImageProps = {
   imageUrl: string;
@@ -35,9 +30,9 @@ const ParagraphImage: React.FC<ParagraphImageProps> = ({
         <View style={styles.boxName}>
           <Text style={styles.textParagraph}>{name}</Text>
         </View>
-        <ScrollView style={styles.boxParagraph}>
+        <ScrollIndicator containerStyle={styles.boxParagraph}>
           <Text style={styles.textParagraph}>{paragraph}</Text>
-        </ScrollView>
+        </ScrollIndicator>
       </ImageBackground>
     </View>
   );
