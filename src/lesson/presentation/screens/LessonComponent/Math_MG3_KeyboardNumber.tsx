@@ -1,4 +1,4 @@
-import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {StyleSheet, Text, View} from 'react-native';
 import React, {
   forwardRef,
   useCallback,
@@ -15,11 +15,7 @@ import {FontFamily} from 'src/core/presentation/hooks/useFonts';
 import useGlobalStyle from 'src/core/presentation/hooks/useGlobalStyle';
 import {Task} from 'src/home/application/types/GetListQuestionResponse';
 import {COLORS} from 'src/core/presentation/constants/colors';
-import {
-  getCorrectAnswer,
-  isAndroid,
-  WIDTH_SCREEN,
-} from 'src/core/presentation/utils';
+import {getCorrectAnswer, WIDTH_SCREEN} from 'src/core/presentation/utils';
 import {scale, verticalScale} from 'react-native-size-matters';
 import Animated, {
   Easing,
@@ -40,9 +36,6 @@ import {SelectionAnswersQuestionRef} from '../../components/SelectionAnswersQues
 import KeyboardNumber from '../../components/KeyboardNumber';
 import {useI18n} from 'src/core/presentation/hooks/useI18n';
 import VoiceButton from '../../components/VoiceButton';
-import {iosVoice} from 'src/core/presentation/hooks/textToSpeech/TextToSpeechProvider';
-import {listLanguage} from 'src/core/presentation/hooks/textToSpeech/TextToSpeechProvider';
-import Tts from 'react-native-tts';
 
 type Props = {
   moduleIndex: number;
@@ -58,7 +51,7 @@ type Props = {
   answer?: string[];
 };
 
-const Math_G0M2 = observer(
+const Math_MG3_KeyboardNumber = observer(
   forwardRef<LessonRef, Props>(
     (
       {
@@ -79,7 +72,7 @@ const Math_G0M2 = observer(
       const answerRef = useRef<SelectionAnswersQuestionRef>(null);
       const globalStyle = useGlobalStyle();
 
-      const {ttsSpeak, updateDefaultVoice} = useContext(TextToSpeechContext);
+      const {ttsSpeak} = useContext(TextToSpeechContext);
       const focus = useIsFocused();
 
       const [answerSelected, setAnswerSelected] = useState<string | string[]>(
@@ -104,7 +97,7 @@ const Math_G0M2 = observer(
           (typeof answerSelected === 'object' &&
             (answerSelected as string[]).join('')) ===
           getCorrectAnswer(
-            firstMiniTestTask?.question?.[moduleIndex]?.correctAnswer,
+            firstMiniTestTask?.question?.[moduleIndex]?.correctAnswer as string,
           ),
         onSubmit: () => {
           setAnswerSelected(isMulti ? [] : '');
@@ -149,7 +142,8 @@ const Math_G0M2 = observer(
 
       const onSpeechText = useCallback(() => {
         ttsSpeak?.(
-          firstMiniTestTask?.question?.[moduleIndex]?.description ?? '',
+          firstMiniTestTask?.question?.[moduleIndex]?.instruction
+            ?.description ?? '',
         );
       }, [firstMiniTestTask?.question, moduleIndex, ttsSpeak]);
 
@@ -195,36 +189,13 @@ const Math_G0M2 = observer(
         };
       });
 
-      useEffect(() => {
-        Tts.voices().then(voices => {
-          if (lessonName.toLocaleLowerCase().includes('english')) {
-            const engVoice = voices.find(
-              voice => voice.language === listLanguage['US English'],
-            );
-            updateDefaultVoice?.(
-              isAndroid ? engVoice?.id : iosVoice[3].id,
-              'US English',
-            );
-          } else if (lessonName.toLocaleLowerCase().includes('mandarin')) {
-            const engVoice = voices.find(
-              voice =>
-                voice.language ===
-                listLanguage['Mainland China, simplified characters'],
-            );
-            updateDefaultVoice?.(
-              engVoice?.id,
-              'Mainland China, simplified characters',
-            );
-          }
-        });
-      }, [lessonName, updateDefaultVoice]);
-
       useImperativeHandle(ref, () => ({
         isAnswerCorrect,
         onChoiceCorrectedAnswer: () => {
           setAnswerSelected(
             getCorrectAnswer(
-              firstMiniTestTask?.question?.[moduleIndex]?.correctAnswer,
+              firstMiniTestTask?.question?.[moduleIndex]
+                ?.correctAnswer as string,
             ),
           );
         },
@@ -239,11 +210,9 @@ const Math_G0M2 = observer(
           part={firstMiniTestTask?.name}
           backgroundColor={settings.backgroundAnswerColor}
           backgroundAnswerColor={settings.backgroundAnswerColor}
-          prompt={
-            firstMiniTestTask?.question?.[moduleIndex]?.instruction ?? {
-              description: settings.prompt?.toString() ?? '',
-            }
-          }
+          prompt={{
+            description: '',
+          }}
           score={selectedChild?.adsPoints}
           txtCountDown={
             word?.toString() ===
@@ -259,7 +228,7 @@ const Math_G0M2 = observer(
               <Animated.Image
                 resizeMode={'contain'}
                 width={WIDTH_SCREEN}
-                height={scale(160)}
+                height={scale(180)}
                 style={[{}, animatedStyle]}
                 source={{
                   uri:
@@ -287,12 +256,16 @@ const Math_G0M2 = observer(
               <KeyboardNumber
                 question={
                   <Text
+                    numberOfLines={1}
+                    adjustsFontSizeToFit
+                    allowFontScaling
                     style={[
-                      styles.fonts_SVN_Neu,
+                      styles.fonts_SVN_Cherish,
                       styles.textQuestion,
-                      styles.textGreen,
-                      styles.mt8,
-                      {fontSize: scale(20)},
+                      {
+                        fontSize: scale(40),
+                        color: settings.backgroundButtonColor,
+                      },
                     ]}>
                     {descriptionWithAnswers}
                   </Text>
@@ -301,10 +274,18 @@ const Math_G0M2 = observer(
                 isShowCorrectContainer={isShowCorrectContainer}
                 isAnswerCorrect={!!isAnswerCorrect}
                 onSelectAnswer={(e: string[]) => {
+                  console.log(
+                    '🛠 LOG: 🚀 --> ----------------------🛠 LOG: 🚀 -->',
+                  );
+                  console.log('🛠 LOG: 🚀 --> ~ e:', e);
+                  console.log(
+                    '🛠 LOG: 🚀 --> ----------------------🛠 LOG: 🚀 -->',
+                  );
                   setAnswerSelected(e);
                 }}
                 learningTimer={learningTimer}
                 ref={answerRef}
+                isKeyboard={true}
               />
 
               <PrimaryButton
@@ -325,7 +306,7 @@ const Math_G0M2 = observer(
   ),
 );
 
-export default Math_G0M2;
+export default Math_MG3_KeyboardNumber;
 
 const styles = StyleSheet.create({
   fill: {
@@ -353,48 +334,7 @@ const styles = StyleSheet.create({
   textGreen: {
     color: COLORS.BLUE_258F78,
   },
-  txtWhite: {
-    color: 'white',
-  },
-  rowAround: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-  },
-  rowAlignCenter: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  rowBetween: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-  },
-  pr16: {
-    paddingRight: 16,
-  },
-  ph24: {
-    paddingHorizontal: 24,
-  },
-  pb8: {
-    paddingBottom: verticalScale(8),
-  },
-  pb16: {
-    paddingBottom: verticalScale(16),
-  },
-  pb32: {
-    paddingBottom: verticalScale(32),
-  },
-  mt8: {
-    marginTop: verticalScale(8),
-  },
-  mt16: {
-    marginTop: verticalScale(16),
-  },
-  mt24: {
-    marginTop: verticalScale(24),
-  },
-  mt32: {
-    marginTop: verticalScale(32),
-  },
+
   alignSelfCenter: {
     alignSelf: 'center',
   },
@@ -402,49 +342,15 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  boxItemAnswer: {
-    height: 94,
-    backgroundColor: '#F2B559',
-    borderRadius: 30,
-  },
-  boxSelected: {
-    backgroundColor: COLORS.WHITE_FBF8CC,
-    height: verticalScale(220),
-    flex: 1,
-    borderRadius: scale(30),
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  boxVowel: {
-    width: 56,
-    height: 56,
-    borderRadius: 10,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginHorizontal: 6,
-    marginVertical: 6,
-  },
-  textVowel: {
-    fontFamily: FontFamily.SVNCherishMoment,
-    color: '#FBF8CC',
-    fontSize: verticalScale(28),
-  },
-  wapper: {
-    marginTop: 8,
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignContent: 'center',
-    flexWrap: 'wrap', // Add this to enable wrapping
-  },
+
   wrapCharContainer: {
     flexDirection: 'row',
   },
   wrapHeaderContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginBottom: 8,
+    marginBottom: verticalScale(8),
   },
-  iconImageContainer: {height: 45, width: 40},
   buttonContainer: {
     borderRadius: scale(52),
     paddingVertical: verticalScale(9),

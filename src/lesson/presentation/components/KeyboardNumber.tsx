@@ -5,7 +5,7 @@ import React, {
   ForwardRefRenderFunction,
 } from 'react';
 import {View, Text, TouchableOpacity, StyleSheet} from 'react-native';
-import {s, scale, verticalScale} from 'react-native-size-matters';
+import {scale, verticalScale} from 'react-native-size-matters';
 import {COLORS} from 'src/core/presentation/constants/colors';
 import {FontFamily} from 'src/core/presentation/hooks/useFonts';
 import {WIDTH_SCREEN} from 'src/core/presentation/utils';
@@ -84,7 +84,7 @@ const KeyboardNumber: ForwardRefRenderFunction<
           const bg =
             Array.isArray(answerSelected) &&
             answerSelected.includes(e) &&
-            !isKeyboard
+            answerSelected.length
               ? isShowCorrectContainer && !isAnswerCorrect
                 ? '#F28759'
                 : '#66C270'

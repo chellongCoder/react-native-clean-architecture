@@ -30,8 +30,7 @@ interface FieldData {
   image: string;
 }
 const ListLesson = () => {
-  const {listSubject, setSubjectId, subjectId, rootSubject, listModule} =
-    useHomeStore();
+  const {listSubject, setSubjectId, rootSubject, listModule} = useHomeStore();
   const lessonStore = useLessonStore();
   const {getData, isConnected} = useOfflineMode();
   const [subjects, setSubjects] = useState<Subject[]>([]);
@@ -96,6 +95,13 @@ const ListLesson = () => {
   );
 
   const changeSpeakLanguage = (index: number) => {
+    console.log(
+      '🛠 LOG: 🚀 --> ----------------------------------------------------🛠 LOG: 🚀 -->',
+    );
+    console.log('🛠 LOG: 🚀 --> ~ changeSpeakLanguage ~ index:', index, data);
+    console.log(
+      '🛠 LOG: 🚀 --> ----------------------------------------------------🛠 LOG: 🚀 -->',
+    );
     Tts.voices().then(voices => {
       if (data[index].description.toLocaleLowerCase().includes('english')) {
         const engVoice = voices.find(
@@ -127,6 +133,14 @@ const ListLesson = () => {
         );
 
         updateDefaultVoice?.(vietnameseVoices[0]?.id, 'Vie (Vietnamese)');
+      } else {
+        const engVoice = voices.find(
+          voice => voice.language === listLanguage['US English'],
+        );
+        updateDefaultVoice?.(
+          isAndroid ? engVoice?.id : iosVoice[3].id,
+          'US English',
+        );
       }
     });
   };
@@ -146,10 +160,10 @@ const ListLesson = () => {
     setTimeout(() => {
       const index = data.findIndex(e => e._id === rootSubject?._id);
       carouselRef?.current?.snapToItem(index);
-      changeSpeakLanguage(index);
+      changeSpeakLanguage(index < 0 ? 0 : index);
     }, 1000);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [data]);
 
   useEffect(() => {
     const handleGetUserModule = async () => {

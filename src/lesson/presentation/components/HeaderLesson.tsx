@@ -5,9 +5,6 @@ import useGlobalStyle from 'src/core/presentation/hooks/useGlobalStyle';
 import {scale, verticalScale} from 'react-native-size-matters';
 import {FontFamily} from 'src/core/presentation/hooks/useFonts';
 import {COLORS} from 'src/core/presentation/constants/colors';
-import IconDiamond from 'assets/svg/IconDiamond';
-import IconStar from 'assets/svg/iconStar';
-import CustomSwitchNew from 'src/home/presentation/components/CustomSwitchNew';
 
 type Props = {
   lessonName?: string;

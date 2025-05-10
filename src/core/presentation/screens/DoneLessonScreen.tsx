@@ -274,7 +274,14 @@ const DoneLessonScreen = ({}) => {
             part={route.partName}
           />
 
-          <Text style={[styleHook.txtWord, styles.text]}>OH NOO !!!</Text>
+          <Text
+            style={[
+              styleHook.txtWord,
+              styles.text,
+              {color: route.colorBgBookView},
+            ]}>
+            OH NOO !!!
+          </Text>
           <Image
             source={
               typeof route.andieImage === 'string'
@@ -307,7 +314,7 @@ const DoneLessonScreen = ({}) => {
               onPress={onSubmit}
               style={[
                 styles.button,
-                !isSuccess && {backgroundColor: COLORS.GREEN_66C270},
+                !isSuccess && {backgroundColor: route.colorBgBookView},
               ]}>
               <Text style={[styleHook.txtButton, styles.textBtn]}>
                 {i18n.t('lesson.screens.Modules.next')}
@@ -337,7 +344,14 @@ const DoneLessonScreen = ({}) => {
             part={route.partName}
             color={route.colorBgBookView}
           />
-          <Text style={[styleHook.txtWord, styles.text]}>YAYYY !!!</Text>
+          <Text
+            style={[
+              styleHook.txtWord,
+              styles.text,
+              {color: route.colorBgBookView},
+            ]}>
+            YAYYY !!!
+          </Text>
           <Image
             source={
               typeof route.andieImage === 'string'
@@ -392,7 +406,7 @@ const DoneLessonScreen = ({}) => {
             <TouchableOpacity
               disabled={ggadsHook.isFetching}
               onPress={onNext}
-              style={styles.button}>
+              style={[styles.button, {backgroundColor: route.colorBgBookView}]}>
               <Text style={[styleHook.txtButton, styles.textBtn]}>
                 {i18n.t('lesson.screens.Modules.next')}
               </Text>
@@ -420,7 +434,10 @@ const DoneLessonScreen = ({}) => {
             <TouchableOpacity
               activeOpacity={1}
               onPress={() => setIsShowWatchAds(false)}
-              style={styles.absoluteContent}>
+              style={[
+                styles.absoluteContent,
+                {backgroundColor: route.colorBgBookView},
+              ]}>
               <GotRewardModal
                 loadedAds={!!ggadsHook.loaded}
                 onWatchRewardAds={onReceiveReward}
@@ -448,9 +465,8 @@ const styles = StyleSheet.create({
   },
   text: {
     fontWeight: '400',
-    fontSize: 40,
+    fontSize: scale(40),
     textAlign: 'center',
-    color: '#FBF8CC',
   },
   content: {marginTop: 80, marginBottom: 0, flex: 1},
   subText: {
@@ -467,9 +483,7 @@ const styles = StyleSheet.create({
     flex: 1,
     width: '100%',
     marginTop: scale(-24),
-    // height: '60%',
-    // position: 'relative',
-    // paddingTop: 80,
+    zIndex: 999,
   },
   achievementContent: {
     backgroundColor: '#FBF8CC',
@@ -526,7 +540,7 @@ const styles = StyleSheet.create({
     fontSize: scale(12),
   },
   contentDescription: {
-    fontSize: 8,
+    fontSize: scale(8),
     color: '#1C6349',
     textAlign: 'center',
   },

@@ -103,6 +103,8 @@ import Mandarin_G4M_SelectAnswer from './LessonComponent/Mandarin_G4M_SelectAnsw
 import Mandarin_G4_Pronunciation from './LessonComponent/Mandarin_G4_Pronunciation';
 import {scale} from 'react-native-size-matters';
 import {verticalScale} from 'react-native-size-matters';
+import Math_MG3_KeyboardNumber from './LessonComponent/Math_MG3_KeyboardNumber';
+import Math_G3M_SelectAnswer from './LessonComponent/Math_G3M_SelectAnswer';
 
 export enum MathQuestionType {
   MathMG0M1 = 'MATH_MG0M1',
@@ -110,7 +112,21 @@ export enum MathQuestionType {
   MathMG0M3 = 'MATH_MG0M3',
   MathMG1M3 = 'MATH_MG1M3',
   MathMG2M4 = 'MATH_MG2M4',
+
+  MathMG3M6 = 'MATH_MG3M6',
+  MathMG3M7 = 'MATH_MG3M7',
   MathMG3M8 = 'MATH_MG3M8',
+  MathMG3M9 = 'MATH_MG3M9',
+  MathMG3M10 = 'MATH_MG3M10',
+  MathMG3M11 = 'MATH_MG3M11',
+  MathMG3M12 = 'MATH_MG3M12',
+  MathMG3M13 = 'MATH_MG3M13',
+  MathMG3M14 = 'MATH_MG3M14',
+  MathMG3M15 = 'MATH_MG3M15',
+
+  MathMG4M13 = 'MATH_MG4M13',
+  MathMG4M14 = 'MATH_MG4M14',
+  MathMG4M15 = 'MATH_MG4M15',
   MathMG4M16 = 'MATH_MG4M16',
   MathMG4M30 = 'MATH_MG4M30',
   MathMG5M18 = 'MATH_MG5M18',
@@ -448,7 +464,7 @@ const LessonScreen = observer(() => {
               backgroundAndie:
                 env.IMAGE_BACKGROUND_BASE_API_URL +
                 lessonSetting?.backgroundImage,
-              colorBgBookView: settings.backgroundAnswerColor,
+              colorBgBookView: settings.backgroundButtonColor,
               title: i18n.t('lesson.screens.Modules.youDidGreat'),
               note: i18n.t('lesson.screens.Modules.goodjobMinitest'),
               isMiniTest: true,
@@ -474,7 +490,7 @@ const LessonScreen = observer(() => {
       playSound,
       route.lessonName,
       route.moduleName,
-      settings.backgroundAnswerColor,
+      settings.backgroundButtonColor,
       testTask,
     ],
   );
@@ -508,7 +524,7 @@ const LessonScreen = observer(() => {
               backgroundAndie:
                 env.IMAGE_BACKGROUND_BASE_API_URL +
                 lessonSetting?.backgroundImage,
-              colorBgBookView: settings.backgroundAnswerColor,
+              colorBgBookView: settings.backgroundButtonColor,
               title: i18n.t('lesson.screens.Modules.youDidGreat'),
               note: i18n.t('lesson.screens.Modules.goodJobTraining'),
               moduleName: route.moduleName,
@@ -548,7 +564,7 @@ const LessonScreen = observer(() => {
             backgroundAndie:
               env.IMAGE_BACKGROUND_BASE_API_URL +
               lessonSetting?.backgroundImage,
-            colorBgBookView: settings.backgroundAnswerColor,
+            colorBgBookView: settings.backgroundButtonColor,
             title,
             countTime: `${trainingCount - 1} ${i18n.t(
               'lesson.screens.Modules.moreTime',
@@ -579,7 +595,7 @@ const LessonScreen = observer(() => {
       env.IMAGE_BACKGROUND_BASE_API_URL,
       lessonSetting?.figureSuccessImage,
       lessonSetting?.backgroundImage,
-      settings.backgroundAnswerColor,
+      settings.backgroundButtonColor,
       i18n,
       route.moduleName,
       route.lessonName,
@@ -1257,9 +1273,31 @@ const LessonScreen = observer(() => {
           />
         );
       case MathQuestionType.MathMG2M4:
-      case MathQuestionType.MathMG3M8:
         return (
           <Math_MG2M4
+            {...dataProps}
+            ref={vowelRef}
+            isMulti={true}
+            answer={['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']}
+          />
+        );
+      case MathQuestionType.MathMG3M6:
+      case MathQuestionType.MathMG3M7:
+      case MathQuestionType.MathMG3M8:
+      case MathQuestionType.MathMG3M10:
+        return (
+          <Math_MG3_KeyboardNumber
+            {...dataProps}
+            ref={vowelRef}
+            isMulti={true}
+            answer={['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']}
+          />
+        );
+      case MathQuestionType.MathMG4M13:
+      case MathQuestionType.MathMG4M14:
+      case MathQuestionType.MathMG4M15:
+        return (
+          <Math_MG3_KeyboardNumber
             {...dataProps}
             ref={vowelRef}
             isMulti={true}

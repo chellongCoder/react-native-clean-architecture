@@ -42,7 +42,7 @@ type Props = {
   isShowCorrectContainer?: boolean;
   txtCountDown?: string;
   onPressFlower?: () => void;
-  prompt?: Instruction;
+  prompt?: Instruction | string;
   characterStyle?: StyleProp<ViewStyle>;
 };
 
@@ -164,7 +164,13 @@ const LessonComponent = ({
                 style={styles.countDown}
                 resizeMode="contain"
                 source={assets.drug_bg}>
-                <Text style={styles.txtCountDown}>{txtCountDown}</Text>
+                <Text
+                  numberOfLines={1}
+                  adjustsFontSizeToFit
+                  allowFontScaling
+                  style={styles.txtCountDown}>
+                  {txtCountDown}
+                </Text>
               </ImageBackground>
             )}
             <View style={{height: verticalScale(5)}} />

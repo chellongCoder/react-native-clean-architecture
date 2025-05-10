@@ -227,7 +227,7 @@ const Math_G3M_SelectAnswer = observer(
                   <Animated.Image
                     resizeMode={'contain'}
                     width={scale(200)}
-                    height={scale(100)}
+                    height={scale(150)}
                     style={[animatedStyle]}
                     source={{
                       uri:
@@ -257,7 +257,7 @@ const Math_G3M_SelectAnswer = observer(
                   styles.textQuestion,
                   {
                     color: settings.backgroundButtonColor,
-                    maxWidth: WIDTH_SCREEN / 2,
+                    maxWidth: WIDTH_SCREEN / 1.2,
                   },
                 ]}>
                 {firstMiniTestTask?.question?.[moduleIndex].description}
@@ -302,6 +302,13 @@ const Math_G3M_SelectAnswer = observer(
                 isShowCorrectContainer={isShowCorrectContainer}
                 isAnswerCorrect={!!isAnswerCorrect}
                 onSelectAnswer={(e: string[]) => {
+                  console.log(
+                    '🛠 LOG: 🚀 --> ----------------------🛠 LOG: 🚀 -->',
+                  );
+                  console.log('🛠 LOG: 🚀 --> ~ e:', e);
+                  console.log(
+                    '🛠 LOG: 🚀 --> ----------------------🛠 LOG: 🚀 -->',
+                  );
                   setAnswerSelected(e);
                 }}
                 learningTimer={learningTimer}
