@@ -73,12 +73,10 @@ import Math_MG1M3_P4 from './LessonComponent/Math_MG1M3_P4';
 import Science_SG6M3 from './LessonComponent/Science_SG6M3';
 import Math_MG4M16 from './LessonComponent/Math_MG4M16';
 import {useI18n} from 'src/core/presentation/hooks/useI18n';
-import VnG2M6Lesson from './LessonComponent/Vietnamese_G4M3_lesson';
 import VnG1M4Lesson from './LessonComponent/Vietnamese_VNG1M4_Lesson';
 import VnG4M3Lesson from './LessonComponent/Vietnamese_G4M3_lesson';
 import DragProvider from '../components/Drag/DragProvider';
 import VNG5M1NLesson from './LessonComponent/Vietnamese_G5M1_N_Leson';
-import VnG4M5Lesson from './LessonComponent/Vietnamese_G4M5_lesson';
 import VnG1M1Lesson from './LessonComponent/Vietnamese_VNG1M1_Lesson';
 import VnG1M5Lesson from './LessonComponent/Vietnamese_VNG1M5_Lesson';
 import VnG1M7Lesson from './LessonComponent/Vietnamese_VNG1M7_Lesson';
@@ -123,13 +121,25 @@ export enum MathQuestionType {
   MathMG3M13 = 'MATH_MG3M13',
   MathMG3M14 = 'MATH_MG3M14',
   MathMG3M15 = 'MATH_MG3M15',
+  MathMG3M16 = 'MATH_MG3M16',
 
   MathMG4M13 = 'MATH_MG4M13',
   MathMG4M14 = 'MATH_MG4M14',
   MathMG4M15 = 'MATH_MG4M15',
   MathMG4M16 = 'MATH_MG4M16',
   MathMG4M30 = 'MATH_MG4M30',
+
+  MathMG5M8 = 'MATH_MG5M8',
+  MathMG5M9 = 'MATH_MG5M9',
+  MathMG5M10 = 'MATH_MG5M10',
+  MathMG5M11 = 'MATH_MG5M11',
+  MathMG5M12 = 'MATH_MG5M12',
+  MathMG5M13 = 'MATH_MG5M13',
+  MathMG5M14 = 'MATH_MG5M14',
+  MathMG5M15 = 'MATH_MG5M15',
+  MathMG5M16 = 'MATH_MG5M16',
   MathMG5M18 = 'MATH_MG5M18',
+
   MathMG6M15 = 'MATH_MG6M15',
 }
 
@@ -1285,6 +1295,7 @@ const LessonScreen = observer(() => {
       case MathQuestionType.MathMG3M7:
       case MathQuestionType.MathMG3M8:
       case MathQuestionType.MathMG3M10:
+      case MathQuestionType.MathMG3M11:
         return (
           <Math_MG3_KeyboardNumber
             {...dataProps}
@@ -1293,6 +1304,9 @@ const LessonScreen = observer(() => {
             answer={['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']}
           />
         );
+      case MathQuestionType.MathMG3M16:
+        return <Math_G3M_SelectAnswer {...dataProps} ref={vowelRef} />;
+
       case MathQuestionType.MathMG4M13:
       case MathQuestionType.MathMG4M14:
       case MathQuestionType.MathMG4M15:
@@ -1307,6 +1321,33 @@ const LessonScreen = observer(() => {
       case MathQuestionType.MathMG4M16:
         return (
           <Math_MG4M16
+            {...dataProps}
+            ref={vowelRef}
+            isMulti={true}
+            answer={['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '.']}
+          />
+        );
+
+      case MathQuestionType.MathMG5M8:
+        return (
+          <Math_MG3_KeyboardNumber
+            {...dataProps}
+            ref={vowelRef}
+            isMulti={true}
+          />
+        );
+      case MathQuestionType.MathMG5M12:
+        return (
+          <Math_MG3_KeyboardNumber
+            {...dataProps}
+            ref={vowelRef}
+            isMulti={true}
+            answer={['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '.']}
+          />
+        );
+      case MathQuestionType.MathMG5M13:
+        return (
+          <Math_MG3_KeyboardNumber
             {...dataProps}
             ref={vowelRef}
             isMulti={true}
