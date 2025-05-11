@@ -24,6 +24,7 @@ import {HomeStore} from 'src/home/presentation/stores/HomeStore';
 import ImageToTextUsecase from 'src/authentication/application/useCases/ImageToTextUsecase';
 import GetUserModuleUseCase from './application/useCases/GetUserModuleUseCase';
 import BuyUserModuleUseCase from './application/useCases/BuyUserModuleUseCase.ts';
+import TranslateTextUsecase from 'src/authentication/application/useCases/TranslateTextUsecase';
 
 @module({
   providers: [
@@ -51,6 +52,7 @@ import BuyUserModuleUseCase from './application/useCases/BuyUserModuleUseCase.ts
     GetPostsUseCase,
     UpdateUserSettingUseCase,
     ImageToTextUsecase,
+    TranslateTextUsecase,
     ChangeChildPointFlowerUsecase,
     GetUserSettingUseCase,
     {

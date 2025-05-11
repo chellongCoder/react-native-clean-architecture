@@ -1,12 +1,17 @@
 import {useEffect, useState} from 'react';
 import useAuthenStore from 'src/authentication/presentation/hooks/useAuthenStore';
 import {useLoadingGlobal} from 'src/core/presentation/hooks/loading/useLoadingGlobal';
+import {listLanguage} from 'src/core/presentation/hooks/textToSpeech/TextToSpeechProvider';
+import {useI18n} from 'src/core/presentation/hooks/useI18n';
 import {Module} from 'src/home/application/types/GetListLessonResponse';
 import useHomeStore from 'src/home/presentation/stores/useHomeStore';
+import {useLessonStore} from 'src/lesson/presentation/stores/LessonStore/useGetPostsStore';
 
 export const useListModule = () => {
   const homeStore = useHomeStore();
+  const lessonStore = useLessonStore();
   const globalLoading = useLoadingGlobal();
+  const i18n = useI18n();
 
   const [modules, setModules] = useState<Module[]>([]);
   const authStore = useAuthenStore();
@@ -20,7 +25,22 @@ export const useListModule = () => {
           childrenId: authStore.selectedChild?._id,
         })
         .then(response => {
-          setModules(response.data);
+          const listTitle = response.data.map(item => item.name);
+          lessonStore
+            .translateText({
+              text: listTitle,
+              targetLanguage: i18n.deviceLocale,
+            })
+            .then(res => {
+              const translatedModules = response.data.map((item, index) => ({
+                ...item,
+                name: res.data[index],
+              }));
+              setModules(translatedModules);
+            })
+            .catch(() => {
+              setModules(response.data);
+            });
         })
         .finally(() => {
           globalLoading.toggleLoading(false, 'listModule');

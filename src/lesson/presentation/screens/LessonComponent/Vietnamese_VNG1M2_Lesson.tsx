@@ -361,13 +361,13 @@ const VnG1M2Lesson = forwardRef<LessonRef, Props>(
                   },
                   show: true,
                   builder: !answerSelected
-                    ? text => {
+                    ? (text, fontSize) => {
                         return (
                           <Svg>
                             <TextSvg
                               x="50%"
                               y="67%"
-                              fontSize={140}
+                              fontSize={fontSize ?? 140}
                               fontFamily={FontFamily.BorelRegular}
                               fontWeight="bold"
                               textAnchor="middle"

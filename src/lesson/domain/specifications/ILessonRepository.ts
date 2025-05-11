@@ -18,6 +18,8 @@ import {ImageToTextResponse} from 'src/authentication/application/types/ImageToT
 import BuyUserModulePayload from 'src/lesson/application/types/BuyUserModulePayload';
 import BuyUserModuleResponse from 'src/lesson/application/types/BuyUserModuleResponse';
 import {GetUserModuleResponse} from 'src/lesson/application/types/GetUserModuleResponse';
+import {TranslateTextPayload} from 'src/authentication/application/types/TranslateTextPayload';
+import {TranslateTextResponse} from 'src/authentication/application/types/TranslateTextResponse';
 
 export const ILessonRepositoryToken = Symbol('ILessonRepository');
 
@@ -38,6 +40,7 @@ export interface ILessonRepository {
     childrenId: string,
   ) => Promise<UserSettingResponse>;
   imageToText: (data: FormData) => Promise<ImageToTextResponse>;
+  translateText: (data: TranslateTextPayload) => Promise<TranslateTextResponse>;
   changePointFlowerChild: (
     data: ChangeChildPointFlowerPayload,
   ) => Promise<ChangeChildPointFlowerResponse>;
