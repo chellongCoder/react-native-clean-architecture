@@ -29,6 +29,8 @@ import {ImageToTextResponse} from 'src/authentication/application/types/ImageToT
 import GetUserModuleResponse from 'src/lesson/application/types/GetUserModuleResponse';
 import BuyUserModulePayload from 'src/lesson/application/types/BuyUserModulePayload';
 import BuyUserModuleResponse from 'src/lesson/application/types/BuyUserModuleResponse';
+import {TranslateTextPayload} from 'src/authentication/application/types/TranslateTextPayload';
+import {TranslateTextResponse} from 'src/authentication/application/types/TranslateTextResponse';
 
 @injectable()
 class LessonRepository implements ILessonRepository {
@@ -123,6 +125,16 @@ class LessonRepository implements ILessonRepository {
           'Content-Type': 'multipart/form-data',
         },
       },
+    );
+    return response;
+  }
+
+  public async translateText(
+    data: TranslateTextPayload,
+  ): Promise<TranslateTextResponse> {
+    const response: TranslateTextResponse = await this.httpClient.post(
+      API_ENDPOINTS.GOOGLE.TRANSLATE_TEXT,
+      data,
     );
     return response;
   }

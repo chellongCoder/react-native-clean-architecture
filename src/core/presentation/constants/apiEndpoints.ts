@@ -105,6 +105,7 @@ export const API_ENDPOINTS = {
   },
   GOOGLE: {
     IMAGE_TO_TEXT: getGoogleEndPointServices('image-to-text'),
+    TRANSLATE_TEXT: getGoogleEndPointServices('translate'),
   },
   SUBJECT: {
     LIST_ALL_SUBJECT: getSubjectEndPointServices('list-all-subject'),

@@ -5,6 +5,7 @@ import React, {
   useCallback,
   // useEffect,
   useImperativeHandle,
+  useMemo,
   // useMemo,
   useRef,
   useState,
@@ -29,7 +30,7 @@ type Props = {
   text?: {
     content: string;
     style: TextStyle;
-    builder?: (text: string) => React.ReactNode;
+    builder?: (text: string, fontSize?: number) => React.ReactNode;
     show?: boolean;
   };
   disable?: boolean;
@@ -93,6 +94,13 @@ const CanvasWrite = forwardRef<CanvasWriteRef, Props>((props: Props, ref) => {
 
   // const [matchDistance] = useState(props.matchDistance ?? 10);
   const [strokesNumber, setStrokesNumber] = useState(0);
+
+  const fontSize = useMemo(() => {
+    if (!props.text?.content?.length) {
+      return 0;
+    }
+    return Math.min((size.width / props.text?.content.length) * 1.8, 140);
+  }, [size, props.text?.content]);
 
   // const findPointNear = useCallback(
   //   (touchInfo: TouchInfo) => {
@@ -272,8 +280,13 @@ const CanvasWrite = forwardRef<CanvasWriteRef, Props>((props: Props, ref) => {
           ,
         ]}>
         {props.text?.show &&
-          (props.text?.builder?.(props.text?.content) ?? (
-            <Text style={[styles.text, {color: 'green'}, props.text?.style]}>
+          (props.text?.builder?.(props.text?.content, fontSize) ?? (
+            <Text
+              style={[
+                styles.text,
+                {color: 'green', fontSize: fontSize},
+                props.text?.style,
+              ]}>
               {props?.text?.content}
             </Text>
           ))}

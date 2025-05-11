@@ -47,6 +47,8 @@ import GetUserModuleUseCase from 'src/lesson/application/useCases/GetUserModuleU
 import BuyUserModuleUseCase from 'src/lesson/application/useCases/BuyUserModuleUseCase.ts';
 import UserModuleEntity from 'src/lesson/domain/entities/UserModuleEntity';
 import BuyUserModulePayload from 'src/lesson/application/types/BuyUserModulePayload';
+import TranslateTextUsecase from 'src/authentication/application/useCases/TranslateTextUsecase';
+import {TranslateTextPayload} from 'src/authentication/application/types/TranslateTextPayload';
 @injectable()
 export class LessonStore {
   point: {value: number; isShow: boolean} = {value: 0, isShow: false};
@@ -108,6 +110,8 @@ export class LessonStore {
     private getUserSettingUserCase: GetUserSettingUseCase,
     @provided(ImageToTextUsecase)
     private imageToTextUseCase: ImageToTextUsecase,
+    @provided(TranslateTextUsecase)
+    private translateTextUseCase: TranslateTextUsecase,
     @provided(ChangeChildPointFlowerUsecase)
     private changeChildPointFlowerUseCase: ChangeChildPointFlowerUsecase,
     @provided(PurchaseModuleUseCase)
@@ -140,6 +144,7 @@ export class LessonStore {
     this.handleGetProductFromBE = this.handleGetProductFromBE.bind(this);
     this.handleGetModulesField = this.handleGetModulesField.bind(this);
     this.imageToText = this.imageToText.bind(this);
+    this.translateText = this.translateText.bind(this);
   }
 
   @action
@@ -362,6 +367,14 @@ export class LessonStore {
   public async imageToText(data: FormData) {
     this.isLoadingUserSetting = true;
     const response = await this.imageToTextUseCase.execute(data);
+    this.isLoadingUserSetting = false;
+    return response;
+  }
+
+  @action
+  public async translateText(data: TranslateTextPayload) {
+    this.isLoadingUserSetting = true;
+    const response = await this.translateTextUseCase.execute(data);
     this.isLoadingUserSetting = false;
     return response;
   }

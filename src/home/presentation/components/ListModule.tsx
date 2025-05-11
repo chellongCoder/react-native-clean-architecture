@@ -17,7 +17,7 @@ import LoadingItem from 'src/lesson/presentation/components/Loading/LoadingItem'
 const screenWidth = Dimensions.get('screen').width;
 
 const ListModule = observer(() => {
-  const {selectedSubject} = useListModule();
+  const {selectedSubject, modules} = useListModule();
 
   const {listSubject, subjectId, listModule, isLoading} = useHomeStore();
 
@@ -49,7 +49,7 @@ const ListModule = observer(() => {
                 <LoadingItem key={index} />
               </View>
             ))
-          : listModule?.map(module => {
+          : modules?.map(module => {
               return (
                 <View style={styles.wrapModuleContainer}>
                   <ModuleItem
