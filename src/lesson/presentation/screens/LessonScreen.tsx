@@ -83,7 +83,6 @@ import VnG1M7Lesson from './LessonComponent/Vietnamese_VNG1M7_Lesson';
 import VnG1M8Lesson from './LessonComponent/Vietnamese_VNG1M8_Lesson';
 import VnG1M9Lesson from './LessonComponent/Vietnamese_VNG1M9_Lesson';
 import VnG1M10Lesson from './LessonComponent/Vietnamese_VNG1M10_Lesson';
-import VietnameseLessonScreen from '../components/ModuleDetail';
 import VnG1M2Lesson from './LessonComponent/Vietnamese_VNG1M2_Lesson';
 import VnG1M6Lesson from './LessonComponent/Vietnamese_G1M6_lesson';
 import VnG2M1Lesson from './LessonComponent/Vietnamese_VNG2M1_Lesson';
@@ -103,6 +102,7 @@ import {scale} from 'react-native-size-matters';
 import {verticalScale} from 'react-native-size-matters';
 import Math_MG3_KeyboardNumber from './LessonComponent/Math_MG3_KeyboardNumber';
 import Math_G3M_SelectAnswer from './LessonComponent/Math_G3M_SelectAnswer';
+import Math_G4M_SelectAnswer from './LessonComponent/Math_G4M_SelectAnswer';
 
 export enum MathQuestionType {
   MathMG0M1 = 'MATH_MG0M1',
@@ -127,6 +127,14 @@ export enum MathQuestionType {
   MathMG4M14 = 'MATH_MG4M14',
   MathMG4M15 = 'MATH_MG4M15',
   MathMG4M16 = 'MATH_MG4M16',
+  MathMG4M18 = 'MATH_MG4M18',
+  MathMG4M21 = 'MATH_MG4M21',
+  MathMG4M22 = 'MATH_MG4M22',
+  MathMG4M23 = 'MATH_MG4M23',
+  MathMG4M24 = 'MATH_MG4M24',
+  MathMG4M25 = 'MATH_MG4M25',
+  MathMG4M26 = 'MATH_MG4M26',
+  MathMG4M27 = 'MATH_MG4M27',
   MathMG4M30 = 'MATH_MG4M30',
 
   MathMG5M8 = 'MATH_MG5M8',
@@ -1327,13 +1335,29 @@ const LessonScreen = observer(() => {
             answer={['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '.']}
           />
         );
-
+      case MathQuestionType.MathMG4M18:
+      case MathQuestionType.MathMG4M21:
+      case MathQuestionType.MathMG4M22:
+        return <Math_G4M_SelectAnswer {...dataProps} ref={vowelRef} />;
       case MathQuestionType.MathMG5M8:
         return (
           <Math_MG3_KeyboardNumber
             {...dataProps}
             ref={vowelRef}
             isMulti={true}
+          />
+        );
+      case MathQuestionType.MathMG4M23:
+      case MathQuestionType.MathMG4M24:
+      case MathQuestionType.MathMG4M25:
+      case MathQuestionType.MathMG4M26:
+      case MathQuestionType.MathMG4M27:
+        return (
+          <Math_MG3_KeyboardNumber
+            {...dataProps}
+            ref={vowelRef}
+            isMulti={true}
+            answer={['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '.']}
           />
         );
       case MathQuestionType.MathMG5M12:

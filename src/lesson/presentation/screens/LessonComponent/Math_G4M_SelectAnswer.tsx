@@ -15,11 +15,7 @@ import {FontFamily} from 'src/core/presentation/hooks/useFonts';
 import useGlobalStyle from 'src/core/presentation/hooks/useGlobalStyle';
 import {Task} from 'src/home/application/types/GetListQuestionResponse';
 import {COLORS} from 'src/core/presentation/constants/colors';
-import {
-  getCorrectAnswer,
-  isMMSS,
-  WIDTH_SCREEN,
-} from 'src/core/presentation/utils';
+import {getCorrectAnswer, isMMSS} from 'src/core/presentation/utils';
 import {scale, verticalScale} from 'react-native-size-matters';
 import Animated, {
   Easing,
@@ -57,7 +53,7 @@ type Props = {
   characterStyle?: StyleProp<ViewStyle>;
 };
 
-const Math_G3M_SelectAnswer = observer(
+const Math_G4M_SelectAnswer = observer(
   forwardRef<LessonRef, Props>(
     (
       {
@@ -196,7 +192,10 @@ const Math_G3M_SelectAnswer = observer(
           );
         },
       }));
-
+      console.log(
+        'firstMiniTestTask?.question?.[moduleIndex]: ',
+        firstMiniTestTask?.question?.[moduleIndex],
+      );
       return (
         <LessonComponent
           backgroundImage={backgroundImage}
@@ -226,7 +225,7 @@ const Math_G3M_SelectAnswer = observer(
                 <View>
                   <Animated.Image
                     resizeMode={'contain'}
-                    width={scale(200)}
+                    width={scale(150)}
                     height={scale(150)}
                     style={[animatedStyle]}
                     source={{
@@ -330,7 +329,7 @@ const Math_G3M_SelectAnswer = observer(
   ),
 );
 
-export default Math_G3M_SelectAnswer;
+export default Math_G4M_SelectAnswer;
 
 const styles = StyleSheet.create({
   fill: {
