@@ -239,12 +239,6 @@ const VnG3M6Lesson = observer(
           isAnswerCorrect={isAnswerCorrect}
           isShowCorrectContainer={isShowCorrectContainer}
           onPressFlower={toggleShowHint}
-          characterStyle={{
-            height: verticalScale(200),
-            width: scale(100),
-            marginBottom: -verticalScale(20),
-            marginLeft: -scale(20),
-          }}
           buildQuestion={
             <View
               style={{

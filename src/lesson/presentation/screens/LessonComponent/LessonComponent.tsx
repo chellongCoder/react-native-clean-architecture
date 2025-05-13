@@ -185,12 +185,7 @@ const LessonComponent = ({
         </View>
 
         {buildQuestion && (
-          <View
-            style={[
-              styles.boxQuestion,
-              styles.pb32,
-              !isShowPrompt && {zIndex: 999},
-            ]}>
+          <View style={[styles.boxQuestion, !isShowPrompt && {zIndex: 999}]}>
             {buildQuestion}
           </View>
         )}
@@ -217,22 +212,34 @@ const LessonComponent = ({
                 </Text>
               </View>
             )}
-            {isShowPrompt && prompt?.description && (
-              <View style={styles.wrapCorrectContainer}>
-                <View style={[{flexDirection: 'row', maxWidth: '100%'}]}>
-                  {prompt.number !== undefined && (
-                    <View style={[styles.promptNumberBg]}>
-                      <Text style={[styles.promptNumber]}>{prompt.number}</Text>
+            {isShowPrompt && (
+              <>
+                {typeof prompt === 'object' && prompt?.description ? (
+                  <View style={styles.wrapCorrectContainer}>
+                    <View style={[{flexDirection: 'row', maxWidth: '100%'}]}>
+                      {prompt.number !== undefined && (
+                        <View style={[styles.promptNumberBg]}>
+                          <Text style={[styles.promptNumber]}>
+                            {prompt?.number}
+                          </Text>
+                        </View>
+                      )}
+                      {!!prompt?.content && (
+                        <Text style={[styles.promptContent]}>
+                          {prompt?.content}
+                        </Text>
+                      )}
+                      <Text style={[styles.promptTitle]}>
+                        {prompt?.description}
+                      </Text>
                     </View>
-                  )}
-                  {!!prompt.content && (
-                    <Text style={[styles.promptContent]}>{prompt.content}</Text>
-                  )}
-                  <Text style={[styles.promptTitle, {flex: 1}]}>
-                    {prompt.description}
-                  </Text>
-                </View>
-              </View>
+                  </View>
+                ) : prompt === '' ? (
+                  <View style={styles.wrapCorrectContainer}>
+                    <Text style={styles.promptContent}>{prompt as string}</Text>
+                  </View>
+                ) : null}
+              </>
             )}
             <View style={[styles.tabs]}>
               {Array.from(
@@ -297,7 +304,7 @@ const styles = StyleSheet.create({
   screen: {
     paddingTop: verticalScale(30),
     flex: 1,
-    backgroundColor: '#66c270',
+    backgroundColor: COLORS.GREEN_66C270,
   },
   rowAlignCenter: {
     flexDirection: 'row',
@@ -329,27 +336,7 @@ const styles = StyleSheet.create({
     marginTop: 0,
     marginBottom: 0,
   },
-  p16: {
-    padding: 16,
-  },
-  pb16: {
-    paddingBottom: 16,
-  },
-  ph24: {
-    paddingHorizontal: 24,
-  },
-  pb32: {
-    paddingBottom: verticalScale(32),
-  },
-  pv32: {
-    paddingVertical: 32,
-  },
-  ph32: {
-    paddingHorizontal: 32,
-  },
-  mt32: {
-    marginTop: 32,
-  },
+
   fonts_SVN_Cherish: {
     fontFamily: FontFamily.SVNCherishMoment,
   },
@@ -357,62 +344,33 @@ const styles = StyleSheet.create({
     fontSize: scale(30),
     color: COLORS.GREEN_1C6349,
   },
-  alightEnd: {
-    alignItems: 'flex-end',
-  },
+
   textModule: {
     fontSize: scale(10),
     color: COLORS.BLUE_258F78,
   },
   textPart: {
-    fontSize: 10,
+    fontSize: scale(10),
     color: COLORS.BLUE_258F78,
     fontWeight: '300',
   },
-  boxPrice: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    paddingVertical: 6,
-    paddingHorizontal: 10,
-    alignItems: 'center',
-    borderRadius: 100,
-    width: 90,
-    backgroundColor: '#FFE699',
-  },
+
   textPrice: {
-    fontSize: 18,
-    color: '#1C6349',
+    fontSize: scale(18),
+    color: COLORS.GREEN_1C6349,
   },
   boxQuestion: {
     flex: 1,
     alignItems: 'center',
     // zIndex: 999,
   },
-  textLarge: {
-    fontSize: scale(140),
-    textAlign: 'center',
-    color: 'white',
-  },
-  textQuestion: {
-    fontSize: scale(40),
-    textAlign: 'center',
-    color: 'white',
-  },
+
   boxAnswer: {
     flex: 1,
     paddingVertical: verticalScale(24),
     paddingHorizontal: scale(10),
   },
-  textW500s16White: {
-    fontWeight: '500',
-    fontSize: 16,
-    color: 'white',
-  },
-  textW500s16Black: {
-    fontWeight: '500',
-    fontSize: 16,
-    color: 'black',
-  },
+
   dotline: {
     height: 6,
     borderRadius: 6,
@@ -421,13 +379,12 @@ const styles = StyleSheet.create({
   },
   tabs: {
     flexDirection: 'row',
-    paddingBottom: 14,
+    paddingBottom: verticalScale(14),
   },
   wrapCorrectContainer: {
     maxWidth: '100%',
     marginRight: scale(8),
     backgroundColor: COLORS.CUSTOM(COLORS.WHITE_FBF8CC, 0.4),
-    marginBottom: scale(8),
     padding: scale(12),
     borderTopLeftRadius: scale(36),
     borderTopRightRadius: scale(36),
@@ -437,7 +394,7 @@ const styles = StyleSheet.create({
     zIndex: 998,
   },
   correctTitle: {
-    color: '#1C6A59',
+    color: COLORS.GREEN_1C6A59,
     textTransform: 'uppercase',
     fontWeight: 'bold',
   },

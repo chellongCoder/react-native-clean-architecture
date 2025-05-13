@@ -146,38 +146,6 @@ const VnG1M1Lesson = forwardRef<LessonRef, Props>(
       firstMiniTestTask?.type,
     ]); // Added focus to the dependency array
 
-    useEffect(() => {
-      Tts.voices().then(voices => {
-        if (lessonName.toLocaleLowerCase().includes('english')) {
-          const engVoice = voices.find(
-            voice => voice.language === listLanguage['US English'],
-          );
-          updateDefaultVoice?.(
-            isAndroid ? engVoice?.id : iosVoice[3].id,
-            'US English',
-          );
-        } else if (lessonName.toLocaleLowerCase().includes('mandarin')) {
-          const engVoice = voices.find(
-            voice =>
-              voice.language ===
-              listLanguage['Mainland China, simplified characters'],
-          );
-          updateDefaultVoice?.(
-            engVoice?.id,
-            'Mainland China, simplified characters',
-          );
-        } else if (lessonName.toLocaleLowerCase().includes('tiếng việt')) {
-          const vietnameseVoices = voices.filter(
-            voice =>
-              voice.language.startsWith('vi-') ||
-              voice.name.toLowerCase().includes('vietnamese'),
-          );
-
-          updateDefaultVoice?.(vietnameseVoices[0]?.id, 'Vie (Vietnamese)');
-        }
-      });
-    }, [lessonName, updateDefaultVoice]);
-
     const onSubmit = useCallback(async () => {
       submit();
     }, [submit]);
