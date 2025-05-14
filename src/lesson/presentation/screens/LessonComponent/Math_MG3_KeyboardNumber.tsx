@@ -1,4 +1,4 @@
-import {StyleSheet, Text, View} from 'react-native';
+import {StyleProp, StyleSheet, Text, View, ViewStyle} from 'react-native';
 import React, {
   forwardRef,
   useCallback,
@@ -49,6 +49,7 @@ type Props = {
   characterImageFail?: string;
   isMulti?: boolean;
   answer?: string[];
+  characterStyle?: StyleProp<ViewStyle>;
 };
 
 const Math_MG3_KeyboardNumber = observer(
@@ -66,6 +67,7 @@ const Math_MG3_KeyboardNumber = observer(
         characterImageFail,
         isMulti,
         answer,
+        characterStyle,
       },
       ref,
     ) => {
@@ -223,6 +225,13 @@ const Math_MG3_KeyboardNumber = observer(
           isAnswerCorrect={isAnswerCorrect}
           isShowCorrectContainer={isShowCorrectContainer}
           onPressFlower={toggleShowHint}
+          characterStyle={
+            characterStyle ?? {
+              height: verticalScale(300),
+              marginBottom: -verticalScale(130),
+              marginLeft: -scale(40),
+            }
+          }
           buildQuestion={
             <View>
               <Animated.Image

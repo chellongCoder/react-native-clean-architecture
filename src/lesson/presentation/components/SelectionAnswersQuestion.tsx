@@ -16,6 +16,7 @@ import {scale, verticalScale} from 'react-native-size-matters';
 import {COLORS} from 'src/core/presentation/constants/colors';
 import {FontFamily} from 'src/core/presentation/hooks/useFonts';
 import {WIDTH_SCREEN} from 'src/core/presentation/utils';
+import TextFraction from './TextFraction';
 
 interface SelectionAnswersQuestionProps {
   question?: React.ReactNode;
@@ -96,6 +97,13 @@ const SelectionAnswersQuestion: ForwardRefRenderFunction<
       {question && <View style={styles.wrapCharContainer}>{question}</View>}
       <View style={[styles.wapper, {width: '100%'}]}>
         {answer?.map((e, i) => {
+          console.log(
+            '🛠 LOG: 🚀 --> -------------------------------------🛠 LOG: 🚀 -->',
+          );
+          console.log('🛠 LOG: 🚀 --> ~ {answer?.map ~ e:', e, e.includes('/'));
+          console.log(
+            '🛠 LOG: 🚀 --> -------------------------------------🛠 LOG: 🚀 -->',
+          );
           const bg =
             Array.isArray(answerSelected) &&
             answerSelected.includes(e.trim()) &&
@@ -112,7 +120,30 @@ const SelectionAnswersQuestion: ForwardRefRenderFunction<
                 (answer.length > 3 ? Math.ceil(length / 2) : 2);
 
           const minHeight = answer.length === 3 ? scale(44) : scale(56);
-
+          if (e.includes('/')) {
+            return (
+              <TouchableOpacity
+                key={i}
+                onPress={() => handleSelectAnswer(e)}
+                style={[
+                  styles.boxVowel,
+                  {
+                    minHeight,
+                    backgroundColor: bg,
+                    width: size,
+                    margin: scale(8), // Add spacing for clarity
+                  },
+                ]}>
+                {contentAnswer?.(e) ?? (
+                  <TextFraction
+                    numerator={+e.split('/')[0]}
+                    denominator={+e.split('/')[1]}
+                    textStyle={answerStyle}
+                  />
+                )}
+              </TouchableOpacity>
+            );
+          }
           return (
             <TouchableOpacity
               key={i}

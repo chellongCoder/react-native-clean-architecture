@@ -1,4 +1,4 @@
-import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {StyleSheet, Text, View} from 'react-native';
 import React, {
   forwardRef,
   useCallback,
@@ -19,7 +19,6 @@ import {
   darkenColor,
   getCorrectAnswer,
   isMMSS,
-  isSubArray,
   WIDTH_SCREEN,
 } from 'src/core/presentation/utils';
 import {scale, verticalScale} from 'react-native-size-matters';
@@ -178,12 +177,6 @@ const Science_SG6M3 = observer(
           // Check if the component is focused
           const firstTimeout = setTimeout(() => {
             onSpeechText();
-
-            const secondTimeout = setTimeout(() => {
-              onSpeechText();
-            }, 2500);
-
-            return () => clearTimeout(secondTimeout);
           }, 1500);
 
           return () => clearTimeout(firstTimeout);

@@ -5,7 +5,7 @@ import {COLORS} from 'src/core/presentation/constants/colors';
 import {FontFamily} from 'src/core/presentation/hooks/useFonts';
 
 type Props = {
-  whole: number;
+  whole?: number;
   numerator: number;
   denominator: number;
   textStyle?: StyleProp<TextStyle>;
@@ -35,13 +35,16 @@ const TextFraction = ({whole, numerator, denominator, textStyle}: Props) => {
 
   return (
     <View style={styles.container}>
-      {whole > 0 && (
+      {whole && whole > 0 && (
         <View style={styles.wholeContainer}>
           <Text style={[styles.whole, textStyle]}>{whole}</Text>
         </View>
       )}
       <View
-        style={[styles.fraction, {marginLeft: whole > 0 ? fontSize * 0.2 : 0}]}>
+        style={[
+          styles.fraction,
+          {marginLeft: whole && whole > 0 ? fontSize * 0.2 : 0},
+        ]}>
         <Text style={[styles.numerator, textStyle]}>{numerator}</Text>
         <View
           style={[
@@ -64,7 +67,7 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
     alignItems: 'center',
-    minHeight: 20,
+    justifyContent: 'center',
   },
   wholeContainer: {
     justifyContent: 'center',

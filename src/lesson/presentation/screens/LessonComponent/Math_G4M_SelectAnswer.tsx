@@ -39,6 +39,7 @@ import {CharScrambleRep} from '../../components/CharScramble';
 import {useI18n} from 'src/core/presentation/hooks/useI18n';
 import VoiceButton from '../../components/VoiceButton';
 import LearningImage from '../../components/LearningImage';
+import TextHighlight from '../../components/TextHighlight';
 
 type Props = {
   moduleIndex: number;
@@ -247,20 +248,6 @@ const Math_G4M_SelectAnswer = observer(
                   }}
                 />
               )}
-              {/* <Text
-                numberOfLines={2}
-                adjustsFontSizeToFit
-                allowFontScaling
-                style={[
-                  styles.fonts_NeuzeitBold,
-                  styles.textQuestion,
-                  {
-                    color: settings.backgroundButtonColor,
-                    maxWidth: WIDTH_SCREEN / 1.2,
-                  },
-                ]}>
-                {firstMiniTestTask?.question?.[moduleIndex].description}
-              </Text> */}
             </>
           }
           characterStyle={
@@ -297,6 +284,21 @@ const Math_G4M_SelectAnswer = observer(
                 answer={
                   (firstMiniTestTask?.question?.[moduleIndex]
                     .answers as string[]) ?? []
+                }
+                question={
+                  <TextHighlight
+                    style={[
+                      styles.textQuestion,
+                      {color: settings.backgroundButtonColor},
+                    ]}
+                    content={
+                      firstMiniTestTask?.question?.[moduleIndex].content ?? ''
+                    }
+                    description={
+                      firstMiniTestTask?.question?.[moduleIndex].description ??
+                      ''
+                    }
+                  />
                 }
                 answerStyle={{
                   fontSize: scale(24),
@@ -341,14 +343,13 @@ const styles = StyleSheet.create({
   fonts_NeuzeitBold: {
     fontFamily: FontFamily.SVNNeuzeitBold,
   },
-  textColor: {
-    color: COLORS.GREEN_DDF598,
-  },
   textQuestion: {
     fontSize: verticalScale(32),
-    textAlign: 'left',
-    color: COLORS.BLUE_258F78,
-    alignSelf: 'center',
+    textAlign: 'center',
+    fontFamily: FontFamily.SVNCherishMoment,
+  },
+  textColor: {
+    color: COLORS.GREEN_DDF598,
   },
 
   center: {

@@ -199,7 +199,8 @@ const ListLesson = () => {
         windowSize={1}
         horizontal={true}
         firstItem={slideIndex}
-        onSnapToItem={(slideIndex: number) => {
+        lockScrollWhileSnapping
+        onSnapToItem={(index: number) => {
           console.log(
             '🛠 LOG: 🚀 --> -----------------------------------------------------🛠 LOG: 🚀 -->',
           );
@@ -207,8 +208,8 @@ const ListLesson = () => {
           console.log(
             '🛠 LOG: 🚀 --> -----------------------------------------------------🛠 LOG: 🚀 -->',
           );
-          setSubjectId(data[slideIndex]?._id);
-          changeSpeakLanguage(slideIndex);
+          setSubjectId(data[index]?._id);
+          changeSpeakLanguage(index);
         }}
       />
 

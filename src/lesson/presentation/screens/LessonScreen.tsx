@@ -148,6 +148,20 @@ export enum MathQuestionType {
   MathMG5M16 = 'MATH_MG5M16',
   MathMG5M18 = 'MATH_MG5M18',
 
+  MathMG6M1 = 'MATH_MG6M1',
+  MathMG6M2 = 'MATH_MG6M2',
+  MathMG6M3 = 'MATH_MG6M3',
+  MathMG6M4 = 'MATH_MG6M4',
+  MathMG6M5 = 'MATH_MG6M5',
+  MathMG6M6 = 'MATH_MG6M6',
+  MathMG6M7 = 'MATH_MG6M7',
+  MathMG6M8 = 'MATH_MG6M8',
+  MathMG6M9 = 'MATH_MG6M9',
+  MathMG6M10 = 'MATH_MG6M10',
+  MathMG6M11 = 'MATH_MG6M11',
+  MathMG6M12 = 'MATH_MG6M12',
+  MathMG6M13 = 'MATH_MG6M13',
+  MathMG6M14 = 'MATH_MG6M14',
   MathMG6M15 = 'MATH_MG6M15',
 }
 
@@ -474,11 +488,8 @@ const LessonScreen = observer(() => {
             {
               totalResult,
               andieImage:
-                item.status === 'completed'
-                  ? env.IMAGE_BACKGROUND_BASE_API_URL +
-                    lessonSetting?.figureSuccessImage
-                  : env.IMAGE_BACKGROUND_BASE_API_URL +
-                    lessonSetting?.figureFailImage,
+                env.IMAGE_BACKGROUND_BASE_API_URL +
+                lessonSetting?.figureSuccessImage,
               backgroundAndie:
                 env.IMAGE_BACKGROUND_BASE_API_URL +
                 lessonSetting?.backgroundImage,
@@ -502,7 +513,6 @@ const LessonScreen = observer(() => {
       i18n,
       lessonIndex,
       lessonSetting?.backgroundImage,
-      lessonSetting?.figureFailImage,
       lessonSetting?.figureSuccessImage,
       lessonState.result,
       playSound,
@@ -1338,15 +1348,14 @@ const LessonScreen = observer(() => {
       case MathQuestionType.MathMG4M18:
       case MathQuestionType.MathMG4M21:
       case MathQuestionType.MathMG4M22:
-        return <Math_G4M_SelectAnswer {...dataProps} ref={vowelRef} />;
-      case MathQuestionType.MathMG5M8:
         return (
-          <Math_MG3_KeyboardNumber
+          <Math_G4M_SelectAnswer
+            characterStyle={characterStyle}
             {...dataProps}
             ref={vowelRef}
-            isMulti={true}
           />
         );
+
       case MathQuestionType.MathMG4M23:
       case MathQuestionType.MathMG4M24:
       case MathQuestionType.MathMG4M25:
@@ -1360,22 +1369,30 @@ const LessonScreen = observer(() => {
             answer={['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '.']}
           />
         );
+      case MathQuestionType.MathMG5M8:
       case MathQuestionType.MathMG5M12:
+      case MathQuestionType.MathMG5M13:
+      case MathQuestionType.MathMG5M14:
+      case MathQuestionType.MathMG5M15:
+      case MathQuestionType.MathMG5M16:
+      case MathQuestionType.MathMG5M18:
         return (
           <Math_MG3_KeyboardNumber
             {...dataProps}
             ref={vowelRef}
             isMulti={true}
+            characterStyle={characterStyle}
             answer={['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '.']}
           />
         );
-      case MathQuestionType.MathMG5M13:
+      case MathQuestionType.MathMG5M9:
+      case MathQuestionType.MathMG5M10:
+      case MathQuestionType.MathMG5M11:
         return (
-          <Math_MG3_KeyboardNumber
+          <Math_G4M_SelectAnswer
+            characterStyle={characterStyle}
             {...dataProps}
             ref={vowelRef}
-            isMulti={true}
-            answer={['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '.']}
           />
         );
       case MathQuestionType.MathMG5M18:
@@ -1387,26 +1404,34 @@ const LessonScreen = observer(() => {
             answer={['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '.']}
           />
         );
+
+      case MathQuestionType.MathMG6M1:
+      case MathQuestionType.MathMG6M2:
+      case MathQuestionType.MathMG6M3:
+      case MathQuestionType.MathMG6M4:
+      case MathQuestionType.MathMG6M6:
+      case MathQuestionType.MathMG6M7:
+
+      case MathQuestionType.MathMG6M9:
+      case MathQuestionType.MathMG6M10:
+      case MathQuestionType.MathMG6M11:
+      case MathQuestionType.MathMG6M12:
+      case MathQuestionType.MathMG6M13:
+      case MathQuestionType.MathMG6M14:
+        return <Math_G4M_SelectAnswer {...dataProps} ref={vowelRef} />;
+      case MathQuestionType.MathMG6M8:
+        return (
+          <Math_MG3_KeyboardNumber
+            {...dataProps}
+            ref={vowelRef}
+            isMulti={true}
+            answer={['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '.']}
+          />
+        );
       case MathQuestionType.MathMG6M15:
         return (
           <Math_MG6M15
-            moduleIndex={lessonIndex}
-            nextModule={nextModule}
-            totalModule={testTask?.question.length ?? 0}
-            lessonName={route.lessonName}
-            moduleName={route.moduleName}
-            firstMiniTestTask={testTask}
-            backgroundImage={
-              env.IMAGE_BACKGROUND_BASE_API_URL + lessonSetting?.backgroundImage
-            }
-            characterImageSuccess={
-              env.IMAGE_BACKGROUND_BASE_API_URL +
-              lessonSetting?.figureSuccessImage
-            }
-            characterImageFail={
-              env.IMAGE_BACKGROUND_BASE_API_URL + lessonSetting?.figureFailImage
-            }
-            ref={vowelRef}
+            {...dataProps}
             isMulti={true}
             answer={['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '.']}
           />
