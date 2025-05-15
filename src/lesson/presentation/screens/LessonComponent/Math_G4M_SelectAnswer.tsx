@@ -15,7 +15,11 @@ import {FontFamily} from 'src/core/presentation/hooks/useFonts';
 import useGlobalStyle from 'src/core/presentation/hooks/useGlobalStyle';
 import {Task} from 'src/home/application/types/GetListQuestionResponse';
 import {COLORS} from 'src/core/presentation/constants/colors';
-import {getCorrectAnswer, isMMSS} from 'src/core/presentation/utils';
+import {
+  getCorrectAnswer,
+  isMMSS,
+  WIDTH_SCREEN,
+} from 'src/core/presentation/utils';
 import {scale, verticalScale} from 'react-native-size-matters';
 import Animated, {
   Easing,
@@ -38,7 +42,6 @@ import SelectionAnswersQuestion, {
 import {CharScrambleRep} from '../../components/CharScramble';
 import {useI18n} from 'src/core/presentation/hooks/useI18n';
 import VoiceButton from '../../components/VoiceButton';
-import LearningImage from '../../components/LearningImage';
 import TextHighlight from '../../components/TextHighlight';
 
 type Props = {
@@ -67,7 +70,6 @@ const Math_G4M_SelectAnswer = observer(
         backgroundImage,
         characterImageSuccess,
         characterImageFail,
-        characterStyle,
       },
       ref,
     ) => {
@@ -118,11 +120,21 @@ const Math_G4M_SelectAnswer = observer(
         () => getSetting(lessonSetting),
         [getSetting, lessonSetting],
       );
+
       const characterImage = useMemo(() => {
         return isAnswerCorrect === true || isAnswerCorrect === undefined
           ? characterImageSuccess
           : characterImageFail;
       }, [characterImageFail, characterImageSuccess, isAnswerCorrect]);
+
+      const isShowVoiceButton = useMemo(() => {
+        const instruction =
+          firstMiniTestTask?.question?.[moduleIndex]?.instruction;
+        return (
+          (typeof instruction === 'string' && instruction !== '') ||
+          (typeof instruction === 'object' && instruction?.description !== '')
+        );
+      }, [firstMiniTestTask?.question, moduleIndex]);
 
       const onSpeechText = useCallback(() => {
         if (
@@ -193,10 +205,7 @@ const Math_G4M_SelectAnswer = observer(
           );
         },
       }));
-      console.log(
-        'firstMiniTestTask?.question?.[moduleIndex]: ',
-        firstMiniTestTask?.question?.[moduleIndex],
-      );
+
       return (
         <LessonComponent
           backgroundImage={backgroundImage}
@@ -220,42 +229,19 @@ const Math_G4M_SelectAnswer = observer(
           isShowCorrectContainer={isShowCorrectContainer}
           onPressFlower={toggleShowHint}
           buildQuestion={
-            <>
-              {typeof firstMiniTestTask?.question?.[moduleIndex].image ===
-              'string' ? (
-                <View>
-                  <Animated.Image
-                    resizeMode={'contain'}
-                    width={scale(150)}
-                    height={scale(150)}
-                    style={[animatedStyle]}
-                    source={{
-                      uri:
-                        env.IMAGE_QUESTION_BASE_API_URL +
-                        firstMiniTestTask?.question?.[moduleIndex].image,
-                    }}
-                  />
-                </View>
-              ) : (
-                <LearningImage
-                  images={
-                    firstMiniTestTask?.question?.[moduleIndex].image as string[]
-                  }
-                  styleContainer={{
-                    width: scale(150),
-                    aspectRatio: 1.5,
-                    borderWidth: 0,
-                  }}
-                />
-              )}
-            </>
-          }
-          characterStyle={
-            characterStyle ?? {
-              height: verticalScale(300),
-              marginBottom: -verticalScale(130),
-              marginLeft: -scale(40),
-            }
+            <View>
+              <Animated.Image
+                resizeMode={'contain'}
+                width={WIDTH_SCREEN}
+                height={scale(180)}
+                style={[{}, animatedStyle]}
+                source={{
+                  uri:
+                    env.IMAGE_QUESTION_BASE_API_URL +
+                    firstMiniTestTask?.question?.[moduleIndex].image,
+                }}
+              />
+            </View>
           }
           buildAnswer={
             <View style={styles.fill}>
@@ -275,10 +261,7 @@ const Math_G4M_SelectAnswer = observer(
                   </Text>
                 </View>
 
-                {firstMiniTestTask?.question?.[moduleIndex]?.instruction
-                  ?.description ? (
-                  <VoiceButton onPress={onSpeechText} />
-                ) : null}
+                {isShowVoiceButton && <VoiceButton onPress={onSpeechText} />}
               </View>
               <SelectionAnswersQuestion
                 answer={

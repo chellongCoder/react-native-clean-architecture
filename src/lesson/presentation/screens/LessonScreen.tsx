@@ -109,7 +109,6 @@ export enum MathQuestionType {
   MathMG0M1 = 'MATH_MG0M1',
   MathMG0M2 = 'MATH_MG0M2',
   MathMG0M3 = 'MATH_MG0M3',
-  MathMG1M3 = 'MATH_MG1M3',
 
   MathMG2M1 = 'MATH_MG2M1',
   MathMG2M2 = 'MATH_MG2M2',
@@ -131,6 +130,25 @@ export enum MathQuestionType {
   MathMG2M18 = 'MATH_MG2M18',
   MathMG2M19 = 'MATH_MG2M19',
   MathMG2M20 = 'MATH_MG2M20',
+
+  MathMG1M1 = 'MATH_MG1M1',
+  MathMG1M2 = 'MATH_MG1M2',
+  MathMG1M3 = 'MATH_MG1M3',
+  MathMG1M4 = 'MATH_MG1M4',
+  MathMG1M5 = 'MATH_MG1M5',
+  MathMG1M6 = 'MATH_MG1M6',
+  MathMG1M7 = 'MATH_MG1M7',
+  MathMG1M8 = 'MATH_MG1M8',
+  MathMG1M9 = 'MATH_MG1M9',
+  MathMG1M10 = 'MATH_MG1M10',
+  MathMG1M11 = 'MATH_MG1M11',
+  MathMG1M12 = 'MATH_MG1M12',
+  MathMG1M13 = 'MATH_MG1M13',
+  MathMG1M14 = 'MATH_MG1M14',
+  MathMG1M15 = 'MATH_MG1M15',
+  MathMG1M16 = 'MATH_MG1M16',
+  MathMG1M17 = 'MATH_MG1M17',
+  MathMG1M18 = 'MATH_MG1M18',
 
   MathMG3M6 = 'MATH_MG3M6',
   MathMG3M7 = 'MATH_MG3M7',
@@ -1305,6 +1323,24 @@ const LessonScreen = observer(() => {
             answer={['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']}
           />
         );
+      case MathQuestionType.MathMG1M1:
+      case MathQuestionType.MathMG1M2:
+      case MathQuestionType.MathMG1M4:
+      case MathQuestionType.MathMG1M5:
+      case MathQuestionType.MathMG1M6:
+      case MathQuestionType.MathMG1M7:
+      case MathQuestionType.MathMG1M8:
+      case MathQuestionType.MathMG1M9:
+      case MathQuestionType.MathMG1M10:
+      case MathQuestionType.MathMG1M11:
+      case MathQuestionType.MathMG1M12:
+      case MathQuestionType.MathMG1M13:
+      case MathQuestionType.MathMG1M14:
+      case MathQuestionType.MathMG1M15:
+      case MathQuestionType.MathMG1M16:
+      case MathQuestionType.MathMG1M17:
+      case MathQuestionType.MathMG1M18:
+        return <Math_G4M_SelectAnswer {...dataProps} ref={vowelRef} />;
       case MathQuestionType.MathMG1M3:
         return testTask?.stt === 4 ? ( // * check xem có phải part 4 không
           <Math_MG1M3_P4

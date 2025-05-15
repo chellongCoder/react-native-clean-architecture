@@ -116,6 +116,7 @@ const Mandarin_G4M_DrawCharacter = forwardRef<
           setAnswerSelected('');
           nextModule(answerSelected);
           setIscorrect(false);
+          setStatusCharacter([]);
         },
         fullAnswer: firstMiniTestTask?.question?.[moduleIndex].fullAnswer,
         totalTime: 5 * 60, // * tổng time làm 1câu
