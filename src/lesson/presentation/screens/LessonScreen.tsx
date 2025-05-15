@@ -103,13 +103,34 @@ import {verticalScale} from 'react-native-size-matters';
 import Math_MG3_KeyboardNumber from './LessonComponent/Math_MG3_KeyboardNumber';
 import Math_G3M_SelectAnswer from './LessonComponent/Math_G3M_SelectAnswer';
 import Math_G4M_SelectAnswer from './LessonComponent/Math_G4M_SelectAnswer';
+import Math_MG2M11 from './LessonComponent/Math_MG2M11';
 
 export enum MathQuestionType {
   MathMG0M1 = 'MATH_MG0M1',
   MathMG0M2 = 'MATH_MG0M2',
   MathMG0M3 = 'MATH_MG0M3',
   MathMG1M3 = 'MATH_MG1M3',
+
+  MathMG2M1 = 'MATH_MG2M1',
+  MathMG2M2 = 'MATH_MG2M2',
+  MathMG2M3 = 'MATH_MG2M3',
   MathMG2M4 = 'MATH_MG2M4',
+  MathMG2M5 = 'MATH_MG2M5',
+  MathMG2M6 = 'MATH_MG2M6',
+  MathMG2M7 = 'MATH_MG2M7',
+  MathMG2M8 = 'MATH_MG2M8',
+  MathMG2M9 = 'MATH_MG2M9',
+  MathMG2M10 = 'MATH_MG2M10',
+  MathMG2M11 = 'MATH_MG2M11',
+  MathMG2M12 = 'MATH_MG2M12',
+  MathMG2M13 = 'MATH_MG2M13',
+  MathMG2M14 = 'MATH_MG2M14',
+  MathMG2M15 = 'MATH_MG2M15',
+  MathMG2M16 = 'MATH_MG2M16',
+  MathMG2M17 = 'MATH_MG2M17',
+  MathMG2M18 = 'MATH_MG2M18',
+  MathMG2M19 = 'MATH_MG2M19',
+  MathMG2M20 = 'MATH_MG2M20',
 
   MathMG3M6 = 'MATH_MG3M6',
   MathMG3M7 = 'MATH_MG3M7',
@@ -1300,7 +1321,35 @@ const LessonScreen = observer(() => {
             answer={['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']}
           />
         );
+      case MathQuestionType.MathMG2M1:
+      case MathQuestionType.MathMG2M3:
       case MathQuestionType.MathMG2M4:
+      case MathQuestionType.MathMG2M5:
+      case MathQuestionType.MathMG2M6:
+      case MathQuestionType.MathMG2M9:
+      case MathQuestionType.MathMG2M10:
+      case MathQuestionType.MathMG2M12:
+        return <Math_G3M_SelectAnswer {...dataProps} ref={vowelRef} />;
+      case MathQuestionType.MathMG2M2:
+      case MathQuestionType.MathMG2M7:
+        return <Math_MG2M4 {...dataProps} ref={vowelRef} isMulti={false} />;
+      case MathQuestionType.MathMG2M8:
+      case MathQuestionType.MathMG2M13:
+      case MathQuestionType.MathMG2M14:
+        return (
+          <Math_G4M_SelectAnswer
+            characterStyle={characterStyle}
+            {...dataProps}
+            ref={vowelRef}
+          />
+        );
+      case MathQuestionType.MathMG2M11:
+        return <Math_MG2M11 {...dataProps} ref={vowelRef} />;
+      case MathQuestionType.MathMG2M4:
+      case MathQuestionType.MathMG2M15:
+      case MathQuestionType.MathMG2M16:
+      case MathQuestionType.MathMG2M19:
+      case MathQuestionType.MathMG2M20:
         return (
           <Math_MG2M4
             {...dataProps}
