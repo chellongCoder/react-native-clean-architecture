@@ -17,9 +17,9 @@ import LoadingItem from 'src/lesson/presentation/components/Loading/LoadingItem'
 const screenWidth = Dimensions.get('screen').width;
 
 const ListModule = observer(() => {
-  const {selectedSubject, modules} = useListModule();
+  const {selectedSubject, modules, isLoading} = useListModule();
 
-  const {listSubject, subjectId, listModule, isLoading} = useHomeStore();
+  const {listSubject, subjectId, listModule} = useHomeStore();
 
   const totalQuestions = listModule?.reduce(
     (acc, item) => acc + item.totalQuestion,

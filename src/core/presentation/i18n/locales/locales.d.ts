@@ -89,6 +89,7 @@ type GenericLocale = {
   'popup.TrialModule': string;
   'popup.TrialModule.title': string;
   'popup.TrialModule.description': string;
+  'popup.TrialModule.description2': string;
   'popup.TrialModule.start': string;
   'popup.TrialModule.notReady': string;
   'popup.ForceUpdateApp': string;

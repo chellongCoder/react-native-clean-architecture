@@ -99,7 +99,9 @@ export default {
     TrialModule: {
       title: 'Bắt đầu chương trình trải nghiệm!!',
       description:
-        'Bạn có 3 ngày để trải nghiệm phiên bản này. Sau 2 tuần, bạn sẽ không thể tiếp tục làm bài tập. Để tiếp tục quá trình, bạn cần dùng kim cương để mở khoá các bài học.',
+        'Bạn có 3 ngày để trải nghiệm phiên bản này. Sau 3 ngày, bạn sẽ không thể tiếp tục làm bài tập. Để tiếp tục quá trình, bạn cần dùng kim cương để mở khoá các bài học.',
+      description2:
+        'Sau 3 ngày, bạn sẽ không thể tiếp tục làm bài tập. Để tiếp tục quá trình, bạn cần dùng kim cương để mở khoá các bài học.',
       start: 'Bắt đầu',
       notReady: 'Chưa sẵn sàng',
     },

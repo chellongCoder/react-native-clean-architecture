@@ -174,38 +174,6 @@ const VnG1M5Lesson = observer(
         });
       }, [moduleIndex, opacity, scaleS]);
 
-      useEffect(() => {
-        Tts.voices().then(voices => {
-          if (lessonName.toLocaleLowerCase().includes('english')) {
-            const engVoice = voices.find(
-              voice => voice.language === listLanguage['US English'],
-            );
-            updateDefaultVoice?.(
-              isAndroid ? engVoice?.id : iosVoice[3].id,
-              'US English',
-            );
-          } else if (lessonName.toLocaleLowerCase().includes('mandarin')) {
-            const engVoice = voices.find(
-              voice =>
-                voice.language ===
-                listLanguage['Mainland China, simplified characters'],
-            );
-            updateDefaultVoice?.(
-              engVoice?.id,
-              'Mainland China, simplified characters',
-            );
-          } else if (lessonName.toLocaleLowerCase().includes('tiếng việt')) {
-            const vietnameseVoices = voices.filter(
-              voice =>
-                voice.language.startsWith('vi-') ||
-                voice.name.toLowerCase().includes('vietnamese'),
-            );
-
-            updateDefaultVoice?.(vietnameseVoices[0]?.id, 'Vie (Vietnamese)');
-          }
-        });
-      }, [lessonName, updateDefaultVoice]);
-
       const animatedStyle = useAnimatedStyle(() => {
         return {
           opacity: opacity.value,

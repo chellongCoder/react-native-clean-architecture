@@ -131,7 +131,7 @@ const SelectionAnswersQuestion: ForwardRefRenderFunction<
                     minHeight,
                     backgroundColor: bg,
                     width: size,
-                    margin: scale(8), // Add spacing for clarity
+                    margin: scale(4), // Add spacing for clarity
                   },
                 ]}>
                 {contentAnswer?.(e) ?? (
@@ -154,7 +154,7 @@ const SelectionAnswersQuestion: ForwardRefRenderFunction<
                   minHeight,
                   backgroundColor: bg,
                   width: size,
-                  margin: scale(8), // Add spacing for clarity
+                  margin: scale(4), // Add spacing for clarity
                 },
               ]}>
               {contentAnswer?.(e) ?? (

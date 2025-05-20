@@ -73,9 +73,7 @@ const TrialModulePopup: React.FC<TrialModulePopupProps> = ({
             {i18n.t('popup.TrialModule.description')}
           </Text>
           <Text style={styles.description}>
-            {
-              'Sau 2 tuần, bạn sẽ không thể tiếp tục làm bài tập. Để tiếp tục quá trình, bạn cần dùng kim cương để mở khoá các bài học.'
-            }
+            {i18n.t('popup.TrialModule.description2')}
           </Text>
         </View>
         <View style={styles.ctnButton}>
@@ -125,7 +123,7 @@ const styles = StyleSheet.create({
     zIndex: 999,
     position: 'absolute',
     alignSelf: 'center',
-    top: '35%',
+    top: '20%',
     alignItems: 'center',
   },
   wrapContentContainer: {

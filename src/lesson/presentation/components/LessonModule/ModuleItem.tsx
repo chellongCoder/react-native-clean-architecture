@@ -40,6 +40,18 @@ const ModuleItem = observer((props: ModuleItemProps) => {
   const lessonStore = useLessonStore();
   const [trialStatus, setTrialStatus] = useState<string>();
 
+  console.log(
+    '🛠 LOG: 🚀 --> ---------------------------------------------------------------------------🛠 LOG: 🚀 -->',
+  );
+  console.log(
+    '🛠 LOG: 🚀 --> ~ isLocked ~ lessonStore.userModule:',
+    lessonStore.userModule,
+    trialStatus,
+  );
+  console.log(
+    '🛠 LOG: 🚀 --> ---------------------------------------------------------------------------🛠 LOG: 🚀 -->',
+  );
+
   const isLocked = useMemo(() => {
     return (
       trialStatus === 'end_trial' &&

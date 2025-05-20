@@ -119,8 +119,6 @@ const VnG1M2Lesson = forwardRef<LessonRef, Props>(
       return firstMiniTestTask?.question?.[moduleIndex].image as string[];
     }, [firstMiniTestTask?.question, moduleIndex]);
 
-    const answerType = firstMiniTestTask?.question?.[moduleIndex].answerType;
-
     const isDrawerType = useMemo(() => {
       return true;
     }, []);
@@ -141,18 +139,14 @@ const VnG1M2Lesson = forwardRef<LessonRef, Props>(
         // Check if the component is focused
         const firstTimeout = setTimeout(() => {
           onSpeechText(
-            getCorrectAnswer(
-              firstMiniTestTask?.type !== 'mini_test'
-                ? firstMiniTestTask?.question?.[moduleIndex].content
-                : firstMiniTestTask?.question?.[moduleIndex].correctAnswer,
-            ),
+            firstMiniTestTask?.question?.[moduleIndex]?.instruction
+              ?.description ?? '',
           );
 
           const secondTimeout = setTimeout(() => {
             onSpeechText(
-              getCorrectAnswer(
-                firstMiniTestTask?.question?.[moduleIndex].fullAnswer,
-              ),
+              firstMiniTestTask?.question?.[moduleIndex]?.instruction
+                ?.description ?? '',
             );
           }, 2500);
 
@@ -229,7 +223,9 @@ const VnG1M2Lesson = forwardRef<LessonRef, Props>(
         .then(data => {
           const char = data.data?.data ?? '';
           const charAnswer = getDataString(
-            firstMiniTestTask?.question?.[moduleIndex].correctAnswer?.trim(),
+            (
+              firstMiniTestTask?.question?.[moduleIndex].correctAnswer as string
+            )?.trim(),
           );
           console.log('imageToText', data, char, charAnswer);
           const charLowerCase = char?.toLocaleLowerCase();

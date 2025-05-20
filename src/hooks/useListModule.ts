@@ -13,11 +13,13 @@ export const useListModule = () => {
   const i18n = useI18n();
 
   const [modules, setModules] = useState<Module[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
   const authStore = useAuthenStore();
 
   useEffect(() => {
     if (authStore.selectedChild?._id && homeStore.subjectId) {
       globalLoading.toggleLoading(true, 'listModule');
+      setIsLoading(true);
       homeStore
         .getListModules({
           subjectId: homeStore.subjectId,
@@ -43,6 +45,7 @@ export const useListModule = () => {
         })
         .finally(() => {
           globalLoading.toggleLoading(false, 'listModule');
+          setIsLoading(false);
         });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -53,5 +56,6 @@ export const useListModule = () => {
     selectedSubject: homeStore.listSubject.find(
       subject => subject._id === homeStore.subjectId,
     ),
+    isLoading,
   };
 };
