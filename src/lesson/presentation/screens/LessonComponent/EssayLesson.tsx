@@ -1,4 +1,4 @@
-import {StyleSheet, Text, View} from 'react-native';
+import {StyleProp, StyleSheet, Text, View, ViewStyle} from 'react-native';
 import React, {
   forwardRef,
   useCallback,
@@ -45,6 +45,7 @@ type Props = {
   backgroundImage?: string;
   characterImageSuccess?: string;
   characterImageFail?: string;
+  characterStyle?: StyleProp<ViewStyle>;
 };
 
 const EssayLesson = observer(
@@ -60,6 +61,7 @@ const EssayLesson = observer(
         backgroundImage,
         characterImageSuccess,
         characterImageFail,
+        characterStyle,
       }: Props,
       ref: React.Ref<any>,
     ) => {
@@ -106,7 +108,7 @@ const EssayLesson = observer(
 
       const onSpeechText = useCallback(() => {
         ttsSpeak?.(
-          firstMiniTestTask?.question?.[moduleIndex].fullAnswer
+          firstMiniTestTask?.question?.[moduleIndex].correctAnswer
             .toString()
             .toLowerCase() ?? '',
         );
@@ -198,6 +200,7 @@ const EssayLesson = observer(
               />
             </View>
           }
+          characterStyle={characterStyle}
           buildAnswer={
             <View style={styles.fill}>
               <View style={styles.wrapHeaderContainer}>

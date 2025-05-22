@@ -8,6 +8,7 @@ import {View, Text, TouchableOpacity, StyleSheet} from 'react-native';
 import {scale, verticalScale} from 'react-native-size-matters';
 import {COLORS} from 'src/core/presentation/constants/colors';
 import {FontFamily} from 'src/core/presentation/hooks/useFonts';
+import useGlobalStyle from 'src/core/presentation/hooks/useGlobalStyle';
 import {WIDTH_SCREEN} from 'src/core/presentation/utils';
 
 interface SelectionAnswersQuestionProps {
@@ -44,6 +45,7 @@ const KeyboardNumber: ForwardRefRenderFunction<
   } = props;
 
   const [answerSelected, setAnswerSelected] = useState<string[]>([]);
+  const globalStyle = useGlobalStyle();
 
   useImperativeHandle(ref, () => ({
     getSelectedAnswers: () => answerSelected,
@@ -78,7 +80,17 @@ const KeyboardNumber: ForwardRefRenderFunction<
 
   return (
     <View style={[styles.boxSelected]}>
-      <View style={styles.wrapCharContainer}>{question}</View>
+      <View style={styles.wrapCharContainer}>
+        {question}
+        <TouchableOpacity
+          style={styles.deleteContainer}
+          onPress={() => {
+            setAnswerSelected([]);
+            onSelectAnswer([]);
+          }}>
+          <Text style={globalStyle.txtModule}>␡</Text>
+        </TouchableOpacity>
+      </View>
       <View style={[styles.wapper, {width: '100%'}]}>
         {answer?.map((e, i) => {
           const bg =
@@ -150,6 +162,7 @@ const styles = StyleSheet.create({
   wrapCharContainer: {
     // Add your styles here
     flexDirection: 'row',
+    alignItems: 'center',
   },
   fonts_SVN_Neu: {
     // Add your styles here
@@ -197,6 +210,9 @@ const styles = StyleSheet.create({
     color: '#FBF8CC',
     fontSize: verticalScale(20),
     flexWrap: 'wrap',
+  },
+  deleteContainer: {
+    padding: scale(8),
   },
 });
 

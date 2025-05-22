@@ -205,7 +205,15 @@ export enum MathQuestionType {
 }
 
 export enum LanguageE {
+  ENGLISH_EG1M1 = 'ENGLISH_EG1M1',
+  ENGLISH_EG1M2 = 'ENGLISH_EG1M2',
   ENGLISH_EG1M3 = 'ENGLISH_EG1M3',
+  ENGLISH_EG1M4 = 'ENGLISH_EG1M4',
+  ENGLISH_EG1M5 = 'ENGLISH_EG1M5',
+  ENGLISH_EG1M6 = 'ENGLISH_EG1M6',
+  ENGLISH_EG1M7 = 'ENGLISH_EG1M7',
+  ENGLISH_EG1M8 = 'ENGLISH_EG1M8',
+
   ENGLISHG2M12 = 'ENGLISHG2M12',
   ENGLISH_G3M20 = 'ENGLISH_G3M20',
   ENGLISH_EG4M23 = 'ENGLISH_G4M23',
@@ -325,15 +333,15 @@ export enum LanguageE {
   VIETNAMESE_VNG0M2 = 'VIETNAMESE_VNG0M2',
   VIETNAMESE_VNG0M3 = 'VIETNAMESE_VNG0M3',
   VIETNAMESE_VNG1M1 = 'VIETNAMESE_VNG1M1',
+  VIETNAMESE_VNG1M2 = 'VIETNAMESE_VNG1M2',
   VIETNAMESE_VNG1M3 = 'VIETNAMESE_VNG1M3',
   VIETNAMESE_VNG1M4 = 'VIETNAMESE_VNG1M4',
   VIETNAMESE_VNG1M5 = 'VIETNAMESE_VNG1M5',
+  VIETNAMESE_VNG1M6 = 'VIETNAMESE_VNG1M6',
   VIETNAMESE_VNG1M7 = 'VIETNAMESE_VNG1M7',
   VIETNAMESE_VNG1M8 = 'VIETNAMESE_VNG1M8',
   VIETNAMESE_VNG1M9 = 'VIETNAMESE_VNG1M9',
   VIETNAMESE_VNG1M10 = 'VIETNAMESE_VNG1M10',
-  VIETNAMESE_VNG1M2 = 'VIETNAMESE_VNG1M2',
-  VIETNAMESE_VNG1M6 = 'VIETNAMESE_VNG1M6',
 
   VIETNAMESE_VNG2M1 = 'VIETNAMESE_VNG2M1',
   VIETNAMESE_VNG2M2 = 'VIETNAMESE_VNG2M2',
@@ -461,7 +469,7 @@ const LessonScreen = observer(() => {
 
   const tasks = useMemo(() => {
     return __DEV__
-      ? apiTasks.map(t => {
+      ? apiTasks.slice(apiTasks.length - 1, apiTasks.length).map(t => {
           return {
             ...t,
             // question: t.question.slice(0, 1),
@@ -912,8 +920,21 @@ const LessonScreen = observer(() => {
             ref={vowelRef}
           />
         );
+      case LanguageE.ENGLISH_EG1M1:
+      case LanguageE.ENGLISH_EG1M2:
       case LanguageE.ENGLISH_EG1M3:
-        return <EssayLesson {...dataProps} ref={vowelRef} />;
+      case LanguageE.ENGLISH_EG1M4:
+      case LanguageE.ENGLISH_EG1M5:
+      case LanguageE.ENGLISH_EG1M6:
+      case LanguageE.ENGLISH_EG1M7:
+      case LanguageE.ENGLISH_EG1M8:
+        return (
+          <EssayLesson
+            characterStyle={characterStyle}
+            {...dataProps}
+            ref={vowelRef}
+          />
+        );
       case LanguageE.ENGLISH_EG1M3:
         return <VowelsLesson {...dataProps} ref={vowelRef} />;
 
@@ -1496,7 +1517,6 @@ const LessonScreen = observer(() => {
       case MathQuestionType.MathMG6M4:
       case MathQuestionType.MathMG6M6:
       case MathQuestionType.MathMG6M7:
-
       case MathQuestionType.MathMG6M9:
       case MathQuestionType.MathMG6M10:
       case MathQuestionType.MathMG6M11:

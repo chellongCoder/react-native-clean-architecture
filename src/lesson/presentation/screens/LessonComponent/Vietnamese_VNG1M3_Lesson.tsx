@@ -1,5 +1,5 @@
 /* eslint-disable react/no-unstable-nested-components */
-import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {StyleSheet, Text, View} from 'react-native';
 import React, {
   forwardRef,
   useCallback,
@@ -19,7 +19,6 @@ import {Task} from 'src/home/application/types/GetListQuestionResponse';
 import useAuthenticationStore from 'src/authentication/presentation/stores/useAuthenticationStore';
 import {scale, verticalScale} from 'react-native-size-matters';
 import {
-  assets,
   darkenColor,
   getCorrectAnswer,
   isAndroid,
@@ -128,10 +127,8 @@ const VnG1M3Lesson = forwardRef<LessonRef, Props>(
 
     const onSpeechText = useCallback(
       (text: string) => {
-        text.split('/').forEach((answer, index) => {
-          setTimeout(() => {
-            ttsSpeak?.(getCorrectAnswer(answer?.trim()));
-          }, index * 1250);
+        ttsSpeak?.(text.replace(/\//g, '-'), () => {
+          console.log('done');
         });
       },
       [ttsSpeak],
@@ -144,20 +141,12 @@ const VnG1M3Lesson = forwardRef<LessonRef, Props>(
           onSpeechText(
             getCorrectAnswer(
               firstMiniTestTask?.type !== 'mini_test'
-                ? firstMiniTestTask?.question?.[moduleIndex].content
-                : firstMiniTestTask?.question?.[moduleIndex].correctAnswer,
+                ? (firstMiniTestTask?.question?.[moduleIndex]
+                    .description as string)
+                : (firstMiniTestTask?.question?.[moduleIndex]
+                    .description as string),
             ),
           );
-
-          const secondTimeout = setTimeout(() => {
-            onSpeechText(
-              getCorrectAnswer(
-                firstMiniTestTask?.question?.[moduleIndex].fullAnswer,
-              ),
-            );
-          }, 2500);
-
-          return () => clearTimeout(secondTimeout);
         }, 1500);
 
         return () => clearTimeout(firstTimeout);
@@ -337,8 +326,9 @@ const VnG1M3Lesson = forwardRef<LessonRef, Props>(
                   onSpeechText(
                     getCorrectAnswer(
                       firstMiniTestTask?.type === 'mini_test'
-                        ? firstMiniTestTask?.question?.[moduleIndex].fullAnswer
-                        : firstMiniTestTask?.question?.[moduleIndex].content,
+                        ? firstMiniTestTask?.question?.[moduleIndex].description
+                        : firstMiniTestTask?.question?.[moduleIndex]
+                            .description,
                     ),
                   )
                 }

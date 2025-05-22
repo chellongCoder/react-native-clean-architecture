@@ -97,13 +97,6 @@ const SelectionAnswersQuestion: ForwardRefRenderFunction<
       {question && <View style={styles.wrapCharContainer}>{question}</View>}
       <View style={[styles.wapper, {width: '100%'}]}>
         {answer?.map((e, i) => {
-          console.log(
-            '🛠 LOG: 🚀 --> -------------------------------------🛠 LOG: 🚀 -->',
-          );
-          console.log('🛠 LOG: 🚀 --> ~ {answer?.map ~ e:', e, e.includes('/'));
-          console.log(
-            '🛠 LOG: 🚀 --> -------------------------------------🛠 LOG: 🚀 -->',
-          );
           const bg =
             Array.isArray(answerSelected) &&
             answerSelected.includes(e.trim()) &&

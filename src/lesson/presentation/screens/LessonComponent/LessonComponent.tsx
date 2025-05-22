@@ -435,6 +435,11 @@ const styles = StyleSheet.create({
     height: verticalScale(150),
     aspectRatio: 1 / 2,
     marginBottom: -verticalScale(30),
+    shadowColor: '#000',
+    shadowOffset: {width: 0, height: 2},
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
   },
   imageContainer: {
     height: '100%',
