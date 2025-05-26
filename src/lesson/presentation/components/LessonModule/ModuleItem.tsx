@@ -40,38 +40,12 @@ const ModuleItem = observer((props: ModuleItemProps) => {
   const lessonStore = useLessonStore();
   const [trialStatus, setTrialStatus] = useState<string>();
 
-  console.log(
-    '🛠 LOG: 🚀 --> ---------------------------------------------------------------------------🛠 LOG: 🚀 -->',
-  );
-  console.log(
-    '🛠 LOG: 🚀 --> ~ isLocked ~ lessonStore.userModule:',
-    lessonStore.userModule,
-    trialStatus,
-  );
-  console.log(
-    '🛠 LOG: 🚀 --> ---------------------------------------------------------------------------🛠 LOG: 🚀 -->',
-  );
-
   const isLocked = useMemo(() => {
     return (
       trialStatus === 'end_trial' &&
       !lessonStore.userModule?.find(module => module.id === props.id)
     );
   }, [lessonStore.userModule, props.id, trialStatus]);
-
-  console.log(
-    '🛠 LOG: 🚀 --> ---------------------------------------------------------------------------🛠 LOG: 🚀 -->',
-  );
-  console.log(
-    '🛠 LOG: 🚀 --> ~ isLocked ~ lessonStore.userModule:',
-    lessonStore.userModule,
-    props.id,
-    isLocked,
-    trialStatus,
-  );
-  console.log(
-    '🛠 LOG: 🚀 --> ---------------------------------------------------------------------------🛠 LOG: 🚀 -->',
-  );
 
   const gotoLesson = useCallback(() => {
     navigateScreen(STACK_NAVIGATOR.HOME.LESSON, {

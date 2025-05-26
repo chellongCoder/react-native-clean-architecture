@@ -11,6 +11,7 @@ interface ImageCarouselProps {
   styleContainer?: StyleProp<ViewStyle>;
   totalSeconds?: number;
   onChangeIndex?: (index: number) => void;
+  isShowBorder?: boolean;
 }
 
 const LearningImage: React.FC<ImageCarouselProps> = ({
@@ -18,6 +19,7 @@ const LearningImage: React.FC<ImageCarouselProps> = ({
   styleContainer = {},
   totalSeconds = 5,
   onChangeIndex,
+  isShowBorder = true,
 }) => {
   const env = coreModuleContainer.getProvided<Env>(EnvToken); // Instantiate CoreService
 
@@ -44,11 +46,13 @@ const LearningImage: React.FC<ImageCarouselProps> = ({
       activeOpacity={1}
       style={[
         {
-          borderWidth: 5,
-          backgroundColor: COLORS.CUSTOM(COLORS.WHITE_FBF8CC, 0.2),
-          borderStyle: 'dashed',
           width: scale(150),
           aspectRatio: 1,
+        },
+        isShowBorder && {
+          borderWidth: scale(5),
+          backgroundColor: COLORS.CUSTOM(COLORS.WHITE_FBF8CC, 0.2),
+          borderStyle: 'dashed',
           borderRadius: scale(20),
           borderColor: COLORS.YELLOW_F2B559,
           overflow: 'hidden',

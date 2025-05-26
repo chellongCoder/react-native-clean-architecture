@@ -1,5 +1,6 @@
-import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {StyleSheet, Text, View} from 'react-native';
 import React, {
+  forwardRef,
   useCallback,
   useContext,
   useEffect,
@@ -17,7 +18,6 @@ import {Task} from 'src/home/application/types/GetListQuestionResponse';
 import useAuthenticationStore from 'src/authentication/presentation/stores/useAuthenticationStore';
 import {scale, verticalScale} from 'react-native-size-matters';
 import {
-  assets,
   getCorrectAnswer,
   isAndroid,
   splitChineseWithFilter,
@@ -244,7 +244,7 @@ const WriteLesson = ({
   );
 };
 
-export default WriteLesson;
+export default forwardRef(WriteLesson);
 
 const styles = StyleSheet.create({
   fill: {

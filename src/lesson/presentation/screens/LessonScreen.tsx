@@ -40,7 +40,6 @@ import OnBoardingScreen from 'src/core/presentation/screens/OnBoardingScreen';
 import Math_MG2M4 from './LessonComponent/Math_MG2M4';
 import English_EG4M23 from './LessonComponent/English_EG4M23';
 import MultiPronunciationLesson from './LessonComponent/MultiPronunciationLesson';
-import LatinLesson from './LessonComponent/LatinLesson';
 import English_G5M16 from './LessonComponent/English_G5M16';
 import English_G6M26 from './LessonComponent/English_G6M26';
 import English_G3M20 from './LessonComponent/English_G3M20';
@@ -62,7 +61,6 @@ import Science_SG5M5 from './LessonComponent/Science_SG5M5';
 import Science_SG3M9 from './LessonComponent/Science_SG3M9';
 import VnG1M3Lesson from './LessonComponent/Vietnamese_VNG1M3_Lesson';
 import VnG2M8Lesson from './LessonComponent/Vietnamese_G2M8_lesson';
-import VnG3M1Lesson from './LessonComponent/Vietnamese_G3M1_lesson';
 import VnG0M2Lesson from './LessonComponent/Vietnamese_G0M2_lesson';
 import VnG0M3Lesson from './LessonComponent/Vietnamese_G0M3_lesson';
 import VnG0M1Lesson from './LessonComponent/Vietnamese_G0M1_Leson';
@@ -73,11 +71,11 @@ import Math_MG1M3_P4 from './LessonComponent/Math_MG1M3_P4';
 import Science_SG6M3 from './LessonComponent/Science_SG6M3';
 import Math_MG4M16 from './LessonComponent/Math_MG4M16';
 import {useI18n} from 'src/core/presentation/hooks/useI18n';
-import VnG1M4Lesson from './LessonComponent/Vietnamese_VNG1M4_Lesson';
 import VnG4M3Lesson from './LessonComponent/Vietnamese_G4M3_lesson';
 import DragProvider from '../components/Drag/DragProvider';
 import VNG5M1NLesson from './LessonComponent/Vietnamese_G5M1_N_Leson';
-import VnG1M1Lesson from './LessonComponent/Vietnamese_VNG1M1_Lesson';
+import VnG1M1Lesson from './LessonComponent/Vietnamese_SelectAnswer';
+import VnG1M4Lesson from './LessonComponent/Vietnamese_VNG1M4_Lesson';
 import VnG1M5Lesson from './LessonComponent/Vietnamese_VNG1M5_Lesson';
 import VnG1M7Lesson from './LessonComponent/Vietnamese_VNG1M7_Lesson';
 import VnG1M8Lesson from './LessonComponent/Vietnamese_VNG1M8_Lesson';
@@ -86,6 +84,8 @@ import VnG1M10Lesson from './LessonComponent/Vietnamese_VNG1M10_Lesson';
 import VnG1M2Lesson from './LessonComponent/Vietnamese_VNG1M2_Lesson';
 import VnG1M6Lesson from './LessonComponent/Vietnamese_G1M6_lesson';
 import VnG2M1Lesson from './LessonComponent/Vietnamese_VNG2M1_Lesson';
+import VnG2M12Lesson from './LessonComponent/Vietnamese_G2M12_lesson';
+import VnG3M1Lesson from './LessonComponent/Vietnamese_G3M1_lesson';
 import VnG3M2Lesson from './LessonComponent/Vietnamese_G3M2_lesson';
 import VnG3M3Lesson from './LessonComponent/Vietnamese_G3M3_lesson';
 import VnG3M4Lesson from './LessonComponent/Vietnamese_G3M4_lesson';
@@ -94,334 +94,14 @@ import VnG3M6Lesson from './LessonComponent/Vietnamese_G3M6_lesson';
 import VnG3M7Lesson from './LessonComponent/Vietnamese_G3M7_lesson';
 import VnG3M8Lesson from './LessonComponent/Vietnamese_G3M8_lesson';
 import VnG3M10Lesson from './LessonComponent/Vietnamese_G3M10_lesson';
-import VnG2M12Lesson from './LessonComponent/Vietnamese_G2M12_lesson';
 import Mandarin_G4M_DrawCharacter from './LessonComponent/Mandarin_G4M_DrawCharacter';
 import Mandarin_G4M_SelectAnswer from './LessonComponent/Mandarin_G4M_SelectAnswer';
 import Mandarin_G4_Pronunciation from './LessonComponent/Mandarin_G4_Pronunciation';
-import {scale} from 'react-native-size-matters';
-import {verticalScale} from 'react-native-size-matters';
 import Math_MG3_KeyboardNumber from './LessonComponent/Math_MG3_KeyboardNumber';
 import Math_G3M_SelectAnswer from './LessonComponent/Math_G3M_SelectAnswer';
 import Math_G4M_SelectAnswer from './LessonComponent/Math_G4M_SelectAnswer';
 import Math_MG2M11 from './LessonComponent/Math_MG2M11';
-
-export enum MathQuestionType {
-  MathMG0M1 = 'MATH_MG0M1',
-  MathMG0M2 = 'MATH_MG0M2',
-  MathMG0M3 = 'MATH_MG0M3',
-
-  MathMG2M1 = 'MATH_MG2M1',
-  MathMG2M2 = 'MATH_MG2M2',
-  MathMG2M3 = 'MATH_MG2M3',
-  MathMG2M4 = 'MATH_MG2M4',
-  MathMG2M5 = 'MATH_MG2M5',
-  MathMG2M6 = 'MATH_MG2M6',
-  MathMG2M7 = 'MATH_MG2M7',
-  MathMG2M8 = 'MATH_MG2M8',
-  MathMG2M9 = 'MATH_MG2M9',
-  MathMG2M10 = 'MATH_MG2M10',
-  MathMG2M11 = 'MATH_MG2M11',
-  MathMG2M12 = 'MATH_MG2M12',
-  MathMG2M13 = 'MATH_MG2M13',
-  MathMG2M14 = 'MATH_MG2M14',
-  MathMG2M15 = 'MATH_MG2M15',
-  MathMG2M16 = 'MATH_MG2M16',
-  MathMG2M17 = 'MATH_MG2M17',
-  MathMG2M18 = 'MATH_MG2M18',
-  MathMG2M19 = 'MATH_MG2M19',
-  MathMG2M20 = 'MATH_MG2M20',
-
-  MathMG1M1 = 'MATH_MG1M1',
-  MathMG1M2 = 'MATH_MG1M2',
-  MathMG1M3 = 'MATH_MG1M3',
-  MathMG1M4 = 'MATH_MG1M4',
-  MathMG1M5 = 'MATH_MG1M5',
-  MathMG1M6 = 'MATH_MG1M6',
-  MathMG1M7 = 'MATH_MG1M7',
-  MathMG1M8 = 'MATH_MG1M8',
-  MathMG1M9 = 'MATH_MG1M9',
-  MathMG1M10 = 'MATH_MG1M10',
-  MathMG1M11 = 'MATH_MG1M11',
-  MathMG1M12 = 'MATH_MG1M12',
-  MathMG1M13 = 'MATH_MG1M13',
-  MathMG1M14 = 'MATH_MG1M14',
-  MathMG1M15 = 'MATH_MG1M15',
-  MathMG1M16 = 'MATH_MG1M16',
-  MathMG1M17 = 'MATH_MG1M17',
-  MathMG1M18 = 'MATH_MG1M18',
-
-  MathMG3M6 = 'MATH_MG3M6',
-  MathMG3M7 = 'MATH_MG3M7',
-  MathMG3M8 = 'MATH_MG3M8',
-  MathMG3M9 = 'MATH_MG3M9',
-  MathMG3M10 = 'MATH_MG3M10',
-  MathMG3M11 = 'MATH_MG3M11',
-  MathMG3M12 = 'MATH_MG3M12',
-  MathMG3M13 = 'MATH_MG3M13',
-  MathMG3M14 = 'MATH_MG3M14',
-  MathMG3M15 = 'MATH_MG3M15',
-  MathMG3M16 = 'MATH_MG3M16',
-
-  MathMG4M13 = 'MATH_MG4M13',
-  MathMG4M14 = 'MATH_MG4M14',
-  MathMG4M15 = 'MATH_MG4M15',
-  MathMG4M16 = 'MATH_MG4M16',
-  MathMG4M18 = 'MATH_MG4M18',
-  MathMG4M21 = 'MATH_MG4M21',
-  MathMG4M22 = 'MATH_MG4M22',
-  MathMG4M23 = 'MATH_MG4M23',
-  MathMG4M24 = 'MATH_MG4M24',
-  MathMG4M25 = 'MATH_MG4M25',
-  MathMG4M26 = 'MATH_MG4M26',
-  MathMG4M27 = 'MATH_MG4M27',
-  MathMG4M30 = 'MATH_MG4M30',
-
-  MathMG5M8 = 'MATH_MG5M8',
-  MathMG5M9 = 'MATH_MG5M9',
-  MathMG5M10 = 'MATH_MG5M10',
-  MathMG5M11 = 'MATH_MG5M11',
-  MathMG5M12 = 'MATH_MG5M12',
-  MathMG5M13 = 'MATH_MG5M13',
-  MathMG5M14 = 'MATH_MG5M14',
-  MathMG5M15 = 'MATH_MG5M15',
-  MathMG5M16 = 'MATH_MG5M16',
-  MathMG5M18 = 'MATH_MG5M18',
-
-  MathMG6M1 = 'MATH_MG6M1',
-  MathMG6M2 = 'MATH_MG6M2',
-  MathMG6M3 = 'MATH_MG6M3',
-  MathMG6M4 = 'MATH_MG6M4',
-  MathMG6M5 = 'MATH_MG6M5',
-  MathMG6M6 = 'MATH_MG6M6',
-  MathMG6M7 = 'MATH_MG6M7',
-  MathMG6M8 = 'MATH_MG6M8',
-  MathMG6M9 = 'MATH_MG6M9',
-  MathMG6M10 = 'MATH_MG6M10',
-  MathMG6M11 = 'MATH_MG6M11',
-  MathMG6M12 = 'MATH_MG6M12',
-  MathMG6M13 = 'MATH_MG6M13',
-  MathMG6M14 = 'MATH_MG6M14',
-  MathMG6M15 = 'MATH_MG6M15',
-}
-
-export enum LanguageE {
-  ENGLISH_EG1M1 = 'ENGLISH_EG1M1',
-  ENGLISH_EG1M2 = 'ENGLISH_EG1M2',
-  ENGLISH_EG1M3 = 'ENGLISH_EG1M3',
-  ENGLISH_EG1M4 = 'ENGLISH_EG1M4',
-  ENGLISH_EG1M5 = 'ENGLISH_EG1M5',
-  ENGLISH_EG1M6 = 'ENGLISH_EG1M6',
-  ENGLISH_EG1M7 = 'ENGLISH_EG1M7',
-  ENGLISH_EG1M8 = 'ENGLISH_EG1M8',
-
-  ENGLISHG2M12 = 'ENGLISHG2M12',
-  ENGLISH_G3M20 = 'ENGLISH_G3M20',
-  ENGLISH_EG4M23 = 'ENGLISH_G4M23',
-  ENGLISH_G5M16 = 'ENGLISH_G5M16',
-  ENGLISH_G6M26 = 'ENGLISH_G6M26',
-
-  ENGLISH_EG0M1 = 'ENGLISH_EG0M1',
-  ENGLISH_EG0M2 = 'ENGLISH_EG0M2',
-  ENGLISH_EG0M3 = 'ENGLISH_EG0M3',
-
-  MANDARIN_MDG1M1 = 'MANDARIN_MDG1M1',
-  MANDARIN_MDG1M2 = 'MANDARIN_MDG1M2',
-  MANDARIN_MDG1M3 = 'MANDARIN_MDG1M3',
-  MANDARIN_MDG1M7 = 'MANDARIN_MDG1M7',
-  MANDARIN_MDG1M8 = 'MANDARIN_MDG1M8',
-  MANDARIN_MDG1M9 = 'MANDARIN_MDG1M9',
-  MANDARIN_MDG1M10 = 'MANDARIN_MDG1M10',
-  MANDARIN_MDG1M11 = 'MANDARIN_MDG1M11',
-  MANDARIN_MDG1M12 = 'MANDARIN_MDG1M12',
-  MANDARIN_MDG1M13 = 'MANDARIN_MDG1M13',
-  MANDARIN_MDG1M14 = 'MANDARIN_MDG1M14',
-  MANDARIN_MDG1M15 = 'MANDARIN_MDG1M15',
-  MANDARIN_G1M4 = 'MANDARIN_G1M4',
-  MANDARIN_G1M5 = 'MANDARIN_G1M5',
-  MANDARIN_G1M6 = 'MANDARIN_G1M6',
-
-  MANDARIN_G2M25 = 'MANDARIN_G2M25',
-  MANDARIN_MDG2M1 = 'MANDARIN_MDG2M1',
-  MANDARIN_MDG2M2 = 'MANDARIN_MDG2M2',
-  MANDARIN_MDG2M3 = 'MANDARIN_MDG2M3',
-  MANDARIN_MDG2M4 = 'MANDARIN_MDG2M4',
-  MANDARIN_MDG2M5 = 'MANDARIN_MDG2M5',
-  MANDARIN_MDG2M6 = 'MANDARIN_MDG2M6',
-  MANDARIN_MDG2M7 = 'MANDARIN_MDG2M7',
-  MANDARIN_MDG2M8 = 'MANDARIN_MDG2M8',
-  MANDARIN_MDG2M9 = 'MANDARIN_MDG2M9',
-  MANDARIN_MDG2M10 = 'MANDARIN_MDG2M10',
-  MANDARIN_MDG2M11 = 'MANDARIN_MDG2M11',
-  MANDARIN_MDG2M12 = 'MANDARIN_MDG2M12',
-  MANDARIN_MDG2M13 = 'MANDARIN_MDG2M13',
-  MANDARIN_MDG2M14 = 'MANDARIN_MDG2M14',
-  MANDARIN_MDG2M15 = 'MANDARIN_MDG2M15',
-
-  MANDARIN_G3M37 = 'MANDARIN_G3M37',
-  MANDARIN_MDG3M1 = 'MANDARIN_MDG3M1',
-  MANDARIN_MDG3M2 = 'MANDARIN_MDG3M2',
-  MANDARIN_MDG3M3 = 'MANDARIN_MDG3M3',
-  MANDARIN_MDG3M4 = 'MANDARIN_MDG3M4',
-  MANDARIN_MDG3M5 = 'MANDARIN_MDG3M5',
-  MANDARIN_MDG3M6 = 'MANDARIN_MDG3M6',
-  MANDARIN_MDG3M7 = 'MANDARIN_MDG3M7',
-  MANDARIN_MDG3M8 = 'MANDARIN_MDG3M8',
-  MANDARIN_MDG3M9 = 'MANDARIN_MDG3M9',
-  MANDARIN_MDG3M10 = 'MANDARIN_MDG3M10',
-  MANDARIN_MDG3M11 = 'MANDARIN_MDG3M11',
-  MANDARIN_MDG3M12 = 'MANDARIN_MDG3M12',
-  MANDARIN_MDG3M13 = 'MANDARIN_MDG3M13',
-  MANDARIN_MDG3M14 = 'MANDARIN_MDG3M14',
-  MANDARIN_MDG3M15 = 'MANDARIN_MDG3M15',
-
-  MANDARIN_G4M27 = 'MANDARIN_G4M27',
-  MANDARIN_MDG4M1 = 'MANDARIN_MDG4M1',
-  MANDARIN_MDG4M2 = 'MANDARIN_MDG4M2',
-  MANDARIN_MDG4M3 = 'MANDARIN_MDG4M3',
-  MANDARIN_MDG4M4 = 'MANDARIN_MDG4M4',
-  MANDARIN_MDG4M5 = 'MANDARIN_MDG4M5',
-  MANDARIN_MDG4M6 = 'MANDARIN_MDG4M6',
-  MANDARIN_MDG4M7 = 'MANDARIN_MDG4M7',
-  MANDARIN_MDG4M8 = 'MANDARIN_MDG4M8',
-  MANDARIN_MDG4M9 = 'MANDARIN_MDG4M9',
-  MANDARIN_MDG4M10 = 'MANDARIN_MDG4M10',
-  MANDARIN_MDG4M11 = 'MANDARIN_MDG4M11',
-  MANDARIN_MDG4M12 = 'MANDARIN_MDG4M12',
-  MANDARIN_MDG4M13 = 'MANDARIN_MDG4M13',
-  MANDARIN_MDG4M14 = 'MANDARIN_MDG4M14',
-  MANDARIN_MDG4M15 = 'MANDARIN_MDG4M15',
-
-  MANDARIN_MDG5M1 = 'MANDARIN_MDG5M1',
-  MANDARIN_MDG5M2 = 'MANDARIN_MDG5M2',
-  MANDARIN_MDG5M3 = 'MANDARIN_MDG5M3',
-  MANDARIN_MDG5M4 = 'MANDARIN_MDG5M4',
-  MANDARIN_MDG5M5 = 'MANDARIN_MDG5M5',
-  MANDARIN_MDG5M6 = 'MANDARIN_MDG5M6',
-  MANDARIN_MDG5M7 = 'MANDARIN_MDG5M7',
-  MANDARIN_MDG5M8 = 'MANDARIN_MDG5M8',
-  MANDARIN_MDG5M9 = 'MANDARIN_MDG5M9',
-  MANDARIN_MDG5M10 = 'MANDARIN_MDG5M10',
-  MANDARIN_MDG5M11 = 'MANDARIN_MDG5M11',
-  MANDARIN_MDG5M12 = 'MANDARIN_MDG5M12',
-  MANDARIN_MDG5M13 = 'MANDARIN_MDG5M13',
-  MANDARIN_MDG5M14 = 'MANDARIN_MDG5M14',
-  MANDARIN_MDG5M15 = 'MANDARIN_MDG5M15',
-
-  MANDARIN_MDG6M1 = 'MANDARIN_MDG6M1',
-  MANDARIN_MDG6M2 = 'MANDARIN_MDG6M2',
-  MANDARIN_MDG6M3 = 'MANDARIN_MDG6M3',
-  MANDARIN_MDG6M4 = 'MANDARIN_MDG6M4',
-  MANDARIN_MDG6M5 = 'MANDARIN_MDG6M5',
-  MANDARIN_MDG6M6 = 'MANDARIN_MDG6M6',
-  MANDARIN_MDG6M7 = 'MANDARIN_MDG6M7',
-  MANDARIN_MDG6M8 = 'MANDARIN_MDG6M8',
-  MANDARIN_MDG6M9 = 'MANDARIN_MDG6M9',
-  MANDARIN_MDG6M10 = 'MANDARIN_MDG6M10',
-  MANDARIN_MDG6M11 = 'MANDARIN_MDG6M11',
-  MANDARIN_MDG6M12 = 'MANDARIN_MDG6M12',
-  MANDARIN_MDG6M13 = 'MANDARIN_MDG6M13',
-  MANDARIN_MDG6M14 = 'MANDARIN_MDG6M14',
-  MANDARIN_MDG6M15 = 'MANDARIN_MDG6M15',
-
-  MANDARIN_G5M25 = 'MANDARIN_G5M25',
-  MANDARIN_G6M31 = 'MANDARIN_G6M31',
-  MANDARIN_M0G1 = 'MANDARIN_M0G1',
-  MANDARIN_M0G2 = 'MANDARIN_M0G2',
-  MANDARIN_M0G3 = 'MANDARIN_M0G3',
-
-  VIETNAMESE_VNG0M1 = 'VIETNAMESE_VNG0M1',
-  VIETNAMESE_VNG0M2 = 'VIETNAMESE_VNG0M2',
-  VIETNAMESE_VNG0M3 = 'VIETNAMESE_VNG0M3',
-  VIETNAMESE_VNG1M1 = 'VIETNAMESE_VNG1M1',
-  VIETNAMESE_VNG1M2 = 'VIETNAMESE_VNG1M2',
-  VIETNAMESE_VNG1M3 = 'VIETNAMESE_VNG1M3',
-  VIETNAMESE_VNG1M4 = 'VIETNAMESE_VNG1M4',
-  VIETNAMESE_VNG1M5 = 'VIETNAMESE_VNG1M5',
-  VIETNAMESE_VNG1M6 = 'VIETNAMESE_VNG1M6',
-  VIETNAMESE_VNG1M7 = 'VIETNAMESE_VNG1M7',
-  VIETNAMESE_VNG1M8 = 'VIETNAMESE_VNG1M8',
-  VIETNAMESE_VNG1M9 = 'VIETNAMESE_VNG1M9',
-  VIETNAMESE_VNG1M10 = 'VIETNAMESE_VNG1M10',
-
-  VIETNAMESE_VNG2M1 = 'VIETNAMESE_VNG2M1',
-  VIETNAMESE_VNG2M2 = 'VIETNAMESE_VNG2M2',
-  VIETNAMESE_VNG2M3 = 'VIETNAMESE_VNG2M3',
-  VIETNAMESE_VNG2M4 = 'VIETNAMESE_VNG2M4',
-  VIETNAMESE_VNG2M5 = 'VIETNAMESE_VNG2M5',
-  VIETNAMESE_VNG2M6 = 'VIETNAMESE_VNG2M6',
-  VIETNAMESE_VNG2M7 = 'VIETNAMESE_VNG2M7',
-  VIETNAMESE_VNG2M8 = 'VIETNAMESE_VNG2M8',
-  VIETNAMESE_VNG2M9 = 'VIETNAMESE_VNG2M9',
-  VIETNAMESE_VNG2M10 = 'VIETNAMESE_VNG2M10',
-  VIETNAMESE_VNG2M11 = 'VIETNAMESE_VNG2M11',
-  VIETNAMESE_VNG2M12 = 'VIETNAMESE_VNG2M12',
-
-  VIETNAMESE_VNG3M1 = 'VIETNAMESE_VNG3M1',
-  VIETNAMESE_VNG3M2 = 'VIETNAMESE_VNG3M2',
-  VIETNAMESE_VNG3M3 = 'VIETNAMESE_VNG3M3',
-  VIETNAMESE_VNG3M4 = 'VIETNAMESE_VNG3M4',
-  VIETNAMESE_VNG3M5 = 'VIETNAMESE_VNG3M5',
-  VIETNAMESE_VNG3M6 = 'VIETNAMESE_VNG3M6',
-  VIETNAMESE_VNG3M7 = 'VIETNAMESE_VNG3M7',
-  VIETNAMESE_VNG3M8 = 'VIETNAMESE_VNG3M8',
-  VIETNAMESE_VNG3M9 = 'VIETNAMESE_VNG3M9',
-  VIETNAMESE_VNG3M10 = 'VIETNAMESE_VNG3M10',
-
-  VIETNAMESE_VNG4M1 = 'VIETNAMESE_VNG4M1',
-  VIETNAMESE_VNG4M2 = 'VIETNAMESE_VNG4M2',
-  VIETNAMESE_VNG4M3 = 'VIETNAMESE_VNG4M3',
-  VIETNAMESE_VNG4M4 = 'VIETNAMESE_VNG4M4',
-  VIETNAMESE_VNG4M5 = 'VIETNAMESE_VNG4M5',
-  VIETNAMESE_VNG4M6 = 'VIETNAMESE_VNG4M6',
-  VIETNAMESE_VNG4M7 = 'VIETNAMESE_VNG4M7',
-  VIETNAMESE_VNG4M8 = 'VIETNAMESE_VNG4M8',
-  VIETNAMESE_VNG4M9 = 'VIETNAMESE_VNG4M9',
-  VIETNAMESE_VNG4M10 = 'VIETNAMESE_VNG4M10',
-
-  VIETNAMESE_VNG5M1 = 'VIETNAMESE_VNG5M1',
-  VIETNAMESE_VNG5M1N = 'VIETNAMESE_VNG5M1_N',
-  VIETNAMESE_VNG5M2 = 'VIETNAMESE_VNG5M2',
-  VIETNAMESE_VNG5M3 = 'VIETNAMESE_VNG5M3',
-  VIETNAMESE_VNG5M4 = 'VIETNAMESE_VNG5M4',
-  VIETNAMESE_VNG5M5 = 'VIETNAMESE_VNG5M5',
-  VIETNAMESE_VNG5M6 = 'VIETNAMESE_VNG5M6',
-  VIETNAMESE_VNG5M7 = 'VIETNAMESE_VNG5M7',
-  VIETNAMESE_VNG5M8 = 'VIETNAMESE_VNG5M8',
-  VIETNAMESE_VNG5M9 = 'VIETNAMESE_VNG5M9',
-  VIETNAMESE_VNG5M10 = 'VIETNAMESE_VNG5M10',
-  VIETNAMESE_VNG5M11 = 'VIETNAMESE_VNG5M11',
-  VIETNAMESE_VNG5M12 = 'VIETNAMESE_VNG5M12',
-
-  VIETNAMESE_VNG6M1 = 'VIETNAMESE_VNG6M1',
-  VIETNAMESE_VNG6M1_N = 'VIETNAMESE_VNG6M1_N',
-  VIETNAMESE_VNG6M2 = 'VIETNAMESE_VNG6M2',
-  VIETNAMESE_VNG6M3 = 'VIETNAMESE_VNG6M3',
-  VIETNAMESE_VNG6M4 = 'VIETNAMESE_VNG6M4',
-  VIETNAMESE_VNG6M5 = 'VIETNAMESE_VNG6M5',
-  VIETNAMESE_VNG6M6 = 'VIETNAMESE_VNG6M6',
-  VIETNAMESE_VNG6M7 = 'VIETNAMESE_VNG6M7',
-  VIETNAMESE_VNG6M8 = 'VIETNAMESE_VNG6M8',
-  VIETNAMESE_VNG6M9 = 'VIETNAMESE_VNG6M9',
-  VIETNAMESE_VNG6M10 = 'VIETNAMESE_VNG6M10',
-}
-
-export enum ScienceE {
-  SCIENCE_G0M1 = 'SCIENCE_SG0M1',
-  SCIENCE_G0M2 = 'SCIENCE_SG0M2',
-
-  SCIENCE_SG1M2 = 'SCIENCE_SG1M2',
-  SCIENCE_SG2M4 = 'SCIENCE_SG2M4',
-  SCIENCE_SG3M9 = 'SCIENCE_SG3M9',
-  SCIENCE_SG4M3 = 'SCIENCE_SG4M3',
-  SCIENCE_SG5M5 = 'SCIENCE_SG5M5',
-  SCIENCE_SG6M6 = 'SCIENCE_SG6M3',
-}
-export enum LessonTypeE {
-  WRITING = 'writing',
-  PRONUNCIATION = 'pronunciation',
-  EXPLANATION = 'explanation',
-  MIX_COLOR = 'mix_color',
-}
+import LatinLesson from './LessonComponent/LatinLesson';
 
 export type TResult = {
   userId?: string;
@@ -436,6 +116,452 @@ export type TLessonState = {
   trainingResult?: TResult[];
 };
 
+// Lesson component mapping with regex patterns
+const LESSON_PATTERNS = [
+  // English Lessons
+  {
+    pattern: /^ENGLISHG2M12$/,
+    component: MultiPronunciationLesson,
+    props: {},
+  },
+  {
+    pattern: /^pronunciation$/,
+    component: PronunciationLesson,
+    props: {},
+  },
+  {
+    pattern: /^ENGLISH_EG0M[1-3]$/,
+    component: LatinLesson,
+    props: {},
+  },
+  {
+    pattern: /^ENGLISH_G3M20$/,
+    component: English_G3M20,
+    props: {},
+  },
+  {
+    pattern: /^ENGLISH_G6M26$/,
+    component: English_G6M26,
+    props: {},
+  },
+  {
+    pattern: /^ENGLISH_G5M16$/,
+    component: English_G5M16,
+    props: {},
+  },
+  {
+    pattern: /^ENGLISH_G4M23$/,
+    component: English_EG4M23,
+    props: {},
+  },
+  {
+    pattern: /^ENGLISH_EG1M[1-8]$/,
+    component: EssayLesson,
+    props: (
+      dataProps: any,
+      testTask: any,
+      lessonIndex: number,
+      characterStyle: any,
+    ) => ({
+      ...dataProps,
+      characterStyle,
+    }),
+  },
+  {
+    pattern: /^ENGLISH_EG1M3$/,
+    component: VowelsLesson,
+    props: {},
+  },
+
+  // Mandarin Lessons
+  {
+    pattern: /^MANDARIN_MDG0M[1-3]$/,
+    component: Mandarin_Kindergarten,
+    props: {},
+  },
+  {
+    pattern: /^MANDARIN_MDG5M25$/,
+    component: Mandarin_G5M25,
+    props: {},
+  },
+  {
+    pattern: /^(writing|MANDARIN_MDG[1-6]M(1|7|10|13))$/,
+    component: Mandarin_G4M_DrawCharacter,
+    props: (
+      dataProps: any,
+      testTask: any,
+      lessonIndex: number,
+      characterStyle: any,
+    ) => ({
+      ...dataProps,
+      characterStyle,
+    }),
+  },
+  {
+    pattern: /^MANDARIN_MDG[1-6]M(2|5|8|11|14)$/,
+    component: Mandarin_G4M_SelectAnswer,
+    props: (
+      dataProps: any,
+      testTask: any,
+      lessonIndex: number,
+      characterStyle: any,
+    ) => ({
+      ...dataProps,
+      characterStyle,
+    }),
+  },
+  {
+    pattern: /^MANDARIN_MDG[1-6]M(3|6|9|12|15)$/,
+    component: Mandarin_G4_Pronunciation,
+    props: (
+      dataProps: any,
+      testTask: any,
+      lessonIndex: number,
+      characterStyle: any,
+    ) => ({
+      ...dataProps,
+      characterStyle,
+    }),
+  },
+  {
+    pattern: /^MANDARIN_MDG1M4$/,
+    component: WriteLesson,
+    props: {},
+  },
+  {
+    pattern: /^MANDARIN_MDG1M5$/,
+    component: Mandarin_G1M5,
+    props: {},
+  },
+  {
+    pattern: /^MANDARIN_MDG1M6$/,
+    component: PronunciationLesson,
+    props: {},
+  },
+  {
+    pattern: /^MANDARIN_MDG2M25$/,
+    component: Mandarin_G2M25,
+    props: {},
+  },
+  {
+    pattern: /^MANDARIN_MDG3M37$/,
+    component: Mandarin_G3M37,
+    props: {},
+  },
+  {
+    pattern: /^MANDARIN_MDG4M27$/,
+    component: Mandarin_G4M27,
+    props: {},
+  },
+  {
+    pattern: /^MANDARIN_MDG6M31$/,
+    component: Mandarin_G6M31,
+    props: {},
+  },
+
+  // Vietnamese Lessons
+  {
+    pattern: /^VIETNAMESE_VNG(0M1|2M2|3M9|4M2)$/,
+    component: VnG0M1Lesson,
+    props: (
+      dataProps: any,
+      testTask: any,
+      lessonIndex: number,
+      characterStyle: any,
+    ) => ({
+      ...dataProps,
+      characterStyle,
+    }),
+  },
+  {
+    pattern: /^VIETNAMESE_VNG0M2$/,
+    component: VnG0M2Lesson,
+    props: {},
+  },
+  {
+    pattern: /^VIETNAMESE_VNG0M3$/,
+    component: VnG0M3Lesson,
+    props: {},
+  },
+  {
+    pattern: /^VIETNAMESE_VNG1M([1-9]|10)$/,
+    component: (type: string) => {
+      const componentMap: Record<string, any> = {
+        VIETNAMESE_VNG1M1: VnG1M1Lesson,
+        VIETNAMESE_VNG1M2: VnG1M2Lesson,
+        VIETNAMESE_VNG1M3: VnG1M3Lesson,
+        VIETNAMESE_VNG1M4: VnG1M4Lesson,
+        VIETNAMESE_VNG1M5: VnG1M5Lesson,
+        VIETNAMESE_VNG1M6: VnG1M6Lesson,
+        VIETNAMESE_VNG1M7: VnG1M7Lesson,
+        VIETNAMESE_VNG1M8: VnG1M8Lesson,
+        VIETNAMESE_VNG1M9: VnG1M9Lesson,
+        VIETNAMESE_VNG1M10: VnG1M10Lesson,
+      };
+      return componentMap[type] || VnG0M1Lesson;
+    },
+    props: {},
+  },
+  {
+    pattern: /^VIETNAMESE_VNG3M(1|2|3|4|5|6|7|8|10)$/,
+    component: (type: string) => {
+      const componentMap: Record<string, any> = {
+        VIETNAMESE_VNG3M1: VnG3M1Lesson,
+        VIETNAMESE_VNG3M2: VnG3M2Lesson,
+        VIETNAMESE_VNG3M3: VnG3M3Lesson,
+        VIETNAMESE_VNG3M4: VnG3M4Lesson,
+        VIETNAMESE_VNG3M5: VnG3M5Lesson,
+        VIETNAMESE_VNG3M6: VnG3M6Lesson,
+        VIETNAMESE_VNG3M7: VnG3M7Lesson,
+        VIETNAMESE_VNG3M8: VnG3M8Lesson,
+        VIETNAMESE_VNG3M10: VnG3M10Lesson,
+      };
+      return componentMap[type] || VnG0M1Lesson;
+    },
+    props: (
+      dataProps: any,
+      testTask: any,
+      lessonIndex: number,
+      characterStyle: any,
+    ) => ({
+      ...dataProps,
+      characterStyle,
+    }),
+  },
+  {
+    pattern: /^VIETNAMESE_VNG2M1$/,
+    component: VnG2M1Lesson,
+    props: {},
+  },
+  {
+    pattern: /^VIETNAMESE_VNG2M(3|4|5|6|9|10)$/,
+    component: VnG2M8Lesson,
+    props: (
+      dataProps: any,
+      testTask: any,
+      lessonIndex: number,
+      characterStyle: any,
+    ) => ({
+      ...dataProps,
+      characterStyle,
+    }),
+  },
+  {
+    pattern: /^VIETNAMESE_VNG2M(7|8)$/,
+    component: VnG1M7Lesson,
+    props: {},
+  },
+  {
+    pattern: /^VIETNAMESE_VNG2M(11|12)$/,
+    component: VnG2M12Lesson,
+    props: {},
+  },
+  {
+    pattern: /^VIETNAMESE_VNG4M3$/,
+    component: VnG4M3Lesson,
+    wrapper: DragProvider,
+    props: {},
+  },
+  {
+    pattern: /^VIETNAMESE_VNG4M1$/,
+    component: VnG4M1Lesson,
+    props: {},
+  },
+  {
+    pattern: /^VIETNAMESE_VNG4M(4|5|6|7|8|9|10)$/,
+    component: VnG2M8Lesson,
+    props: (
+      dataProps: any,
+      testTask: any,
+      lessonIndex: number,
+      characterStyle: any,
+    ) => ({
+      ...dataProps,
+      characterStyle,
+    }),
+  },
+  {
+    pattern: /^VIETNAMESE_VNG5M1$/,
+    component: VnG5M1Lesson,
+    props: {},
+  },
+  {
+    pattern: /^VIETNAMESE_VNG5M(1_N|2)$/,
+    component: VNG5M1NLesson,
+    props: {},
+  },
+  {
+    pattern: /^VIETNAMESE_VNG5M(3|4|5|6|7|8|9|10|11|12)$/,
+    component: VnG2M8Lesson,
+    props: (
+      dataProps: any,
+      testTask: any,
+      lessonIndex: number,
+      characterStyle: any,
+    ) => ({
+      ...dataProps,
+      characterStyle,
+    }),
+  },
+  {
+    pattern: /^VIETNAMESE_VNG6M1$/,
+    component: VnG3M1Lesson,
+    props: {},
+  },
+  {
+    pattern: /^VIETNAMESE_VNG6M(1_N|2|3|4|5|6|7|8|9|10)$/,
+    component: VnG2M8Lesson,
+    props: (
+      dataProps: any,
+      testTask: any,
+      lessonIndex: number,
+      characterStyle: any,
+    ) => ({
+      ...dataProps,
+      characterStyle,
+    }),
+  },
+
+  // Science Lessons
+  {
+    pattern: /^mix_color$/,
+    component: ScienceLesson,
+    props: (dataProps: any, testTask: any, lessonIndex: number) => ({
+      ...dataProps,
+      answers: (
+        (testTask?.question[lessonIndex]?.answers as string[]) ?? []
+      ).map((v: string) => '#' + v.replace('.png', '')),
+    }),
+  },
+  {
+    pattern: /^SCIENCE_SG0M1$/,
+    component: Science_G0M1,
+    props: {},
+  },
+  {
+    pattern: /^SCIENCE_SG0M2$/,
+    component: ScienceLesson,
+    props: (dataProps: any, testTask: any, lessonIndex: number) => ({
+      ...dataProps,
+      answers: (
+        (testTask?.question[lessonIndex]?.answers as string[]) ?? []
+      ).map((v: string) => '#' + v.replace('.png', '')),
+    }),
+  },
+  {
+    pattern: /^SCIENCE_SG[1-6]M\d+$/,
+    component: (type: string) => {
+      const componentMap: Record<string, any> = {
+        SCIENCE_SG1M2: Science_SG1M2,
+        SCIENCE_SG2M4: Science_SG2M4,
+        SCIENCE_SG3M9: Science_SG3M9,
+        SCIENCE_SG4M3: Science_SG4M3,
+        SCIENCE_SG5M5: Science_SG5M5,
+        SCIENCE_SG6M6: Science_SG6M3,
+      };
+      return componentMap[type] || Science_G0M1;
+    },
+    props: {},
+  },
+
+  // Math Lessons
+  {
+    pattern: /^MATH_MG0M[1-3]$/,
+    component: Math_Kindergarten,
+    props: {
+      isMulti: true,
+      answer: ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'],
+    },
+  },
+  {
+    pattern: /^MATH_MG1M(1|2|4|5|6|7|8|9|10|11|12|13|14|15|16|17|18)$/,
+    component: Math_G4M_SelectAnswer,
+    props: {},
+  },
+  {
+    pattern: /^MATH_MG1M3$/,
+    component: (dataProps: any, testTask: any) =>
+      testTask?.stt === 4 ? Math_MG1M3_P4 : Math_MG1M3,
+    props: (dataProps: any, testTask: any, lessonIndex: number) =>
+      testTask?.stt === 4
+        ? {
+            ...dataProps,
+            isMulti: true,
+            answer: testTask.question[lessonIndex].answers as string[],
+          }
+        : {
+            ...dataProps,
+            isMulti: false,
+            answer: ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'],
+          },
+  },
+  {
+    pattern: /^MATH_MG2M(1|3|4|5|6|9|10|12)$/,
+    component: Math_G3M_SelectAnswer,
+    props: {},
+  },
+  {
+    pattern: /^MATH_MG2M(2|7)$/,
+    component: Math_MG2M4,
+    props: {isMulti: false},
+  },
+  {
+    pattern: /^MATH_MG2M(8|13|14)$/,
+    component: Math_G4M_SelectAnswer,
+    props: (characterStyle: any) => ({characterStyle}),
+  },
+  {
+    pattern: /^MATH_MG2M11$/,
+    component: Math_MG2M11,
+    props: {},
+  },
+  {
+    pattern: /^MATH_MG2M(4|15|16|19|20)$/,
+    component: Math_MG2M4,
+    props: {
+      isMulti: true,
+      answer: ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'],
+    },
+  },
+  {
+    pattern: /^MATH_MG3M(6|7|8|10|11)$/,
+    component: Math_MG3_KeyboardNumber,
+    props: {
+      isMulti: true,
+      answer: ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'],
+    },
+  },
+  {
+    pattern: /^MATH_MG4M16$/,
+    component: Math_MG4M16,
+    props: {
+      isMulti: true,
+      answer: ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'],
+    },
+  },
+  {
+    pattern: /^MATH_MG4M30$/,
+    component: MathLesson,
+    props: {},
+  },
+  {
+    pattern: /^MATH_MG5M18$/,
+    component: Math_MG5M18,
+    props: {
+      isMulti: true,
+      answer: ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'],
+    },
+  },
+  {
+    pattern: /^Math_MG6M15$/,
+    component: Math_MG6M15,
+    props: {
+      isMulti: true,
+      answer: ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'],
+    },
+  },
+];
+
 const LessonScreen = observer(() => {
   const vowelRef = useRef<LessonRef | null>(null);
 
@@ -448,7 +574,7 @@ const LessonScreen = observer(() => {
     >().params;
 
   const lessonStore = lessonModuleContainer.getProvided(LessonStore);
-  const env = coreModuleContainer.getProvided<Env>(EnvToken); // Instantiate CoreService
+  const env = coreModuleContainer.getProvided<Env>(EnvToken);
 
   const {
     handlePostUserProgress,
@@ -462,53 +588,33 @@ const LessonScreen = observer(() => {
   } = lessonStore;
 
   const {lessonSetting, characterStyle} = useHomeStore();
-
   const i18n = useI18n();
-
   const {tasks: apiTasks} = useListQuestions(route?.lessonId);
 
   const tasks = useMemo(() => {
     return __DEV__
-      ? apiTasks.slice(apiTasks.length - 1, apiTasks.length).map(t => {
-          return {
-            ...t,
-            // question: t.question.slice(0, 1),
-            // question: t.question.slice(0, 5),
-            // question: shuffleArray(t.question),
-            question: __DEV__ ? t.question.slice(0, 10) : t.question,
-          };
-        })
-      : apiTasks.map(t => {
-          return {
-            ...t,
-            // question: t.question.slice(0, 1),
-            // question: t.question.slice(0, 5),
-            // question: shuffleArray(t.question),
-            question: t.question,
-          };
-        });
+      ? apiTasks.slice(apiTasks.length - 1, apiTasks.length).map(t => ({
+          ...t,
+          question: __DEV__ ? t.question.slice(0, 10) : t.question,
+        }))
+      : apiTasks.map(t => ({
+          ...t,
+          question: t.question,
+        }));
   }, [apiTasks]);
 
   const [activeTaskIndex, setActiveTaskIndex] = useState(0);
   const {selectedChild, getUserProfile, setSelectedChild} =
     useAuthenticationStore();
   const {playSound, pauseSound, loopSound} = useContext(SoundGlobalContext);
-
   const [lessonIndex, setLessonIndex] = useState(0);
-
   const [lessonState, setLessonState] = useStateCustom<TLessonState>({
     result: [],
     trainingResult: [],
   });
 
-  /**
-   * Lấy ra mini test trong task của module
-   */
   const firstMiniTestTask = tasks.find(task => task.type === 'mini_test');
 
-  /**
-   * Lấy ra task đang được làm
-   */
   const testTask = useMemo(() => {
     if (tasks[activeTaskIndex]?.type === 'mini_test') {
       return firstMiniTestTask;
@@ -872,700 +978,45 @@ const LessonScreen = observer(() => {
   };
 
   const buildLesson = () => {
-    console.log(testTask?.question?.[lessonIndex]?.type, 'type lesson');
-    switch (
-      testTask?.question?.[lessonIndex]?.type.trim() as
-        | LessonTypeE
-        | MathQuestionType
-        | LanguageE
-        | ScienceE
-    ) {
-      /**
-       * * UI chung dành cho các module phát âm
-       */
-      case LanguageE.ENGLISHG2M12:
-        return <MultiPronunciationLesson {...dataProps} ref={vowelRef} />;
-      case LessonTypeE.PRONUNCIATION:
-        return <PronunciationLesson {...dataProps} ref={vowelRef} />;
+    const questionType = testTask?.question?.[lessonIndex]?.type.trim();
 
-      /**----------------------
-       *todo    các question cho môn Tiếng Anh
-       *------------------------**/
-      case LanguageE.ENGLISH_EG0M1:
-      case LanguageE.ENGLISH_EG0M2:
-      case LanguageE.ENGLISH_EG0M3:
-        return <LatinLesson {...dataProps} />;
-      case LanguageE.ENGLISH_G3M20:
-        return (
-          <English_G3M20
-            {...dataProps}
-            // descriptionType="image"
-            ref={vowelRef}
-          />
-        );
-      case LanguageE.ENGLISH_G6M26:
-        return <English_G6M26 {...dataProps} ref={vowelRef} />;
-      case LanguageE.ENGLISH_G5M16:
-        return <English_G5M16 {...dataProps} ref={vowelRef} />;
-      case LanguageE.ENGLISH_EG4M23:
-        return (
-          <English_EG4M23
-            {...dataProps}
-            // descriptionType="text-blank"
-            // textDescriptionProps={{
-            //   fontName: FontFamily.SVNCherishMoment,
-            //   fontSize: scale(25),
-            //   color: COLORS.RED_AF3A1B,
-            // }}
-            ref={vowelRef}
-          />
-        );
-      case LanguageE.ENGLISH_EG1M1:
-      case LanguageE.ENGLISH_EG1M2:
-      case LanguageE.ENGLISH_EG1M3:
-      case LanguageE.ENGLISH_EG1M4:
-      case LanguageE.ENGLISH_EG1M5:
-      case LanguageE.ENGLISH_EG1M6:
-      case LanguageE.ENGLISH_EG1M7:
-      case LanguageE.ENGLISH_EG1M8:
-        return (
-          <EssayLesson
-            characterStyle={characterStyle}
-            {...dataProps}
-            ref={vowelRef}
-          />
-        );
-      case LanguageE.ENGLISH_EG1M3:
-        return <VowelsLesson {...dataProps} ref={vowelRef} />;
-
-      /**----------------------
-       *todo    các question cho môn Tiếng trung
-       *------------------------**/
-
-      case LanguageE.MANDARIN_M0G1:
-      case LanguageE.MANDARIN_M0G2:
-      case LanguageE.MANDARIN_M0G3:
-        return <Mandarin_Kindergarten {...dataProps} ref={vowelRef} />;
-      case LanguageE.MANDARIN_G5M25:
-        return <Mandarin_G5M25 {...dataProps} ref={vowelRef} />;
-
-      case LessonTypeE.WRITING:
-      case LanguageE.MANDARIN_MDG1M1:
-      case LanguageE.MANDARIN_MDG1M7:
-      case LanguageE.MANDARIN_MDG1M10:
-      case LanguageE.MANDARIN_MDG1M13:
-        return (
-          <Mandarin_G4M_DrawCharacter
-            characterStyle={characterStyle}
-            {...dataProps}
-            ref={vowelRef}
-          />
-        );
-
-      case LanguageE.MANDARIN_MDG1M2:
-      case LanguageE.MANDARIN_MDG1M8:
-      case LanguageE.MANDARIN_MDG1M11:
-      case LanguageE.MANDARIN_MDG1M14:
-        return (
-          <Mandarin_G4M_SelectAnswer
-            characterStyle={characterStyle}
-            {...dataProps}
-            ref={vowelRef}
-          />
-        );
-      case LanguageE.MANDARIN_MDG1M3:
-      case LanguageE.MANDARIN_MDG1M9:
-      case LanguageE.MANDARIN_MDG1M12:
-      case LanguageE.MANDARIN_MDG1M15:
-        return (
-          <Mandarin_G4_Pronunciation
-            characterStyle={characterStyle}
-            {...dataProps}
-            ref={vowelRef}
-          />
-        );
-      case LanguageE.MANDARIN_G1M4:
-        return <WriteLesson {...dataProps} />;
-      case LanguageE.MANDARIN_G1M5:
-        return <Mandarin_G1M5 {...dataProps} ref={vowelRef} />;
-      case LanguageE.MANDARIN_G1M6:
-        return <PronunciationLesson {...dataProps} ref={vowelRef} />;
-
-      case LanguageE.MANDARIN_G2M25:
-        return <Mandarin_G2M25 {...dataProps} ref={vowelRef} />;
-      case LanguageE.MANDARIN_MDG2M1:
-      case LanguageE.MANDARIN_MDG2M4:
-      case LanguageE.MANDARIN_MDG2M7:
-      case LanguageE.MANDARIN_MDG2M10:
-      case LanguageE.MANDARIN_MDG2M13:
-        return (
-          <Mandarin_G4M_DrawCharacter
-            characterStyle={characterStyle}
-            {...dataProps}
-            ref={vowelRef}
-          />
-        );
-      case LanguageE.MANDARIN_MDG2M2:
-      case LanguageE.MANDARIN_MDG2M5:
-      case LanguageE.MANDARIN_MDG2M8:
-      case LanguageE.MANDARIN_MDG2M11:
-      case LanguageE.MANDARIN_MDG2M14:
-        return (
-          <Mandarin_G4M_SelectAnswer
-            characterStyle={characterStyle}
-            {...dataProps}
-            ref={vowelRef}
-          />
-        );
-      case LanguageE.MANDARIN_MDG2M3:
-      case LanguageE.MANDARIN_MDG2M6:
-      case LanguageE.MANDARIN_MDG2M9:
-      case LanguageE.MANDARIN_MDG2M12:
-      case LanguageE.MANDARIN_MDG2M15:
-        return (
-          <Mandarin_G4_Pronunciation
-            characterStyle={characterStyle}
-            {...dataProps}
-            ref={vowelRef}
-          />
-        );
-
-      case LanguageE.MANDARIN_G3M37:
-        return <Mandarin_G3M37 {...dataProps} ref={vowelRef} />;
-      case LanguageE.MANDARIN_MDG3M1:
-      case LanguageE.MANDARIN_MDG3M4:
-      case LanguageE.MANDARIN_MDG3M7:
-      case LanguageE.MANDARIN_MDG3M10:
-      case LanguageE.MANDARIN_MDG3M13:
-        return (
-          <Mandarin_G4M_DrawCharacter
-            characterStyle={characterStyle}
-            {...dataProps}
-            ref={vowelRef}
-          />
-        );
-      case LanguageE.MANDARIN_MDG3M2:
-      case LanguageE.MANDARIN_MDG3M5:
-      case LanguageE.MANDARIN_MDG3M8:
-      case LanguageE.MANDARIN_MDG3M11:
-      case LanguageE.MANDARIN_MDG3M14:
-        return (
-          <Mandarin_G4M_SelectAnswer
-            characterStyle={characterStyle}
-            {...dataProps}
-            ref={vowelRef}
-          />
-        );
-      case LanguageE.MANDARIN_MDG3M3:
-      case LanguageE.MANDARIN_MDG3M6:
-      case LanguageE.MANDARIN_MDG3M9:
-      case LanguageE.MANDARIN_MDG3M12:
-      case LanguageE.MANDARIN_MDG3M15:
-        return (
-          <Mandarin_G4_Pronunciation
-            characterStyle={characterStyle}
-            {...dataProps}
-            ref={vowelRef}
-          />
-        );
-
-      case LanguageE.MANDARIN_MDG4M1:
-      case LanguageE.MANDARIN_MDG4M4:
-      case LanguageE.MANDARIN_MDG4M7:
-      case LanguageE.MANDARIN_MDG4M10:
-      case LanguageE.MANDARIN_MDG4M13:
-        return <Mandarin_G4M_DrawCharacter {...dataProps} ref={vowelRef} />;
-      case LanguageE.MANDARIN_MDG4M2:
-      case LanguageE.MANDARIN_MDG4M5:
-      case LanguageE.MANDARIN_MDG4M8:
-      case LanguageE.MANDARIN_MDG4M11:
-      case LanguageE.MANDARIN_MDG4M14:
-        return <Mandarin_G4M_SelectAnswer {...dataProps} ref={vowelRef} />;
-      case LanguageE.MANDARIN_MDG4M3:
-      case LanguageE.MANDARIN_MDG4M6:
-      case LanguageE.MANDARIN_MDG4M9:
-      case LanguageE.MANDARIN_MDG4M12:
-      case LanguageE.MANDARIN_MDG4M15:
-        return <Mandarin_G4_Pronunciation {...dataProps} ref={vowelRef} />;
-
-      case LanguageE.MANDARIN_MDG5M1:
-      case LanguageE.MANDARIN_MDG5M4:
-      case LanguageE.MANDARIN_MDG5M7:
-      case LanguageE.MANDARIN_MDG5M10:
-      case LanguageE.MANDARIN_MDG5M13:
-        return <Mandarin_G4M_DrawCharacter {...dataProps} ref={vowelRef} />;
-      case LanguageE.MANDARIN_MDG5M2:
-      case LanguageE.MANDARIN_MDG5M5:
-      case LanguageE.MANDARIN_MDG5M8:
-      case LanguageE.MANDARIN_MDG5M11:
-      case LanguageE.MANDARIN_MDG5M14:
-        return <Mandarin_G4M_SelectAnswer {...dataProps} ref={vowelRef} />;
-      case LanguageE.MANDARIN_MDG5M3:
-      case LanguageE.MANDARIN_MDG5M6:
-      case LanguageE.MANDARIN_MDG5M9:
-      case LanguageE.MANDARIN_MDG5M12:
-      case LanguageE.MANDARIN_MDG5M15:
-        return <Mandarin_G4_Pronunciation {...dataProps} ref={vowelRef} />;
-
-      case LanguageE.MANDARIN_MDG6M1:
-      case LanguageE.MANDARIN_MDG6M4:
-      case LanguageE.MANDARIN_MDG6M7:
-      case LanguageE.MANDARIN_MDG6M10:
-      case LanguageE.MANDARIN_MDG6M13:
-        return <Mandarin_G4M_DrawCharacter {...dataProps} ref={vowelRef} />;
-      case LanguageE.MANDARIN_MDG6M2:
-      case LanguageE.MANDARIN_MDG6M5:
-      case LanguageE.MANDARIN_MDG6M8:
-      case LanguageE.MANDARIN_MDG6M11:
-      case LanguageE.MANDARIN_MDG6M14:
-        return <Mandarin_G4M_SelectAnswer {...dataProps} ref={vowelRef} />;
-      case LanguageE.MANDARIN_MDG6M3:
-      case LanguageE.MANDARIN_MDG6M6:
-      case LanguageE.MANDARIN_MDG6M9:
-      case LanguageE.MANDARIN_MDG6M12:
-      case LanguageE.MANDARIN_MDG6M15:
-        return <Mandarin_G4_Pronunciation {...dataProps} ref={vowelRef} />;
-      case LanguageE.MANDARIN_G6M31:
-        return <Mandarin_G6M31 {...dataProps} ref={vowelRef} />;
-
-      case LanguageE.MANDARIN_G4M27:
-        return <Mandarin_G4M27 {...dataProps} ref={vowelRef} />;
-
-      /**----------------------
-       *todo    các question cho môn Tiếng việt
-       *------------------------**/
-      case LanguageE.VIETNAMESE_VNG0M1:
-        return <VnG0M1Lesson {...dataProps} ref={vowelRef} />;
-      case LanguageE.VIETNAMESE_VNG0M2:
-        return <VnG0M2Lesson {...dataProps} ref={vowelRef} />;
-      case LanguageE.VIETNAMESE_VNG0M3:
-        return <VnG0M3Lesson {...dataProps} ref={vowelRef} />;
-
-      case LanguageE.VIETNAMESE_VNG1M1:
-        return <VnG1M1Lesson {...dataProps} ref={vowelRef} />;
-      case LanguageE.VIETNAMESE_VNG1M2:
-        return <VnG1M2Lesson {...dataProps} ref={vowelRef} />;
-      case LanguageE.VIETNAMESE_VNG1M3:
-        return <VnG1M3Lesson {...dataProps} ref={vowelRef} />;
-      case LanguageE.VIETNAMESE_VNG1M4:
-        return <VnG1M4Lesson {...dataProps} ref={vowelRef} />;
-      case LanguageE.VIETNAMESE_VNG1M5:
-        return <VnG1M5Lesson {...dataProps} ref={vowelRef} />;
-      case LanguageE.VIETNAMESE_VNG1M6:
-        return <VnG1M6Lesson {...dataProps} ref={vowelRef} />;
-      case LanguageE.VIETNAMESE_VNG1M7:
-        return <VnG1M7Lesson {...dataProps} ref={vowelRef} />;
-      case LanguageE.VIETNAMESE_VNG1M8:
-        return <VnG1M8Lesson {...dataProps} ref={vowelRef} />;
-      case LanguageE.VIETNAMESE_VNG1M9:
-        return <VnG1M9Lesson {...dataProps} ref={vowelRef} />;
-      case LanguageE.VIETNAMESE_VNG1M10:
-        return <VnG1M10Lesson {...dataProps} ref={vowelRef} />;
-
-      case LanguageE.VIETNAMESE_VNG2M1:
-        return <VnG2M1Lesson {...dataProps} ref={vowelRef} />;
-      case LanguageE.VIETNAMESE_VNG2M2:
-        return <VnG0M1Lesson {...dataProps} ref={vowelRef} />;
-      case LanguageE.VIETNAMESE_VNG2M3:
-      case LanguageE.VIETNAMESE_VNG2M4:
-      case LanguageE.VIETNAMESE_VNG2M5:
-      case LanguageE.VIETNAMESE_VNG2M6:
-      case LanguageE.VIETNAMESE_VNG2M9:
-      case LanguageE.VIETNAMESE_VNG2M10:
-        return React.cloneElement(VnG2M8Lesson, {
-          ...dataProps,
-          ref: vowelRef,
-        });
-      case LanguageE.VIETNAMESE_VNG2M7:
-      case LanguageE.VIETNAMESE_VNG2M8:
-        return React.cloneElement(VnG1M7Lesson, {
-          ...dataProps,
-          ref: vowelRef,
-        });
-      case LanguageE.VIETNAMESE_VNG2M11:
-      case LanguageE.VIETNAMESE_VNG2M12:
-        return <VnG2M12Lesson {...dataProps} ref={vowelRef} />;
-
-      case LanguageE.VIETNAMESE_VNG2M6:
-        return <VnG2M8Lesson {...dataProps} ref={vowelRef} />;
-      case LanguageE.VIETNAMESE_VNG3M1:
-        return <VnG3M1Lesson {...dataProps} ref={vowelRef} />;
-      case LanguageE.VIETNAMESE_VNG3M2:
-        return <VnG3M2Lesson {...dataProps} ref={vowelRef} />;
-      case LanguageE.VIETNAMESE_VNG3M3:
-        return <VnG3M3Lesson {...dataProps} ref={vowelRef} />;
-      case LanguageE.VIETNAMESE_VNG3M4:
-        return <VnG3M4Lesson {...dataProps} ref={vowelRef} />;
-      case LanguageE.VIETNAMESE_VNG3M5:
-        return <VnG3M5Lesson {...dataProps} ref={vowelRef} />;
-      case LanguageE.VIETNAMESE_VNG3M6:
-        return <VnG3M6Lesson {...dataProps} ref={vowelRef} />;
-      case LanguageE.VIETNAMESE_VNG3M7:
-        return <VnG3M7Lesson {...dataProps} ref={vowelRef} />;
-      case LanguageE.VIETNAMESE_VNG3M8:
-        return <VnG3M8Lesson {...dataProps} ref={vowelRef} />;
-      case LanguageE.VIETNAMESE_VNG3M9:
-        return <VnG0M1Lesson {...dataProps} ref={vowelRef} />;
-      case LanguageE.VIETNAMESE_VNG3M10:
-        return <VnG3M10Lesson {...dataProps} ref={vowelRef} />;
-
-      case LanguageE.VIETNAMESE_VNG4M1:
-        return <VnG4M1Lesson {...dataProps} ref={vowelRef} />;
-      case LanguageE.VIETNAMESE_VNG4M2:
-        return (
-          <VnG0M1Lesson
-            {...dataProps}
-            characterStyle={{
-              height: verticalScale(150),
-              width: scale(150),
-              marginBottom: -verticalScale(60),
-              marginLeft: -scale(40),
-            }}
-            ref={vowelRef}
-          />
-        );
-      case LanguageE.VIETNAMESE_VNG4M3:
-        return (
-          <DragProvider>
-            <VnG4M3Lesson {...dataProps} ref={vowelRef} />
-          </DragProvider>
-        );
-      case LanguageE.VIETNAMESE_VNG4M4:
-      case LanguageE.VIETNAMESE_VNG4M5:
-      case LanguageE.VIETNAMESE_VNG4M6:
-      case LanguageE.VIETNAMESE_VNG4M7:
-      case LanguageE.VIETNAMESE_VNG4M8:
-      case LanguageE.VIETNAMESE_VNG4M9:
-      case LanguageE.VIETNAMESE_VNG4M10:
-        return React.cloneElement(VnG2M8Lesson, {
-          ...dataProps,
-          ref: vowelRef,
-        });
-
-      case LanguageE.VIETNAMESE_VNG5M1:
-        return (
-          <VnG5M1Lesson
-            {...dataProps}
-            // descriptionType="text-highlight"
-            // textDescriptionProps={{
-            //   fontName: FontFamily.SVNCherishMoment,
-            //   fontSize: scale(25),
-            //   color: COLORS.RED_AF3A1B,
-            // }}
-            ref={vowelRef}
-          />
-        );
-      case LanguageE.VIETNAMESE_VNG6M1:
-        return <VnG3M1Lesson {...dataProps} ref={vowelRef} />;
-      case LanguageE.VIETNAMESE_VNG6M1_N:
-      case LanguageE.VIETNAMESE_VNG6M2:
-      case LanguageE.VIETNAMESE_VNG6M3:
-      case LanguageE.VIETNAMESE_VNG6M4:
-      case LanguageE.VIETNAMESE_VNG6M5:
-      case LanguageE.VIETNAMESE_VNG6M6:
-      case LanguageE.VIETNAMESE_VNG6M7:
-      case LanguageE.VIETNAMESE_VNG6M8:
-      case LanguageE.VIETNAMESE_VNG6M9:
-      case LanguageE.VIETNAMESE_VNG6M10:
-        return React.cloneElement(VnG2M8Lesson, {
-          ...dataProps,
-          ref: vowelRef,
-        });
-
-      case LanguageE.VIETNAMESE_VNG4M3:
-        return (
-          <DragProvider>
-            <VnG4M3Lesson {...dataProps} ref={vowelRef} />
-          </DragProvider>
-        );
-      case LanguageE.VIETNAMESE_VNG5M1N:
-      case LanguageE.VIETNAMESE_VNG5M2:
-        return <VNG5M1NLesson {...dataProps} ref={vowelRef} />;
-      case LanguageE.VIETNAMESE_VNG5M3:
-      case LanguageE.VIETNAMESE_VNG5M4:
-      case LanguageE.VIETNAMESE_VNG5M5:
-      case LanguageE.VIETNAMESE_VNG5M7:
-      case LanguageE.VIETNAMESE_VNG5M8:
-      case LanguageE.VIETNAMESE_VNG5M9:
-      case LanguageE.VIETNAMESE_VNG5M10:
-      case LanguageE.VIETNAMESE_VNG5M11:
-      case LanguageE.VIETNAMESE_VNG5M12:
-        return React.cloneElement(VnG2M8Lesson, {
-          ...dataProps,
-          ref: vowelRef,
-        });
-
-      /**----------------------
-       *todo    các question cho môn khoa học
-       *------------------------**/
-      case LessonTypeE.MIX_COLOR:
-        return (
-          <ScienceLesson
-            {...dataProps}
-            answers={(testTask?.question[lessonIndex]?.answers ?? []).map(
-              v => '#' + v.replace('.png', ''),
-            )}
-          />
-        );
-      case ScienceE.SCIENCE_G0M1:
-        return <Science_G0M1 {...dataProps} />;
-      case ScienceE.SCIENCE_G0M2:
-        return (
-          <ScienceLesson
-            {...dataProps}
-            answers={(testTask?.question[lessonIndex]?.answers ?? []).map(
-              v => '#' + v.replace('.png', ''),
-            )}
-          />
-        );
-      case ScienceE.SCIENCE_SG1M2:
-        return <Science_SG1M2 {...dataProps} ref={vowelRef} />;
-      case ScienceE.SCIENCE_SG2M4:
-        return <Science_SG2M4 {...dataProps} ref={vowelRef} />;
-      case ScienceE.SCIENCE_SG3M9:
-        return <Science_SG3M9 {...dataProps} ref={vowelRef} />;
-      case ScienceE.SCIENCE_SG4M3:
-        return <Science_SG4M3 {...dataProps} ref={vowelRef} />;
-      case ScienceE.SCIENCE_SG5M5:
-        return <Science_SG5M5 {...dataProps} ref={vowelRef} />;
-      case ScienceE.SCIENCE_SG6M6:
-        return <Science_SG6M3 {...dataProps} ref={vowelRef} />;
-
-      /**----------------------
-       *todo    các question cho môn toán
-       *------------------------**/
-      case MathQuestionType.MathMG0M1:
-      case MathQuestionType.MathMG0M2:
-      case MathQuestionType.MathMG0M3:
-        return (
-          <Math_Kindergarten
-            {...dataProps}
-            isMulti={true}
-            answer={['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']}
-          />
-        );
-      case MathQuestionType.MathMG1M1:
-      case MathQuestionType.MathMG1M2:
-      case MathQuestionType.MathMG1M4:
-      case MathQuestionType.MathMG1M5:
-      case MathQuestionType.MathMG1M6:
-      case MathQuestionType.MathMG1M7:
-      case MathQuestionType.MathMG1M8:
-      case MathQuestionType.MathMG1M9:
-      case MathQuestionType.MathMG1M10:
-      case MathQuestionType.MathMG1M11:
-      case MathQuestionType.MathMG1M12:
-      case MathQuestionType.MathMG1M13:
-      case MathQuestionType.MathMG1M14:
-      case MathQuestionType.MathMG1M15:
-      case MathQuestionType.MathMG1M16:
-      case MathQuestionType.MathMG1M17:
-      case MathQuestionType.MathMG1M18:
-        return <Math_G4M_SelectAnswer {...dataProps} ref={vowelRef} />;
-      case MathQuestionType.MathMG1M3:
-        return testTask?.stt === 4 ? ( // * check xem có phải part 4 không
-          <Math_MG1M3_P4
-            {...dataProps}
-            isMulti={true}
-            ref={vowelRef}
-            answer={testTask.question[lessonIndex].answers as string[]}
-          />
-        ) : (
-          <Math_MG1M3
-            {...dataProps}
-            ref={vowelRef}
-            isMulti={false}
-            answer={['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']}
-          />
-        );
-      case MathQuestionType.MathMG2M1:
-      case MathQuestionType.MathMG2M3:
-      case MathQuestionType.MathMG2M4:
-      case MathQuestionType.MathMG2M5:
-      case MathQuestionType.MathMG2M6:
-      case MathQuestionType.MathMG2M9:
-      case MathQuestionType.MathMG2M10:
-      case MathQuestionType.MathMG2M12:
-        return <Math_G3M_SelectAnswer {...dataProps} ref={vowelRef} />;
-      case MathQuestionType.MathMG2M2:
-      case MathQuestionType.MathMG2M7:
-        return <Math_MG2M4 {...dataProps} ref={vowelRef} isMulti={false} />;
-      case MathQuestionType.MathMG2M8:
-      case MathQuestionType.MathMG2M13:
-      case MathQuestionType.MathMG2M14:
-        return (
-          <Math_G4M_SelectAnswer
-            characterStyle={characterStyle}
-            {...dataProps}
-            ref={vowelRef}
-          />
-        );
-      case MathQuestionType.MathMG2M11:
-        return <Math_MG2M11 {...dataProps} ref={vowelRef} />;
-      case MathQuestionType.MathMG2M4:
-      case MathQuestionType.MathMG2M15:
-      case MathQuestionType.MathMG2M16:
-      case MathQuestionType.MathMG2M19:
-      case MathQuestionType.MathMG2M20:
-        return (
-          <Math_MG2M4
-            {...dataProps}
-            ref={vowelRef}
-            isMulti={true}
-            answer={['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']}
-          />
-        );
-      case MathQuestionType.MathMG3M6:
-      case MathQuestionType.MathMG3M7:
-      case MathQuestionType.MathMG3M8:
-      case MathQuestionType.MathMG3M10:
-      case MathQuestionType.MathMG3M11:
-        return (
-          <Math_MG3_KeyboardNumber
-            {...dataProps}
-            ref={vowelRef}
-            isMulti={true}
-            answer={['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']}
-          />
-        );
-      case MathQuestionType.MathMG3M16:
-        return <Math_G3M_SelectAnswer {...dataProps} ref={vowelRef} />;
-
-      case MathQuestionType.MathMG4M13:
-      case MathQuestionType.MathMG4M14:
-      case MathQuestionType.MathMG4M15:
-        return (
-          <Math_MG3_KeyboardNumber
-            {...dataProps}
-            ref={vowelRef}
-            isMulti={true}
-            answer={['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']}
-          />
-        );
-      case MathQuestionType.MathMG4M16:
-        return (
-          <Math_MG4M16
-            {...dataProps}
-            ref={vowelRef}
-            isMulti={true}
-            answer={['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '.']}
-          />
-        );
-      case MathQuestionType.MathMG4M18:
-      case MathQuestionType.MathMG4M21:
-      case MathQuestionType.MathMG4M22:
-        return (
-          <Math_G4M_SelectAnswer
-            characterStyle={characterStyle}
-            {...dataProps}
-            ref={vowelRef}
-          />
-        );
-
-      case MathQuestionType.MathMG4M23:
-      case MathQuestionType.MathMG4M24:
-      case MathQuestionType.MathMG4M25:
-      case MathQuestionType.MathMG4M26:
-      case MathQuestionType.MathMG4M27:
-        return (
-          <Math_MG3_KeyboardNumber
-            {...dataProps}
-            ref={vowelRef}
-            isMulti={true}
-            answer={['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '.']}
-          />
-        );
-      case MathQuestionType.MathMG5M8:
-      case MathQuestionType.MathMG5M12:
-      case MathQuestionType.MathMG5M13:
-      case MathQuestionType.MathMG5M14:
-      case MathQuestionType.MathMG5M15:
-      case MathQuestionType.MathMG5M16:
-      case MathQuestionType.MathMG5M18:
-        return (
-          <Math_MG3_KeyboardNumber
-            {...dataProps}
-            ref={vowelRef}
-            isMulti={true}
-            characterStyle={characterStyle}
-            answer={['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '.']}
-          />
-        );
-      case MathQuestionType.MathMG5M9:
-      case MathQuestionType.MathMG5M10:
-      case MathQuestionType.MathMG5M11:
-        return (
-          <Math_G4M_SelectAnswer
-            characterStyle={characterStyle}
-            {...dataProps}
-            ref={vowelRef}
-          />
-        );
-      case MathQuestionType.MathMG5M18:
-        return (
-          <Math_MG5M18
-            {...dataProps}
-            ref={vowelRef}
-            isMulti={true}
-            answer={['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '.']}
-          />
-        );
-
-      case MathQuestionType.MathMG6M1:
-      case MathQuestionType.MathMG6M2:
-      case MathQuestionType.MathMG6M3:
-      case MathQuestionType.MathMG6M4:
-      case MathQuestionType.MathMG6M6:
-      case MathQuestionType.MathMG6M7:
-      case MathQuestionType.MathMG6M9:
-      case MathQuestionType.MathMG6M10:
-      case MathQuestionType.MathMG6M11:
-      case MathQuestionType.MathMG6M12:
-      case MathQuestionType.MathMG6M13:
-      case MathQuestionType.MathMG6M14:
-        return <Math_G4M_SelectAnswer {...dataProps} ref={vowelRef} />;
-      case MathQuestionType.MathMG6M8:
-        return (
-          <Math_MG3_KeyboardNumber
-            {...dataProps}
-            ref={vowelRef}
-            isMulti={true}
-            answer={['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '.']}
-          />
-        );
-      case MathQuestionType.MathMG6M15:
-        return (
-          <Math_MG6M15
-            {...dataProps}
-            isMulti={true}
-            answer={['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '.']}
-          />
-        );
-      case MathQuestionType.MathMG4M30:
-        return (
-          <MathLesson
-            moduleIndex={lessonIndex}
-            nextModule={nextModule}
-            totalModule={testTask?.question.length ?? 0}
-            backgroundImage={
-              env.IMAGE_BACKGROUND_BASE_API_URL + lessonSetting?.backgroundImage
-            }
-            characterImageSuccess={
-              env.IMAGE_BACKGROUND_BASE_API_URL +
-              lessonSetting?.figureSuccessImage
-            }
-            characterImageFail={
-              env.IMAGE_BACKGROUND_BASE_API_URL + lessonSetting?.figureFailImage
-            }
-            lessonName={route.lessonName}
-            moduleName={route.moduleName}
-            firstMiniTestTask={testTask}
-            ref={vowelRef}
-          />
-        );
-      default:
-        return <OnBoardingScreen />;
+    if (!questionType) {
+      return <OnBoardingScreen />;
     }
+    // Find matching pattern
+    const matchedPattern = LESSON_PATTERNS.find(pattern =>
+      pattern.pattern.test(questionType),
+    );
+
+    if (!matchedPattern) {
+      return <OnBoardingScreen />;
+    }
+
+    // Get component
+    let Component = matchedPattern.component;
+    if (typeof Component === 'function' && Component.length > 0) {
+      Component = Component(questionType, dataProps, testTask);
+    }
+
+    // Get props
+    let props = matchedPattern.props;
+    if (typeof props === 'function') {
+      props = props(dataProps, testTask, lessonIndex, characterStyle);
+    } else {
+      props = {...dataProps, ...props};
+    }
+
+    // Handle wrapper if exists
+    if (matchedPattern.wrapper) {
+      const Wrapper = matchedPattern.wrapper;
+      return (
+        <Wrapper>
+          <Component {...props} ref={vowelRef} />
+        </Wrapper>
+      );
+    }
+
+    return <Component {...props} ref={vowelRef} />;
   };
 
   const buildHint = () => {

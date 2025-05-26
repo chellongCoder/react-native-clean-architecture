@@ -75,6 +75,7 @@ const VnG3M2Lesson = observer(
         backgroundImage,
         characterImageSuccess,
         characterImageFail,
+        ...other
       },
       ref,
     ) => {
@@ -236,6 +237,7 @@ const VnG3M2Lesson = observer(
               ? undefined
               : word
           }
+          {...other}
           isAnswerCorrect={isAnswerCorrect}
           isShowCorrectContainer={isShowCorrectContainer}
           onPressFlower={toggleShowHint}

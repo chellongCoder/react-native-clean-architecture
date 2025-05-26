@@ -1,4 +1,4 @@
-import {StyleSheet, Text, View} from 'react-native';
+import {StyleProp, StyleSheet, Text, View, ViewStyle} from 'react-native';
 import React, {
   forwardRef,
   useCallback,
@@ -52,6 +52,7 @@ type Props = {
   backgroundImage?: string;
   characterImageSuccess?: string;
   characterImageFail?: string;
+  characterStyle?: StyleProp<ViewStyle>;
 };
 
 const VnG2M8Lesson = observer(
@@ -67,6 +68,7 @@ const VnG2M8Lesson = observer(
         backgroundImage,
         characterImageSuccess,
         characterImageFail,
+        characterStyle,
       },
       ref,
     ) => {
@@ -201,11 +203,7 @@ const VnG2M8Lesson = observer(
           isAnswerCorrect={isAnswerCorrect}
           isShowCorrectContainer={isShowCorrectContainer}
           onPressFlower={toggleShowHint}
-          characterStyle={{
-            height: verticalScale(260),
-            marginBottom: -verticalScale(80),
-            marginLeft: -verticalScale(30),
-          }}
+          characterStyle={characterStyle}
           buildQuestion={
             <View>
               <Animated.Image

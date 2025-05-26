@@ -1,5 +1,6 @@
-import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {StyleSheet, Text, View} from 'react-native';
 import React, {
+  forwardRef,
   useCallback,
   useContext,
   useEffect,
@@ -15,20 +16,10 @@ import CanvasWrite, {CanvasWriteRef} from '../../components/CanvasWrite';
 import {Task} from 'src/home/application/types/GetListQuestionResponse';
 import useAuthenticationStore from 'src/authentication/presentation/stores/useAuthenticationStore';
 import {scale, verticalScale} from 'react-native-size-matters';
-import {
-  assets,
-  darkenColor,
-  getCorrectAnswer,
-  isAndroid,
-} from 'src/core/presentation/utils';
+import {darkenColor, getCorrectAnswer} from 'src/core/presentation/utils';
 import {useLessonStore} from '../../stores/LessonStore/useGetPostsStore';
 import {useSettingLesson} from '../../hooks/useSettingLesson';
 import {COLORS} from 'src/core/presentation/constants/colors';
-import Tts from 'react-native-tts';
-import {
-  iosVoice,
-  listLanguage,
-} from 'src/core/presentation/hooks/textToSpeech/TextToSpeechProvider';
 import {TextToSpeechContext} from 'src/core/presentation/hooks/textToSpeech/TextToSpeechContext';
 import {useIsFocused} from '@react-navigation/native';
 import ImageMeaning from '../../components/ImageMeaning';
@@ -67,7 +58,7 @@ const LatinLesson = ({
   const [isCorrect, setIscorrect] = useState(false);
   const [countCall, setCountCall] = useState(0);
 
-  const {ttsSpeak, updateDefaultVoice} = useContext(TextToSpeechContext);
+  const {ttsSpeak} = useContext(TextToSpeechContext);
   const focus = useIsFocused();
   const {lessonSetting} = useHomeStore();
 
@@ -123,38 +114,6 @@ const LatinLesson = ({
       return () => clearTimeout(firstTimeout);
     }
   }, [onSpeechText, focus]); // Added focus to the dependency array
-
-  useEffect(() => {
-    console.log(
-      '🛠 LOG: 🚀 --> -----------------------------------------------------🛠 LOG: 🚀 -->',
-    );
-    console.log('🛠 LOG: 🚀 --> ~ Tts.voices ~ lessonName:', lessonName);
-    console.log(
-      '🛠 LOG: 🚀 --> -----------------------------------------------------🛠 LOG: 🚀 -->',
-    );
-
-    Tts.voices().then(voices => {
-      if (lessonName.toLocaleLowerCase().includes('english')) {
-        const engVoice = voices.find(
-          voice => voice.language === listLanguage['US English'],
-        );
-        updateDefaultVoice?.(
-          isAndroid ? engVoice?.id : iosVoice[3].id,
-          'US English',
-        );
-      } else if (lessonName.toLocaleLowerCase().includes('mandarin')) {
-        const engVoice = voices.find(
-          voice =>
-            voice.language ===
-            listLanguage['Mainland China, simplified characters'],
-        );
-        updateDefaultVoice?.(
-          engVoice?.id,
-          'Mainland China, simplified characters',
-        );
-      }
-    });
-  }, [lessonName, updateDefaultVoice]);
 
   const onSubmit = useCallback(async () => {
     const base64 = canvasWriteRef.current?.getBase64();
@@ -261,7 +220,7 @@ const LatinLesson = ({
             ref={canvasWriteRef}
             text={{
               content: answerSelected ?? '',
-              color: COLORS.PRIMARY,
+              style: {color: COLORS.PRIMARY},
               show: !!answerSelected,
             }}
           />
@@ -281,7 +240,7 @@ const LatinLesson = ({
   );
 };
 
-export default LatinLesson;
+export default forwardRef(LatinLesson);
 
 const styles = StyleSheet.create({
   fill: {
