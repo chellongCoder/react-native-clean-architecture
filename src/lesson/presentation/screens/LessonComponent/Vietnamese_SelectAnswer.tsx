@@ -1,5 +1,4 @@
-/* eslint-disable react/no-unstable-nested-components */
-import {StyleSheet, Text, View} from 'react-native';
+import {StyleProp, StyleSheet, Text, View, ViewStyle} from 'react-native';
 import React, {
   forwardRef,
   useCallback,
@@ -17,30 +16,20 @@ import useGlobalStyle from 'src/core/presentation/hooks/useGlobalStyle';
 import {Task} from 'src/home/application/types/GetListQuestionResponse';
 import useAuthenticationStore from 'src/authentication/presentation/stores/useAuthenticationStore';
 import {scale, verticalScale} from 'react-native-size-matters';
-import {
-  darkenColor,
-  getCorrectAnswer,
-  isAndroid,
-} from 'src/core/presentation/utils';
+import {darkenColor, getCorrectAnswer} from 'src/core/presentation/utils';
 import {useLessonStore} from '../../stores/LessonStore/useGetPostsStore';
 import {useSettingLesson} from '../../hooks/useSettingLesson';
 import {COLORS} from 'src/core/presentation/constants/colors';
-import Tts from 'react-native-tts';
-import {
-  iosVoice,
-  listLanguage,
-} from 'src/core/presentation/hooks/textToSpeech/TextToSpeechProvider';
 import {TextToSpeechContext} from 'src/core/presentation/hooks/textToSpeech/TextToSpeechContext';
 import {useIsFocused} from '@react-navigation/native';
 import useHomeStore from 'src/home/presentation/stores/useHomeStore';
 import LearningImage from '../../components/LearningImage';
 import LearningText from '../../components/LearningText';
-import KeyboardNumber, {
-  SelectionAnswersQuestionRef,
-} from '../../components/KeyboardNumber';
+import {SelectionAnswersQuestionRef} from '../../components/SelectionAnswersQuestion';
 import {useI18n} from 'src/core/presentation/hooks/useI18n';
 import VoiceButton from '../../components/VoiceButton';
 import {LessonRef} from '../../types';
+import SelectionAnswersQuestion from '../../components/SelectionAnswersQuestion';
 
 type Props = {
   moduleIndex: number;
@@ -52,6 +41,7 @@ type Props = {
   backgroundImage?: string;
   characterImageSuccess?: string;
   characterImageFail?: string;
+  characterStyle?: StyleProp<ViewStyle>;
 };
 
 const VnG1M1Lesson = forwardRef<LessonRef, Props>(
@@ -66,6 +56,7 @@ const VnG1M1Lesson = forwardRef<LessonRef, Props>(
       backgroundImage,
       characterImageFail,
       characterImageSuccess,
+      characterStyle,
     }: Props,
     ref,
   ) => {
@@ -76,7 +67,7 @@ const VnG1M1Lesson = forwardRef<LessonRef, Props>(
     const [isCorrect, setIscorrect] = useState(false);
     const answerRef = useRef<SelectionAnswersQuestionRef>(null);
 
-    const {ttsSpeak, updateDefaultVoice} = useContext(TextToSpeechContext);
+    const {ttsSpeak} = useContext(TextToSpeechContext);
     const focus = useIsFocused();
     const {lessonSetting} = useHomeStore();
 
@@ -171,6 +162,7 @@ const VnG1M1Lesson = forwardRef<LessonRef, Props>(
             description: settings.prompt?.toString() ?? '',
           }
         }
+        characterStyle={characterStyle}
         score={selectedChild?.adsPoints}
         isAnswerCorrect={isAnswerCorrect}
         isShowCorrectContainer={isShowCorrectContainer}
@@ -207,17 +199,17 @@ const VnG1M1Lesson = forwardRef<LessonRef, Props>(
 
             <View style={{height: verticalScale(10)}} />
 
-            <KeyboardNumber
+            <SelectionAnswersQuestion
               answer={
                 (firstMiniTestTask?.question?.[moduleIndex]
                   .answers as string[]) ?? []
               }
-              answerBuilder={e => <Text style={[styles.textAnswer]}>{e}</Text>}
               question={
                 <Text style={[styles.fonts_Borel, styles.textQuestion]}>
                   {firstMiniTestTask?.question?.[moduleIndex].content ?? ''}
                 </Text>
               }
+              answerStyle={styles.textAnswer}
               isShowCorrectContainer={isShowCorrectContainer}
               isAnswerCorrect={!!isAnswerCorrect}
               onSelectAnswer={(e: string[]) => {
@@ -291,14 +283,9 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
   },
-  pb32: {},
-  mt32: {
-    marginTop: 32,
-  },
   alignSelfCenter: {
     alignSelf: 'center',
   },
-  iconAIVoiceContainer: {height: scale(31), width: scale(31)},
   buttonContainer: {
     borderRadius: scale(52),
     paddingVertical: verticalScale(9),

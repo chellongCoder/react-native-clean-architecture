@@ -163,6 +163,8 @@ const styles = StyleSheet.create({
     // Add your styles here
     flexDirection: 'row',
     alignItems: 'center',
+    width: '80%',
+    justifyContent: 'center',
   },
   fonts_SVN_Neu: {
     // Add your styles here

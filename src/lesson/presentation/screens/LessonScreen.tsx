@@ -496,7 +496,7 @@ const LESSON_PATTERNS = [
           },
   },
   {
-    pattern: /^MATH_MG2M(1|3|4|5|6|9|10|12)$/,
+    pattern: /^MATH_MG2M(1|3|4|5|6|9|10|12|16)$/,
     component: Math_G3M_SelectAnswer,
     props: {},
   },
@@ -508,7 +508,15 @@ const LESSON_PATTERNS = [
   {
     pattern: /^MATH_MG2M(8|13|14)$/,
     component: Math_G4M_SelectAnswer,
-    props: (characterStyle: any) => ({characterStyle}),
+    props: (
+      dataProps: any,
+      testTask: any,
+      lessonIndex: number,
+      characterStyle: any,
+    ) => ({
+      ...dataProps,
+      characterStyle,
+    }),
   },
   {
     pattern: /^MATH_MG2M11$/,
@@ -524,12 +532,53 @@ const LESSON_PATTERNS = [
     },
   },
   {
-    pattern: /^MATH_MG3M(6|7|8|10|11)$/,
+    pattern: /^MATH_MG3M(6|7|8|10|11|13|14|15|23|24|25|26|27)$/,
     component: Math_MG3_KeyboardNumber,
     props: {
       isMulti: true,
       answer: ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'],
     },
+  },
+  {
+    pattern: /^MATH_MG3M(5|16|18|21|22)$/,
+    component: Math_G4M_SelectAnswer,
+    props: (
+      dataProps: any,
+      testTask: any,
+      lessonIndex: number,
+      characterStyle: any,
+    ) => ({
+      ...dataProps,
+      characterStyle,
+    }),
+  },
+  {
+    pattern: /^MATH_MG4M(13|14|15|23|24|25|26|27)$/,
+    component: Math_MG3_KeyboardNumber,
+    props: (
+      dataProps: any,
+      testTask: any,
+      lessonIndex: number,
+      characterStyle: any,
+    ) => ({
+      ...dataProps,
+      isMulti: true,
+      answer: ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'],
+      characterStyle,
+    }),
+  },
+  {
+    pattern: /^MATH_MG4M(18|21|22)$/,
+    component: Math_G4M_SelectAnswer,
+    props: (
+      dataProps: any,
+      testTask: any,
+      lessonIndex: number,
+      characterStyle: any,
+    ) => ({
+      ...dataProps,
+      characterStyle,
+    }),
   },
   {
     pattern: /^MATH_MG4M16$/,
@@ -545,20 +594,68 @@ const LESSON_PATTERNS = [
     props: {},
   },
   {
-    pattern: /^MATH_MG5M18$/,
-    component: Math_MG5M18,
+    pattern: /^MATH_MG5M(8|12|13|14|15|16|18)$/,
+    component: Math_MG3_KeyboardNumber,
+    props: (
+      dataProps: any,
+      testTask: any,
+      lessonIndex: number,
+      characterStyle: any,
+    ) => ({
+      ...dataProps,
+      isMulti: true,
+      answer: ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'],
+      characterStyle,
+    }),
+  },
+  {
+    pattern: /^MATH_MG5M(9|10|11)$/,
+    component: Math_G4M_SelectAnswer,
+    props: (
+      dataProps: any,
+      testTask: any,
+      lessonIndex: number,
+      characterStyle: any,
+    ) => ({
+      ...dataProps,
+      characterStyle,
+    }),
+  },
+  {
+    pattern: /^MATH_MG6M15$/,
+    component: Math_MG6M15,
     props: {
       isMulti: true,
       answer: ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'],
     },
   },
   {
-    pattern: /^Math_MG6M15$/,
-    component: Math_MG6M15,
-    props: {
+    pattern: /^MATH_MG6M(1|2|3|4|6|7|9|10|11|12|13|14)$/,
+    component: Math_G4M_SelectAnswer,
+    props: (
+      dataProps: any,
+      testTask: any,
+      lessonIndex: number,
+      characterStyle: any,
+    ) => ({
+      ...dataProps,
+      characterStyle,
+    }),
+  },
+  {
+    pattern: /^MATH_MG6M(8)$/,
+    component: Math_MG3_KeyboardNumber,
+    props: (
+      dataProps: any,
+      testTask: any,
+      lessonIndex: number,
+      characterStyle: any,
+    ) => ({
+      ...dataProps,
       isMulti: true,
       answer: ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'],
-    },
+      characterStyle,
+    }),
   },
 ];
 

@@ -279,7 +279,7 @@ const Math_MG4M16 = observer(
                       style={[
                         styles.fonts_SVN_Cherish,
                         styles.textQuestion,
-                        {fontSize: 40},
+                        {fontSize: scale(40)},
                       ]}>
                       {descriptionWithAnswers}
                     </Text>
