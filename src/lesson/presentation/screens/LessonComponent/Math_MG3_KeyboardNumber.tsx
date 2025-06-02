@@ -225,19 +225,12 @@ const Math_MG3_KeyboardNumber = observer(
           isAnswerCorrect={isAnswerCorrect}
           isShowCorrectContainer={isShowCorrectContainer}
           onPressFlower={toggleShowHint}
-          characterStyle={
-            characterStyle ?? {
-              height: verticalScale(300),
-              marginBottom: -verticalScale(130),
-              marginLeft: -scale(40),
-            }
-          }
           buildQuestion={
             <View>
               <Animated.Image
                 resizeMode={'contain'}
                 width={WIDTH_SCREEN}
-                height={scale(180)}
+                height={scale(150)}
                 style={[{}, animatedStyle]}
                 source={{
                   uri:
