@@ -1,4 +1,4 @@
-import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {StyleSheet, Text, View} from 'react-native';
 import React, {
   forwardRef,
   useCallback,
@@ -14,7 +14,7 @@ import {FontFamily} from 'src/core/presentation/hooks/useFonts';
 import useGlobalStyle from 'src/core/presentation/hooks/useGlobalStyle';
 import {Task} from 'src/home/application/types/GetListQuestionResponse';
 import {COLORS} from 'src/core/presentation/constants/colors';
-import {assets, getCorrectAnswer} from 'src/core/presentation/utils';
+import {getCorrectAnswer} from 'src/core/presentation/utils';
 import {scale, verticalScale} from 'react-native-size-matters';
 import {
   Easing,
@@ -176,7 +176,7 @@ const PronunciationLesson = observer(
         },
         fullAnswer: firstMiniTestTask?.question?.[moduleIndex].fullAnswer,
         correctAnswer: getCorrectAnswer(
-          firstMiniTestTask?.question?.[moduleIndex].correctAnswer,
+          firstMiniTestTask?.question?.[moduleIndex]?.correctAnswer as string,
         ),
         totalTime: 5 * 60, // * tổng time làm 1câu
       });
@@ -193,7 +193,7 @@ const PronunciationLesson = observer(
         checkEmpty,
       } = usePronunciation({
         correctAnswer: getCorrectAnswer(
-          firstMiniTestTask?.question?.[moduleIndex].correctAnswer,
+          firstMiniTestTask?.question?.[moduleIndex]?.correctAnswer as string,
         ),
       });
 
@@ -217,7 +217,7 @@ const PronunciationLesson = observer(
       const onSpeechText = useCallback(() => {
         ttsSpeak?.(
           getCorrectAnswer(
-            firstMiniTestTask?.question?.[moduleIndex].correctAnswer,
+            firstMiniTestTask?.question?.[moduleIndex].correctAnswer as string,
           ),
         );
       }, [firstMiniTestTask?.question, moduleIndex, ttsSpeak]);
@@ -363,9 +363,10 @@ const PronunciationLesson = observer(
           backgroundColor="#66c270"
           backgroundAnswerColor={settings.backgroundAnswerColor}
           prompt={
-            firstMiniTestTask?.question?.[moduleIndex]?.instruction ?? {
-              descrption: settings.prompt?.toString() ?? '',
-            }
+            firstMiniTestTask?.question?.[moduleIndex]?.instruction
+              ?.description ??
+            settings.prompt?.toString() ??
+            ''
           }
           price="Free"
           score={selectedChild?.adsPoints}
@@ -573,33 +574,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
   },
-  pr16: {
-    paddingRight: 16,
-  },
-  ph24: {
-    paddingHorizontal: 24,
-  },
-  pb8: {
-    paddingBottom: verticalScale(8),
-  },
-  pb16: {
-    paddingBottom: verticalScale(16),
-  },
-  pb32: {
-    paddingBottom: verticalScale(32),
-  },
-  mt8: {
-    marginTop: verticalScale(8),
-  },
-  mt16: {
-    marginTop: verticalScale(16),
-  },
-  mt24: {
-    marginTop: verticalScale(24),
-  },
-  mt32: {
-    marginTop: verticalScale(32),
-  },
+
   alignSelfCenter: {
     alignSelf: 'center',
   },

@@ -1,4 +1,4 @@
-import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {StyleSheet, Text, View} from 'react-native';
 import React, {
   forwardRef,
   useCallback,
@@ -18,7 +18,6 @@ import {COLORS} from 'src/core/presentation/constants/colors';
 import {
   darkenColor,
   getCorrectAnswer,
-  isMMSS,
   isSubArray,
 } from 'src/core/presentation/utils';
 import {scale, verticalScale} from 'react-native-size-matters';
@@ -37,10 +36,11 @@ import useAuthenticationStore from 'src/authentication/presentation/stores/useAu
 import {observer} from 'mobx-react';
 import {LessonRef} from '../../types';
 import useHomeStore from 'src/home/presentation/stores/useHomeStore';
-import SelectionAnswersQuestion, {
-  SelectionAnswersQuestionRef,
-} from '../../components/SelectionAnswersQuestion';
-import CharScramble, {CharScrambleRep} from '../../components/CharScramble';
+
+import SelectionTextsQuestion, {
+  SelectionTextsQuestionRef,
+} from '../../components/SelectionTextsQuestion';
+import TextHighlight from '../../components/TextHighlight';
 import {useI18n} from 'src/core/presentation/hooks/useI18n';
 import VoiceButton from '../../components/VoiceButton';
 import Tts from 'react-native-tts';
@@ -49,6 +49,8 @@ import {
   listLanguage,
 } from 'src/core/presentation/hooks/textToSpeech/TextToSpeechProvider';
 import {isAndroid} from 'src/core/presentation/utils';
+import ScrollIndicator from '../../components/ScrollIndicator';
+import env from 'src/core/infrastructure/env';
 
 type Props = {
   moduleIndex: number;
@@ -60,9 +62,11 @@ type Props = {
   backgroundImage?: string;
   characterImageSuccess?: string;
   characterImageFail?: string;
+  isMulti?: boolean;
+  answer?: string[];
 };
 
-const English_G3M20 = observer(
+const English_SelectText = observer(
   forwardRef<LessonRef, Props>(
     (
       {
@@ -75,24 +79,23 @@ const English_G3M20 = observer(
         backgroundImage,
         characterImageSuccess,
         characterImageFail,
+        isMulti,
+        answer,
       },
       ref,
     ) => {
+      const answerRef = useRef<SelectionTextsQuestionRef>(null);
       const globalStyle = useGlobalStyle();
 
       const {ttsSpeak, updateDefaultVoice} = useContext(TextToSpeechContext);
       const focus = useIsFocused();
-      const answerRef = useRef<SelectionAnswersQuestionRef>();
 
       const [answerSelected, setAnswerSelected] = useState<string | string[]>(
         '',
       );
-
       const {trainingCount, getSetting} = useLessonStore();
 
       const {selectedChild} = useAuthenticationStore();
-
-      const charScrambleRep = useRef<CharScrambleRep>(null);
 
       const {
         isAnswerCorrect,
@@ -105,14 +108,15 @@ const English_G3M20 = observer(
         resetLearning,
       } = useSettingLesson({
         countDownTime: trainingCount <= 2 ? 0 : 5,
-        isCorrectAnswer:
-          answerSelected.toString() ===
-          (firstMiniTestTask?.question?.[moduleIndex]?.correctAnswer as string),
+        isCorrectAnswer: isSubArray(
+          answerSelected as string[],
+          firstMiniTestTask?.question?.[moduleIndex]?.correctAnswer as string[],
+        ),
         onSubmit: () => {
-          setAnswerSelected('');
-          nextModule((answerSelected as string[]).toString());
+          setAnswerSelected(isMulti ? [] : '');
           answerRef.current?.resetAnswerSelected?.();
-          charScrambleRep.current?.reset?.();
+
+          nextModule((answerSelected as string[]).join(''));
         },
         fullAnswer: firstMiniTestTask?.question?.[moduleIndex].fullAnswer,
       });
@@ -131,10 +135,29 @@ const English_G3M20 = observer(
           : characterImageFail;
       }, [characterImageFail, characterImageSuccess, isAnswerCorrect]);
 
+      const descriptionWithAnswers = useMemo(() => {
+        const insertAnswersIntoDescription = (
+          description: string,
+          answers: string[],
+        ) => {
+          let answerIndex = 0;
+          return description.replace(/_/g, () =>
+            answerIndex < answers.length ? answers[answerIndex++] : '_',
+          );
+        };
+        const description =
+          firstMiniTestTask?.question?.[moduleIndex].description || '';
+        const updatedDescription = insertAnswersIntoDescription(
+          description,
+          answerSelected as string[],
+        );
+        return updatedDescription;
+      }, [answerSelected, firstMiniTestTask?.question, moduleIndex]);
+
       const onSpeechText = useCallback(() => {
         ttsSpeak?.(
-          firstMiniTestTask?.question?.[moduleIndex].content
-            .toString()
+          firstMiniTestTask?.question?.[moduleIndex]?.description
+            ?.toString()
             .toLowerCase() ?? '',
         );
       }, [firstMiniTestTask?.question, moduleIndex, ttsSpeak]);
@@ -174,6 +197,13 @@ const English_G3M20 = observer(
         });
       }, [moduleIndex, opacity, scaleS]);
 
+      const animatedStyle = useAnimatedStyle(() => {
+        return {
+          opacity: opacity.value,
+          transform: [{scale: scaleS.value}],
+        };
+      });
+
       useEffect(() => {
         Tts.voices().then(voices => {
           if (lessonName.toLocaleLowerCase().includes('english')) {
@@ -206,19 +236,13 @@ const English_G3M20 = observer(
         });
       }, [lessonName, updateDefaultVoice]);
 
-      const animatedStyle = useAnimatedStyle(() => {
-        return {
-          opacity: opacity.value,
-          transform: [{scale: scaleS.value}],
-        };
-      });
-
       useImperativeHandle(ref, () => ({
         isAnswerCorrect,
         onChoiceCorrectedAnswer: () => {
           setAnswerSelected(
             getCorrectAnswer(
-              firstMiniTestTask?.question?.[moduleIndex]?.correctAnswer,
+              firstMiniTestTask?.question?.[moduleIndex]
+                ?.correctAnswer as string,
             ),
           );
         },
@@ -228,19 +252,30 @@ const English_G3M20 = observer(
         <LessonComponent
           backgroundImage={backgroundImage}
           characterImage={characterImage}
-          lessonName={lessonName}
-          module={moduleName}
-          part={firstMiniTestTask?.name}
-          backgroundColor="#66c270"
-          backgroundAnswerColor={
-            settings.backgroundAnswerColor ?? COLORS.GREEN_DDF598
-          }
-          prompt={{
-            description: '',
+          characterStyle={{
+            marginBottom: -verticalScale(60),
+            marginLeft: -verticalScale(15),
+            transform: [{scale: 1.4}],
           }}
-          price="Free"
+          module={moduleName}
+          lessonName={lessonName}
+          part={firstMiniTestTask?.name}
+          backgroundColor={settings.backgroundAnswerColor}
+          backgroundAnswerColor={settings.backgroundAnswerColor}
+          prompt={
+            firstMiniTestTask?.question?.[moduleIndex]?.instruction ?? {
+              description: settings.prompt?.toString() ?? '',
+            }
+          }
           score={selectedChild?.adsPoints}
-          txtCountDown={word && !isMMSS(word) ? undefined : word}
+          txtCountDown={
+            (
+              firstMiniTestTask?.question?.[moduleIndex]
+                .correctAnswer as string[]
+            ).includes((word as string)?.toLocaleLowerCase())
+              ? undefined
+              : word
+          }
           isAnswerCorrect={isAnswerCorrect}
           isShowCorrectContainer={isShowCorrectContainer}
           onPressFlower={toggleShowHint}
@@ -281,47 +316,31 @@ const English_G3M20 = observer(
                         ),
                       },
                     ]}>
-                    {i18n.t('lesson.screens.Modules.chooseTheCorrectAnswer')}
+                    {i18n.t('lesson.screens.Modules.chooseTheCorrectWord')}
                   </Text>
                 </View>
 
                 <VoiceButton onPress={onSpeechText} />
               </View>
-              {firstMiniTestTask?.question?.[moduleIndex].answerType ===
-              'answer_pick_one' ? (
-                <SelectionAnswersQuestion
-                  question={
-                    <Text
-                      style={[
-                        styles.textQuestion,
-                        styles.textGreen,
-                        styles.mt8,
-                        {fontSize: scale(24)},
-                      ]}>
-                      {firstMiniTestTask?.question?.[moduleIndex].content}
-                    </Text>
-                  }
-                  answer={
-                    firstMiniTestTask?.question?.[moduleIndex].answers ?? []
-                  }
-                  isShowCorrectContainer={isShowCorrectContainer}
-                  isAnswerCorrect={!!isAnswerCorrect}
-                  onSelectAnswer={(e: string[]) => {
-                    setAnswerSelected(e);
-                  }}
-                  learningTimer={learningTimer}
-                  isSelectOne
-                  ref={answerRef}
-                />
-              ) : (
-                <CharScramble
-                  ref={charScrambleRep}
-                  content={firstMiniTestTask?.question?.[moduleIndex]?.content}
-                  listChar={firstMiniTestTask?.question?.[moduleIndex]?.answers}
-                  learningTimer={learningTimer}
-                  onAnswerChanged={setAnswerSelected}
-                />
-              )}
+              <SelectionTextsQuestion
+                question={
+                  <TextHighlight
+                    style={{textAlign: 'center'}}
+                    content={
+                      firstMiniTestTask?.question?.[moduleIndex].content ?? ''
+                    }
+                    description={descriptionWithAnswers}
+                  />
+                }
+                answer={answer ?? []}
+                isShowCorrectContainer={isShowCorrectContainer}
+                isAnswerCorrect={!!isAnswerCorrect}
+                onSelectAnswer={(e: string[]) => {
+                  setAnswerSelected(e);
+                }}
+                learningTimer={learningTimer}
+                ref={answerRef}
+              />
 
               <PrimaryButton
                 text={i18n.t('lesson.screens.Modules.submit')}
@@ -341,7 +360,7 @@ const English_G3M20 = observer(
   ),
 );
 
-export default English_G3M20;
+export default English_SelectText;
 
 const styles = StyleSheet.create({
   fill: {
@@ -350,71 +369,17 @@ const styles = StyleSheet.create({
   fonts_SVN_Cherish: {
     fontFamily: FontFamily.SVNCherishMoment,
   },
-  textColor: {
-    color: '#1C6349',
+  fonts_SVN_Neu: {
+    fontFamily: FontFamily.SVNNeuzeitRegular,
   },
+
   textQuestion: {
-    fontSize: verticalScale(15),
-    textAlign: 'left',
+    fontSize: verticalScale(34),
+    textAlign: 'center',
     color: COLORS.BLUE_258F78,
+    marginHorizontal: scale(10),
   },
-  textGreen: {
-    color: '#258F78',
-  },
-  txtWhite: {
-    color: 'white',
-  },
-  rowAround: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-  },
-  rowAlignCenter: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  rowBetween: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-  },
-  pr16: {
-    paddingRight: 16,
-  },
-  ph24: {
-    paddingHorizontal: 24,
-  },
-  pb8: {
-    paddingBottom: verticalScale(8),
-  },
-  pb16: {
-    paddingBottom: verticalScale(16),
-  },
-  pb32: {
-    paddingBottom: verticalScale(32),
-  },
-  mt8: {
-    marginTop: verticalScale(8),
-  },
-  mt16: {
-    marginTop: verticalScale(16),
-  },
-  mt24: {
-    marginTop: verticalScale(24),
-  },
-  mt32: {
-    marginTop: verticalScale(32),
-  },
-  alignSelfCenter: {
-    alignSelf: 'center',
-  },
-  center: {
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  boxItemAnswer: {
-    height: 94,
-    backgroundColor: '#F2B559',
-    borderRadius: 30,
-  },
+
   boxSelected: {
     backgroundColor: COLORS.WHITE_FBF8CC,
     height: verticalScale(220),
@@ -423,44 +388,23 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  boxVowel: {
-    width: 56,
-    height: 56,
-    borderRadius: 10,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginHorizontal: 6,
-    marginVertical: 6,
-  },
-  textVowel: {
-    fontFamily: FontFamily.SVNCherishMoment,
-    color: '#FBF8CC',
-    fontSize: verticalScale(28),
-  },
-  wapper: {
-    marginTop: 8,
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    justifyContent: 'center',
-    alignContent: 'center',
-  },
-  wrapCharContainer: {
-    flexDirection: 'row',
-  },
+
   wrapHeaderContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginBottom: verticalScale(8),
+    marginBottom: 8,
   },
-  iconImageContainer: {
-    height: verticalScale(39),
-    width: verticalScale(34),
-  },
+  iconImageContainer: {height: 39, width: 34},
   buttonContainer: {
     borderRadius: scale(52),
     paddingVertical: verticalScale(9),
     paddingHorizontal: scale(24),
     marginTop: scale(16),
     backgroundColor: '#0877B6',
+  },
+  txtParagraph: {
+    fontFamily: FontFamily.SVNNeuzeitBold,
+    fontSize: scale(14),
+    color: COLORS.WHITE_FBF8CC,
   },
 });

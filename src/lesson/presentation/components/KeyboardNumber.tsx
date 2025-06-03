@@ -9,7 +9,7 @@ import {scale, verticalScale} from 'react-native-size-matters';
 import {COLORS} from 'src/core/presentation/constants/colors';
 import {FontFamily} from 'src/core/presentation/hooks/useFonts';
 import useGlobalStyle from 'src/core/presentation/hooks/useGlobalStyle';
-import {WIDTH_SCREEN} from 'src/core/presentation/utils';
+import ScrollIndicator from './ScrollIndicator';
 
 interface SelectionAnswersQuestionProps {
   question: React.ReactNode;
@@ -91,46 +91,46 @@ const KeyboardNumber: ForwardRefRenderFunction<
           <Text style={globalStyle.txtModule}>␡</Text>
         </TouchableOpacity>
       </View>
-      <View style={[styles.wapper, {width: '100%'}]}>
-        {answer?.map((e, i) => {
-          const bg =
-            Array.isArray(answerSelected) &&
-            answerSelected.includes(e) &&
-            answerSelected.length
-              ? isShowCorrectContainer && !isAnswerCorrect
-                ? '#F28759'
-                : '#66C270'
-              : '#F2B559';
-          const length = answer?.length ?? 2;
-          const size = (WIDTH_SCREEN - scale(120)) / Math.ceil(length / 2);
+      <ScrollIndicator>
+        <View style={[styles.wapper, {width: '100%'}]}>
+          {answer?.map((e, i) => {
+            const bg =
+              Array.isArray(answerSelected) &&
+              answerSelected.includes(e) &&
+              answerSelected.length
+                ? isShowCorrectContainer && !isAnswerCorrect
+                  ? '#F28759'
+                  : '#66C270'
+                : '#F2B559';
 
-          return (
-            <TouchableOpacity
-              key={i}
-              onPress={() => handleSelectAnswer(e)}
-              disabled={
-                e === '.' &&
-                (answerSelected.length === 0 || answerSelected.includes('.'))
-              }
-              style={[
-                styles.boxVowel,
-                {
-                  backgroundColor: bg,
-                  width: size,
-                  height: size,
-                  margin: scale(8), // Add spacing for clarity
-                  paddingHorizontal: scale(8),
-                },
-              ]}>
-              {answerBuilder ? (
-                answerBuilder(e)
-              ) : (
-                <Text style={[styles.textVowel]}>{e}</Text>
-              )}
-            </TouchableOpacity>
-          );
-        })}
-      </View>
+            return (
+              <TouchableOpacity
+                key={i}
+                onPress={() => handleSelectAnswer(e)}
+                disabled={
+                  e === '.' &&
+                  (answerSelected.length === 0 || answerSelected.includes('.'))
+                }
+                style={[
+                  styles.boxVowel,
+                  {
+                    backgroundColor: bg,
+                    width: scale(29),
+                    height: scale(41),
+                    margin: scale(4), // Add spacing for clarity
+                    paddingHorizontal: scale(4),
+                  },
+                ]}>
+                {answerBuilder ? (
+                  answerBuilder(e)
+                ) : (
+                  <Text style={[styles.textVowel]}>{e}</Text>
+                )}
+              </TouchableOpacity>
+            );
+          })}
+        </View>
+      </ScrollIndicator>
       {learningTimer !== 0 && (
         <View
           style={[
@@ -203,13 +203,13 @@ const styles = StyleSheet.create({
     borderRadius: scale(10),
     justifyContent: 'center',
     alignItems: 'center',
-    marginHorizontal: scale(6),
-    marginVertical: scale(6),
+    marginHorizontal: scale(4),
+    marginVertical: scale(4),
   },
   textVowel: {
     // Add your styles here
     fontFamily: FontFamily.SVNCherishMoment,
-    color: '#FBF8CC',
+    color: COLORS.WHITE_FBF8CC,
     fontSize: verticalScale(20),
     flexWrap: 'wrap',
   },

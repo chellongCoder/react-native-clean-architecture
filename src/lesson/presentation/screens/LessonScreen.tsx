@@ -42,7 +42,7 @@ import English_EG4M23 from './LessonComponent/English_EG4M23';
 import MultiPronunciationLesson from './LessonComponent/MultiPronunciationLesson';
 import English_G5M16 from './LessonComponent/English_G5M16';
 import English_G6M26 from './LessonComponent/English_G6M26';
-import English_G3M20 from './LessonComponent/English_G3M20';
+import English_CharSelector from './LessonComponent/English_CharSelector';
 import Mandarin_G1M5 from './LessonComponent/Mandarin_G1M5';
 import Mandarin_G2M25 from './LessonComponent/Mandarin_G2M25';
 import Mandarin_G3M37 from './LessonComponent/Mandarin_G3M37';
@@ -50,7 +50,6 @@ import Mandarin_G4M27 from './LessonComponent/Mandarin_G4M27';
 import Mandarin_G5M25 from './LessonComponent/Mandarin_G5M25';
 import Mandarin_G6M31 from './LessonComponent/Mandarin_G6M31';
 import Mandarin_Kindergarten from './LessonComponent/Mandarin_Kindergarten';
-import Math_MG5M18 from './LessonComponent/Math_MG5M18';
 import Math_MG6M15 from './LessonComponent/Math_MG6M15';
 import Math_Kindergarten from './LessonComponent/Math_Kindergarten';
 import Science_G0M1 from './LessonComponent/Science_G0M1';
@@ -102,6 +101,11 @@ import Math_G3M_SelectAnswer from './LessonComponent/Math_G3M_SelectAnswer';
 import Math_G4M_SelectAnswer from './LessonComponent/Math_G4M_SelectAnswer';
 import Math_MG2M11 from './LessonComponent/Math_MG2M11';
 import LatinLesson from './LessonComponent/LatinLesson';
+import English_Pronounciation from './LessonComponent/English_Pronounciation';
+import English_SelectAnswer from './LessonComponent/English_SelectAnswer';
+import English_DrawerCharacter from './LessonComponent/English_DrawerCharacter';
+import English_SelectText from './LessonComponent/English_SelectText';
+import English_QwertyKeyboard from './LessonComponent/English_QwertyKeyboard';
 
 export type TResult = {
   userId?: string;
@@ -116,6 +120,15 @@ export type TLessonState = {
   trainingResult?: TResult[];
 };
 
+const props = (
+  dataProps: any,
+  testTask: any,
+  lessonIndex: number,
+  characterStyle: any,
+) => ({
+  ...dataProps,
+  characterStyle,
+});
 // Lesson component mapping with regex patterns
 const LESSON_PATTERNS = [
   // English Lessons
@@ -136,7 +149,7 @@ const LESSON_PATTERNS = [
   },
   {
     pattern: /^ENGLISH_G3M20$/,
-    component: English_G3M20,
+    component: English_CharSelector,
     props: {},
   },
   {
@@ -157,22 +170,50 @@ const LESSON_PATTERNS = [
   {
     pattern: /^ENGLISH_EG1M[1-8]$/,
     component: EssayLesson,
-    props: (
-      dataProps: any,
-      testTask: any,
-      lessonIndex: number,
-      characterStyle: any,
-    ) => ({
-      ...dataProps,
-      characterStyle,
-    }),
+    props,
   },
   {
-    pattern: /^ENGLISH_EG1M3$/,
-    component: VowelsLesson,
-    props: {},
+    pattern: /^ENGLISH_EG1M(9|10|11|12|13|14|15|16|17)$/,
+    component: English_EG4M23,
+    props,
   },
-
+  //: TODO: tồn động : M35, 33
+  {
+    pattern: /^ENGLISH_EG2M(1|3|5|7|9)$/,
+    component: VowelsLesson,
+    props,
+  },
+  {
+    pattern: /^ENGLISH_EG2M(2|4|6|8|10)$/,
+    component: English_Pronounciation,
+    props,
+  },
+  {
+    pattern: /^ENGLISH_EG2M(11)$/,
+    component: English_DrawerCharacter,
+    props,
+  },
+  {
+    pattern:
+      /^(ENGLISH_EG2M(31|32|34|36|37|38|39|40|42|43|44|45|46|47|48|49|51|52|53|54))$/,
+    component: English_SelectAnswer,
+    props,
+  },
+  {
+    pattern: /^ENGLISH_EG2M(41)$/,
+    component: English_QwertyKeyboard,
+    props,
+  },
+  {
+    pattern: /^ENGLISH_EG2M(50)$/,
+    component: English_SelectText,
+    props,
+  },
+  {
+    pattern: /^ENGLISH_EG3M(1)$/,
+    component: English_CharSelector,
+    props,
+  },
   // Mandarin Lessons
   {
     pattern: /^MANDARIN_MDG0M[1-3]$/,
@@ -187,41 +228,17 @@ const LESSON_PATTERNS = [
   {
     pattern: /^(writing|MANDARIN_MDG[1-6]M(1|7|10|13))$/,
     component: Mandarin_G4M_DrawCharacter,
-    props: (
-      dataProps: any,
-      testTask: any,
-      lessonIndex: number,
-      characterStyle: any,
-    ) => ({
-      ...dataProps,
-      characterStyle,
-    }),
+    props,
   },
   {
     pattern: /^MANDARIN_MDG[1-6]M(2|5|8|11|14)$/,
     component: Mandarin_G4M_SelectAnswer,
-    props: (
-      dataProps: any,
-      testTask: any,
-      lessonIndex: number,
-      characterStyle: any,
-    ) => ({
-      ...dataProps,
-      characterStyle,
-    }),
+    props,
   },
   {
     pattern: /^MANDARIN_MDG[1-6]M(3|6|9|12|15)$/,
     component: Mandarin_G4_Pronunciation,
-    props: (
-      dataProps: any,
-      testTask: any,
-      lessonIndex: number,
-      characterStyle: any,
-    ) => ({
-      ...dataProps,
-      characterStyle,
-    }),
+    props,
   },
   {
     pattern: /^MANDARIN_MDG1M4$/,
@@ -263,15 +280,7 @@ const LESSON_PATTERNS = [
   {
     pattern: /^VIETNAMESE_VNG(0M1|2M2|3M9|4M2)$/,
     component: VnG0M1Lesson,
-    props: (
-      dataProps: any,
-      testTask: any,
-      lessonIndex: number,
-      characterStyle: any,
-    ) => ({
-      ...dataProps,
-      characterStyle,
-    }),
+    props,
   },
   {
     pattern: /^VIETNAMESE_VNG0M2$/,
@@ -318,15 +327,7 @@ const LESSON_PATTERNS = [
       };
       return componentMap[type] || VnG0M1Lesson;
     },
-    props: (
-      dataProps: any,
-      testTask: any,
-      lessonIndex: number,
-      characterStyle: any,
-    ) => ({
-      ...dataProps,
-      characterStyle,
-    }),
+    props,
   },
   {
     pattern: /^VIETNAMESE_VNG2M1$/,
@@ -336,15 +337,7 @@ const LESSON_PATTERNS = [
   {
     pattern: /^VIETNAMESE_VNG2M(3|4|5|6|9|10)$/,
     component: VnG2M8Lesson,
-    props: (
-      dataProps: any,
-      testTask: any,
-      lessonIndex: number,
-      characterStyle: any,
-    ) => ({
-      ...dataProps,
-      characterStyle,
-    }),
+    props,
   },
   {
     pattern: /^VIETNAMESE_VNG2M(7|8)$/,
@@ -370,15 +363,7 @@ const LESSON_PATTERNS = [
   {
     pattern: /^VIETNAMESE_VNG4M(4|5|6|7|8|9|10)$/,
     component: VnG2M8Lesson,
-    props: (
-      dataProps: any,
-      testTask: any,
-      lessonIndex: number,
-      characterStyle: any,
-    ) => ({
-      ...dataProps,
-      characterStyle,
-    }),
+    props,
   },
   {
     pattern: /^VIETNAMESE_VNG5M1$/,
@@ -393,15 +378,7 @@ const LESSON_PATTERNS = [
   {
     pattern: /^VIETNAMESE_VNG5M(3|4|5|6|7|8|9|10|11|12)$/,
     component: VnG2M8Lesson,
-    props: (
-      dataProps: any,
-      testTask: any,
-      lessonIndex: number,
-      characterStyle: any,
-    ) => ({
-      ...dataProps,
-      characterStyle,
-    }),
+    props,
   },
   {
     pattern: /^VIETNAMESE_VNG6M1$/,
@@ -411,15 +388,7 @@ const LESSON_PATTERNS = [
   {
     pattern: /^VIETNAMESE_VNG6M(1_N|2|3|4|5|6|7|8|9|10)$/,
     component: VnG2M8Lesson,
-    props: (
-      dataProps: any,
-      testTask: any,
-      lessonIndex: number,
-      characterStyle: any,
-    ) => ({
-      ...dataProps,
-      characterStyle,
-    }),
+    props,
   },
 
   // Science Lessons
@@ -476,7 +445,7 @@ const LESSON_PATTERNS = [
   {
     pattern: /^MATH_MG1M(1|2|4|5|6|7|8|9|10|11|12|13|14|15|16|17|18)$/,
     component: Math_G4M_SelectAnswer,
-    props: {},
+    props,
   },
   {
     pattern: /^MATH_MG1M3$/,
@@ -632,15 +601,7 @@ const LESSON_PATTERNS = [
   {
     pattern: /^MATH_MG6M(1|2|3|4|6|7|9|10|11|12|13|14)$/,
     component: Math_G4M_SelectAnswer,
-    props: (
-      dataProps: any,
-      testTask: any,
-      lessonIndex: number,
-      characterStyle: any,
-    ) => ({
-      ...dataProps,
-      characterStyle,
-    }),
+    props,
   },
   {
     pattern: /^MATH_MG6M(8)$/,
@@ -690,7 +651,7 @@ const LessonScreen = observer(() => {
 
   const tasks = useMemo(() => {
     return __DEV__
-      ? apiTasks.slice(apiTasks.length - 1, apiTasks.length).map(t => ({
+      ? apiTasks.map(t => ({
           ...t,
           question: __DEV__ ? t.question.slice(0, 10) : t.question,
         }))
@@ -1092,7 +1053,7 @@ const LessonScreen = observer(() => {
     // Get component
     let Component = matchedPattern.component;
     if (typeof Component === 'function' && Component.length > 0) {
-      Component = Component(questionType, dataProps, testTask);
+      Component = Component(questionType, dataProps);
     }
 
     // Get props

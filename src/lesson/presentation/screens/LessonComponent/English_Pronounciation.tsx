@@ -93,7 +93,7 @@ type Props = {
  *   characterImageFail="path/to/fail.png"
  * />
  */
-const VnG0M1Lesson = observer(
+const English_Pronounciation = observer(
   forwardRef<LessonRef, Props>(
     (
       {
@@ -220,21 +220,18 @@ const VnG0M1Lesson = observer(
       const scaleLP = useSharedValue(1);
 
       const onSpeechText = useCallback(() => {
-        const contents =
-          firstMiniTestTask?.question?.[moduleIndex]?.content?.split('/');
+        const correctAnswers = Array.isArray(
+          firstMiniTestTask?.question?.[moduleIndex]?.correctAnswer,
+        )
+          ? (firstMiniTestTask?.question?.[moduleIndex]
+              ?.correctAnswer as string[])
+          : [firstMiniTestTask?.question?.[moduleIndex]?.correctAnswer];
 
-        if (contents) {
-          let index = 0;
-          const speak = (text: string) => {
-            ttsSpeak?.(getCorrectAnswer(text?.trim()), () => {
-              index++;
-              if (index < contents?.length) {
-                speak(contents?.[index]);
-              }
-            });
-          };
-          speak(contents?.[index]);
-        }
+        correctAnswers.forEach((answer, index) => {
+          setTimeout(() => {
+            ttsSpeak?.(getCorrectAnswer(answer?.trim()));
+          }, index * 750);
+        });
       }, [firstMiniTestTask?.question, moduleIndex, ttsSpeak]);
 
       const opacity = useSharedValue(0);
@@ -443,41 +440,35 @@ const VnG0M1Lesson = observer(
                     width: '100%',
                     alignItems: 'center',
                   }}>
-                  {answerSelected !== '' &&
-                    answerSelected
-                      .split(' ') // * nếu correctAnswer là mảng thì check xem correctAnswer đã là chuỗi chưa, nếu chưa thì hiển thị phần tử khác với answerSelected
-                      ?.map(voicedAnswer => {
-                        return (
-                          <View style={styles.wrapCharContainer}>
-                            {(
-                              firstMiniTestTask?.question?.[moduleIndex]
-                                .correctAnswer as string[]
-                            )?.find(
-                              e =>
-                                e.toLocaleLowerCase() ===
-                                voicedAnswer.toLocaleLowerCase(),
-                            ) ? (
-                              <Text
-                                style={[
-                                  styles.fonts_SVN_Cherish,
-                                  styles.textQuestion,
-                                  styles.textGreen,
-                                ]}>
-                                {voicedAnswer}
-                              </Text>
-                            ) : (
-                              <Text
-                                style={[
-                                  styles.fonts_EinaBold,
-                                  styles.textQuestion,
-                                  styles.textRed,
-                                ]}>
-                                {voicedAnswer}
-                              </Text>
+                  {isCorrectAnswer ? (
+                    <Text
+                      style={[
+                        styles.fonts_SVN_Cherish,
+                        styles.textQuestion,
+                        styles.textGreen,
+                      ]}>
+                      {typeof firstMiniTestTask?.question?.[moduleIndex] // * nếu correctAnswer là string thì hiển thị answerSelected
+                        ?.correctAnswer === 'string'
+                        ? answerSelected
+                        : firstMiniTestTask?.question?.[ // * nếu correctAnswer là mảng thì check xem correctAnswer đã là chuỗi chưa, nếu chưa thì hiển thị phần tử khác với answerSelected
+                            moduleIndex
+                          ]?.correctAnswer
+                            ?.find(e =>
+                              !Number(answerSelected)
+                                ? answerSelected
+                                : e !== answerSelected,
                             )}
-                          </View>
-                        );
-                      })}
+                    </Text>
+                  ) : (
+                    <Text
+                      style={[
+                        styles.fonts_NeuzeitBold,
+                        styles.textQuestion,
+                        styles.textRed,
+                      ]}>
+                      {answerSelected}
+                    </Text>
+                  )}
                 </View>
 
                 <RecordButton
@@ -558,7 +549,7 @@ const VnG0M1Lesson = observer(
   ),
 );
 
-export default VnG0M1Lesson;
+export default English_Pronounciation;
 
 const styles = StyleSheet.create({
   fill: {
@@ -570,14 +561,10 @@ const styles = StyleSheet.create({
   fonts_EinaBold: {
     fontFamily: FontFamily.SVNNeuzeitBold,
   },
-  textColor: {
-    color: '#1C6349',
+  fonts_NeuzeitBold: {
+    fontFamily: FontFamily.SVNNeuzeitBold,
   },
-  textLarge: {
-    fontSize: 140,
-    textAlign: 'center',
-    color: 'white',
-  },
+
   textQuestion: {
     fontSize: 48,
     textAlign: 'center',
@@ -589,60 +576,12 @@ const styles = StyleSheet.create({
   textRed: {
     color: COLORS.RED_E1460E,
   },
-  txtWhite: {
-    color: 'white',
-  },
-  rowAround: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-  },
-  rowAlignCenter: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  rowBetween: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-  },
-  pr16: {
-    paddingRight: 16,
-  },
-  ph24: {
-    paddingHorizontal: 24,
-  },
-  pb8: {
-    paddingBottom: verticalScale(8),
-  },
-  pb16: {
-    paddingBottom: verticalScale(16),
-  },
-  pb32: {
-    paddingBottom: verticalScale(32),
-  },
-  mt8: {
-    marginTop: verticalScale(8),
-  },
-  mt16: {
-    marginTop: verticalScale(16),
-  },
-  mt24: {
-    marginTop: verticalScale(24),
-  },
-  mt32: {
-    marginTop: verticalScale(32),
-  },
-  alignSelfCenter: {
-    alignSelf: 'center',
-  },
+
   center: {
     justifyContent: 'center',
     alignItems: 'center',
   },
-  boxItemAnswer: {
-    height: 94,
-    backgroundColor: '#F2B559',
-    borderRadius: 30,
-  },
+
   boxSelected: {
     backgroundColor: COLORS.WHITE_FBF8CC,
     height: verticalScale(220),
@@ -651,15 +590,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  boxVowel: {
-    width: 56,
-    height: 56,
-    borderRadius: 10,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginHorizontal: 6,
-    marginVertical: 6,
-  },
+
   textVowel: {
     fontFamily: FontFamily.SVNCherishMoment,
     color: '#FBF8CC',
@@ -687,18 +618,7 @@ const styles = StyleSheet.create({
     color: COLORS.PRIMARY,
     fontSize: scale(12),
   },
-  wrapTextQuestion: {
-    paddingVertical: 8,
-    paddingHorizontal: 32,
-    marginHorizontal: 12,
-    borderRadius: 30,
-    backgroundColor: COLORS.WHITE_FBF8CC,
-    borderStyle: 'dashed',
-    borderWidth: 4,
-    borderColor: COLORS.BLUE_258F78,
-    marginBottom: 16,
-    flexDirection: 'row',
-  },
+
   buttonContainer: {
     borderRadius: scale(52),
     paddingVertical: verticalScale(9),

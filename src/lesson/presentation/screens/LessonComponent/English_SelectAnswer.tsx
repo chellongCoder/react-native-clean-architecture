@@ -1,11 +1,4 @@
-import {
-  StyleProp,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-  ViewStyle,
-} from 'react-native';
+import {StyleProp, StyleSheet, Text, View, ViewStyle} from 'react-native';
 import React, {
   forwardRef,
   useCallback,
@@ -22,7 +15,12 @@ import {FontFamily} from 'src/core/presentation/hooks/useFonts';
 import useGlobalStyle from 'src/core/presentation/hooks/useGlobalStyle';
 import {Task} from 'src/home/application/types/GetListQuestionResponse';
 import {COLORS} from 'src/core/presentation/constants/colors';
-import {getCorrectAnswer, WIDTH_SCREEN} from 'src/core/presentation/utils';
+import {
+  darkenColor,
+  getCorrectAnswer,
+  isMMSS,
+  isSubArray,
+} from 'src/core/presentation/utils';
 import {scale, verticalScale} from 'react-native-size-matters';
 import Animated, {
   Easing,
@@ -39,11 +37,12 @@ import useAuthenticationStore from 'src/authentication/presentation/stores/useAu
 import {observer} from 'mobx-react';
 import {LessonRef} from '../../types';
 import useHomeStore from 'src/home/presentation/stores/useHomeStore';
-import {useI18n} from 'src/core/presentation/hooks/useI18n';
-import VoiceButton from '../../components/VoiceButton';
 import SelectionAnswersQuestion, {
   SelectionAnswersQuestionRef,
 } from '../../components/SelectionAnswersQuestion';
+import TextHighlight from '../../components/TextHighlight';
+import {useI18n} from 'src/core/presentation/hooks/useI18n';
+import VoiceButton from '../../components/VoiceButton';
 
 type Props = {
   moduleIndex: number;
@@ -58,7 +57,7 @@ type Props = {
   characterStyle?: StyleProp<ViewStyle>;
 };
 
-const VowelsLesson = observer(
+const English_SelectAnswer = observer(
   forwardRef<LessonRef, Props>(
     (
       {
@@ -76,19 +75,15 @@ const VowelsLesson = observer(
       ref,
     ) => {
       const globalStyle = useGlobalStyle();
-      const answerRef = useRef<SelectionAnswersQuestionRef>(null);
 
       const {ttsSpeak} = useContext(TextToSpeechContext);
       const focus = useIsFocused();
+      const answerRef = useRef<SelectionAnswersQuestionRef>(null);
 
-      const [answerSelected, setAnswerSelected] = useState('');
-      console.log(
-        '🛠 LOG: 🚀 --> ------------------------------------------------🛠 LOG: 🚀 -->',
+      const [answerSelected, setAnswerSelected] = useState<string | string[]>(
+        '',
       );
-      console.log('🛠 LOG: 🚀 --> ~ answerSelected:', answerSelected);
-      console.log(
-        '🛠 LOG: 🚀 --> ------------------------------------------------🛠 LOG: 🚀 -->',
-      );
+
       const {trainingCount, getSetting} = useLessonStore();
 
       const {selectedChild} = useAuthenticationStore();
@@ -104,17 +99,14 @@ const VowelsLesson = observer(
         resetLearning,
       } = useSettingLesson({
         countDownTime: trainingCount <= 2 ? 0 : 5,
-        isCorrectAnswer:
-          firstMiniTestTask?.question?.[moduleIndex]?.content.replace(
-            /_/g,
-            answerSelected,
-          ) ===
-          getCorrectAnswer(
-            firstMiniTestTask?.question?.[moduleIndex]?.correctAnswer as string,
-          ),
+        isCorrectAnswer: isSubArray(
+          answerSelected as string[],
+          firstMiniTestTask?.question?.[moduleIndex]?.correctAnswer as string[],
+        ),
         onSubmit: () => {
           setAnswerSelected('');
-          nextModule(answerSelected);
+          nextModule((answerSelected as string[]).toString());
+          answerRef.current?.resetAnswerSelected?.();
         },
         fullAnswer: firstMiniTestTask?.question?.[moduleIndex].fullAnswer,
       });
@@ -134,12 +126,8 @@ const VowelsLesson = observer(
       }, [characterImageFail, characterImageSuccess, isAnswerCorrect]);
 
       const onSpeechText = useCallback(() => {
-        ttsSpeak?.(
-          firstMiniTestTask?.question?.[moduleIndex].fullAnswer
-            .toString()
-            .toLowerCase() ?? '',
-        );
-      }, [firstMiniTestTask?.question, moduleIndex, ttsSpeak]);
+        ttsSpeak?.(settings.prompt?.toString() ?? '');
+      }, [settings.prompt, ttsSpeak]);
 
       const opacity = useSharedValue(0);
       const scaleS = useSharedValue(1);
@@ -205,6 +193,7 @@ const VowelsLesson = observer(
         <LessonComponent
           backgroundImage={backgroundImage}
           characterImage={characterImage}
+          characterStyle={characterStyle}
           lessonName={lessonName}
           module={moduleName}
           part={firstMiniTestTask?.name}
@@ -217,15 +206,9 @@ const VowelsLesson = observer(
               description: settings.prompt?.toString() ?? '',
             }
           }
-          characterStyle={characterStyle}
           price="Free"
           score={selectedChild?.adsPoints}
-          txtCountDown={
-            word?.toString() ===
-            firstMiniTestTask?.question?.[moduleIndex].correctAnswer
-              ? undefined
-              : word
-          }
+          txtCountDown={word && !isMMSS(word) ? undefined : word}
           isAnswerCorrect={isAnswerCorrect}
           isShowCorrectContainer={isShowCorrectContainer}
           onPressFlower={toggleShowHint}
@@ -233,9 +216,13 @@ const VowelsLesson = observer(
             <View>
               <Animated.Image
                 resizeMode={'contain'}
-                width={WIDTH_SCREEN}
-                height={scale(200)}
-                style={[{}, animatedStyle]}
+                style={[
+                  {
+                    width: scale(200),
+                    height: verticalScale(140),
+                  },
+                  animatedStyle,
+                ]}
                 source={{
                   uri:
                     env.IMAGE_QUESTION_BASE_API_URL +
@@ -252,66 +239,55 @@ const VowelsLesson = observer(
                     justifyContent: 'center',
                     flex: 1,
                   }}>
-                  <Text style={[globalStyle.txtLabel, styles.textColor]}>
-                    {i18n.t('lesson.screens.Modules.chooseTheCorrectAnswer')}
+                  <Text
+                    style={[
+                      globalStyle.txtLabel,
+                      {
+                        color: darkenColor(
+                          settings.backgroundButtonColor ?? '',
+                          20,
+                        ),
+                      },
+                    ]}>
+                    {i18n.t('lesson.screens.Modules.chooseCorrectAnswer')}
                   </Text>
                 </View>
 
                 <VoiceButton onPress={onSpeechText} />
               </View>
               <SelectionAnswersQuestion
-                answer={
-                  firstMiniTestTask?.question?.[moduleIndex].answers as string[]
-                }
                 question={
-                  <View style={styles.wrapCharContainer}>
-                    {firstMiniTestTask?.question?.[moduleIndex]?.content
-                      .split('')
-                      .map(char => {
-                        if (char === '_' && answerSelected) {
-                          return (
-                            <Text
-                              style={[
-                                styles.fonts_SVN_Cherish,
-                                styles.textQuestion,
-                                styles.textGreen,
-                                {textDecorationLine: 'underline'},
-                              ]}>
-                              {answerSelected}
-                            </Text>
-                          );
-                        }
-                        return (
-                          <Text
-                            style={[
-                              styles.fonts_SVN_Cherish,
-                              styles.textQuestion,
-                              styles.textGreen,
-                            ]}>
-                            {char}
-                          </Text>
-                        );
-                      })}
-                  </View>
+                  <TextHighlight
+                    content={
+                      firstMiniTestTask?.question?.[moduleIndex].content ?? ''
+                    }
+                    description={
+                      firstMiniTestTask?.question?.[moduleIndex].description ??
+                      ''
+                    }
+                  />
+                }
+                answer={
+                  (firstMiniTestTask?.question?.[moduleIndex]
+                    .answers as string[]) ?? []
                 }
                 answerStyle={styles.fonts_SVN_Cherish}
                 isShowCorrectContainer={isShowCorrectContainer}
                 isAnswerCorrect={!!isAnswerCorrect}
                 onSelectAnswer={(e: string[]) => {
-                  setAnswerSelected(e.toString().trim());
+                  setAnswerSelected(e);
                 }}
                 learningTimer={learningTimer}
-                isSelectOne
                 ref={answerRef}
               />
 
               <PrimaryButton
                 text={i18n.t('lesson.screens.Modules.submit')}
-                onPress={submit}
                 style={[
                   styles.buttonContainer,
                   {backgroundColor: settings.backgroundButtonColor},
                 ]}
+                onPress={submit}
               />
             </View>
           }
@@ -323,7 +299,7 @@ const VowelsLesson = observer(
   ),
 );
 
-export default VowelsLesson;
+export default English_SelectAnswer;
 
 const styles = StyleSheet.create({
   fill: {
@@ -332,22 +308,10 @@ const styles = StyleSheet.create({
   fonts_SVN_Cherish: {
     fontFamily: FontFamily.SVNCherishMoment,
   },
-  textColor: {
-    color: '#1C6349',
-  },
-
   textQuestion: {
-    fontSize: verticalScale(34),
-    textAlign: 'center',
+    fontSize: verticalScale(15),
+    textAlign: 'left',
     color: COLORS.BLUE_258F78,
-  },
-  textGreen: {
-    color: '#258F78',
-  },
-
-  center: {
-    justifyContent: 'center',
-    alignItems: 'center',
   },
 
   boxSelected: {
@@ -358,38 +322,15 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  boxVowel: {
-    width: scale(56),
-    height: scale(56),
-    borderRadius: 10,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginHorizontal: scale(6),
-    marginVertical: scale(6),
-  },
-  textVowel: {
-    fontFamily: FontFamily.SVNCherishMoment,
-    color: '#FBF8CC',
-    fontSize: verticalScale(28),
-  },
-  wapper: {
-    marginTop: 8,
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    justifyContent: 'center',
-    alignContent: 'center',
-  },
-  wrapCharContainer: {
-    flexDirection: 'row',
-  },
+
   wrapHeaderContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     marginBottom: verticalScale(8),
   },
   iconImageContainer: {
-    height: verticalScale(45),
-    width: verticalScale(40),
+    height: verticalScale(39),
+    width: verticalScale(34),
   },
   buttonContainer: {
     borderRadius: scale(52),

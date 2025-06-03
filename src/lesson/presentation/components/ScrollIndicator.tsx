@@ -158,6 +158,7 @@ const styles = StyleSheet.create({
   indicatorContainer: {
     backgroundColor: COLORS.PRIMARY,
     borderRadius: 10,
+    opacity: 0.5,
   },
   horizontalIndicator: {
     height: 2,

@@ -1,11 +1,4 @@
-import {
-  StyleProp,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-  ViewStyle,
-} from 'react-native';
+import {StyleProp, StyleSheet, Text, View, ViewStyle} from 'react-native';
 import React, {
   forwardRef,
   useCallback,
@@ -39,11 +32,10 @@ import useAuthenticationStore from 'src/authentication/presentation/stores/useAu
 import {observer} from 'mobx-react';
 import {LessonRef} from '../../types';
 import useHomeStore from 'src/home/presentation/stores/useHomeStore';
+import {SelectionAnswersQuestionRef} from '../../components/SelectionAnswersQuestion';
+import KeyboardNumber from '../../components/KeyboardNumber';
 import {useI18n} from 'src/core/presentation/hooks/useI18n';
 import VoiceButton from '../../components/VoiceButton';
-import SelectionAnswersQuestion, {
-  SelectionAnswersQuestionRef,
-} from '../../components/SelectionAnswersQuestion';
 
 type Props = {
   moduleIndex: number;
@@ -55,10 +47,12 @@ type Props = {
   backgroundImage?: string;
   characterImageSuccess?: string;
   characterImageFail?: string;
+  isMulti?: boolean;
+  answer?: string[];
   characterStyle?: StyleProp<ViewStyle>;
 };
 
-const VowelsLesson = observer(
+const English_QwertyKeyboard = observer(
   forwardRef<LessonRef, Props>(
     (
       {
@@ -71,23 +65,20 @@ const VowelsLesson = observer(
         backgroundImage,
         characterImageSuccess,
         characterImageFail,
+        isMulti,
+        answer,
         characterStyle,
       },
       ref,
     ) => {
-      const globalStyle = useGlobalStyle();
       const answerRef = useRef<SelectionAnswersQuestionRef>(null);
+      const globalStyle = useGlobalStyle();
 
       const {ttsSpeak} = useContext(TextToSpeechContext);
       const focus = useIsFocused();
 
-      const [answerSelected, setAnswerSelected] = useState('');
-      console.log(
-        '🛠 LOG: 🚀 --> ------------------------------------------------🛠 LOG: 🚀 -->',
-      );
-      console.log('🛠 LOG: 🚀 --> ~ answerSelected:', answerSelected);
-      console.log(
-        '🛠 LOG: 🚀 --> ------------------------------------------------🛠 LOG: 🚀 -->',
+      const [answerSelected, setAnswerSelected] = useState<string | string[]>(
+        '',
       );
       const {trainingCount, getSetting} = useLessonStore();
 
@@ -105,16 +96,15 @@ const VowelsLesson = observer(
       } = useSettingLesson({
         countDownTime: trainingCount <= 2 ? 0 : 5,
         isCorrectAnswer:
-          firstMiniTestTask?.question?.[moduleIndex]?.content.replace(
-            /_/g,
-            answerSelected,
-          ) ===
+          (typeof answerSelected === 'object' &&
+            (answerSelected as string[]).join('')) ===
           getCorrectAnswer(
             firstMiniTestTask?.question?.[moduleIndex]?.correctAnswer as string,
           ),
         onSubmit: () => {
-          setAnswerSelected('');
-          nextModule(answerSelected);
+          setAnswerSelected(isMulti ? [] : '');
+          answerRef.current?.resetAnswerSelected?.();
+          nextModule((answerSelected as string[]).join(''));
         },
         fullAnswer: firstMiniTestTask?.question?.[moduleIndex].fullAnswer,
       });
@@ -133,11 +123,29 @@ const VowelsLesson = observer(
           : characterImageFail;
       }, [characterImageFail, characterImageSuccess, isAnswerCorrect]);
 
+      const descriptionWithAnswers = useMemo(() => {
+        const insertAnswersIntoDescription = (
+          description: string,
+          answers: string[],
+        ) => {
+          let answerIndex = 0;
+          return description.replace(/_/g, () =>
+            answerIndex < answers.length ? answers[answerIndex++] : '_',
+          );
+        };
+        const description =
+          firstMiniTestTask?.question?.[moduleIndex].description || '';
+        const updatedDescription = insertAnswersIntoDescription(
+          description,
+          answerSelected as string[],
+        );
+        return updatedDescription;
+      }, [answerSelected, firstMiniTestTask?.question, moduleIndex]);
+
       const onSpeechText = useCallback(() => {
         ttsSpeak?.(
-          firstMiniTestTask?.question?.[moduleIndex].fullAnswer
-            .toString()
-            .toLowerCase() ?? '',
+          firstMiniTestTask?.question?.[moduleIndex]?.instruction
+            ?.description ?? '',
         );
       }, [firstMiniTestTask?.question, moduleIndex, ttsSpeak]);
 
@@ -157,12 +165,6 @@ const VowelsLesson = observer(
           // Check if the component is focused
           const firstTimeout = setTimeout(() => {
             onSpeechText();
-
-            const secondTimeout = setTimeout(() => {
-              onSpeechText();
-            }, 2500);
-
-            return () => clearTimeout(secondTimeout);
           }, 1500);
 
           return () => clearTimeout(firstTimeout);
@@ -205,20 +207,14 @@ const VowelsLesson = observer(
         <LessonComponent
           backgroundImage={backgroundImage}
           characterImage={characterImage}
-          lessonName={lessonName}
           module={moduleName}
+          lessonName={lessonName}
           part={firstMiniTestTask?.name}
-          backgroundColor="#66c270"
-          backgroundAnswerColor={
-            settings.backgroundAnswerColor ?? COLORS.GREEN_DDF598
-          }
-          prompt={
-            firstMiniTestTask?.question?.[moduleIndex]?.instruction ?? {
-              description: settings.prompt?.toString() ?? '',
-            }
-          }
-          characterStyle={characterStyle}
-          price="Free"
+          backgroundColor={settings.backgroundAnswerColor}
+          backgroundAnswerColor={settings.backgroundAnswerColor}
+          prompt={{
+            description: '',
+          }}
           score={selectedChild?.adsPoints}
           txtCountDown={
             word?.toString() ===
@@ -229,12 +225,19 @@ const VowelsLesson = observer(
           isAnswerCorrect={isAnswerCorrect}
           isShowCorrectContainer={isShowCorrectContainer}
           onPressFlower={toggleShowHint}
+          characterStyle={
+            characterStyle ?? {
+              height: verticalScale(300),
+              marginBottom: -verticalScale(130),
+              marginLeft: -scale(40),
+            }
+          }
           buildQuestion={
             <View>
               <Animated.Image
                 resizeMode={'contain'}
                 width={WIDTH_SCREEN}
-                height={scale(200)}
+                height={scale(180)}
                 style={[{}, animatedStyle]}
                 source={{
                   uri:
@@ -259,59 +262,48 @@ const VowelsLesson = observer(
 
                 <VoiceButton onPress={onSpeechText} />
               </View>
-              <SelectionAnswersQuestion
-                answer={
-                  firstMiniTestTask?.question?.[moduleIndex].answers as string[]
-                }
+              <KeyboardNumber
                 question={
-                  <View style={styles.wrapCharContainer}>
-                    {firstMiniTestTask?.question?.[moduleIndex]?.content
-                      .split('')
-                      .map(char => {
-                        if (char === '_' && answerSelected) {
-                          return (
-                            <Text
-                              style={[
-                                styles.fonts_SVN_Cherish,
-                                styles.textQuestion,
-                                styles.textGreen,
-                                {textDecorationLine: 'underline'},
-                              ]}>
-                              {answerSelected}
-                            </Text>
-                          );
-                        }
-                        return (
-                          <Text
-                            style={[
-                              styles.fonts_SVN_Cherish,
-                              styles.textQuestion,
-                              styles.textGreen,
-                            ]}>
-                            {char}
-                          </Text>
-                        );
-                      })}
-                  </View>
+                  <Text
+                    numberOfLines={1}
+                    adjustsFontSizeToFit
+                    allowFontScaling
+                    style={[
+                      styles.fonts_SVN_Cherish,
+                      styles.textQuestion,
+                      {
+                        fontSize: scale(40),
+                        color: settings.backgroundButtonColor,
+                      },
+                    ]}>
+                    {descriptionWithAnswers}
+                  </Text>
                 }
-                answerStyle={styles.fonts_SVN_Cherish}
+                answer={answer ?? []}
                 isShowCorrectContainer={isShowCorrectContainer}
                 isAnswerCorrect={!!isAnswerCorrect}
                 onSelectAnswer={(e: string[]) => {
-                  setAnswerSelected(e.toString().trim());
+                  console.log(
+                    '🛠 LOG: 🚀 --> ----------------------🛠 LOG: 🚀 -->',
+                  );
+                  console.log('🛠 LOG: 🚀 --> ~ e:', e);
+                  console.log(
+                    '🛠 LOG: 🚀 --> ----------------------🛠 LOG: 🚀 -->',
+                  );
+                  setAnswerSelected(e);
                 }}
                 learningTimer={learningTimer}
-                isSelectOne
                 ref={answerRef}
+                isKeyboard={true}
               />
 
               <PrimaryButton
                 text={i18n.t('lesson.screens.Modules.submit')}
-                onPress={submit}
                 style={[
                   styles.buttonContainer,
-                  {backgroundColor: settings.backgroundButtonColor},
+                  {backgroundColor: lessonSetting?.backgroundButtonColor},
                 ]}
+                onPress={submit}
               />
             </View>
           }
@@ -323,7 +315,7 @@ const VowelsLesson = observer(
   ),
 );
 
-export default VowelsLesson;
+export default English_QwertyKeyboard;
 
 const styles = StyleSheet.create({
   fill: {
@@ -332,53 +324,34 @@ const styles = StyleSheet.create({
   fonts_SVN_Cherish: {
     fontFamily: FontFamily.SVNCherishMoment,
   },
+  fonts_SVN_Neu: {
+    fontFamily: FontFamily.SVNNeuzeitRegular,
+  },
   textColor: {
     color: '#1C6349',
   },
-
+  textLarge: {
+    fontSize: 140,
+    textAlign: 'center',
+    color: 'white',
+  },
   textQuestion: {
     fontSize: verticalScale(34),
     textAlign: 'center',
     color: COLORS.BLUE_258F78,
   },
   textGreen: {
-    color: '#258F78',
+    color: COLORS.BLUE_258F78,
   },
 
+  alignSelfCenter: {
+    alignSelf: 'center',
+  },
   center: {
     justifyContent: 'center',
     alignItems: 'center',
   },
 
-  boxSelected: {
-    backgroundColor: COLORS.WHITE_FBF8CC,
-    height: verticalScale(220),
-    flex: 1,
-    borderRadius: scale(30),
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  boxVowel: {
-    width: scale(56),
-    height: scale(56),
-    borderRadius: 10,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginHorizontal: scale(6),
-    marginVertical: scale(6),
-  },
-  textVowel: {
-    fontFamily: FontFamily.SVNCherishMoment,
-    color: '#FBF8CC',
-    fontSize: verticalScale(28),
-  },
-  wapper: {
-    marginTop: 8,
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    justifyContent: 'center',
-    alignContent: 'center',
-  },
   wrapCharContainer: {
     flexDirection: 'row',
   },
@@ -386,10 +359,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     marginBottom: verticalScale(8),
-  },
-  iconImageContainer: {
-    height: verticalScale(45),
-    width: verticalScale(40),
   },
   buttonContainer: {
     borderRadius: scale(52),
