@@ -42,7 +42,7 @@ import English_EG4M23 from './LessonComponent/English_EG4M23';
 import MultiPronunciationLesson from './LessonComponent/MultiPronunciationLesson';
 import English_G5M16 from './LessonComponent/English_G5M16';
 import English_G6M26 from './LessonComponent/English_G6M26';
-import English_CharSelector from './LessonComponent/English_CharSelector';
+import English_CharSelector from './LessonComponent/English_CharSelector_Meaning';
 import Mandarin_G1M5 from './LessonComponent/Mandarin_G1M5';
 import Mandarin_G2M25 from './LessonComponent/Mandarin_G2M25';
 import Mandarin_G3M37 from './LessonComponent/Mandarin_G3M37';
@@ -106,6 +106,8 @@ import English_SelectAnswer from './LessonComponent/English_SelectAnswer';
 import English_DrawerCharacter from './LessonComponent/English_DrawerCharacter';
 import English_SelectText from './LessonComponent/English_SelectText';
 import English_QwertyKeyboard from './LessonComponent/English_QwertyKeyboard';
+import English_CharSelector_Meaning from './LessonComponent/English_CharSelector_Meaning';
+import English_Pronounciation_Meaning from './LessonComponent/English_Pronounciation_Meaning';
 
 export type TResult = {
   userId?: string;
@@ -148,11 +150,6 @@ const LESSON_PATTERNS = [
     props: {},
   },
   {
-    pattern: /^ENGLISH_G3M20$/,
-    component: English_CharSelector,
-    props: {},
-  },
-  {
     pattern: /^ENGLISH_G6M26$/,
     component: English_G6M26,
     props: {},
@@ -167,6 +164,7 @@ const LESSON_PATTERNS = [
     component: English_EG4M23,
     props: {},
   },
+  // * English G1
   {
     pattern: /^ENGLISH_EG1M[1-8]$/,
     component: EssayLesson,
@@ -177,6 +175,7 @@ const LESSON_PATTERNS = [
     component: English_EG4M23,
     props,
   },
+  // * English G2
   //: TODO: tồn động : M35, 33
   {
     pattern: /^ENGLISH_EG2M(1|3|5|7|9)$/,
@@ -200,18 +199,73 @@ const LESSON_PATTERNS = [
     props,
   },
   {
-    pattern: /^ENGLISH_EG2M(41)$/,
+    pattern: /^(ENGLISH_EG2M(41)|ENGLISH_EG3M(26|30|39))$/,
     component: English_QwertyKeyboard,
     props,
   },
   {
-    pattern: /^ENGLISH_EG2M(50)$/,
+    pattern: /^ENGLISH_EG(2M(50)|3M(40|41))$/,
     component: English_SelectText,
     props,
   },
+  // * English G3
   {
-    pattern: /^ENGLISH_EG3M(1)$/,
+    pattern: /^ENGLISH_G3M20$/,
     component: English_CharSelector,
+    props,
+  },
+  {
+    pattern: /^ENGLISH_EG3M(1|3|5|7|9|28)$/,
+    component: English_CharSelector,
+    props,
+  },
+  {
+    pattern: /^ENGLISH_EG3M(2|4|6|8|10|27|29|(3[1-8])|4([2-6]))$/,
+    component: English_SelectAnswer,
+    props,
+  },
+  {
+    pattern: /^ENGLISH_EG3M(21|23|24)$/,
+    component: English_Pronounciation,
+    props,
+  },
+
+  // * English G4
+  {
+    pattern: /^ENGLISH_EG4M(1|3|5|7|9)$/,
+    component: English_CharSelector_Meaning,
+    props,
+  },
+  {
+    pattern: /^ENGLISH_EG4M(2|4|6|8|10)$/,
+    component: English_Pronounciation_Meaning,
+    props,
+  },
+  {
+    pattern: /^ENGLISH_EG4M(22|27|28|29|30|31|33|34)$/,
+    component: English_SelectAnswer,
+    props,
+  },
+  {
+    pattern: /^ENGLISH_EG4M(25|26|32)$/,
+    component: English_SelectText,
+    props,
+  },
+  // * English G5
+  {
+    pattern: /^ENGLISH_EG5M(1|3|5|7|9)$/,
+    component: English_CharSelector_Meaning,
+    props,
+  },
+  // * English G6
+  {
+    pattern: /^ENGLISH_EG6M(1|3|5|7|9)$/,
+    component: English_CharSelector_Meaning,
+    props,
+  },
+  {
+    pattern: /^ENGLISH_EG6M(2|4|6|8|10)$/,
+    component: English_Pronounciation_Meaning,
     props,
   },
   // Mandarin Lessons

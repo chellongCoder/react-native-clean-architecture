@@ -56,7 +56,7 @@ type Props = {
   characterStyle?: StyleProp<ViewStyle>;
 };
 
-const English_CharSelector = observer(
+const English_CharSelector_Meaning = observer(
   forwardRef<LessonRef, Props>(
     (
       {
@@ -110,6 +110,7 @@ const English_CharSelector = observer(
           charScrambleRep.current?.reset?.();
         },
         fullAnswer: firstMiniTestTask?.question?.[moduleIndex].fullAnswer,
+        totalTime: 60 * 2, // 2 minutes
       });
 
       const {lessonSetting} = useHomeStore();
@@ -210,22 +211,31 @@ const English_CharSelector = observer(
           isShowCorrectContainer={isShowCorrectContainer}
           onPressFlower={toggleShowHint}
           buildQuestion={
-            <View>
-              <Animated.Image
-                resizeMode={'contain'}
+            <View style={[styles.containerMeaning]}>
+              {learningTimer !== 0 && (
+                <Animated.Image
+                  resizeMode={'contain'}
+                  style={[
+                    {
+                      width: scale(240),
+                      height: verticalScale(100),
+                    },
+                    animatedStyle,
+                  ]}
+                  source={{
+                    uri:
+                      env.IMAGE_QUESTION_BASE_API_URL +
+                      firstMiniTestTask?.question?.[moduleIndex].image,
+                  }}
+                />
+              )}
+              <Text
                 style={[
-                  {
-                    width: scale(200),
-                    height: verticalScale(140),
-                  },
-                  animatedStyle,
-                ]}
-                source={{
-                  uri:
-                    env.IMAGE_QUESTION_BASE_API_URL +
-                    firstMiniTestTask?.question?.[moduleIndex].image,
-                }}
-              />
+                  styles.textMeaning,
+                  {color: settings.backgroundButtonColor},
+                ]}>
+                {firstMiniTestTask?.question?.[moduleIndex].description}
+              </Text>
             </View>
           }
           buildAnswer={
@@ -285,6 +295,7 @@ const English_CharSelector = observer(
                   listChar={firstMiniTestTask?.question?.[moduleIndex]?.answers}
                   learningTimer={learningTimer}
                   onAnswerChanged={setAnswerSelected}
+                  questionStyle={{color: settings.backgroundButtonColor}}
                 />
               )}
 
@@ -306,7 +317,7 @@ const English_CharSelector = observer(
   ),
 );
 
-export default English_CharSelector;
+export default English_CharSelector_Meaning;
 
 const styles = StyleSheet.create({
   fill: {
@@ -324,7 +335,17 @@ const styles = StyleSheet.create({
   textGreen: {
     color: COLORS.BLUE_258F78,
   },
-
+  containerMeaning: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  textMeaning: {
+    fontFamily: FontFamily.SVNNeuzeitRegular,
+    fontSize: 20,
+    textAlign: 'center',
+    fontWeight: '400',
+  },
   textVowel: {
     fontFamily: FontFamily.SVNCherishMoment,
     color: COLORS.YELLOW_F2B559,

@@ -109,6 +109,7 @@ const English_SelectAnswer = observer(
           answerRef.current?.resetAnswerSelected?.();
         },
         fullAnswer: firstMiniTestTask?.question?.[moduleIndex].fullAnswer,
+        totalTime: 60 * 5,
       });
 
       const {lessonSetting} = useHomeStore();
