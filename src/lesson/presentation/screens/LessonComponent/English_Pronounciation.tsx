@@ -14,7 +14,11 @@ import {FontFamily} from 'src/core/presentation/hooks/useFonts';
 import useGlobalStyle from 'src/core/presentation/hooks/useGlobalStyle';
 import {Task} from 'src/home/application/types/GetListQuestionResponse';
 import {COLORS} from 'src/core/presentation/constants/colors';
-import {getCorrectAnswer, isMMSS} from 'src/core/presentation/utils';
+import {
+  getCorrectAnswer,
+  isMMSS,
+  WIDTH_SCREEN,
+} from 'src/core/presentation/utils';
 import {scale, verticalScale} from 'react-native-size-matters';
 import Animated, {
   Easing,
@@ -402,8 +406,8 @@ const English_Pronounciation = observer(
                 resizeMode={'contain'}
                 style={[
                   {
-                    width: scale(200),
-                    height: verticalScale(140),
+                    width: WIDTH_SCREEN,
+                    height: verticalScale(150),
                   },
                   animatedStyle,
                 ]}

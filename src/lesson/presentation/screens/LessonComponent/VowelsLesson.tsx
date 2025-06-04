@@ -82,13 +82,7 @@ const VowelsLesson = observer(
       const focus = useIsFocused();
 
       const [answerSelected, setAnswerSelected] = useState('');
-      console.log(
-        '🛠 LOG: 🚀 --> ------------------------------------------------🛠 LOG: 🚀 -->',
-      );
-      console.log('🛠 LOG: 🚀 --> ~ answerSelected:', answerSelected);
-      console.log(
-        '🛠 LOG: 🚀 --> ------------------------------------------------🛠 LOG: 🚀 -->',
-      );
+
       const {trainingCount, getSetting} = useLessonStore();
 
       const {selectedChild} = useAuthenticationStore();
@@ -234,7 +228,7 @@ const VowelsLesson = observer(
               <Animated.Image
                 resizeMode={'contain'}
                 width={WIDTH_SCREEN}
-                height={scale(200)}
+                height={scale(150)}
                 style={[{}, animatedStyle]}
                 source={{
                   uri:
