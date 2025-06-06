@@ -14,7 +14,7 @@ import {FontFamily} from 'src/core/presentation/hooks/useFonts';
 import useGlobalStyle from 'src/core/presentation/hooks/useGlobalStyle';
 import {Task} from 'src/home/application/types/GetListQuestionResponse';
 import {COLORS} from 'src/core/presentation/constants/colors';
-import {isMMSS} from 'src/core/presentation/utils';
+import {isMMSS, WIDTH_SCREEN} from 'src/core/presentation/utils';
 import {scale, verticalScale} from 'react-native-size-matters';
 import {
   Easing,
@@ -77,11 +77,7 @@ const English_CombineSentences = forwardRef<LessonRef, Props>(
     const {ttsSpeak} = useContext(TextToSpeechContext);
 
     const charScrambleRep = useRef<CharScrambleRep>(null);
-    console.log('answerSelected: ', answerSelected);
-    console.log(
-      'firstMiniTestTask?.question?.[moduleIndex]: ',
-      firstMiniTestTask?.question?.[moduleIndex],
-    );
+
     const {
       isAnswerCorrect,
       isShowCorrectContainer,
@@ -172,6 +168,10 @@ const English_CombineSentences = forwardRef<LessonRef, Props>(
               env.IMAGE_QUESTION_BASE_API_URL +
               firstMiniTestTask?.question?.[moduleIndex].image
             }
+            imageStyle={{
+              height: verticalScale(100),
+              width: WIDTH_SCREEN,
+            }}
             paragraph={
               firstMiniTestTask?.question?.[moduleIndex].paragraph ?? ''
             }

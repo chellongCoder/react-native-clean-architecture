@@ -1,5 +1,12 @@
 import React from 'react';
-import {ImageBackground, StyleSheet, Text, View} from 'react-native';
+import {
+  ImageBackground,
+  ImageStyle,
+  StyleProp,
+  StyleSheet,
+  Text,
+  View,
+} from 'react-native';
 import {scale, verticalScale} from 'react-native-size-matters';
 import {FontFamily} from 'src/core/presentation/hooks/useFonts';
 import {COLORS} from 'src/core/presentation/constants/colors';
@@ -10,22 +17,26 @@ type ParagraphImageProps = {
   imageUrl: string;
   name?: string;
   paragraph: string;
+  imageStyle?: StyleProp<ImageStyle>;
 };
 
 const ParagraphImage: React.FC<ParagraphImageProps> = ({
   imageUrl,
   name,
   paragraph,
+  imageStyle,
 }) => {
   return (
     <View>
       <ImageBackground
         resizeMode={'contain'}
         style={[
-          {
-            width: WIDTH_SCREEN,
-            height: verticalScale(140),
-          },
+          imageStyle
+            ? imageStyle
+            : {
+                width: WIDTH_SCREEN,
+                height: verticalScale(140),
+              },
         ]}
         source={{uri: imageUrl}}>
         {name && (

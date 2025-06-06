@@ -108,6 +108,7 @@ import English_SelectText from './LessonComponent/English_SelectText';
 import English_QwertyKeyboard from './LessonComponent/English_QwertyKeyboard';
 import English_CharSelector_Meaning from './LessonComponent/English_CharSelector_Meaning';
 import English_Pronounciation_Meaning from './LessonComponent/English_Pronounciation_Meaning';
+import English_CombineSentences from './LessonComponent/English_CombineSentences';
 
 export type TResult = {
   userId?: string;
@@ -134,11 +135,6 @@ const props = (
 // Lesson component mapping with regex patterns
 const LESSON_PATTERNS = [
   // English Lessons
-  {
-    pattern: /^ENGLISHG2M12$/,
-    component: MultiPronunciationLesson,
-    props: {},
-  },
   {
     pattern: /^pronunciation$/,
     component: PronunciationLesson,
@@ -178,12 +174,12 @@ const LESSON_PATTERNS = [
   // * English G2
   //: TODO: tồn động : M35, 33
   {
-    pattern: /^ENGLISH_EG2M(1|3|5|7|9)$/,
+    pattern: /^ENGLISH_EG2M(1|3|5|7|9|16)$/,
     component: VowelsLesson,
     props,
   },
   {
-    pattern: /^ENGLISH_EG2M(2|4|6|8|10)$/,
+    pattern: /^ENGLISH_EG2M(2|4|6|8|10|13|14|15|17)$/,
     component: English_Pronounciation,
     props,
   },
@@ -193,8 +189,18 @@ const LESSON_PATTERNS = [
     props,
   },
   {
+    pattern: /^ENGLISH_EG2M(12)$/,
+    component: MultiPronunciationLesson,
+    props: {},
+  },
+  {
+    pattern: /^ENGLISH_EG2M(20|30|33|35|41)$/,
+    component: English_CombineSentences,
+    props,
+  },
+  {
     pattern:
-      /^(ENGLISH_EG2M(31|32|34|36|37|38|39|40|42|43|44|45|46|47|48|49|51|52|53|54))$/,
+      /^(ENGLISH_EG2M(23|24|25|26|27|28|29|31|32|34|36|37|38|39|40|42|43|44|45|46|47|48|49|51|52|53|54))$/,
     component: English_SelectAnswer,
     props,
   },
@@ -1096,9 +1102,13 @@ const LessonScreen = observer(() => {
       return <OnBoardingScreen />;
     }
     // Find matching pattern
-    const matchedPattern = LESSON_PATTERNS.find(pattern =>
-      pattern.pattern.test(questionType),
-    );
+    const matchedPattern = LESSON_PATTERNS.find(pattern => {
+      console.log(
+        '🛠 LOG: 🚀 --> ~ file: LessonScreen.tsx:1046 ~ LessonScreen ~ matchedPattern:',
+        pattern,
+      );
+      return pattern.pattern.test(questionType);
+    });
 
     if (!matchedPattern) {
       return <OnBoardingScreen />;
