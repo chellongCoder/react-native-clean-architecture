@@ -4,10 +4,11 @@ import {scale, verticalScale} from 'react-native-size-matters';
 import {FontFamily} from 'src/core/presentation/hooks/useFonts';
 import {COLORS} from 'src/core/presentation/constants/colors';
 import ScrollIndicator from './ScrollIndicator';
+import {WIDTH_SCREEN} from 'src/core/presentation/utils';
 
 type ParagraphImageProps = {
   imageUrl: string;
-  name: string;
+  name?: string;
   paragraph: string;
 };
 
@@ -19,17 +20,19 @@ const ParagraphImage: React.FC<ParagraphImageProps> = ({
   return (
     <View>
       <ImageBackground
-        resizeMode={'cover'}
+        resizeMode={'contain'}
         style={[
           {
-            width: scale(170),
-            aspectRatio: 0.7,
+            width: WIDTH_SCREEN,
+            height: verticalScale(140),
           },
         ]}
         source={{uri: imageUrl}}>
-        <View style={styles.boxName}>
-          <Text style={styles.textParagraph}>{name}</Text>
-        </View>
+        {name && (
+          <View style={styles.boxName}>
+            <Text style={styles.textParagraph}>{name}</Text>
+          </View>
+        )}
         <ScrollIndicator containerStyle={styles.boxParagraph}>
           <Text style={styles.textParagraph}>{paragraph}</Text>
         </ScrollIndicator>
