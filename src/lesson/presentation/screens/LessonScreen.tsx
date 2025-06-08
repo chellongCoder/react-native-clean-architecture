@@ -221,21 +221,26 @@ const LESSON_PATTERNS = [
     props,
   },
   {
-    pattern: /^ENGLISH_EG3M(1|3|5|7|9|28)$/,
+    pattern: /^ENGLISH_EG3M(1|3|5|7|9|26|28|30)$/,
     component: English_CharSelector,
     props,
   },
   {
-    pattern: /^ENGLISH_EG3M(2|4|6|8|10|27|29|(3[1-8])|4([2-6]))$/,
+    pattern: /^ENGLISH_EG3M(2|4|6|8|10)$/,
+    component: English_Pronounciation,
+    props,
+  },
+  {
+    pattern:
+      /^ENGLISH_EG3M(21|22|23|24|27|29|31|32|33|34|35|36|37|38|39|42|43|44|45|46)$/,
     component: English_SelectAnswer,
     props,
   },
   {
-    pattern: /^ENGLISH_EG3M(21|23|24)$/,
-    component: English_Pronounciation,
+    pattern: /^ENGLISH_EG3M(25|40|41)$/,
+    component: English_SelectText,
     props,
   },
-
   // * English G4
   {
     pattern: /^ENGLISH_EG4M(1|3|5|7|9)$/,
