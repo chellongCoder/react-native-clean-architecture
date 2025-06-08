@@ -253,12 +253,12 @@ const LESSON_PATTERNS = [
     props,
   },
   {
-    pattern: /^ENGLISH_EG4M(22|27|28|29|30|31|33|34)$/,
+    pattern: /^ENGLISH_EG4M(11|12|13|14|20|23|24|27|28|29|30|31|33|34)$/,
     component: English_SelectAnswer,
     props,
   },
   {
-    pattern: /^ENGLISH_EG4M(25|26|32)$/,
+    pattern: /^ENGLISH_EG4M(15|16|17|18|19|21|22|25|26|32)$/,
     component: English_SelectText,
     props,
   },
@@ -266,6 +266,26 @@ const LESSON_PATTERNS = [
   {
     pattern: /^ENGLISH_EG5M(1|3|5|7|9)$/,
     component: English_CharSelector_Meaning,
+    props,
+  },
+  {
+    pattern: /^ENGLISH_EG5M(2|4|6|8|10)$/,
+    component: English_Pronounciation_Meaning,
+    props,
+  },
+  {
+    pattern: /^ENGLISH_EG5M(11)$/,
+    component: English_QwertyKeyboard,
+    props,
+  },
+  {
+    pattern: /^ENGLISH_EG5M(12|17|19|20|22|24|25|26|27|28|29|30|31|32|33|34)$/,
+    component: English_SelectAnswer,
+    props,
+  },
+  {
+    pattern: /^ENGLISH_EG5M(13|14|15|18|21|23)$/,
+    component: English_SelectText,
     props,
   },
   // * English G6
@@ -277,6 +297,16 @@ const LESSON_PATTERNS = [
   {
     pattern: /^ENGLISH_EG6M(2|4|6|8|10)$/,
     component: English_Pronounciation_Meaning,
+    props,
+  },
+  {
+    pattern: /^ENGLISH_EG6M(11|15|16|17|18)$/,
+    component: English_QwertyKeyboard,
+    props,
+  },
+  {
+    pattern: /^ENGLISH_EG6M(12|13|14|20|21|22|23|24)$/,
+    component: English_SelectAnswer,
     props,
   },
   // Mandarin Lessons
