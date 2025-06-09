@@ -115,7 +115,10 @@ const SelectionAnswersQuestion: ForwardRefRenderFunction<
                 (answer.length > 3 ? Math.ceil(length / 2) : 2);
 
           const minHeight = answer.length === 3 ? scale(44) : scale(56);
-          if (e.includes('/')) {
+          if (
+            e.includes('/') &&
+            e.split('/').every(num => !isNaN(Number(num.trim())))
+          ) {
             return (
               <TouchableOpacity
                 key={i}
