@@ -96,7 +96,7 @@ const EssayLesson = observer(
         countDownTime: 5,
         isCorrectAnswer:
           answerSelected ===
-          firstMiniTestTask?.question?.[moduleIndex]?.correctAnswer,
+          firstMiniTestTask?.question?.[moduleIndex]?.fullAnswer,
         onSubmit: () => {
           charScrambleRep.current?.reset();
           nextModule(answerSelected);

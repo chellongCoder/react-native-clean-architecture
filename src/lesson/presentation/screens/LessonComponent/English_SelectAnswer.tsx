@@ -101,7 +101,9 @@ const English_SelectAnswer = observer(
         countDownTime: trainingCount <= 2 ? 0 : 5,
         isCorrectAnswer: isSubArray(
           answerSelected as string[],
-          firstMiniTestTask?.question?.[moduleIndex]?.correctAnswer as string[],
+          [
+            firstMiniTestTask?.question?.[moduleIndex]?.correctAnswer,
+          ] as string[],
         ),
         onSubmit: () => {
           setAnswerSelected('');
