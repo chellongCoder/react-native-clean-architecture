@@ -394,7 +394,7 @@ const LESSON_PATTERNS = [
     props: {},
   },
   {
-    pattern: /^VIETNAMESE_VNG2M(3|4|5|6|9|10)$/,
+    pattern: /^VIETNAMESE_VNG2M(3|4|5|6|8|9|10)$/,
     component: VnG2M8Lesson,
     props,
   },
