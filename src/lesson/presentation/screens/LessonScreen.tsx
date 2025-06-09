@@ -300,6 +300,11 @@ const LESSON_PATTERNS = [
     props: {},
   },
   {
+    pattern: /^MANDARIN_MDG[2-6]M4$/,
+    component: Mandarin_G4M_DrawCharacter,
+    props,
+  },
+  {
     pattern: /^MANDARIN_MDG1M5$/,
     component: Mandarin_G1M5,
     props: {},
