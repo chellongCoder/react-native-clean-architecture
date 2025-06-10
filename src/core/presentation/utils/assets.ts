@@ -58,4 +58,5 @@ export const assets = {
   feedbackImage: require('assets/images/feedbackImage.png'),
   upgradeApp: require('assets/images/upgradeApp.png'),
   bg_hint: require('assets/images/bg_hint.gif'),
+  icon_delete: require('assets/images/icon_delete.png'),
 };

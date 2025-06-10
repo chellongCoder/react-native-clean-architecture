@@ -4,12 +4,13 @@ import React, {
   forwardRef,
   ForwardRefRenderFunction,
 } from 'react';
-import {View, Text, TouchableOpacity, StyleSheet} from 'react-native';
+import {View, Text, TouchableOpacity, StyleSheet, Image} from 'react-native';
 import {scale, verticalScale} from 'react-native-size-matters';
 import {COLORS} from 'src/core/presentation/constants/colors';
 import {FontFamily} from 'src/core/presentation/hooks/useFonts';
 import useGlobalStyle from 'src/core/presentation/hooks/useGlobalStyle';
 import ScrollIndicator from './ScrollIndicator';
+import {assets} from 'src/core/presentation/utils';
 
 interface SelectionAnswersQuestionProps {
   question: React.ReactNode;
@@ -88,7 +89,11 @@ const KeyboardNumber: ForwardRefRenderFunction<
             setAnswerSelected([]);
             onSelectAnswer([]);
           }}>
-          <Text style={globalStyle.txtModule}>␡</Text>
+          <Image
+            resizeMode="contain"
+            source={assets.icon_delete}
+            style={[{width: scale(20), height: scale(20)}]}
+          />
         </TouchableOpacity>
       </View>
       <ScrollIndicator>

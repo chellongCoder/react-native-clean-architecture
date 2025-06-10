@@ -222,6 +222,7 @@ const Math_MG3_KeyboardNumber = observer(
               ? undefined
               : word
           }
+          characterStyle={characterStyle}
           isAnswerCorrect={isAnswerCorrect}
           isShowCorrectContainer={isShowCorrectContainer}
           onPressFlower={toggleShowHint}

@@ -127,14 +127,12 @@ const English_PronounciationRepeat = observer(
           typeof firstMiniTestTask?.question?.[moduleIndex]?.correctAnswer ===
           'string'
         ) {
-          return (
-            answerSelected.toLocaleLowerCase() ===
-            getCorrectAnswer(
-              firstMiniTestTask?.question?.[moduleIndex]?.correctAnswer,
-            )
-              .toLocaleLowerCase()
-              .trim()
-          );
+          return getCorrectAnswer(
+            firstMiniTestTask?.question?.[moduleIndex]?.correctAnswer,
+          )
+            .toLocaleLowerCase()
+            .trim()
+            .includes(answerSelected.toLocaleLowerCase().trim());
         } else if (
           typeof firstMiniTestTask?.question?.[moduleIndex]?.correctAnswer ===
           'object'

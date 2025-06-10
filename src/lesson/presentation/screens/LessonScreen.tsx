@@ -65,7 +65,6 @@ import VnG0M3Lesson from './LessonComponent/Vietnamese_G0M3_lesson';
 import VnG0M1Lesson from './LessonComponent/Vietnamese_G0M1_Leson';
 import VnG4M1Lesson from './LessonComponent/Vietnamese_G4M1_lesson';
 import VnG5M1Lesson from './LessonComponent/Vietnamese_G5M1_lesson';
-import Math_MG1M3 from './LessonComponent/Math_MG1M3';
 import Math_MG1M3_P4 from './LessonComponent/Math_MG1M3_P4';
 import Science_SG6M3 from './LessonComponent/Science_SG6M3';
 import Math_MG4M16 from './LessonComponent/Math_MG4M16';
@@ -109,6 +108,8 @@ import English_QwertyKeyboard from './LessonComponent/English_QwertyKeyboard';
 import English_CharSelector_Meaning from './LessonComponent/English_CharSelector_Meaning';
 import English_Pronounciation_Meaning from './LessonComponent/English_Pronounciation_Meaning';
 import English_CombineSentences from './LessonComponent/English_CombineSentences';
+import English_PronounciationRepeat from './LessonComponent/English_PronounciationRepeat';
+import Math_Text_SelectAnswer from './LessonComponent/Math_Text_SelectAnswer';
 
 export type TResult = {
   userId?: string;
@@ -192,6 +193,11 @@ const LESSON_PATTERNS = [
     pattern: /^ENGLISH_EG2M(12)$/,
     component: MultiPronunciationLesson,
     props: {},
+  },
+  {
+    pattern: /^ENGLISH_EG2M(17)$/,
+    component: English_PronounciationRepeat,
+    props,
   },
   {
     pattern: /^ENGLISH_EG2M(20|30|33|35|41)$/,
@@ -550,7 +556,7 @@ const LESSON_PATTERNS = [
   {
     pattern: /^MATH_MG1M3$/,
     component: (dataProps: any, testTask: any) =>
-      testTask?.stt === 4 ? Math_MG1M3_P4 : Math_MG1M3,
+      testTask?.stt === 4 ? Math_MG1M3_P4 : Math_MG3_KeyboardNumber,
     props: (dataProps: any, testTask: any, lessonIndex: number) =>
       testTask?.stt === 4
         ? {
@@ -697,6 +703,11 @@ const LESSON_PATTERNS = [
       isMulti: true,
       answer: ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'],
     },
+  },
+  {
+    pattern: /^MATH_MG6M(3)$/,
+    component: Math_Text_SelectAnswer,
+    props,
   },
   {
     pattern: /^MATH_MG6M(1|2|3|4|6|7|9|10|11|12|13|14)$/,
