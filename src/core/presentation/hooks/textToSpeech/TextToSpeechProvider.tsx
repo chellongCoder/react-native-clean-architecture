@@ -357,7 +357,7 @@ export const TextToSpeechProvider = ({children}: PropsWithChildren) => {
     Tts.setDefaultRate(isAndroid ? 0.5 : 1);
 
     // Độ ấm của giọng càng thấp giọng càng trầm ấm
-    Tts.setDefaultPitch(1.5);
+    Tts.setDefaultPitch(20);
 
     // Ignore the silent switch on the device, allowing TTS to play even if the device is set to silent
     Tts.setIgnoreSilentSwitch('ignore');
