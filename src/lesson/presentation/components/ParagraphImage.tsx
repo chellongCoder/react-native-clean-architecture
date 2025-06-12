@@ -29,21 +29,17 @@ const ParagraphImage: React.FC<ParagraphImageProps> = ({
   return (
     <View>
       <ImageBackground
-        resizeMode={'contain'}
+        resizeMode={'cover'}
         style={[
-          imageStyle
-            ? imageStyle
-            : {
-                width: WIDTH_SCREEN,
-                height: verticalScale(140),
-              },
+          {
+            width: scale(170),
+            aspectRatio: 0.7,
+          },
         ]}
         source={{uri: imageUrl}}>
-        {name && (
-          <View style={styles.boxName}>
-            <Text style={styles.textParagraph}>{name}</Text>
-          </View>
-        )}
+        <View style={styles.boxName}>
+          <Text style={styles.textParagraph}>{name}</Text>
+        </View>
         <ScrollIndicator containerStyle={styles.boxParagraph}>
           <Text style={styles.textParagraph}>{paragraph}</Text>
         </ScrollIndicator>
@@ -70,6 +66,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     height: verticalScale(30),
     justifyContent: 'center',
+    backgroundColor: COLORS.WHITE_FBF8CC,
   },
   textParagraph: {
     fontFamily: FontFamily.SVNNeuzeitRegular,

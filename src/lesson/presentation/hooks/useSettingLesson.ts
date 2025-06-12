@@ -20,6 +20,7 @@ import useAuthenticationStore from 'src/authentication/presentation/stores/useAu
 import Toast from 'react-native-toast-message';
 import {useSpeechToText} from './useSpeechToText';
 import {formatTimeMMSS} from 'src/core/presentation/utils';
+import {useI18n} from 'src/core/presentation/hooks/useI18n';
 
 type Props = {
   countDownTime: number; // * thời gian đếm ngược 5s
@@ -28,6 +29,14 @@ type Props = {
   correctAnswer?: string; // * thông tin câu trả lời đúng
   isCorrectAnswer?: boolean; // * câu trả lời đúng hay sai
   onSubmit?: (speechResult?: string) => void;
+  firstMiniTestTask?: {
+    question?: {
+      [key: number]: {
+        description?: string;
+      };
+    };
+  };
+  moduleIndex?: number;
 };
 
 export const useSettingLesson = ({
@@ -37,13 +46,17 @@ export const useSettingLesson = ({
   correctAnswer,
   isCorrectAnswer,
   onSubmit,
+  firstMiniTestTask,
+  moduleIndex,
 }: Props) => {
   const lessonStore = useLessonStore();
   const authStore = useAuthenticationStore();
+  const i18n = useI18n();
   const {playSound} = useContext(SoundGlobalContext);
   const [isAnswerCorrect, setIsAnswerCorrect] = useState<boolean | undefined>(); // * nếu undefined thì là chưa chọn câu trả lời
   const [isShowCorrectContainer, setIsShowCorrectContainer] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [transDescription, setTransDescription] = useState<string>('');
   const {
     start,
     stop,
@@ -259,6 +272,42 @@ export const useSettingLesson = ({
     };
   }, [stopRecord]);
 
+  /**
+   * * Translate question description based on firstMiniTestTask and moduleIndex
+   */
+  useEffect(() => {
+    const description =
+      firstMiniTestTask?.question?.[moduleIndex ?? 0]?.description;
+
+    if (description && i18n.deviceLocale) {
+      lessonStore
+        .translateText({
+          text: [description],
+          targetLanguage: i18n.deviceLocale,
+        })
+        .then(res => {
+          if (res.data && res.data.length > 0) {
+            setTransDescription(res.data[0]);
+          }
+        })
+        .catch(() => {
+          // Fallback to original description if translation fails
+          setTransDescription(description);
+        });
+    } else if (description) {
+      // If no deviceLocale or translation not needed, use original description
+      setTransDescription(description);
+    } else {
+      // Clear description if no data
+      setTransDescription('');
+    }
+  }, [
+    firstMiniTestTask?.question,
+    moduleIndex,
+    i18n.deviceLocale,
+    lessonStore,
+  ]);
+
   return {
     start,
     stop,
@@ -275,5 +324,6 @@ export const useSettingLesson = ({
     toggleShowHint,
     isShowHint: lessonStore.isShowHint,
     clearSpeechResult,
+    transDescription,
   };
 };

@@ -81,17 +81,20 @@ const Mandarin_G2M25 = forwardRef<Mandarin_G2M25Ref, Props>(
       [getSetting, lessonSetting],
     );
 
-    const {isAnswerCorrect, isShowCorrectContainer, submit} = useSettingLesson({
-      countDownTime: trainingCount <= 2 ? 0 : 5,
-      isCorrectAnswer: !!isCorrect,
-      onSubmit: () => {
-        setAnswerSelected('');
-        nextModule(answerSelected);
-        setIscorrect(false);
-      },
-      fullAnswer: firstMiniTestTask?.question?.[moduleIndex].fullAnswer,
-      totalTime: 5 * 60, // * tổng time làm 1câu
-    });
+    const {isAnswerCorrect, isShowCorrectContainer, transDescription, submit} =
+      useSettingLesson({
+        countDownTime: trainingCount <= 2 ? 0 : 5,
+        isCorrectAnswer: !!isCorrect,
+        onSubmit: () => {
+          setAnswerSelected('');
+          nextModule(answerSelected);
+          setIscorrect(false);
+        },
+        firstMiniTestTask,
+        moduleIndex,
+        fullAnswer: firstMiniTestTask?.question?.[moduleIndex].fullAnswer,
+        totalTime: 5 * 60, // * tổng time làm 1câu
+      });
 
     const characterImage = useMemo(() => {
       return isAnswerCorrect === true || isAnswerCorrect === undefined
@@ -157,7 +160,7 @@ const Mandarin_G2M25 = forwardRef<Mandarin_G2M25Ref, Props>(
               {firstMiniTestTask?.question?.[moduleIndex].content}
             </Text>
             <Text style={[styles.fonts_Neuzeit, styles.textQuestion2]}>
-              {firstMiniTestTask?.question?.[moduleIndex].description}
+              {transDescription}
             </Text>
 
             <ImageMeaning

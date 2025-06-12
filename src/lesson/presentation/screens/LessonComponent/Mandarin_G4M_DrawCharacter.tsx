@@ -108,19 +108,26 @@ const Mandarin_G4M_DrawCharacter = forwardRef<
       [getSetting, lessonSetting],
     );
 
-    const {isAnswerCorrect, isShowCorrectContainer, submit, env} =
-      useSettingLesson({
-        countDownTime: trainingCount <= 2 ? 0 : 5,
-        isCorrectAnswer: !!isCorrect,
-        onSubmit: () => {
-          setAnswerSelected('');
-          nextModule(answerSelected);
-          setIscorrect(false);
-          setStatusCharacter([]);
-        },
-        fullAnswer: firstMiniTestTask?.question?.[moduleIndex].fullAnswer,
-        totalTime: 5 * 60, // * tổng time làm 1câu
-      });
+    const {
+      isAnswerCorrect,
+      isShowCorrectContainer,
+      submit,
+      transDescription,
+      env,
+    } = useSettingLesson({
+      countDownTime: trainingCount <= 2 ? 0 : 5,
+      isCorrectAnswer: !!isCorrect,
+      onSubmit: () => {
+        setAnswerSelected('');
+        nextModule(answerSelected);
+        setIscorrect(false);
+        setStatusCharacter([]);
+      },
+      firstMiniTestTask,
+      moduleIndex,
+      fullAnswer: firstMiniTestTask?.question?.[moduleIndex].fullAnswer,
+      totalTime: 5 * 60, // * tổng time làm 1câu
+    });
 
     const characterImage = useMemo(() => {
       return isAnswerCorrect === true || isAnswerCorrect === undefined
@@ -237,9 +244,7 @@ const Mandarin_G4M_DrawCharacter = forwardRef<
                 }}
               />
             )}
-            <Text style={styles.textQuestion}>
-              {firstMiniTestTask?.question?.[moduleIndex].description}
-            </Text>
+            <Text style={styles.textQuestion}>{transDescription}</Text>
           </>
         }
         characterStyle={

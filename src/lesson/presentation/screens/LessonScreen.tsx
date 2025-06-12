@@ -200,7 +200,7 @@ const LESSON_PATTERNS = [
     props,
   },
   {
-    pattern: /^ENGLISH_EG2M(20|30|33|35|41)$/,
+    pattern: /^ENGLISH_EG2M(30|33|35|41)$/,
     component: English_CombineSentences,
     props,
   },
@@ -218,6 +218,11 @@ const LESSON_PATTERNS = [
   {
     pattern: /^ENGLISH_EG(2M(50)|3M(40|41))$/,
     component: English_SelectText,
+    props,
+  },
+  {
+    pattern: /^ENGLISH_EG2M(20)$/,
+    component: English_CharSelector,
     props,
   },
   // * English G3
@@ -327,7 +332,7 @@ const LESSON_PATTERNS = [
     props: {},
   },
   {
-    pattern: /^(writing|MANDARIN_MDG[1-6]M(1|7|10|13))$/,
+    pattern: /^(writing|MANDARIN_MDG[1-6]M(1|4|7|10|13))$/,
     component: Mandarin_G4M_DrawCharacter,
     props,
   },
@@ -341,25 +346,11 @@ const LESSON_PATTERNS = [
     component: Mandarin_G4_Pronunciation,
     props,
   },
-  {
-    pattern: /^MANDARIN_MDG1M4$/,
-    component: WriteLesson,
-    props: {},
-  },
+  // * Mandarin G2
   {
     pattern: /^MANDARIN_MDG[2-6]M4$/,
     component: Mandarin_G4M_DrawCharacter,
     props,
-  },
-  {
-    pattern: /^MANDARIN_MDG1M5$/,
-    component: Mandarin_G1M5,
-    props: {},
-  },
-  {
-    pattern: /^MANDARIN_MDG1M6$/,
-    component: PronunciationLesson,
-    props: {},
   },
   {
     pattern: /^MANDARIN_MDG2M25$/,

@@ -96,6 +96,7 @@ const Mandarin_G4M_SelectAnswer = observer(
         word,
         env,
         learningTimer,
+        transDescription,
         submit,
         toggleShowHint,
         resetLearning,
@@ -110,6 +111,8 @@ const Mandarin_G4M_SelectAnswer = observer(
           answerRef.current?.resetAnswerSelected?.();
           charScrambleRep.current?.reset?.();
         },
+        firstMiniTestTask,
+        moduleIndex,
         fullAnswer: firstMiniTestTask?.question?.[moduleIndex].fullAnswer,
       });
 
@@ -260,7 +263,7 @@ const Mandarin_G4M_SelectAnswer = observer(
                     maxWidth: WIDTH_SCREEN / 2,
                   },
                 ]}>
-                {firstMiniTestTask?.question?.[moduleIndex].description}
+                {transDescription}
               </Text>
             </>
           }

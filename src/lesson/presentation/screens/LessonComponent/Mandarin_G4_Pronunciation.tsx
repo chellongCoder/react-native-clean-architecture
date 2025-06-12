@@ -169,12 +169,15 @@ const Mandarin_G4_Pronunciation = observer(
         word,
         env,
         learningTimer,
+        transDescription,
         submit,
         toggleShowHint,
         resetLearning,
       } = useSettingLesson({
         countDownTime: trainingCount <= 2 ? 0 : 5,
         isCorrectAnswer: !!isCorrectAnswer,
+        firstMiniTestTask,
+        moduleIndex,
         onSubmit: () => {
           setAnswerSelected('');
           clearSpeechResult();
@@ -413,7 +416,7 @@ const Mandarin_G4_Pronunciation = observer(
                 {firstMiniTestTask?.question?.[moduleIndex].content}
               </Text>
               <Text style={[styles.fonts_Neuzeit, styles.textQuestion2]}>
-                {firstMiniTestTask?.question?.[moduleIndex].description}
+                {transDescription}
               </Text>
 
               {typeof firstMiniTestTask?.question?.[moduleIndex].image ===

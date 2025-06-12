@@ -162,6 +162,7 @@ const PronunciationLesson = observer(
         word,
         env,
         learningTimer,
+        transDescription,
         submit,
         toggleShowHint,
         resetLearning,
@@ -174,6 +175,8 @@ const PronunciationLesson = observer(
           nextModule(answerSelected);
           setIsDisabledRecord(false);
         },
+        firstMiniTestTask,
+        moduleIndex,
         fullAnswer: firstMiniTestTask?.question?.[moduleIndex].fullAnswer,
         correctAnswer: getCorrectAnswer(
           firstMiniTestTask?.question?.[moduleIndex]?.correctAnswer as string,
@@ -309,7 +312,8 @@ const PronunciationLesson = observer(
         onChoiceCorrectedAnswer: () => {
           setAnswerSelected(
             getCorrectAnswer(
-              firstMiniTestTask?.question?.[moduleIndex]?.correctAnswer,
+              firstMiniTestTask?.question?.[moduleIndex]
+                ?.correctAnswer as string,
             ),
           );
         },
@@ -384,7 +388,7 @@ const PronunciationLesson = observer(
                 {firstMiniTestTask?.question?.[moduleIndex].content}
               </Text>
               <Text style={[styles.fonts_Neuzeit, styles.textQuestion2]}>
-                {firstMiniTestTask?.question?.[moduleIndex].description}
+                {transDescription}
               </Text>
 
               <ImageMeaning
