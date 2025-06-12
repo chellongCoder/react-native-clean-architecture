@@ -35,7 +35,8 @@ const ListLesson = () => {
   const {getData, isConnected} = useOfflineMode();
   const [subjects, setSubjects] = useState<Subject[]>([]);
   const env = coreModuleContainer.getProvided<Env>(EnvToken); // Instantiate CoreService
-  const {updateDefaultVoice} = useContext(TextToSpeechContext);
+  const {updateDefaultVoice, updateSpeechPitch} =
+    useContext(TextToSpeechContext);
 
   const carouselRef = useRef<Carousel>();
 
@@ -131,8 +132,8 @@ const ListLesson = () => {
             voice.language.startsWith('vi-') ||
             voice.name.toLowerCase().includes('vietnamese'),
         );
-
         updateDefaultVoice?.(vietnameseVoices[0]?.id, 'Vie (Vietnamese)');
+        updateSpeechPitch?.(10);
       } else {
         const engVoice = voices.find(
           voice => voice.language === listLanguage['US English'],

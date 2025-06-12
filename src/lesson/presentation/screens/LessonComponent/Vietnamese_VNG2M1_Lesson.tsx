@@ -104,7 +104,7 @@ const VnG2M1Lesson = forwardRef<LessonRef, Props>(
 
     const onSpeechText = useCallback(() => {
       ttsSpeak?.(
-        firstMiniTestTask?.question?.[moduleIndex].fullAnswer
+        firstMiniTestTask?.question?.[moduleIndex].instruction.description
           .toString()
           .toLowerCase() ?? '',
       );
@@ -199,7 +199,7 @@ const VnG2M1Lesson = forwardRef<LessonRef, Props>(
                 styles.fonts_SVN_Cherish,
                 {fontSize: scale(36), color: COLORS.BLUE_0877B6},
               ]}
-              answerStyle={[styles.fonts_SVN_Cherish, {fontSize: scale(28)}]}
+              answerStyle={[styles.fonts_SVN_Cherish, {fontSize: scale(16)}]}
               isCharacter
             />
 
