@@ -16,9 +16,10 @@ import {Task} from 'src/home/application/types/GetListQuestionResponse';
 import {COLORS} from 'src/core/presentation/constants/colors';
 import {isMMSS, WIDTH_SCREEN} from 'src/core/presentation/utils';
 import {scale, verticalScale} from 'react-native-size-matters';
-import {
+import Animated, {
   Easing,
   ReduceMotion,
+  useAnimatedStyle,
   useSharedValue,
   withTiming,
 } from 'react-native-reanimated';
@@ -27,12 +28,13 @@ import useHomeStore from 'src/home/presentation/stores/useHomeStore';
 import {useLessonStore} from '../../stores/LessonStore/useGetPostsStore';
 import useAuthenticationStore from 'src/authentication/presentation/stores/useAuthenticationStore';
 import {TextToSpeechContext} from 'src/core/presentation/hooks/textToSpeech/TextToSpeechContext';
-import CharScramble, {CharScrambleRep} from '../../components/CharScramble';
+import {CharScrambleRep} from '../../components/CharScramble';
 import {useI18n} from 'src/core/presentation/hooks/useI18n';
 import VoiceButton from '../../components/VoiceButton';
 import {useIsFocused} from '@react-navigation/native';
 import {LessonRef} from '../../types';
 import ParagraphImage from '../../components/ParagraphImage';
+import WordScramble from '../../components/WordScramble';
 
 type Props = {
   moduleIndex: number;
@@ -78,6 +80,12 @@ const English_CombineSentences = forwardRef<LessonRef, Props>(
 
     const charScrambleRep = useRef<CharScrambleRep>(null);
 
+    const animatedStyle = useAnimatedStyle(() => {
+      return {
+        opacity: opacity.value,
+        transform: [{scale: scaleS.value}],
+      };
+    });
     const {
       isAnswerCorrect,
       isShowCorrectContainer,
@@ -163,19 +171,23 @@ const English_CombineSentences = forwardRef<LessonRef, Props>(
         isAnswerCorrect={isAnswerCorrect}
         isShowCorrectContainer={isShowCorrectContainer}
         buildQuestion={
-          <ParagraphImage
-            imageUrl={
-              env.IMAGE_QUESTION_BASE_API_URL +
-              firstMiniTestTask?.question?.[moduleIndex].image
-            }
-            imageStyle={{
-              height: verticalScale(100),
-              width: WIDTH_SCREEN,
-            }}
-            paragraph={
-              firstMiniTestTask?.question?.[moduleIndex].paragraph ?? ''
-            }
-          />
+          <View>
+            <Animated.Image
+              resizeMode={'contain'}
+              style={[
+                {
+                  width: scale(200),
+                  height: verticalScale(140),
+                },
+                animatedStyle,
+              ]}
+              source={{
+                uri:
+                  env.IMAGE_QUESTION_BASE_API_URL +
+                  firstMiniTestTask?.question?.[moduleIndex].image,
+              }}
+            />
+          </View>
         }
         buildAnswer={
           <View style={styles.fill}>
@@ -192,7 +204,7 @@ const English_CombineSentences = forwardRef<LessonRef, Props>(
 
               <VoiceButton onPress={onSpeechText} />
             </View>
-            <CharScramble
+            <WordScramble
               ref={charScrambleRep}
               content={firstMiniTestTask?.question?.[moduleIndex]?.content}
               listChar={firstMiniTestTask?.question?.[moduleIndex]?.answers}

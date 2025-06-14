@@ -26,16 +26,28 @@ export const useListModule = () => {
           childrenId: authStore.selectedChild?._id,
         })
         .then(response => {
-          const listTitle = response.data.map(item => item.name);
-          lessonStore
-            .translateText({
+          const listTitle = response.data.map(item => item.description);
+          const listDesc = response.data.map(
+            item => item.tasks?.map(task => task.description).toString() ?? '',
+          );
+          Promise.all([
+            lessonStore.translateText({
               text: listTitle,
               targetLanguage: i18n.deviceLocale,
-            })
-            .then(res => {
+            }),
+            lessonStore.translateText({
+              text: listDesc,
+              targetLanguage: i18n.deviceLocale,
+            }),
+          ])
+            .then(([resTitle, resDesc]) => {
               const translatedModules = response.data.map((item, index) => ({
                 ...item,
-                name: res.data[index],
+                name: resTitle.data[index],
+                tasks: item.tasks?.map((task, i) => ({
+                  ...task,
+                  description: (resDesc.data[index] ?? '').split(',')[i], // split by comma and get the index of the task
+                })),
               }));
               setModules(translatedModules);
             })

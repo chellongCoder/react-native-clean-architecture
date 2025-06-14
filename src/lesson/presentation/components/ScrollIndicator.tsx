@@ -7,13 +7,14 @@ import {
   StyleSheet,
   ViewStyle,
   LayoutChangeEvent,
+  StyleProp,
 } from 'react-native';
 import {COLORS} from 'src/core/presentation/constants/colors';
 
 interface ScrollIndicatorProps {
   containerStyle?: ViewStyle;
   indicatorStyle?: ViewStyle;
-  scrollViewStyle?: ViewStyle;
+  scrollViewStyle?: StyleProp<ViewStyle>;
   indicatorColor?: string;
   indicatorContainerColor?: string;
   horizontal?: boolean;

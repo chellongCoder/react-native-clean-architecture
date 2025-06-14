@@ -129,8 +129,10 @@ const English_SelectAnswer = observer(
       }, [characterImageFail, characterImageSuccess, isAnswerCorrect]);
 
       const onSpeechText = useCallback(() => {
-        ttsSpeak?.(settings.prompt?.toString() ?? '');
-      }, [settings.prompt, ttsSpeak]);
+        ttsSpeak?.(
+          firstMiniTestTask?.question?.[moduleIndex]?.fullAnswer ?? '',
+        );
+      }, [firstMiniTestTask, moduleIndex, ttsSpeak]);
 
       const opacity = useSharedValue(0);
       const scaleS = useSharedValue(1);

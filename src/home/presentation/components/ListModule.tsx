@@ -58,8 +58,8 @@ const ListModule = observer(() => {
                     isFinished={module.progressOfChildren > 0}
                     title={module.name}
                     subTitle={module.tasks
-                      ?.map(item => item.description)
-                      ?.join('\n\n')
+                      ?.map(item => '•' + item.description)
+                      ?.join('\n')
                       ?.toString()}
                     id={module._id}
                     lessonName={selectedSubject?.description}

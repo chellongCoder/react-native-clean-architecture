@@ -17,9 +17,10 @@ import {Task} from 'src/home/application/types/GetListQuestionResponse';
 import {COLORS} from 'src/core/presentation/constants/colors';
 import {getCorrectAnswer} from 'src/core/presentation/utils';
 import {scale, verticalScale} from 'react-native-size-matters';
-import {
+import Animated, {
   Easing,
   ReduceMotion,
+  useAnimatedStyle,
   useSharedValue,
   withTiming,
 } from 'react-native-reanimated';
@@ -83,6 +84,7 @@ const English_EG4M23 = observer(
         isAnswerCorrect,
         isShowCorrectContainer,
         word,
+        env,
         learningTimer,
         submit,
         toggleShowHint,
@@ -112,6 +114,7 @@ const English_EG4M23 = observer(
         () => getSetting(lessonSetting),
         [getSetting, lessonSetting],
       );
+
       const characterImage = useMemo(() => {
         return isAnswerCorrect === true || isAnswerCorrect === undefined
           ? characterImageSuccess
@@ -132,7 +135,12 @@ const English_EG4M23 = observer(
 
       const opacity = useSharedValue(0);
       const scaleS = useSharedValue(1);
-
+      const animatedStyle = useAnimatedStyle(() => {
+        return {
+          opacity: opacity.value,
+          transform: [{scale: scaleS.value}],
+        };
+      });
       /**
        * * reset lại countdown khi lần làm thay đổi
        */
@@ -211,13 +219,32 @@ const English_EG4M23 = observer(
           buildQuestion={
             <View
               style={{
+                alignItems: 'center',
                 width: scale(200),
-                height: verticalScale(150),
-                marginTop: verticalScale(50),
               }}>
-              <Text style={[styles.fonts_SVN_Cherish, styles.textQuestion]}>
+              <Text
+                style={[
+                  styles.fonts_SVN_Cherish,
+                  styles.textQuestion,
+                  {color: settings.backgroundAnswerColor},
+                ]}>
                 {firstMiniTestTask?.question?.[moduleIndex].content}
               </Text>
+              <Animated.Image
+                resizeMode={'contain'}
+                style={[
+                  {
+                    width: scale(200),
+                    height: verticalScale(140),
+                  },
+                  animatedStyle,
+                ]}
+                source={{
+                  uri:
+                    env.IMAGE_QUESTION_BASE_API_URL +
+                    firstMiniTestTask?.question?.[moduleIndex].image,
+                }}
+              />
             </View>
           }
           buildAnswer={
@@ -243,11 +270,7 @@ const English_EG4M23 = observer(
                 answer={
                   firstMiniTestTask?.question?.[moduleIndex].answers as string[]
                 }
-                question={
-                  <Text style={[styles.textQuestion, styles.fonts_SVN_Cherish]}>
-                    {firstMiniTestTask?.question?.[moduleIndex]?.content}
-                  </Text>
-                }
+                question={null}
                 answerStyle={styles.fonts_SVN_Cherish}
                 isShowCorrectContainer={isShowCorrectContainer}
                 isAnswerCorrect={!!isAnswerCorrect}
@@ -288,8 +311,8 @@ const styles = StyleSheet.create({
   },
 
   textQuestion: {
-    fontSize: verticalScale(15),
-    textAlign: 'left',
+    fontSize: verticalScale(20),
+    textAlign: 'center',
     color: COLORS.BLUE_258F78,
   },
 

@@ -1,3 +1,4 @@
+/* eslint-disable react-native/no-inline-styles */
 import {
   ScrollView,
   StyleProp,
@@ -19,7 +20,6 @@ import {COLORS} from 'src/core/presentation/constants/colors';
 import {scale, verticalScale} from 'react-native-size-matters';
 import {FontFamily} from 'src/core/presentation/hooks/useFonts';
 import {WIDTH_SCREEN} from 'src/core/presentation/utils';
-import ScrollIndicator from './ScrollIndicator';
 
 type Props = {
   content?: string;
@@ -35,7 +35,7 @@ export type CharScrambleRep = {
   reset: () => void;
 };
 
-const CharScramble = forwardRef<CharScrambleRep, Props>(
+const WordScramble = forwardRef<CharScrambleRep, Props>(
   (
     {
       content,
@@ -136,11 +136,16 @@ const CharScramble = forwardRef<CharScrambleRep, Props>(
                   styles.boxVowel,
                   {
                     backgroundColor: bg,
-                    height: verticalScale(41),
-                    width: scale(29)
+                    height: size,
                   },
                 ]}>
-                <Text allowFontScaling adjustsFontSizeToFit numberOfLines={1} style={[styles.textVowel, answerStyle]}>{e}</Text>
+                <Text
+                  allowFontScaling
+                  adjustsFontSizeToFit
+                  numberOfLines={1}
+                  style={[styles.textVowel, answerStyle]}>
+                  {e}
+                </Text>
               </TouchableOpacity>
             );
           })}
@@ -164,7 +169,7 @@ const CharScramble = forwardRef<CharScrambleRep, Props>(
   },
 );
 
-export default CharScramble;
+export default WordScramble;
 
 const styles = StyleSheet.create({
   boxSelected: {
@@ -176,7 +181,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   fill: {
-    marginTop: verticalScale(12),
+    marginTop: verticalScale(22),
   },
   fonts_SVN_Cherish: {
     fontFamily: FontFamily.SVNCherishMoment,
@@ -202,6 +207,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     flexWrap: 'wrap',
     alignContent: 'center',
+    justifyContent: 'center',
   },
   boxVowel: {
     width: scale(56),
