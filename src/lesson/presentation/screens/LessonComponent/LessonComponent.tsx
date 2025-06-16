@@ -234,9 +234,15 @@ const LessonComponent = ({
                       </Text>
                     </View>
                   </View>
-                ) : prompt === '' ? (
+                ) : prompt !== '' ? (
                   <View style={styles.wrapCorrectContainer}>
-                    <Text style={styles.promptContent}>{prompt as string}</Text>
+                    <Text
+                      style={[
+                        styles.promptContent,
+                        {color: lessonSetting?.backgroundButtonColor},
+                      ]}>
+                      {prompt as string}
+                    </Text>
                   </View>
                 ) : null}
               </>
@@ -415,10 +421,10 @@ const styles = StyleSheet.create({
   },
   promptContent: {
     color: COLORS.GREEN_1C6A59,
-    fontFamily: FontFamily.SVNCherishMoment,
+    fontFamily: FontFamily.SVNNeuzeitBold,
     maxWidth: '38%',
     marginRight: scale(6),
-    fontSize: scale(15),
+    fontSize: scale(11),
     zIndex: 998,
   },
   promptTitle: {

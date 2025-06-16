@@ -28,7 +28,9 @@ const TextHighlight = ({
       const regex = new RegExp(`(${pattern})`, 'g');
 
       // Split by the regex and keep the separators
-      const parts = description.split(regex);
+      const parts = description
+        ? description.split(regex)
+        : content.map(e => e.toLocaleLowerCase());
 
       return parts.map(part => ({
         text: part,
@@ -38,7 +40,9 @@ const TextHighlight = ({
       }));
     } else {
       // Original logic for string content
-      const list = ` ${description} `.split(content);
+      const list = description
+        ? ` ${description} `.split(content)
+        : content.split(content).map(e => e.toLocaleLowerCase());
       return list.flatMap((e, i) => {
         if (i === list.length - 1) {
           return [{text: e, highlight: false}];

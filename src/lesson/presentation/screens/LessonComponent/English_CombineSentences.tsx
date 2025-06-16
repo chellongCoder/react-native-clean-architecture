@@ -14,7 +14,7 @@ import {FontFamily} from 'src/core/presentation/hooks/useFonts';
 import useGlobalStyle from 'src/core/presentation/hooks/useGlobalStyle';
 import {Task} from 'src/home/application/types/GetListQuestionResponse';
 import {COLORS} from 'src/core/presentation/constants/colors';
-import {isMMSS, WIDTH_SCREEN} from 'src/core/presentation/utils';
+import {isMMSS} from 'src/core/presentation/utils';
 import {scale, verticalScale} from 'react-native-size-matters';
 import Animated, {
   Easing,
@@ -33,7 +33,6 @@ import {useI18n} from 'src/core/presentation/hooks/useI18n';
 import VoiceButton from '../../components/VoiceButton';
 import {useIsFocused} from '@react-navigation/native';
 import {LessonRef} from '../../types';
-import ParagraphImage from '../../components/ParagraphImage';
 import WordScramble from '../../components/WordScramble';
 
 type Props = {

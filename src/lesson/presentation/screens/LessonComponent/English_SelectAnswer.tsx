@@ -270,6 +270,7 @@ const English_SelectAnswer = observer(
                       firstMiniTestTask?.question?.[moduleIndex].description ??
                       ''
                     }
+                    style={styles.fonts_SVN_Cherish}
                   />
                 }
                 answer={

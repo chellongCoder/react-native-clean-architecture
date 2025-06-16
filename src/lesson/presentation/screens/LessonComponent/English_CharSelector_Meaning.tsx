@@ -39,9 +39,10 @@ import useHomeStore from 'src/home/presentation/stores/useHomeStore';
 import SelectionAnswersQuestion, {
   SelectionAnswersQuestionRef,
 } from '../../components/SelectionAnswersQuestion';
-import CharScramble, {CharScrambleRep} from '../../components/CharScramble';
+import {CharScrambleRep} from '../../components/CharScramble';
 import {useI18n} from 'src/core/presentation/hooks/useI18n';
 import VoiceButton from '../../components/VoiceButton';
+import WordScramble from '../../components/WordScramble';
 
 type Props = {
   moduleIndex: number;
@@ -200,9 +201,11 @@ const English_CharSelector_Meaning = observer(
           backgroundAnswerColor={
             settings.backgroundAnswerColor ?? COLORS.GREEN_DDF598
           }
-          prompt={{
-            description: '',
-          }}
+          prompt={
+            firstMiniTestTask?.question?.[moduleIndex]?.description ??
+            settings.prompt?.toString() ??
+            ''
+          }
           characterStyle={characterStyle}
           price="Free"
           score={selectedChild?.adsPoints}
@@ -289,7 +292,7 @@ const English_CharSelector_Meaning = observer(
                   ref={answerRef}
                 />
               ) : (
-                <CharScramble
+                <WordScramble
                   ref={charScrambleRep}
                   content={firstMiniTestTask?.question?.[moduleIndex]?.content}
                   listChar={firstMiniTestTask?.question?.[moduleIndex]?.answers}

@@ -212,9 +212,11 @@ const English_QwertyKeyboard = observer(
           part={firstMiniTestTask?.name}
           backgroundColor={settings.backgroundAnswerColor}
           backgroundAnswerColor={settings.backgroundAnswerColor}
-          prompt={{
-            description: '',
-          }}
+          prompt={
+            firstMiniTestTask?.question?.[moduleIndex]?.instruction ?? {
+              description: settings.prompt?.toString() ?? '',
+            }
+          }
           score={selectedChild?.adsPoints}
           txtCountDown={
             word?.toString() ===

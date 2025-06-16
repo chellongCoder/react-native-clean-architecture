@@ -200,18 +200,18 @@ const LESSON_PATTERNS = [
     props,
   },
   {
-    pattern: /^ENGLISH_EG2M(30|33|35|41)$/,
+    pattern: /^ENGLISH_EG2M(18|19|20|21|30|33|35|41)$/,
     component: English_CombineSentences,
     props,
   },
   {
     pattern:
-      /^(ENGLISH_EG2M(23|24|25|26|27|28|29|31|32|34|36|37|38|39|40|42|43|44|45|46|47|48|49|51|52|53|54))$/,
+      /^(ENGLISH_EG2M(22|23|24|25|26|27|28|29|31|32|34|36|37|38|39|40|42|43|44|45|46|47|48|49|51|52|53|54))$/,
     component: English_SelectAnswer,
     props,
   },
   {
-    pattern: /^(ENGLISH_EG2M(41)|ENGLISH_EG3M(26|30|39))$/,
+    pattern: /^(ENGLISH_EG2M(41)|ENGLISH_EG3M(14|18|26|30|39))$/,
     component: English_QwertyKeyboard,
     props,
   },
@@ -227,23 +227,18 @@ const LESSON_PATTERNS = [
   },
   // * English G3
   {
-    pattern: /^ENGLISH_G3M20$/,
+    pattern: /^ENGLISH_EG3M(1|3|5|7|9|20|26|28|30)$/,
     component: English_CharSelector,
     props,
   },
   {
-    pattern: /^ENGLISH_EG3M(1|3|5|7|9|26|28|30)$/,
-    component: English_CharSelector,
-    props,
-  },
-  {
-    pattern: /^ENGLISH_EG3M(2|4|6|8|10)$/,
+    pattern: /^ENGLISH_EG3M(2|4|6|8|10|11|12)$/,
     component: English_Pronounciation,
     props,
   },
   {
     pattern:
-      /^ENGLISH_EG3M(21|22|23|24|27|29|31|32|33|34|35|36|37|38|39|42|43|44|45|46)$/,
+      /^ENGLISH_EG3M(13|15|16|17|19|21|22|23|24|27|29|31|32|33|34|35|36|37|38|39|42|43|44|45|46)$/,
     component: English_SelectAnswer,
     props,
   },
