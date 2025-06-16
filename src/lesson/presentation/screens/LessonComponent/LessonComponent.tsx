@@ -234,7 +234,7 @@ const LessonComponent = ({
                       </Text>
                     </View>
                   </View>
-                ) : prompt !== '' ? (
+                ) : typeof prompt === 'string' ? (
                   <View style={styles.wrapCorrectContainer}>
                     <Text
                       style={[
