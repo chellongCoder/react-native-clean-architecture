@@ -43,6 +43,7 @@ import SelectionAnswersQuestion, {
 import TextHighlight from '../../components/TextHighlight';
 import {useI18n} from 'src/core/presentation/hooks/useI18n';
 import VoiceButton from '../../components/VoiceButton';
+import ScrollIndicator from '../../components/ScrollIndicator';
 
 type Props = {
   moduleIndex: number;
@@ -101,9 +102,13 @@ const English_SelectAnswer = observer(
         countDownTime: trainingCount <= 2 ? 0 : 5,
         isCorrectAnswer: isSubArray(
           answerSelected as string[],
-          [
+          Array.isArray(
             firstMiniTestTask?.question?.[moduleIndex]?.correctAnswer,
-          ] as string[],
+          )
+            ? firstMiniTestTask?.question?.[moduleIndex]?.correctAnswer
+            : ([
+                firstMiniTestTask?.question?.[moduleIndex]?.correctAnswer,
+              ] as string[]),
         ),
         onSubmit: () => {
           setAnswerSelected('');
@@ -219,21 +224,33 @@ const English_SelectAnswer = observer(
           onPressFlower={toggleShowHint}
           buildQuestion={
             <View>
-              <Animated.Image
-                resizeMode={'contain'}
-                style={[
-                  {
-                    width: scale(200),
-                    height: verticalScale(140),
-                  },
-                  animatedStyle,
-                ]}
-                source={{
-                  uri:
-                    env.IMAGE_QUESTION_BASE_API_URL +
-                    firstMiniTestTask?.question?.[moduleIndex].image,
-                }}
-              />
+              {firstMiniTestTask?.question?.[moduleIndex].image ? (
+                <Animated.Image
+                  resizeMode={'contain'}
+                  style={[
+                    {
+                      width: scale(200),
+                      height: verticalScale(140),
+                    },
+                    animatedStyle,
+                  ]}
+                  source={{
+                    uri:
+                      env.IMAGE_QUESTION_BASE_API_URL +
+                      firstMiniTestTask?.question?.[moduleIndex].image,
+                  }}
+                />
+              ) : (
+                <Animated.View style={animatedStyle}>
+                  <ScrollIndicator
+                    horizontal={false}
+                    containerStyle={{marginHorizontal: scale(20)}}>
+                    <Text style={styles.txtParagraph}>
+                      {firstMiniTestTask?.question?.[moduleIndex].paragraph}
+                    </Text>
+                  </ScrollIndicator>
+                </Animated.View>
+              )}
             </View>
           }
           buildAnswer={
@@ -344,5 +361,10 @@ const styles = StyleSheet.create({
     paddingHorizontal: scale(24),
     marginTop: scale(16),
     backgroundColor: '#0877B6',
+  },
+  txtParagraph: {
+    fontFamily: FontFamily.SVNNeuzeitBold,
+    fontSize: scale(14),
+    color: COLORS.WHITE_FBF8CC,
   },
 });

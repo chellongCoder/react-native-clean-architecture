@@ -166,7 +166,7 @@ const SelectionAnswersQuestion: ForwardRefRenderFunction<
                     answerStyle,
                   ]}>
                   {e
-                    .replace(/\s*-\s*/, '')
+                    .replace(/\s*-\s*/, '-')
                     .replace(/(?<!\S)\s+(?!\S)/g, '\n')
                     .trim()}
                 </Text>

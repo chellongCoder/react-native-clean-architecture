@@ -290,8 +290,13 @@ const LESSON_PATTERNS = [
     props,
   },
   {
-    pattern: /^ENGLISH_EG5M(13|14|15|18|21|23)$/,
+    pattern: /^ENGLISH_EG5M(14)$/,
     component: English_SelectText,
+    props,
+  },
+  {
+    pattern: /^ENGLISH_EG5M(13|15|18|21|23)$/,
+    component: English_G5M16,
     props,
   },
   // * English G6
@@ -311,7 +316,7 @@ const LESSON_PATTERNS = [
     props,
   },
   {
-    pattern: /^ENGLISH_EG6M(12|13|14|20|21|22|23|24)$/,
+    pattern: /^ENGLISH_EG6M(12|13|14|19|20|21|22|23|24|27|28)$/,
     component: English_SelectAnswer,
     props,
   },
@@ -1129,7 +1134,7 @@ const LessonScreen = observer(() => {
       env.IMAGE_BACKGROUND_BASE_API_URL + lessonSetting?.figureSuccessImage,
     characterImageFail:
       env.IMAGE_BACKGROUND_BASE_API_URL + lessonSetting?.figureFailImage,
-    answer: testTask?.question?.[lessonIndex].answers as string[],
+    answer: testTask?.question?.[lessonIndex]?.answers as string[],
   };
 
   const buildLesson = () => {
