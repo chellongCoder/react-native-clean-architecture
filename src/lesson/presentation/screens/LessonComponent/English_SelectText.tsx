@@ -147,6 +147,9 @@ const English_SelectText = observer(
         };
         const description =
           firstMiniTestTask?.question?.[moduleIndex].description || '';
+        if (Array.isArray(description)) {
+          return '';
+        }
         const updatedDescription = insertAnswersIntoDescription(
           description,
           answerSelected as string[],
