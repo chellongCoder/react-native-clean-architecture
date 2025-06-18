@@ -58,7 +58,7 @@ type Props = {
   characterStyle?: StyleProp<ViewStyle>;
 };
 
-const English_SelectAnswer = observer(
+const English_SelectAnswer_Paragraph = observer(
   forwardRef<LessonRef, Props>(
     (
       {
@@ -228,21 +228,22 @@ const English_SelectAnswer = observer(
           onPressFlower={toggleShowHint}
           buildQuestion={
             <View>
-              <Animated.Image
-                resizeMode={'contain'}
-                style={[
-                  {
-                    width: scale(200),
-                    height: verticalScale(140),
-                  },
-                  animatedStyle,
-                ]}
-                source={{
-                  uri:
-                    env.IMAGE_QUESTION_BASE_API_URL +
-                    firstMiniTestTask?.question?.[moduleIndex].image,
-                }}
-              />
+              <Animated.View style={animatedStyle}>
+                <View style={{alignSelf: 'center'}}>
+                  <Text style={styles.txtDesc}>
+                    {firstMiniTestTask?.question?.[moduleIndex].description}
+                  </Text>
+                </View>
+                <ScrollIndicator
+                  horizontal={false}
+                  indicatorColor={COLORS.RED_BA3201}
+                  indicatorContainerColor={COLORS.RED_BA3201}
+                  containerStyle={{marginHorizontal: scale(60)}}>
+                  <Text style={styles.txtParagraph}>
+                    {firstMiniTestTask?.question?.[moduleIndex].paragraph}
+                  </Text>
+                </ScrollIndicator>
+              </Animated.View>
             </View>
           }
           buildAnswer={
@@ -314,7 +315,7 @@ const English_SelectAnswer = observer(
   ),
 );
 
-export default English_SelectAnswer;
+export default English_SelectAnswer_Paragraph;
 
 const styles = StyleSheet.create({
   fill: {
@@ -357,6 +358,11 @@ const styles = StyleSheet.create({
   txtParagraph: {
     fontFamily: FontFamily.SVNNeuzeitBold,
     fontSize: scale(14),
-    color: COLORS.WHITE_FBF8CC,
+    color: COLORS.RED_BA3201,
+  },
+  txtDesc: {
+    fontFamily: FontFamily.SVNNeuzeitBold,
+    fontSize: scale(24),
+    color: COLORS.RED_BA3201,
   },
 });

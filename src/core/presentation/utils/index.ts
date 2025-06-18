@@ -100,11 +100,16 @@ export const shuffleArray = (array: any[]) => {
   return shuffledArray;
 };
 
+export const trim = (s: any) =>
+  typeof s === 'string' ? (s as string).trim() : s;
+
 export const isSubArray = (answerSelected: any[], correctAnswer: any[]) => {
   if (!Array.isArray(answerSelected) || !Array.isArray(correctAnswer)) {
     return false;
   }
-  return answerSelected.every(answer => correctAnswer.includes(answer));
+  return answerSelected.every(answer =>
+    correctAnswer.map(e => trim(e)).includes(trim(answer)),
+  );
 };
 
 export const isMMSS = (str: string) => {
