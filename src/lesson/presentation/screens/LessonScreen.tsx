@@ -110,6 +110,8 @@ import English_Pronounciation_Meaning from './LessonComponent/English_Pronouncia
 import English_CombineSentences from './LessonComponent/English_CombineSentences';
 import English_PronounciationRepeat from './LessonComponent/English_PronounciationRepeat';
 import Math_Text_SelectAnswer from './LessonComponent/Math_Text_SelectAnswer';
+import English_SelectAnswer_Paragraph from './LessonComponent/English_SelectAnswer_Paragraph';
+import English_QwertyKeyboard_Paragraph from './LessonComponent/English_QwertyKeyboard_Paragraph';
 
 export type TResult = {
   userId?: string;
@@ -285,8 +287,13 @@ const LESSON_PATTERNS = [
     props,
   },
   {
-    pattern: /^ENGLISH_EG5M(12|17|19|20|22|24|25|26|27|28|29|30|31|32|33|34)$/,
+    pattern: /^ENGLISH_EG5M(12|19|20|22|24|25|26|27|28|29|30|31|32|33|34)$/,
     component: English_SelectAnswer,
+    props,
+  },
+  {
+    pattern: /^ENGLISH_EG5M(17)$/,
+    component: English_SelectAnswer_Paragraph,
     props,
   },
   {
@@ -311,13 +318,23 @@ const LESSON_PATTERNS = [
     props,
   },
   {
-    pattern: /^ENGLISH_EG6M(11|15|16|17|18)$/,
+    pattern: /^ENGLISH_EG6M(11)$/,
     component: English_QwertyKeyboard,
     props,
   },
   {
-    pattern: /^ENGLISH_EG6M(12|13|14|19|20|21|22|23|24|27|28)$/,
+    pattern: /^ENGLISH_EG6M(15|16|17|18)$/,
+    component: English_QwertyKeyboard_Paragraph,
+    props,
+  },
+  {
+    pattern: /^ENGLISH_EG6M(20|22|23|26|27|28)$/,
     component: English_SelectAnswer,
+    props,
+  },
+  {
+    pattern: /^ENGLISH_EG6M(12|13|14|19|21|24)$/,
+    component: English_SelectAnswer_Paragraph,
     props,
   },
   // Mandarin Lessons
