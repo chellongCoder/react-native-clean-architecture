@@ -126,6 +126,25 @@ const English_SelectAnswer_Paragraph = observer(
 
       const i18n = useI18n();
 
+      const descriptionWithAnswers = useMemo(() => {
+        const insertAnswersIntoDescription = (
+          description: string,
+          answers: string[],
+        ) => {
+          let answerIndex = 0;
+          return description.replace(/_/g, () =>
+            answerIndex < answers.length ? answers[answerIndex++] : '_',
+          );
+        };
+        const description =
+          firstMiniTestTask?.question?.[moduleIndex].content || '';
+        const updatedDescription = insertAnswersIntoDescription(
+          description,
+          answerSelected as string[],
+        );
+        return updatedDescription;
+      }, [answerSelected, firstMiniTestTask?.question, moduleIndex]);
+
       const settings = useMemo(
         () => getSetting(lessonSetting),
         [getSetting, lessonSetting],
@@ -227,7 +246,7 @@ const English_SelectAnswer_Paragraph = observer(
           isShowCorrectContainer={isShowCorrectContainer}
           onPressFlower={toggleShowHint}
           buildQuestion={
-            <View>
+            <View style={{height: verticalScale(230)}}>
               <Animated.View style={animatedStyle}>
                 <View style={{alignSelf: 'center'}}>
                   <Text style={styles.txtDesc}>
@@ -238,7 +257,7 @@ const English_SelectAnswer_Paragraph = observer(
                   horizontal={false}
                   indicatorColor={COLORS.RED_BA3201}
                   indicatorContainerColor={COLORS.RED_BA3201}
-                  containerStyle={{marginHorizontal: scale(60)}}>
+                  containerStyle={{marginHorizontal: scale(30)}}>
                   <Text style={styles.txtParagraph}>
                     {firstMiniTestTask?.question?.[moduleIndex].paragraph}
                   </Text>
@@ -273,14 +292,9 @@ const English_SelectAnswer_Paragraph = observer(
               <SelectionAnswersQuestion
                 question={
                   <TextHighlight
-                    content={
-                      firstMiniTestTask?.question?.[moduleIndex].content ?? ''
-                    }
-                    description={
-                      firstMiniTestTask?.question?.[moduleIndex].description ??
-                      ''
-                    }
-                    style={styles.fonts_SVN_Cherish}
+                    content={descriptionWithAnswers}
+                    description={descriptionWithAnswers}
+                    style={styles.fonts_SVN_Neuzeit}
                   />
                 }
                 answer={
@@ -323,6 +337,9 @@ const styles = StyleSheet.create({
   },
   fonts_SVN_Cherish: {
     fontFamily: FontFamily.SVNCherishMoment,
+  },
+  fonts_SVN_Neuzeit: {
+    fontFamily: FontFamily.SVNNeuzeitBold,
   },
   textQuestion: {
     fontSize: verticalScale(15),

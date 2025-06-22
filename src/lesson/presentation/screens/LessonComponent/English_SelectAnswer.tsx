@@ -43,7 +43,6 @@ import SelectionAnswersQuestion, {
 import TextHighlight from '../../components/TextHighlight';
 import {useI18n} from 'src/core/presentation/hooks/useI18n';
 import VoiceButton from '../../components/VoiceButton';
-import ScrollIndicator from '../../components/ScrollIndicator';
 
 type Props = {
   moduleIndex: number;
@@ -94,10 +93,10 @@ const English_SelectAnswer = observer(
           firstMiniTestTask?.question?.[moduleIndex]?.correctAnswer;
         const answerSelectedArray = (
           Array.isArray(answerSelected) ? answerSelected : [answerSelected]
-        ).map(e => e?.toLocaleString());
+        ).map(e => e?.toLocaleString().toLocaleLowerCase());
         const correctAnswerArray = (
           Array.isArray(correctAnswer) ? correctAnswer : [correctAnswer]
-        ).map(e => e?.toLocaleString());
+        ).map(e => e?.toLocaleString().toLocaleLowerCase());
         return isSubArray(answerSelectedArray, correctAnswerArray);
       }, [answerSelected, firstMiniTestTask?.question, moduleIndex]);
 
@@ -138,10 +137,12 @@ const English_SelectAnswer = observer(
 
       const onSpeechText = useCallback(() => {
         ttsSpeak?.(
-          firstMiniTestTask?.question?.[moduleIndex]?.fullAnswer?.toString() ??
+          firstMiniTestTask?.question?.[moduleIndex]?.instruction
+            ?.description ??
+            settings.prompt?.toString() ??
             '',
         );
-      }, [firstMiniTestTask, moduleIndex, ttsSpeak]);
+      }, [firstMiniTestTask?.question, moduleIndex, settings.prompt, ttsSpeak]);
 
       const opacity = useSharedValue(0);
       const scaleS = useSharedValue(1);

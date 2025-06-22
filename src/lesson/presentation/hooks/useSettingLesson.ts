@@ -267,6 +267,13 @@ export const useSettingLesson = ({
   }, [lessonStore.backgroundSound, lessonStore.charSound]);
 
   useEffect(() => {
+    VolumeManager.addVolumeListener(result => {
+      lessonStore.setCharSound(result.volume);
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
     return () => {
       stopRecord();
     };

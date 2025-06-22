@@ -8,7 +8,6 @@ import {View, Text, TouchableOpacity, StyleSheet, Image} from 'react-native';
 import {scale, verticalScale} from 'react-native-size-matters';
 import {COLORS} from 'src/core/presentation/constants/colors';
 import {FontFamily} from 'src/core/presentation/hooks/useFonts';
-import useGlobalStyle from 'src/core/presentation/hooks/useGlobalStyle';
 import ScrollIndicator from './ScrollIndicator';
 import {assets} from 'src/core/presentation/utils';
 
@@ -46,7 +45,6 @@ const KeyboardNumber: ForwardRefRenderFunction<
   } = props;
 
   const [answerSelected, setAnswerSelected] = useState<string[]>([]);
-  const globalStyle = useGlobalStyle();
 
   useImperativeHandle(ref, () => ({
     getSelectedAnswers: () => answerSelected,

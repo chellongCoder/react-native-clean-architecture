@@ -134,7 +134,7 @@ const English_QwertyKeyboard = observer(
           );
         };
         const description =
-          firstMiniTestTask?.question?.[moduleIndex].description || '';
+          firstMiniTestTask?.question?.[moduleIndex].content || '';
         const updatedDescription = insertAnswersIntoDescription(
           description,
           answerSelected as string[],

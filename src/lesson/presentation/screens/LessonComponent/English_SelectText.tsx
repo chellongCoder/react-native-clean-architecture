@@ -1,4 +1,4 @@
-import {StyleSheet, Text, View} from 'react-native';
+import {StyleProp, StyleSheet, Text, View, ViewStyle} from 'react-native';
 import React, {
   forwardRef,
   useCallback,
@@ -64,6 +64,7 @@ type Props = {
   characterImageFail?: string;
   isMulti?: boolean;
   answer?: string[];
+  characterStyle?: StyleProp<ViewStyle>;
 };
 
 const English_SelectText = observer(
@@ -81,6 +82,7 @@ const English_SelectText = observer(
         characterImageFail,
         isMulti,
         answer,
+        characterStyle,
       },
       ref,
     ) => {
@@ -141,9 +143,11 @@ const English_SelectText = observer(
           answers: string[],
         ) => {
           let answerIndex = 0;
-          return description.replace(/_/g, () =>
-            answerIndex < answers.length ? answers[answerIndex++] : '_',
-          );
+          return description
+            .toString()
+            .replace(/_/g, () =>
+              answerIndex < answers.length ? answers[answerIndex++] : '_',
+            );
         };
         const description =
           firstMiniTestTask?.question?.[moduleIndex].description || '';
@@ -255,11 +259,7 @@ const English_SelectText = observer(
         <LessonComponent
           backgroundImage={backgroundImage}
           characterImage={characterImage}
-          characterStyle={{
-            marginBottom: -verticalScale(60),
-            marginLeft: -verticalScale(15),
-            transform: [{scale: 1.4}],
-          }}
+          characterStyle={characterStyle}
           module={moduleName}
           lessonName={lessonName}
           part={firstMiniTestTask?.name}

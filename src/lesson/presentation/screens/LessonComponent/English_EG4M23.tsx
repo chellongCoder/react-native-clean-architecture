@@ -123,13 +123,8 @@ const English_EG4M23 = observer(
 
       const onSpeechText = useCallback(() => {
         const content = //she _ a song in the school choir next month.
-          firstMiniTestTask?.question?.[moduleIndex].content
-            .replace(
-              /_/g,
-              `${firstMiniTestTask?.question?.[moduleIndex].correctAnswer}`,
-            )
-            .toString()
-            .toLowerCase() ?? '';
+          firstMiniTestTask?.question?.[moduleIndex].instruction?.description ??
+          '';
         ttsSpeak?.(content);
       }, [firstMiniTestTask?.question, moduleIndex, ttsSpeak]);
 
@@ -226,25 +221,10 @@ const English_EG4M23 = observer(
                 style={[
                   styles.fonts_SVN_Cherish,
                   styles.textQuestion,
-                  {color: settings.backgroundAnswerColor},
+                  {color: settings.backgroundButtonColor},
                 ]}>
                 {firstMiniTestTask?.question?.[moduleIndex].content}
               </Text>
-              <Animated.Image
-                resizeMode={'contain'}
-                style={[
-                  {
-                    width: scale(200),
-                    height: verticalScale(140),
-                  },
-                  animatedStyle,
-                ]}
-                source={{
-                  uri:
-                    env.IMAGE_QUESTION_BASE_API_URL +
-                    firstMiniTestTask?.question?.[moduleIndex].image,
-                }}
-              />
             </View>
           }
           buildAnswer={

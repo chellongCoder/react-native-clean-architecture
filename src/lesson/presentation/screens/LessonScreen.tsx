@@ -148,21 +148,7 @@ const LESSON_PATTERNS = [
     component: LatinLesson,
     props: {},
   },
-  {
-    pattern: /^ENGLISH_G6M26$/,
-    component: English_G6M26,
-    props: {},
-  },
-  {
-    pattern: /^ENGLISH_G5M16$/,
-    component: English_G5M16,
-    props: {},
-  },
-  {
-    pattern: /^ENGLISH_G4M23$/,
-    component: English_EG4M23,
-    props: {},
-  },
+
   // * English G1
   {
     pattern: /^ENGLISH_EG1M[1-8]$/,
@@ -202,7 +188,7 @@ const LESSON_PATTERNS = [
     props,
   },
   {
-    pattern: /^ENGLISH_EG2M(18|19|20|21|30|33|35|41)$/,
+    pattern: /^ENGLISH_EG2M(18|19|20|21|30|33|35)$/,
     component: English_CombineSentences,
     props,
   },
@@ -266,6 +252,11 @@ const LESSON_PATTERNS = [
     props,
   },
   {
+    pattern: /^ENGLISH_G4M23$/,
+    component: English_EG4M23,
+    props,
+  },
+  {
     pattern: /^ENGLISH_EG4M(15|16|17|18|19|21|22|25|26|32)$/,
     component: English_SelectText,
     props,
@@ -302,6 +293,11 @@ const LESSON_PATTERNS = [
     props,
   },
   {
+    pattern: /^ENGLISH_G5M16$/,
+    component: English_G5M16,
+    props,
+  },
+  {
     pattern: /^ENGLISH_EG5M(13|15|18|21|23)$/,
     component: English_G5M16,
     props,
@@ -325,6 +321,11 @@ const LESSON_PATTERNS = [
   {
     pattern: /^ENGLISH_EG6M(15|16|17|18)$/,
     component: English_QwertyKeyboard_Paragraph,
+    props,
+  },
+  {
+    pattern: /^ENGLISH_G6M(25|26)$/,
+    component: English_G6M26,
     props,
   },
   {
@@ -363,6 +364,7 @@ const LESSON_PATTERNS = [
     component: Mandarin_G4_Pronunciation,
     props,
   },
+
   // * Mandarin G2
   {
     pattern: /^MANDARIN_MDG[2-6]M4$/,

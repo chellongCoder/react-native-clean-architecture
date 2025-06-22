@@ -243,7 +243,7 @@ const English_QwertyKeyboard_Paragraph = observer(
             }
           }
           buildQuestion={
-            <View>
+            <View style={{height: verticalScale(250)}}>
               <Animated.View style={animatedStyle}>
                 <View style={{alignSelf: 'center'}}>
                   <Text style={styles.txtDesc}>
@@ -254,7 +254,7 @@ const English_QwertyKeyboard_Paragraph = observer(
                   horizontal={false}
                   indicatorColor={COLORS.RED_BA3201}
                   indicatorContainerColor={COLORS.RED_BA3201}
-                  containerStyle={{marginHorizontal: scale(60)}}>
+                  containerStyle={{marginHorizontal: scale(30)}}>
                   <Text style={styles.txtParagraph}>
                     {firstMiniTestTask?.question?.[moduleIndex].paragraph}
                   </Text>

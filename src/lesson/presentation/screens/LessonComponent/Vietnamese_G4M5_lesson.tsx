@@ -20,7 +20,6 @@ import {COLORS} from 'src/core/presentation/constants/colors';
 import {
   darkenColor,
   getCorrectAnswer,
-  isAndroid,
   isSubArray,
 } from 'src/core/presentation/utils';
 import {scale, verticalScale} from 'react-native-size-matters';
@@ -79,7 +78,7 @@ const VnG4M5Lesson = observer(
       const answerRef = useRef<SelectionAnswersQuestionRef>(null);
       const globalStyle = useGlobalStyle();
 
-      const {ttsSpeak, updateDefaultVoice} = useContext(TextToSpeechContext);
+      const {ttsSpeak} = useContext(TextToSpeechContext);
       const focus = useIsFocused();
 
       const [answerSelected, setAnswerSelected] = useState<string | string[]>(
