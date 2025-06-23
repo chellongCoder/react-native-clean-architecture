@@ -27,6 +27,9 @@ const TextFraction = ({whole, numerator, denominator, textStyle}: Props) => {
   const numeratorLength = numerator.toString().length * (fontSize * 0.4); // Scale with fontSize
   const denominatorLength = denominator.toString().length * (fontSize * 0.4);
   const dividerWidth = Math.max(numeratorLength, denominatorLength, fontSize);
+  const textShadowColor = (styleMap as TextStyle)?.textShadowColor;
+  const textShadowOffset = (styleMap as TextStyle)?.textShadowOffset;
+  const textShadowRadius = (styleMap as TextStyle)?.textShadowRadius;
 
   const dividerColor =
     styleMap && (styleMap as TextStyle).color
@@ -54,6 +57,11 @@ const TextFraction = ({whole, numerator, denominator, textStyle}: Props) => {
               backgroundColor: dividerColor,
               height: Math.max(1, fontSize * 0.08), // Scale divider height
               marginVertical: fontSize * 0.15,
+              borderRadius: 100,
+              shadowColor: textShadowColor,
+              shadowOffset: textShadowOffset,
+              shadowRadius: textShadowRadius,
+              shadowOpacity: textShadowColor ? 1 : 0,
             },
           ]}
         />
