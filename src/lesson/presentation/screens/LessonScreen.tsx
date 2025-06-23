@@ -112,6 +112,7 @@ import English_PronounciationRepeat from './LessonComponent/English_Pronounciati
 import Math_Text_SelectAnswer from './LessonComponent/Math_Text_SelectAnswer';
 import English_SelectAnswer_Paragraph from './LessonComponent/English_SelectAnswer_Paragraph';
 import English_QwertyKeyboard_Paragraph from './LessonComponent/English_QwertyKeyboard_Paragraph';
+import Science_Select_BGImageText from './LessonComponent/Science_Select_BGImageText';
 
 export type TResult = {
   userId?: string;
@@ -537,7 +538,7 @@ const LESSON_PATTERNS = [
     pattern: /^SCIENCE_SG[1-6]M\d+$/,
     component: (type: string) => {
       const componentMap: Record<string, any> = {
-        SCIENCE_SG1M2: Science_SG1M2,
+        SCIENCE_SG1M2: Science_Select_BGImageText,
         SCIENCE_SG2M4: Science_SG2M4,
         SCIENCE_SG3M9: Science_SG3M9,
         SCIENCE_SG4M3: Science_SG4M3,

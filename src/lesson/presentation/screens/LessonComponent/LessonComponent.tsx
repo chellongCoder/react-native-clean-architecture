@@ -2,11 +2,9 @@ import {
   View,
   Text,
   StyleSheet,
-  Image,
   TouchableOpacity,
   StyleProp,
   ViewStyle,
-  ImageBackground,
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
@@ -160,10 +158,12 @@ const LessonComponent = ({
           </View>
           <View style={{alignItems: 'flex-end'}}>
             {txtCountDown && (
-              <ImageBackground
-                style={styles.countDown}
-                resizeMode="contain"
-                source={assets.drug_bg}>
+              <View style={styles.countDown}>
+                <FastImage
+                  style={StyleSheet.absoluteFill}
+                  resizeMode={FastImage.resizeMode.contain}
+                  source={assets.drug_bg}
+                />
                 <Text
                   numberOfLines={1}
                   adjustsFontSizeToFit
@@ -171,7 +171,7 @@ const LessonComponent = ({
                   style={styles.txtCountDown}>
                   {txtCountDown}
                 </Text>
-              </ImageBackground>
+              </View>
             )}
             <View style={{height: verticalScale(5)}} />
             <TouchableOpacity onPress={onPressFlower}>
@@ -191,7 +191,7 @@ const LessonComponent = ({
         )}
         <View style={styles.wrapDescriptionContainer}>
           <View style={[styles.wrapImageContainer, characterStyle]}>
-            <Image
+            <FastImage
               source={
                 characterImage
                   ? {uri: characterImage}

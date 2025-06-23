@@ -1,17 +1,10 @@
 import React from 'react';
-import {
-  ImageBackground,
-  ImageStyle,
-  StyleProp,
-  StyleSheet,
-  Text,
-  View,
-} from 'react-native';
+import {ImageStyle, StyleProp, StyleSheet, Text, View} from 'react-native';
 import {scale, verticalScale} from 'react-native-size-matters';
 import {FontFamily} from 'src/core/presentation/hooks/useFonts';
 import {COLORS} from 'src/core/presentation/constants/colors';
 import ScrollIndicator from './ScrollIndicator';
-import {WIDTH_SCREEN} from 'src/core/presentation/utils';
+import FastImage from 'react-native-fast-image';
 
 type ParagraphImageProps = {
   imageUrl: string;
@@ -28,22 +21,26 @@ const ParagraphImage: React.FC<ParagraphImageProps> = ({
 }) => {
   return (
     <View>
-      <ImageBackground
-        resizeMode={'cover'}
+      <View
         style={[
           {
             width: scale(170),
             aspectRatio: 0.7,
           },
-        ]}
-        source={{uri: imageUrl}}>
+          imageStyle,
+        ]}>
+        <FastImage
+          resizeMode={FastImage.resizeMode.cover}
+          style={StyleSheet.absoluteFill}
+          source={{uri: imageUrl}}
+        />
         <View style={styles.boxName}>
           <Text style={styles.textParagraph}>{name}</Text>
         </View>
         <ScrollIndicator containerStyle={styles.boxParagraph}>
           <Text style={styles.textParagraph}>{paragraph}</Text>
         </ScrollIndicator>
-      </ImageBackground>
+      </View>
     </View>
   );
 };
