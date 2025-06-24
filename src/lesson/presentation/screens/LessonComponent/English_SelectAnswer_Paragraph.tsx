@@ -44,6 +44,7 @@ import TextHighlight from '../../components/TextHighlight';
 import {useI18n} from 'src/core/presentation/hooks/useI18n';
 import VoiceButton from '../../components/VoiceButton';
 import ScrollIndicator from '../../components/ScrollIndicator';
+import TextShadow from '../../components/TextShadow';
 
 type Props = {
   moduleIndex: number;
@@ -249,9 +250,11 @@ const English_SelectAnswer_Paragraph = observer(
             <View style={{height: verticalScale(230)}}>
               <Animated.View style={animatedStyle}>
                 <View style={{alignSelf: 'center'}}>
-                  <Text style={styles.txtDesc}>
+                  <TextShadow
+                    style={styles.txtDesc}
+                    textShadowColor={COLORS.RED_BA3201}>
                     {firstMiniTestTask?.question?.[moduleIndex].description}
-                  </Text>
+                  </TextShadow>
                 </View>
                 <ScrollIndicator
                   horizontal={false}
@@ -378,8 +381,8 @@ const styles = StyleSheet.create({
     color: COLORS.RED_BA3201,
   },
   txtDesc: {
-    fontFamily: FontFamily.SVNNeuzeitBold,
+    fontFamily: FontFamily.SVNCherishMoment,
     fontSize: scale(24),
-    color: COLORS.RED_BA3201,
+    color: COLORS.YELLOW_F5CD38,
   },
 });
