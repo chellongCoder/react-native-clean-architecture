@@ -158,8 +158,8 @@ const English_SelectAnswer_Paragraph = observer(
 
       const onSpeechText = useCallback(() => {
         ttsSpeak?.(
-          firstMiniTestTask?.question?.[moduleIndex]?.fullAnswer?.toString() ??
-            '',
+          firstMiniTestTask?.question?.[moduleIndex]?.instruction
+            ?.description ?? '',
         );
       }, [firstMiniTestTask, moduleIndex, ttsSpeak]);
 
@@ -312,6 +312,7 @@ const English_SelectAnswer_Paragraph = observer(
                 }}
                 learningTimer={learningTimer}
                 ref={answerRef}
+                isSelectOne={true}
               />
 
               <PrimaryButton

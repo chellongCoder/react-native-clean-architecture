@@ -92,7 +92,7 @@ const English_EG4M23 = observer(
       } = useSettingLesson({
         countDownTime: trainingCount <= 2 ? 0 : 5,
         isCorrectAnswer:
-          answerSelected ===
+          answerSelected.toString().toLowerCase() ===
           getCorrectAnswer(
             firstMiniTestTask?.question?.[moduleIndex]?.correctAnswer
               .toString()

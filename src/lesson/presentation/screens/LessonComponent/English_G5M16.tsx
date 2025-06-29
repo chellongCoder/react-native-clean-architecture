@@ -152,7 +152,7 @@ const English_G5M16 = observer(
 
       const onSpeechText = useCallback(() => {
         ttsSpeak?.(
-          firstMiniTestTask?.question?.[moduleIndex]?.description
+          firstMiniTestTask?.question?.[moduleIndex]?.instruction?.description
             ?.toString()
             .toLowerCase() ?? '',
         );

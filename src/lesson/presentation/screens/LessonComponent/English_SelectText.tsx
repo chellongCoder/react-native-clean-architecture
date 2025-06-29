@@ -164,7 +164,7 @@ const English_SelectText = observer(
 
       const onSpeechText = useCallback(() => {
         ttsSpeak?.(
-          firstMiniTestTask?.question?.[moduleIndex]?.description
+          firstMiniTestTask?.question?.[moduleIndex]?.instruction?.description
             ?.toString()
             .toLowerCase() ?? '',
         );

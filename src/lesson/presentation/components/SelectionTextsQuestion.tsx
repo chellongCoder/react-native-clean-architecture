@@ -143,7 +143,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
     alignSelf: 'center',
-    flexWrap: 'wrap-reverse', // Add this to enable wrapping
+    flexWrap: 'wrap', // Add this to enable wrapping
   },
   fill: {
     // Add your styles here
