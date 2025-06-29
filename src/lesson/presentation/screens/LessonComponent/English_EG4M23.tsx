@@ -212,11 +212,14 @@ const English_EG4M23 = observer(
           isShowCorrectContainer={isShowCorrectContainer}
           onPressFlower={toggleShowHint}
           buildQuestion={
-            <View
-              style={{
-                alignItems: 'center',
-                width: scale(200),
-              }}>
+            <Animated.View
+              style={[
+                {
+                  alignItems: 'center',
+                  width: '80%',
+                },
+                animatedStyle,
+              ]}>
               <Text
                 style={[
                   styles.fonts_SVN_Cherish,
@@ -225,7 +228,7 @@ const English_EG4M23 = observer(
                 ]}>
                 {firstMiniTestTask?.question?.[moduleIndex].content}
               </Text>
-            </View>
+            </Animated.View>
           }
           buildAnswer={
             <View style={styles.fill}>
@@ -291,7 +294,7 @@ const styles = StyleSheet.create({
   },
 
   textQuestion: {
-    fontSize: verticalScale(20),
+    fontSize: scale(32),
     textAlign: 'center',
     color: COLORS.BLUE_258F78,
   },

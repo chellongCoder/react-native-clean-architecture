@@ -43,6 +43,7 @@ import {CharScrambleRep} from '../../components/CharScramble';
 import {useI18n} from 'src/core/presentation/hooks/useI18n';
 import VoiceButton from '../../components/VoiceButton';
 import WordScramble from '../../components/WordScramble';
+import FastImage from 'react-native-fast-image';
 
 type Props = {
   moduleIndex: number;
@@ -216,21 +217,23 @@ const English_CharSelector_Meaning = observer(
           buildQuestion={
             <View style={[styles.containerMeaning]}>
               {learningTimer !== 0 && (
-                <Animated.Image
-                  resizeMode={'contain'}
+                <Animated.View
                   style={[
                     {
                       width: scale(240),
                       height: verticalScale(100),
                     },
                     animatedStyle,
-                  ]}
-                  source={{
-                    uri:
-                      env.IMAGE_QUESTION_BASE_API_URL +
-                      firstMiniTestTask?.question?.[moduleIndex].image,
-                  }}
-                />
+                  ]}>
+                  <FastImage
+                    resizeMode="contain"
+                    source={{
+                      uri:
+                        env.IMAGE_QUESTION_BASE_API_URL +
+                        firstMiniTestTask?.question?.[moduleIndex].image,
+                    }}
+                  />
+                </Animated.View>
               )}
               <Text
                 style={[

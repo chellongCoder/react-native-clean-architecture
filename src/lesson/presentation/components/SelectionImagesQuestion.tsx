@@ -4,7 +4,8 @@ import React, {
   forwardRef,
   ForwardRefRenderFunction,
 } from 'react';
-import {View, Text, TouchableOpacity, StyleSheet, Image} from 'react-native';
+import {View, TouchableOpacity, StyleSheet} from 'react-native';
+import FastImage from 'react-native-fast-image';
 import {scale, verticalScale} from 'react-native-size-matters';
 import {coreModuleContainer} from 'src/core/CoreModule';
 import Env, {EnvToken} from 'src/core/domain/entities/Env';
@@ -43,7 +44,6 @@ const SelectionImagesQuestion: ForwardRefRenderFunction<
     learningTimer,
     isKeyboard,
     isSelectOne,
-    contentAnswer,
   } = props;
 
   const [answerSelected, setAnswerSelected] = useState<string[]>([]);
@@ -117,7 +117,7 @@ const SelectionImagesQuestion: ForwardRefRenderFunction<
                   margin: scale(8), // Add spacing for clarity
                 },
               ]}>
-              <Image
+              <FastImage
                 resizeMode={'contain'}
                 style={{
                   width: '100%',

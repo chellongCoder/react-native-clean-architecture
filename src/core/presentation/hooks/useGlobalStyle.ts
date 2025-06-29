@@ -1,6 +1,6 @@
 import {StyleSheet} from 'react-native';
 import {FontFamily} from './useFonts';
-import {moderateScale, scale, verticalScale} from 'react-native-size-matters';
+import {moderateScale, verticalScale} from 'react-native-size-matters';
 import {COLORS} from '../utils/colors';
 
 export default function useGlobalStyle() {

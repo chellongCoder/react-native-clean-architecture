@@ -18,8 +18,8 @@ import React, {
 import {COLORS} from 'src/core/presentation/constants/colors';
 import {scale, verticalScale} from 'react-native-size-matters';
 import {FontFamily} from 'src/core/presentation/hooks/useFonts';
-import {WIDTH_SCREEN} from 'src/core/presentation/utils';
-import ScrollIndicator from './ScrollIndicator';
+import {assets} from 'src/core/presentation/utils';
+import FastImage from 'react-native-fast-image';
 
 type Props = {
   content?: string;
@@ -117,17 +117,25 @@ const CharScramble = forwardRef<CharScrambleRep, Props>(
             questionStyle,
           ]}>
           {answerSelected}
+          <TouchableOpacity
+            style={styles.deleteContainer}
+            onPress={() => {
+              setAnswerSelectedChars(answerSelectedChars.map(_ => '_'));
+              setSelectedStack([]);
+            }}>
+            <FastImage
+              resizeMode="contain"
+              source={assets.icon_delete}
+              style={[{width: scale(20), height: scale(20)}]}
+            />
+          </TouchableOpacity>
         </Text>
         <ScrollView contentContainerStyle={[styles.wapper, styles.fill]}>
           {listCharArray?.map((e, i) => {
             const bg = selectedStack.find(v => v.index === i)
               ? '#66C270'
               : '#F2B559';
-            const length = listChar?.length ?? 2;
-            const size = Math.min(
-              (WIDTH_SCREEN - 80) / (length / 2),
-              verticalScale(44),
-            );
+
             return (
               <TouchableOpacity
                 key={i}
@@ -137,10 +145,16 @@ const CharScramble = forwardRef<CharScrambleRep, Props>(
                   {
                     backgroundColor: bg,
                     height: verticalScale(41),
-                    width: scale(29)
+                    width: scale(29),
                   },
                 ]}>
-                <Text allowFontScaling adjustsFontSizeToFit numberOfLines={1} style={[styles.textVowel, answerStyle]}>{e}</Text>
+                <Text
+                  allowFontScaling
+                  adjustsFontSizeToFit
+                  numberOfLines={1}
+                  style={[styles.textVowel, answerStyle]}>
+                  {e}
+                </Text>
               </TouchableOpacity>
             );
           })}
@@ -218,5 +232,8 @@ const styles = StyleSheet.create({
     fontSize: scale(24),
     fontWeight: '400',
     paddingTop: scale(8),
+  },
+  deleteContainer: {
+    padding: scale(8),
   },
 });

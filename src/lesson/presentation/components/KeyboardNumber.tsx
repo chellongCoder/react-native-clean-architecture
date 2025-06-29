@@ -3,13 +3,17 @@ import React, {
   useImperativeHandle,
   forwardRef,
   ForwardRefRenderFunction,
+  useMemo,
 } from 'react';
-import {View, Text, TouchableOpacity, StyleSheet, Image} from 'react-native';
+import {View, Text, TouchableOpacity, StyleSheet} from 'react-native';
 import {scale, verticalScale} from 'react-native-size-matters';
 import {COLORS} from 'src/core/presentation/constants/colors';
 import {FontFamily} from 'src/core/presentation/hooks/useFonts';
 import ScrollIndicator from './ScrollIndicator';
 import {assets} from 'src/core/presentation/utils';
+import FastImage from 'react-native-fast-image';
+import {useLessonStore} from '../stores/LessonStore/useGetPostsStore';
+import useHomeStore from 'src/home/presentation/stores/useHomeStore';
 
 interface SelectionAnswersQuestionProps {
   question: React.ReactNode;
@@ -45,6 +49,13 @@ const KeyboardNumber: ForwardRefRenderFunction<
   } = props;
 
   const [answerSelected, setAnswerSelected] = useState<string[]>([]);
+  const {getSetting} = useLessonStore();
+  const {lessonSetting} = useHomeStore();
+
+  const settings = useMemo(
+    () => getSetting(lessonSetting),
+    [getSetting, lessonSetting],
+  );
 
   useImperativeHandle(ref, () => ({
     getSelectedAnswers: () => answerSelected,
@@ -87,14 +98,16 @@ const KeyboardNumber: ForwardRefRenderFunction<
             setAnswerSelected([]);
             onSelectAnswer([]);
           }}>
-          <Image
+          <FastImage
             resizeMode="contain"
             source={assets.icon_delete}
             style={[{width: scale(20), height: scale(20)}]}
           />
         </TouchableOpacity>
       </View>
-      <ScrollIndicator>
+      <ScrollIndicator
+        indicatorContainerColor={settings.backgroundButtonColor}
+        indicatorColor={settings.backgroundButtonColor}>
         <View style={[styles.wapper, {width: '100%'}]}>
           {answer?.map((e, i) => {
             const bg =

@@ -216,7 +216,7 @@ const LESSON_PATTERNS = [
   },
   // * English G3
   {
-    pattern: /^ENGLISH_EG3M(1|3|5|7|9|20|26|28|30)$/,
+    pattern: /^ENGLISH_EG3M(1|3|5|7|9|20|28|30)$/,
     component: English_CharSelector,
     props,
   },

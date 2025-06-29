@@ -293,6 +293,7 @@ const English_SelectAnswer = observer(
                 onSelectAnswer={(e: string[]) => {
                   setAnswerSelected(e);
                 }}
+                isSelectOne
                 learningTimer={learningTimer}
                 ref={answerRef}
               />

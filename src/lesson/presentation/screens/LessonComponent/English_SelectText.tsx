@@ -43,14 +43,6 @@ import SelectionTextsQuestion, {
 import TextHighlight from '../../components/TextHighlight';
 import {useI18n} from 'src/core/presentation/hooks/useI18n';
 import VoiceButton from '../../components/VoiceButton';
-import Tts from 'react-native-tts';
-import {
-  iosVoice,
-  listLanguage,
-} from 'src/core/presentation/hooks/textToSpeech/TextToSpeechProvider';
-import {isAndroid} from 'src/core/presentation/utils';
-import ScrollIndicator from '../../components/ScrollIndicator';
-import env from 'src/core/infrastructure/env';
 
 type Props = {
   moduleIndex: number;
@@ -89,7 +81,7 @@ const English_SelectText = observer(
       const answerRef = useRef<SelectionTextsQuestionRef>(null);
       const globalStyle = useGlobalStyle();
 
-      const {ttsSpeak, updateDefaultVoice} = useContext(TextToSpeechContext);
+      const {ttsSpeak} = useContext(TextToSpeechContext);
       const focus = useIsFocused();
 
       const [answerSelected, setAnswerSelected] = useState<string | string[]>(
@@ -98,6 +90,18 @@ const English_SelectText = observer(
       const {trainingCount, getSetting} = useLessonStore();
 
       const {selectedChild} = useAuthenticationStore();
+
+      const isCorrectAnswer = useMemo(() => {
+        const correctAnswer =
+          firstMiniTestTask?.question?.[moduleIndex]?.correctAnswer;
+        const answerSelectedArray = (
+          Array.isArray(answerSelected) ? answerSelected : [answerSelected]
+        ).map(e => e?.toLocaleString());
+        const correctAnswerArray = (
+          Array.isArray(correctAnswer) ? correctAnswer : [correctAnswer]
+        ).map(e => e?.toLocaleString());
+        return isSubArray(answerSelectedArray, correctAnswerArray);
+      }, [answerSelected, firstMiniTestTask?.question, moduleIndex]);
 
       const {
         isAnswerCorrect,
@@ -110,10 +114,7 @@ const English_SelectText = observer(
         resetLearning,
       } = useSettingLesson({
         countDownTime: trainingCount <= 2 ? 0 : 5,
-        isCorrectAnswer: isSubArray(
-          answerSelected as string[],
-          firstMiniTestTask?.question?.[moduleIndex]?.correctAnswer as string[],
-        ),
+        isCorrectAnswer,
         onSubmit: () => {
           setAnswerSelected(isMulti ? [] : '');
           answerRef.current?.resetAnswerSelected?.();
@@ -211,38 +212,6 @@ const English_SelectText = observer(
         };
       });
 
-      useEffect(() => {
-        Tts.voices().then(voices => {
-          if (lessonName.toLocaleLowerCase().includes('english')) {
-            const engVoice = voices.find(
-              voice => voice.language === listLanguage['US English'],
-            );
-            updateDefaultVoice?.(
-              isAndroid ? engVoice?.id : iosVoice[3].id,
-              'US English',
-            );
-          } else if (lessonName.toLocaleLowerCase().includes('mandarin')) {
-            const engVoice = voices.find(
-              voice =>
-                voice.language ===
-                listLanguage['Mainland China, simplified characters'],
-            );
-            updateDefaultVoice?.(
-              engVoice?.id,
-              'Mainland China, simplified characters',
-            );
-          } else if (lessonName.toLocaleLowerCase().includes('tiếng việt')) {
-            const vietnameseVoices = voices.filter(
-              voice =>
-                voice.language.startsWith('vi-') ||
-                voice.name.toLowerCase().includes('vietnamese'),
-            );
-
-            updateDefaultVoice?.(vietnameseVoices[0]?.id, 'Vie (Vietnamese)');
-          }
-        });
-      }, [lessonName, updateDefaultVoice]);
-
       useImperativeHandle(ref, () => ({
         isAnswerCorrect,
         onChoiceCorrectedAnswer: () => {
@@ -332,7 +301,11 @@ const English_SelectText = observer(
                     content={
                       firstMiniTestTask?.question?.[moduleIndex].content ?? ''
                     }
-                    description={descriptionWithAnswers}
+                    description={
+                      descriptionWithAnswers.includes('_')
+                        ? descriptionWithAnswers
+                        : ''
+                    }
                   />
                 }
                 answer={answer ?? []}

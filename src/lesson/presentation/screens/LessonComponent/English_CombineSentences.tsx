@@ -211,7 +211,7 @@ const English_CombineSentences = forwardRef<LessonRef, Props>(
               onAnswerChanged={setAnswerSelected}
               questionStyle={[
                 styles.fonts_SVN_Cherish,
-                {fontSize: scale(36), color: COLORS.BLUE_0877B6},
+                {fontSize: scale(36), color: settings.backgroundButtonColor},
               ]}
               answerStyle={[styles.fonts_SVN_Cherish, {fontSize: scale(18)}]}
               isCharacter

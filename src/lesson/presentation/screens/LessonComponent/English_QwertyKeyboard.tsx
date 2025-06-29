@@ -36,6 +36,7 @@ import {SelectionAnswersQuestionRef} from '../../components/SelectionAnswersQues
 import KeyboardNumber from '../../components/KeyboardNumber';
 import {useI18n} from 'src/core/presentation/hooks/useI18n';
 import VoiceButton from '../../components/VoiceButton';
+import FastImage from 'react-native-fast-image';
 
 type Props = {
   moduleIndex: number;
@@ -235,19 +236,23 @@ const English_QwertyKeyboard = observer(
             }
           }
           buildQuestion={
-            <View>
-              <Animated.Image
+            <Animated.View
+              style={[
+                {
+                  width: '60%',
+                },
+                animatedStyle,
+              ]}>
+              <FastImage
                 resizeMode={'contain'}
-                width={WIDTH_SCREEN}
-                height={scale(180)}
-                style={[{}, animatedStyle]}
+                style={{width: '100%', height: scale(180)}}
                 source={{
                   uri:
                     env.IMAGE_QUESTION_BASE_API_URL +
                     firstMiniTestTask?.question?.[moduleIndex].image,
                 }}
               />
-            </View>
+            </Animated.View>
           }
           buildAnswer={
             <View style={styles.fill}>

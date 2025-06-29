@@ -181,7 +181,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   fill: {
-    marginTop: verticalScale(22),
+    flex: 1,
   },
   fonts_SVN_Cherish: {
     fontFamily: FontFamily.SVNCherishMoment,

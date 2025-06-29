@@ -38,12 +38,6 @@ import useHomeStore from 'src/home/presentation/stores/useHomeStore';
 import {CharScrambleRep} from '../../components/CharScramble';
 import {useI18n} from 'src/core/presentation/hooks/useI18n';
 import VoiceButton from '../../components/VoiceButton';
-import Tts from 'react-native-tts';
-import {
-  iosVoice,
-  listLanguage,
-} from 'src/core/presentation/hooks/textToSpeech/TextToSpeechProvider';
-import {isAndroid} from 'src/core/presentation/utils';
 import SelectionAnswersQuestion, {
   SelectionAnswersQuestionRef,
 } from '../../components/SelectionAnswersQuestion';
@@ -78,7 +72,7 @@ const VnG1M10Lesson = observer(
     ) => {
       const globalStyle = useGlobalStyle();
 
-      const {ttsSpeak, updateDefaultVoice} = useContext(TextToSpeechContext);
+      const {ttsSpeak} = useContext(TextToSpeechContext);
       const focus = useIsFocused();
       const answerRef = useRef<SelectionAnswersQuestionRef>(null);
 
@@ -172,38 +166,6 @@ const VnG1M10Lesson = observer(
         });
       }, [moduleIndex, opacity, scaleS]);
 
-      useEffect(() => {
-        Tts.voices().then(voices => {
-          if (lessonName.toLocaleLowerCase().includes('english')) {
-            const engVoice = voices.find(
-              voice => voice.language === listLanguage['US English'],
-            );
-            updateDefaultVoice?.(
-              isAndroid ? engVoice?.id : iosVoice[3].id,
-              'US English',
-            );
-          } else if (lessonName.toLocaleLowerCase().includes('mandarin')) {
-            const engVoice = voices.find(
-              voice =>
-                voice.language ===
-                listLanguage['Mainland China, simplified characters'],
-            );
-            updateDefaultVoice?.(
-              engVoice?.id,
-              'Mainland China, simplified characters',
-            );
-          } else if (lessonName.toLocaleLowerCase().includes('tiếng việt')) {
-            const vietnameseVoices = voices.filter(
-              voice =>
-                voice.language.startsWith('vi-') ||
-                voice.name.toLowerCase().includes('vietnamese'),
-            );
-
-            updateDefaultVoice?.(vietnameseVoices[0]?.id, 'Vie (Vietnamese)');
-          }
-        });
-      }, [lessonName, updateDefaultVoice]);
-
       useImperativeHandle(ref, () => ({
         isAnswerCorrect,
         onChoiceCorrectedAnswer: () => {
@@ -264,6 +226,7 @@ const VnG1M10Lesson = observer(
                           settings.backgroundButtonColor ?? '',
                           20,
                         ),
+                        fontSize: scale(32),
                       },
                     ]}>
                     {i18n.t('lesson.screens.Modules.chooseTheCorrectAnswer')}
@@ -280,7 +243,7 @@ const VnG1M10Lesson = observer(
                       styles.textQuestion,
                       styles.mt8,
                       styles.BorelRegular,
-                      {fontSize: 32},
+                      {fontSize: scale(32)},
                     ]}>
                     {firstMiniTestTask?.question?.[moduleIndex].content}
                   </Text>
@@ -303,16 +266,6 @@ const VnG1M10Lesson = observer(
                 questionStyle={[styles.questionStyle, styles.BorelRegular]}
                 answerStyle={[styles.BorelRegular, {fontSize: 32}]}
               />
-
-              {/* <CharScramble
-                ref={charScrambleRep}
-                content={firstMiniTestTask?.question?.[moduleIndex]?.content}
-                listChar={firstMiniTestTask?.question?.[moduleIndex]?.answers}
-                learningTimer={learningTimer}
-                onAnswerChanged={setAnswerSelected}
-                questionStyle={[styles.questionStyle, styles.BorelRegular]}
-                answerStyle={[styles.BorelRegular]}
-              /> */}
 
               <PrimaryButton
                 text={i18n.t('lesson.screens.Modules.submit')}
