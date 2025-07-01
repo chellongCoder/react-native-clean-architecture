@@ -23,6 +23,7 @@ export const assets = {
   star: require('assets/images/star.png'),
   untitled_artwork: require('assets/images/untitled_artwork.png'),
   bee_bg: require('assets/images/bee_bg.png'),
+  bee_trans: require('assets/images/bee_trans.png'),
   bee_x50: require('assets/images/bee_x50.png'),
   andie_1: require('assets/images/andie_1.png'),
   andie_2: require('assets/images/andie_2.png'),

@@ -8,6 +8,7 @@ import YourRank from '../components/YourRank';
 import Top50Rank from '../components/Top50Rank';
 import {LessonStoreProvider} from 'src/lesson/presentation/stores/LessonStore/LessonStoreProvider';
 import {withProviders} from 'src/core/presentation/utils/withProviders';
+import ComingSoonScreen from 'src/core/presentation/screens/ComingSoonScreen';
 
 const RankScreen = () => {
   return (
@@ -20,6 +21,7 @@ const RankScreen = () => {
           <YourRank />
           <Top50Rank />
         </View>
+        <ComingSoonScreen />
       </SafeAreaView>
     </Fragment>
   );
