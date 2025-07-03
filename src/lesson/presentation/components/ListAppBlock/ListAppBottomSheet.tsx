@@ -6,9 +6,10 @@ import BottomSheetCustom from '../BottomSheet';
 import {AppEntity} from 'src/lesson/domain/entities/AppEntity';
 import {COLORS} from 'src/core/presentation/constants/colors';
 import ItemApps, {AppItem} from './ItemApps';
-import {scale, verticalScale} from 'react-native-size-matters';
+import {verticalScale} from 'react-native-size-matters';
 import {heightItem} from 'src/core/presentation/navigation/tabNavigator/BottomTabBar/TabButton';
 import {useI18n} from 'src/core/presentation/hooks/useI18n';
+import {getBundleId} from 'react-native-device-info';
 const ListAppBottomSheet = observer(() => {
   const lesson = useLessonStore();
   const i18n = useI18n();
@@ -40,10 +41,14 @@ const ListAppBottomSheet = observer(() => {
     () => lesson.listAppsSystem.map(transformAppEntityToListItem),
     [lesson.listAppsSystem],
   );
+  const bundleId = getBundleId();
 
   const listItemDisplay = useMemo(
-    () => (isSheetOpen ? listItem : listItem.slice(0, 12)),
-    [listItem, isSheetOpen],
+    () =>
+      (isSheetOpen ? listItem : listItem.slice(0, 12)).filter(
+        item => item.subTitle !== bundleId,
+      ),
+    [isSheetOpen, listItem, bundleId],
   );
 
   return (
@@ -63,6 +68,7 @@ const ListAppBottomSheet = observer(() => {
             data={listItemDisplay}
             renderItem={({item}) => {
               const blockedApps = lesson.blockedListAppsSystem;
+
               const blockedApp = blockedApps.find(
                 app => app.package_name === item.subTitle,
               );

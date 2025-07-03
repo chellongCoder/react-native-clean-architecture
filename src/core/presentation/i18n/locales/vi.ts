@@ -98,8 +98,8 @@ export default {
     },
     TrialModule: {
       title: 'Bắt đầu chương trình trải nghiệm!!',
-      description:
-        'Bạn có 3 ngày để trải nghiệm phiên bản này. Sau 3 ngày, bạn sẽ không thể tiếp tục làm bài tập. Để tiếp tục quá trình, bạn cần dùng kim cương để mở khoá các bài học.',
+      endTrial: 'Kết thúc trải nghiệm',
+      description: 'Bạn có 3 ngày để trải nghiệm phiên bản này.',
       description2:
         'Sau 3 ngày, bạn sẽ không thể tiếp tục làm bài tập. Để tiếp tục quá trình, bạn cần dùng kim cương để mở khoá các bài học.',
       start: 'Bắt đầu',

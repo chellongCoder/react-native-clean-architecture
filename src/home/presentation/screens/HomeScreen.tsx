@@ -1,25 +1,46 @@
 import React, {Fragment} from 'react';
-import {StyleSheet, View} from 'react-native';
-import {SafeAreaView} from 'react-native-safe-area-context';
-import {COLORS} from 'src/core/presentation/constants/colors';
+import {ScrollView, StyleSheet, View} from 'react-native';
 import ListSubject from '../components/subjects/ListSubject';
 import AccountStatus from '../components/AccountStatus';
 import {scale} from 'react-native-size-matters';
 import {observer} from 'mobx-react';
 import {withProviders} from 'src/core/presentation/utils/withProviders';
 import {HomeProvider} from '../stores/HomeProvider';
+import FastImage from 'react-native-fast-image';
+import {SCREEN_HEIGHT} from '@gorhom/bottom-sheet';
+import {assets} from 'src/core/presentation/utils';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 const HomeScreen = observer(() => {
+  const inset = useSafeAreaInsets();
   return (
     <Fragment>
-      <SafeAreaView style={styles.container} edges={['top']}>
-        <View style={styles.wrapContentContainer}>
-          <View style={{position: 'absolute', right: scale(10), zIndex: 999}}>
-            <AccountStatus />
+      <View style={[styles.container]}>
+        <ScrollView
+          style={[styles.container]}
+          contentContainerStyle={{alignItems: 'center'}}
+          showsVerticalScrollIndicator={false}
+          bounces={false}>
+          <FastImage
+            source={assets.bg_scroll}
+            style={[styles.image, {height: SCREEN_HEIGHT * 2, width: '100%'}]}
+            resizeMode="cover"
+          />
+          <View
+            style={[[styles.wrapContentContainer, {paddingTop: inset.top}]]}>
+            <View
+              style={{
+                position: 'absolute',
+                right: scale(10),
+                zIndex: 999,
+                top: inset.top,
+              }}>
+              <AccountStatus />
+            </View>
+            <ListSubject />
           </View>
-          <ListSubject />
-        </View>
-      </SafeAreaView>
+        </ScrollView>
+      </View>
     </Fragment>
   );
 });
@@ -27,10 +48,14 @@ const HomeScreen = observer(() => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: COLORS.WHITE_FFFBE3,
   },
   wrapContentContainer: {
-    flex: 1,
+    position: 'absolute',
+    left: 0,
+    width: '100%',
+  },
+  image: {
+    width: '100%',
   },
 });
 

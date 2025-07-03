@@ -33,19 +33,19 @@ const ListSubject = () => {
   const data: TData = [
     {
       id: 1,
-      position: 'left',
+      position: 'right',
       bgc: COLORS.BLUE_3AB89C,
       textColor: COLORS.YELLOW_FFBF60,
     },
     {
       id: 2,
-      position: 'right',
+      position: 'left',
       bgc: COLORS.YELLOW_F2B559,
       textColor: COLORS.WHITE_FBF8CC,
     },
     {
       id: 3,
-      position: 'left',
+      position: 'right',
       bgc: COLORS.PINK_FFB29F,
       textColor: COLORS.WHITE_FBF8CC,
     },
@@ -57,7 +57,6 @@ const ListSubject = () => {
     },
   ];
   const scaleValue = useSharedValue(0.5);
-
   const selectedItemOpacity = useSharedValue(0);
   const selectedItemStyle = useAnimatedStyle(() => {
     return {
@@ -127,7 +126,7 @@ const ListSubject = () => {
       <SubjectItem
         key={index}
         item={item}
-        animatedStyle={animatedStyle}
+        animatedStyle={[animatedStyle, {opacity: 0.1}]}
         onSelectSubject={onSelectSubject}
       />
     );
@@ -144,13 +143,13 @@ const ListSubject = () => {
   }, [homeState.field, onSelectField, selectedItemOpacity]);
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container]}>
       <FlatList
         data={mergedData}
         renderItem={renderItem}
         keyExtractor={item => item.id.toString()}
         showsVerticalScrollIndicator={false}
-        contentContainerStyle={{paddingBottom: scale(54)}}
+        contentContainerStyle={{paddingBottom: scale(74)}}
       />
 
       {homeState?.field ? (

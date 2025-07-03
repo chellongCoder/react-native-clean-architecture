@@ -106,8 +106,8 @@ export default {
     },
     TrialModule: {
       title: 'Start the experience program!!',
-      description:
-        'You have 3 days to experience this version. After 3 days, you will not be able to continue the exercises. To continue the process, you need to use diamonds to unlock the lessons.',
+      endTrial: 'Kết thúc trải nghiệm',
+      description: 'Bạn có 3 ngày để trải nghiệm phiên bản này.',
       description2:
         'After 3 days, you will not be able to continue the exercises. To continue the process, you need to use diamonds to unlock the lessons.',
       start: 'Start',

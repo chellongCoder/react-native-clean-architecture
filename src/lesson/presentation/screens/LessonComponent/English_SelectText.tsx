@@ -122,6 +122,7 @@ const English_SelectText = observer(
           nextModule((answerSelected as string[]).join(''));
         },
         fullAnswer: firstMiniTestTask?.question?.[moduleIndex].fullAnswer,
+        totalTime: 5 * 60,
       });
 
       const {lessonSetting} = useHomeStore();

@@ -228,13 +228,13 @@ const English_SelectAnswer = observer(
           isShowCorrectContainer={isShowCorrectContainer}
           onPressFlower={toggleShowHint}
           buildQuestion={
-            <View>
+            <View style={{flex : 1}}>
               <Animated.Image
                 resizeMode={'contain'}
                 style={[
                   {
                     width: scale(200),
-                    height: verticalScale(140),
+                    aspectRatio: 2/1,
                   },
                   animatedStyle,
                 ]}
@@ -244,6 +244,11 @@ const English_SelectAnswer = observer(
                     firstMiniTestTask?.question?.[moduleIndex].image,
                 }}
               />
+              {firstMiniTestTask?.question?.[moduleIndex]?.paragraph && <View style={{ width: scale(200), height: verticalScale(100), flexWrap: 'wrap'}}>
+                <Text style={[styles.fonts_SVN_Neuzeit_Bold, {color: settings.backgroundButtonColor}]}>
+                  {firstMiniTestTask?.question?.[moduleIndex]?.paragraph?.replace(/[.,]/g, '\n')}
+                </Text>
+              </View>}
             </View>
           }
           buildAnswer={
@@ -280,7 +285,7 @@ const English_SelectAnswer = observer(
                       firstMiniTestTask?.question?.[moduleIndex].description ??
                       ''
                     }
-                    style={styles.fonts_SVN_Cherish}
+                    style={styles.fonts_SVN_Neuzeit_Bold}
                   />
                 }
                 answer={
@@ -324,6 +329,9 @@ const styles = StyleSheet.create({
   },
   fonts_SVN_Cherish: {
     fontFamily: FontFamily.SVNCherishMoment,
+  },
+  fonts_SVN_Neuzeit_Bold: {
+    fontFamily: FontFamily.SVNNeuzeitBold,
   },
   textQuestion: {
     fontSize: verticalScale(15),

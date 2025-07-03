@@ -30,10 +30,7 @@ import {observer} from 'mobx-react';
 import {withProviders} from 'src/core/presentation/utils/withProviders';
 import {LessonStoreProvider} from '../stores/LessonStore/LessonStoreProvider';
 import useAuthenticationStore from 'src/authentication/presentation/stores/useAuthenticationStore';
-import {
-  children,
-  data,
-} from 'src/authentication/application/types/GetUserProfileResponse';
+import {children} from 'src/authentication/application/types/GetUserProfileResponse';
 import ICAddChild from 'src/core/components/icons/ICAddChild';
 import {COLORS} from 'src/core/presentation/constants/colors';
 import ICManIconMedium from 'src/core/components/icons/ICManIconMedium';
@@ -56,7 +53,6 @@ import {
   isAndroid,
   WIDTH_SCREEN,
 } from 'src/core/presentation/utils';
-import {assets} from 'src/core/presentation/utils';
 import ListBlockedApps from '../components/LessonModule/ListBlockedApps';
 import {
   addToLockedApps,
@@ -95,6 +91,7 @@ import ChangeLanguage from 'src/core/presentation/components/ChangeLanguage';
 import {coreModuleContainer} from 'src/core/CoreModule';
 import I18n from 'src/core/presentation/i18n';
 import useHomeStore from 'src/home/presentation/stores/useHomeStore';
+import {useLoadingGlobal} from 'src/core/presentation/hooks/loading/useLoadingGlobal';
 
 // ... existing imports ...
 
@@ -119,24 +116,25 @@ const setingOptions = [
 ];
 
 const ParentScreen = observer(() => {
-  enum TabParentE {
-    APP_BLOCK = coreModuleContainer
+  const TabParentE = {
+    APP_BLOCK: coreModuleContainer
       .getProvided(I18n)
       .t('lesson.screens.Parent.appBlock')
       .toString(),
-    SETTING = coreModuleContainer
+    SETTING: coreModuleContainer
       .getProvided(I18n)
       .t('lesson.screens.Parent.setting'),
-    PURCHASE = coreModuleContainer
+    PURCHASE: coreModuleContainer
       .getProvided(I18n)
       .t('lesson.screens.Parent.purchase'),
-  }
+  };
 
   const tabsParent = [
     {id: TabParentE.APP_BLOCK, name: TabParentE.APP_BLOCK, icon: IClock},
     {id: TabParentE.SETTING, name: TabParentE.SETTING, icon: ICsetting},
     {id: TabParentE.PURCHASE, name: TabParentE.PURCHASE, icon: ICpurchase},
   ];
+
   // ---------------------------------------------------------------------------
   // State & Context
   // ---------------------------------------------------------------------------
@@ -158,12 +156,14 @@ const ParentScreen = observer(() => {
     deviceToken,
     deleteChildren,
   } = useAuthenticationStore();
-  const {listSubject, rootSubject, showTutorial} = useHomeStore();
+  const homeStore = useHomeStore();
+  const {listSubject, rootSubject, showTutorial} = homeStore;
   const i18n = useI18n();
 
   const {isShowAuth: isAuthenSetting, changeIsShowAuth} = useAuthParent();
   const isShowAuth = __DEV__ ? false : isAuthenSetting;
 
+  const loadingGlobal = useLoadingGlobal();
   useGetUserSetting(deviceToken, selectedChild?._id ?? '', lesson);
 
   // ---------------------------------------------------------------------------
@@ -233,6 +233,7 @@ const ParentScreen = observer(() => {
     lesson.blockedAnonymousListAppsSystem?.categoryTokens,
     lesson.blockedListAppsSystem,
   ]);
+
   const purchaseOptions = useMemo(() => {
     return (
       listFields?.map(field => ({
@@ -392,6 +393,44 @@ const ParentScreen = observer(() => {
     blockOptions,
   ]);
 
+  const onUnlockApps = useCallback(async () => {
+    try {
+      if (selectedChild) {
+        loadingGlobal.toggleLoading(true, 'unlocking');
+
+        await Promise.all([
+          unBlockApps(selectedChild?._id),
+          lesson.updateAppBlock({
+            childrenId: selectedChild?._id ?? '',
+            deviceToken,
+            point,
+            modules: [],
+            appBlocked: {
+              android: [],
+              ios: [],
+            },
+          }),
+        ]);
+        Toast.show({
+          type: 'success',
+          text1: i18n.t('lesson.screens.Parent.yourAppsHaveBeenUnlocked'),
+        });
+      } else {
+        Toast.show({
+          type: 'error',
+          text1: i18n.t('lesson.screens.Parent.pleaseSelectChild'),
+        });
+      }
+    } catch (error) {
+      console.log('🛠 LOG: 🚀 --> ~ onPress={ ~ error:', error);
+    } finally {
+      lesson.changeBlockedAnonymousListAppSystem(undefined);
+      lesson.resetListAppSystem();
+      loadingGlobal.toggleLoading(false, 'unlocking');
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [i18n, lesson, selectedChild]);
+
   const onSaveSoundSetting = () => {
     lesson.setBackgroundSound(backgroundSound);
     lesson.setCharSound(charSound);
@@ -411,6 +450,10 @@ The blockAppsSystem function is an asynchronous function that awaits the result 
   const blockAppsSystem = useCallback(async () => {
     try {
       if (isAndroid) {
+        loadingGlobal.toggleLoading(true, 'blocking');
+        setTimeout(() => {
+          loadingGlobal.toggleLoading(false, 'blocking');
+        }, 5000);
         await addToLockedApps(
           lesson.blockedListAppsSystem.map(v => ({
             app_name: v.app_name ?? '',
@@ -425,7 +468,10 @@ The blockAppsSystem function is an asynchronous function that awaits the result 
         type: 'success',
         text1: i18n.t('lesson.screens.Parent.selectedAppsHasBeenBlocked'),
       });
-    } catch (error) {}
+    } catch (error) {
+      console.log('🛠 LOG: 🚀 --> ~ blockAppsSystem ~ error:', error);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [i18n, lesson.blockedListAppsSystem, selectedChild?._id]);
 
   const listTabOptions = useMemo(() => {
@@ -470,7 +516,7 @@ The blockAppsSystem function is an asynchronous function that awaits the result 
           break;
         case TabParentE.PURCHASE:
           const selectedItem = purchaseOptions.find(item => item.name === id);
-          setSelectedPurchase(selectedItem);
+          selectedItem && setSelectedPurchase(selectedItem);
           break;
       }
     },
@@ -571,6 +617,19 @@ The blockAppsSystem function is an asynchronous function that awaits the result 
       pushScreen(STACK_NAVIGATOR.TUTORIAL_NAVIGATOR, {});
     }
   }, [showTutorial]);
+  useEffect(() => {
+    if (homeStore.isGotoBuyModule) {
+      setTabparent(TabParentE.PURCHASE);
+      setSelectedOption(listTabOptions?.[0]?.name ?? '');
+      homeStore.setIsGotoBuyModule(false);
+    }
+  }, [
+    TabParentE.PURCHASE,
+    homeStore,
+    homeStore.isGotoBuyModule,
+    listTabOptions,
+    setSelectedOption,
+  ]);
 
   const _buildBlockView = () => {
     return (
@@ -585,7 +644,7 @@ The blockAppsSystem function is an asynchronous function that awaits the result 
             selectedApp={
               typeof selectedOption === 'string'
                 ? selectedOption
-                : selectedOption.name
+                : selectedOption?.name ?? ''
             }
             listApp={listTabOptions}
           />
@@ -656,18 +715,6 @@ The blockAppsSystem function is an asynchronous function that awaits the result 
                     nameIndex="name"
                   />
                 </View>
-
-                {/* <View style={[{zIndex: -2}]}>
-                  <Text style={[globalStyle.txtButton, styles.textColor]}>
-                    Your unlock score
-                  </Text>
-                  <View style={[styles.card, {opacity: 0.6}]}>
-                    <Text style={[globalStyle.txtButton, styles.textCard]}>
-                      {point}%
-                    </Text>
-                    {isShowLimitOption ? <IconArrowUp /> : <IconArrowDown />}
-                  </View>
-                </View> */}
               </View>
             </View>
             <View>
@@ -682,31 +729,7 @@ The blockAppsSystem function is an asynchronous function that awaits the result 
               <PrimaryButton
                 text={i18n.t('lesson.screens.Parent.unlock')}
                 style={[styles.btnCommon, styles.btnRed]}
-                onPress={async () => {
-                  try {
-                    if (selectedChild) {
-                      await unBlockApps(selectedChild?._id);
-                      Toast.show({
-                        type: 'success',
-                        text1: i18n.t(
-                          'lesson.screens.Parent.yourAppsHaveBeenUnlocked',
-                        ),
-                      });
-                    } else {
-                      Toast.show({
-                        type: 'error',
-                        text1: i18n.t(
-                          'lesson.screens.Parent.pleaseSelectChild',
-                        ),
-                      });
-                    }
-                  } catch (error) {
-                    console.log('🛠 LOG: 🚀 --> ~ onPress={ ~ error:', error);
-                  } finally {
-                    lesson.changeBlockedAnonymousListAppSystem(undefined);
-                    lesson.resetListAppSystem();
-                  }
-                }}
+                onPress={onUnlockApps}
               />
               {!isShowAuth && (
                 <Animated.View
@@ -819,7 +842,7 @@ The blockAppsSystem function is an asynchronous function that awaits the result 
             selectedApp={
               typeof selectedOption === 'string'
                 ? selectedOption
-                : selectedOption.name
+                : selectedOption?.name ?? ''
             }
             listApp={listTabOptions}
           />
@@ -1009,7 +1032,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   bg: {
-    backgroundColor: '#fbf8cc',
+    backgroundColor: COLORS.WHITE_FBF8CC,
   },
   btnLogout: {
     backgroundColor: '#66C270',

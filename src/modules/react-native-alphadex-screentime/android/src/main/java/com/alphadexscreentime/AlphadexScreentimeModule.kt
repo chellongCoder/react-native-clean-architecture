@@ -26,9 +26,13 @@ import com.facebook.react.bridge.ReactMethod
 import com.facebook.react.bridge.ReadableArray
 import com.facebook.react.bridge.ReadableType
 import com.facebook.react.bridge.WritableArray
+import com.facebook.react.bridge.WritableMap
+import com.facebook.react.modules.core.DeviceEventManagerModule.RCTDeviceEventEmitter
 import com.facebook.react.modules.core.PermissionListener
-
-
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class AlphadexScreentimeModule(reactContext: ReactApplicationContext) : ReactContextBaseJavaModule(reactContext), ActivityEventListener, PermissionListener {
   val SYSTEM_APP_MASK = ApplicationInfo.FLAG_SYSTEM or ApplicationInfo.FLAG_UPDATED_SYSTEM_APP
@@ -193,58 +197,84 @@ class AlphadexScreentimeModule(reactContext: ReactApplicationContext) : ReactCon
     editor.putBoolean("blocked", false)
     promise.resolve(true)
   }
+
   @ReactMethod
-  fun addToLockedApps(array: ReadableArray, promise : Promise) {
-    lockedAppList = emptyList()
-//        val mContentView = RemoteViews(packageName, R.layout.list_view)
-    val applicationContext = reactApplicationContext.applicationContext
-    val packageManager = applicationContext.getPackageManager()
-    appInfo  = packageManager.getInstalledApplications(PackageManager.GET_META_DATA)
+  fun addToLockedApps(array: ReadableArray, promise: Promise) {
+    CoroutineScope(Dispatchers.Main).launch {
+        try {
+            // Operations on background thread
+            lockedAppList = emptyList()
+            val applicationContext = reactApplicationContext.applicationContext
+            val packageManager = applicationContext.getPackageManager()
+            appInfo = packageManager.getInstalledApplications(PackageManager.GET_META_DATA)
 
-    val arrayList = ArrayList<Map<String, *>>()
+            val arrayList = ArrayList<Map<String, *>>()
 
-    for (i in 0 until array.size()) {
-      when (array.getType(i)) {
-        ReadableType.Map -> {
-          val readableMap = array.getMap(i)
-          val map = readableMap.toHashMap()
-          arrayList.add(map)
+            for (i in 0 until array.size()) {
+                when (array.getType(i)) {
+                    ReadableType.Map -> {
+                        val readableMap = array.getMap(i)
+                        val map = readableMap.toHashMap()
+                        arrayList.add(map)
+                    }
+                    else -> {
+                        // Handle other types if necessary
+                    }
+                }
+            }
+            val arr: ArrayList<Map<String, *>> = arrayList as ArrayList<Map<String, *>>
+
+            for (element in arr) {
+                run breaking@ {
+                    for (i in appInfo!!.indices) {
+                        if (appInfo!![i].packageName.toString() == element["package_name"].toString()) {
+                            val ogList = lockedAppList
+                            lockedAppList = ogList + appInfo!![i]
+                            return@breaking
+                        }
+                    }
+                }
+            }
+
+            var packageData: List<String> = emptyList()
+
+            for (element in lockedAppList) {
+                val ogList = packageData
+                packageData = ogList + element.packageName
+            }
+
+            val editor: SharedPreferences.Editor = saveAppData!!.edit()
+            editor.remove("app_data")
+            editor.putString("app_data", "$packageData")
+            editor.putBoolean("blocked", true)
+            editor.apply()
+          // Emit event after startForegroundService is called
+          val params = Arguments.createMap()
+          params.putString("status", "success")
+          params.putString("message", "Foreground service started successfully")
+          sendEvent("onAppBlockingComplete", params)
+
+          // Switch to main thread for UI operations
+            withContext(Dispatchers.Main) {
+                setIfServiceClosed("1")
+                startForegroundService()
+
+
+                promise.resolve(true)
+            }
+        } catch (e: Exception) {
+            withContext(Dispatchers.Main) {
+                // Also emit error event
+                val params = Arguments.createMap()
+                params.putString("status", "error")
+                params.putString("message", e.message ?: "Unknown error occurred")
+                sendEvent("onAppBlockingComplete", params)
+
+                promise.reject("ERROR", e.message ?: "Unknown error occurred in addToLockedApps")
+            }
         }
-        else -> {
-          // Handle other types if necessary
-        }
-      }
     }
-    val arr : ArrayList<Map<String,*>> = arrayList  as ArrayList<Map<String,*>>
-
-    for (element in arr){
-      run breaking@{
-        for (i in appInfo!!.indices){
-          if(appInfo!![i].packageName.toString() == element["package_name"].toString()){
-            val ogList = lockedAppList
-            lockedAppList = ogList + appInfo!![i]
-            return@breaking
-          }
-        }
-      }
-    }
-
-
-    var packageData:List<String> = emptyList()
-
-    for(element in lockedAppList){
-      val ogList = packageData
-      packageData = ogList + element.packageName
-    }
-
-    val editor: SharedPreferences.Editor =  saveAppData!!.edit()
-    editor.remove("app_data")
-    editor.putString("app_data", "$packageData")
-    editor.putBoolean("blocked", true)
-    editor.apply()
-
-    startForegroundService()
-  }
+}
 
   private fun setIfServiceClosed(data:String){
     val editor: SharedPreferences.Editor =  saveAppData!!.edit()
@@ -383,5 +413,11 @@ class AlphadexScreentimeModule(reactContext: ReactApplicationContext) : ReactCon
 
   override fun onNewIntent(p0: Intent?) {
 
+  }
+
+  private fun sendEvent(eventName: String, params: WritableMap? = null) {
+    reactApplicationContext
+        .getJSModule(RCTDeviceEventEmitter::class.java)
+        .emit(eventName, params)
   }
 }

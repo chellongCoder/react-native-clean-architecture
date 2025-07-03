@@ -48,6 +48,8 @@ export class HomeStore implements HomeStoreState {
     marginLeft: -scale(20),
   };
 
+  isGotoBuyModule = false;
+
   constructor(
     @provided(GetFieldUseCase)
     private getFieldUseCase: GetFieldUseCase,
@@ -85,6 +87,10 @@ export class HomeStore implements HomeStoreState {
   @action
   public async setShowTutorial(showTutorial: boolean) {
     this.showTutorial = showTutorial;
+  }
+  @action
+  public setIsGotoBuyModule(isGotoBuyModule: boolean) {
+    this.isGotoBuyModule = isGotoBuyModule;
   }
 
   @computed

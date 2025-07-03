@@ -7,8 +7,6 @@ import {
   FamilyActivitySelection,
   ScreenTimeComponent,
 } from 'react-native-alphadex-screentime';
-import {lessonModuleContainer} from 'src/lesson/LessonModule';
-import {LessonStore} from '../../stores/LessonStore/LessonStore';
 import {isAndroid} from 'src/core/presentation/utils';
 import {COLORS} from 'src/core/presentation/constants/colors';
 import {useAnimatedShake} from 'src/hooks/useAnimatedShake';
@@ -24,7 +22,7 @@ const SelectApp = ({appName, error, childrenId, onBlocked}: Props) => {
   const lesson = useLessonStore();
   const globalStyle = useGlobalStyle();
   const {shake, rStyle} = useAnimatedShake();
-  const shakeRef = useRef<NodeJS.Timeout>(null);
+  const shakeRef = useRef<NodeJS.Timeout>();
   useEffect(() => {
     if (error !== '') {
       shakeRef.current = setInterval(() => {

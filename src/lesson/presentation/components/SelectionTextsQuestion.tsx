@@ -5,9 +5,10 @@ import React, {
   ForwardRefRenderFunction,
 } from 'react';
 import {View, Text, TouchableOpacity, StyleSheet} from 'react-native';
-import {s, scale, verticalScale} from 'react-native-size-matters';
+import {scale, verticalScale} from 'react-native-size-matters';
 import {COLORS} from 'src/core/presentation/constants/colors';
 import {FontFamily} from 'src/core/presentation/hooks/useFonts';
+import ScrollIndicator from './ScrollIndicator';
 
 interface SelectionAnswersQuestionProps {
   question: React.ReactNode;
@@ -66,27 +67,29 @@ const SelectionTextsQuestion: ForwardRefRenderFunction<
   return (
     <View style={[styles.boxSelected]}>
       <View style={styles.wrapCharContainer}>{question}</View>
-      <View style={[styles.wapper, {width: '100%'}]}>
-        {answer?.map((e, i) => {
-          const bg =
-            Array.isArray(answerSelected) &&
-            answerSelected.includes(e) &&
-            !isKeyboard
-              ? isShowCorrectContainer && !isAnswerCorrect
-                ? '#F28759'
-                : '#66C270'
-              : '#F2B559';
+      <ScrollIndicator>
+        <View style={[styles.wapper, {width: '100%'}]}>
+          {answer?.map((e, i) => {
+            const bg =
+              Array.isArray(answerSelected) &&
+              answerSelected.includes(e) &&
+              !isKeyboard
+                ? isShowCorrectContainer && !isAnswerCorrect
+                  ? '#F28759'
+                  : '#66C270'
+                : '#F2B559';
 
-          return (
-            <TouchableOpacity
-              key={i}
-              onPress={() => handleSelectAnswer(e)}
-              style={[styles.boxVowel, {}]}>
-              <Text style={[styles.textVowel, {color: bg}]}>{e}</Text>
-            </TouchableOpacity>
-          );
-        })}
-      </View>
+            return (
+              <TouchableOpacity
+                key={i}
+                onPress={() => handleSelectAnswer(e)}
+                style={[styles.boxVowel, {}]}>
+                <Text style={[styles.textVowel, {color: bg}]}>{e}</Text>
+              </TouchableOpacity>
+            );
+          })}
+        </View>
+      </ScrollIndicator>
       {learningTimer !== 0 && (
         <View
           style={[
@@ -117,7 +120,8 @@ const styles = StyleSheet.create({
   },
   wrapCharContainer: {
     // Add your styles here
-    flexDirection: 'row',
+    marginHorizontal: scale(16),
+    marginVertical: verticalScale(8),
   },
   fonts_SVN_Neu: {
     // Add your styles here

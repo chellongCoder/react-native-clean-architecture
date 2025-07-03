@@ -7,7 +7,6 @@ import React, {
   useRef,
   useState,
 } from 'react';
-import WriteLesson from './LessonComponent/WriteLesson';
 import MathLesson from './LessonComponent/MathLesson';
 import {
   navigateScreen,
@@ -43,7 +42,6 @@ import MultiPronunciationLesson from './LessonComponent/MultiPronunciationLesson
 import English_G5M16 from './LessonComponent/English_G5M16';
 import English_G6M26 from './LessonComponent/English_G6M26';
 import English_CharSelector from './LessonComponent/English_CharSelector_Meaning';
-import Mandarin_G1M5 from './LessonComponent/Mandarin_G1M5';
 import Mandarin_G2M25 from './LessonComponent/Mandarin_G2M25';
 import Mandarin_G3M37 from './LessonComponent/Mandarin_G3M37';
 import Mandarin_G4M27 from './LessonComponent/Mandarin_G4M27';
@@ -53,7 +51,6 @@ import Mandarin_Kindergarten from './LessonComponent/Mandarin_Kindergarten';
 import Math_MG6M15 from './LessonComponent/Math_MG6M15';
 import Math_Kindergarten from './LessonComponent/Math_Kindergarten';
 import Science_G0M1 from './LessonComponent/Science_G0M1';
-import Science_SG1M2 from './LessonComponent/Science_SG1M2';
 import Science_SG2M4 from './LessonComponent/Science_SG2M4';
 import Science_SG4M3 from './LessonComponent/Science_SG4M3';
 import Science_SG5M5 from './LessonComponent/Science_SG5M5';
@@ -164,7 +161,7 @@ const LESSON_PATTERNS = [
   // * English G2
   //: TODO: tồn động : M35, 33
   {
-    pattern: /^ENGLISH_EG2M(1|3|5|7|9|16)$/,
+    pattern: /^ENGLISH_EG2M(1|3|5|7|9)$/,
     component: VowelsLesson,
     props,
   },
@@ -195,7 +192,7 @@ const LESSON_PATTERNS = [
   },
   {
     pattern:
-      /^(ENGLISH_EG2M(22|23|24|25|26|27|28|29|31|32|34|36|37|38|39|40|42|43|44|45|46|47|48|49|51|52|53|54))$/,
+      /^(ENGLISH_EG2M(16|22|23|24|25|26|27|28|29|31|32|34|36|37|38|39|40|42|43|44|45|46|47|48|49|51|52|53|54))$/,
     component: English_SelectAnswer,
     props,
   },

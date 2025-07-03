@@ -35,6 +35,8 @@ const TrialModulePopup: React.FC<TrialModulePopupProps> = ({
   const authStore = useAuthenStore();
   const homeStore = useHomeStore();
 
+  const isTrial = authStore.userProfile?.isTrial;
+
   const onUpdate = async () => {
     if (homeStore.moduleItem) {
       handleToggleTrialPopup(() => {
@@ -46,6 +48,7 @@ const TrialModulePopup: React.FC<TrialModulePopupProps> = ({
       });
       authStore.updateTrialModules({});
     } else {
+      homeStore.setIsGotoBuyModule(true);
       handleToggleTrialPopup();
       resetNavigator(STACK_NAVIGATOR.HOME.HOME_SCREEN, {});
       navigateScreen(STACK_NAVIGATOR.BOTTOM_TAB.PARENT_TAB, {});
@@ -67,7 +70,9 @@ const TrialModulePopup: React.FC<TrialModulePopupProps> = ({
       <View style={styles.contentContainer}>
         <View style={styles.wrapContentContainer}>
           <Text style={[styles.title, {marginVertical: 24, marginTop: 64}]}>
-            {i18n.t('popup.TrialModule.title')}
+            {isTrial
+              ? i18n.t('popup.TrialModule.title')
+              : i18n.t('popup.TrialModule.endTrial')}
           </Text>
           <Text style={styles.subTitle}>
             {i18n.t('popup.TrialModule.description')}

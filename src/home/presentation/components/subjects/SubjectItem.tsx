@@ -1,15 +1,12 @@
 import React from 'react';
 import {View, Text, TouchableOpacity, StyleSheet} from 'react-native';
 import Animated, {
-  runOnJS,
   useAnimatedStyle,
   useSharedValue,
-  withSpring,
 } from 'react-native-reanimated';
 import {scale} from 'react-native-size-matters';
 import {CustomTextStyle} from 'src/core/presentation/constants/typography';
 import {IMergedData} from './ListSubject';
-import {HEIGHT_SCREEN, WIDTH_SCREEN} from 'src/core/presentation/utils';
 
 const SubjectItem = ({
   item,
@@ -21,11 +18,6 @@ const SubjectItem = ({
   onSelectSubject: (item: IMergedData) => void;
 }) => {
   const scaleItem = useSharedValue(1);
-  const offsetX = useSharedValue(0);
-  const offsetY = useSharedValue(0);
-  const position = useSharedValue<'absolute' | 'relative' | undefined>(
-    undefined,
-  );
 
   const itemAnimatedStyle = useAnimatedStyle(() => {
     return {
@@ -82,7 +74,6 @@ const styles = StyleSheet.create({
   contentContainer: {
     flex: 1,
     flexDirection: 'row',
-    alignItems: 'center',
   },
   leftContentContainer: {
     height: scale(142),

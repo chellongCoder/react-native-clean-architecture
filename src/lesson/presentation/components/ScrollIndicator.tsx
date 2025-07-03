@@ -1,5 +1,5 @@
 /* eslint-disable react-native/no-inline-styles */
-import React, {useRef, useState} from 'react';
+import React, {useMemo, useRef, useState} from 'react';
 import {
   View,
   ScrollView,
@@ -10,9 +10,11 @@ import {
   StyleProp,
 } from 'react-native';
 import {COLORS} from 'src/core/presentation/constants/colors';
+import {useLessonStore} from '../stores/LessonStore/useGetPostsStore';
+import useHomeStore from 'src/home/presentation/stores/useHomeStore';
 
 interface ScrollIndicatorProps {
-  containerStyle?: ViewStyle;
+  containerStyle?: StyleProp<ViewStyle>;
   indicatorStyle?: ViewStyle;
   scrollViewStyle?: StyleProp<ViewStyle>;
   indicatorColor?: string;
@@ -36,7 +38,13 @@ const ScrollIndicator: React.FC<ScrollIndicatorProps> = ({
   // Add state for viewport and content dimensions
   const [viewportDimension, setViewportDimension] = useState(0);
   const [contentDimension, setContentDimension] = useState(0);
+  const {getSetting} = useLessonStore();
+  const {lessonSetting} = useHomeStore();
 
+  const settings = useMemo(
+    () => getSetting(lessonSetting),
+    [getSetting, lessonSetting],
+  );
   // Calculate indicator size based on viewport ratio
   const getIndicatorSize = (): `${number}%` => {
     if (contentDimension <= viewportDimension) {
@@ -112,7 +120,10 @@ const ScrollIndicator: React.FC<ScrollIndicatorProps> = ({
             styles.indicatorContainer,
             horizontal ? styles.horizontalIndicator : styles.verticalIndicator,
             indicatorStyle,
-            {backgroundColor: indicatorContainerColor},
+            {
+              backgroundColor:
+                settings.backgroundButtonColor ?? indicatorContainerColor,
+            },
           ]}>
           <Animated.View
             style={[
@@ -122,7 +133,8 @@ const ScrollIndicator: React.FC<ScrollIndicatorProps> = ({
                 height: horizontal ? 4 : indicatorSize,
                 marginLeft: horizontal ? 0 : -1,
                 marginTop: horizontal ? -1 : 0,
-                backgroundColor: indicatorColor,
+                backgroundColor:
+                  settings.backgroundButtonColor ?? indicatorColor,
                 transform: [
                   horizontal
                     ? {

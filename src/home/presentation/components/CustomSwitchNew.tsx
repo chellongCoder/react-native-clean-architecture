@@ -1,5 +1,6 @@
 import React, {useEffect} from 'react';
-import {Pressable, View, StyleSheet, Text, Image} from 'react-native';
+import {Pressable, View, StyleSheet, Text} from 'react-native';
+import FastImage from 'react-native-fast-image';
 import LinearGradient from 'react-native-linear-gradient';
 import Animated, {
   useSharedValue,
@@ -67,6 +68,11 @@ const CustomSwitchNew = ({value, onValueChange, point}: TPros) => {
 
   return (
     <Pressable onPress={toggleSwitch} style={styles.pressable} disabled>
+      <FastImage
+        source={assets.untitled_artwork}
+        resizeMode="cover"
+        style={styles.icon}
+      />
       <LinearGradient
         colors={currentStyles.bgGradientColors}
         style={[styles.backgroundGradient, styles.border]}
@@ -80,11 +86,6 @@ const CustomSwitchNew = ({value, onValueChange, point}: TPros) => {
           end={{x: 0.5, y: 1}}>
           <View style={styles.innerContainer}>
             <Animated.View style={[styles.wrapContentContainer, animatedStyle]}>
-              <Image
-                source={assets.untitled_artwork}
-                resizeMode="contain"
-                style={styles.icon}
-              />
               <View style={styles.fillCenter}>
                 <View style={styles.wrapContent}>
                   <View style={styles.decorate} />
@@ -103,16 +104,17 @@ const styles = StyleSheet.create({
   pressable: {
     width: scale(50),
     height: verticalScale(20),
-    borderRadius: 16,
+    borderRadius: scale(10),
   },
   border: {
     padding: 2,
   },
   icon: {
-    left: scale(-14),
+    left: scale(-8),
     position: 'absolute',
-    height: scale(28),
-    width: scale(28),
+    height: scale(22),
+    width: scale(22),
+    zIndex: 999,
   },
   fillCenter: {
     flex: 1,
