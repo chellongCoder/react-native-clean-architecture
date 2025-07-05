@@ -19,6 +19,7 @@ import {useAsyncEffect} from '..';
 import {useNavigationState} from '@react-navigation/native';
 import {STACK_NAVIGATOR} from '../../navigation/ConstantNavigator';
 import TrialModulePopup from 'src/core/components/popup/TrialModulePopup';
+import BuyMoreModulePopup from 'src/core/components/popup/BuyMoreModulePopup';
 
 // Define the context type
 type PopupModalContextType = {
@@ -42,6 +43,7 @@ type TPopupState = {
   isShowForceUpdateApp?: boolean;
   isShowTrial?: boolean;
   appInfo?: ForceUpdateAppResponse['data'];
+  isShowBuyMoreModule?: boolean;
 };
 
 // Define the provider component
@@ -58,6 +60,7 @@ export const PopupModalGlobalProvider = observer(
       isShowForceUpdateApp: false,
       isShowTrial: false,
       appInfo: undefined,
+      isShowBuyMoreModule: false,
     });
 
     const {userProfile, handleGetForceUpdateApp} = useAuthenticationStore();
@@ -159,6 +162,12 @@ export const PopupModalGlobalProvider = observer(
           isVisible={popupState.isShowTrial || false}
           onClose={() => {}}
           handleToggleTrialPopup={handleToggleTrialPopup}
+        />
+        <BuyMoreModulePopup
+          isVisible={popupState.isShowBuyMoreModule || false}
+          onClose={() => {
+            setPopupState({isShowBuyMoreModule: false});
+          }}
         />
         {/* Optionally, you can include the modal component here if it should be global */}
       </PopupModalContext.Provider>

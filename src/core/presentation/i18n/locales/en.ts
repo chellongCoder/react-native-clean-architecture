@@ -119,6 +119,12 @@ export default {
       update: 'Update',
       descriptionUpdate: 'You need to update the app \n to continue using',
     },
+    BuyMoreModule: {
+      youChildHasFinished: 'You child has finished his/her study modules',
+      description: 'You need to buy more modules to continue using',
+      buyNewModules: 'Buy new modules now',
+      noThanks: 'No thanks, I will let my child to have more screen time',
+    },
   },
   lesson: {
     screens: {

@@ -66,4 +66,6 @@ export const assets = {
   upgradeApp: require('assets/images/upgradeApp.png'),
   bg_hint: require('assets/images/bg_hint.gif'),
   icon_delete: require('assets/images/icon_delete.png'),
+  buyMoreImage: require('assets/images/buyMoreImage.png'),
+  closeBuyMore: require('assets/images/closeBuyMore.png'),
 };
