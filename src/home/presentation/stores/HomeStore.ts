@@ -37,6 +37,7 @@ export class HomeStore implements HomeStoreState {
   @persist('list') @observable listSubject: Subject[] = [];
   @persist('list') @observable listModule: Module[] = [];
   @persist subjectId = '';
+  @persist showTutorial = true;
   moduleItem?: ModuleItemProps;
 
   @observable lessonSetting?: LessonSettingT;
@@ -79,6 +80,11 @@ export class HomeStore implements HomeStoreState {
   @action
   public async setSubjectId(index: string) {
     this.subjectId = index;
+  }
+
+  @action
+  public async setShowTutorial(showTutorial: boolean) {
+    this.showTutorial = showTutorial;
   }
 
   @computed

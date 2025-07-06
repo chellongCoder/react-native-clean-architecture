@@ -27,6 +27,7 @@ import CheckoutScreen from 'src/lesson/presentation/screens/CheckoutScreen';
 import PurchaseSuccessScreen from '../screens/PurchaseSuccessScreen';
 import PurchaseFailedScreen from '../screens/PurchaseFailedScreen';
 import ChangePasswordScreen from 'src/authentication/presentation/screens/ChangePasswordScreen';
+import TutorialSlideScreen from 'src/lesson/presentation/screens/TutorialSlideScreen';
 
 const AuthStack = createStackNavigator();
 const HomeStack = createStackNavigator();
@@ -363,6 +364,11 @@ function AppNavigator(): React.ReactElement {
         name={STACK_NAVIGATOR.RANK_NAVIGATOR}
         key={STACK_NAVIGATOR.RANK_NAVIGATOR}
         component={RankStackScreens}
+      />
+      <AppStack.Screen
+        name={STACK_NAVIGATOR.TUTORIAL_NAVIGATOR}
+        key={STACK_NAVIGATOR.TUTORIAL_NAVIGATOR}
+        component={TutorialSlideScreen}
       />
     </>
   );
