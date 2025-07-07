@@ -18,11 +18,7 @@ import {unBlockApps} from 'react-native-alphadex-screentime';
 import {lessonModuleContainer} from 'src/lesson/LessonModule';
 import {LessonStore} from 'src/lesson/presentation/stores/LessonStore/LessonStore';
 import {RouteProp, useRoute} from '@react-navigation/native';
-import {
-  LessonTypeE,
-  MathQuestionType,
-  TResult,
-} from 'src/lesson/presentation/screens/LessonScreen';
+import {TResult} from 'src/lesson/presentation/screens/LessonScreen';
 import {useGetUserSetting} from 'src/hooks/useGetUserSetting';
 import useAuthenticationStore from 'src/authentication/presentation/stores/useAuthenticationStore';
 import BookView from 'src/lesson/presentation/components/BookView';
@@ -45,6 +41,9 @@ import {useGoogleAdsmob} from '../hooks/ggads/useGoogleAdsmob';
 import {GoogleAdsmobProvider} from '../hooks/ggads/GoogleAdsmobProvider';
 import {Task} from 'src/home/application/types/GetListQuestionResponse';
 import {useI18n} from '../hooks/useI18n';
+import useHomeStore from 'src/home/presentation/stores/useHomeStore';
+import {observer} from 'mobx-react';
+import useAuthenStore from 'src/authentication/presentation/hooks/useAuthenStore';
 
 export type RouteParamsDone = {
   totalResult: TResult[];
@@ -59,11 +58,12 @@ export type RouteParamsDone = {
   lessonName?: string;
   partName?: string;
   noMiniTest?: boolean;
-  type?: LessonTypeE | MathQuestionType | string;
+  type?: string;
   module?: Task;
+  subjectId?: string;
 };
 
-const DoneLessonScreen = ({}) => {
+const DoneLessonScreen = observer(({}) => {
   const route = useRoute<RouteProp<{param: RouteParamsDone}>>()?.params;
 
   const totalResultLength = route.totalResult?.length || 0;
@@ -72,6 +72,8 @@ const DoneLessonScreen = ({}) => {
       ?.length || 0;
   const styleHook = useGlobalStyle();
   const lessonStore = lessonModuleContainer.getProvided(LessonStore);
+  const homeStore = useHomeStore();
+  const authStore = useAuthenStore();
 
   const {deviceToken, selectedChild, getUserProfile, setSelectedChild} =
     useAuthenticationStore();
@@ -151,6 +153,45 @@ const DoneLessonScreen = ({}) => {
       });
     }
   }, [i18n, isSuccess, lessonStore]);
+
+  const onShowBuyNewModule = useCallback(async () => {
+    const userModule = await lessonStore.handleGetUserModule(
+      homeStore.listModule,
+      [0],
+    );
+
+    const allModule = await homeStore.getListModules({
+      subjectId: route.subjectId ?? '',
+      childrenId: authStore.selectedChild?._id ?? '',
+    });
+
+    const purchasedModules = allModule.data.filter(module =>
+      userModule.some(um => um._id === module._id),
+    );
+
+    const countFinishedModule = purchasedModules.filter(
+      module => module.progressOfChildren > 0,
+    );
+    console.log(
+      '🛠 LOG: 🚀 --> -------------------------------------------------------------------------------🛠 LOG: 🚀 -->',
+    );
+    console.log(
+      '🛠 LOG: 🚀 --> ~ onShowBuyNewModule ~ countFinishedModule:',
+      countFinishedModule,
+      userModule,
+      allModule,
+      purchasedModules,
+      homeStore.field,
+    );
+    console.log(
+      '🛠 LOG: 🚀 --> -------------------------------------------------------------------------------🛠 LOG: 🚀 -->',
+    );
+
+    if (countFinishedModule.length === purchasedModules.length) {
+      // TODO: show popup buy new module
+      return;
+    }
+  }, [authStore.selectedChild?._id, homeStore, lessonStore, route.subjectId]);
 
   const onSubmit = useCallback(() => {
     if (route.noMiniTest) {
@@ -244,8 +285,9 @@ const DoneLessonScreen = ({}) => {
   useEffect(() => {
     if (route.isMiniTest) {
       onUnlockAppSetting();
+      onShowBuyNewModule();
     }
-  }, [onUnlockAppSetting, route.isMiniTest]);
+  }, [onShowBuyNewModule, onUnlockAppSetting, route.isMiniTest]);
 
   useEffect(() => {
     const backHandler = BackHandler.addEventListener(
@@ -447,9 +489,9 @@ const DoneLessonScreen = ({}) => {
       </View>
     </GoogleAdsmobProvider>
   );
-};
-
+});
 export default DoneLessonScreen;
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,

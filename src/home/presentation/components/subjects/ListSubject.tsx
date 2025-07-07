@@ -33,19 +33,19 @@ const ListSubject = () => {
   const data: TData = [
     {
       id: 1,
-      position: 'right',
+      position: 'left',
       bgc: COLORS.BLUE_3AB89C,
       textColor: COLORS.YELLOW_FFBF60,
     },
     {
       id: 2,
-      position: 'left',
+      position: 'right',
       bgc: COLORS.YELLOW_F2B559,
       textColor: COLORS.WHITE_FBF8CC,
     },
     {
       id: 3,
-      position: 'right',
+      position: 'left',
       bgc: COLORS.PINK_FFB29F,
       textColor: COLORS.WHITE_FBF8CC,
     },
@@ -56,7 +56,7 @@ const ListSubject = () => {
       textColor: COLORS.YELLOW_FFBF60,
     },
   ];
-  const scaleValue = useSharedValue(0.5);
+  const scaleValue = useSharedValue(1);
   const selectedItemOpacity = useSharedValue(0);
   const selectedItemStyle = useAnimatedStyle(() => {
     return {
@@ -204,8 +204,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   leftContentContainer: {
-    height: scale(142),
-    width: scale(142),
+    height: scale(192),
+    width: scale(192),
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 999,

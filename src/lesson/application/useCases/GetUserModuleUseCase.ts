@@ -5,17 +5,18 @@ import {
   ILessonRepositoryToken,
 } from 'src/lesson/domain/specifications/ILessonRepository';
 import {GetUserModuleResponse} from '../types/GetUserModuleResponse';
+import {GetUserModuleRequest} from '../types/GetUserModuleRequest';
 
 @injectable()
 export default class GetUserModuleUseCase
-  implements UseCase<void, Promise<GetUserModuleResponse>>
+  implements UseCase<GetUserModuleRequest, Promise<GetUserModuleResponse>>
 {
   constructor(
     @provided(ILessonRepositoryToken)
     private readonly lessonRepository: ILessonRepository,
   ) {}
 
-  public execute() {
-    return this.lessonRepository.getUserModule();
+  public execute(params?: GetUserModuleRequest) {
+    return this.lessonRepository.getUserModule(params);
   }
 }

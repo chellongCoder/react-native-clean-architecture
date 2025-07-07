@@ -29,6 +29,8 @@ export class HomeStore implements HomeStoreState {
   @persist('object') @observable field: FieldData = {
     _id: '',
     name: '',
+    name_vi: '',
+    isActive: false,
     description: '',
     isDeleted: false,
     createdAt: '',
@@ -36,8 +38,8 @@ export class HomeStore implements HomeStoreState {
   };
   @persist('list') @observable listSubject: Subject[] = [];
   @persist('list') @observable listModule: Module[] = [];
-  @persist subjectId = '';
   @persist showTutorial = true;
+  @persist @observable subjectId = '';
   moduleItem?: ModuleItemProps;
 
   @observable lessonSetting?: LessonSettingT;
@@ -105,6 +107,11 @@ export class HomeStore implements HomeStoreState {
   }
 
   @action
+  public setField(field: FieldData) {
+    this.field = field;
+  }
+
+  @action
   public async getField() {
     this.setIsLoading(true);
     const response = await this.getFieldUseCase.execute();
@@ -162,11 +169,11 @@ export class HomeStore implements HomeStoreState {
     moduleItem?: ModuleItemProps,
   ) {
     if (userProfile?.isTrial) {
-      this.moduleItem = moduleItem;
+      moduleItem && (this.moduleItem = moduleItem);
       return 'being_trial';
     } else {
       if (!userProfile?.startFreeTrial || !userProfile?.endFreeTrial) {
-        this.moduleItem = moduleItem;
+        moduleItem && (this.moduleItem = moduleItem);
         return 'no_trial';
       } else if (new Date() > new Date(userProfile?.endFreeTrial)) {
         return 'end_trial';

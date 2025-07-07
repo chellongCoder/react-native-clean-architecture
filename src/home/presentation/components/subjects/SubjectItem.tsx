@@ -39,7 +39,9 @@ const SubjectItem = ({
     //   offsetX.value = withSpring(0);
     //   offsetY.value = withSpring(0);
     // }
-    onSelectSubject(item);
+    if (item.isActive) {
+      onSelectSubject(item);
+    }
     // scaleItem.value = withSpring(1.5, {damping: 5}, () => {
     //   runOnJS(onSelectSubject)(item);
     // });
@@ -49,7 +51,7 @@ const SubjectItem = ({
     <Animated.View
       key={item.id}
       style={[styles.contentContainer, animatedStyle, itemAnimatedStyle]}>
-      {item.position === 'right' && <View style={[{height: scale(132)}]} />}
+      {item.position === 'right' && <View style={[{height: scale(192)}]} />}
       <TouchableOpacity
         style={[
           item.position === 'right'
@@ -76,8 +78,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   leftContentContainer: {
-    height: scale(142),
-    width: scale(142),
+    height: scale(152),
+    width: scale(152),
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 999,

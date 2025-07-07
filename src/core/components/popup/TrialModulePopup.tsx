@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useMemo} from 'react';
 import {
   Modal,
   View,
@@ -35,7 +35,14 @@ const TrialModulePopup: React.FC<TrialModulePopupProps> = ({
   const authStore = useAuthenStore();
   const homeStore = useHomeStore();
 
-  const isTrial = authStore.userProfile?.isTrial;
+  const isStart = useMemo(() => {
+    const statusTrial = homeStore.checkDoingModule(
+      authStore.userProfile,
+      homeStore.moduleItem,
+    );
+
+    return !authStore.userProfile?.isTrial && statusTrial === 'no_trial';
+  }, [authStore.userProfile, homeStore]);
 
   const onUpdate = async () => {
     if (homeStore.moduleItem) {
@@ -70,7 +77,7 @@ const TrialModulePopup: React.FC<TrialModulePopupProps> = ({
       <View style={styles.contentContainer}>
         <View style={styles.wrapContentContainer}>
           <Text style={[styles.title, {marginVertical: 24, marginTop: 64}]}>
-            {isTrial
+            {isStart
               ? i18n.t('popup.TrialModule.title')
               : i18n.t('popup.TrialModule.endTrial')}
           </Text>

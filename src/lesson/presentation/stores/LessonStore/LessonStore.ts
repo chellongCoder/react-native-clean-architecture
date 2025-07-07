@@ -406,8 +406,14 @@ export class LessonStore {
   };
 
   @action
-  public async handleGetUserModule(modules: Module[]) {
-    const response = await this.getUserModuleUseCase.execute();
+  public async handleGetUserModule(modules: Module[], excludes?: number[]) {
+    const response = await this.getUserModuleUseCase.execute(
+      excludes?.length
+        ? {
+            exclude: excludes.join(','),
+          }
+        : undefined,
+    );
     this.userModule = response.map(module => {
       const moduleItem = modules.find(m => m._id === module.lessonId);
       return {

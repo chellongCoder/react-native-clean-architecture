@@ -37,7 +37,7 @@ const ListGrade = forwardRef((_, ref) => {
       }, 1000);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [rootSubject]);
+  }, [rootSubject, gradeObjs]);
 
   return (
     <View style={styles.container}>

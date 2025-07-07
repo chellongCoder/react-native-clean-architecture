@@ -25,6 +25,7 @@ export interface IHomeState {
 export const HomeProvider = ({children}: PropsWithChildren) => {
   const store = homeModuleContainer.getProvided(HomeStore);
   const {getField, getListSubject} = useHomeStore();
+
   const {storeData, getData, isConnected} = useOfflineMode();
   useLoadingGlobal();
 
@@ -36,6 +37,7 @@ export const HomeProvider = ({children}: PropsWithChildren) => {
   });
 
   const onSelectField = (e?: IMergedData) => {
+    e && store.setField(e as FieldData);
     setHomeState({field: e});
   };
 

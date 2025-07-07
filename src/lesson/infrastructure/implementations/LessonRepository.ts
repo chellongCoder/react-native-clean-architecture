@@ -26,11 +26,12 @@ import PurchaseModuleResponse from 'src/lesson/application/types/PurchaseModuleR
 import {GetListSubjectPayload} from 'src/home/application/types/GetListSubjectPayload';
 import GetListLessonResponse from 'src/home/application/types/GetListLessonResponse';
 import {ImageToTextResponse} from 'src/authentication/application/types/ImageToTextResponse';
-import GetUserModuleResponse from 'src/lesson/application/types/GetUserModuleResponse';
+import {GetUserModuleResponse} from 'src/lesson/application/types/GetUserModuleResponse';
 import BuyUserModulePayload from 'src/lesson/application/types/BuyUserModulePayload';
 import BuyUserModuleResponse from 'src/lesson/application/types/BuyUserModuleResponse';
 import {TranslateTextPayload} from 'src/authentication/application/types/TranslateTextPayload';
 import {TranslateTextResponse} from 'src/authentication/application/types/TranslateTextResponse';
+import {GetUserModuleRequest} from 'src/lesson/application/types/GetUserModuleRequest';
 
 @injectable()
 class LessonRepository implements ILessonRepository {
@@ -176,10 +177,15 @@ class LessonRepository implements ILessonRepository {
     return response;
   }
 
-  public async getUserModule(): Promise<GetUserModuleResponse> {
-    const response: GetUserModuleResponse = await this.httpClient.get(
-      `${API_ENDPOINTS.USER_MODULE.USER_MODULE}`,
-    );
+  public async getUserModule(
+    params?: GetUserModuleRequest,
+  ): Promise<GetUserModuleResponse> {
+    const queryParams = new URLSearchParams(params as any).toString();
+    const fullUrl = params
+      ? `${API_ENDPOINTS.USER_MODULE.USER_MODULE}?${queryParams}`
+      : API_ENDPOINTS.USER_MODULE.USER_MODULE;
+
+    const response: GetUserModuleResponse = await this.httpClient.get(fullUrl);
 
     return response;
   }

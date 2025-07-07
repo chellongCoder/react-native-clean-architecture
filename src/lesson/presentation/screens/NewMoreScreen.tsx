@@ -15,13 +15,11 @@ import {observer} from 'mobx-react';
 import {withProviders} from 'src/core/presentation/utils/withProviders';
 import {LessonStoreProvider} from '../stores/LessonStore/LessonStoreProvider';
 import IconBook from 'assets/svg/IconBook';
-import IconCheckout from 'assets/svg/IconCheckout';
 import {scale, verticalScale} from 'react-native-size-matters';
 import {COLORS} from 'src/core/presentation/constants/colors';
 import {useI18n} from 'src/core/presentation/hooks/useI18n';
 import {RouteProp, ParamListBase} from '@react-navigation/native';
 import {Subject} from 'src/home/application/types/GetListSubjectResponse';
-import GetUserProfileResponse from 'src/authentication/application/types/GetUserProfileResponse';
 import useHomeStore from 'src/home/presentation/stores/useHomeStore';
 import useAuthenStore from 'src/authentication/presentation/hooks/useAuthenStore';
 import {Module} from 'src/home/application/types/GetListLessonResponse';
@@ -31,7 +29,6 @@ import PurchaseSuccessScreen from 'src/core/presentation/screens/PurchaseSuccess
 import {UserModule} from 'src/lesson/application/types/GetUserModuleResponse';
 import useGetUserProfile from '../hooks/useGetUserProfile';
 import useAuthenticationStore from 'src/authentication/presentation/stores/useAuthenticationStore';
-import Diamond from 'src/home/presentation/components/Diamond';
 import {assets} from 'src/core/presentation/utils';
 
 interface Props {
@@ -55,6 +52,7 @@ const NewMoreScreen = observer((props: Props) => {
 
   const [modules, setModules] = useState<Module[]>([]);
   const [userModule, setUserModule] = useState<UserModule[]>([]);
+
   const [isLoading, setIsLoading] = useState(true);
   const [loadingModuleId, setLoadingModuleId] = useState<string | null>(null);
   const [purchaseState, setPurchaseState] = useState<{

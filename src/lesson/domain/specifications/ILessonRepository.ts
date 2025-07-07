@@ -20,6 +20,7 @@ import BuyUserModuleResponse from 'src/lesson/application/types/BuyUserModuleRes
 import {GetUserModuleResponse} from 'src/lesson/application/types/GetUserModuleResponse';
 import {TranslateTextPayload} from 'src/authentication/application/types/TranslateTextPayload';
 import {TranslateTextResponse} from 'src/authentication/application/types/TranslateTextResponse';
+import {GetUserModuleRequest} from 'src/lesson/application/types/GetUserModuleRequest';
 
 export const ILessonRepositoryToken = Symbol('ILessonRepository');
 
@@ -51,7 +52,9 @@ export interface ILessonRepository {
   getListLessonByField: ({
     fieldId,
   }: GetListSubjectPayload) => Promise<GetListLessonResponse>;
-  getUserModule: () => Promise<GetUserModuleResponse>;
+  getUserModule: (
+    params?: GetUserModuleRequest,
+  ) => Promise<GetUserModuleResponse>;
   buyUserModule: (
     payload: BuyUserModulePayload,
   ) => Promise<BuyUserModuleResponse>;
