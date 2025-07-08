@@ -12,6 +12,7 @@ import GetListLessonResponse from '../application/types/GetListLessonResponse';
 import GetListQuestionResponse from '../application/types/GetListQuestionResponse';
 import {LoggingActionPayload} from '../application/types/LoggingActionPayload';
 import {LoggingActionResponse} from '../application/types/LoggingActionResponse';
+import {GetListModulesChildrenPayload} from '../application/types/GetListModulesChildrenPayload';
 
 @injectable()
 class HomeRepository implements IHomeRepository {
@@ -67,6 +68,16 @@ class HomeRepository implements IHomeRepository {
   }: Partial<GetListLessonPayload>): Promise<GetListQuestionResponse> {
     const response: GetListQuestionResponse = await this.httpClient.get(
       `${API_ENDPOINTS.LESSON.QUESTIONS}/${subjectId}`,
+    );
+    return response;
+  }
+
+  public async getListModulesByChildren({
+    childrenId,
+  }: GetListModulesChildrenPayload): Promise<GetListLessonResponse> {
+    const response: GetListLessonResponse = await this.httpClient.post(
+      `${API_ENDPOINTS.USER_MODULE.PROGRESS_CHILDREN}`,
+      {childrenId},
     );
     return response;
   }

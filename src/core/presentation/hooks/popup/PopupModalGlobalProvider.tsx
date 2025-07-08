@@ -27,6 +27,7 @@ type PopupModalContextType = {
   hide: () => void;
   isShown: boolean;
   handleToggleTrialPopup: (callback?: () => void) => void;
+  handleToggleBuyMoreModulePopup: () => void;
 };
 
 // Create the context
@@ -35,6 +36,7 @@ export const PopupModalContext = createContext<PopupModalContextType>({
   hide: () => {},
   isShown: false,
   handleToggleTrialPopup: () => {},
+  handleToggleBuyMoreModulePopup: () => {},
 });
 
 type TPopupState = {
@@ -122,6 +124,10 @@ export const PopupModalGlobalProvider = observer(
       setPopupState({isShowTrial: !popupState.isShowTrial});
     };
 
+    const handleToggleBuyMoreModulePopup = useCallback(() => {
+      setPopupState({isShowBuyMoreModule: !popupState.isShowBuyMoreModule});
+    }, [popupState.isShowBuyMoreModule, setPopupState]);
+
     useAsyncEffect(async () => {
       getUpdateAppInfo();
     }, []);
@@ -135,7 +141,13 @@ export const PopupModalGlobalProvider = observer(
 
     return (
       <PopupModalContext.Provider
-        value={{show, hide, isShown, handleToggleTrialPopup}}>
+        value={{
+          show,
+          hide,
+          isShown,
+          handleToggleTrialPopup,
+          handleToggleBuyMoreModulePopup,
+        }}>
         {children}
         <ReceivedDiamondPopup
           isVisible={popupState.isShowReceived || false}

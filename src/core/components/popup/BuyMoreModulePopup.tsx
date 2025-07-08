@@ -12,7 +12,10 @@ import {COLORS} from 'src/core/presentation/constants/colors';
 import {TYPOGRAPHY} from 'src/core/presentation/constants/typography';
 import {assets} from 'src/core/presentation/utils';
 import {STACK_NAVIGATOR} from 'src/core/presentation/navigation/ConstantNavigator';
-import {navigateScreen} from 'src/core/presentation/navigation/actions/RootNavigationActions';
+import {
+  navigateScreen,
+  resetNavigator,
+} from 'src/core/presentation/navigation/actions/RootNavigationActions';
 import useHomeStore from 'src/home/presentation/stores/useHomeStore';
 import {useI18n} from 'src/core/presentation/hooks/useI18n';
 
@@ -31,6 +34,7 @@ const BuyMoreModulePopup: React.FC<BuyMoreModulePopupProps> = ({
   const onBuyMore = () => {
     onClose();
     homeStore.setIsGotoBuyModule(true);
+    resetNavigator(STACK_NAVIGATOR.HOME.HOME_SCREEN, {});
     navigateScreen(STACK_NAVIGATOR.BOTTOM_TAB.PARENT_TAB, {});
   };
 

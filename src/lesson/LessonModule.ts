@@ -18,6 +18,7 @@ import ChangeChildPointFlowerUsecase from 'src/authentication/application/useCas
 import PurchaseModuleUseCase from './application/useCases/PurchaseModuleUseCase';
 import GetProductUseCase from './application/useCases/getProductUseCase';
 import GetListModuleByFieldUseCase from 'src/home/application/useCases/GetListModuleByFieldUseCase';
+import GetListModuleByChildrenUseCase from 'src/home/application/useCases/GetListModuleByChildrenUseCase';
 import HomeRepository from 'src/home/infrastructure/HomeRepository';
 import {IHomeRepository} from 'src/home/domain/IHomeRepository';
 import {HomeStore} from 'src/home/presentation/stores/HomeStore';
@@ -71,6 +72,7 @@ import TranslateTextUsecase from 'src/authentication/application/useCases/Transl
     PurchaseModuleUseCase,
     GetProductUseCase,
     GetListModuleByFieldUseCase,
+    GetListModuleByChildrenUseCase,
     GetUserModuleUseCase,
     BuyUserModuleUseCase,
   ],

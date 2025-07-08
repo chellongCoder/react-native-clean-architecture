@@ -6,6 +6,7 @@ import {GetListSubjectPayload} from '../application/types/GetListSubjectPayload'
 import GetListSubjectResponse from '../application/types/GetListSubjectResponse';
 import {LoggingActionPayload} from '../application/types/LoggingActionPayload';
 import {LoggingActionResponse} from '../application/types/LoggingActionResponse';
+import {GetListModulesChildrenPayload} from '../application/types/GetListModulesChildrenPayload';
 
 export const IHomeRepository = Symbol('IHomeRepository');
 
@@ -17,6 +18,9 @@ export interface IHomeRepository {
   getListLessonByField: ({
     fieldId,
   }: GetListSubjectPayload) => Promise<GetListLessonResponse>;
+  getListModulesByChildren: ({
+    childrenId,
+  }: GetListModulesChildrenPayload) => Promise<GetListLessonResponse>;
   getListLesson: (
     fieldId: GetListLessonPayload,
   ) => Promise<GetListLessonResponse>;

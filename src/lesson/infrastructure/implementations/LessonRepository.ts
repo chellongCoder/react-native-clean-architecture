@@ -32,6 +32,7 @@ import BuyUserModuleResponse from 'src/lesson/application/types/BuyUserModuleRes
 import {TranslateTextPayload} from 'src/authentication/application/types/TranslateTextPayload';
 import {TranslateTextResponse} from 'src/authentication/application/types/TranslateTextResponse';
 import {GetUserModuleRequest} from 'src/lesson/application/types/GetUserModuleRequest';
+import {GetListModulesChildrenPayload} from 'src/home/application/types/GetListModulesChildrenPayload';
 
 @injectable()
 class LessonRepository implements ILessonRepository {
@@ -172,6 +173,16 @@ class LessonRepository implements ILessonRepository {
   }: GetListSubjectPayload): Promise<GetListLessonResponse> {
     const response: GetListLessonResponse = await this.httpClient.get(
       `${API_ENDPOINTS.SUBJECT.LIST_LESSON_OF_FIELD}/${fieldId}`,
+    );
+
+    return response;
+  }
+
+  public async getListModulesByChildren({
+    childrenId,
+  }: GetListModulesChildrenPayload): Promise<GetListLessonResponse> {
+    const response: GetListLessonResponse = await this.httpClient.get(
+      `${API_ENDPOINTS.USER_MODULE.PROGRESS_CHILDREN}/${childrenId}`,
     );
 
     return response;

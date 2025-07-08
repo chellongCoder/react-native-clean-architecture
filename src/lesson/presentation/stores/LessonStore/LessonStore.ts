@@ -40,7 +40,9 @@ import PurchaseModuleUseCase from 'src/lesson/application/useCases/PurchaseModul
 import PurchaseModulePayload from 'src/lesson/application/types/PurchaseModulePayload';
 import GetProductUseCase from 'src/lesson/application/useCases/getProductUseCase';
 import GetListModuleByFieldUseCase from 'src/home/application/useCases/GetListModuleByFieldUseCase';
+import GetListModuleByChildrenUseCase from 'src/home/application/useCases/GetListModuleByChildrenUseCase';
 import {GetListSubjectPayload} from 'src/home/application/types/GetListSubjectPayload';
+import {GetListModulesChildrenPayload} from 'src/home/application/types/GetListModulesChildrenPayload';
 import {Module} from 'src/home/application/types/GetListLessonResponse';
 import ImageToTextUsecase from 'src/authentication/application/useCases/ImageToTextUsecase';
 import GetUserModuleUseCase from 'src/lesson/application/useCases/GetUserModuleUseCase';
@@ -79,6 +81,8 @@ export class LessonStore {
   @observable productFromBE = [];
 
   @observable listModuleByField: Module[] = [];
+
+  @observable listModuleByChildren: Module[] = [];
 
   @persist @observable backgroundSound = 0.8;
   @persist @observable charSound = 0.3;
@@ -120,6 +124,8 @@ export class LessonStore {
     private getProductUseCase: GetProductUseCase,
     @provided(GetListModuleByFieldUseCase)
     private getListModuleByFieldUseCase: GetListModuleByFieldUseCase,
+    @provided(GetListModuleByChildrenUseCase)
+    private getListModuleByChildrenUseCase: GetListModuleByChildrenUseCase,
     @provided(GetUserModuleUseCase)
     private getUserModuleUseCase: GetUserModuleUseCase,
     @provided(BuyUserModuleUseCase)
@@ -143,6 +149,7 @@ export class LessonStore {
     this.handlePurchaseModule = this.handlePurchaseModule.bind(this);
     this.handleGetProductFromBE = this.handleGetProductFromBE.bind(this);
     this.handleGetModulesField = this.handleGetModulesField.bind(this);
+    this.handleGetModulesChildren = this.handleGetModulesChildren.bind(this);
     this.imageToText = this.imageToText.bind(this);
     this.translateText = this.translateText.bind(this);
   }
@@ -303,6 +310,17 @@ export class LessonStore {
   public async handleGetModulesField(field: GetListSubjectPayload) {
     const response = await this.getListModuleByFieldUseCase.execute(field);
     this.listModuleByField = response.data;
+    return response;
+  }
+
+  @action
+  public async handleGetModulesChildren(
+    children: GetListModulesChildrenPayload,
+  ) {
+    const response = await this.getListModuleByChildrenUseCase.execute(
+      children,
+    );
+    this.listModuleByChildren = response.data;
     return response;
   }
 

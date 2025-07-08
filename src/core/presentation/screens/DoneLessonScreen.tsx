@@ -44,6 +44,8 @@ import {useI18n} from '../hooks/useI18n';
 import useHomeStore from 'src/home/presentation/stores/useHomeStore';
 import {observer} from 'mobx-react';
 import useAuthenStore from 'src/authentication/presentation/hooks/useAuthenStore';
+import {Module} from 'src/home/application/types/GetListLessonResponse';
+import {usePopupTrialMode} from '../hooks/popup/usePopupTrialMode';
 
 export type RouteParamsDone = {
   totalResult: TResult[];
@@ -74,6 +76,7 @@ const DoneLessonScreen = observer(({}) => {
   const lessonStore = lessonModuleContainer.getProvided(LessonStore);
   const homeStore = useHomeStore();
   const authStore = useAuthenStore();
+  const popupHook = usePopupTrialMode();
 
   const {deviceToken, selectedChild, getUserProfile, setSelectedChild} =
     useAuthenticationStore();
@@ -160,38 +163,25 @@ const DoneLessonScreen = observer(({}) => {
       [0],
     );
 
-    const allModule = await homeStore.getListModules({
-      subjectId: route.subjectId ?? '',
+    const allModule = await lessonStore.handleGetModulesChildren({
       childrenId: authStore.selectedChild?._id ?? '',
     });
 
-    const purchasedModules = allModule.data.filter(module =>
+    const purchasedModules = (allModule as unknown as Module[]).filter(module =>
       userModule.some(um => um._id === module._id),
     );
 
     const countFinishedModule = purchasedModules.filter(
       module => module.progressOfChildren > 0,
     );
-    console.log(
-      '🛠 LOG: 🚀 --> -------------------------------------------------------------------------------🛠 LOG: 🚀 -->',
-    );
-    console.log(
-      '🛠 LOG: 🚀 --> ~ onShowBuyNewModule ~ countFinishedModule:',
-      countFinishedModule,
-      userModule,
-      allModule,
-      purchasedModules,
-      homeStore.field,
-    );
-    console.log(
-      '🛠 LOG: 🚀 --> -------------------------------------------------------------------------------🛠 LOG: 🚀 -->',
-    );
 
     if (countFinishedModule.length === purchasedModules.length) {
       // TODO: show popup buy new module
+      popupHook.handleToggleBuyMoreModulePopup();
       return;
     }
-  }, [authStore.selectedChild?._id, homeStore, lessonStore, route.subjectId]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [authStore.selectedChild?._id, homeStore, lessonStore]);
 
   const onSubmit = useCallback(() => {
     if (route.noMiniTest) {
@@ -226,14 +216,6 @@ const DoneLessonScreen = observer(({}) => {
     setIsShowGotReward(false);
     onSubmit();
   }, [onSubmit]);
-
-  console.log(
-    '🛠 LOG: 🚀 --> ---------------------------------------🛠 LOG: 🚀 -->',
-  );
-  console.log('🛠 LOG: 🚀 --> ~ onNext ~ route:', route);
-  console.log(
-    '🛠 LOG: 🚀 --> ---------------------------------------🛠 LOG: 🚀 -->',
-  );
 
   const onNext = useCallback(() => {
     if (route.isMiniTest) {

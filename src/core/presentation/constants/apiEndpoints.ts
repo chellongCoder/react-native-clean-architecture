@@ -149,5 +149,6 @@ export const API_ENDPOINTS = {
   },
   USER_MODULE: {
     USER_MODULE: getUserModuleEndPointServices(),
+    PROGRESS_CHILDREN: getUserModuleEndPointServices('progress-child'),
   },
 };

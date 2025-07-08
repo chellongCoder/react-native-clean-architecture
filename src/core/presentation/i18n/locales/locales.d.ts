@@ -98,6 +98,11 @@ type GenericLocale = {
   'popup.ForceUpdateApp.description': string;
   'popup.ForceUpdateApp.update': string;
   'popup.ForceUpdateApp.descriptionUpdate': string;
+  'popup.BuyMoreModule': string;
+  'popup.BuyMoreModule.youChildHasFinished': string;
+  'popup.BuyMoreModule.description': string;
+  'popup.BuyMoreModule.buyNewModules': string;
+  'popup.BuyMoreModule.noThanks': string;
   'lesson': string;
   'lesson.screens': string;
   'lesson.screens.Parent': string;
