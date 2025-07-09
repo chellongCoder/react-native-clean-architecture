@@ -158,7 +158,7 @@ const ParentScreen = observer(() => {
     deviceToken,
     deleteChildren,
   } = useAuthenticationStore();
-  const {listSubject, rootSubject} = useHomeStore();
+  const {listSubject, rootSubject, showTutorial} = useHomeStore();
   const i18n = useI18n();
 
   const {isShowAuth: isAuthenSetting, changeIsShowAuth} = useAuthParent();
@@ -565,6 +565,12 @@ The blockAppsSystem function is an asynchronous function that awaits the result 
   useEffect(() => {
     handleGetListSubjectInField({fieldId: selectedPurchase.id});
   }, [handleGetListSubjectInField, selectedPurchase.id]);
+
+  useEffect(() => {
+    if (showTutorial) {
+      pushScreen(STACK_NAVIGATOR.TUTORIAL_NAVIGATOR, {});
+    }
+  }, [showTutorial]);
 
   const _buildBlockView = () => {
     return (

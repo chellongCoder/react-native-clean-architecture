@@ -5,6 +5,7 @@ type HomeStoreState = {
   field: FieldData;
   listSubject: Subject[];
   subjectId: string;
+  showTutorial: boolean;
 };
 
 export default HomeStoreState;
