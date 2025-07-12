@@ -11,6 +11,7 @@ import {
   StyleSheet,
   TextStyle,
   StyleProp,
+  Image,
 } from 'react-native';
 import {scale, verticalScale} from 'react-native-size-matters';
 import {COLORS} from 'src/core/presentation/constants/colors';
@@ -31,6 +32,7 @@ interface SelectionAnswersQuestionProps {
   fontFamily?: FontFamily;
   questionStyle?: StyleProp<TextStyle>;
   answerStyle?: StyleProp<TextStyle>;
+  answerIsImage?: boolean;
 }
 
 export interface SelectionAnswersQuestionRef {
@@ -55,6 +57,7 @@ const SelectionAnswersQuestion: ForwardRefRenderFunction<
     contentAnswer,
     fontFamily,
     answerStyle,
+    answerIsImage,
   } = props;
 
   const [answerSelected, setAnswerSelected] = useState<string[]>([]);
@@ -139,6 +142,51 @@ const SelectionAnswersQuestion: ForwardRefRenderFunction<
                     textStyle={answerStyle}
                   />
                 )}
+              </TouchableOpacity>
+            );
+          } else if (answerIsImage) {
+            const isRightSide = i % 2 !== 0;
+            return (
+              <TouchableOpacity
+                key={i}
+                onPress={() => handleSelectAnswer(e)}
+                style={[
+                  styles.boxVowel,
+                  styles.boxImage,
+                  {
+                    minHeight,
+                    backgroundColor: bg,
+                    width: size,
+                    margin: scale(4),
+                    padding: scale(4),
+                    flexDirection: isRightSide ? 'row-reverse' : 'row',
+                  },
+                ]}>
+                <View style={{flex: 1}}>
+                  <Text
+                    allowFontScaling
+                    adjustsFontSizeToFit
+                    style={[
+                      styles.textVowel,
+                      fontFamily && {fontFamily},
+                      answerStyle,
+                      {textAlign: isRightSide ? 'right' : 'left'},
+                    ]}>
+                    {e
+                      .replace(/\s*-\s*/, '-')
+                      .replace(/(?<!\S)\s+(?!\S)/g, '\n')
+                      .trim()}
+                  </Text>
+                </View>
+                <Image
+                  source={{
+                    uri: 'https://letsenhance.io/static/73136da51c245e80edc6ccfe44888a99/1015f/MainBefore.jpg',
+                  }}
+                  style={{
+                    height: minHeight,
+                    width: size / 2,
+                  }}
+                />
               </TouchableOpacity>
             );
           }
@@ -254,6 +302,9 @@ const styles = StyleSheet.create({
     fontSize: verticalScale(14),
     flexWrap: 'wrap',
     textAlign: 'center',
+  },
+  boxImage: {
+    flexDirection: 'row',
   },
 });
 
