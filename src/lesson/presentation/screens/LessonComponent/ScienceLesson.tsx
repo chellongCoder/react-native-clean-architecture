@@ -53,6 +53,7 @@ import {useIsFocused} from '@react-navigation/native';
 import TextHighlight from '../../components/TextHighlight';
 import {useI18n} from 'src/core/presentation/hooks/useI18n';
 import VoiceButton from '../../components/VoiceButton';
+import {observer} from 'mobx-react';
 
 type Props = {
   moduleIndex: number;
@@ -338,7 +339,7 @@ const ScienceLesson = ({
   );
 };
 
-export default ScienceLesson;
+export default observer(ScienceLesson);
 
 const Circle = ({
   bg,
