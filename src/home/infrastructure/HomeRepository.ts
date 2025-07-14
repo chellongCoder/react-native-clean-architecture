@@ -13,6 +13,8 @@ import GetListQuestionResponse from '../application/types/GetListQuestionRespons
 import {LoggingActionPayload} from '../application/types/LoggingActionPayload';
 import {LoggingActionResponse} from '../application/types/LoggingActionResponse';
 import {GetListModulesChildrenPayload} from '../application/types/GetListModulesChildrenPayload';
+import {coreModuleContainer} from 'src/core/CoreModule';
+import I18n from 'src/core/presentation/i18n';
 
 @injectable()
 class HomeRepository implements IHomeRepository {
@@ -66,8 +68,15 @@ class HomeRepository implements IHomeRepository {
   public async getListLessonQuestions({
     subjectId,
   }: Partial<GetListLessonPayload>): Promise<GetListQuestionResponse> {
+    const i18n = coreModuleContainer.getProvided(I18n);
     const response: GetListQuestionResponse = await this.httpClient.get(
       `${API_ENDPOINTS.LESSON.QUESTIONS}/${subjectId}`,
+      {
+        headers: {
+          language: i18n.deviceLocale,
+          targetLanguage: i18n.deviceLocale,
+        },
+      },
     );
     return response;
   }

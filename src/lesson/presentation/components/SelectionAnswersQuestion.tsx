@@ -11,6 +11,7 @@ import {
   StyleSheet,
   TextStyle,
   StyleProp,
+  ViewStyle,
 } from 'react-native';
 import {scale, verticalScale} from 'react-native-size-matters';
 import {COLORS} from 'src/core/presentation/constants/colors';
@@ -34,6 +35,7 @@ interface SelectionAnswersQuestionProps {
   answerStyle?: StyleProp<TextStyle>;
   answerIsImage?: boolean;
   answerImage?: string[];
+  styleItem?: StyleProp<ViewStyle>;
 }
 
 export interface SelectionAnswersQuestionRef {
@@ -60,6 +62,7 @@ const SelectionAnswersQuestion: ForwardRefRenderFunction<
     answerStyle,
     answerIsImage,
     answerImage,
+    styleItem,
   } = props;
 
   const [answerSelected, setAnswerSelected] = useState<string[]>([]);
@@ -136,6 +139,7 @@ const SelectionAnswersQuestion: ForwardRefRenderFunction<
                     width: size,
                     margin: scale(4), // Add spacing for clarity
                   },
+                  styleItem,
                 ]}>
                 {contentAnswer?.(e) ?? (
                   <TextFraction
@@ -205,6 +209,7 @@ const SelectionAnswersQuestion: ForwardRefRenderFunction<
                   width: size,
                   margin: scale(4), // Add spacing for clarity
                 },
+                styleItem,
               ]}>
               {contentAnswer?.(e) ?? (
                 <Text
