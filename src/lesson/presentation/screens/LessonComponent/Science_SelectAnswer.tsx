@@ -231,50 +231,18 @@ const Science_SelectAnswer = observer(
           buildQuestion={
             <View style={{flex: 1}}>
               <QuestionImageText
-                title={firstMiniTestTask?.question?.[moduleIndex]?.content}
+                title={firstMiniTestTask?.question?.[moduleIndex]?.highlight}
                 image={
                   env.IMAGE_QUESTION_BASE_API_URL +
                   firstMiniTestTask?.question?.[moduleIndex].image
                 }
-                descriptions={[
-                  'LEAVES COME IN MANY SHAPES, SIZES, AND COLORS.',
-                  'LEAVES HELP PLANTS MAKE FOOD THROUGH PHOTOSYNTHESIS.',
-                ]}
+                descriptions={
+                  firstMiniTestTask?.question?.[moduleIndex]?.paragraph?.split(
+                    '\n',
+                  ) ?? []
+                }
                 backgroundColor="transparent"
               />
-              <Animated.Image
-                resizeMode={'contain'}
-                style={[
-                  {
-                    width: scale(200),
-                    aspectRatio: 2 / 1,
-                  },
-                  animatedStyle,
-                ]}
-                source={{
-                  uri:
-                    env.IMAGE_QUESTION_BASE_API_URL +
-                    firstMiniTestTask?.question?.[moduleIndex].image,
-                }}
-              />
-              {firstMiniTestTask?.question?.[moduleIndex]?.paragraph && (
-                <View
-                  style={{
-                    width: scale(200),
-                    height: verticalScale(100),
-                    flexWrap: 'wrap',
-                  }}>
-                  <Text
-                    style={[
-                      styles.fonts_SVN_Neuzeit_Bold,
-                      {color: settings.backgroundButtonColor},
-                    ]}>
-                    {firstMiniTestTask?.question?.[
-                      moduleIndex
-                    ]?.paragraph?.replace(/[.,]/g, '\n')}
-                  </Text>
-                </View>
-              )}
             </View>
           }
           buildAnswer={
@@ -306,13 +274,12 @@ const Science_SelectAnswer = observer(
                 question={
                   <TextHighlight
                     content={
-                      firstMiniTestTask?.question?.[moduleIndex].content ?? ''
+                      firstMiniTestTask?.question?.[moduleIndex].highlight ?? ''
                     }
                     description={
                       firstMiniTestTask?.question?.[moduleIndex].description ??
                       ''
                     }
-                    style={styles.fonts_SVN_Neuzeit_Bold}
                   />
                 }
                 answer={
@@ -325,7 +292,9 @@ const Science_SelectAnswer = observer(
                   (
                     firstMiniTestTask?.question?.[moduleIndex]
                       ?.answers as Answer[]
-                  ).map(q => env.IMAGE_QUESTION_BASE_API_URL + q.image) ?? []
+                  ).map(
+                    q => env.IMAGE_QUESTION_BASE_API_URL + q.image.trim(),
+                  ) ?? []
                 }
                 answerStyle={styles.fonts_SVN_Cherish}
                 isShowCorrectContainer={isShowCorrectContainer}
@@ -336,6 +305,39 @@ const Science_SelectAnswer = observer(
                 learningTimer={learningTimer}
                 ref={answerRef}
               />
+
+              {/* <SelectionAnswersImage
+                // answerIsImage
+                question={
+                  <TextHighlight
+                    content={
+                      firstMiniTestTask?.question?.[moduleIndex].highlight ?? ''
+                    }
+                    description={
+                      firstMiniTestTask?.question?.[moduleIndex].description ??
+                      ''
+                    }
+                  />
+                }
+                answer={
+                  (
+                    firstMiniTestTask?.question?.[moduleIndex]
+                      ?.answers as Answer[]
+                  ).map(q => q.content) ?? []
+                }
+                questionImage={
+                  env.IMAGE_QUESTION_BASE_API_URL +
+                  firstMiniTestTask?.question?.[moduleIndex].image
+                }
+                answerStyle={styles.fonts_SVN_Cherish}
+                isShowCorrectContainer={isShowCorrectContainer}
+                isAnswerCorrect={!!isAnswerCorrect}
+                onSelectAnswer={(e: string[]) => {
+                  setAnswerSelected(e);
+                }}
+                learningTimer={learningTimer}
+                ref={answerRef}
+              /> */}
 
               <PrimaryButton
                 text={i18n.t('lesson.screens.Modules.submit')}

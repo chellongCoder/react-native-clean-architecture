@@ -11,7 +11,6 @@ import {
   StyleSheet,
   TextStyle,
   StyleProp,
-  Image,
 } from 'react-native';
 import {scale, verticalScale} from 'react-native-size-matters';
 import {COLORS} from 'src/core/presentation/constants/colors';

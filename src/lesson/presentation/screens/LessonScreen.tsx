@@ -110,6 +110,8 @@ import Math_Text_SelectAnswer from './LessonComponent/Math_Text_SelectAnswer';
 import English_SelectAnswer_Paragraph from './LessonComponent/English_SelectAnswer_Paragraph';
 import English_QwertyKeyboard_Paragraph from './LessonComponent/English_QwertyKeyboard_Paragraph';
 import Science_Select_BGImageText from './LessonComponent/Science_Select_BGImageText';
+import Science_SG1M2 from './LessonComponent/Science_SG1M2';
+import Science_SelectAnswer from './LessonComponent/Science_SelectAnswer';
 
 export type TResult = {
   userId?: string;
@@ -506,16 +508,7 @@ const LESSON_PATTERNS = [
   },
 
   // Science Lessons
-  {
-    pattern: /^mix_color$/,
-    component: ScienceLesson,
-    props: (dataProps: any, testTask: any, lessonIndex: number) => ({
-      ...dataProps,
-      answers: (
-        (testTask?.question[lessonIndex]?.answers as string[]) ?? []
-      ).map((v: string) => '#' + v.replace('.png', '')),
-    }),
-  },
+
   {
     pattern: /^SCIENCE_SG0M1$/,
     component: Science_G0M1,
@@ -532,10 +525,20 @@ const LESSON_PATTERNS = [
     }),
   },
   {
+    pattern: /^SCIENCE_SG[1-6]M(3)$/,
+    component: (type: string) => {
+      const componentMap: Record<string, any> = {
+        SCIENCE_SG1M3: Science_SelectAnswer,
+      };
+      return componentMap[type] || Science_G0M1;
+    },
+    props,
+  },
+  {
     pattern: /^SCIENCE_SG[1-6]M\d+$/,
     component: (type: string) => {
       const componentMap: Record<string, any> = {
-        SCIENCE_SG1M2: Science_Select_BGImageText,
+        SCIENCE_SG1M2: Science_SG1M2,
         SCIENCE_SG2M4: Science_SG2M4,
         SCIENCE_SG3M9: Science_SG3M9,
         SCIENCE_SG4M3: Science_SG4M3,
@@ -772,7 +775,7 @@ const LessonScreen = observer(() => {
     return __DEV__
       ? apiTasks.map(t => ({
           ...t,
-          question: __DEV__ ? t.question.slice(0, 10) : t.question,
+          question: __DEV__ ? t.question.slice(0, 1) : t.question,
         }))
       : apiTasks.map(t => ({
           ...t,

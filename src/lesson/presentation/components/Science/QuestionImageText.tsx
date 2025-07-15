@@ -8,6 +8,7 @@ import {
   TextStyle,
   ImageStyle,
   Text,
+  ScrollView,
 } from 'react-native';
 import {scale, verticalScale} from 'react-native-size-matters';
 import {FontFamily} from 'src/core/presentation/hooks/useFonts';
@@ -64,7 +65,9 @@ const QuestionImageText = ({
         )}
 
         {/* Text descriptions on the right */}
-        <View style={styles.textContainer}>
+        <ScrollView
+          showsVerticalScrollIndicator={false}
+          style={styles.textContainer}>
           {descriptions.map((description, index) => (
             <View key={index} style={styles.descriptionItem}>
               <Text style={[styles.description, descriptionStyle]}>
@@ -72,7 +75,7 @@ const QuestionImageText = ({
               </Text>
             </View>
           ))}
-        </View>
+        </ScrollView>
       </View>
     </View>
   );
@@ -83,6 +86,7 @@ const styles = StyleSheet.create({
     borderRadius: scale(16),
     padding: scale(16),
     minHeight: verticalScale(200),
+    minWidth: scale(250),
   },
   titleContainer: {
     alignItems: 'center',
@@ -99,6 +103,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     flex: 1,
     alignItems: 'center',
+    overflow: 'scroll',
   },
   imageContainer: {
     flex: 1,
@@ -111,8 +116,8 @@ const styles = StyleSheet.create({
     height: scale(120),
   },
   textContainer: {
-    flex: 2,
-    justifyContent: 'center',
+    flex: 1,
+    // justifyContent: 'center',
   },
   descriptionItem: {
     marginBottom: verticalScale(12),

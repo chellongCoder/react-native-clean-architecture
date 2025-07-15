@@ -1,6 +1,7 @@
 export type Answer = {content: string; image: string};
 export interface Question {
   content: string;
+  highlight: string;
   correctAnswer: string | string[] | string[][];
   createdAt: string;
   description: string;
