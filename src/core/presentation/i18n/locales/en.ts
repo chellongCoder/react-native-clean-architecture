@@ -235,6 +235,23 @@ export default {
         buyModule: 'Buy module',
         loading: 'Loading...',
       },
+      Introduction: {
+        chooseAccount: 'Select the child account',
+        chooseApp: 'Choose apps to lock',
+        setScore: 'Set % learning goal',
+        chooseSubject: 'Select the subject and assignment to complete',
+        finishModule: 'Complete lock app',
+        contentChooseAccount:
+          'Click on the name or avatar to select the correct child you want to set a goal for and lock the app.',
+        contentChooseApp:
+          'Click on "choose app" to select the application you want to lock (youtube, tiktok, facebook,...) Children can only have fun after completing their learning objectives.',
+        contentSetScore:
+          'Choose the completion percentage (e.g., 75%) that the child must achieve in a day to unlock the app.',
+        contentChooseSubject:
+          'Our study materials are based on the Singapore education curriculum.',
+        contentFinishModule:
+          'Click save to complete the app lock. You can unlock it anytime if you want.',
+      },
     },
   },
 };

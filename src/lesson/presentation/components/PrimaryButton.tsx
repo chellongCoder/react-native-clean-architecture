@@ -37,7 +37,8 @@ const PrimaryButton = ({isLoading = false, ...props}: Props) => {
         props.disable && {backgroundColor: COLORS.DISABLED},
       ]}
       onPress={props.onPress}
-      disabled={props.disable}>
+      disabled={props.disable}
+      hitSlop={{top: 10, bottom: 10, left: 10, right: 10}}>
       <Text style={[styles.text, commonStyle.txtButton, props.textStyle]}>
         {props.text}
       </Text>

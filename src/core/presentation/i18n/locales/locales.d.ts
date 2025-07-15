@@ -206,5 +206,16 @@ type GenericLocale = {
   'lesson.screens.NewMoreScreen.noModulesAvailable': string;
   'lesson.screens.NewMoreScreen.buyModule': string;
   'lesson.screens.NewMoreScreen.loading': string;
+  'lesson.screens.Introduction': string;
+  'lesson.screens.Introduction.chooseAccount': string;
+  'lesson.screens.Introduction.chooseApp': string;
+  'lesson.screens.Introduction.setScore': string;
+  'lesson.screens.Introduction.chooseSubject': string;
+  'lesson.screens.Introduction.finishModule': string;
+  'lesson.screens.Introduction.contentChooseAccount': string;
+  'lesson.screens.Introduction.contentChooseApp': string;
+  'lesson.screens.Introduction.contentSetScore': string;
+  'lesson.screens.Introduction.contentChooseSubject': string;
+  'lesson.screens.Introduction.contentFinishModule': string;
 };
 export type LocaleKeys = keyof GenericLocale;

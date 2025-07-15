@@ -13,7 +13,7 @@ import LessonComponent from './LessonComponent';
 import PrimaryButton from '../../components/PrimaryButton';
 import {FontFamily} from 'src/core/presentation/hooks/useFonts';
 import useGlobalStyle from 'src/core/presentation/hooks/useGlobalStyle';
-import {Task} from 'src/home/application/types/GetListQuestionResponse';
+import {Answer, Task} from 'src/home/application/types/GetListQuestionResponse';
 import {COLORS} from 'src/core/presentation/constants/colors';
 import {
   darkenColor,
@@ -43,6 +43,7 @@ import SelectionAnswersQuestion, {
 import TextHighlight from '../../components/TextHighlight';
 import {useI18n} from 'src/core/presentation/hooks/useI18n';
 import VoiceButton from '../../components/VoiceButton';
+import QuestionImageText from '../../components/Science/QuestionImageText';
 
 type Props = {
   moduleIndex: number;
@@ -57,7 +58,7 @@ type Props = {
   characterStyle?: StyleProp<ViewStyle>;
 };
 
-const English_SelectAnswer = observer(
+const Science_SelectAnswer = observer(
   forwardRef<LessonRef, Props>(
     (
       {
@@ -229,6 +230,18 @@ const English_SelectAnswer = observer(
           onPressFlower={toggleShowHint}
           buildQuestion={
             <View style={{flex: 1}}>
+              <QuestionImageText
+                title={firstMiniTestTask?.question?.[moduleIndex]?.content}
+                image={
+                  env.IMAGE_QUESTION_BASE_API_URL +
+                  firstMiniTestTask?.question?.[moduleIndex].image
+                }
+                descriptions={[
+                  'LEAVES COME IN MANY SHAPES, SIZES, AND COLORS.',
+                  'LEAVES HELP PLANTS MAKE FOOD THROUGH PHOTOSYNTHESIS.',
+                ]}
+                backgroundColor="transparent"
+              />
               <Animated.Image
                 resizeMode={'contain'}
                 style={[
@@ -289,6 +302,7 @@ const English_SelectAnswer = observer(
                 <VoiceButton onPress={onSpeechText} />
               </View>
               <SelectionAnswersQuestion
+                answerIsImage
                 question={
                   <TextHighlight
                     content={
@@ -302,8 +316,16 @@ const English_SelectAnswer = observer(
                   />
                 }
                 answer={
-                  (firstMiniTestTask?.question?.[moduleIndex]
-                    .answers as string[]) ?? []
+                  (
+                    firstMiniTestTask?.question?.[moduleIndex]
+                      ?.answers as Answer[]
+                  ).map(q => q.content) ?? []
+                }
+                answerImage={
+                  (
+                    firstMiniTestTask?.question?.[moduleIndex]
+                      ?.answers as Answer[]
+                  ).map(q => env.IMAGE_QUESTION_BASE_API_URL + q.image) ?? []
                 }
                 answerStyle={styles.fonts_SVN_Cherish}
                 isShowCorrectContainer={isShowCorrectContainer}
@@ -311,7 +333,6 @@ const English_SelectAnswer = observer(
                 onSelectAnswer={(e: string[]) => {
                   setAnswerSelected(e);
                 }}
-                isSelectOne
                 learningTimer={learningTimer}
                 ref={answerRef}
               />
@@ -334,7 +355,7 @@ const English_SelectAnswer = observer(
   ),
 );
 
-export default English_SelectAnswer;
+export default Science_SelectAnswer;
 
 const styles = StyleSheet.create({
   fill: {

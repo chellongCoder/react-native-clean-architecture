@@ -7,9 +7,8 @@ import {observer} from 'mobx-react';
 import {withProviders} from 'src/core/presentation/utils/withProviders';
 import {HomeProvider} from '../stores/HomeProvider';
 import FastImage from 'react-native-fast-image';
-import {SCREEN_HEIGHT} from '@gorhom/bottom-sheet';
-import {assets} from 'src/core/presentation/utils';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
+import {WIDTH_SCREEN} from 'src/core/presentation/utils';
 
 const HomeScreen = observer(() => {
   const inset = useSafeAreaInsets();
@@ -18,13 +17,15 @@ const HomeScreen = observer(() => {
       <View style={[styles.container]}>
         <ScrollView
           style={[styles.container]}
-          contentContainerStyle={{alignItems: 'center'}}
+          contentContainerStyle={{alignItems: 'flex-start'}}
           showsVerticalScrollIndicator={false}
           bounces={false}>
           <FastImage
-            source={assets.bg_scroll}
-            style={[styles.image, {height: SCREEN_HEIGHT * 2, width: '100%'}]}
-            resizeMode="cover"
+            source={{
+              uri: 'https://storage.googleapis.com/alphadex-image-abeeci/backgrounds/bg-HOME.png',
+            }}
+            style={[styles.image, {height: WIDTH_SCREEN * 3.35, width: '100%'}]}
+            resizeMode="contain"
           />
           <View
             style={[[styles.wrapContentContainer, {paddingTop: inset.top}]]}>

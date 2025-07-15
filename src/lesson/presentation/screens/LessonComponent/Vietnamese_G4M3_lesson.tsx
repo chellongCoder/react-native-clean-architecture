@@ -37,19 +37,11 @@ import useAuthenticationStore from 'src/authentication/presentation/stores/useAu
 import {observer} from 'mobx-react';
 import {LessonRef} from '../../types';
 import useHomeStore from 'src/home/presentation/stores/useHomeStore';
-import SelectionAnswersQuestion, {
-  SelectionAnswersQuestionRef,
-} from '../../components/SelectionAnswersQuestion';
-import TextHighlight from '../../components/TextHighlight';
-import Tts from 'react-native-tts';
-import {
-  iosVoice,
-  listLanguage,
-} from 'src/core/presentation/hooks/textToSpeech/TextToSpeechProvider';
+import {SelectionAnswersQuestionRef} from '../../components/SelectionAnswersQuestion';
 import {useI18n} from 'src/core/presentation/hooks/useI18n';
 import VoiceButton from '../../components/VoiceButton';
 import DragItem from '../../components/Drag/DragSendItem';
-import DragProvider, {useDragContext} from '../../components/Drag/DragProvider';
+import {useDragContext} from '../../components/Drag/DragProvider';
 
 type Props = {
   moduleIndex: number;
@@ -81,7 +73,7 @@ const VnG4M3Lesson = observer(
     ) => {
       const globalStyle = useGlobalStyle();
 
-      const {ttsSpeak, updateDefaultVoice} = useContext(TextToSpeechContext);
+      const {ttsSpeak} = useContext(TextToSpeechContext);
       const focus = useIsFocused();
       const answerRef = useRef<SelectionAnswersQuestionRef>();
 

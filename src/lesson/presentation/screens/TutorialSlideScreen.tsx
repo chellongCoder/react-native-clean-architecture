@@ -18,46 +18,9 @@ import {SafeAreaView} from 'react-native-safe-area-context';
 import {goBack} from 'src/core/presentation/navigation/actions/RootNavigationActions';
 import LinearGradient from 'react-native-linear-gradient';
 import useHomeStore from 'src/home/presentation/stores/useHomeStore';
+import {useI18n} from 'src/core/presentation/hooks/useI18n';
 
 const {width} = Dimensions.get('window');
-
-const slides = [
-  {
-    id: '1',
-    title: 'Chọn tài khoản\ncủa trẻ',
-    content:
-      'Nhấn vào tên hoặc avatar để chọn đúng bé mà bạn muốn đặt mục tiêu & khoá ứng dụng.',
-    image: assets.tutorial_1,
-  },
-  {
-    id: '2',
-    title: 'Chọn ứng dụng\ncần khóa',
-    content:
-      'Nhấn vào “choose apps” để chọn ứng dụng mà bạn muốn khoá (YouTube, TikTok, Facebook,...). Trẻ chỉ được giải trí sau khi hoàn thành mục tiêu học tập.',
-    image: assets.tutorial_2,
-  },
-  {
-    id: '3',
-    title: 'Đặt % hoàn thành bài tập',
-    content:
-      'Chọn tỷ lệ (ví dụ 75%) mà trẻ phải hoàn thành trong ngày để mở khoá ứng dụng.',
-    image: assets.tutorial_3,
-  },
-  {
-    id: '4',
-    title: 'Chọn môn học và bài tập cần hoàn thành',
-    content:
-      'Tài liệu học tập của chúng tôi dựa trên chương trình giáo dục của Singapore',
-    image: assets.tutorial_4,
-  },
-  {
-    id: '5',
-    title: 'Hoàn thành khóa ứng dụng',
-    content:
-      'Bấm lưu để hoàn thành khóa ứng dụng. Bạn có thể mở khóa chủ động nếu muốn',
-    image: assets.tutorial_5,
-  },
-];
 
 const bgGradientColors = [
   '#8DE795',
@@ -70,6 +33,46 @@ const bgGradientColors = [
 ];
 
 const TutorialSlideScreen = () => {
+  const i18n = useI18n();
+
+  const slides = [
+    {
+      id: '1',
+      title: i18n.t('lesson.screens.Introduction.chooseAccount') as string,
+      content: i18n.t(
+        'lesson.screens.Introduction.contentChooseAccount',
+      ) as string,
+      image: assets.tutorial_1,
+    },
+    {
+      id: '2',
+      title: i18n.t('lesson.screens.Introduction.chooseApp') as string,
+      content: i18n.t('lesson.screens.Introduction.contentChooseApp') as string,
+      image: assets.tutorial_2,
+    },
+    {
+      id: '3',
+      title: i18n.t('lesson.screens.Introduction.setScore') as string,
+      content: i18n.t('lesson.screens.Introduction.contentSetScore') as string,
+      image: assets.tutorial_3,
+    },
+    {
+      id: '4',
+      title: i18n.t('lesson.screens.Introduction.chooseSubject') as string,
+      content: i18n.t(
+        'lesson.screens.Introduction.contentChooseSubject',
+      ) as string,
+      image: assets.tutorial_4,
+    },
+    {
+      id: '5',
+      title: i18n.t('lesson.screens.Introduction.finishModule') as string,
+      content: i18n.t(
+        'lesson.screens.Introduction.contentFinishModule',
+      ) as string,
+      image: assets.tutorial_5,
+    },
+  ];
   const [currentSlide, setCurrentSlide] = useState(0);
 
   const {setShowTutorial} = useHomeStore();

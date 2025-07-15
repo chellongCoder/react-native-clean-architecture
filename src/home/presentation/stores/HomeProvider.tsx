@@ -37,7 +37,6 @@ export const HomeProvider = ({children}: PropsWithChildren) => {
   });
 
   const onSelectField = (e?: IMergedData) => {
-    e && store.setField(e as FieldData);
     setHomeState({field: e});
   };
 

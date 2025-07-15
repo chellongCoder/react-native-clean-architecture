@@ -126,7 +126,7 @@ const ListSubject = () => {
       <SubjectItem
         key={index}
         item={item}
-        animatedStyle={[animatedStyle, {opacity: 0.1}]}
+        animatedStyle={[animatedStyle, {opacity: 0}]}
         onSelectSubject={onSelectSubject}
       />
     );
@@ -204,8 +204,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   leftContentContainer: {
-    height: scale(192),
-    width: scale(192),
+    height: scale(152),
+    width: scale(152),
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 999,

@@ -219,6 +219,23 @@ export default {
         buyModule: 'Mua module',
         loading: 'Đang tải...',
       },
+      Introduction: {
+        chooseAccount: 'Chọn tài khoản\ncủa trẻ',
+        chooseApp: 'Chọn ứng dụng\ncần khóa',
+        setScore: 'Đặt % hoàn thành bài tập',
+        chooseSubject: 'Chọn môn học và bài tập cần hoàn thành',
+        finishModule: 'Hoàn thành khóa ứng dụng',
+        contentChooseAccount:
+          'Nhấn vào tên hoặc avatar để chọn đúng bé mà bạn muốn đặt mục tiêu & khoá ứng dụng.',
+        contentChooseApp:
+          'Nhấn vào “choose apps” để chọn ứng dụng mà bạn muốn khoá (YouTube, TikTok, Facebook,...). Trẻ chỉ được giải trí sau khi hoàn thành mục tiêu học tập.',
+        contentSetScore:
+          'Chọn tỷ lệ (ví dụ 75%) mà trẻ phải hoàn thành trong ngày để mở khoá ứng dụng.',
+        contentChooseSubject:
+          'Tài liệu học tập của chúng tôi dựa trên chương trình giáo dục của Singapore',
+        contentFinishModule:
+          'Bấm lưu để hoàn thành khóa ứng dụng. Bạn có thể mở khóa chủ động nếu muốn',
+      },
     },
   },
 };

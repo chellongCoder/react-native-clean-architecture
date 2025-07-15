@@ -51,7 +51,7 @@ const SubjectItem = ({
     <Animated.View
       key={item.id}
       style={[styles.contentContainer, animatedStyle, itemAnimatedStyle]}>
-      {item.position === 'right' && <View style={[{height: scale(192)}]} />}
+      {item.position === 'right' && <View style={[{height: scale(152)}]} />}
       <TouchableOpacity
         style={[
           item.position === 'right'
@@ -59,6 +59,7 @@ const SubjectItem = ({
             : styles.leftContentContainer,
           {backgroundColor: item.bgc},
         ]}
+        hitSlop={{top: 100, bottom: 100, left: 20, right: 20}}
         onPress={() => handlePress()}>
         <Text
           allowFontScaling
@@ -85,8 +86,8 @@ const styles = StyleSheet.create({
     borderRadius: 999,
   },
   rightContentContainer: {
-    height: scale(192),
-    width: scale(192),
+    height: scale(152),
+    width: scale(152),
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 999,

@@ -18,6 +18,7 @@ import {COLORS} from 'src/core/presentation/constants/colors';
 import {FontFamily} from 'src/core/presentation/hooks/useFonts';
 import {WIDTH_SCREEN} from 'src/core/presentation/utils';
 import TextFraction from './TextFraction';
+import FastImage from 'react-native-fast-image';
 
 interface SelectionAnswersQuestionProps {
   question?: React.ReactNode;
@@ -33,6 +34,7 @@ interface SelectionAnswersQuestionProps {
   questionStyle?: StyleProp<TextStyle>;
   answerStyle?: StyleProp<TextStyle>;
   answerIsImage?: boolean;
+  answerImage?: string[];
 }
 
 export interface SelectionAnswersQuestionRef {
@@ -58,6 +60,7 @@ const SelectionAnswersQuestion: ForwardRefRenderFunction<
     fontFamily,
     answerStyle,
     answerIsImage,
+    answerImage,
   } = props;
 
   const [answerSelected, setAnswerSelected] = useState<string[]>([]);
@@ -162,6 +165,16 @@ const SelectionAnswersQuestion: ForwardRefRenderFunction<
                     flexDirection: isRightSide ? 'row-reverse' : 'row',
                   },
                 ]}>
+                <FastImage
+                  source={{
+                    uri: answerImage?.[i],
+                  }}
+                  style={{
+                    height: minHeight,
+                    width: size / 2,
+                    position: 'absolute',
+                  }}
+                />
                 <View style={{flex: 1}}>
                   <Text
                     allowFontScaling
@@ -178,15 +191,6 @@ const SelectionAnswersQuestion: ForwardRefRenderFunction<
                       .trim()}
                   </Text>
                 </View>
-                <Image
-                  source={{
-                    uri: 'https://letsenhance.io/static/73136da51c245e80edc6ccfe44888a99/1015f/MainBefore.jpg',
-                  }}
-                  style={{
-                    height: minHeight,
-                    width: size / 2,
-                  }}
-                />
               </TouchableOpacity>
             );
           }
