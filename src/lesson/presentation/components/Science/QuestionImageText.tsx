@@ -19,7 +19,7 @@ type Props = {
   title?: string;
   image?: string;
   imageStyle?: StyleProp<ImageStyle>;
-  descriptions: string[];
+  descriptions?: string[];
   containerStyle?: StyleProp<ViewStyle>;
   titleStyle?: StyleProp<TextStyle>;
   descriptionStyle?: StyleProp<TextStyle>;
@@ -38,6 +38,13 @@ const QuestionImageText = ({
   backgroundColor = '#E8F5E8',
   textShadowColor = 'rgba(0,0,0,0.3)',
 }: Props) => {
+  console.log(
+    '🛠 LOG: 🚀 --> --------------------------------------------🛠 LOG: 🚀 -->',
+  );
+  console.log('🛠 LOG: 🚀 --> ~ descriptions:', descriptions);
+  console.log(
+    '🛠 LOG: 🚀 --> --------------------------------------------🛠 LOG: 🚀 -->',
+  );
   return (
     <View style={[styles.container, {backgroundColor}, containerStyle]}>
       {/* Title at the top */}
@@ -65,17 +72,19 @@ const QuestionImageText = ({
         )}
 
         {/* Text descriptions on the right */}
-        <ScrollView
-          showsVerticalScrollIndicator={false}
-          style={styles.textContainer}>
-          {descriptions.map((description, index) => (
-            <View key={index} style={styles.descriptionItem}>
-              <Text style={[styles.description, descriptionStyle]}>
-                {description}
-              </Text>
-            </View>
-          ))}
-        </ScrollView>
+        {descriptions && (
+          <ScrollView
+            showsVerticalScrollIndicator={false}
+            style={styles.textContainer}>
+            {descriptions?.map((description, index) => (
+              <View key={index} style={styles.descriptionItem}>
+                <Text style={[styles.description, descriptionStyle]}>
+                  {description}
+                </Text>
+              </View>
+            ))}
+          </ScrollView>
+        )}
       </View>
     </View>
   );

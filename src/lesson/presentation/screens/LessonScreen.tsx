@@ -112,6 +112,7 @@ import English_QwertyKeyboard_Paragraph from './LessonComponent/English_QwertyKe
 import Science_Select_BGImageText from './LessonComponent/Science_Select_BGImageText';
 import Science_SG1M2 from './LessonComponent/Science_SG1M2';
 import Science_SelectAnswer from './LessonComponent/Science_SelectAnswer';
+import Science_SelectAnswer_Image_TextImageAnswer from './LessonComponent/Science_SelectAnswer_Image_TextImageAnswer';
 
 export type TResult = {
   userId?: string;
@@ -525,10 +526,21 @@ const LESSON_PATTERNS = [
     }),
   },
   {
+    pattern: /^SCIENCE_SG[1-6]M(2)$/,
+    component: (type: string) => {
+      const componentMap: Record<string, any> = {
+        SCIENCE_SG3M2: Science_SelectAnswer_Image_TextImageAnswer,
+      };
+      return componentMap[type] || Science_G0M1;
+    },
+    props,
+  },
+  {
     pattern: /^SCIENCE_SG[1-6]M(3)$/,
     component: (type: string) => {
       const componentMap: Record<string, any> = {
         SCIENCE_SG1M3: Science_SelectAnswer,
+        SCIENCE_SG3M3: Science_SelectAnswer,
       };
       return componentMap[type] || Science_G0M1;
     },
@@ -1154,7 +1166,7 @@ const LessonScreen = observer(() => {
       env.IMAGE_BACKGROUND_BASE_API_URL + lessonSetting?.figureSuccessImage,
     characterImageFail:
       env.IMAGE_BACKGROUND_BASE_API_URL + lessonSetting?.figureFailImage,
-    answer: testTask?.question?.[lessonIndex]?.answers as string[],
+    answer: testTask?.question?.[lessonIndex]?.answers,
   };
 
   const buildLesson = () => {

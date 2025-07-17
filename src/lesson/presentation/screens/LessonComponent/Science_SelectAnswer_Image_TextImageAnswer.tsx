@@ -37,13 +37,12 @@ import useAuthenticationStore from 'src/authentication/presentation/stores/useAu
 import {observer} from 'mobx-react';
 import {LessonRef} from '../../types';
 import useHomeStore from 'src/home/presentation/stores/useHomeStore';
-import SelectionAnswersQuestion, {
-  SelectionAnswersQuestionRef,
-} from '../../components/SelectionAnswersQuestion';
+import {SelectionAnswersQuestionRef} from '../../components/SelectionAnswersQuestion';
 import TextHighlight from '../../components/TextHighlight';
 import {useI18n} from 'src/core/presentation/hooks/useI18n';
 import VoiceButton from '../../components/VoiceButton';
 import QuestionImageText from '../../components/Science/QuestionImageText';
+import SelectionAnswersImage from '../../components/SelectionAnswersImage';
 
 type Props = {
   moduleIndex: number;
@@ -58,7 +57,7 @@ type Props = {
   characterStyle?: StyleProp<ViewStyle>;
 };
 
-const Science_SelectAnswer = observer(
+const Science_SelectAnswer_Image_TextImageAnswer = observer(
   forwardRef<LessonRef, Props>(
     (
       {
@@ -83,6 +82,13 @@ const Science_SelectAnswer = observer(
 
       const [answerSelected, setAnswerSelected] = useState<string | string[]>(
         '',
+      );
+      console.log(
+        '🛠 LOG: 🚀 --> ------------------------------------------------🛠 LOG: 🚀 -->',
+      );
+      console.log('🛠 LOG: 🚀 --> ~ answerSelected:', answerSelected);
+      console.log(
+        '🛠 LOG: 🚀 --> ------------------------------------------------🛠 LOG: 🚀 -->',
       );
 
       const {trainingCount, getSetting} = useLessonStore();
@@ -236,11 +242,6 @@ const Science_SelectAnswer = observer(
                   env.IMAGE_QUESTION_BASE_API_URL +
                   firstMiniTestTask?.question?.[moduleIndex].image
                 }
-                descriptions={
-                  firstMiniTestTask?.question?.[moduleIndex]?.paragraph?.split(
-                    '\n',
-                  ) ?? []
-                }
                 backgroundColor="transparent"
               />
             </Animated.View>
@@ -269,44 +270,8 @@ const Science_SelectAnswer = observer(
 
                 <VoiceButton onPress={onSpeechText} />
               </View>
-              <SelectionAnswersQuestion
-                answerIsImage
-                question={
-                  <TextHighlight
-                    content={
-                      firstMiniTestTask?.question?.[moduleIndex].highlight ?? ''
-                    }
-                    description={
-                      firstMiniTestTask?.question?.[moduleIndex].description ??
-                      ''
-                    }
-                  />
-                }
-                answer={
-                  (
-                    firstMiniTestTask?.question?.[moduleIndex]
-                      ?.answers as Answer[]
-                  ).map(q => q.content) ?? []
-                }
-                answerImage={
-                  (
-                    firstMiniTestTask?.question?.[moduleIndex]
-                      ?.answers as Answer[]
-                  ).map(
-                    q => env.IMAGE_QUESTION_BASE_API_URL + q.image.trim(),
-                  ) ?? []
-                }
-                answerStyle={styles.fonts_SVN_Cherish}
-                isShowCorrectContainer={isShowCorrectContainer}
-                isAnswerCorrect={!!isAnswerCorrect}
-                onSelectAnswer={(e: string[]) => {
-                  setAnswerSelected(e);
-                }}
-                learningTimer={learningTimer}
-                ref={answerRef}
-              />
 
-              {/* <SelectionAnswersImage
+              <SelectionAnswersImage
                 // answerIsImage
                 question={
                   <TextHighlight
@@ -326,8 +291,10 @@ const Science_SelectAnswer = observer(
                   ).map(q => q.content) ?? []
                 }
                 questionImage={
-                  env.IMAGE_QUESTION_BASE_API_URL +
-                  firstMiniTestTask?.question?.[moduleIndex].image
+                  (
+                    firstMiniTestTask?.question?.[moduleIndex]
+                      ?.answers as Answer[]
+                  ).map(q => env.IMAGE_QUESTION_BASE_API_URL + q.image) ?? []
                 }
                 answerStyle={styles.fonts_SVN_Cherish}
                 isShowCorrectContainer={isShowCorrectContainer}
@@ -335,9 +302,10 @@ const Science_SelectAnswer = observer(
                 onSelectAnswer={(e: string[]) => {
                   setAnswerSelected(e);
                 }}
+                isSelectOne
                 learningTimer={learningTimer}
                 ref={answerRef}
-              /> */}
+              />
 
               <PrimaryButton
                 text={i18n.t('lesson.screens.Modules.submit')}
@@ -357,7 +325,7 @@ const Science_SelectAnswer = observer(
   ),
 );
 
-export default Science_SelectAnswer;
+export default Science_SelectAnswer_Image_TextImageAnswer;
 
 const styles = StyleSheet.create({
   fill: {

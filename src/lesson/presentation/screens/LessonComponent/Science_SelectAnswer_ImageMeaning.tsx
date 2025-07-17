@@ -58,7 +58,7 @@ type Props = {
   characterStyle?: StyleProp<ViewStyle>;
 };
 
-const Science_SelectAnswer = observer(
+const Science_SelectAnswer_ImageMeaning = observer(
   forwardRef<LessonRef, Props>(
     (
       {
@@ -357,7 +357,7 @@ const Science_SelectAnswer = observer(
   ),
 );
 
-export default Science_SelectAnswer;
+export default Science_SelectAnswer_ImageMeaning;
 
 const styles = StyleSheet.create({
   fill: {
