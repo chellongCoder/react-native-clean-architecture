@@ -1,4 +1,11 @@
-import {StyleSheet, Text, View, TouchableOpacity} from 'react-native';
+import {
+  StyleSheet,
+  Text,
+  View,
+  TouchableOpacity,
+  Image,
+  ImageBackground,
+} from 'react-native';
 import React, {
   forwardRef,
   useCallback,
@@ -16,7 +23,7 @@ import {Task} from 'src/home/application/types/GetListQuestionResponse';
 import {COLORS} from 'src/core/presentation/constants/colors';
 import {isMMSS} from 'src/core/presentation/utils';
 import {scale, verticalScale} from 'react-native-size-matters';
-import Animated, {
+import {
   Easing,
   ReduceMotion,
   useAnimatedStyle,
@@ -93,7 +100,7 @@ const Science_Select_BGImageText = observer(
             id: 'arctic',
             text: 'ARCTIC',
             imageUrl:
-              'https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=300&h=200&fit=crop',
+              'https://i0.wp.com/ocean-climate.org/wp-content/uploads/2021/01/Arctique-willian-justen-de-vasconcellos-unsplash.png?fit=1268%2C848&ssl=1',
           },
           {
             id: 'grasslands',
@@ -211,27 +218,22 @@ const Science_Select_BGImageText = observer(
         const isCorrect = option.id === 'grasslands';
         const showResult = isShowCorrectContainer;
 
-        let backgroundColor = '#66c270';
-        if (option.id === 'arctic') {
-          backgroundColor = '#87CEEB';
-        } else if (option.id === 'grasslands') {
-          backgroundColor = '#66c270';
-        }
+        let backgroundColor = COLORS.YELLOW_F2B559;
 
         if (showResult) {
           if (isCorrect) {
-            backgroundColor = '#66c270';
+            backgroundColor = COLORS.PRIMARY;
           } else if (isSelected && !isCorrect) {
-            backgroundColor = '#FF6B6B';
+            backgroundColor = COLORS.RED_F38756;
           }
         } else if (isSelected) {
-          backgroundColor = '#4A90E2';
+          backgroundColor = COLORS.PRIMARY;
         }
 
         const positions = [
-          {top: verticalScale(10), right: scale(-10)}, // SAVANNA
-          {top: verticalScale(70), right: scale(-10)}, // ARCTIC
-          {top: verticalScale(130), right: scale(-10)}, // GRASSLANDS
+          {top: verticalScale(15), right: scale(-20)}, // SAVANNA
+          {top: verticalScale(55), right: scale(-20)}, // ARCTIC
+          {top: verticalScale(95), right: scale(-20)}, // GRASSLANDS
         ];
 
         return (
@@ -241,8 +243,7 @@ const Science_Select_BGImageText = observer(
               styles.overlayAnswerButton,
               {
                 ...positions[index],
-                borderWidth: isSelected || (showResult && isCorrect) ? 3 : 0,
-                borderColor: isSelected ? '#FFFFFF' : 'transparent',
+                justifyContent: 'flex-end',
               },
             ]}
             onPress={() => !showResult && handleImageAnswerSelect(option.id)}
@@ -252,21 +253,22 @@ const Science_Select_BGImageText = observer(
                 {
                   borderTopLeftRadius: scale(12),
                   borderBottomLeftRadius: scale(12),
-                  flex: 1,
                   height: verticalScale(20),
                   justifyContent: 'center',
-                  alignItems: 'center',
                   marginRight: -scale(5),
+                  paddingHorizontal: 8,
                 },
                 {
                   backgroundColor: backgroundColor,
-                  borderWidth: isSelected || (showResult && isCorrect) ? 3 : 0,
-                  borderColor: isSelected ? '#FFFFFF' : 'transparent',
                 },
               ]}>
               <Text style={[styles.overlayAnswerText]}>{option.text}</Text>
             </View>
-            <View style={styles.circularImageContainer}>
+            <View
+              style={[
+                styles.circularImageContainer,
+                {borderColor: backgroundColor},
+              ]}>
               <FastImage
                 source={{uri: option.imageUrl}}
                 style={styles.circularImage}
@@ -285,7 +287,7 @@ const Science_Select_BGImageText = observer(
           lessonName={lessonName}
           module={moduleName}
           part="Practice"
-          backgroundColor="#66c270"
+          backgroundColor={COLORS.PRIMARY}
           backgroundAnswerColor={
             settings.backgroundAnswerColor ?? COLORS.GREEN_DDF598
           }
@@ -301,12 +303,11 @@ const Science_Select_BGImageText = observer(
           onPressFlower={toggleShowHint}
           buildQuestion={
             <View style={styles.landscapeContainer}>
-              <Animated.View style={[styles.factTextOverlay, animatedStyle]}>
-                <Text style={[styles.fonts_SVN_Cherish, styles.factText]}>
-                  LIONS ARE KNOWN AS THE KING OF THE JUNGLE THOUGH THEY ACTUALLY
-                  LIVE IN GRASSLANDS.
-                </Text>
-              </Animated.View>
+              <Image
+                source={require('../../../../../assets/images/SG2M1Q1.png')}
+                style={[styles.landscapeBackground, {borderWidth: 0}]}
+                resizeMode="contain"
+              />
             </View>
           }
           buildAnswer={
@@ -324,26 +325,38 @@ const Science_Select_BGImageText = observer(
 
                 <VoiceButton onPress={onSpeechText} />
               </View>
+              <View style={styles.wrapAnswerContainer}>
+                <View style={styles.questionTextContainer}>
+                  <Text style={[styles.fonts_SVN_Cherish, styles.questionText]}>
+                    Where do lions live?
+                  </Text>
+                </View>
 
-              <View style={styles.questionTextContainer}>
-                <Text style={[styles.fonts_SVN_Cherish, styles.questionText]}>
-                  Where do lions live?
-                </Text>
-              </View>
-
-              <View style={styles.answersContainer}>
-                <FastImage
+                <ImageBackground
+                  style={styles.answersContainer}
                   source={{
                     uri: imageAnswerOptions.find(
                       option => option.id === answerSelected,
                     )?.imageUrl,
                   }}
-                  style={styles.landscapeBackground}
-                  resizeMode="cover"
-                />
-                {imageAnswerOptions.map((option, index) =>
-                  renderImageAnswer(option, index),
-                )}
+                  imageStyle={{
+                    borderRadius: 22,
+                  }}>
+                  <Image
+                    source={require('../../../../../assets/images/SG2M1Q1.1.png')}
+                    style={{
+                      height: '100%',
+                      width: '35%',
+                      position: 'absolute',
+                      left: scale(-15),
+                      bottom: scale(-25),
+                    }}
+                    resizeMode="contain"
+                  />
+                  {imageAnswerOptions.map((option, index) =>
+                    renderImageAnswer(option, index),
+                  )}
+                </ImageBackground>
               </View>
 
               <PrimaryButton
@@ -381,7 +394,6 @@ const styles = StyleSheet.create({
     position: 'relative',
     width: '100%',
     height: verticalScale(200),
-    borderRadius: scale(16),
     overflow: 'hidden',
     marginHorizontal: scale(16),
   },
@@ -415,16 +427,25 @@ const styles = StyleSheet.create({
   },
   questionTextContainer: {
     alignItems: 'center',
-    marginBottom: verticalScale(16),
+    marginVertical: 8,
   },
   questionText: {
     fontSize: verticalScale(18),
     color: '#1C6349',
     textAlign: 'center',
   },
+  wrapAnswerContainer: {
+    flex: 1,
+    backgroundColor: COLORS.WHITE_FBF8CC,
+    borderRadius: scale(30),
+  },
   answersContainer: {
     position: 'relative',
     flex: 1,
+    borderRadius: 24,
+    borderWidth: 2,
+    marginHorizontal: 16,
+    marginBottom: 8,
   },
   overlayAnswerButton: {
     position: 'absolute',
@@ -447,6 +468,7 @@ const styles = StyleSheet.create({
   overlayAnswerText: {
     fontSize: verticalScale(12),
     fontFamily: FontFamily.SVNCherishMoment,
+    color: COLORS.WHITE,
   },
   circularImageContainer: {
     width: scale(40),
@@ -454,7 +476,6 @@ const styles = StyleSheet.create({
     borderRadius: scale(20),
     overflow: 'hidden',
     borderWidth: 2,
-    borderColor: '#FFFFFF',
   },
   circularImage: {
     width: '100%',
