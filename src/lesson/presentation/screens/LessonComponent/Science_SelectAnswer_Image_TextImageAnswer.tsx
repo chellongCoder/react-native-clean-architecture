@@ -41,8 +41,8 @@ import {SelectionAnswersQuestionRef} from '../../components/SelectionAnswersQues
 import TextHighlight from '../../components/TextHighlight';
 import {useI18n} from 'src/core/presentation/hooks/useI18n';
 import VoiceButton from '../../components/VoiceButton';
-import QuestionImageText from '../../components/Science/QuestionImageText';
 import SelectionAnswersImage from '../../components/SelectionAnswersImage';
+import FastImage from 'react-native-fast-image';
 
 type Props = {
   moduleIndex: number;
@@ -55,6 +55,8 @@ type Props = {
   characterImageSuccess?: string;
   characterImageFail?: string;
   characterStyle?: StyleProp<ViewStyle>;
+  contentContainerStyle?: StyleProp<ViewStyle>;
+  hasTitle?: boolean;
 };
 
 const Science_SelectAnswer_Image_TextImageAnswer = observer(
@@ -71,6 +73,7 @@ const Science_SelectAnswer_Image_TextImageAnswer = observer(
         characterImageSuccess,
         characterImageFail,
         characterStyle,
+        contentContainerStyle,
       },
       ref,
     ) => {
@@ -235,15 +238,38 @@ const Science_SelectAnswer_Image_TextImageAnswer = observer(
           isShowCorrectContainer={isShowCorrectContainer}
           onPressFlower={toggleShowHint}
           buildQuestion={
-            <Animated.View style={[animatedStyle, {flex: 1}]}>
-              <QuestionImageText
-                title={firstMiniTestTask?.question?.[moduleIndex]?.highlight}
-                image={
-                  env.IMAGE_QUESTION_BASE_API_URL +
-                  firstMiniTestTask?.question?.[moduleIndex].image
-                }
-                backgroundColor="transparent"
-              />
+            <Animated.View
+              style={[animatedStyle, {flex: 1}, contentContainerStyle]}>
+              {firstMiniTestTask?.question?.[moduleIndex]?.description && (
+                <View style={styles.descriptionContainer}>
+                  {firstMiniTestTask?.question?.[moduleIndex]?.description
+                    ?.split('\n')
+                    ?.map((description, index) => (
+                      <View key={index} style={styles.descriptionItem}>
+                        <Text
+                          style={[
+                            [
+                              styles.description,
+                              {color: settings.backgroundButtonColor},
+                            ],
+                          ]}>
+                          {description}
+                        </Text>
+                      </View>
+                    ))}
+                </View>
+              )}
+              <View style={styles.imageContainer}>
+                <FastImage
+                  source={{
+                    uri:
+                      env.IMAGE_QUESTION_BASE_API_URL +
+                      firstMiniTestTask?.question?.[moduleIndex].image,
+                  }}
+                  style={[styles.image]}
+                  resizeMode="contain"
+                />
+              </View>
             </Animated.View>
           }
           buildAnswer={
@@ -279,8 +305,9 @@ const Science_SelectAnswer_Image_TextImageAnswer = observer(
                       firstMiniTestTask?.question?.[moduleIndex].highlight ?? ''
                     }
                     description={
-                      firstMiniTestTask?.question?.[moduleIndex].description ??
-                      ''
+                      firstMiniTestTask?.question?.[
+                        moduleIndex
+                      ].description.toLocaleLowerCase() ?? ''
                     }
                   />
                 }
@@ -372,5 +399,23 @@ const styles = StyleSheet.create({
     fontFamily: FontFamily.SVNNeuzeitBold,
     fontSize: scale(14),
     color: COLORS.WHITE_FBF8CC,
+  },
+  image: {
+    width: scale(120),
+    height: scale(120),
+  },
+  imageContainer: {
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  descriptionItem: {},
+  descriptionContainer: {
+    width: '60%',
+  },
+  description: {
+    fontSize: scale(19),
+    fontFamily: FontFamily.SVNCherishMoment,
+    lineHeight: scale(27),
+    textAlign: 'center',
   },
 });

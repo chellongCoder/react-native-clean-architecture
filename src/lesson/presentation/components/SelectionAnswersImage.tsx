@@ -18,6 +18,7 @@ import {COLORS} from 'src/core/presentation/constants/colors';
 import {FontFamily} from 'src/core/presentation/hooks/useFonts';
 import FastImage from 'react-native-fast-image';
 import {assets} from 'src/core/presentation/utils';
+import ScrollIndicator from './ScrollIndicator';
 
 interface SelectionAnswersImageProps {
   question?: React.ReactNode;
@@ -113,101 +114,108 @@ const SelectionAnswersImage: ForwardRefRenderFunction<
     <View style={styles.container}>
       {question && <View style={styles.questionContainer}>{question}</View>}
 
-      <View style={styles.contentContainer}>
-        {/* Left side - Question Image */}
-        <View style={styles.imageContainer}>
-          {/* Low quality placeholder */}
-          {isImageLoading && (
+      <ScrollIndicator containerStyle={{width: '100%'}}>
+        <View style={styles.contentContainer}>
+          {/* Left side - Question Image */}
+          <View style={styles.imageContainer}>
+            {/* Low quality placeholder */}
+            {isImageLoading && (
+              <FastImage
+                source={{
+                  uri: getLowQualityImageUrl(
+                    questionImage[answerSelectedIndex],
+                  ),
+                }}
+                style={[styles.questionImage, styles.blurredImage]}
+                resizeMode={FastImage.resizeMode.cover}
+              />
+            )}
+
+            {/* High quality image */}
             <FastImage
-              source={{
-                uri: getLowQualityImageUrl(questionImage[answerSelectedIndex]),
-              }}
-              style={[styles.questionImage, styles.blurredImage]}
+              source={
+                imageLoadError
+                  ? assets.onboarding
+                  : {
+                      uri: questionImage[answerSelectedIndex],
+                      priority: FastImage.priority.high,
+                      cache: FastImage.cacheControl.immutable,
+                    }
+              }
+              style={[styles.questionImage, {opacity: isImageLoading ? 0 : 1}]}
               resizeMode={FastImage.resizeMode.cover}
+              onLoadStart={() => {
+                setIsImageLoading(true);
+                setImageLoadError(false);
+              }}
+              onProgress={e => {
+                // Show loading progress
+                const progress = e.nativeEvent.loaded / e.nativeEvent.total;
+                console.log('Image loading progress:', progress);
+              }}
+              onLoad={e => {
+                setIsImageLoading(false);
+                console.log(
+                  'Image loaded:',
+                  e.nativeEvent.width,
+                  e.nativeEvent.height,
+                );
+              }}
+              onLoadEnd={() => setIsImageLoading(false)}
+              onError={() => {
+                setIsImageLoading(false);
+                setImageLoadError(true);
+              }}
+              // Optional: fallback to regular Image component if needed
+              fallback={false}
             />
-          )}
 
-          {/* High quality image */}
-          <FastImage
-            source={
-              imageLoadError
-                ? assets.onboarding
-                : {
-                    uri: questionImage[answerSelectedIndex],
-                    priority: FastImage.priority.high,
-                    cache: FastImage.cacheControl.immutable,
-                  }
-            }
-            style={[styles.questionImage, {opacity: isImageLoading ? 0 : 1}]}
-            resizeMode={FastImage.resizeMode.cover}
-            onLoadStart={() => {
-              setIsImageLoading(true);
-              setImageLoadError(false);
-            }}
-            onProgress={e => {
-              // Show loading progress
-              const progress = e.nativeEvent.loaded / e.nativeEvent.total;
-              console.log('Image loading progress:', progress);
-            }}
-            onLoad={e => {
-              setIsImageLoading(false);
-              console.log(
-                'Image loaded:',
-                e.nativeEvent.width,
-                e.nativeEvent.height,
-              );
-            }}
-            onLoadEnd={() => setIsImageLoading(false)}
-            onError={() => {
-              setIsImageLoading(false);
-              setImageLoadError(true);
-            }}
-            // Optional: fallback to regular Image component if needed
-            fallback={false}
-          />
+            {/* Loading indicator */}
+            {isImageLoading && (
+              <View style={styles.loadingIndicator}>
+                <ActivityIndicator size="small" color={COLORS.GREEN_66C270} />
+              </View>
+            )}
 
-          {/* Loading indicator */}
-          {isImageLoading && (
-            <View style={styles.loadingIndicator}>
-              <ActivityIndicator size="small" color={COLORS.GREEN_66C270} />
-            </View>
-          )}
+            {/* Blur Overlay while loading */}
+            {isImageLoading && (
+              <View style={styles.blurOverlay}>
+                <ActivityIndicator size="large" color={COLORS.GREEN_66C270} />
+              </View>
+            )}
+          </View>
 
-          {/* Blur Overlay while loading */}
-          {isImageLoading && (
-            <View style={styles.blurOverlay}>
-              <ActivityIndicator size="large" color={COLORS.GREEN_66C270} />
-            </View>
-          )}
-        </View>
-
-        {/* Right side - Answer Options */}
-        <View style={styles.answersContainer}>
-          {answer?.map((answerText, index) => (
-            <TouchableOpacity
-              key={index}
-              onPress={() => handleSelectAnswer(answerText, index)}
-              style={[
-                styles.answerButton,
-                {
-                  backgroundColor: getAnswerBackgroundColor(answerText, index),
-                },
-              ]}>
-              <Text
-                allowFontScaling
-                adjustsFontSizeToFit
-                numberOfLines={2}
+          {/* Right side - Answer Options */}
+          <View style={styles.answersContainer}>
+            {answer?.map((answerText, index) => (
+              <TouchableOpacity
+                key={index}
+                onPress={() => handleSelectAnswer(answerText, index)}
                 style={[
-                  styles.answerText,
-                  fontFamily && {fontFamily},
-                  answerStyle,
+                  styles.answerButton,
+                  {
+                    backgroundColor: getAnswerBackgroundColor(
+                      answerText,
+                      index,
+                    ),
+                  },
                 ]}>
-                {answerText.trim()}
-              </Text>
-            </TouchableOpacity>
-          ))}
+                <Text
+                  allowFontScaling
+                  adjustsFontSizeToFit
+                  numberOfLines={2}
+                  style={[
+                    styles.answerText,
+                    fontFamily && {fontFamily},
+                    answerStyle,
+                  ]}>
+                  {answerText.trim()}
+                </Text>
+              </TouchableOpacity>
+            ))}
+          </View>
         </View>
-      </View>
+      </ScrollIndicator>
 
       {/* Learning Timer Overlay */}
       {learningTimer !== 0 && <View style={styles.timerOverlay} />}
@@ -223,7 +231,7 @@ const styles = StyleSheet.create({
     borderRadius: scale(30),
     justifyContent: 'center',
     alignItems: 'center',
-    padding: scale(16),
+    paddingHorizontal: scale(16),
   },
   questionContainer: {
     flexDirection: 'row',
@@ -233,7 +241,6 @@ const styles = StyleSheet.create({
   contentContainer: {
     flex: 1,
     flexDirection: 'row',
-    alignSelf: 'stretch',
     gap: scale(16),
   },
   imageContainer: {
@@ -248,22 +255,19 @@ const styles = StyleSheet.create({
   },
   answersContainer: {
     flex: 1,
-    justifyContent: 'space-between',
+    // justifyContent: 'space-between',
     gap: scale(8),
   },
   answerButton: {
-    flex: 1,
     borderRadius: scale(8),
     justifyContent: 'center',
     alignItems: 'center',
-    minHeight: verticalScale(32),
   },
   answerText: {
     fontFamily: FontFamily.SVNNeuzeitBold,
     color: COLORS.WHITE_FBF8CC,
-    fontSize: verticalScale(12),
+    fontSize: verticalScale(16),
     textAlign: 'center',
-    lineHeight: verticalScale(16),
   },
   timerOverlay: {
     position: 'absolute',

@@ -130,7 +130,10 @@ const Science_SG1M2 = observer(
       }, [characterImageFail, characterImageSuccess, isAnswerCorrect]);
 
       const onSpeechText = useCallback(() => {
-        ttsSpeak?.(firstMiniTestTask?.question?.[moduleIndex]?.content ?? '');
+        ttsSpeak?.(
+          firstMiniTestTask?.question?.[moduleIndex]?.instruction.description ??
+            '',
+        );
       }, [firstMiniTestTask?.question, moduleIndex, ttsSpeak]);
 
       const opacity = useSharedValue(0);

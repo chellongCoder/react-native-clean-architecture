@@ -113,6 +113,8 @@ import Science_Select_BGImageText from './LessonComponent/Science_Select_BGImage
 import Science_SG1M2 from './LessonComponent/Science_SG1M2';
 import Science_SelectAnswer from './LessonComponent/Science_SelectAnswer';
 import Science_SelectAnswer_Image_TextImageAnswer from './LessonComponent/Science_SelectAnswer_Image_TextImageAnswer';
+import Science_SelectAnswer_2Question from './LessonComponent/Science_SelectAnswer_2Question';
+import Science_SelectAnswer_Circle from './LessonComponent/Science_SelectAnswer_Circle';
 
 export type TResult = {
   userId?: string;
@@ -526,13 +528,30 @@ const LESSON_PATTERNS = [
     }),
   },
   {
-    pattern: /^SCIENCE_SG[1-6]M(2)$/,
-    component: (type: string) => {
-      const componentMap: Record<string, any> = {
-        SCIENCE_SG3M2: Science_SelectAnswer_Image_TextImageAnswer,
-      };
-      return componentMap[type] || Science_G0M1;
-    },
+    pattern: /^SCIENCE_SG2M(1|3)$/,
+    component: Science_SelectAnswer_Image_TextImageAnswer,
+    props: (dataProps: any) => ({
+      ...dataProps,
+    }),
+  },
+  {
+    pattern: /^SCIENCE_SG2M(2)$/,
+    component: Science_SelectAnswer_Image_TextImageAnswer,
+    props: (dataProps: any) => ({
+      ...dataProps,
+      contentContainerStyle: {
+        flexDirection: 'row',
+      },
+    }),
+  },
+  {
+    pattern: /^SCIENCE_SG2M(5)$/,
+    component: Science_SelectAnswer_2Question,
+    props,
+  },
+  {
+    pattern: /^SCIENCE_SG2M(7)$/,
+    component: Science_SelectAnswer_Circle,
     props,
   },
   {
@@ -542,7 +561,7 @@ const LESSON_PATTERNS = [
         SCIENCE_SG1M3: Science_SelectAnswer,
         SCIENCE_SG3M3: Science_SelectAnswer,
       };
-      return componentMap[type] || Science_G0M1;
+      return componentMap[type] || Science_SelectAnswer;
     },
     props,
   },

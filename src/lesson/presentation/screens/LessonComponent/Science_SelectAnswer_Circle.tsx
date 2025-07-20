@@ -43,7 +43,8 @@ import SelectionAnswersQuestion, {
 import TextHighlight from '../../components/TextHighlight';
 import {useI18n} from 'src/core/presentation/hooks/useI18n';
 import VoiceButton from '../../components/VoiceButton';
-import QuestionImageText from '../../components/Science/QuestionImageText';
+import MultiQuestionList from '../../components/Science/MultiQuestionList';
+import SelectionCircleAnswers from '../../components/Science/SelectionCircleAnswers';
 
 type Props = {
   moduleIndex: number;
@@ -58,7 +59,7 @@ type Props = {
   characterStyle?: StyleProp<ViewStyle>;
 };
 
-const Science_SelectAnswer = observer(
+const Science_SelectAnswer_Circle = observer(
   forwardRef<LessonRef, Props>(
     (
       {
@@ -230,19 +231,7 @@ const Science_SelectAnswer = observer(
           onPressFlower={toggleShowHint}
           buildQuestion={
             <Animated.View style={[animatedStyle, {flex: 1}]}>
-              <QuestionImageText
-                title={firstMiniTestTask?.question?.[moduleIndex]?.highlight}
-                image={
-                  env.IMAGE_QUESTION_BASE_API_URL +
-                  firstMiniTestTask?.question?.[moduleIndex].image
-                }
-                descriptions={
-                  firstMiniTestTask?.question?.[moduleIndex]?.paragraph?.split(
-                    '\n',
-                  ) ?? []
-                }
-                backgroundColor="transparent"
-              />
+              <Text>{firstMiniTestTask?.question?.[moduleIndex].content}</Text>
             </Animated.View>
           }
           buildAnswer={
@@ -269,32 +258,22 @@ const Science_SelectAnswer = observer(
 
                 <VoiceButton onPress={onSpeechText} />
               </View>
-              <SelectionAnswersQuestion
-                answerIsImage
+              <SelectionCircleAnswers
+                answer={['HIGHEST', 'WATER', 'PROTECTS', 'OXYGEN']}
+                isSelectOne
+                centerImage={
+                  env.IMAGE_QUESTION_BASE_API_URL +
+                  firstMiniTestTask?.question?.[moduleIndex].image
+                }
                 question={
                   <TextHighlight
                     content={
                       firstMiniTestTask?.question?.[moduleIndex].highlight ?? ''
                     }
                     description={
-                      firstMiniTestTask?.question?.[moduleIndex].description ??
-                      ''
+                      firstMiniTestTask?.question?.[moduleIndex].content ?? ''
                     }
                   />
-                }
-                answer={
-                  (
-                    firstMiniTestTask?.question?.[moduleIndex]
-                      ?.answers as Answer[]
-                  ).map(q => q.content) ?? []
-                }
-                answerImage={
-                  (
-                    firstMiniTestTask?.question?.[moduleIndex]
-                      ?.answers as Answer[]
-                  ).map(
-                    q => env.IMAGE_QUESTION_BASE_API_URL + q.image.trim(),
-                  ) ?? []
                 }
                 answerStyle={styles.fonts_SVN_Cherish}
                 isShowCorrectContainer={isShowCorrectContainer}
@@ -324,7 +303,7 @@ const Science_SelectAnswer = observer(
   ),
 );
 
-export default Science_SelectAnswer;
+export default Science_SelectAnswer_Circle;
 
 const styles = StyleSheet.create({
   fill: {

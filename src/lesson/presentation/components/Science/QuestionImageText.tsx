@@ -1,12 +1,10 @@
 import React from 'react';
 import {
   View,
-  Image,
   StyleSheet,
   StyleProp,
   ViewStyle,
   TextStyle,
-  ImageStyle,
   Text,
   ScrollView,
 } from 'react-native';
@@ -14,6 +12,7 @@ import {scale, verticalScale} from 'react-native-size-matters';
 import {FontFamily} from 'src/core/presentation/hooks/useFonts';
 import {COLORS} from 'src/core/presentation/constants/colors';
 import TextShadow from '../TextShadow';
+import FastImage, {ImageStyle} from 'react-native-fast-image';
 
 type Props = {
   title?: string;
@@ -21,6 +20,7 @@ type Props = {
   imageStyle?: StyleProp<ImageStyle>;
   descriptions?: string[];
   containerStyle?: StyleProp<ViewStyle>;
+  contentContainerStyle?: StyleProp<ViewStyle>;
   titleStyle?: StyleProp<TextStyle>;
   descriptionStyle?: StyleProp<TextStyle>;
   backgroundColor?: string;
@@ -33,6 +33,7 @@ const QuestionImageText = ({
   imageStyle,
   descriptions,
   containerStyle,
+  contentContainerStyle,
   titleStyle,
   descriptionStyle,
   backgroundColor = '#E8F5E8',
@@ -59,11 +60,11 @@ const QuestionImageText = ({
       )}
 
       {/* Content container with image and text */}
-      <View style={styles.contentContainer}>
+      <View style={[styles.contentContainer, contentContainerStyle]}>
         {/* Image on the left */}
         {image && (
           <View style={styles.imageContainer}>
-            <Image
+            <FastImage
               source={{uri: image}}
               style={[styles.image, imageStyle]}
               resizeMode="contain"
