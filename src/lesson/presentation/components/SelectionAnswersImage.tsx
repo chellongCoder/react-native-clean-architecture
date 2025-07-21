@@ -236,7 +236,7 @@ const styles = StyleSheet.create({
   questionContainer: {
     flexDirection: 'row',
     paddingHorizontal: scale(16),
-    paddingBottom: scale(8),
+    paddingVertical: scale(16),
   },
   contentContainer: {
     flex: 1,
@@ -247,7 +247,7 @@ const styles = StyleSheet.create({
     flex: 1,
     borderRadius: scale(15),
     overflow: 'hidden',
-    backgroundColor: '#f0f0f0',
+    minHeight: verticalScale(150),
   },
   questionImage: {
     width: '100%',
@@ -255,8 +255,9 @@ const styles = StyleSheet.create({
   },
   answersContainer: {
     flex: 1,
-    // justifyContent: 'space-between',
+    justifyContent: 'space-between',
     gap: scale(8),
+    minHeight: verticalScale(150),
   },
   answerButton: {
     borderRadius: scale(8),

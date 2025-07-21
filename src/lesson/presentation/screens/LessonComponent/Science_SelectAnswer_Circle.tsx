@@ -13,7 +13,7 @@ import LessonComponent from './LessonComponent';
 import PrimaryButton from '../../components/PrimaryButton';
 import {FontFamily} from 'src/core/presentation/hooks/useFonts';
 import useGlobalStyle from 'src/core/presentation/hooks/useGlobalStyle';
-import {Answer, Task} from 'src/home/application/types/GetListQuestionResponse';
+import {Task} from 'src/home/application/types/GetListQuestionResponse';
 import {COLORS} from 'src/core/presentation/constants/colors';
 import {
   darkenColor,
@@ -37,13 +37,10 @@ import useAuthenticationStore from 'src/authentication/presentation/stores/useAu
 import {observer} from 'mobx-react';
 import {LessonRef} from '../../types';
 import useHomeStore from 'src/home/presentation/stores/useHomeStore';
-import SelectionAnswersQuestion, {
-  SelectionAnswersQuestionRef,
-} from '../../components/SelectionAnswersQuestion';
+import {SelectionAnswersQuestionRef} from '../../components/SelectionAnswersQuestion';
 import TextHighlight from '../../components/TextHighlight';
 import {useI18n} from 'src/core/presentation/hooks/useI18n';
 import VoiceButton from '../../components/VoiceButton';
-import MultiQuestionList from '../../components/Science/MultiQuestionList';
 import SelectionCircleAnswers from '../../components/Science/SelectionCircleAnswers';
 
 type Props = {
@@ -230,8 +227,15 @@ const Science_SelectAnswer_Circle = observer(
           isShowCorrectContainer={isShowCorrectContainer}
           onPressFlower={toggleShowHint}
           buildQuestion={
-            <Animated.View style={[animatedStyle, {flex: 1}]}>
-              <Text>{firstMiniTestTask?.question?.[moduleIndex].content}</Text>
+            <Animated.View style={[animatedStyle, {flex: 1, width: '50%'}]}>
+              <Text
+                style={[
+                  styles.fonts_SVN_Cherish,
+                  styles.textDescription,
+                  {color: settings.backgroundAnswerColor},
+                ]}>
+                {firstMiniTestTask?.question?.[moduleIndex].description}
+              </Text>
             </Animated.View>
           }
           buildAnswer={
@@ -308,6 +312,9 @@ export default Science_SelectAnswer_Circle;
 const styles = StyleSheet.create({
   fill: {
     flex: 1,
+  },
+  textDescription: {
+    fontSize: scale(30),
   },
   fonts_SVN_Cherish: {
     fontFamily: FontFamily.SVNCherishMoment,

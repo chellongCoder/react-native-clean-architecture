@@ -119,6 +119,8 @@ import Science_SelectAnswer_FillQuestion from './LessonComponent/Science_SelectA
 import Science_G4M2 from './LessonComponent/Science_G4M2';
 import Science_G4M5 from './LessonComponent/Science_G4M5';
 import Science_G4M4 from './LessonComponent/Science_G4M4';
+import Science_SelectAnswer_ImageLearning from './LessonComponent/Science_SelectAnswer_ImageLearning';
+import Science_SelectAnswer_Image_TextUnderline from './LessonComponent/Science_SelectAnswer_Image_TextUnderline';
 
 export type TResult = {
   userId?: string;
@@ -581,6 +583,20 @@ const LESSON_PATTERNS = [
   {
     pattern: /^SCIENCE_SG4M(5)$/,
     component: Science_G4M5,
+  },
+  {
+    pattern: /^SCIENCE_SG3M(1)$/,
+    component: Science_SelectAnswer_ImageLearning,
+    props,
+  },
+  {
+    pattern: /^SCIENCE_SG3M(2)$/,
+    component: Science_SelectAnswer_Image_TextImageAnswer,
+    props,
+  },
+  {
+    pattern: /^SCIENCE_SG3M(4|5)$/,
+    component: Science_SelectAnswer_Image_TextUnderline,
     props,
   },
   {

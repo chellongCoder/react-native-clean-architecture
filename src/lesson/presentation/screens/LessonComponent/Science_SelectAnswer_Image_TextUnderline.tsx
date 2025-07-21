@@ -13,13 +13,12 @@ import LessonComponent from './LessonComponent';
 import PrimaryButton from '../../components/PrimaryButton';
 import {FontFamily} from 'src/core/presentation/hooks/useFonts';
 import useGlobalStyle from 'src/core/presentation/hooks/useGlobalStyle';
-import {Answer, Task} from 'src/home/application/types/GetListQuestionResponse';
+import {Task} from 'src/home/application/types/GetListQuestionResponse';
 import {COLORS} from 'src/core/presentation/constants/colors';
 import {
   darkenColor,
   getCorrectAnswer,
   isMMSS,
-  isSubArray,
 } from 'src/core/presentation/utils';
 import {scale, verticalScale} from 'react-native-size-matters';
 import Animated, {
@@ -38,11 +37,9 @@ import {observer} from 'mobx-react';
 import {LessonRef} from '../../types';
 import useHomeStore from 'src/home/presentation/stores/useHomeStore';
 import {SelectionAnswersQuestionRef} from '../../components/SelectionAnswersQuestion';
-import TextHighlight from '../../components/TextHighlight';
+import SelectionImagesQuestion from '../../components/SelectionImagesQuestion';
 import {useI18n} from 'src/core/presentation/hooks/useI18n';
 import VoiceButton from '../../components/VoiceButton';
-import SelectionAnswersImage from '../../components/SelectionAnswersImage';
-import FastImage from 'react-native-fast-image';
 
 type Props = {
   moduleIndex: number;
@@ -55,11 +52,9 @@ type Props = {
   characterImageSuccess?: string;
   characterImageFail?: string;
   characterStyle?: StyleProp<ViewStyle>;
-  contentContainerStyle?: StyleProp<ViewStyle>;
-  hasTitle?: boolean;
 };
 
-const Science_SelectAnswer_Image_TextImageAnswer = observer(
+const Science_SelectAnswer_Image_TextUnderline = observer(
   forwardRef<LessonRef, Props>(
     (
       {
@@ -73,7 +68,6 @@ const Science_SelectAnswer_Image_TextImageAnswer = observer(
         characterImageSuccess,
         characterImageFail,
         characterStyle,
-        contentContainerStyle,
       },
       ref,
     ) => {
@@ -83,32 +77,20 @@ const Science_SelectAnswer_Image_TextImageAnswer = observer(
       const focus = useIsFocused();
       const answerRef = useRef<SelectionAnswersQuestionRef>(null);
 
-      const [answerSelected, setAnswerSelected] = useState<string | string[]>(
-        '',
-      );
-      console.log(
-        '🛠 LOG: 🚀 --> ------------------------------------------------🛠 LOG: 🚀 -->',
-      );
-      console.log('🛠 LOG: 🚀 --> ~ answerSelected:', answerSelected);
-      console.log(
-        '🛠 LOG: 🚀 --> ------------------------------------------------🛠 LOG: 🚀 -->',
-      );
+      const [answerSelected, setAnswerSelected] = useState<string>('');
 
       const {trainingCount, getSetting} = useLessonStore();
 
-      const {selectedChild} = useAuthenticationStore();
-
       const isCorrectAnswer = useMemo(() => {
-        const correctAnswer =
-          firstMiniTestTask?.question?.[moduleIndex]?.correctAnswer;
-        const answerSelectedArray = (
-          Array.isArray(answerSelected) ? answerSelected : [answerSelected]
-        ).map(e => e?.toLocaleString().toLocaleLowerCase());
-        const correctAnswerArray = (
-          Array.isArray(correctAnswer) ? correctAnswer : [correctAnswer]
-        ).map(e => e?.toLocaleString().toLocaleLowerCase());
-        return isSubArray(answerSelectedArray, correctAnswerArray);
+        return (
+          `${answerSelected.trim().toLocaleLowerCase()}` ===
+          firstMiniTestTask?.question?.[
+            moduleIndex
+          ]?.fullAnswer.toLocaleLowerCase()
+        );
       }, [answerSelected, firstMiniTestTask?.question, moduleIndex]);
+
+      const {selectedChild} = useAuthenticationStore();
 
       const {
         isAnswerCorrect,
@@ -121,14 +103,16 @@ const Science_SelectAnswer_Image_TextImageAnswer = observer(
         resetLearning,
       } = useSettingLesson({
         countDownTime: trainingCount <= 2 ? 0 : 5,
-        isCorrectAnswer: isCorrectAnswer,
+        isCorrectAnswer: !!isCorrectAnswer,
         onSubmit: () => {
           setAnswerSelected('');
-          nextModule((answerSelected as string[]).toString());
+          nextModule(
+            `${answerSelected.trim().toLocaleLowerCase().replace('#', '')}.png`,
+          );
           answerRef.current?.resetAnswerSelected?.();
         },
         fullAnswer: firstMiniTestTask?.question?.[moduleIndex].fullAnswer,
-        totalTime: 60 * 5,
+        totalTime: 5 * 60,
       });
 
       const {lessonSetting} = useHomeStore();
@@ -147,12 +131,10 @@ const Science_SelectAnswer_Image_TextImageAnswer = observer(
 
       const onSpeechText = useCallback(() => {
         ttsSpeak?.(
-          firstMiniTestTask?.question?.[moduleIndex]?.instruction
-            ?.description ??
-            settings.prompt?.toString() ??
+          firstMiniTestTask?.question?.[moduleIndex]?.instruction.description ??
             '',
         );
-      }, [firstMiniTestTask?.question, moduleIndex, settings.prompt, ttsSpeak]);
+      }, [firstMiniTestTask?.question, moduleIndex, ttsSpeak]);
 
       const opacity = useSharedValue(0);
       const scaleS = useSharedValue(1);
@@ -208,7 +190,7 @@ const Science_SelectAnswer_Image_TextImageAnswer = observer(
           setAnswerSelected(
             getCorrectAnswer(
               firstMiniTestTask?.question?.[moduleIndex]
-                ?.correctAnswer as string,
+                ?.correctAnswer as string[],
             ),
           );
         },
@@ -238,38 +220,45 @@ const Science_SelectAnswer_Image_TextImageAnswer = observer(
           isShowCorrectContainer={isShowCorrectContainer}
           onPressFlower={toggleShowHint}
           buildQuestion={
-            <Animated.View
-              style={[animatedStyle, {flex: 1}, contentContainerStyle]}>
-              {firstMiniTestTask?.question?.[moduleIndex]?.description && (
-                <View style={styles.descriptionContainer}>
-                  {firstMiniTestTask?.question?.[moduleIndex]?.description
-                    ?.split('\n')
-                    ?.map((description, index) => (
-                      <View key={index} style={styles.descriptionItem}>
-                        <Text
-                          style={[
-                            [
-                              styles.description,
-                              {color: settings.backgroundButtonColor},
-                            ],
-                          ]}>
-                          {description}
+            <Animated.View style={[animatedStyle, {flex: 1, width: '60%'}]}>
+              <Text
+                style={[
+                  styles.contentText,
+                  styles.fonts_SVN_Cherish,
+                  {color: settings.backgroundButtonColor},
+                ]}>
+                {firstMiniTestTask?.question?.[moduleIndex].paragraph
+                  ?.split('\n')?.[0]
+                  ?.split(firstMiniTestTask?.question?.[moduleIndex].highlight)
+                  ?.map((e, i) => {
+                    if (i > 0) {
+                      return e;
+                    }
+                    return (
+                      <>
+                        {e}
+                        <Text style={{textDecorationLine: 'underline'}}>
+                          {firstMiniTestTask?.question?.[moduleIndex].highlight}
                         </Text>
-                      </View>
-                    ))}
-                </View>
+                      </>
+                    );
+                  })}
+              </Text>
+              {firstMiniTestTask?.question?.[moduleIndex].paragraph?.split(
+                '\n',
+              )?.[1] && (
+                <Text
+                  style={[
+                    styles.descriptionText,
+                    {color: settings.backgroundColor},
+                  ]}>
+                  {
+                    firstMiniTestTask?.question?.[moduleIndex].paragraph?.split(
+                      '\n',
+                    )?.[1]
+                  }
+                </Text>
               )}
-              <View style={styles.imageContainer}>
-                <FastImage
-                  source={{
-                    uri:
-                      env.IMAGE_QUESTION_BASE_API_URL +
-                      firstMiniTestTask?.question?.[moduleIndex].image,
-                  }}
-                  style={[styles.image]}
-                  resizeMode="contain"
-                />
-              </View>
             </Animated.View>
           }
           buildAnswer={
@@ -290,46 +279,24 @@ const Science_SelectAnswer_Image_TextImageAnswer = observer(
                         ),
                       },
                     ]}>
-                    {i18n.t('lesson.screens.Modules.chooseCorrectAnswer')}
+                    {i18n.t('lesson.screens.Modules.chooseTheCorrectAnswer')}
                   </Text>
                 </View>
 
                 <VoiceButton onPress={onSpeechText} />
               </View>
-
-              <SelectionAnswersImage
-                question={
-                  <TextHighlight
-                    content={
-                      firstMiniTestTask?.question?.[moduleIndex].highlight ?? ''
-                    }
-                    description={
-                      firstMiniTestTask?.question?.[
-                        moduleIndex
-                      ].description.toLocaleLowerCase() ?? ''
-                    }
-                  />
+              <SelectionImagesQuestion
+                answers={
+                  (firstMiniTestTask?.question?.[moduleIndex]
+                    .answers as string[]) ?? []
                 }
-                answer={
-                  (
-                    firstMiniTestTask?.question?.[moduleIndex]
-                      ?.answers as Answer[]
-                  ).map(q => q.content) ?? []
-                }
-                questionImage={
-                  (
-                    firstMiniTestTask?.question?.[moduleIndex]
-                      ?.answers as Answer[]
-                  ).map(q => env.IMAGE_QUESTION_BASE_API_URL + q.image) ?? []
-                }
-                answerStyle={styles.fonts_SVN_Cherish}
                 isShowCorrectContainer={isShowCorrectContainer}
                 isAnswerCorrect={!!isAnswerCorrect}
                 onSelectAnswer={(e: string[]) => {
-                  setAnswerSelected(e);
+                  setAnswerSelected(e[0]);
                 }}
-                isSelectOne
                 learningTimer={learningTimer}
+                isSelectOne
                 ref={answerRef}
               />
 
@@ -351,7 +318,7 @@ const Science_SelectAnswer_Image_TextImageAnswer = observer(
   ),
 );
 
-export default Science_SelectAnswer_Image_TextImageAnswer;
+export default Science_SelectAnswer_Image_TextUnderline;
 
 const styles = StyleSheet.create({
   fill: {
@@ -360,32 +327,46 @@ const styles = StyleSheet.create({
   fonts_SVN_Cherish: {
     fontFamily: FontFamily.SVNCherishMoment,
   },
-  fonts_SVN_Neuzeit_Bold: {
+  contentText: {
+    fontSize: scale(40),
+    textAlign: 'center',
+  },
+  descriptionText: {
     fontFamily: FontFamily.SVNNeuzeitBold,
+    fontSize: scale(20),
+    textAlign: 'center',
   },
   textQuestion: {
     fontSize: verticalScale(15),
     textAlign: 'left',
     color: COLORS.BLUE_258F78,
   },
-
-  boxSelected: {
-    backgroundColor: COLORS.WHITE_FBF8CC,
-    height: verticalScale(220),
-    flex: 1,
-    borderRadius: scale(30),
-    justifyContent: 'center',
+  textGreen: {
+    color: '#258F78',
+  },
+  txtWhite: {
+    color: 'white',
+  },
+  rowAround: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+  },
+  rowAlignCenter: {
+    flexDirection: 'row',
     alignItems: 'center',
   },
-
+  rowBetween: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
   wrapHeaderContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     marginBottom: verticalScale(8),
   },
   iconImageContainer: {
-    height: verticalScale(39),
-    width: verticalScale(34),
+    height: verticalScale(45),
+    width: verticalScale(40),
   },
   buttonContainer: {
     borderRadius: scale(52),
@@ -393,28 +374,5 @@ const styles = StyleSheet.create({
     paddingHorizontal: scale(24),
     marginTop: scale(16),
     backgroundColor: '#0877B6',
-  },
-  txtParagraph: {
-    fontFamily: FontFamily.SVNNeuzeitBold,
-    fontSize: scale(14),
-    color: COLORS.WHITE_FBF8CC,
-  },
-  image: {
-    width: scale(120),
-    height: scale(120),
-  },
-  imageContainer: {
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  descriptionItem: {},
-  descriptionContainer: {
-    width: '60%',
-  },
-  description: {
-    fontSize: scale(19),
-    fontFamily: FontFamily.SVNCherishMoment,
-    lineHeight: scale(27),
-    textAlign: 'center',
   },
 });

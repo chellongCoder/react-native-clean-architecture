@@ -1,6 +1,7 @@
 import React from 'react';
 import {StyleSheet, Text, View, ViewStyle, StyleProp} from 'react-native';
 import {scale, verticalScale} from 'react-native-size-matters';
+import {COLORS} from 'src/core/presentation/constants/colors';
 import {FontFamily} from 'src/core/presentation/hooks/useFonts';
 
 type Props = {
@@ -10,26 +11,40 @@ type Props = {
   titleColor?: string;
   questionColor?: string;
   backgroundColor?: string;
+  activeIndex?: number;
 };
 
 const MultiQuestionList: React.FC<Props> = ({
   title,
   questions,
   style,
-  titleColor = '#B4E7CE',
-  questionColor = '#FFFFFF',
-  backgroundColor = '#8B5FBF',
+  titleColor = '#A5FFEF',
+  questionColor = '#5440D2',
+  backgroundColor = '#E2CBF7',
+  activeIndex,
 }) => {
   return (
-    <View style={[styles.container, {backgroundColor}, style]}>
+    <View style={[styles.container, style]}>
       {/* Title */}
       <Text style={[styles.title, {color: titleColor}]}>{title}</Text>
 
       {/* Questions List */}
       <View style={styles.questionsContainer}>
         {questions.map((question, index) => (
-          <View key={index} style={styles.questionItem}>
-            <Text style={[styles.questionText, {color: questionColor}]}>
+          <View
+            key={index}
+            style={[
+              styles.questionItem,
+              {
+                backgroundColor:
+                  activeIndex === index ? backgroundColor : 'transparent',
+              },
+            ]}>
+            <Text
+              style={[
+                styles.questionText,
+                {color: activeIndex === index ? questionColor : COLORS.WHITE},
+              ]}>
               {`${index + 1}. ${question}`}
             </Text>
           </View>
@@ -43,48 +58,30 @@ const styles = StyleSheet.create({
   container: {
     borderRadius: scale(20),
     paddingHorizontal: scale(20),
-    paddingVertical: verticalScale(30),
-    minHeight: verticalScale(200),
-    position: 'relative',
-    overflow: 'hidden',
   },
-  decorativeContainer: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-  },
+
   title: {
-    fontSize: scale(32),
-    fontFamily: FontFamily.SVNNeuzeitBold,
+    fontSize: scale(60),
+    fontFamily: FontFamily.SVNCherishMoment,
     textAlign: 'center',
     marginBottom: verticalScale(20),
     fontWeight: 'bold',
-    textShadowColor: 'rgba(0, 0, 0, 0.3)',
-    textShadowOffset: {width: 2, height: 2},
     textShadowRadius: 4,
     letterSpacing: scale(2),
   },
   questionsContainer: {
-    flex: 1,
     justifyContent: 'center',
   },
   questionItem: {
-    backgroundColor: 'rgba(255, 255, 255, 0.15)',
-    borderRadius: scale(15),
+    borderRadius: scale(10),
     paddingHorizontal: scale(16),
     paddingVertical: verticalScale(12),
     marginBottom: verticalScale(12),
-    borderWidth: 2,
-    borderColor: 'rgba(255, 255, 255, 0.2)',
   },
   questionText: {
-    fontSize: scale(16),
-    fontFamily: FontFamily.SVNNeuzeitBold,
+    fontSize: scale(22),
+    fontFamily: FontFamily.SVNCherishMoment,
     textAlign: 'center',
-    fontWeight: '600',
-    lineHeight: scale(20),
   },
   // Decorative elements
   star: {
