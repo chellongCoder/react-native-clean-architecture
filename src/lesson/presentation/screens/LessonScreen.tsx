@@ -115,7 +115,6 @@ import Science_SelectAnswer from './LessonComponent/Science_SelectAnswer';
 import Science_SelectAnswer_Image_TextImageAnswer from './LessonComponent/Science_SelectAnswer_Image_TextImageAnswer';
 import Science_SelectAnswer_2Question from './LessonComponent/Science_SelectAnswer_2Question';
 import Science_SelectAnswer_Circle from './LessonComponent/Science_SelectAnswer_Circle';
-import Science_SelectAnswer_FillQuestion from './LessonComponent/Science_SelectAnswer_FillQuestion';
 import Science_G4M2 from './LessonComponent/Science_G4M2';
 import Science_G4M5 from './LessonComponent/Science_G4M5';
 import Science_G4M4 from './LessonComponent/Science_G4M4';
@@ -124,6 +123,7 @@ import Science_SelectAnswer_Image_TextUnderline from './LessonComponent/Science_
 import Science_SelectAnswer_ParagraphImage from './LessonComponent/Science_SelectAnswer_ParagraphImage';
 import Science_SelectAnswer_Image_Text from './LessonComponent/Science_SelectAnswer_Image_Text';
 import Science_SelectAnswer_ImageMeaning_Image from './LessonComponent/Science_SelectAnswer_ImageMeaning_Image';
+import Science_SelectAnswer_ScrollQuestion from './LessonComponent/Science_SelectAnswer_ScrollQuestion';
 
 export type TResult = {
   userId?: string;
@@ -615,7 +615,11 @@ const LESSON_PATTERNS = [
     component: Science_G4M5,
     props,
   },
-
+  {
+    pattern: /^SCIENCE_SG5M(3|4)$/,
+    component: Science_SelectAnswer_ScrollQuestion,
+    props,
+  },
   {
     pattern: /^SCIENCE_SG6M(1)$/,
     component: Science_G4M5,
