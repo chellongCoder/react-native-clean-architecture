@@ -12,6 +12,8 @@ type GenericLocale = {
   'core.errors': string;
   'core.errors.screenNotFound': string;
   'core.errors.contextNotProvided': string;
+  'core.errors.info': string;
+  'core.errors.inDeveloping': string;
   'core.bottomTab': string;
   'core.bottomTab.home': string;
   'core.bottomTab.parent': string;
@@ -195,6 +197,7 @@ type GenericLocale = {
   'lesson.screens.Modules.combineWordSuccess': string;
   'lesson.screens.Modules.combineWord': string;
   'lesson.screens.Modules.writeTheCharacter': string;
+  'lesson.screens.Modules.fillTheBlank': string;
   'lesson.screens.NewMoreScreen': string;
   'lesson.screens.NewMoreScreen.parentName': string;
   'lesson.screens.NewMoreScreen.parentEmail': string;

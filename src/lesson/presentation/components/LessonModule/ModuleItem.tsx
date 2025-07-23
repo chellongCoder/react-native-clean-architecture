@@ -27,6 +27,7 @@ import {IClock} from '../icons';
 import {useAsyncEffect} from 'src/core/presentation/hooks';
 import {observer} from 'mobx-react';
 import FastImage from 'react-native-fast-image';
+import Toast from 'react-native-toast-message';
 
 const ModuleItem = observer((props: ModuleItemProps) => {
   const globalStyle = useGlobalStyle();
@@ -56,6 +57,14 @@ const ModuleItem = observer((props: ModuleItemProps) => {
   }, [props.id, props.lessonName, props.title]);
 
   const onStartDoing = useCallback(async () => {
+    if (Number.isNaN(props.progress / props.totalQuestion)) {
+      Toast.show({
+        type: 'info', // or 'error', 'info'
+        text1: i18n.t('core.errors.info'),
+        text2: i18n.t('core.errors.inDeveloping'),
+      });
+      return;
+    }
     // gotoLesson();
     if (trialStatus === 'being_trial') {
       gotoLesson();
@@ -70,7 +79,15 @@ const ModuleItem = observer((props: ModuleItemProps) => {
         }
       }
     }
-  }, [trialStatus, gotoLesson, isLocked, popupHook]);
+  }, [
+    props.progress,
+    props.totalQuestion,
+    trialStatus,
+    i18n,
+    gotoLesson,
+    popupHook,
+    isLocked,
+  ]);
 
   const renderIcon = () =>
     props?.image ? (

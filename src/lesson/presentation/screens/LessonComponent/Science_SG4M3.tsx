@@ -97,9 +97,10 @@ const Science_SG4M3 = observer(
           typeof firstMiniTestTask?.question?.[moduleIndex]?.correctAnswer ===
           'object'
         ) {
-          return firstMiniTestTask?.question?.[
-            moduleIndex
-          ]?.correctAnswer?.some((item: string) => {
+          return (
+            firstMiniTestTask?.question?.[moduleIndex]
+              ?.correctAnswer as string[]
+          )?.some((item: string) => {
             return (
               answerSelected.toLocaleLowerCase() === item.toLocaleLowerCase()
             );

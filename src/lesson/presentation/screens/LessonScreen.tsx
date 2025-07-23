@@ -611,6 +611,13 @@ const LESSON_PATTERNS = [
   {
     pattern: /^SCIENCE_SG4M(5)$/,
     component: Science_G4M5,
+    props,
+  },
+
+  {
+    pattern: /^SCIENCE_SG6M(1)$/,
+    component: Science_G4M5,
+    props,
   },
   {
     pattern: /^SCIENCE_SG[1-6]M\d+$/,

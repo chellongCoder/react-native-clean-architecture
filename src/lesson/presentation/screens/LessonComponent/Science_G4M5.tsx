@@ -217,7 +217,7 @@ const Science_G4M5 = observer(
               <Text
                 style={[
                   styles.fonts_SVN_Cherish,
-                  {fontSize: scale(24), color: COLORS.CYAN_A5FFEF},
+                  {fontSize: scale(24), color: settings.backgroundButtonColor},
                   {textAlign: 'center'},
                 ]}>
                 {firstMiniTestTask?.question?.[moduleIndex].paragraph}
@@ -256,8 +256,7 @@ const Science_G4M5 = observer(
                       ''
                     }
                     description={
-                      firstMiniTestTask?.question?.[moduleIndex].description ??
-                      ''
+                      firstMiniTestTask?.question?.[moduleIndex].content ?? ''
                     }
                     styleHighlight={[
                       styles.fonts_SVN_Cherish,

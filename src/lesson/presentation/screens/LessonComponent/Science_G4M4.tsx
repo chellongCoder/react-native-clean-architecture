@@ -222,7 +222,12 @@ const Science_G4M4 = observer(
           onPressFlower={toggleShowHint}
           buildQuestion={
             <View style={styles.questionContainer}>
-              <Text style={[styles.fonts_SVN_Cherish, styles.questionText]}>
+              <Text
+                style={[
+                  styles.fonts_SVN_Cherish,
+                  styles.questionText,
+                  {color: settings.backgroundButtonColor},
+                ]}>
                 {firstMiniTestTask?.question?.[moduleIndex].paragraph}
               </Text>
             </View>
