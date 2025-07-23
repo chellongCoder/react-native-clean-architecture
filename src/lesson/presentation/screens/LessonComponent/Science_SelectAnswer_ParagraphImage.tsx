@@ -13,7 +13,7 @@ import LessonComponent from './LessonComponent';
 import PrimaryButton from '../../components/PrimaryButton';
 import {FontFamily} from 'src/core/presentation/hooks/useFonts';
 import useGlobalStyle from 'src/core/presentation/hooks/useGlobalStyle';
-import {Task} from 'src/home/application/types/GetListQuestionResponse';
+import {Answer, Task} from 'src/home/application/types/GetListQuestionResponse';
 import {COLORS} from 'src/core/presentation/constants/colors';
 import {
   darkenColor,
@@ -43,7 +43,7 @@ import SelectionAnswersQuestion, {
 import TextHighlight from '../../components/TextHighlight';
 import {useI18n} from 'src/core/presentation/hooks/useI18n';
 import VoiceButton from '../../components/VoiceButton';
-import LearningImage from '../../components/LearningImage';
+import ParagraphImageText from '../../components/ParagraphImageText';
 
 type Props = {
   moduleIndex: number;
@@ -58,7 +58,7 @@ type Props = {
   characterStyle?: StyleProp<ViewStyle>;
 };
 
-const Science_SelectAnswer_ImageLearning = observer(
+const Science_SelectAnswer_ParagraphImage = observer(
   forwardRef<LessonRef, Props>(
     (
       {
@@ -230,12 +230,14 @@ const Science_SelectAnswer_ImageLearning = observer(
           onPressFlower={toggleShowHint}
           buildQuestion={
             <Animated.View style={[animatedStyle, {flex: 1}]}>
-              <LearningImage
-                images={[
-                  firstMiniTestTask?.question?.[moduleIndex].image as string,
-                ]}
-                title={firstMiniTestTask?.question?.[moduleIndex].content}
-                titleStyle={{color: settings.backgroundButtonColor}}
+              <ParagraphImageText
+                paragraph={
+                  firstMiniTestTask?.question?.[moduleIndex]?.paragraph ?? ''
+                }
+                imageUrl={
+                  env.IMAGE_QUESTION_BASE_API_URL +
+                  firstMiniTestTask?.question?.[moduleIndex].image
+                }
               />
             </Animated.View>
           }
@@ -272,13 +274,13 @@ const Science_SelectAnswer_ImageLearning = observer(
                     description={
                       firstMiniTestTask?.question?.[moduleIndex].content ?? ''
                     }
-                    styleHighlight={{color: COLORS.RED_FF6B6B}}
-                    style={styles.fonts_SVN_Cherish}
                   />
                 }
                 answer={
-                  (firstMiniTestTask?.question?.[moduleIndex]
-                    ?.answers as string[]) ?? []
+                  (
+                    firstMiniTestTask?.question?.[moduleIndex]
+                      ?.answers as string[]
+                  ).map(q => q) ?? []
                 }
                 answerStyle={styles.fonts_SVN_Cherish}
                 isShowCorrectContainer={isShowCorrectContainer}
@@ -308,7 +310,7 @@ const Science_SelectAnswer_ImageLearning = observer(
   ),
 );
 
-export default Science_SelectAnswer_ImageLearning;
+export default Science_SelectAnswer_ParagraphImage;
 
 const styles = StyleSheet.create({
   fill: {

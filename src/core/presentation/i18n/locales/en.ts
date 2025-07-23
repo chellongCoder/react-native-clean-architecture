@@ -15,6 +15,9 @@ export default {
     errors: {
       screenNotFound: 'Screen not found',
       contextNotProvided: '{{contextName}} is not provided.',
+      info: 'Info',
+      inDeveloping:
+        'This feature is under development. Please try again later.',
     },
     bottomTab: {
       home: 'Home',

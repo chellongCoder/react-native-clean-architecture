@@ -1,5 +1,5 @@
 import React from 'react';
-import {ImageStyle, StyleProp, StyleSheet, Text, View} from 'react-native';
+import {StyleSheet, Text, View} from 'react-native';
 import {scale, verticalScale} from 'react-native-size-matters';
 import {FontFamily} from 'src/core/presentation/hooks/useFonts';
 import {COLORS} from 'src/core/presentation/constants/colors';
@@ -56,10 +56,11 @@ const styles = StyleSheet.create({
     height: verticalScale(110),
   },
   textParagraph: {
-    fontFamily: FontFamily.SVNNeuzeitRegular,
+    fontFamily: FontFamily.SVNCherishMoment,
     fontSize: verticalScale(14),
     color: COLORS.RED_BA3201,
-    letterSpacing: 0.1,
+    letterSpacing: 0.7,
+    lineHeight: scale(20),
   },
 });
 

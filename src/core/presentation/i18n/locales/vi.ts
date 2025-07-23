@@ -8,6 +8,8 @@ export default {
     errors: {
       screenNotFound: 'Không tìm thấy màn hình',
       contextNotProvided: '{{contextName}} chưa được cung cấp.',
+      info: 'Lưu ý',
+      inDeveloping: 'Tính năng đang phát triển. Vui lòng thử lại sau.',
     },
     bottomTab: {
       home: 'Trang chủ',

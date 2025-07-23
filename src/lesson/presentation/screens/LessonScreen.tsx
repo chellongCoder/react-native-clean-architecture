@@ -121,6 +121,7 @@ import Science_G4M5 from './LessonComponent/Science_G4M5';
 import Science_G4M4 from './LessonComponent/Science_G4M4';
 import Science_SelectAnswer_ImageLearning from './LessonComponent/Science_SelectAnswer_ImageLearning';
 import Science_SelectAnswer_Image_TextUnderline from './LessonComponent/Science_SelectAnswer_Image_TextUnderline';
+import Science_SelectAnswer_ParagraphImage from './LessonComponent/Science_SelectAnswer_ParagraphImage';
 
 export type TResult = {
   userId?: string;
@@ -560,9 +561,36 @@ const LESSON_PATTERNS = [
     component: Science_SelectAnswer_Circle,
     props,
   },
+
+  {
+    pattern: /^SCIENCE_SG3M(1)$/,
+    component: Science_SelectAnswer_ImageLearning,
+    props,
+  },
+  {
+    pattern: /^SCIENCE_SG3M(2)$/,
+    component: Science_SelectAnswer_Image_TextImageAnswer,
+    props,
+  },
+  {
+    pattern: /^SCIENCE_SG(1|3)M(3)$/,
+    component: Science_SelectAnswer,
+    props,
+  },
+  {
+    pattern: /^SCIENCE_SG3M(4|5)$/,
+    component: Science_SelectAnswer_Image_TextUnderline,
+    props,
+  },
+  {
+    pattern: /^SCIENCE_SG3M(9|10)$/,
+    component: Science_SG3M9,
+    props,
+  },
+
   {
     pattern: /^SCIENCE_SG4M(1)$/,
-    component: Science_SelectAnswer_FillQuestion,
+    component: Science_SelectAnswer_ParagraphImage,
     props,
   },
   {
@@ -585,40 +613,15 @@ const LESSON_PATTERNS = [
     component: Science_G4M5,
   },
   {
-    pattern: /^SCIENCE_SG3M(1)$/,
-    component: Science_SelectAnswer_ImageLearning,
-    props,
-  },
-  {
-    pattern: /^SCIENCE_SG3M(2)$/,
-    component: Science_SelectAnswer_Image_TextImageAnswer,
-    props,
-  },
-  {
-    pattern: /^SCIENCE_SG3M(4|5)$/,
-    component: Science_SelectAnswer_Image_TextUnderline,
-    props,
-  },
-  {
-    pattern: /^SCIENCE_SG[1-6]M(3)$/,
-    component: (type: string) => {
-      const componentMap: Record<string, any> = {
-        SCIENCE_SG1M3: Science_SelectAnswer,
-        SCIENCE_SG3M3: Science_SelectAnswer,
-      };
-      return componentMap[type] || Science_SelectAnswer;
-    },
-    props,
-  },
-  {
     pattern: /^SCIENCE_SG[1-6]M\d+$/,
     component: (type: string) => {
       const componentMap: Record<string, any> = {
         SCIENCE_SG1M2: Science_SG1M2,
         SCIENCE_SG2M4: Science_SG2M4,
         SCIENCE_SG3M9: Science_SG3M9,
+        SCIENCE_SG4M3: Science_SG4M3,
         SCIENCE_SG5M5: Science_SG5M5,
-        SCIENCE_SG6M6: Science_SG6M3,
+        SCIENCE_SG6M3: Science_SG6M3,
       };
       return componentMap[type] || Science_G0M1;
     },
