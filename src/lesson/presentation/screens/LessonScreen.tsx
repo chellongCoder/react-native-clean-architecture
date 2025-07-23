@@ -125,6 +125,7 @@ import Science_SelectAnswer_Image_Text from './LessonComponent/Science_SelectAns
 import Science_SelectAnswer_ImageMeaning_Image from './LessonComponent/Science_SelectAnswer_ImageMeaning_Image';
 import Science_SelectAnswer_ScrollQuestion from './LessonComponent/Science_SelectAnswer_ScrollQuestion';
 import Science_SG5M2 from './LessonComponent/Science_SG5M2';
+import Science_SG2M8 from './LessonComponent/Science_SG2M8';
 
 export type TResult = {
   userId?: string;
@@ -647,6 +648,7 @@ const LESSON_PATTERNS = [
       const componentMap: Record<string, any> = {
         SCIENCE_SG1M2: Science_SG1M2,
         SCIENCE_SG2M4: Science_SG2M4,
+        SCIENCE_SG2M8: Science_SG2M8,
         SCIENCE_SG3M9: Science_SG3M9,
         SCIENCE_SG4M3: Science_SG4M3,
         SCIENCE_SG5M5: Science_SG5M5,
