@@ -12,7 +12,7 @@ export interface Question {
   type: string;
   updatedAt: string;
   _id: string;
-  answers: Answer[] | string;
+  answers: Answer[] | string | string[];
   fullAnswer: string;
   image: string | string[];
   descriptionImage: string | string[];

@@ -115,6 +115,10 @@ import Science_SelectAnswer from './LessonComponent/Science_SelectAnswer';
 import Science_SelectAnswer_Image_TextImageAnswer from './LessonComponent/Science_SelectAnswer_Image_TextImageAnswer';
 import Science_SelectAnswer_2Question from './LessonComponent/Science_SelectAnswer_2Question';
 import Science_SelectAnswer_Circle from './LessonComponent/Science_SelectAnswer_Circle';
+import Science_SelectAnswer_FillQuestion from './LessonComponent/Science_SelectAnswer_FillQuestion';
+import Science_G4M2 from './LessonComponent/Science_G4M2';
+import Science_G4M5 from './LessonComponent/Science_G4M5';
+import Science_G4M4 from './LessonComponent/Science_G4M4';
 
 export type TResult = {
   userId?: string;
@@ -555,6 +559,31 @@ const LESSON_PATTERNS = [
     props,
   },
   {
+    pattern: /^SCIENCE_SG4M(1)$/,
+    component: Science_SelectAnswer_FillQuestion,
+    props,
+  },
+  {
+    pattern: /^SCIENCE_SG4M(2)$/,
+    component: Science_G4M2,
+    props,
+  },
+  {
+    pattern: /^SCIENCE_SG4M(3)$/,
+    component: Science_SG4M3,
+    props,
+  },
+  {
+    pattern: /^SCIENCE_SG4M(4)$/,
+    component: Science_G4M4,
+    props,
+  },
+  {
+    pattern: /^SCIENCE_SG4M(5)$/,
+    component: Science_G4M5,
+    props,
+  },
+  {
     pattern: /^SCIENCE_SG[1-6]M(3)$/,
     component: (type: string) => {
       const componentMap: Record<string, any> = {
@@ -572,7 +601,6 @@ const LESSON_PATTERNS = [
         SCIENCE_SG1M2: Science_SG1M2,
         SCIENCE_SG2M4: Science_SG2M4,
         SCIENCE_SG3M9: Science_SG3M9,
-        SCIENCE_SG4M3: Science_SG4M3,
         SCIENCE_SG5M5: Science_SG5M5,
         SCIENCE_SG6M6: Science_SG6M3,
       };

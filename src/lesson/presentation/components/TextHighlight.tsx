@@ -57,13 +57,17 @@ const TextHighlight = ({
 
   return (
     <Text style={[styles.textQuestion, style]}>
-      {splitText.map((part, index) => (
-        <Text
-          key={index}
-          style={part.highlight ? [{fontWeight: 'bold'}, styleHighlight] : {}}>
-          {part.text}
-        </Text>
-      ))}
+      {splitText.map((part, index) => {
+        return (
+          <Text
+            key={index}
+            style={
+              part.highlight ? [{fontWeight: 'bold'}, styleHighlight] : {}
+            }>
+            {part.text}
+          </Text>
+        );
+      })}
     </Text>
   );
 };
@@ -73,7 +77,7 @@ export default TextHighlight;
 const styles = StyleSheet.create({
   textQuestion: {
     fontSize: verticalScale(15),
-    textAlign: 'left',
+    textAlign: 'center',
     color: COLORS.BLUE_258F78,
   },
 });
