@@ -8,5 +8,6 @@ module.exports = {
   ignorePatterns: ['babel.config.js', 'metro.config.js', 'webpack.config.js'],
   rules: {
     'prettier/prettier': ['error', {endOfLine: 'auto'}, {usePrettierrc: true}],
+    'react-native/no-inline-styles': 'off',
   },
 };

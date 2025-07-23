@@ -39,13 +39,6 @@ const QuestionImageText = ({
   backgroundColor = '#E8F5E8',
   textShadowColor = 'rgba(0,0,0,0.3)',
 }: Props) => {
-  console.log(
-    '🛠 LOG: 🚀 --> --------------------------------------------🛠 LOG: 🚀 -->',
-  );
-  console.log('🛠 LOG: 🚀 --> ~ descriptions:', descriptions);
-  console.log(
-    '🛠 LOG: 🚀 --> --------------------------------------------🛠 LOG: 🚀 -->',
-  );
   return (
     <View style={[styles.container, {backgroundColor}, containerStyle]}>
       {/* Title at the top */}
