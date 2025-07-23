@@ -105,7 +105,6 @@ const Science_SelectAnswer_ImageLearning = observer(
         isAnswerCorrect,
         isShowCorrectContainer,
         word,
-        env,
         learningTimer,
         submit,
         toggleShowHint,

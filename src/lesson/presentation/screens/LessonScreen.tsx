@@ -122,6 +122,8 @@ import Science_G4M4 from './LessonComponent/Science_G4M4';
 import Science_SelectAnswer_ImageLearning from './LessonComponent/Science_SelectAnswer_ImageLearning';
 import Science_SelectAnswer_Image_TextUnderline from './LessonComponent/Science_SelectAnswer_Image_TextUnderline';
 import Science_SelectAnswer_ParagraphImage from './LessonComponent/Science_SelectAnswer_ParagraphImage';
+import Science_SelectAnswer_Image_Text from './LessonComponent/Science_SelectAnswer_Image_Text';
+import Science_SelectAnswer_ImageMeaning_Image from './LessonComponent/Science_SelectAnswer_ImageMeaning_Image';
 
 export type TResult = {
   userId?: string;
@@ -617,6 +619,16 @@ const LESSON_PATTERNS = [
   {
     pattern: /^SCIENCE_SG6M(1)$/,
     component: Science_G4M5,
+    props,
+  },
+  {
+    pattern: /^SCIENCE_SG6M(2)$/,
+    component: Science_SelectAnswer_Image_Text,
+    props,
+  },
+  {
+    pattern: /^SCIENCE_SG6M(4)$/,
+    component: Science_SelectAnswer_ImageMeaning_Image,
     props,
   },
   {

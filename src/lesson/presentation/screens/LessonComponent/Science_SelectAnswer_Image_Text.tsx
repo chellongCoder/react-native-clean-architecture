@@ -19,6 +19,7 @@ import {
   darkenColor,
   getCorrectAnswer,
   isMMSS,
+  isSubArray,
 } from 'src/core/presentation/utils';
 import {scale, verticalScale} from 'react-native-size-matters';
 import Animated, {
@@ -54,7 +55,7 @@ type Props = {
   characterStyle?: StyleProp<ViewStyle>;
 };
 
-const Science_SelectAnswer_Image_TextUnderline = observer(
+const Science_SelectAnswer_Image_Text = observer(
   forwardRef<LessonRef, Props>(
     (
       {
@@ -82,12 +83,15 @@ const Science_SelectAnswer_Image_TextUnderline = observer(
       const {trainingCount, getSetting} = useLessonStore();
 
       const isCorrectAnswer = useMemo(() => {
-        return (
-          `${answerSelected.trim().toLocaleLowerCase()}` ===
-          firstMiniTestTask?.question?.[
-            moduleIndex
-          ]?.fullAnswer.toLocaleLowerCase()
-        );
+        const correctAnswer =
+          firstMiniTestTask?.question?.[moduleIndex]?.correctAnswer;
+        const answerSelectedArray = (
+          Array.isArray(answerSelected) ? answerSelected : [answerSelected]
+        ).map(e => e?.toLocaleString().toLocaleLowerCase());
+        const correctAnswerArray = (
+          Array.isArray(correctAnswer) ? correctAnswer : [correctAnswer]
+        ).map(e => e?.toLocaleString().toLocaleLowerCase());
+        return isSubArray(answerSelectedArray, correctAnswerArray);
       }, [answerSelected, firstMiniTestTask?.question, moduleIndex]);
 
       const {selectedChild} = useAuthenticationStore();
@@ -219,45 +223,21 @@ const Science_SelectAnswer_Image_TextUnderline = observer(
           isShowCorrectContainer={isShowCorrectContainer}
           onPressFlower={toggleShowHint}
           buildQuestion={
-            <Animated.View style={[animatedStyle, {flex: 1, width: '60%'}]}>
+            <Animated.View
+              style={[
+                {
+                  flex: 1,
+                  width: '60%',
+                },
+                animatedStyle,
+              ]}>
               <Text
                 style={[
-                  styles.contentText,
-                  styles.fonts_SVN_Cherish,
+                  styles.textDescription,
                   {color: settings.backgroundButtonColor},
                 ]}>
-                {firstMiniTestTask?.question?.[moduleIndex].paragraph
-                  ?.split('\n')?.[0]
-                  ?.split(firstMiniTestTask?.question?.[moduleIndex].highlight)
-                  ?.map((e, i) => {
-                    if (i > 0) {
-                      return e;
-                    }
-                    return (
-                      <>
-                        {e}
-                        <Text style={{textDecorationLine: 'underline'}}>
-                          {firstMiniTestTask?.question?.[moduleIndex].highlight}
-                        </Text>
-                      </>
-                    );
-                  })}
+                {firstMiniTestTask?.question?.[moduleIndex].content}
               </Text>
-              {firstMiniTestTask?.question?.[moduleIndex].paragraph?.split(
-                '\n',
-              )?.[1] && (
-                <Text
-                  style={[
-                    styles.descriptionText,
-                    {color: settings.backgroundColor},
-                  ]}>
-                  {
-                    firstMiniTestTask?.question?.[moduleIndex].paragraph?.split(
-                      '\n',
-                    )?.[1]
-                  }
-                </Text>
-              )}
             </Animated.View>
           }
           buildAnswer={
@@ -295,7 +275,6 @@ const Science_SelectAnswer_Image_TextUnderline = observer(
                   setAnswerSelected(e[0]);
                 }}
                 learningTimer={learningTimer}
-                isSelectOne
                 ref={answerRef}
               />
 
@@ -317,7 +296,7 @@ const Science_SelectAnswer_Image_TextUnderline = observer(
   ),
 );
 
-export default Science_SelectAnswer_Image_TextUnderline;
+export default Science_SelectAnswer_Image_Text;
 
 const styles = StyleSheet.create({
   fill: {
@@ -326,37 +305,16 @@ const styles = StyleSheet.create({
   fonts_SVN_Cherish: {
     fontFamily: FontFamily.SVNCherishMoment,
   },
-  contentText: {
-    fontSize: scale(40),
-    textAlign: 'center',
-  },
-  descriptionText: {
-    fontFamily: FontFamily.SVNNeuzeitBold,
-    fontSize: scale(20),
-    textAlign: 'center',
-  },
+
   textQuestion: {
     fontSize: verticalScale(15),
     textAlign: 'left',
     color: COLORS.BLUE_258F78,
   },
-  textGreen: {
-    color: '#258F78',
-  },
-  txtWhite: {
-    color: 'white',
-  },
-  rowAround: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-  },
-  rowAlignCenter: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  rowBetween: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+  textDescription: {
+    fontSize: verticalScale(30),
+    textAlign: 'center',
+    fontFamily: FontFamily.SVNCherishMoment,
   },
   wrapHeaderContainer: {
     flexDirection: 'row',
