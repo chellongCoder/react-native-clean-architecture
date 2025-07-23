@@ -651,7 +651,6 @@ const LESSON_PATTERNS = [
         SCIENCE_SG2M8:
           testTask?.firstMiniTestTask?.stt === 2 ? Science_SG2M8 : undefined,
         SCIENCE_SG3M9: Science_SG3M9,
-        SCIENCE_SG4M3: Science_SG4M3,
         SCIENCE_SG5M5: Science_SG5M5,
         SCIENCE_SG6M3: Science_SG6M3,
       };
