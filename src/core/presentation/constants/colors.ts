@@ -66,4 +66,5 @@ export const COLORS = {
   RED_BC3F0B: '#BC3F0B',
   PURPLE_8F82E8: '#8F82E8',
   RED_FF6B6B: '#FF6B6B',
+  BLUE_003C82: '#003C82',
 };
