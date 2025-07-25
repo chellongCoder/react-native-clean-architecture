@@ -44,6 +44,7 @@ import VoiceButton from '../../components/VoiceButton';
 import DragItem from '../../components/Drag/DragSendItem';
 import {useDragContext} from '../../components/Drag/DragProvider';
 import env from 'src/core/infrastructure/env';
+import TextHighlight from '../../components/TextHighlight';
 
 type Props = {
   moduleIndex: number;
@@ -296,20 +297,28 @@ const Science_SG2M8 = observer(
           buildQuestion={
             <View
               style={{
-                width: scale(200),
-                minHeight: scale(500),
-                height: 200,
-                marginTop: verticalScale(10),
-                flexDirection: 'row',
-                flexWrap: 'wrap',
-                justifyContent: 'center',
+                alignItems: 'center',
               }}>
-              {(
-                (firstMiniTestTask?.question?.[moduleIndex]
-                  .fullAnswer as any as string[]) || []
-              )
-                .slice(0, 6)
-                .map((item, index) => {
+              <Text style={styles.textQuestion}>
+                {
+                  firstMiniTestTask?.question?.[moduleIndex].instruction
+                    .description
+                }
+              </Text>
+              <View
+                style={{
+                  width: scale(200),
+                  minHeight: scale(500),
+                  height: 200,
+                  marginTop: verticalScale(10),
+                  flexDirection: 'row',
+                  flexWrap: 'wrap',
+                  justifyContent: 'center',
+                }}>
+                {(
+                  (firstMiniTestTask?.question?.[moduleIndex]
+                    .answers as any as string[]) || []
+                ).map((item, index) => {
                   return (
                     <DragItem
                       key={index}
@@ -333,6 +342,7 @@ const Science_SG2M8 = observer(
                     />
                   );
                 })}
+              </View>
             </View>
           }
           buildAnswer={
@@ -362,20 +372,35 @@ const Science_SG2M8 = observer(
 
               <View
                 style={{
-                  flexDirection: 'row',
-                  flexWrap: 'wrap',
-                  alignItems: 'center',
-                  justifyContent: 'center',
                   backgroundColor: COLORS.WHITE_FBF8CC,
                   borderRadius: scale(10),
                   padding: scale(10),
+                  alignItems: 'center',
                 }}>
-                {(
-                  firstMiniTestTask?.question?.[moduleIndex]
-                    .answers as any as string[]
-                ).map((item, index) => {
-                  return buildItemAnswer([], item, index);
-                })}
+                <TextHighlight
+                  content={
+                    firstMiniTestTask?.question?.[moduleIndex].content ?? ''
+                  }
+                  description={
+                    firstMiniTestTask?.question?.[moduleIndex].description ?? ''
+                  }
+                />
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    flexWrap: 'wrap',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    marginTop: scale(10),
+                    padding: scale(10),
+                    maxWidth: scale(270),
+                  }}>
+                  {(
+                    firstMiniTestTask?.question?.[moduleIndex].image as string[]
+                  ).map((item, index) => {
+                    return buildItemAnswer([], item, index);
+                  })}
+                </View>
               </View>
 
               <PrimaryButton
@@ -417,7 +442,9 @@ const styles = StyleSheet.create({
     textShadowRadius: 2,
   },
   textQuestion: {
-    fontSize: verticalScale(18),
+    fontSize: verticalScale(14),
+    maxWidth: 250,
+    fontWeight: 'bold',
     textAlign: 'center',
     color: COLORS.BLUE_258F78,
   },
