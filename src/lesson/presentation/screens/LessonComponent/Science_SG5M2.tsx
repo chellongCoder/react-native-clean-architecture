@@ -1,12 +1,4 @@
-import {
-  Image,
-  ScrollView,
-  StyleProp,
-  StyleSheet,
-  Text,
-  View,
-  ViewStyle,
-} from 'react-native';
+import {ImageBackground, StyleSheet, Text, View} from 'react-native';
 import React, {
   forwardRef,
   useCallback,
@@ -23,12 +15,7 @@ import {FontFamily} from 'src/core/presentation/hooks/useFonts';
 import useGlobalStyle from 'src/core/presentation/hooks/useGlobalStyle';
 import {Task} from 'src/home/application/types/GetListQuestionResponse';
 import {COLORS} from 'src/core/presentation/constants/colors';
-import {
-  darkenColor,
-  getCorrectAnswer,
-  isMMSS,
-  isSubArray,
-} from 'src/core/presentation/utils';
+import {getCorrectAnswer, isMMSS} from 'src/core/presentation/utils';
 import {scale, verticalScale} from 'react-native-size-matters';
 import {
   Easing,
@@ -36,7 +23,6 @@ import {
   useSharedValue,
   withTiming,
 } from 'react-native-reanimated';
-import {TextToSpeechContext} from 'src/core/presentation/hooks/textToSpeech/TextToSpeechContext';
 import {useLessonStore} from '../../stores/LessonStore/useGetPostsStore';
 import {useSettingLesson} from '../../hooks/useSettingLesson';
 import {useIsFocused} from '@react-navigation/native';
@@ -44,12 +30,13 @@ import useAuthenticationStore from 'src/authentication/presentation/stores/useAu
 import {observer} from 'mobx-react';
 import {LessonRef} from '../../types';
 import useHomeStore from 'src/home/presentation/stores/useHomeStore';
-import SelectionAnswersQuestion, {
-  SelectionAnswersQuestionRef,
-} from '../../components/SelectionAnswersQuestion';
+import {SelectionAnswersQuestionRef} from '../../components/SelectionAnswersQuestion';
+import {CharScrambleRep} from '../../components/CharScramble';
 import TextHighlight from '../../components/TextHighlight';
 import {useI18n} from 'src/core/presentation/hooks/useI18n';
 import VoiceButton from '../../components/VoiceButton';
+import {TextToSpeechContext} from 'src/core/presentation/hooks/textToSpeech/TextToSpeechContext';
+import SelectionImagesQuestion from '../../components/SelectionImagesQuestion';
 
 type Props = {
   moduleIndex: number;
@@ -61,10 +48,9 @@ type Props = {
   backgroundImage?: string;
   characterImageSuccess?: string;
   characterImageFail?: string;
-  characterStyle?: StyleProp<ViewStyle>;
 };
 
-const Science_SelectAnswer_ScrollQuestion = observer(
+const Science_SG5M2 = observer(
   forwardRef<LessonRef, Props>(
     (
       {
@@ -77,13 +63,13 @@ const Science_SelectAnswer_ScrollQuestion = observer(
         backgroundImage,
         characterImageSuccess,
         characterImageFail,
-        characterStyle,
       },
       ref,
     ) => {
       const globalStyle = useGlobalStyle();
 
       const {ttsSpeak} = useContext(TextToSpeechContext);
+
       const focus = useIsFocused();
       const answerRef = useRef<SelectionAnswersQuestionRef>(null);
 
@@ -95,17 +81,7 @@ const Science_SelectAnswer_ScrollQuestion = observer(
 
       const {selectedChild} = useAuthenticationStore();
 
-      const isCorrectAnswer = useMemo(() => {
-        const correctAnswer =
-          firstMiniTestTask?.question?.[moduleIndex]?.correctAnswer;
-        const answerSelectedArray = (
-          Array.isArray(answerSelected) ? answerSelected : [answerSelected]
-        ).map(e => e?.toLocaleString().toLocaleLowerCase());
-        const correctAnswerArray = (
-          Array.isArray(correctAnswer) ? correctAnswer : [correctAnswer]
-        ).map(e => e?.toLocaleString().toLocaleLowerCase());
-        return isSubArray(answerSelectedArray, correctAnswerArray);
-      }, [answerSelected, firstMiniTestTask?.question, moduleIndex]);
+      const charScrambleRep = useRef<CharScrambleRep>(null);
 
       const {
         isAnswerCorrect,
@@ -118,14 +94,17 @@ const Science_SelectAnswer_ScrollQuestion = observer(
         resetLearning,
       } = useSettingLesson({
         countDownTime: trainingCount <= 2 ? 0 : 5,
-        isCorrectAnswer: isCorrectAnswer,
+        isCorrectAnswer:
+          answerSelected.toString() ===
+          (firstMiniTestTask?.question?.[moduleIndex]?.correctAnswer as string),
         onSubmit: () => {
           setAnswerSelected('');
           nextModule((answerSelected as string[]).toString());
           answerRef.current?.resetAnswerSelected?.();
+          charScrambleRep.current?.reset?.();
         },
         fullAnswer: firstMiniTestTask?.question?.[moduleIndex].fullAnswer,
-        totalTime: 60 * 5,
+        totalTime: 5 * 60,
       });
 
       const {lessonSetting} = useHomeStore();
@@ -153,28 +132,6 @@ const Science_SelectAnswer_ScrollQuestion = observer(
 
       const opacity = useSharedValue(0);
       const scaleS = useSharedValue(1);
-
-      // Custom scroll indicator state
-      const [scrollY, setScrollY] = useState(0);
-      const [contentHeight, setContentHeight] = useState(1);
-      const [visibleHeight, setVisibleHeight] = useState(1);
-
-      // Calculate indicator height and position
-      const indicatorHeight = useMemo(() => {
-        if (contentHeight <= visibleHeight) {
-          return 0;
-        }
-        return Math.max((visibleHeight / contentHeight) * visibleHeight, 34);
-      }, [contentHeight, visibleHeight]);
-      const indicatorTop = useMemo(() => {
-        if (contentHeight <= visibleHeight) {
-          return 0;
-        }
-        return (
-          (scrollY / (contentHeight - visibleHeight)) *
-          (visibleHeight - indicatorHeight)
-        );
-      }, [scrollY, contentHeight, visibleHeight, indicatorHeight]);
 
       /**
        * * reset lại countdown khi lần làm thay đổi
@@ -224,7 +181,7 @@ const Science_SelectAnswer_ScrollQuestion = observer(
         <LessonComponent
           backgroundImage={backgroundImage}
           characterImage={characterImage}
-          characterStyle={characterStyle}
+          characterStyle={{height: scale(200), marginBottom: scale(-34)}}
           lessonName={lessonName}
           module={moduleName}
           part={firstMiniTestTask?.name}
@@ -232,11 +189,7 @@ const Science_SelectAnswer_ScrollQuestion = observer(
           backgroundAnswerColor={
             settings.backgroundAnswerColor ?? COLORS.GREEN_DDF598
           }
-          prompt={
-            firstMiniTestTask?.question?.[moduleIndex]?.instruction ?? {
-              description: settings.prompt?.toString() ?? '',
-            }
-          }
+          prompt={settings.prompt?.toString()}
           price="Free"
           score={selectedChild?.adsPoints}
           txtCountDown={word && !isMMSS(word) ? undefined : word}
@@ -244,68 +197,56 @@ const Science_SelectAnswer_ScrollQuestion = observer(
           isShowCorrectContainer={isShowCorrectContainer}
           onPressFlower={toggleShowHint}
           buildQuestion={
-            <View
-              style={{
-                height: scale(200),
-                width: scale(200),
-                alignItems: 'center',
-                padding: 16,
-                borderRadius: 32,
-                backgroundColor: COLORS.WHITE_FBF8CC,
-                borderWidth: 2,
-                borderColor: COLORS.YELLOW_F2B559,
-                borderStyle: 'dashed',
-              }}>
-              <Image
+            <View>
+              <ImageBackground
+                resizeMode={'contain'}
+                style={[
+                  {
+                    width: scale(225),
+                    height: scale(225),
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                  },
+                ]}
                 source={{
                   uri:
                     env.IMAGE_QUESTION_BASE_API_URL +
                     firstMiniTestTask?.question?.[moduleIndex].image,
-                }}
-                style={{
-                  height: scale(102),
-                  width: scale(102),
-                  borderRadius: 999,
-                }}
-                resizeMode="cover"
-              />
-
-              <View style={{flex: 1, width: '100%'}}>
-                <ScrollView
-                  style={{flex: 1}}
-                  showsVerticalScrollIndicator={false}
-                  onScroll={e => {
-                    setScrollY(e.nativeEvent.contentOffset.y);
-                  }}
-                  onContentSizeChange={(_, h) => setContentHeight(h)}
-                  onLayout={e => setVisibleHeight(e.nativeEvent.layout.height)}
-                  scrollEventThrottle={16}>
+                }}>
+                <View
+                  style={{
+                    width: scale(100),
+                    height: scale(100),
+                    marginTop: 12,
+                    gap: 8,
+                    padding: 4,
+                  }}>
                   <Text
                     style={[
                       styles.fonts_SVN_Cherish,
-                      {fontSize: scale(16), color: COLORS.RED_AF3A1B},
+                      {
+                        fontSize: 24,
+                        color: COLORS.WHITE_FBF8CC,
+                        textAlign: 'center',
+                      },
+                    ]}
+                    adjustsFontSizeToFit>
+                    {firstMiniTestTask?.question?.[moduleIndex].description}
+                  </Text>
+                  <Text
+                    adjustsFontSizeToFit
+                    style={[
+                      styles.fonts_Grotesk,
+                      {
+                        fontSize: 10,
+                        color: COLORS.BLUE_003C82,
+                        textAlign: 'center',
+                      },
                     ]}>
                     {firstMiniTestTask?.question?.[moduleIndex].paragraph}
                   </Text>
-                </ScrollView>
-                {/* Custom vertical scroll indicator */}
-                {contentHeight > visibleHeight && (
-                  <View
-                    pointerEvents="none"
-                    style={{
-                      position: 'absolute',
-                      right: 0,
-                      top: indicatorTop,
-                      width: 4,
-                      height: indicatorHeight,
-                      backgroundColor: COLORS.RED_BA3201,
-                      borderRadius: 30,
-                      opacity: 0.8,
-                      overflow: 'hidden', // ensure child doesn't overflow
-                    }}
-                  />
-                )}
-              </View>
+                </View>
+              </ImageBackground>
             </View>
           }
           buildAnswer={
@@ -316,51 +257,37 @@ const Science_SelectAnswer_ScrollQuestion = observer(
                     justifyContent: 'center',
                     flex: 1,
                   }}>
-                  <Text
-                    style={[
-                      globalStyle.txtLabel,
-                      {
-                        color: darkenColor(
-                          settings.backgroundButtonColor ?? '',
-                          20,
-                        ),
-                      },
-                    ]}>
-                    {i18n.t('lesson.screens.Modules.fillTheBlank')}
+                  <Text style={[globalStyle.txtLabel, styles.textColor]}>
+                    {i18n.t('lesson.screens.Modules.chooseTheCorrectAnswer')}
                   </Text>
                 </View>
 
                 <VoiceButton onPress={onSpeechText} />
               </View>
-              <SelectionAnswersQuestion
+              <SelectionImagesQuestion
                 question={
                   <TextHighlight
                     content={
-                      firstMiniTestTask?.question?.[moduleIndex].content ?? ''
+                      firstMiniTestTask?.question?.[moduleIndex]?.highlight ??
+                      ''
                     }
                     description={
-                      firstMiniTestTask?.question?.[moduleIndex].content ?? ''
+                      firstMiniTestTask?.question?.[moduleIndex]?.content ?? ''
                     }
-                    styleHighlight={[
-                      styles.fonts_SVN_Neuzeit,
-                      {fontSize: scale(18)},
-                    ]}
                   />
                 }
-                answer={
-                  firstMiniTestTask?.question?.[moduleIndex]
-                    ?.answers as string[]
+                answers={
+                  (firstMiniTestTask?.question?.[moduleIndex]
+                    .answers as string[]) ?? []
                 }
-                answerStyle={styles.fonts_SVN_Cherish}
                 isShowCorrectContainer={isShowCorrectContainer}
                 isAnswerCorrect={!!isAnswerCorrect}
                 onSelectAnswer={(e: string[]) => {
-                  setAnswerSelected(e);
+                  setAnswerSelected(e[0]);
                 }}
                 learningTimer={learningTimer}
-                ref={answerRef}
-                questionStyle={styles.fonts_SVN_Cherish}
                 isSelectOne
+                ref={answerRef}
               />
 
               <PrimaryButton
@@ -370,6 +297,7 @@ const Science_SelectAnswer_ScrollQuestion = observer(
                   {backgroundColor: settings.backgroundButtonColor},
                 ]}
                 onPress={submit}
+                disable={learningTimer > 0}
               />
             </View>
           }
@@ -381,7 +309,7 @@ const Science_SelectAnswer_ScrollQuestion = observer(
   ),
 );
 
-export default Science_SelectAnswer_ScrollQuestion;
+export default Science_SG5M2;
 
 const styles = StyleSheet.create({
   fill: {
@@ -390,15 +318,74 @@ const styles = StyleSheet.create({
   fonts_SVN_Cherish: {
     fontFamily: FontFamily.SVNCherishMoment,
   },
-  fonts_SVN_Neuzeit: {
-    fontFamily: FontFamily.SVNNeuzeitRegular,
+  fonts_Grotesk: {
+    fontFamily: FontFamily.SVNNeuzeitBold,
+  },
+  textColor: {
+    color: '#003C82',
   },
   textQuestion: {
     fontSize: verticalScale(15),
     textAlign: 'left',
     color: COLORS.BLUE_258F78,
   },
-
+  textGreen: {
+    color: '#258F78',
+  },
+  txtWhite: {
+    color: 'white',
+  },
+  rowAround: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+  },
+  rowAlignCenter: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  rowBetween: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  pr16: {
+    paddingRight: 16,
+  },
+  ph24: {
+    paddingHorizontal: 24,
+  },
+  pb8: {
+    paddingBottom: verticalScale(8),
+  },
+  pb16: {
+    paddingBottom: verticalScale(16),
+  },
+  pb32: {
+    paddingBottom: verticalScale(32),
+  },
+  mt8: {
+    marginTop: verticalScale(8),
+  },
+  mt16: {
+    marginTop: verticalScale(16),
+  },
+  mt24: {
+    marginTop: verticalScale(24),
+  },
+  mt32: {
+    marginTop: verticalScale(32),
+  },
+  alignSelfCenter: {
+    alignSelf: 'center',
+  },
+  center: {
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  boxItemAnswer: {
+    height: 94,
+    backgroundColor: '#F2B559',
+    borderRadius: 30,
+  },
   boxSelected: {
     backgroundColor: COLORS.WHITE_FBF8CC,
     height: verticalScale(220),
@@ -407,15 +394,38 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-
+  boxVowel: {
+    width: 56,
+    height: 56,
+    borderRadius: 10,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginHorizontal: 6,
+    marginVertical: 6,
+  },
+  textVowel: {
+    fontFamily: FontFamily.SVNCherishMoment,
+    color: '#FBF8CC',
+    fontSize: verticalScale(28),
+  },
+  wapper: {
+    marginTop: 8,
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'center',
+    alignContent: 'center',
+  },
+  wrapCharContainer: {
+    flexDirection: 'row',
+  },
   wrapHeaderContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     marginBottom: verticalScale(8),
   },
   iconImageContainer: {
-    height: verticalScale(39),
-    width: verticalScale(34),
+    height: verticalScale(45),
+    width: verticalScale(40),
   },
   buttonContainer: {
     borderRadius: scale(52),
@@ -423,10 +433,5 @@ const styles = StyleSheet.create({
     paddingHorizontal: scale(24),
     marginTop: scale(16),
     backgroundColor: '#0877B6',
-  },
-  txtParagraph: {
-    fontFamily: FontFamily.SVNNeuzeitBold,
-    fontSize: scale(14),
-    color: COLORS.WHITE_FBF8CC,
   },
 });
