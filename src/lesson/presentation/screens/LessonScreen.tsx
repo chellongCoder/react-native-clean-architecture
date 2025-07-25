@@ -537,11 +537,11 @@ const LESSON_PATTERNS = [
   },
   {
     pattern: /^SCIENCE_SG[1-6]M\d+$/,
-    component: (type: string) => {
+    component: (type: string, testTask: any) => {
       const componentMap: Record<string, any> = {
         SCIENCE_SG1M2: Science_SG1M2,
         SCIENCE_SG2M4: Science_SG2M4,
-        SCIENCE_SG2M8: Science_SG2M8,
+        SCIENCE_SG2M8: testTask?.stt === 1 ? Science_SG2M8 : undefined,
         SCIENCE_SG3M9: Science_SG3M9,
         SCIENCE_SG4M3: Science_SG4M3,
         SCIENCE_SG5M5: Science_SG5M5,
@@ -549,6 +549,7 @@ const LESSON_PATTERNS = [
       };
       return componentMap[type] || Science_G0M1;
     },
+    wrapper: DragProvider,
     props: {},
   },
 
