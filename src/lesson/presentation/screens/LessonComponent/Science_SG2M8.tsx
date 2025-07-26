@@ -1,5 +1,5 @@
 /* eslint-disable react/no-unstable-nested-components */
-import {Image, StyleSheet, Text, View} from 'react-native';
+import {StyleSheet, Text, View} from 'react-native';
 import React, {
   forwardRef,
   useCallback,
@@ -39,6 +39,7 @@ import DragItem from '../../components/Drag/DragSendItem';
 import {useDragContext} from '../../components/Drag/DragProvider';
 import env from 'src/core/infrastructure/env';
 import TextHighlight from '../../components/TextHighlight';
+import FastImage, {ResizeMode} from 'react-native-fast-image';
 
 type Props = {
   moduleIndex: number;
@@ -245,13 +246,55 @@ const Science_SG2M8 = observer(
             <DragItem
               index={100 + index}
               value={item}
-              createItem={({value}) => {
+              createItem={({value, index}) => {
+                console.log(
+                  '🛠 LOG: 🚀 --> ------------------------------🛠 LOG: 🚀 -->',
+                );
+                console.log('🛠 LOG: 🚀 --> ~ index:', index);
+                console.log(
+                  '🛠 LOG: 🚀 --> ------------------------------🛠 LOG: 🚀 -->',
+                );
+                let width, height;
+                let resizeMode = 'contain';
+                let marginRight = -scale(20);
+                if (index === 100 || index === 101 || index === 102) {
+                  marginRight = -scale(20);
+                } else if (index === 104) {
+                  marginRight = -scale(25);
+                } else if (index === 105) {
+                  marginRight = -scale(20);
+                } else {
+                  marginRight = -scale(25);
+                }
+
+                if (
+                  index === 100 ||
+                  index === 102 ||
+                  index === 103 ||
+                  index === 105
+                ) {
+                  width = scale(80);
+                  height = scale(80);
+                } else if (index === 101) {
+                  width = scale(70);
+                  height = scale(70);
+                } else {
+                  width = scale(93);
+                  height = scale(93);
+                  resizeMode = 'contain';
+                }
                 return (
-                  <Image
+                  <FastImage
+                    resizeMode={resizeMode as ResizeMode}
                     source={{
                       uri: env?.IMAGE_QUESTION_BASE_API_URL + value,
                     }}
-                    style={{width: scale(80), height: scale(80)}}
+                    style={{
+                      width,
+                      height,
+                      marginRight,
+                      marginBottom: -scale(35),
+                    }}
                   />
                 );
               }}
@@ -321,7 +364,7 @@ const Science_SG2M8 = observer(
                       canSwap={false}
                       createItem={({value}) => {
                         return (
-                          <Image
+                          <FastImage
                             source={{
                               uri: env?.IMAGE_QUESTION_BASE_API_URL + value,
                             }}
@@ -373,10 +416,10 @@ const Science_SG2M8 = observer(
                 }}>
                 <TextHighlight
                   content={
-                    firstMiniTestTask?.question?.[moduleIndex].content ?? ''
+                    firstMiniTestTask?.question?.[moduleIndex].highlight ?? ''
                   }
                   description={
-                    firstMiniTestTask?.question?.[moduleIndex].description ?? ''
+                    firstMiniTestTask?.question?.[moduleIndex].content ?? ''
                   }
                 />
                 <View
@@ -385,9 +428,9 @@ const Science_SG2M8 = observer(
                     flexWrap: 'wrap',
                     alignItems: 'center',
                     justifyContent: 'center',
-                    marginTop: scale(10),
-                    padding: scale(10),
-                    maxWidth: scale(270),
+                    marginTop: verticalScale(10),
+                    marginBottom: verticalScale(40),
+                    maxWidth: scale(200),
                   }}>
                   {(
                     firstMiniTestTask?.question?.[moduleIndex].image as string[]

@@ -1,4 +1,3 @@
-/* eslint-disable react-native/no-inline-styles */
 /* eslint-disable react/react-in-jsx-scope */
 import {
   createContext,
@@ -24,7 +23,11 @@ export type DragItemT = {
   parentId: number;
   isMatch: boolean;
   canSwap: boolean;
-  createItem: (params: {value: string; isFocus: boolean}) => React.ReactNode;
+  createItem: (params: {
+    value: string;
+    isFocus: boolean;
+    index: number;
+  }) => React.ReactNode;
 };
 
 export type DragStateT = {
@@ -230,7 +233,11 @@ const DragProvider = ({children}: PropsWithChildren) => {
                 translateX={item.translateX}
                 translateY={item.translateY}
                 createItem={() =>
-                  item.createItem({value: getValue(item.id), isFocus: false})
+                  item.createItem({
+                    value: getValue(item.id),
+                    isFocus: false,
+                    index,
+                  })
                 }
               />
             </View>

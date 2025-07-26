@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-/* eslint-disable react-native/no-inline-styles */
+
 import {TouchableOpacity, View} from 'react-native';
 import React, {useEffect, useMemo, useRef} from 'react';
 import {
@@ -23,7 +23,11 @@ type Props = {
   translateX?: SharedValue<number>;
   translateY?: SharedValue<number>;
   canSwap?: boolean;
-  createItem: (params: {value: string; isFocus: boolean}) => React.ReactNode;
+  createItem: (params: {
+    value: string;
+    isFocus: boolean;
+    index: number;
+  }) => React.ReactNode;
 };
 
 const DragItem = ({
@@ -133,6 +137,7 @@ Props) => {
             {createItem({
               value: getValue(index) || value,
               isFocus: false,
+              index,
             })}
           </TouchableOpacity>
         </View>
@@ -156,7 +161,11 @@ Props) => {
             }
           }}>
           <View style={{opacity: canDrag ? 0 : 1}}>
-            {createItem({value: listDragItem[index]?.value, isFocus: false})}
+            {createItem({
+              value: listDragItem[index]?.value,
+              isFocus: false,
+              index,
+            })}
           </View>
         </Animated.View>
       </GestureDetector>
