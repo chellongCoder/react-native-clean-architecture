@@ -70,7 +70,7 @@ const Science_SG3M9 = observer(
 
       const {ttsSpeak} = useContext(TextToSpeechContext);
       const focus = useIsFocused();
-      const answerRef = useRef<SelectionAnswersQuestionRef>();
+      const answerRef = useRef<SelectionAnswersQuestionRef>(null);
 
       const [answerSelected, setAnswerSelected] = useState<string>('');
 
@@ -92,7 +92,6 @@ const Science_SG3M9 = observer(
         isAnswerCorrect,
         isShowCorrectContainer,
         word,
-        env,
         learningTimer,
         submit,
         toggleShowHint,
@@ -199,7 +198,8 @@ const Science_SG3M9 = observer(
         onChoiceCorrectedAnswer: () => {
           setAnswerSelected(
             getCorrectAnswer(
-              firstMiniTestTask?.question?.[moduleIndex]?.correctAnswer,
+              firstMiniTestTask?.question?.[moduleIndex]
+                ?.correctAnswer as string,
             ),
           );
         },
