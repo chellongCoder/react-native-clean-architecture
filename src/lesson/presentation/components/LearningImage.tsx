@@ -84,8 +84,7 @@ const LearningImage: React.FC<ImageCarouselProps> = ({
         activeOpacity={1}
         style={[
           {
-            width: scale(180),
-            aspectRatio: 2,
+            flex: 1,
           },
         ]}>
         <FastImage

@@ -19,7 +19,6 @@ import {
   darkenColor,
   getCorrectAnswer,
   isMMSS,
-  isSubArray,
 } from 'src/core/presentation/utils';
 import {scale, verticalScale} from 'react-native-size-matters';
 import Animated, {
@@ -98,7 +97,16 @@ const Science_SelectAnswer_ParagraphImage = observer(
         const correctAnswerArray = (
           Array.isArray(correctAnswer) ? correctAnswer : [correctAnswer]
         ).map(e => e?.toLocaleString().toLocaleLowerCase());
-        return isSubArray(answerSelectedArray, correctAnswerArray);
+
+        // Check if arrays have the same length
+        if (answerSelectedArray.length !== correctAnswerArray.length) {
+          return false;
+        }
+
+        // Check if every element at the same index matches
+        return answerSelectedArray.every(
+          (answer, index) => answer === correctAnswerArray[index],
+        );
       }, [answerSelected, firstMiniTestTask?.question, moduleIndex]);
 
       const {
@@ -161,12 +169,6 @@ const Science_SelectAnswer_ParagraphImage = observer(
           // Check if the component is focused
           const firstTimeout = setTimeout(() => {
             onSpeechText();
-
-            const secondTimeout = setTimeout(() => {
-              onSpeechText();
-            }, 2500);
-
-            return () => clearTimeout(secondTimeout);
           }, 1500);
 
           return () => clearTimeout(firstTimeout);
