@@ -123,6 +123,7 @@ const SelectionImagesQuestion: ForwardRefRenderFunction<
                   borderWidth: 2,
                   width: size,
                   margin: scale(8), // Add spacing for clarity
+                  flex: answers.length === 2 ? 1 : undefined,
                 },
                 styleItem,
               ]}>

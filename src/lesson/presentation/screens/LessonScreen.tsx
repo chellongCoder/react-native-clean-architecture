@@ -126,6 +126,8 @@ import Science_SelectAnswer_ImageMeaning_Image from './LessonComponent/Science_S
 import Science_SelectAnswer_ScrollQuestion from './LessonComponent/Science_SelectAnswer_ScrollQuestion';
 import Science_SG5M2 from './LessonComponent/Science_SG5M2';
 import Science_SG2M8 from './LessonComponent/Science_SG2M8';
+import Science_SelectAnswer_AnswerMeaning from './LessonComponent/Science_SelectAnswer_AnswerMeaning';
+import Science_SelectAnswer_Explain_TextImageAnswer from './LessonComponent/Science_SelectAnswer_Explain_TextImageAnswer';
 
 export type TResult = {
   userId?: string;
@@ -552,12 +554,18 @@ const LESSON_PATTERNS = [
       ...dataProps,
       contentContainerStyle: {
         flexDirection: 'row',
+        width: '60%',
       },
     }),
   },
   {
     pattern: /^SCIENCE_SG2M(5)$/,
     component: Science_SelectAnswer_2Question,
+    props,
+  },
+  {
+    pattern: /^SCIENCE_SG2M(6)$/,
+    component: Science_SelectAnswer_Explain_TextImageAnswer,
     props,
   },
   {
@@ -663,7 +671,9 @@ const LESSON_PATTERNS = [
         SCIENCE_SG1M2: Science_SG1M2,
         SCIENCE_SG2M4: Science_SG2M4,
         SCIENCE_SG2M8:
-          testTask?.firstMiniTestTask?.stt === 2 ? Science_SG2M8 : undefined,
+          testTask?.firstMiniTestTask?.stt === 2
+            ? Science_SG2M8
+            : Science_SelectAnswer_AnswerMeaning,
         SCIENCE_SG3M9: Science_SG3M9,
         SCIENCE_SG5M5: Science_SG5M5,
         SCIENCE_SG6M3: Science_SG6M3,
@@ -895,11 +905,12 @@ const LessonScreen = observer(() => {
   const i18n = useI18n();
   const {tasks: apiTasks} = useListQuestions(route?.lessonId);
 
+  // TODO: check task
   const tasks = useMemo(() => {
     return __DEV__
       ? apiTasks.map(t => ({
           ...t,
-          question: __DEV__ ? t.question.slice(0, 1) : t.question,
+          question: __DEV__ ? t.question.slice(0, 6) : t.question,
         }))
       : apiTasks.map(t => ({
           ...t,

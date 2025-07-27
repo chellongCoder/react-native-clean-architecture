@@ -232,7 +232,7 @@ const Science_SelectAnswer_Circle = observer(
                 style={[
                   styles.fonts_SVN_Cherish,
                   styles.textDescription,
-                  {color: settings.backgroundAnswerColor},
+                  {color: settings.backgroundColor},
                 ]}>
                 {firstMiniTestTask?.question?.[moduleIndex].description}
               </Text>
@@ -263,7 +263,10 @@ const Science_SelectAnswer_Circle = observer(
                 <VoiceButton onPress={onSpeechText} />
               </View>
               <SelectionCircleAnswers
-                answer={['HIGHEST', 'WATER', 'PROTECTS', 'OXYGEN']}
+                answer={
+                  firstMiniTestTask?.question?.[moduleIndex]
+                    ?.answers as string[]
+                }
                 isSelectOne
                 centerImage={
                   env.IMAGE_QUESTION_BASE_API_URL +

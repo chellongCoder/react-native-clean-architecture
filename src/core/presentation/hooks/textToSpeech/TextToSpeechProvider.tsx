@@ -387,8 +387,8 @@ export const TextToSpeechProvider = ({children}: PropsWithChildren) => {
     Tts.addEventListener('tts-finish', event => {
       console.log('Speech completed!');
       onFinish?.();
-      setOnFinish(undefined);
-      // setIsSpeakDone(true); // Perform any action you need after speech is done
+      // setOnFinish(undefined);
+      setIsSpeakDone(true); // Perform any action you need after speech is done
       // Perform any action you need after speech is done
     });
   }, [init, onFinish]);
