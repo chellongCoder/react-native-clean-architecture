@@ -24,10 +24,10 @@ import useGlobalStyle from 'src/core/presentation/hooks/useGlobalStyle';
 import {Task} from 'src/home/application/types/GetListQuestionResponse';
 import {COLORS} from 'src/core/presentation/constants/colors';
 import {
+  arraysEqualWithExactItem,
   darkenColor,
   getCorrectAnswer,
   isMMSS,
-  isSubArray,
 } from 'src/core/presentation/utils';
 import {scale, verticalScale} from 'react-native-size-matters';
 import Animated, {
@@ -49,9 +49,9 @@ import {SelectionAnswersQuestionRef} from '../../components/SelectionAnswersQues
 import TextHighlight from '../../components/TextHighlight';
 import {useI18n} from 'src/core/presentation/hooks/useI18n';
 import VoiceButton from '../../components/VoiceButton';
-import QuestionImageText from '../../components/Science/QuestionImageText';
-import SelectionAnswersImage from '../../components/SelectionAnswersImage';
 import useStateCustom from 'src/hooks/useStateCommon';
+import {SoundGlobalContext} from 'src/core/presentation/hooks/sound/SoundGlobalContext';
+import {soundTrack} from 'src/core/presentation/hooks/sound/SoundGlobalProvider';
 
 type Props = {
   moduleIndex: number;
@@ -71,6 +71,7 @@ type TMultiQuestionAnswerSelected = {
   questionIndex?: number;
   answerSelected?: string[];
   answerHasSelected?: string[];
+  correctImage?: null | string;
 };
 
 const Science_SelectAnswer_AnswerImage_MultipleQuestion = observer(
@@ -87,7 +88,6 @@ const Science_SelectAnswer_AnswerImage_MultipleQuestion = observer(
         characterImageSuccess,
         characterImageFail,
         characterStyle,
-        isMultiQuestion,
       },
       ref,
     ) => {
@@ -105,69 +105,27 @@ const Science_SelectAnswer_AnswerImage_MultipleQuestion = observer(
           questionIndex: 0,
           answerSelected: [],
           answerHasSelected: [],
+          correctImage: null,
         });
-      console.log('multiQuestionAnswerSelected: ', multiQuestionAnswerSelected);
-      const correctAnswer = useMemo(() => {
-        return [
-          ['hammer', 'screwdriver'],
-          ['wrench', 'pliers'],
-          ['screw', 'nail'],
-        ];
-      }, []);
-
-      const mockAnswerData = [
-        {
-          id: 1,
-          name: 'hammer',
-          image:
-            'https://img.freepik.com/free-vector/claw-hammer-sticker-white-background_1308-80363.jpg?semt=ais_hybrid&w=740',
-        },
-        {
-          id: 2,
-          name: 'screwdriver',
-          image:
-            'https://res.cloudinary.com/rsc/image/upload/w_1024/Y1829689-01',
-        },
-        {
-          id: 3,
-          name: 'wrench',
-          image:
-            'https://images-na.ssl-images-amazon.com/images/I/71UQTCpwndL.jpg',
-        },
-        {
-          id: 4,
-          name: 'pliers',
-          image: 'https://m.media-amazon.com/images/I/71FSIonNe3L.jpg',
-        },
-        {
-          id: 5,
-          name: 'screw',
-          image:
-            'https://www.hafele.com/INTERSHOP/static/WFS/Haefele-HAC-Site/-/Haefele-HAC/en_US/opentext/assets/hac/Chipboard_Screws_Teaser_880x880px.png',
-        },
-        {
-          id: 6,
-          name: 'nail',
-          image:
-            'https://5.imimg.com/data5/SELLER/Default/2023/1/AQ/YD/PU/140685744/5inch-high-density-iron-nail-500x500.webp',
-        },
-      ];
 
       const {trainingCount, getSetting} = useLessonStore();
-
+      const {playSound} = useContext(SoundGlobalContext);
       const {selectedChild} = useAuthenticationStore();
 
       const isCorrectAnswer = useMemo(() => {
-        const correctAnswer =
-          firstMiniTestTask?.question?.[moduleIndex]?.correctAnswer;
-        const answerSelectedArray = (
-          Array.isArray(answerSelected) ? answerSelected : [answerSelected]
-        ).map(e => e?.toLocaleString().toLocaleLowerCase());
-        const correctAnswerArray = (
-          Array.isArray(correctAnswer) ? correctAnswer : [correctAnswer]
-        ).map(e => e?.toLocaleString().toLocaleLowerCase());
-        return isSubArray(answerSelectedArray, correctAnswerArray);
-      }, [answerSelected, firstMiniTestTask?.question, moduleIndex]);
+        const correctAnswer = (
+          firstMiniTestTask?.question?.[moduleIndex].correctAnswer as string[][]
+        ).flat();
+
+        const answerHasSelectedArray =
+          multiQuestionAnswerSelected.answerHasSelected ?? [];
+
+        return arraysEqualWithExactItem(correctAnswer, answerHasSelectedArray);
+      }, [
+        firstMiniTestTask?.question,
+        moduleIndex,
+        multiQuestionAnswerSelected.answerHasSelected,
+      ]);
 
       const {
         isAnswerCorrect,
@@ -187,7 +145,7 @@ const Science_SelectAnswer_AnswerImage_MultipleQuestion = observer(
           answerRef.current?.resetAnswerSelected?.();
         },
         fullAnswer: firstMiniTestTask?.question?.[moduleIndex].fullAnswer,
-        totalTime: 60 * 5 * 50000,
+        totalTime: 60 * 5,
       });
 
       const {lessonSetting} = useHomeStore();
@@ -216,59 +174,77 @@ const Science_SelectAnswer_AnswerImage_MultipleQuestion = observer(
       const opacity = useSharedValue(0);
       const scaleS = useSharedValue(1);
 
-      const onMultiQuestionSubmit = useCallback(() => {
-        if (isMultiQuestion) {
-          console.log('123');
-        } else {
-          submit();
-        }
-      }, [isMultiQuestion, submit]);
-
-      const onSelectAnswer = item => {
+      const onSelectAnswer = (item: string) => {
         setMultiQuestionAnswerSelected({
           answerSelected: [
             ...(multiQuestionAnswerSelected.answerSelected ?? []),
-            item.name,
+            item,
           ],
         });
       };
 
       const onCheckResult = useCallback(() => {
-        const tout = setTimeout(() => {
-          clearTimeout(tout);
-          if (
-            JSON.stringify(
-              correctAnswer?.[multiQuestionAnswerSelected.questionIndex ?? 0],
-            ) === JSON.stringify(multiQuestionAnswerSelected.answerSelected)
-          ) {
-            setMultiQuestionAnswerSelected({
-              answerSelected: [],
-              questionIndex:
-                (multiQuestionAnswerSelected.questionIndex ?? 0) + 1,
-              answerHasSelected: [
-                ...(multiQuestionAnswerSelected.answerHasSelected ?? []),
-                ...(multiQuestionAnswerSelected.answerSelected ?? []),
+        if (
+          JSON.stringify(
+            firstMiniTestTask?.question?.[moduleIndex].correctAnswer?.[
+              multiQuestionAnswerSelected.questionIndex ?? 0
+            ],
+          ) === JSON.stringify(multiQuestionAnswerSelected.answerSelected)
+        ) {
+          playSound(soundTrack.bell_ding_sound);
+          setMultiQuestionAnswerSelected({
+            questionIndex: (multiQuestionAnswerSelected.questionIndex ?? 0) + 1,
+            answerHasSelected: [
+              ...(multiQuestionAnswerSelected.answerHasSelected ?? []),
+              ...(multiQuestionAnswerSelected.answerSelected ?? []),
+            ],
+            correctImage:
+              firstMiniTestTask?.question?.[moduleIndex].image?.[
+                multiQuestionAnswerSelected.questionIndex ?? 0
               ],
-            });
-          } else {
+          });
+          const tout = setTimeout(() => {
+            clearTimeout(tout);
             setMultiQuestionAnswerSelected({
               answerSelected: [],
+              correctImage: null,
             });
-          }
-        }, 3000);
+          }, 2000);
+        } else {
+          playSound(soundTrack.oh_no_sound);
+          setMultiQuestionAnswerSelected({
+            answerSelected: [],
+          });
+        }
       }, [
-        correctAnswer,
+        firstMiniTestTask?.question,
+        moduleIndex,
         multiQuestionAnswerSelected.answerHasSelected,
         multiQuestionAnswerSelected.answerSelected,
         multiQuestionAnswerSelected.questionIndex,
+        playSound,
         setMultiQuestionAnswerSelected,
       ]);
 
-      useEffect(() => {
-        if (multiQuestionAnswerSelected.answerSelected?.length === 2) {
+      const onMultiQuestionSubmit = useCallback(() => {
+        if (
+          (multiQuestionAnswerSelected.questionIndex ?? 0) >
+          (Number(
+            firstMiniTestTask?.question?.[moduleIndex].correctAnswer?.length,
+          ) ?? 0) -
+            1
+        ) {
+          submit();
+        } else {
           onCheckResult();
         }
-      }, [multiQuestionAnswerSelected.answerSelected, onCheckResult]);
+      }, [
+        firstMiniTestTask?.question,
+        moduleIndex,
+        multiQuestionAnswerSelected.questionIndex,
+        onCheckResult,
+        submit,
+      ]);
 
       /**
        * * reset lại countdown khi lần làm thay đổi
@@ -283,12 +259,6 @@ const Science_SelectAnswer_AnswerImage_MultipleQuestion = observer(
           // Check if the component is focused
           const firstTimeout = setTimeout(() => {
             onSpeechText();
-
-            const secondTimeout = setTimeout(() => {
-              onSpeechText();
-            }, 2500);
-
-            return () => clearTimeout(secondTimeout);
           }, 1500);
 
           return () => clearTimeout(firstTimeout);
@@ -327,7 +297,10 @@ const Science_SelectAnswer_AnswerImage_MultipleQuestion = observer(
         },
       }));
 
-      const rows = [mockAnswerData.slice(0, 3), mockAnswerData.slice(3, 6)];
+      const rows = [
+        firstMiniTestTask?.question?.[moduleIndex].answers.slice(0, 3),
+        firstMiniTestTask?.question?.[moduleIndex].answers.slice(3, 6),
+      ];
 
       return (
         <LessonComponent
@@ -370,11 +343,17 @@ const Science_SelectAnswer_AnswerImage_MultipleQuestion = observer(
                       multiQuestionAnswerSelected.answerSelected.length > 0 && (
                         <Image
                           source={{
-                            uri: mockAnswerData.find(
-                              item =>
-                                item.name ===
-                                multiQuestionAnswerSelected.answerSelected?.[0],
-                            )?.image,
+                            uri:
+                              env.IMAGE_QUESTION_BASE_API_URL +
+                              (
+                                firstMiniTestTask?.question?.[moduleIndex]
+                                  .answers as string[]
+                              ).find(
+                                item =>
+                                  item ===
+                                  multiQuestionAnswerSelected
+                                    .answerSelected?.[0],
+                              ),
                           }}
                           style={[
                             styles.wrapAnswerItemImage,
@@ -391,11 +370,17 @@ const Science_SelectAnswer_AnswerImage_MultipleQuestion = observer(
                       multiQuestionAnswerSelected.answerSelected.length > 1 && (
                         <Image
                           source={{
-                            uri: mockAnswerData.find(
-                              item =>
-                                item.name ===
-                                multiQuestionAnswerSelected.answerSelected?.[1],
-                            )?.image,
+                            uri:
+                              env.IMAGE_QUESTION_BASE_API_URL +
+                              (
+                                firstMiniTestTask?.question?.[moduleIndex]
+                                  .answers as string[]
+                              ).find(
+                                item =>
+                                  item ===
+                                  multiQuestionAnswerSelected
+                                    .answerSelected?.[1],
+                              ),
                           }}
                           style={[
                             styles.wrapAnswerItemImage,
@@ -406,8 +391,18 @@ const Science_SelectAnswer_AnswerImage_MultipleQuestion = observer(
                   </View>
                 </View>
                 <View
-                  style={[styles.questionContainer, {height: 118, width: 118}]}
-                />
+                  style={[styles.questionContainer, {height: 118, width: 118}]}>
+                  {multiQuestionAnswerSelected.correctImage && (
+                    <Image
+                      source={{
+                        uri:
+                          env.IMAGE_QUESTION_BASE_API_URL +
+                          multiQuestionAnswerSelected.correctImage,
+                      }}
+                      style={[styles.wrapAnswerItemImage, {borderRadius: 20}]}
+                    />
+                  )}
+                </View>
               </View>
             </Animated.View>
           }
@@ -433,41 +428,54 @@ const Science_SelectAnswer_AnswerImage_MultipleQuestion = observer(
               </View>
 
               <View style={[styles.fill, styles.wrapAnswerContainer]}>
-                <Text style={styles.headerAnswerTitle}>
-                  Find Pairs that Interact with Each Other.
-                </Text>
+                <TextHighlight
+                  content={
+                    firstMiniTestTask?.question?.[moduleIndex].highlight ?? ''
+                  }
+                  description={
+                    firstMiniTestTask?.question?.[moduleIndex].description ?? ''
+                  }
+                  styleHighlight={[
+                    styles.fonts_SVN_Cherish,
+                    {fontSize: scale(24)},
+                  ]}
+                />
                 <View style={[styles.fill, {gap: 8, marginTop: 16}]}>
                   {rows.map((row, rowIndex) => (
                     <View
                       key={rowIndex}
                       style={[styles.fill, styles.flexRow, {gap: 8}]}>
-                      {row.map(item => {
-                        const isSelected =
-                          multiQuestionAnswerSelected.answerHasSelected?.includes(
-                            item.name,
-                          );
-                        return isSelected ? (
-                          <View
-                            style={[
-                              styles.wrapAnswerItemContainer,
-                              {
-                                backgroundColor: COLORS.GREEN_66C270,
-                                borderColor: COLORS.GREEN_66C270,
-                              },
-                            ]}
-                          />
-                        ) : (
-                          <TouchableOpacity
-                            key={item.id}
-                            style={[styles.wrapAnswerItemContainer]}
-                            onPress={() => onSelectAnswer(item)}>
-                            <Image
-                              source={{uri: item.image}}
-                              style={styles.wrapAnswerItemImage}
+                      {row &&
+                        Array.isArray(row) &&
+                        row.map((item, index) => {
+                          const isSelected =
+                            multiQuestionAnswerSelected.answerHasSelected?.includes(
+                              item as string,
+                            );
+                          return isSelected ? (
+                            <View
+                              style={[
+                                styles.wrapAnswerItemContainer,
+                                {
+                                  backgroundColor: COLORS.GREEN_66C270,
+                                  borderColor: COLORS.GREEN_66C270,
+                                },
+                              ]}
                             />
-                          </TouchableOpacity>
-                        );
-                      })}
+                          ) : (
+                            <TouchableOpacity
+                              key={index}
+                              style={[styles.wrapAnswerItemContainer]}
+                              onPress={() => onSelectAnswer(item as string)}>
+                              <Image
+                                source={{
+                                  uri: env.IMAGE_QUESTION_BASE_API_URL + item,
+                                }}
+                                style={styles.wrapAnswerItemImage}
+                              />
+                            </TouchableOpacity>
+                          );
+                        })}
                     </View>
                   ))}
                 </View>

@@ -112,6 +112,13 @@ export const isSubArray = (answerSelected: any[], correctAnswer: any[]) => {
   );
 };
 
+export function arraysEqualWithExactItem<T>(a: T[], b: T[]): boolean {
+  if (a.length !== b.length) {
+    return false;
+  }
+  return a.every((val, index) => val === b[index]);
+}
+
 export const isMMSS = (str: string) => {
   const regex = /^([0-5][0-9]):([0-5][0-9])$/;
 
