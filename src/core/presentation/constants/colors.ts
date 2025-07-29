@@ -67,4 +67,5 @@ export const COLORS = {
   PURPLE_8F82E8: '#8F82E8',
   RED_FF6B6B: '#FF6B6B',
   BLUE_003C82: '#003C82',
+  GREEN_157152: '#157152',
 };
