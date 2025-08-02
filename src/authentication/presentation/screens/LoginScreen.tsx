@@ -5,7 +5,6 @@ import {
   Text,
   TouchableOpacity,
   View,
-  Image,
 } from 'react-native';
 import React, {useState} from 'react';
 import PrimaryButton from '../components/PrimaryButton';
@@ -21,7 +20,6 @@ import Dropdown from 'src/core/components/dropdown/Dropdown';
 import useGlobalStyle from 'src/core/presentation/hooks/useGlobalStyle';
 import useGoogleLogin from 'src/hooks/useGoogleLogin';
 import {COLORS} from 'src/core/presentation/constants/colors';
-import {assets} from 'src/core/presentation/utils';
 import {useI18n} from 'src/core/presentation/hooks/useI18n';
 
 const LoginScreen = observer(() => {
@@ -60,7 +58,7 @@ const LoginScreen = observer(() => {
           data={['Eng', 'Vie']}
         />
 
-        <View style={[styles.fill, styles.justifyCenter]}>
+        <View style={[styles.fill, styles.justifyCenter, styles.mt48]}>
           <CommonInput
             label={i18n.t('authentication.screens.Login.emailOrPhone')}
             textInputProp={{
@@ -101,7 +99,7 @@ const LoginScreen = observer(() => {
         </View>
 
         <View style={[{paddingHorizontal: scale(16)}]}>
-          <Text style={[styles.txtLink, styles.mv8, styles.textCenter]}>
+          <Text style={[styles.txtLink, styles.textCenter]}>
             {i18n.t('authentication.screens.Login.orLoginWith')}
           </Text>
           <PrimaryButton
@@ -111,22 +109,14 @@ const LoginScreen = observer(() => {
             text={i18n.t('authentication.screens.Login.google')}
             wrapContent={false}
             style={[
-              styles.mv8,
               {
                 backgroundColor: COLORS.YELLOW_F2B559,
               },
             ]}
           />
-          <TouchableOpacity
-            onPress={onRegister}
-            style={{marginVertical: scale(32)}}>
+          <TouchableOpacity onPress={onRegister}>
             <Text
-              style={[
-                globalStyle.txtLabel,
-                styles.txtLink,
-                styles.mv8,
-                styles.textCenter,
-              ]}>
+              style={[globalStyle.txtLabel, styles.txtLink, styles.textCenter]}>
               {i18n.t('authentication.screens.Login.dontHaveAccount')}
               <Text
                 style={{
@@ -156,24 +146,16 @@ const styles = StyleSheet.create({
   },
   wrapContentContainer: {
     flex: 1,
-    paddingVertical: 30,
-    paddingHorizontal: 40,
+    paddingVertical: verticalScale(30),
+    paddingHorizontal: scale(40),
   },
   justifyCenter: {
-    justifyContent: 'flex-end',
+    // justifyContent: 'flex-end',
   },
   container: {
     flex: 1,
   },
-  boxLang: {
-    backgroundColor: '#FFE699',
-    flexDirection: 'row',
-    alignItems: 'center',
-    alignSelf: 'flex-start',
-    height: 40,
-    // padding: 5,
-    borderRadius: 30,
-  },
+
   arrowIcon: {
     // width: 22,
     // height: 22,
@@ -184,18 +166,17 @@ const styles = StyleSheet.create({
     paddingHorizontal: scale(16),
   },
   mh12: {
-    marginHorizontal: 12,
-  },
-  mv8: {
-    marginVertical: verticalScale(8),
+    marginHorizontal: scale(12),
   },
   mt48: {
     marginTop: scale(24),
-    marginBottom: scale(48),
+    // marginBottom: scale(48),
   },
   txtLink: {
-    fontSize: scale(10),
-    color: '#1C6349',
+    fontSize: scale(12),
+    color: COLORS.GREEN_1C6349,
+    paddingTop: verticalScale(8),
+    paddingBottom: verticalScale(16),
   },
   textCenter: {
     textAlign: 'center',

@@ -225,7 +225,7 @@ const RegisterScreen: React.FC = observer(() => {
             <PrimaryButton
               text={i18n.t('authentication.screens.Register.logIn')}
               onPress={goBack}
-              style={{backgroundColor: '#F2B559'}}
+              style={{backgroundColor: COLORS.YELLOW_F2B559}}
             />
             <Text style={styles.subTitle}>
               {i18n.t('authentication.screens.Register.alreadyHaveAccount')}
@@ -248,7 +248,7 @@ const styles = StyleSheet.create({
   },
   overlay: {
     ...StyleSheet.absoluteFillObject, // This makes the overlay fill the entire ImageBackground
-    backgroundColor: '#fbf8cc', // Adjust the color and opacity as needed
+    backgroundColor: COLORS.WHITE_FBF8CC, // Adjust the color and opacity as needed
     opacity: 0.9,
   },
   justifyCenter: {

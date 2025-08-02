@@ -8,9 +8,8 @@ import {
   ScrollView,
   ImageBackground,
 } from 'react-native';
-import {SafeAreaView} from 'react-native-safe-area-context';
-import {scale} from 'react-native-size-matters';
-import ICDropDown from 'src/core/components/icons/ICDropDown';
+import {SafeAreaView, useSafeAreaInsets} from 'react-native-safe-area-context';
+import {scale, verticalScale} from 'react-native-size-matters';
 import ICManIconMedium from 'src/core/components/icons/ICManIconMedium';
 import {COLORS} from 'src/core/presentation/constants/colors';
 import {CustomTextStyle} from 'src/core/presentation/constants/typography';
@@ -19,7 +18,6 @@ import {useLoadingGlobal} from 'src/core/presentation/hooks/loading/useLoadingGl
 import {
   navigateScreen,
   pushScreen,
-  resetNavigator,
 } from 'src/core/presentation/navigation/actions/RootNavigationActions';
 import {STACK_NAVIGATOR} from 'src/core/presentation/navigation/ConstantNavigator';
 import ICAddChild from 'src/core/components/icons/ICAddChild';
@@ -31,6 +29,8 @@ import {useOfflineMode} from 'src/core/presentation/hooks/offline/useOfflineMode
 import {OfflineEnum} from 'src/core/presentation/hooks/offline/OfflineEnum';
 import {observer} from 'mobx-react';
 import {useI18n} from 'src/core/presentation/hooks/useI18n';
+import Dropdown from 'src/core/components/dropdown/Dropdown';
+import PrimaryButton from '../components/PrimaryButton';
 
 const screenWidth = Dimensions.get('screen').width;
 
@@ -40,6 +40,8 @@ const ListChildrenScreen = observer(() => {
   const {storeData, getData, isConnected} = useOfflineMode();
   useLoadingGlobal();
   const i18n = useI18n();
+  const [lang, setLang] = useState('Eng');
+  const insets = useSafeAreaInsets();
 
   const [userProfile, setUserProfile] = useState<data>();
   const [isChooseChildren, setIsChooseChildren] = useState<string>();
@@ -97,17 +99,22 @@ const ListChildrenScreen = observer(() => {
       style={[styles.container]}
       source={require('../../../../assets/images/authBackground.png')}>
       <View style={styles.overlay} />
-      <SafeAreaView style={styles.container} edges={['top']}>
+      <SafeAreaView style={[styles.container]} edges={['top']}>
         <View style={styles.wrapContainer}>
-          <TouchableOpacity style={styles.wrapHeaderContainer}>
-            <Text style={styles.headerTitle}>Eng</Text>
-            <ICDropDown />
-          </TouchableOpacity>
+          <Dropdown
+            title={lang}
+            width={scale(76)}
+            onSelectItem={item => setLang(item)}
+            data={['Eng', 'Vie']}
+          />
 
           <View style={styles.wrapBodyContainer}>
             <View style={styles.bigCircle}>
               <View style={styles.mediumCircle}>
-                <ICManIconMedium />
+                <ICManIconMedium
+                  width={scale(15).toString()}
+                  height={scale(15).toString()}
+                />
               </View>
             </View>
             <View style={styles.bodyContainer}>
@@ -127,7 +134,8 @@ const ListChildrenScreen = observer(() => {
             </View>
           </View>
         </View>
-        <View style={styles.wrapBottomContainer}>
+        <View
+          style={[styles.wrapBottomContainer, {paddingBottom: insets.bottom}]}>
           <View style={styles.square} />
 
           <View>
@@ -167,7 +175,11 @@ const ListChildrenScreen = observer(() => {
                 userProfile?.children.length < 5 &&
                 isConnected && (
                   <View style={styles.wrapAddChildContainer}>
-                    <View style={{alignItems: 'center', opacity: 0.5}}>
+                    <View
+                      style={{
+                        alignItems: 'center',
+                        opacity: userProfile?.children.length > 0 ? 0.5 : 1,
+                      }}>
                       <TouchableOpacity
                         style={styles.addChildContainer}
                         onPress={onAddChild}
@@ -181,13 +193,17 @@ const ListChildrenScreen = observer(() => {
           </View>
 
           <View style={{justifyContent: 'center', alignItems: 'center'}}>
-            <TouchableOpacity
+            {/* <TouchableOpacity
               style={styles.wrapBottomButtonContainer}
               onPress={onEnter}>
               <Text style={styles.bottomButtonTitle}>
                 {i18n.t('authentication.screens.ListChildren.enter')}
               </Text>
-            </TouchableOpacity>
+            </TouchableOpacity> */}
+            <PrimaryButton
+              text={i18n.t('authentication.screens.ListChildren.enter')}
+              onPress={onEnter}
+            />
           </View>
         </View>
       </SafeAreaView>
@@ -226,20 +242,23 @@ const styles = StyleSheet.create({
   wrapBodyContainer: {
     flex: 1,
     alignItems: 'center',
+    justifyContent: 'center',
     marginTop: scale(32),
+    flexDirection: 'column',
+    gap: verticalScale(16),
   },
   bigCircle: {
-    height: scale(150),
-    width: scale(150),
+    height: scale(50),
+    width: scale(50),
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: COLORS.YELLOW_F2B559,
     borderRadius: 999,
-    marginBottom: scale(16),
+    // marginBottom: scale(16),
   },
   mediumCircle: {
-    height: scale(125),
-    width: scale(125),
+    height: scale(30),
+    width: scale(30),
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: COLORS.WHITE_FFE699,
@@ -255,7 +274,7 @@ const styles = StyleSheet.create({
   titleBold: {
     ...CustomTextStyle.body1_bold,
     color: COLORS.BLUE_1C6349,
-    marginBottom: scale(24),
+    // marginBottom: scale(24),
   },
   logoutTitle: {
     ...CustomTextStyle.smallNormal,
@@ -263,7 +282,6 @@ const styles = StyleSheet.create({
     textDecorationLine: 'underline',
   },
   wrapBottomContainer: {
-    flex: 1,
     backgroundColor: COLORS.GREEN_DDF598,
     borderTopRightRadius: 48,
     borderTopLeftRadius: 48,
@@ -281,10 +299,10 @@ const styles = StyleSheet.create({
   bottomTitle: {
     ...CustomTextStyle.body1_bold,
     color: COLORS.BLUE_1C6349,
-    marginTop: scale(54),
+    marginVertical: verticalScale(25),
   },
   wrapBottomButtonContainer: {
-    marginTop: scale(56),
+    marginTop: scale(26),
     alignItems: 'center',
     paddingVertical: scale(8),
     width: '30%',
@@ -293,7 +311,7 @@ const styles = StyleSheet.create({
   },
   wrapAddChildContainer: {
     flexDirection: 'row',
-    marginTop: scale(16),
+    // marginTop: scale(16),
   },
   bottomButtonTitle: {
     ...CustomTextStyle.body1,

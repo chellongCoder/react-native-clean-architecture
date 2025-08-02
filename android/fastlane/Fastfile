@@ -87,6 +87,7 @@ platform :android do
     supply(
       track: "beta", # Use "beta" for public testing track
       aab: aab_path,
+      skip_upload_apk: true, # Skip uploading APK files
       skip_upload_metadata: true,
       skip_upload_images: true,
       skip_upload_screenshots: true,
