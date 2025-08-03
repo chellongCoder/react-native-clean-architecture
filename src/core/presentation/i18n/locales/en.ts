@@ -128,6 +128,11 @@ export default {
       buyNewModules: 'Buy new modules now',
       noThanks: 'No thanks, I will let my child to have more screen time',
     },
+    EnableVoiceSetting: {
+      title:
+        'ABeeCi needs microphone access so the kids can tackle their homework — one loud answer at a time!',
+      goToSettings: 'Go to Settings',
+    },
   },
   lesson: {
     screens: {

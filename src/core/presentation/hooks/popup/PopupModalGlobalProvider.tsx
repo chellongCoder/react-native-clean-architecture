@@ -20,6 +20,8 @@ import {useNavigationState} from '@react-navigation/native';
 import {STACK_NAVIGATOR} from '../../navigation/ConstantNavigator';
 import TrialModulePopup from 'src/core/components/popup/TrialModulePopup';
 import BuyMoreModulePopup from 'src/core/components/popup/BuyMoreModulePopup';
+import {useSpeechToText} from 'src/lesson/presentation/hooks/useSpeechToText';
+import EnableVoiceSettingPopup from 'src/core/components/popup/EnableVoiceSettingPopup';
 
 // Define the context type
 type PopupModalContextType = {
@@ -46,6 +48,7 @@ type TPopupState = {
   isShowTrial?: boolean;
   appInfo?: ForceUpdateAppResponse['data'];
   isShowBuyMoreModule?: boolean;
+  isShowEnableVoiceSetting?: boolean;
 };
 
 // Define the provider component
@@ -63,9 +66,11 @@ export const PopupModalGlobalProvider = observer(
       isShowTrial: false,
       appInfo: undefined,
       isShowBuyMoreModule: false,
+      isShowEnableVoiceSetting: undefined,
     });
 
     const {userProfile, handleGetForceUpdateApp} = useAuthenticationStore();
+    const {voiceState} = useSpeechToText();
 
     const show = useCallback(() => {
       setIsShown(true);
@@ -139,6 +144,15 @@ export const PopupModalGlobalProvider = observer(
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [currentRoute]);
 
+    useEffect(() => {
+      if (voiceState.isVoicePermissionGranted === false) {
+        setPopupState({isShowEnableVoiceSetting: true});
+      } else if (voiceState.isVoicePermissionGranted) {
+        setPopupState({isShowEnableVoiceSetting: false});
+      }
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [voiceState.isVoicePermissionGranted]);
+
     return (
       <PopupModalContext.Provider
         value={{
@@ -179,6 +193,12 @@ export const PopupModalGlobalProvider = observer(
           isVisible={popupState.isShowBuyMoreModule || false}
           onClose={() => {
             setPopupState({isShowBuyMoreModule: false});
+          }}
+        />
+        <EnableVoiceSettingPopup
+          isVisible={popupState.isShowEnableVoiceSetting || false}
+          onClose={() => {
+            setPopupState({isShowEnableVoiceSetting: false});
           }}
         />
         {/* Optionally, you can include the modal component here if it should be global */}

@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-empty-function */
 import {useCallback, useEffect, useRef} from 'react';
 import {PermissionsAndroid, Platform} from 'react-native';
 import useStateCustom from 'src/hooks/useStateCommon';
@@ -22,6 +21,7 @@ type TState = {
   loading?: boolean;
   time?: boolean;
   checkEmpty?: boolean;
+  isVoicePermissionGranted?: boolean;
 };
 
 export type TLanguageMap = {
@@ -95,6 +95,7 @@ export const useSpeechToText = (fullAnswer?: string) => {
     isListening: false,
     loading: false,
     checkEmpty: false,
+    isVoicePermissionGranted: undefined,
   });
 
   const RECOGNIZER_ENGINE = useRef('GOOGLE').current;
@@ -306,11 +307,19 @@ export const useSpeechToText = (fullAnswer?: string) => {
     [setVoiceState],
   );
 
-  const requestMicrophonePermission = async () => {
-    const atLeastAndroid13 =
-      Platform.OS === 'android' && Platform.Version >= 33;
+  const requestAudioVoicePermission = useCallback(async () => {
+    // First, check if voice recognition is available
+    const voiceIsAvailable = await Voice.isAvailable();
 
+    if (!voiceIsAvailable) {
+      setVoiceState({isVoicePermissionGranted: undefined});
+      return false;
+    }
+
+    // Handle Android-specific permissions
     if (Platform.OS === 'android') {
+      const atLeastAndroid13 = Platform.Version >= 33;
+
       const grants = await PermissionsAndroid.requestMultiple(
         atLeastAndroid13
           ? [
@@ -323,57 +332,50 @@ export const useSpeechToText = (fullAnswer?: string) => {
               PermissionsAndroid.PERMISSIONS.RECORD_AUDIO,
             ],
       );
-      if (
-        atLeastAndroid13
-          ? grants['android.permission.RECORD_AUDIO'] ===
-            PermissionsAndroid.RESULTS.GRANTED
-          : grants['android.permission.WRITE_EXTERNAL_STORAGE'] ===
-              PermissionsAndroid.RESULTS.GRANTED &&
-            grants['android.permission.READ_EXTERNAL_STORAGE'] ===
-              PermissionsAndroid.RESULTS.GRANTED &&
-            grants['android.permission.RECORD_AUDIO'] ===
-              PermissionsAndroid.RESULTS.GRANTED
-      ) {
-        console.log('Permissions granted');
-        return PermissionsAndroid.RESULTS.GRANTED;
-      } else {
+
+      const isGranted = atLeastAndroid13
+        ? grants['android.permission.RECORD_AUDIO'] ===
+          PermissionsAndroid.RESULTS.GRANTED
+        : grants['android.permission.WRITE_EXTERNAL_STORAGE'] ===
+            PermissionsAndroid.RESULTS.GRANTED &&
+          grants['android.permission.READ_EXTERNAL_STORAGE'] ===
+            PermissionsAndroid.RESULTS.GRANTED &&
+          grants['android.permission.RECORD_AUDIO'] ===
+            PermissionsAndroid.RESULTS.GRANTED;
+
+      if (!isGranted) {
         console.log('All required permissions not granted');
-        return PermissionsAndroid.RESULTS.BLOCKED;
+        setVoiceState({isVoicePermissionGranted: false});
+        return false;
+      } else {
+        console.log('Android permissions granted');
+        setVoiceState({isVoicePermissionGranted: true});
+        return true;
       }
-    } else {
-      return PermissionsAndroid.RESULTS.GRANTED;
     }
-  };
 
-  const handleRecordWithVoice = useCallback(async () => {
-    const voiceIsAvailable = await Voice.isAvailable();
-
-    if (voiceIsAvailable) {
+    // Check voice permission status (for both platforms)
+    try {
       const res: TPermissionResponse = await CheckVoicePermission();
-      console.log(
-        '🛠 LOG: 🚀 --> --------------------------------------------------🛠 LOG: 🚀 -->',
-      );
-      console.log('🛠 LOG: 🚀 --> ~ handleRecordWithVoice ~ res:', res);
-      console.log(
-        '🛠 LOG: 🚀 --> --------------------------------------------------🛠 LOG: 🚀 -->',
-      );
       if (res.message === 'success') {
-        if (res.result === RESULTS.BLOCKED) {
-          // this.onShowVoiceSettingModal();
+        if (res.result === RESULTS.GRANTED) {
+          setVoiceState({isVoicePermissionGranted: true});
+          return true;
         } else {
-          // onSearch?.();
+          setVoiceState({isVoicePermissionGranted: false});
+          return false;
         }
       } else {
         console.log('Cannot check micro permission!');
+        setVoiceState({isVoicePermissionGranted: undefined});
+        return false;
       }
-    } else {
-      if (!isAndroid) {
-        // this.onShowVoiceRecognizeModal();
-      } else {
-        // this.onShowVoiceNotCompatibleModal();
-      }
+    } catch (error) {
+      console.log('Error checking voice permission:', error);
+      setVoiceState({isVoicePermissionGranted: undefined});
+      return false;
     }
-  }, []);
+  }, [setVoiceState]);
 
   const setErrorSpeech = useCallback(
     (error: typeof voiceState.error) => {
@@ -390,9 +392,8 @@ export const useSpeechToText = (fullAnswer?: string) => {
     Voice.onSpeechPartialResults = onSpeechPartialResults;
     Voice.onSpeechError = _onSpeechError;
 
-    requestMicrophonePermission();
+    requestAudioVoicePermission();
 
-    handleRecordWithVoice();
     return () => {
       Voice.destroy().then(Voice.removeAllListeners);
     };
@@ -408,7 +409,6 @@ export const useSpeechToText = (fullAnswer?: string) => {
     onResultPress, //stop speech + clear previous result
     destroy: destroyRecording,
     clearSpeechResult, //clear result
-    handleRecordWithVoice,
     loading: voiceState.loading,
     initSpeechLanguage,
     checkEmpty: voiceState.checkEmpty,
