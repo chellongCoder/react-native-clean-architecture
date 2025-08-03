@@ -40,7 +40,8 @@ const ListModule = observer(() => {
         </Text>
       </View>
       <ScrollView
-        style={styles.f1}
+        style={[styles.f1, {height: verticalScale(300)}]}
+        nestedScrollEnabled
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{paddingBottom: scale(54)}}>
         {isLoading

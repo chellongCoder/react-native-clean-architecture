@@ -16,11 +16,11 @@ import {useLoadingGlobal} from 'src/core/presentation/hooks/loading/useLoadingGl
 import {navigateScreen} from 'src/core/presentation/navigation/actions/RootNavigationActions';
 import {STACK_NAVIGATOR} from 'src/core/presentation/navigation/ConstantNavigator';
 import {scale, verticalScale} from 'react-native-size-matters';
-import Dropdown from 'src/core/components/dropdown/Dropdown';
 import useGlobalStyle from 'src/core/presentation/hooks/useGlobalStyle';
 import useGoogleLogin from 'src/hooks/useGoogleLogin';
 import {COLORS} from 'src/core/presentation/constants/colors';
 import {useI18n} from 'src/core/presentation/hooks/useI18n';
+import DropdownChangeLang from 'src/core/presentation/components/DropdownChangeLang';
 
 const LoginScreen = observer(() => {
   const {handleLoginWithCredentials} = useLoginWithCredentials();
@@ -31,7 +31,6 @@ const LoginScreen = observer(() => {
 
   const [emailOrPhone, setEmailOrPhone] = useState('');
   const [password, setPassword] = useState('');
-  const [lang, setLang] = useState('Eng');
   const onLogin = () => {
     const params = {
       email: emailOrPhone.toLowerCase(),
@@ -51,12 +50,7 @@ const LoginScreen = observer(() => {
       <View style={styles.overlay} />
 
       <ScrollView contentContainerStyle={[styles.wrapContentContainer]}>
-        <Dropdown
-          title={lang}
-          width={scale(76)}
-          onSelectItem={item => setLang(item)}
-          data={['Eng', 'Vie']}
-        />
+        <DropdownChangeLang />
 
         <View style={[styles.fill, styles.justifyCenter, styles.mt48]}>
           <CommonInput

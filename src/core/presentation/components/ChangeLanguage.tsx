@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useState} from 'react';
 import {View, StyleSheet} from 'react-native';
 import {useI18n} from '../hooks/useI18n';
 import locales from '../i18n/locales';

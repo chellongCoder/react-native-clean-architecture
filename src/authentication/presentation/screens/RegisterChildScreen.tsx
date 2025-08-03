@@ -13,11 +13,10 @@ import {
 } from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {scale} from 'react-native-size-matters';
-import ICDropDown from 'src/core/components/icons/ICDropDown';
 import {COLORS} from 'src/core/presentation/constants/colors';
 import {CustomTextStyle} from 'src/core/presentation/constants/typography';
 import useStateCustom from 'src/hooks/useStateCommon';
-import CommonInput, {
+import {
   CommonDropDown,
   ItemType,
 } from 'src/post/presentation/components/CommonInput';
@@ -25,8 +24,8 @@ import useLoginWithCredentials from '../hooks/useLoginWithCredentials';
 import {useLoadingGlobal} from 'src/core/presentation/hooks/loading/useLoadingGlobal';
 import {Subject} from 'src/authentication/application/types/GetListSubjectResponse';
 import useGlobalStyle from 'src/core/presentation/hooks/useGlobalStyle';
-import Dropdown from 'src/core/components/dropdown/Dropdown';
 import {useI18n} from 'src/core/presentation/hooks/useI18n';
+import DropdownChangeLang from 'src/core/presentation/components/DropdownChangeLang';
 
 type TRegister = {
   name?: string;
@@ -58,8 +57,6 @@ const RegisterChildScreen: React.FC = () => {
   const [ageOptions, setAgeOptions] = useState<ItemType[]>(
     Array.from({length: 15}, (_, i) => ({label: `${i + 5}`, value: i + 5})),
   );
-
-  const [lang, setLang] = useState('Eng');
 
   const [registerState, setRegisterState] =
     useStateCustom<TRegister>(initialRegisterState);
@@ -142,14 +139,9 @@ const RegisterChildScreen: React.FC = () => {
       source={require('../../../../assets/images/authBackground.png')}>
       <View style={styles.overlay} />
       <SafeAreaView style={styles.container}>
-        <View style={styles.wrapContainer}>
-          <Dropdown
-            title={lang}
-            width={scale(76)}
-            onSelectItem={item => setLang(item)}
-            data={['Eng', 'Vie']}
-          />
+        <DropdownChangeLang />
 
+        <View style={styles.wrapContainer}>
           {/* <ScrollView contentContainerStyle={{flex: 1}}> */}
           <KeyboardAvoidingView
             style={[styles.fill]}

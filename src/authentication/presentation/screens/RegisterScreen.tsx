@@ -1,4 +1,4 @@
-import React, {useCallback, useState} from 'react';
+import React, {useCallback} from 'react';
 import {
   ImageBackground,
   KeyboardAvoidingView,
@@ -19,9 +19,9 @@ import {CustomTextStyle} from 'src/core/presentation/constants/typography';
 import {COLORS} from 'src/core/presentation/constants/colors';
 import {RegisterPayload} from 'src/authentication/application/types/RegisterPayload';
 import {FontFamily} from 'src/core/presentation/hooks/useFonts';
-import Dropdown from 'src/core/components/dropdown/Dropdown';
 import {scale} from 'react-native-size-matters';
 import {useI18n} from 'src/core/presentation/hooks/useI18n';
+import DropdownChangeLang from 'src/core/presentation/components/DropdownChangeLang';
 
 interface TRegisterError {
   emailOrPhoneError?: string;
@@ -55,7 +55,6 @@ const RegisterScreen: React.FC = observer(() => {
 
   const [registerState, setRegisterState] =
     useStateCustom<TRegister>(initialRegisterState);
-  const [lang, setLang] = useState('Eng');
 
   const validateEmailOrPhone = (value: string): string | undefined => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -147,12 +146,7 @@ const RegisterScreen: React.FC = observer(() => {
       source={require('../../../../assets/images/authBackground.png')}>
       <View style={styles.overlay} />
       <ScrollView contentContainerStyle={styles.fill}>
-        <Dropdown
-          title={lang}
-          width={scale(76)}
-          onSelectItem={item => setLang(item)}
-          data={['Eng', 'Vie']}
-        />
+        <DropdownChangeLang />
         <KeyboardAvoidingView
           style={[styles.fill, styles.justifyCenter]}
           behavior={Platform.OS === 'ios' ? 'padding' : undefined}>

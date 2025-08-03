@@ -45,7 +45,7 @@ const Dropdown = ({
   const animatedStyles = useAnimatedStyle(() => {
     return {
       height: maxHeight.value + 10,
-      overflow: 'hidden',
+      // overflow: 'hidden',
     };
   });
 
@@ -138,14 +138,16 @@ const Dropdown = ({
                         {typeof p === 'object' ? p[nameIndex!] : p}
                         {prefix}
                       </Text>
-                      <View
-                        style={[
-                          styles.divide,
-                          i === data.length - 1 && {
-                            marginBottom: verticalScale(20),
-                          },
-                        ]}
-                      />
+                      {i !== data.filter(e => e !== title).length - 1 && (
+                        <View
+                          style={[
+                            styles.divide,
+                            i === data.filter(e => e !== title).length - 1 && {
+                              marginBottom: verticalScale(20),
+                            },
+                          ]}
+                        />
+                      )}
                     </TouchableOpacity>
                   </>
                 );
@@ -163,16 +165,17 @@ const styles = StyleSheet.create({
   dropdown: {
     backgroundColor: COLORS.WHITE_FBF8CC,
     shadowColor: '#000',
-    shadowOffset: {width: 10, height: 10},
+    shadowOffset: {width: 15, height: 15},
     shadowOpacity: 0.3,
     shadowRadius: scale(12),
-    paddingBottom: scale(10),
+    paddingVertical: scale(10),
     paddingHorizontal: scale(10),
     width: scale(70),
     borderBottomRightRadius: scale(20),
     borderBottomLeftRadius: scale(20),
-    paddingTop: verticalScale(10),
+    paddingTop: verticalScale(20),
     position: 'absolute', // Set position to absolute
+    elevation: 10,
   },
   card: {
     paddingVertical: verticalScale(8),

@@ -29,8 +29,8 @@ import {useOfflineMode} from 'src/core/presentation/hooks/offline/useOfflineMode
 import {OfflineEnum} from 'src/core/presentation/hooks/offline/OfflineEnum';
 import {observer} from 'mobx-react';
 import {useI18n} from 'src/core/presentation/hooks/useI18n';
-import Dropdown from 'src/core/components/dropdown/Dropdown';
 import PrimaryButton from '../components/PrimaryButton';
+import DropdownChangeLang from 'src/core/presentation/components/DropdownChangeLang';
 
 const screenWidth = Dimensions.get('screen').width;
 
@@ -40,7 +40,6 @@ const ListChildrenScreen = observer(() => {
   const {storeData, getData, isConnected} = useOfflineMode();
   useLoadingGlobal();
   const i18n = useI18n();
-  const [lang, setLang] = useState('Eng');
   const insets = useSafeAreaInsets();
 
   const [userProfile, setUserProfile] = useState<data>();
@@ -101,12 +100,7 @@ const ListChildrenScreen = observer(() => {
       <View style={styles.overlay} />
       <SafeAreaView style={[styles.container]} edges={['top']}>
         <View style={styles.wrapContainer}>
-          <Dropdown
-            title={lang}
-            width={scale(76)}
-            onSelectItem={item => setLang(item)}
-            data={['Eng', 'Vie']}
-          />
+          <DropdownChangeLang />
 
           <View style={styles.wrapBodyContainer}>
             <View style={styles.bigCircle}>
