@@ -191,7 +191,7 @@ const English_Pronounciation_Meaning = observer(
         setErrorSpeech,
         loadingRecord,
         speechResult,
-        startRecord: handleStartRecord,
+        recordWithLesson,
         stopRecord: handleStopRecord,
         destroy: handleDestroyRecord,
         clearSpeechResult,
@@ -304,15 +304,9 @@ const English_Pronounciation_Meaning = observer(
 
           // Calls the handleStartRecord function which likely starts the actual audio recording.
           // This function is expected to handle all the setup necessary for capturing audio input.
-          if (lessonName.toLocaleLowerCase().includes('english')) {
-            handleStartRecord('unitedstates');
-          } else if (lessonName.toLocaleLowerCase().includes('mandarin')) {
-            handleStartRecord('china');
-          } else if (lessonName.toLocaleLowerCase().includes('tiếng việt')) {
-            handleStartRecord('vietnam');
-          }
+          recordWithLesson(lessonName);
         }
-      }, [setErrorSpeech, loadingRecord, lessonName, handleStartRecord]);
+      }, [setErrorSpeech, loadingRecord, lessonName, recordWithLesson]);
 
       const stopRecord = useCallback(() => {
         // Logs the termination of the recording process to the console.

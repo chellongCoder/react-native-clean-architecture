@@ -191,16 +191,23 @@ const VnG0M1Lesson = observer(
         setErrorSpeech,
         loadingRecord,
         speechResult,
-        startRecord: handleStartRecord,
         stopRecord: handleStopRecord,
         destroy: handleDestroyRecord,
         clearSpeechResult,
+        recordWithLesson,
         checkEmpty,
       } = usePronunciation({
         correctAnswer: getCorrectAnswer(
           firstMiniTestTask?.question?.[moduleIndex].correctAnswer as string[],
         ),
       });
+      console.log(
+        '🛠 LOG: 🚀 --> ----------------------------------------------🛠 LOG: 🚀 -->',
+      );
+      console.log('🛠 LOG: 🚀 --> ~ loadingRecord:', loadingRecord);
+      console.log(
+        '🛠 LOG: 🚀 --> ----------------------------------------------🛠 LOG: 🚀 -->',
+      );
 
       const {lessonSetting} = useHomeStore();
 
@@ -297,25 +304,12 @@ const VnG0M1Lesson = observer(
         // Checks if there is no ongoing recording process (loadingRecord is false).
         if (!loadingRecord) {
           // Initiates the animation associated with recording. This could involve visual feedback like pulsing or scaling effects.
-          console.log(
-            '🛠 LOG: 🚀 --> ------------------------------------------------------🛠 LOG: 🚀 -->',
-          );
-          console.log('🛠 LOG: 🚀 --> ~ startRecord ~ lessonName:', lessonName);
-          console.log(
-            '🛠 LOG: 🚀 --> ------------------------------------------------------🛠 LOG: 🚀 -->',
-          );
 
           // Calls the handleStartRecord function which likely starts the actual audio recording.
           // This function is expected to handle all the setup necessary for capturing audio input.
-          if (lessonName.toLocaleLowerCase().includes('english')) {
-            handleStartRecord('unitedstates');
-          } else if (lessonName.toLocaleLowerCase().includes('mandarin')) {
-            handleStartRecord('china');
-          } else if (lessonName.toLocaleLowerCase().includes('tiếng việt')) {
-            handleStartRecord('vietnam');
-          }
+          recordWithLesson(lessonName);
         }
-      }, [setErrorSpeech, loadingRecord, lessonName, handleStartRecord]);
+      }, [setErrorSpeech, loadingRecord, lessonName, recordWithLesson]);
 
       const stopRecord = useCallback(() => {
         // Logs the termination of the recording process to the console.

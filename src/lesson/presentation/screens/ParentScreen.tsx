@@ -1053,7 +1053,7 @@ const styles = StyleSheet.create({
   profile_border: {
     height: 120,
     width: 120,
-    backgroundColor: '#F2B559',
+    backgroundColor: COLORS.YELLOW_F2B559,
     borderTopLeftRadius: 60,
     borderTopRightRadius: 60,
     borderBottomLeftRadius: 60,
@@ -1064,7 +1064,7 @@ const styles = StyleSheet.create({
   profile: {
     height: '100%',
     width: '100%',
-    backgroundColor: '#FFE699',
+    backgroundColor: COLORS.YELLOW_FFE699,
     borderRadius: 60,
     alignItems: 'center',
     justifyContent: 'center',
@@ -1075,45 +1075,43 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   head: {
-    paddingHorizontal: 16,
+    paddingHorizontal: scale(16),
     alignItems: 'center',
   },
   textColor: {
-    color: '#1C6349',
+    color: COLORS.BLUE_1C6349,
   },
   txtParentName: {
-    color: '#1C6349',
+    color: COLORS.BLUE_1C6349,
     marginRight: 12,
   },
-  pt16: {
-    paddingTop: 16,
-  },
+
   ph16: {
-    paddingHorizontal: 16,
+    paddingHorizontal: scale(16),
   },
   mb12: {
-    marginBottom: 12,
+    marginBottom: scale(12),
   },
   mt4: {
-    marginTop: 4,
+    marginTop: scale(4),
   },
   mt16: {
     paddingTop: scale(16),
   },
   mr16: {
-    marginRight: 16,
+    marginRight: scale(16),
   },
   mr32: {
-    marginRight: 32,
+    marginRight: scale(32),
   },
   arrowLeft: {
-    marginRight: 8,
+    marginRight: scale(8),
   },
   arrowRight: {
-    marginLeft: 8,
+    marginLeft: scale(8),
   },
   bookContent: {
-    paddingHorizontal: 16,
+    paddingHorizontal: scale(16),
     paddingBottom: scale(54),
   },
   bodyBook: {
@@ -1172,10 +1170,10 @@ const styles = StyleSheet.create({
     width: scale(90),
   },
   btnOrange: {
-    backgroundColor: '#F2B559',
+    backgroundColor: COLORS.YELLOW_F2B559,
   },
   btnRed: {
-    backgroundColor: '#F28759',
+    backgroundColor: COLORS.RED_F28759,
   },
   card: {
     paddingVertical: verticalScale(8),
@@ -1184,13 +1182,13 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    backgroundColor: '#FFE699',
+    backgroundColor: COLORS.YELLOW_FFE699,
     marginTop: verticalScale(6),
     marginBottom: verticalScale(12),
     marginRight: scale(8),
   },
   textCard: {
-    color: '#1C6349',
+    color: COLORS.BLUE_1C6349,
     marginRight: 4,
   },
   wrapAddChildContainer: {
@@ -1220,7 +1218,7 @@ const styles = StyleSheet.create({
   },
   dropdown: {
     backgroundColor: COLORS.WHITE_FBF8CC,
-    shadowColor: '#000',
+    shadowColor: COLORS.BLACK,
     shadowOffset: {width: 2, height: 0},
     shadowOpacity: 0.3,
     shadowRadius: 12,

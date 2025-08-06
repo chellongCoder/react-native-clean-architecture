@@ -1,4 +1,3 @@
-/* eslint-disable react-native/no-inline-styles */
 /* eslint-disable react/no-unstable-nested-components */
 import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import React, {
@@ -156,46 +155,6 @@ const VnG0M3Lesson = observer(
           return () => clearTimeout(firstTimeout);
         }
       }, [onSpeechText, focus]); // Added focus to the dependency array
-
-      useEffect(() => {
-        console.log(
-          '🛠 LOG: 🚀 --> -----------------------------------------------------🛠 LOG: 🚀 -->',
-        );
-        console.log('🛠 LOG: 🚀 --> ~ Tts.voices ~ lessonName:', lessonName);
-        console.log(
-          '🛠 LOG: 🚀 --> -----------------------------------------------------🛠 LOG: 🚀 -->',
-        );
-
-        Tts.voices().then(voices => {
-          if (lessonName.toLocaleLowerCase().includes('english')) {
-            const engVoice = voices.find(
-              voice => voice.language === listLanguage['US English'],
-            );
-            updateDefaultVoice?.(
-              isAndroid ? engVoice?.id : iosVoice[3].id,
-              'US English',
-            );
-          } else if (lessonName.toLocaleLowerCase().includes('mandarin')) {
-            const engVoice = voices.find(
-              voice =>
-                voice.language ===
-                listLanguage['Mainland China, simplified characters'],
-            );
-            updateDefaultVoice?.(
-              engVoice?.id,
-              'Mainland China, simplified characters',
-            );
-          } else if (lessonName.toLocaleLowerCase().includes('tiếng việt')) {
-            const vietnameseVoices = voices.filter(
-              voice =>
-                voice.language.startsWith('vi-') ||
-                voice.name.toLowerCase().includes('vietnamese'),
-            );
-
-            updateDefaultVoice?.(vietnameseVoices[0]?.id, 'Vie (Vietnamese)');
-          }
-        });
-      }, [lessonName, updateDefaultVoice]);
 
       const animatedStyle = useAnimatedStyle(() => {
         return {

@@ -20,11 +20,25 @@ export const usePronunciation = ({correctAnswer}: Props) => {
   // * start record
   const startRecord = useCallback(
     async (language: keyof TLanguageMap) => {
-      console.log('start record');
+      console.log('start record', language);
       // Pass a key in list language. Ex: await startRecording('china');
       await startRecording(language);
     },
     [startRecording],
+  );
+
+  // * start record
+  const recordWithLesson = useCallback(
+    async (lessonName: string) => {
+      if (lessonName.toLocaleLowerCase().includes('english')) {
+        startRecord('unitedstates');
+      } else if (lessonName.toLocaleLowerCase().includes('mandarin')) {
+        startRecord('china');
+      } else if (lessonName.toLocaleLowerCase().includes('vietnamese')) {
+        startRecord('vietnam');
+      }
+    },
+    [startRecord],
   );
 
   // * stop record
@@ -42,5 +56,6 @@ export const usePronunciation = ({correctAnswer}: Props) => {
     loadingRecord,
     checkEmpty,
     destroy,
+    recordWithLesson,
   };
 };

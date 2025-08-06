@@ -1,16 +1,9 @@
-import {
-  ScrollView,
-  StyleSheet,
-  View,
-  Text,
-  Keyboard,
-  ImageBackground,
-} from 'react-native';
+import {ScrollView, StyleSheet, Text, ImageBackground} from 'react-native';
 import React, {useEffect, useRef, useState} from 'react';
 import {CommonInputPassword} from 'src/authentication/presentation/components/CommonInput';
 import PrimaryButton from '../components/PrimaryButton';
 import {useLessonStore} from '../stores/LessonStore/useGetPostsStore';
-import {assets, isAndroid} from 'src/core/presentation/utils';
+import {assets} from 'src/core/presentation/utils';
 import {scale} from 'react-native-size-matters';
 import useLoginWithCredentials from 'src/authentication/presentation/hooks/useLoginWithCredentials';
 import {CustomTextStyle} from 'src/core/presentation/constants/typography';
@@ -22,14 +15,12 @@ import Animated, {
   withSpring,
   withTiming,
 } from 'react-native-reanimated';
-import {usePermissionApplock} from 'src/hooks/usePermissionApplock';
 import {useLoadingGlobal} from 'src/core/presentation/hooks/loading/useLoadingGlobal';
 
 const AuthParentScreen = ({changeIsShowAuth}: any) => {
   // const [password, setPassword] = useState('');
   const passwordRef = useRef('');
   const [error, setError] = useState('');
-  usePermissionApplock();
   const {handleComparePassword} = useLoginWithCredentials();
   const {shake, rStyle} = useAnimatedShake();
   const lessonStore = useLessonStore();
