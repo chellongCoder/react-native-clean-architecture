@@ -14,7 +14,7 @@ import {requestScreenTime} from 'react-native-alphadex-screentime';
 import {isAndroid} from './utils';
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
 import {SoundGlobalProvider} from './hooks/sound/SoundGlobalProvider';
-import {LogBox, StatusBar} from 'react-native';
+import {LogBox, Platform, StatusBar} from 'react-native';
 import {SoundBackgroundGlobalProvider} from './hooks/sound/SoundBackgroundGlobalProvider';
 import {OfflineProvider} from './hooks/offline/OfflineProvider';
 import {TextToSpeechProvider} from './hooks/textToSpeech/TextToSpeechProvider';
@@ -24,12 +24,61 @@ import {withIAPContext} from 'react-native-iap';
 import crashlytics from '@react-native-firebase/crashlytics';
 import {AuthenticationProvider} from 'src/authentication/presentation/stores/AuthenticationProvider';
 import ErrorBoundary from './components/ErrorBoundary';
+import SpInAppUpdates, {
+  IAUUpdateKind,
+  IosStartUpdateOptions,
+  AndroidStartUpdateOptions,
+  IAUInstallStatus,
+} from 'sp-react-native-in-app-updates';
+import DeviceInfo from 'react-native-device-info';
 
 LogBox.ignoreLogs(['Warning: ...']); // Ignore log notification by message
 LogBox.ignoreAllLogs(); //Ignore all log notifications
 
 const App = () => {
   const routeNameRef = useRef<string>();
+
+  const checkForUpdate = () => {
+    const version = DeviceInfo.getVersion();
+    const inAppUpdates = new SpInAppUpdates(
+      true, // isDebug
+    );
+
+    inAppUpdates
+      .checkNeedsUpdate({curVersion: version})
+      .then(result => {
+        if (result.shouldUpdate) {
+          let updateOptions: IosStartUpdateOptions | AndroidStartUpdateOptions;
+          if (Platform.OS === 'ios') {
+            updateOptions = {
+              title: 'Update available',
+              message:
+                'There is a new version of the app available on the App Store, do you want to update it?',
+              buttonUpgradeText: 'Update',
+              buttonCancelText: 'Cancel',
+            };
+          } else {
+            updateOptions = {
+              updateType: IAUUpdateKind.FLEXIBLE,
+            };
+          }
+          inAppUpdates.addStatusUpdateListener(downloadStatus => {
+            console.log('download status', downloadStatus);
+            if (downloadStatus.status === IAUInstallStatus.DOWNLOADED) {
+              console.log('downloaded');
+              inAppUpdates.installUpdate();
+              inAppUpdates.removeStatusUpdateListener(finalStatus => {
+                console.log('final status', finalStatus);
+              });
+            }
+          });
+          inAppUpdates.startUpdate(updateOptions);
+        }
+      })
+      .catch(err => {
+        console.log('checkForUpdate err: ', err);
+      });
+  };
 
   const onNavigationReady = (): void => {
     const route = RootNavigation.current?.getCurrentRoute();
@@ -54,6 +103,10 @@ const App = () => {
     crashlytics().log('App mounted.');
 
     !isAndroid && requestScreenTime();
+  }, []);
+
+  useEffect(() => {
+    checkForUpdate();
   }, []);
 
   return (
