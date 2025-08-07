@@ -14,6 +14,7 @@ import com.facebook.react.defaults.DefaultReactNativeHost
 import com.facebook.soloader.SoLoader
 import expo.modules.ApplicationLifecycleDispatcher
 import expo.modules.ReactNativeHostWrapper
+import com.microsoft.codepush.react.CodePush
 
 class MainApplication : Application(), ReactApplication {
 
@@ -24,6 +25,7 @@ class MainApplication : Application(), ReactApplication {
               // Packages that cannot be autolinked yet can be added manually here, for example:
               // add(MyReactNativePackage())
               add(ViewModulePackage())
+              add(CodePush(getCodePushDeploymentKey(), getApplicationContext(), BuildConfig.DEBUG, getCodePushServerUrl()))
             }
 
         override fun getJSMainModuleName(): String = "index"
@@ -32,6 +34,10 @@ class MainApplication : Application(), ReactApplication {
 
         override val isNewArchEnabled: Boolean = BuildConfig.IS_NEW_ARCHITECTURE_ENABLED
         override val isHermesEnabled: Boolean = BuildConfig.IS_HERMES_ENABLED
+
+        override fun getJSBundleFile(): String? {
+          return CodePush.getJSBundleFile()
+        }
       })
 
   override val reactHost: ReactHost
@@ -50,5 +56,13 @@ class MainApplication : Application(), ReactApplication {
    override fun onConfigurationChanged(newConfig: Configuration) {
     super.onConfigurationChanged(newConfig)
     ApplicationLifecycleDispatcher.onConfigurationChanged(this, newConfig)
+  }
+
+  private fun getCodePushDeploymentKey(): String {
+    return BuildConfig.CODEPUSH_DEPLOYMENT_KEY
+  }
+
+  private fun getCodePushServerUrl(): String {
+    return BuildConfig.CODEPUSH_SERVER_URL
   }
 }

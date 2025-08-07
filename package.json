@@ -61,6 +61,7 @@
     "react-native-admob-native-ads": "^0.7.6",
     "react-native-alphadex-screentime": "link:./src/modules/react-native-alphadex-screentime",
     "react-native-applifecycle": "^1.0.0",
+    "react-native-code-push": "^7.0.5",
     "react-native-device-info": "^11.1.0",
     "react-native-dropdown-picker": "^5.4.6",
     "react-native-fast-image": "^8.6.3",
@@ -112,6 +113,7 @@
     "eslint-plugin-jest": "^28.3.0",
     "husky": "^7.0.4",
     "jest": "^29.6.3",
+    "metro-react-native-babel-preset": "^0.77.0",
     "prettier": "2.8.8",
     "react-test-renderer": "18.2.0",
     "typescript": "^5.3.0"
