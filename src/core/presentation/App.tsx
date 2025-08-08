@@ -41,7 +41,7 @@ const App = () => {
   const checkForUpdate = () => {
     const version = DeviceInfo.getVersion();
     const inAppUpdates = new SpInAppUpdates(
-      true, // isDebug
+      false, // isDebug
     );
 
     inAppUpdates
@@ -106,7 +106,11 @@ const App = () => {
   }, []);
 
   useEffect(() => {
-    checkForUpdate();
+    if (__DEV__) {
+      return;
+    } else {
+      checkForUpdate();
+    }
   }, []);
 
   return (
