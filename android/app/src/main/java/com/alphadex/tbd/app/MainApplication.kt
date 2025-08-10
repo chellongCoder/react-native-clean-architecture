@@ -25,10 +25,10 @@ class MainApplication : Application(), ReactApplication {
               // Packages that cannot be autolinked yet can be added manually here, for example:
               // add(MyReactNativePackage())
               add(ViewModulePackage())
-              add(CodePush(getCodePushDeploymentKey(), getApplicationContext(), BuildConfig.DEBUG, getCodePushServerUrl()))
             }
 
         override fun getJSMainModuleName(): String = "index"
+
 
         override fun getUseDeveloperSupport(): Boolean = BuildConfig.DEBUG
 
@@ -58,11 +58,4 @@ class MainApplication : Application(), ReactApplication {
     ApplicationLifecycleDispatcher.onConfigurationChanged(this, newConfig)
   }
 
-  private fun getCodePushDeploymentKey(): String {
-    return BuildConfig.CODEPUSH_DEPLOYMENT_KEY
-  }
-
-  private fun getCodePushServerUrl(): String {
-    return BuildConfig.CODEPUSH_SERVER_URL
-  }
 }

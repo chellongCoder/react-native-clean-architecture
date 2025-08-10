@@ -2,5 +2,5 @@
   <string name="app_name">ABeeCi</string>
   <string name="expo_splash_screen_resize_mode" translatable="false">cover</string>
   <string name="expo_splash_screen_status_bar_translucent" translatable="false">false</string>
-  <string moduleConfig="true" name="CodePushDeploymentKey">@string/CODEPUSH_DEPLOYMENT_KEY</string>
+  <string moduleConfig="true" name="CodePushDeploymentKey">CODEPUSH_DEPLOYMENT_KEY</string>
 </resources>

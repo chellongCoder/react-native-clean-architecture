@@ -6,6 +6,7 @@ const appConfig: ExpoConfig = {
   slug: 'abeeci',
   scheme: 'rnca',
   version: packageJson.version,
+  entryPoint: './index.js',
   orientation: 'portrait',
   icon: './assets/images/icon.png',
   userInterfaceStyle: 'light',
@@ -29,24 +30,7 @@ const appConfig: ExpoConfig = {
     },
   },
   plugins: [
-    [
-      'react-native-code-push',
-      {
-        deploymentKey: {
-          ios: {
-            debug: 'YOUR_IOS_DEBUG_DEPLOYMENT_KEY',
-            staging: 'YOUR_IOS_STAGING_DEPLOYMENT_KEY',
-            release: 'YOUR_IOS_PRODUCTION_DEPLOYMENT_KEY',
-          },
-          android: {
-            debug: 'YOUR_ANDROID_DEBUG_DEPLOYMENT_KEY',
-            staging: 'YOUR_ANDROID_STAGING_DEPLOYMENT_KEY',
-            release: 'YOUR_ANDROID_PRODUCTION_DEPLOYMENT_KEY',
-          },
-        },
-        serverUrl: 'YOUR_SELF_HOSTED_CODEPUSH_SERVER_URL',
-      },
-    ],
+    // your other plugins...
   ],
   web: {
     favicon: './assets/images/favicon.png',
