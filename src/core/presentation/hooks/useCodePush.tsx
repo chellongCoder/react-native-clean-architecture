@@ -3,6 +3,7 @@ import {ActivityIndicator, Text, View, StyleSheet} from 'react-native';
 import CodePush, {DownloadProgress, LocalPackage} from 'react-native-code-push';
 import { coreModuleContainer } from 'src/core/CoreModule';
 import Env, { EnvToken } from 'src/core/domain/entities/Env';
+import { useI18n } from './useI18n';
 
 export type CodePushContextValue = {
   setProgress: React.Dispatch<React.SetStateAction<number>>;
@@ -20,25 +21,26 @@ const CodePushProvider: React.FC<Props> = ({children}) => {
   const [progress, setProgress] = useState<number>(-1);
   const [statusUpdate, setStatusUpdate] = useState<string>('');
   const [metaData, setMetaData] = useState<LocalPackage | null>(null);
+  const i18n = useI18n()
 
   const codePushStatusDidChange = (status: CodePush.SyncStatus) => {
     switch (status) {
       case CodePush.SyncStatus.CHECKING_FOR_UPDATE:
         setProgress(0);
-        setStatusUpdate('Checking for updates...');
+        setStatusUpdate(i18n.t('core.screens.codepush.checkingForUpdate') + '...');
         break;
       case CodePush.SyncStatus.DOWNLOADING_PACKAGE:
-        setStatusUpdate('Downloading update...');
+        setStatusUpdate(i18n.t('core.screens.codepush.downloadingUpdate') + '...');
         break;
       case CodePush.SyncStatus.INSTALLING_UPDATE:
-        setStatusUpdate('Installing update...');
+        setStatusUpdate(i18n.t('core.screens.codepush.installingUpdate') + '...');
         break;
       case CodePush.SyncStatus.UP_TO_DATE:
-        setStatusUpdate('Up to date.');
+        setStatusUpdate(i18n.t('core.screens.codepush.upToDate'));
         setProgress(-1);
         break;
       case CodePush.SyncStatus.UPDATE_INSTALLED:
-        setStatusUpdate('Update installed.');
+        setStatusUpdate(i18n.t('core.screens.codepush.updateInstalled'));
         setProgress(-1);
         break;
       default:
@@ -58,12 +60,12 @@ const CodePushProvider: React.FC<Props> = ({children}) => {
       {
         deploymentKey: env.CODEPUSH_DEPLOYMENT_KEY,
         updateDialog: {
-          title: 'Update available',
-          optionalUpdateMessage: 'A new update is available. Would you like to install it?',
-          optionalIgnoreButtonLabel: 'Later',
-          optionalInstallButtonLabel: 'Install',
-          mandatoryUpdateMessage: 'An update is required to continue.',
-          mandatoryContinueButtonLabel: 'Install',
+          title: i18n.t('core.screens.codepush.updateAvailable'),
+          optionalUpdateMessage: i18n.t('core.screens.codepush.contentUpdate'),
+          optionalIgnoreButtonLabel: i18n.t('core.screens.codepush.later'),
+          optionalInstallButtonLabel: i18n.t('core.screens.codepush.install'),
+          mandatoryUpdateMessage: i18n.t('core.screens.codepush.mandatoryMessage'),
+          mandatoryContinueButtonLabel: i18n.t('core.screens.codepush.install'),
         },
         installMode: CodePush.InstallMode.IMMEDIATE,
       },

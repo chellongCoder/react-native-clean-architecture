@@ -8,11 +8,14 @@
 # code-push release-react ABeeCi-android android --deploymentName Staging --rollout 25%
 
 # Full example with multiple options
-# code-push release-react ABeeCi-android android \
-#   --deploymentName Staging \
-#   --targetBinaryVersion "1.0.0" \
-#   --description "Staging release v1.1" \
-#   --mandatory false \
-#   --rollout 100%
+code-push release-react ABeeCi-android android \
+  --deploymentName Staging \
+  --targetBinaryVersion "1.0.0" \
+  --description "Staging release v1.1" \
+  --mandatory false \
+  --rollout 100% \
+  --verbose \
+  --bundleName "index.android.bundle" \
+  --development false \
 
-code-push release-react ABeeCi-android android --deploymentName Staging --verbose --bundleName "index.android.bundle" --development false --sourcemapOutput "./sourcemap.map" --description "Staging release v1.1"
+# code-push release-react ABeeCi-android android --deploymentName Staging --verbose --bundleName "index.android.bundle" --development false  --description "Staging release v1.1"

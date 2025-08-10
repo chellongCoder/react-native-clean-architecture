@@ -4,6 +4,20 @@ export default {
       NotFound: {
         goHome: 'Go to home screen',
       },
+      codepush: {
+        checkingForUpdate: 'Checking for updates',
+        downloadingUpdate: 'Downloading update',
+        installingUpdate: 'Installing update',
+        upToDate: 'Up to date',
+        updateInstalled: 'Update installed',
+        updateIgnored: 'Update ignored',
+        updateFailed: 'Update failed',
+        updateAvailable: 'Update available',
+        contentUpdate: 'A new update is available. Would you like to install it?',
+        later: 'Later',
+        install: 'Install',
+        mandatoryMessage: 'Mandatory update',
+      }
     },
     PurchaseSuccessScreen: {
       paymentSuccess: 'Payment\nSuccess',

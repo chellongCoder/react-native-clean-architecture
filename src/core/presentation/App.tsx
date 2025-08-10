@@ -130,12 +130,12 @@ const App = () => {
                     <TextToSpeechProvider>
                       <AuthenticationProvider>
                         <IapProvider>
-                          {/* <CodePushProvider> */}
+                          <CodePushProvider>
                             <ErrorBoundary>
                               <RootNavigator />
                             </ErrorBoundary>
                             <Toast />
-                          {/* </CodePushProvider> */}
+                          </CodePushProvider>
                         </IapProvider>
                       </AuthenticationProvider>
                     </TextToSpeechProvider>
