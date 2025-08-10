@@ -29,6 +29,9 @@ const appConfig: ExpoConfig = {
       backgroundColor: '#FFFFFF',
     },
   },
+  plugins: [
+    // your other plugins...
+  ],
   web: {
     favicon: './assets/images/favicon.png',
   },
@@ -46,6 +49,8 @@ const appConfig: ExpoConfig = {
       'https://storage.googleapis.com/alphadex-image-abeeci/module-images/',
     IMAGE_BACKGROUND_BASE_API_URL:
       'https://storage.googleapis.com/alphadex-image-abeeci/backgrounds/',
+    CODEPUSH_SERVER_URL: 'https://code-push.tbd-alphadex.com/',
+    CODEPUSH_DEPLOYMENT_KEY: '0Stgs2wPTZDLsxQQlEsaSQ7XKBr74ksvOXqog'
   },
 };
 //storage.googleapis.com/alphadex-image-abeeci/backgrounds/

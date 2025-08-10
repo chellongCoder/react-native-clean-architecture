@@ -92,5 +92,9 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
+	<key>CodePushDeploymentKey</key>
+	<string>$(CODEPUSH_DEPLOYMENT_KEY)</string>
+	<key>CodePushServerURL</key>
+	<string>$(CODEPUSH_SERVER_URL)</string>
 </dict>
 </plist>

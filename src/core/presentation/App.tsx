@@ -20,6 +20,7 @@ import {OfflineProvider} from './hooks/offline/OfflineProvider';
 import {TextToSpeechProvider} from './hooks/textToSpeech/TextToSpeechProvider';
 import {IapProvider} from './store/iapProvider';
 import FirebaseCrashlyticProvider from './hooks/firebaseCrashlytic/FirebaseCrashlyticProvider';
+import CodePushProvider from './hooks/useCodePush';
 import {withIAPContext} from 'react-native-iap';
 import crashlytics from '@react-native-firebase/crashlytics';
 import {AuthenticationProvider} from 'src/authentication/presentation/stores/AuthenticationProvider';
@@ -129,10 +130,12 @@ const App = () => {
                     <TextToSpeechProvider>
                       <AuthenticationProvider>
                         <IapProvider>
-                          <ErrorBoundary>
-                            <RootNavigator />
-                          </ErrorBoundary>
-                          <Toast />
+                          <CodePushProvider>
+                            <ErrorBoundary>
+                              <RootNavigator />
+                            </ErrorBoundary>
+                            <Toast />
+                          </CodePushProvider>
                         </IapProvider>
                       </AuthenticationProvider>
                     </TextToSpeechProvider>

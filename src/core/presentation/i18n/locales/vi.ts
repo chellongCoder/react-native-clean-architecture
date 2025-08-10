@@ -4,6 +4,20 @@ export default {
       NotFound: {
         goHome: 'Đi đến màn hình chính',
       },
+      codepush: {
+        checkingForUpdate: 'Kiểm tra cập nhật',
+        downloadingUpdate: 'Đang tải cập nhật',
+        installingUpdate: 'Đang cài đặt cập nhật',
+        updateInstalled: 'Cập nhật đã được cài đặt',
+        upToDate: 'Cập nhật đã có sẵn',
+        updateIgnored: 'Cập nhật đã bị bỏ qua',
+        updateFailed: 'Cập nhật thất bại',
+        updateAvailable: 'Cập nhật có sẵn',
+        contentUpdate: 'Có bản cập nhật mới. Bạn có muốn cập nhật không?',
+        later: 'Để sau',
+        install: 'Cập nhật',
+        mandatoryMessage: 'Cập nhật bắt buộc',
+      }
     },
     errors: {
       screenNotFound: 'Không tìm thấy màn hình',

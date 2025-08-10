@@ -7,4 +7,6 @@ export default interface Env {
   IMAGE_QUESTION_BASE_API_URL: string;
   IMAGE_MODULE_BASE_API_URL: string;
   IMAGE_BACKGROUND_BASE_API_URL: string;
+  CODEPUSH_DEPLOYMENT_KEY: string;
+  CODEPUSH_SERVER_URL: string;
 }
