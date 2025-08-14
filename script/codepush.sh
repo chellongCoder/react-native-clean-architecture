@@ -8,14 +8,15 @@
 # code-push release-react ABeeCi-android android --deploymentName Staging --rollout 25%
 
 # Full example with multiple options
+cd .. &&
 code-push release-react ABeeCi-android android \
   --deploymentName Staging \
-  --targetBinaryVersion "1.0.0" \
+  --targetBinaryVersion "1.1" \
   --description "Staging release v1.1" \
-  --mandatory false \
+  --mandatory true \
   --rollout 100% \
   --verbose \
-  --bundleName "index.android.bundle" \
   --development false \
 
+cd script
 # code-push release-react ABeeCi-android android --deploymentName Staging --verbose --bundleName "index.android.bundle" --development false  --description "Staging release v1.1"
