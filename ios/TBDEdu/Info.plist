@@ -37,21 +37,32 @@
 	<key>LSApplicationCategoryType</key>
 	<string/>
 	<key>LSRequiresIPhoneOS</key>
-	<true/>
+	<true/>	
 	<key>NSAppTransportSecurity</key>
 	<dict>
 		<key>NSAllowsArbitraryLoads</key>
 		<false/>
 		<key>NSAllowsLocalNetworking</key>
 		<true/>
+
 		<key>NSExceptionDomains</key>
 		<dict>
-			<key>localhost</key>
-			<dict>
+			<key>34.30.145.97</key>
+            <dict>
+                <key>NSIncludesSubdomains</key>
+				<true/>
 				<key>NSExceptionAllowsInsecureHTTPLoads</key>
 				<true/>
-			</dict>
+            </dict>
+			<key>code-push.tbd-alphadex.com</key>
+            <dict>
+                <key>NSIncludesSubdomains</key>
+				<true/>
+				<key>NSExceptionAllowsInsecureHTTPLoads</key>
+				<true/>
+            </dict>
 		</dict>
+
 	</dict>
 	<key>NSAppleMusicUsageDescription</key>
 	<string>To select local pictures from library, and change your information photo in our application, allow us to access your Media</string>
@@ -95,6 +106,6 @@
 	<key>CodePushDeploymentKey</key>
 	<string>$(CODEPUSH_DEPLOYMENT_KEY)</string>
 	<key>CodePushServerURL</key>
-	<string>$(CODEPUSH_SERVER_URL)</string>
+	<string>https://code-push.tbd-alphadex.com</string>
 </dict>
 </plist>

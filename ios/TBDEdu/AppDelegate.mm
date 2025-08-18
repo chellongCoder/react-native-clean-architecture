@@ -3,6 +3,7 @@
 
 #import <React/RCTBundleURLProvider.h>
 #import <GoogleSignIn/GoogleSignIn.h>
+#import <CodePush/CodePush.h>
 
 @implementation AppDelegate
 

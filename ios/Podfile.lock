@@ -1440,7 +1440,7 @@ PODS:
   - RNGoogleSignin (13.3.1):
     - GoogleSignIn (~> 7.1)
     - React-Core
-  - RNIap (12.16.4):
+  - RNIap (12.15.3):
     - React-Core
   - RNKeychain (8.2.0):
     - React-Core
@@ -1953,7 +1953,7 @@ SPEC CHECKSUMS:
   RNGestureHandler: 15c6ef51acba34c49ff03003806cf5dd6098f383
   RNGoogleMobileAds: f9959d58545ba76e51fc37c6d2e021df9ab38a82
   RNGoogleSignin: c26dada63b1a357af4f6a87f93ee70268d420c0f
-  RNIap: cc6ad44185936b2ced74691b154cc9c322a2cb5a
+  RNIap: 76bb8783a92a6e6bd2ad7a1e91a8b2e75930db36
   RNKeychain: bfe3d12bf4620fe488771c414530bf16e88f3678
   RNPermissions: 4264b7f2eeb0fae15cc6629316105d0b4f920231
   RNReanimated: f6b02d8f5eaa2830296411d4ec3b8ef5442dd13d
