@@ -62,6 +62,7 @@
     "react-native-admob-native-ads": "^0.7.6",
     "react-native-alphadex-screentime": "link:./src/modules/react-native-alphadex-screentime",
     "react-native-applifecycle": "^1.0.0",
+    "react-native-appsflyer": "^6.17.2",
     "react-native-code-push": "^8.3.1",
     "react-native-device-info": "^11.1.0",
     "react-native-dropdown-picker": "^5.4.6",

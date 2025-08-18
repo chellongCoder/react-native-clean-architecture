@@ -5,6 +5,9 @@ PODS:
   - AppAuth/Core (1.7.6)
   - AppAuth/ExternalUserAgent (1.7.6):
     - AppAuth/Core
+  - AppsFlyerFramework (6.17.2):
+    - AppsFlyerFramework/Main (= 6.17.2)
+  - AppsFlyerFramework/Main (6.17.2)
   - Base64 (1.1.2)
   - boost (1.83.0)
   - BVLinearGradient (2.8.3):
@@ -1223,6 +1226,9 @@ PODS:
     - glog
     - RCT-Folly (= 2022.05.16.00)
     - React-Core
+  - react-native-appsflyer (6.17.2):
+    - AppsFlyerFramework (= 6.17.2)
+    - React
   - react-native-get-random-values (1.11.0):
     - React-Core
   - react-native-netinfo (11.4.1):
@@ -1556,6 +1562,7 @@ DEPENDENCIES:
   - React-Mapbuffer (from `../node_modules/react-native/ReactCommon`)
   - react-native-admob-native-ads (from `../node_modules/react-native-admob-native-ads`)
   - react-native-alphadex-screentime (from `../node_modules/react-native-alphadex-screentime`)
+  - react-native-appsflyer (from `../node_modules/react-native-appsflyer`)
   - react-native-get-random-values (from `../node_modules/react-native-get-random-values`)
   - "react-native-netinfo (from `../node_modules/@react-native-community/netinfo`)"
   - react-native-safe-area-context (from `../node_modules/react-native-safe-area-context`)
@@ -1604,6 +1611,7 @@ DEPENDENCIES:
 SPEC REPOS:
   trunk:
     - AppAuth
+    - AppsFlyerFramework
     - Base64
     - CocoaAsyncSocket
     - Firebase
@@ -1743,6 +1751,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-admob-native-ads"
   react-native-alphadex-screentime:
     :path: "../node_modules/react-native-alphadex-screentime"
+  react-native-appsflyer:
+    :path: "../node_modules/react-native-appsflyer"
   react-native-get-random-values:
     :path: "../node_modules/react-native-get-random-values"
   react-native-netinfo:
@@ -1834,6 +1844,7 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   AppAuth: d4f13a8fe0baf391b2108511793e4b479691fb73
+  AppsFlyerFramework: 3e48c87fd356e7cbf09b87e176c0b04dc42f95fe
   Base64: cecfb41a004124895a7bcee567a89bae5a89d49b
   boost: d3f49c53809116a5d38da093a8aa78bf551aed09
   BVLinearGradient: 880f91a7854faff2df62518f0281afb1c60d49a3
@@ -1918,6 +1929,7 @@ SPEC CHECKSUMS:
   React-Mapbuffer: 84ea43c6c6232049135b1550b8c60b2faac19fab
   react-native-admob-native-ads: 6529b0dee2036f94ab53f5483c2c27c9c9a10942
   react-native-alphadex-screentime: a28983a3ea15e3516cbfeb3b903911732fb324ee
+  react-native-appsflyer: 0d92762254499358874eaeae2effd4d53872b0ab
   react-native-get-random-values: 21325b2244dfa6b58878f51f9aa42821e7ba3d06
   react-native-netinfo: f0a9899081c185db1de5bb2fdc1c88c202a059ac
   react-native-safe-area-context: 0ee144a6170530ccc37a0fd9388e28d06f516a89
@@ -1965,7 +1977,7 @@ SPEC CHECKSUMS:
   SocketRocket: f32cd54efbe0f095c4d7594881e52619cfe80b17
   SSZipArchive: 62d4947b08730e4cda640473b0066d209ff033c9
   TextToSpeech: 2b930ec3756afde499061f4f01ea895e1f75dccb
-  Yoga: 805bf71192903b20fc14babe48080582fee65a80
+  Yoga: d17d2cc8105eed528474683b42e2ea310e1daf61
 
 PODFILE CHECKSUM: 2136dd344121a48314747f03afb0077b4611feef
 
