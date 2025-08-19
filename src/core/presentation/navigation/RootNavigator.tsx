@@ -15,6 +15,10 @@ import {usePermissionApplock} from 'src/hooks/usePermissionApplock';
 import useHydration from 'src/hooks/useHydration';
 import {PopupModalGlobalProvider} from '../hooks/popup/PopupModalGlobalProvider';
 import {useI18n} from '../hooks/useI18n';
+import appsFlyer from 'react-native-appsflyer';
+import { useCampaign } from 'src/authentication/presentation/hooks/useCampaign';
+import { isAndroid } from '../utils';
+import { getAndroidId, getDeviceToken } from 'react-native-device-info';
 
 export const AppStack = createStackNavigator();
 
@@ -24,11 +28,53 @@ const RootNavigator: FC = () => {
   const i18n = useI18n();
 
   const isHydrated = useHydration();
+  const {postCampaign} = useCampaign();
 
   useFonts();
   usePermissionApplock();
 
   const [userProfile, setUserProfile] = useState();
+
+  // Listen to conversion data
+  const listenAttribution = async () => {
+    appsFlyer.onInstallConversionData(async (data) => {
+      if (data.type === "onInstallConversionDataLoaded") {
+        const attrData = data.data;
+        const mediaSource = attrData.media_source;   // e.g. facebook / instagram / tiktok_int
+        const campaign = attrData.campaign;          // campaign name
+        const referralCode = attrData.referral_code; // if you passed it in link
+
+        console.log("Install from:", mediaSource, "Campaign:", campaign, "Referral:", referralCode);
+        let deviceToken;
+
+        if (isAndroid) {
+          await getAndroidId().then((androidId: string) => {
+            deviceToken = androidId;
+          });
+        } else {
+          await getDeviceToken().then((iosId: string) => {
+            deviceToken = iosId;
+          });
+        }
+        postCampaign({
+          mediaSource: mediaSource ?? 'string',
+          campaignName: campaign ?? 'string',
+          referCode: referralCode ?? 'string',
+          deviceToken: deviceToken ?? 'string',
+          token: 'alphadex',
+        });
+      }
+    });
+
+    appsFlyer.onInstallConversionFailure((error) => {
+      console.error("Attribution error:", error);
+    });
+  };
+
+  useEffect(() => {
+    listenAttribution();
+  }, []);
+
 
   useEffect(() => {
     const getDataFromStore = async () => {

@@ -4,7 +4,6 @@ import {scale} from 'react-native-size-matters';
 import ICStar from 'src/core/components/icons/ICStar';
 import {COLORS} from 'src/core/presentation/constants/colors';
 import {CustomTextStyle} from 'src/core/presentation/constants/typography';
-import {useLoadingGlobal} from 'src/core/presentation/hooks/loading/useLoadingGlobal';
 import useLoginWithCredentials from 'src/authentication/presentation/hooks/useLoginWithCredentials';
 import ICLogout from 'src/core/components/icons/ICLogout';
 import CustomSwitchNew from './CustomSwitchNew';
@@ -24,7 +23,6 @@ type TProps = {
 const AccountStatus = (props: TProps) => {
   const {title, subject, isShowLogout, isShowDiamond, diamond} = props;
   const {handleLogOut} = useLoginWithCredentials();
-  useLoadingGlobal();
   const {selectedChild} = useAuthenticationStore();
   const i18n = useI18n();
 
