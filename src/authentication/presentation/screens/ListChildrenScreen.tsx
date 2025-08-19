@@ -14,7 +14,6 @@ import ICManIconMedium from 'src/core/components/icons/ICManIconMedium';
 import {COLORS} from 'src/core/presentation/constants/colors';
 import {CustomTextStyle} from 'src/core/presentation/constants/typography';
 import useAuthenticationStore from '../stores/useAuthenticationStore';
-import {useLoadingGlobal} from 'src/core/presentation/hooks/loading/useLoadingGlobal';
 import {
   navigateScreen,
   pushScreen,
@@ -38,7 +37,6 @@ const ListChildrenScreen = observer(() => {
   const {handleUserLogOut, getUserProfile, setSelectedChild} =
     useAuthenticationStore();
   const {storeData, getData, isConnected} = useOfflineMode();
-  useLoadingGlobal();
   const i18n = useI18n();
   const insets = useSafeAreaInsets();
 

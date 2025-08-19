@@ -14,6 +14,7 @@ const SERVICES = {
   APP_VERSION: '/app-version',
   GOOGLE: '/google-api',
   USER_MODULE: '/user-module',
+  CAMPAIGN: '/campaign',
 };
 
 const getProduct = () => {
@@ -83,6 +84,10 @@ const getUserModuleEndPointServices = (path?: string) => {
   }
 };
 
+const getCampaign = () => {
+  return `/api${API_VERSION}${SERVICES.CAMPAIGN}`;
+};
+
 export const API_ENDPOINTS = {
   AUTHENTICATION: {
     LOGIN_WITH_CREDENTIALS: getAuthEndPointServices('login'),
@@ -150,5 +155,8 @@ export const API_ENDPOINTS = {
   USER_MODULE: {
     USER_MODULE: getUserModuleEndPointServices(),
     PROGRESS_CHILDREN: getUserModuleEndPointServices('progress-child'),
+  },
+  CAMPAIGN: {
+    POST_CAMPAIGN: getCampaign(),
   },
 };

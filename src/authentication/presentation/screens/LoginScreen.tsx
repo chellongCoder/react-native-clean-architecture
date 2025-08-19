@@ -12,7 +12,6 @@ import CommonInput, {CommonInputPassword} from '../components/CommonInput';
 import {FontFamily} from 'src/core/presentation/hooks/useFonts';
 import useLoginWithCredentials from 'src/authentication/presentation/hooks/useLoginWithCredentials';
 import {observer} from 'mobx-react';
-import {useLoadingGlobal} from 'src/core/presentation/hooks/loading/useLoadingGlobal';
 import {navigateScreen} from 'src/core/presentation/navigation/actions/RootNavigationActions';
 import {STACK_NAVIGATOR} from 'src/core/presentation/navigation/ConstantNavigator';
 import {scale, verticalScale} from 'react-native-size-matters';
@@ -24,7 +23,6 @@ import DropdownChangeLang from 'src/core/presentation/components/DropdownChangeL
 
 const LoginScreen = observer(() => {
   const {handleLoginWithCredentials} = useLoginWithCredentials();
-  useLoadingGlobal();
   const {handleLoginViaGoogle} = useGoogleLogin();
   const globalStyle = useGlobalStyle();
   const i18n = useI18n();

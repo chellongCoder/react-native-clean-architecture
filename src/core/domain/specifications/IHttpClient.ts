@@ -6,6 +6,7 @@ export const IHttpClientToken = Symbol('IHttpClient');
 export default interface IHttpClient {
   setAuthCredentials: (credentials: Credentials) => void;
   removeCurrentCredentials: () => void;
+  setDeviceToken: (deviceToken: string) => void;
 
   get<ResponseType>(
     url: string,

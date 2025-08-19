@@ -6,7 +6,6 @@ import {HomeStore} from './HomeStore';
 import useHomeStore from './useHomeStore';
 import useStateCustom from 'src/hooks/useStateCommon';
 import {FieldData} from 'src/home/application/types/GetFieldResponse';
-import {useLoadingGlobal} from 'src/core/presentation/hooks/loading/useLoadingGlobal';
 import {IMergedData} from '../components/subjects/ListSubject';
 import {Subject} from 'src/home/application/types/GetListSubjectResponse';
 import {navigateScreen} from 'src/core/presentation/navigation/actions/RootNavigationActions';
@@ -27,7 +26,6 @@ export const HomeProvider = ({children}: PropsWithChildren) => {
   const {getField, getListSubject} = useHomeStore();
 
   const {storeData, getData, isConnected} = useOfflineMode();
-  useLoadingGlobal();
 
   const [homeState, setHomeState] = useStateCustom<IHomeState>({
     listField: [],

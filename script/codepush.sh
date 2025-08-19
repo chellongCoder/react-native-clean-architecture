@@ -13,7 +13,7 @@ code-push release-react ABeeCi-android android \
   --deploymentName Staging \
   --targetBinaryVersion "1.1" \
   --description "Staging release v1.1" \
-  --mandatory true \
+  --mandatory false \
   --rollout 100% \
   --verbose \
   --development false \

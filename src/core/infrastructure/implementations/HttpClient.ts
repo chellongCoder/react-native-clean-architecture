@@ -18,17 +18,21 @@ class HttpClient implements IHttpClient {
     this.axios.interceptors.request.use(requestConfig => {
       requestConfig.baseURL = this.env.EXPO_BASE_V1_API_DOMAIN;
 
+      // Get the authentication store to access deviceToken
+      const store = authenticationModuleContainer.getProvided(AuthenticationStore);
+      
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
       requestConfig.headers = {
         'Content-Type': 'application/json; charset=utf-8',
         Accept: 'application/json',
         Origin: this.env.EXPO_BASE_V1_API_DOMAIN,
+        ...(store.deviceToken && { 'X-Device-Token': store.deviceToken }),
         ...requestConfig.headers,
       };
 
       requestConfig.timeout = 5000;
-      requestConfig.responseEncoding = 'utf-8'; // Add responseEncoding here
+      requestConfig.responseEncoding = 'utf-8';
       return requestConfig;
     });
 
@@ -131,6 +135,10 @@ class HttpClient implements IHttpClient {
   public async delete<ResponseType>(url: string, config?: AxiosRequestConfig) {
     const response = await this.axios.delete<ResponseType>(url, config);
     return response.data;
+  }
+
+  public setDeviceToken(deviceToken: string) {
+    this.axios.defaults.headers.common['X-Device-Token'] = deviceToken;
   }
 }
 

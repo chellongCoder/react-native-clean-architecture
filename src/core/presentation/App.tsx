@@ -38,22 +38,24 @@ LogBox.ignoreLogs(['Warning: ...']); // Ignore log notification by message
 LogBox.ignoreAllLogs(); //Ignore all log notifications
 
 const App = () => {
-  appsFlyer.initSdk(
-    {
-      devKey: 'WgiQWB8TNKSTGf96jjqBXa', // Get from dashboard
-      isDebug: false,
-      appId: '41*****44', // iOS only
-      onInstallConversionDataListener: true, //Optional
-      onDeepLinkListener: true, //Optional
-      timeToWaitForATTUserAuthorization: 10, //for iOS 14.5
-    },
-    result => {
-      console.log('appsFlyer result: ', result);
-    },
-    error => {
-      console.error('appsFlyer error: ', error);
-    },
-  );
+  const initializeAppsFlyer = () => {
+    appsFlyer.initSdk(
+      {
+        devKey: 'WgiQWB8TNKSTGf96jjqBXa', // Get from dashboard
+        isDebug: false,
+        appId: '41*****44', // iOS only
+        onInstallConversionDataListener: true, //Optional
+        onDeepLinkListener: true, //Optional
+        timeToWaitForATTUserAuthorization: 10, //for iOS 14.5
+      },
+      result => {
+        console.log('appsFlyer result: ', result);
+      },
+      error => {
+        console.error('appsFlyer error: ', error);
+      },
+    );
+  };
 
   const routeNameRef = useRef<string>();
 
@@ -117,6 +119,10 @@ const App = () => {
       routeNameRef.current = currentRouteName;
     }
   };
+
+  useEffect(() => {
+    initializeAppsFlyer();
+  }, []);
 
   useEffect(() => {
     crashlytics().log('App mounted.');

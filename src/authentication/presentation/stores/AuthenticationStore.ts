@@ -45,6 +45,8 @@ import {ForceUpdateAppResponse} from 'src/authentication/application/types/Force
 import UpdatePasswordUseCase from 'src/authentication/application/useCases/UpdatePasswordUsecase';
 import {UpdatePasswordPayload} from 'src/authentication/application/types/UpdatePasswordPayload';
 import UpdateTrialModuleUsecase from 'src/authentication/application/useCases/UpdateTrialModuleUsecase';
+import PostCampaignUseCase from 'src/authentication/application/useCases/PostCampaignUseCase';
+import {PostCampaignPayload} from 'src/authentication/application/types/PostCampaignPayload';
 @injectable()
 export class AuthenticationStore implements AuthenticationStoreState {
   isLoading = false;
@@ -110,6 +112,9 @@ export class AuthenticationStore implements AuthenticationStoreState {
     @provided(UpdateTrialModuleUsecase)
     private updateTrialModuleUsecase: UpdateTrialModuleUsecase,
 
+    @provided(PostCampaignUseCase)
+    private postCampaignUseCase: PostCampaignUseCase,
+
     @provided(IHttpClientToken) private readonly httpClient: IHttpClient, // @provided(CoreStore) private coreStore: CoreStore,
   ) {
     this.loginUsernamePassword = this.loginUsernamePassword.bind(this);
@@ -126,6 +131,7 @@ export class AuthenticationStore implements AuthenticationStoreState {
     this.handleUserLogOut = this.handleUserLogOut.bind(this);
     this.handlePostReport = this.handlePostReport.bind(this);
     this.handleGetForceUpdateApp = this.handleGetForceUpdateApp.bind(this);
+    this.handlePostCampaign = this.handlePostCampaign.bind(this);
   }
 
   private async initializePersistence() {
@@ -351,6 +357,14 @@ export class AuthenticationStore implements AuthenticationStoreState {
     const response = await this.updateTrialModuleUsecase.execute(args);
     this.setIsLoading(false);
     this.getUserProfile();
+    return response;
+  }
+
+  @action
+  public async handlePostCampaign(args: PostCampaignPayload) {
+    this.setIsLoading(true);
+    const response = await this.postCampaignUseCase.execute(args);
+    this.setIsLoading(false);
     return response;
   }
 }
