@@ -34,6 +34,8 @@ import {ForceUpdateAppPayload} from 'src/authentication/application/types/ForceU
 import {ForceUpdateAppResponse} from 'src/authentication/application/types/ForceUpdateAppResponse';
 import {UpdatePasswordPayload} from 'src/authentication/application/types/UpdatePasswordPayload';
 import {UpdatePasswordResponse} from 'src/authentication/application/types/UpdatePasswordResponse';
+import {PostCampaignPayload} from 'src/authentication/application/types/PostCampaignPayload';
+import {PostCampaignResponse} from 'src/authentication/application/types/PostCampaignResponse';
 
 @injectable()
 class AuthenticationRepository implements IAuthenticationRepository {
@@ -212,6 +214,16 @@ class AuthenticationRepository implements IAuthenticationRepository {
   public async updateTrialModules(data: any): Promise<any> {
     const response: any = await this.httpClient.post(
       API_ENDPOINTS.USER.UPDATE_TRIAL,
+      data,
+    );
+    return response;
+  }
+
+  public async postCampaign(
+    data: PostCampaignPayload,
+  ): Promise<PostCampaignResponse> {
+    const response: PostCampaignResponse = await this.httpClient.post(
+      API_ENDPOINTS.CAMPAIGN.POST_CAMPAIGN,
       data,
     );
     return response;

@@ -19,6 +19,7 @@ import PostReportUseCase from './application/useCases/PostReportUseCase';
 import ForceUpdateAppUseCase from './application/useCases/ForceUpdateAppUseCase';
 import UpdatePasswordUseCase from './application/useCases/UpdatePasswordUsecase';
 import UpdateTrialModuleUsecase from './application/useCases/UpdateTrialModuleUsecase';
+import PostCampaignUseCase from './application/useCases/PostCampaignUseCase';
 
 @module({
   providers: [
@@ -47,6 +48,7 @@ import UpdateTrialModuleUsecase from './application/useCases/UpdateTrialModuleUs
     PostReportUseCase,
     ForceUpdateAppUseCase,
     UpdateTrialModuleUsecase,
+    PostCampaignUseCase,
   ],
 })
 export class AuthenticationModule {}

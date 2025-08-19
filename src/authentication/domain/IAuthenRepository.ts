@@ -22,6 +22,8 @@ import {RegisterPayload} from '../application/types/RegisterPayload';
 import RegisterResponse from '../application/types/RegisterResponse';
 import {UpdatePasswordPayload} from '../application/types/UpdatePasswordPayload';
 import {UpdatePasswordResponse} from '../application/types/UpdatePasswordResponse';
+import {PostCampaignPayload} from '../application/types/PostCampaignPayload';
+import {PostCampaignResponse} from '../application/types/PostCampaignResponse';
 import AuthenticationEntity from './entities/Authentication';
 
 export const IAuthenticationRepositoryToken = Symbol(
@@ -75,4 +77,6 @@ export interface IAuthenticationRepository {
   ) => Promise<ForceUpdateAppResponse>;
 
   updateTrialModules: (data: any) => Promise<any>;
+
+  postCampaign: (data: PostCampaignPayload) => Promise<PostCampaignResponse>;
 }
