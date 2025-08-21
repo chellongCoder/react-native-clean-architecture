@@ -592,7 +592,12 @@ const LESSON_PATTERNS = [
     props,
   },
   {
-    pattern: /^SCIENCE_SG3M(4|5)$/,
+    pattern: /^SCIENCE_SG3M(6)$/,
+    component: Science_SelectAnswer_Image_Text,
+    props,
+  },
+  {
+    pattern: /^SCIENCE_SG3M(4|5|7)$/,
     component: Science_SelectAnswer_Image_TextUnderline,
     props,
   },

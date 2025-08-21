@@ -41,6 +41,7 @@ import {SelectionAnswersQuestionRef} from '../../components/SelectionAnswersQues
 import SelectionImagesQuestion from '../../components/SelectionImagesQuestion';
 import {useI18n} from 'src/core/presentation/hooks/useI18n';
 import VoiceButton from '../../components/VoiceButton';
+import FastImage from 'react-native-fast-image';
 
 type Props = {
   moduleIndex: number;
@@ -98,6 +99,7 @@ const Science_SelectAnswer_Image_Text = observer(
 
       const {
         isAnswerCorrect,
+        env,
         isShowCorrectContainer,
         word,
         learningTimer,
@@ -238,6 +240,20 @@ const Science_SelectAnswer_Image_Text = observer(
                 ]}>
                 {firstMiniTestTask?.question?.[moduleIndex].content}
               </Text>
+              {firstMiniTestTask?.question?.[moduleIndex].image &&
+              typeof firstMiniTestTask?.question?.[moduleIndex].image == 'string' &&
+                <View style={styles.imageContainer}>
+                  <FastImage
+                    source={{
+                      uri:
+                        env.IMAGE_QUESTION_BASE_API_URL +
+                        firstMiniTestTask?.question?.[moduleIndex].image,
+                    }}
+                    style={[styles.image]}
+                    resizeMode="contain"
+                  />
+                </View>
+              }
             </Animated.View>
           }
           buildAnswer={
@@ -331,5 +347,13 @@ const styles = StyleSheet.create({
     paddingHorizontal: scale(24),
     marginTop: scale(16),
     backgroundColor: '#0877B6',
+  },
+  image: {
+    width: scale(120),
+    height: scale(120),
+  },
+  imageContainer: {
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 });

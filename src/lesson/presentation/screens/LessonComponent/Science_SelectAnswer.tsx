@@ -18,6 +18,7 @@ import {COLORS} from 'src/core/presentation/constants/colors';
 import {
   darkenColor,
   getCorrectAnswer,
+  arraysEqualWithExactItem,
   isMMSS,
   isSubArray,
 } from 'src/core/presentation/utils';
@@ -98,7 +99,7 @@ const Science_SelectAnswer = observer(
         const correctAnswerArray = (
           Array.isArray(correctAnswer) ? correctAnswer : [correctAnswer]
         ).map(e => e?.toLocaleString().toLocaleLowerCase());
-        return isSubArray(answerSelectedArray, correctAnswerArray);
+        return arraysEqualWithExactItem(answerSelectedArray, correctAnswerArray);
       }, [answerSelected, firstMiniTestTask?.question, moduleIndex]);
 
       const {
