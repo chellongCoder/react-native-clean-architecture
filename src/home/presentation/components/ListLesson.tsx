@@ -32,6 +32,7 @@ interface FieldData {
 const ListLesson = () => {
   const {listSubject, setSubjectId, rootSubject, listModule} = useHomeStore();
   const lessonStore = useLessonStore();
+
   const {getData, isConnected} = useOfflineMode();
   const [subjects, setSubjects] = useState<Subject[]>([]);
   const env = coreModuleContainer.getProvided<Env>(EnvToken); // Instantiate CoreService
@@ -205,7 +206,7 @@ const ListLesson = () => {
           console.log(
             '🛠 LOG: 🚀 --> -----------------------------------------------------🛠 LOG: 🚀 -->',
           );
-          console.log('🛠 LOG: 🚀 --> ~ ListLesson ~ slideIndex:', slideIndex);
+          console.log('🛠 LOG: 🚀 --> ~ ListLesson ~ slideIndex:',index, slideIndex);
           console.log(
             '🛠 LOG: 🚀 --> -----------------------------------------------------🛠 LOG: 🚀 -->',
           );

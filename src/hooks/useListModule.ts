@@ -1,4 +1,4 @@
-import {useEffect, useState} from 'react';
+import {useCallback, useEffect, useState} from 'react';
 import useAuthenStore from 'src/authentication/presentation/hooks/useAuthenStore';
 import {useLoadingGlobal} from 'src/core/presentation/hooks/loading/useLoadingGlobal';
 import {useI18n} from 'src/core/presentation/hooks/useI18n';
@@ -16,14 +16,14 @@ export const useListModule = () => {
   const [isLoading, setIsLoading] = useState(false);
   const authStore = useAuthenStore();
 
-  useEffect(() => {
-    if (authStore.selectedChild?._id && homeStore.subjectId) {
+  const getListModules = useCallback(
+    (childrenId: string, subjectId: string) => {
       globalLoading.toggleLoading(true, 'listModule');
       setIsLoading(true);
       homeStore
         .getListModules({
-          subjectId: homeStore.subjectId,
-          childrenId: authStore.selectedChild?._id,
+          subjectId: subjectId,
+          childrenId: childrenId,
         })
         .then(response => {
           const listTitle = response.data.map(item => item.description);
@@ -59,15 +59,28 @@ export const useListModule = () => {
           globalLoading.toggleLoading(false, 'listModule');
           setIsLoading(false);
         });
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [authStore.selectedChild?._id, homeStore, homeStore.subjectId]);
+    },
+    [],
+  );
+  
+  useEffect(() => {
+    setModules(lessonStore.modulesBySubject);
+  }, [lessonStore.modulesBySubject])
 
+  useEffect(() => {
+    if (lessonStore.isLoadingModulesBySubject) {
+      setIsLoading(true);
+    } else {
+      setIsLoading(false);
+    }
+  }, [lessonStore.isLoadingModulesBySubject])
+  
   return {
     modules,
     selectedSubject: homeStore.listSubject.find(
       subject => subject._id === homeStore.subjectId,
     ),
     isLoading,
+    getListModules,
   };
 };

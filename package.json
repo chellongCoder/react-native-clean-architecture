@@ -19,7 +19,10 @@
     "splash": "rn-toolbox splash .assets/images/splash.png",
     "link:node": "echo export NODE_BINARY=$(command -v node) > .xcode.env.local",
     "link:assets": "npx react-native-asset",
-    "gen:i18n": "cd src/core/presentation/i18n/locales && ./locale.sh"
+    "gen:i18n": "cd src/core/presentation/i18n/locales && ./locale.sh",
+    "bundle:analyze": "cd script && ./bundle-analyzer.sh",
+    "bundle:check": "cd script && ./asset-monitor.sh",
+    "codepush:safe": "cd script && ./codepush-with-analysis.sh"
   },
   "dependencies": {
     "@expo/webpack-config": "~19.0.1",

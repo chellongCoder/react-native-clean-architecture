@@ -51,6 +51,8 @@ import UserModuleEntity from 'src/lesson/domain/entities/UserModuleEntity';
 import BuyUserModulePayload from 'src/lesson/application/types/BuyUserModulePayload';
 import TranslateTextUsecase from 'src/authentication/application/useCases/TranslateTextUsecase';
 import {TranslateTextPayload} from 'src/authentication/application/types/TranslateTextPayload';
+import { HomeStore } from 'src/home/presentation/stores/HomeStore';
+import I18n from 'src/core/presentation/i18n';
 @injectable()
 export class LessonStore {
   point: {value: number; isShow: boolean} = {value: 0, isShow: false};
@@ -90,6 +92,9 @@ export class LessonStore {
   @persist('list') @observable blockedModules?: BlockedModuleSetting[] = [];
 
   @observable userModule: UserModuleEntity[] = [];
+
+  @observable modulesBySubject: Module[] = [];
+  @observable isLoadingModulesBySubject = false;
 
   @computed getSetting(lessonSetting?: LessonSettingT) {
     return {
@@ -449,6 +454,51 @@ export class LessonStore {
   public async handleBuyUserModule(data: BuyUserModulePayload) {
     const response = await this.buyUserModuleUseCase.execute(data);
     return response;
+  }
+
+  @action
+  public async handleGetModulesBySubject(homeStore: HomeStore, i18n: I18n, childrenId: string, subjectId: string) {
+    this.isLoadingModulesBySubject = true;
+    homeStore
+        .getListModules({
+          subjectId: subjectId,
+          childrenId: childrenId,
+        })
+        .then(response => {
+          const listTitle = response.data.map(item => item.description);
+          const listDesc = response.data.map(
+            item => item.tasks?.map(task => task.description).toString() ?? '',
+          );
+          Promise.all([
+            this.translateText({
+              text: listTitle,
+              targetLanguage: i18n.deviceLocale,
+            }),
+            this.translateText({
+              text: listDesc,
+              targetLanguage: i18n.deviceLocale,
+            }),
+          ])
+            .then(([resTitle, resDesc]) => {
+              const translatedModules = response.data.map((item, index) => ({
+                ...item,
+                name: resTitle.data[index],
+                tasks: item.tasks?.map((task, i) => ({
+                  ...task,
+                  description: (resDesc.data[index] ?? '').split(',')[i], // split by comma and get the index of the task
+                })),
+              }));
+              this.modulesBySubject = translatedModules;
+            })
+            .catch(() => {
+              this.modulesBySubject = response.data;
+            })
+            .finally(() => {
+              this.isLoadingModulesBySubject = false;
+            });
+        }).catch(() => {
+          this.isLoadingModulesBySubject = false;
+        });
   }
 }
 

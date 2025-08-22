@@ -11,10 +11,17 @@ import {FontFamily} from 'src/core/presentation/hooks/useFonts';
 import {COLORS} from 'src/core/presentation/constants/colors';
 import useHomeStore from 'src/home/presentation/stores/useHomeStore';
 import * as Haptics from 'expo-haptics';
+import { useLessonStore } from '../../stores/LessonStore/useGetPostsStore';
+import useAuthenStore from 'src/authentication/presentation/hooks/useAuthenStore';
+import { useI18n } from 'src/core/presentation/hooks/useI18n';
 
 const ListGrade = forwardRef((_, ref) => {
   const [index, setIndex] = useState<number | undefined>(0);
   const {setSubjectId, listSubject, rootSubject} = useHomeStore();
+  const lessonStore = useLessonStore();
+  const authStore = useAuthenStore();
+  const homeStore = useHomeStore();
+  const i18n = useI18n(); 
 
   const gradeObjs = useMemo(() => {
     return listSubject
@@ -34,6 +41,7 @@ const ListGrade = forwardRef((_, ref) => {
       setTimeout(() => {
         setIndex(0);
         setSubjectId(gradeObjs[0]._id);
+        authStore.selectedChild && lessonStore.handleGetModulesBySubject(homeStore, i18n, authStore.selectedChild?._id, gradeObjs[0]._id);
       }, 1000);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -54,6 +62,7 @@ const ListGrade = forwardRef((_, ref) => {
             onPress={() => {
               setIndex(gradeObjs.indexOf(grade));
               setSubjectId(grade._id);
+              authStore.selectedChild && lessonStore.handleGetModulesBySubject(homeStore, i18n, authStore.selectedChild?._id, grade._id);
               Haptics.selectionAsync();
             }}>
             <Text style={styles.txtItem}>
