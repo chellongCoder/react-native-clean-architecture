@@ -158,11 +158,6 @@ const Science_SelectAnswer_Image_Text = observer(
           const firstTimeout = setTimeout(() => {
             onSpeechText();
 
-            const secondTimeout = setTimeout(() => {
-              onSpeechText();
-            }, 2500);
-
-            return () => clearTimeout(secondTimeout);
           }, 1500);
 
           return () => clearTimeout(firstTimeout);

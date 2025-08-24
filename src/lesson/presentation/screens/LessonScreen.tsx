@@ -639,21 +639,7 @@ const LESSON_PATTERNS = [
     pattern: /^SCIENCE_SG4M(5)$/,
     component: Science_G4M5,
   },
-  {
-    pattern: /^SCIENCE_SG3M(1)$/,
-    component: Science_SelectAnswer_ImageLearning,
-    props,
-  },
-  {
-    pattern: /^SCIENCE_SG3M(2)$/,
-    component: Science_SelectAnswer_Image_TextImageAnswer,
-    props,
-  },
-  {
-    pattern: /^SCIENCE_SG3M(4|5)$/,
-    component: Science_SelectAnswer_Image_TextUnderline,
-    props,
-  },
+
   {
     pattern: /^SCIENCE_SG5M(1)$/,
     component: Science_G5M1,

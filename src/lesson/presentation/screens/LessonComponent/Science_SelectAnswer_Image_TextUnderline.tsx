@@ -40,6 +40,7 @@ import {SelectionAnswersQuestionRef} from '../../components/SelectionAnswersQues
 import SelectionImagesQuestion from '../../components/SelectionImagesQuestion';
 import {useI18n} from 'src/core/presentation/hooks/useI18n';
 import VoiceButton from '../../components/VoiceButton';
+import TextHighlight from '../../components/TextHighlight';
 
 type Props = {
   moduleIndex: number;
@@ -219,30 +220,20 @@ const Science_SelectAnswer_Image_TextUnderline = observer(
           isShowCorrectContainer={isShowCorrectContainer}
           onPressFlower={toggleShowHint}
           buildQuestion={
-            <Animated.View style={[animatedStyle, {flex: 1, width: '60%'}]}>
-              <Text
+            <Animated.View style={[animatedStyle, {flex: 1, width: '80%'}]}>
+              
+              <TextHighlight
+                description={
+                  firstMiniTestTask?.question?.[moduleIndex].paragraph ?? ''
+                }
+                content={(firstMiniTestTask?.question?.[moduleIndex].highlight ?? []) as string[]}
                 style={[
                   styles.contentText,
                   styles.fonts_SVN_Cherish,
                   {color: settings.backgroundButtonColor},
-                ]}>
-                {firstMiniTestTask?.question?.[moduleIndex].paragraph
-                  ?.split('\n')?.[0]
-                  ?.split(firstMiniTestTask?.question?.[moduleIndex].highlight)
-                  ?.map((e, i) => {
-                    if (i > 0) {
-                      return e;
-                    }
-                    return (
-                      <>
-                        {e}
-                        <Text style={{textDecorationLine: 'underline'}}>
-                          {firstMiniTestTask?.question?.[moduleIndex].highlight}
-                        </Text>
-                      </>
-                    );
-                  })}
-              </Text>
+                ]}
+                styleHighlight={{textDecorationLine: 'underline'}}
+              />
               {firstMiniTestTask?.question?.[moduleIndex].paragraph?.split(
                 '\n',
               )?.[1] && (
