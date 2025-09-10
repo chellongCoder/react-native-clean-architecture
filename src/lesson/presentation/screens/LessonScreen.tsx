@@ -136,6 +136,8 @@ import History_SelectAnswer_Image_TextImageAnswer from './LessonComponent/Histor
 import History_SelectAnswer from './LessonComponent/History_SelectAnswer';
 import History_SelectAnswer_Slider from './LessonComponent/History_SelectAnswer_Slider';
 import History_SelectImage_Description from './LessonComponent/History_SelectImage_Description';
+import HistoryHS1M2 from './LessonComponent/History_HS1M2';
+import HistoryHS1M5P1 from './LessonComponent/History_HS1M5P1';
 
 export type TResult = {
   userId?: string;
@@ -889,6 +891,20 @@ const LESSON_PATTERNS = [
 
   // HIstory module
   {
+    pattern: /^HISTORY_HS1M2$/,
+    component: HistoryHS1M2,
+    wrapper: DragProvider,
+    props,
+  },
+  // {
+  //   pattern: /^HISTORY_HS1M5$/,
+  //   component: (type: string, testTask: any) => {
+  //     return testTask?.firstMiniTestTask?.stt === 1 ? HistoryHS1M5P1 : View;
+  //   },
+  //   wrapper: DragProvider,
+  //   props,
+  // },
+  {
     pattern: /^HISTORY_HS1M(1)$/,
     component: History_SelectAnswer_Image_TextImageAnswer,
     props,
@@ -902,7 +918,7 @@ const LESSON_PATTERNS = [
     pattern: /^HISTORY_HS1M(5)$/,
     component: (type: string, testTask: any) => {
       const componentMap: Record<string, any> = {
-        HISTORY_HS1M5_P1: History_SelectAnswer_SwipeImage,
+        HISTORY_HS1M5_P1: HistoryHS1M5P1,
         HISTORY_HS1M5_P2: History_SelectImage_Description,
         HISTORY_HS1M5_P4: History_SelectAnswer_Image,
       };
