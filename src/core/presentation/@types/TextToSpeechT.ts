@@ -3,6 +3,7 @@ import {TLanguageKeys} from '../hooks/textToSpeech/TextToSpeechProvider';
 
 export interface TextToSpeechT {
   ttsSpeak: (e: string, callback?: () => void) => void;
+  ttsStop: () => void;
   updateSpeechRate: (e: number) => void;
   updateSpeechPitch: (e: number) => void;
   updateDefaultVoice: (e?: string, i?: TLanguageKeys) => void;

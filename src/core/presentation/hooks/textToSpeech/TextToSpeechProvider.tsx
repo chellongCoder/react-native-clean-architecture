@@ -307,7 +307,9 @@ export const TextToSpeechProvider = ({children}: PropsWithChildren) => {
     });
   };
 
-  Tts.voices().then(voices => {});
+  const ttsStop = async () => {
+    await Tts.stop();
+  };
 
   const updateSpeechRate = async (rate: number) => {
     await Tts.setDefaultRate(rate);
@@ -410,6 +412,7 @@ export const TextToSpeechProvider = ({children}: PropsWithChildren) => {
         voices,
         isSpeakDone,
         init,
+        ttsStop,
       }}>
       {children}
     </TextToSpeechContext.Provider>

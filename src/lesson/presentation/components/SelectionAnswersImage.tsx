@@ -3,6 +3,7 @@ import React, {
   useImperativeHandle,
   forwardRef,
   ForwardRefRenderFunction,
+  useRef,
 } from 'react';
 import {
   View,
@@ -62,6 +63,7 @@ const SelectionAnswersImage: ForwardRefRenderFunction<
   const [answerSelectedIndex, setAnswerSelectedIndex] = useState<number>(0);
   const [isImageLoading, setIsImageLoading] = useState(true);
   const [imageLoadError, setImageLoadError] = useState(false);
+  const progressRef = useRef<number>(0);
 
   const handleSelectAnswer = (e: string, index: number) => {
     if (isSelectOne) {
@@ -145,6 +147,9 @@ const SelectionAnswersImage: ForwardRefRenderFunction<
               style={[styles.questionImage, {opacity: isImageLoading ? 0 : 1}]}
               resizeMode={FastImage.resizeMode.cover}
               onLoadStart={() => {
+                if(progressRef.current === -0) {
+                  return;
+                }
                 setIsImageLoading(true);
                 setImageLoadError(false);
               }}
@@ -152,6 +157,7 @@ const SelectionAnswersImage: ForwardRefRenderFunction<
                 // Show loading progress
                 const progress = e.nativeEvent.loaded / e.nativeEvent.total;
                 console.log('Image loading progress:', progress);
+                progressRef.current = progress;
               }}
               onLoad={e => {
                 setIsImageLoading(false);
@@ -255,14 +261,14 @@ const styles = StyleSheet.create({
   },
   answersContainer: {
     flex: 1,
-    justifyContent: 'space-between',
-    gap: scale(8),
+    gap: scale(4),
     minHeight: verticalScale(150),
   },
   answerButton: {
     borderRadius: scale(8),
     justifyContent: 'center',
     alignItems: 'center',
+    flexGrow: 1
   },
   answerText: {
     fontFamily: FontFamily.SVNNeuzeitBold,

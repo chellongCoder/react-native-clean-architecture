@@ -130,6 +130,8 @@ import Science_SelectAnswer_AnswerMeaning from './LessonComponent/Science_Select
 import Science_SelectAnswer_Explain_TextImageAnswer from './LessonComponent/Science_SelectAnswer_Explain_TextImageAnswer';
 import Science_G5M1 from './LessonComponent/Science_G5M1';
 import Science_SelectAnswer_AnswerImage_MultipleQuestion from './LessonComponent/Science_SelectAnswer_AnswerImage_MultipleQuestion';
+import History_Finding_Diff_Point from './LessonComponent/History_Finding_Diff_Point';
+import History_SelectAnswer_SwipeImage from './LessonComponent/History_SelectAnswer_SwipeImage';
 
 export type TResult = {
   userId?: string;
@@ -880,6 +882,15 @@ const LESSON_PATTERNS = [
       characterStyle,
     }),
   },
+
+  // HIstory module 
+  {
+    pattern: /^HISTORY_HS1M(3)$/,
+    component: History_SelectAnswer_SwipeImage,
+    props,
+  },
+  
+  
 ];
 
 const LessonScreen = observer(() => {

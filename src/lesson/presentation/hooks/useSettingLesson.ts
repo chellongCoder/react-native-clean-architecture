@@ -52,7 +52,7 @@ export const useSettingLesson = ({
   const lessonStore = useLessonStore();
   const authStore = useAuthenticationStore();
   const i18n = useI18n();
-  const {playSound} = useContext(SoundGlobalContext);
+  const {playSound, pauseSound} = useContext(SoundGlobalContext);
   const [isAnswerCorrect, setIsAnswerCorrect] = useState<boolean | undefined>(); // * nếu undefined thì là chưa chọn câu trả lời
   const [isShowCorrectContainer, setIsShowCorrectContainer] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -250,6 +250,9 @@ export const useSettingLesson = ({
       playSound(soundTrack.tiktak);
       playSoundRef.current = true;
     }
+    return () => {
+      pauseSound();
+    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [learningTimer]);
 
