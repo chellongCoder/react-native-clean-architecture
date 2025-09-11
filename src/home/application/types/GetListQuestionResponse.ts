@@ -13,6 +13,7 @@ export interface Question {
   updatedAt: string;
   _id: string;
   answers: Answer[] | string | string[];
+  slide?: Answer[]
   fullAnswer: string;
   image: string | string[];
   answerImage: string[];

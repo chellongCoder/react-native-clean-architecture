@@ -229,33 +229,15 @@ const History_SelectAnswer_SwipeImage = observer(
         },
       }));
 
-      // Sample data - replace with your actual image URLs and content
-  const slideData = [
-    {
-      id: '1',
-      imageUrl: 'https://picsum.photos/seed/story1/300/200.webp', // Replace with your actual image URLs
-      title: 'Lạc Long Quân và Âu Cơ gặp gỡ',
-      subtitle: 'Câu chuyện bắt đầu từ cuộc gặp gỡ định mệnh',
-    },
-    {
-      id: '2',
-      imageUrl: 'https://picsum.photos/seed/story2/300/200.webp',
-      title: 'Kết duyên cùng nhau',
-      subtitle: 'Hai người kết hôn và sinh ra 100 người con',
-    },
-    {
-      id: '3',
-      imageUrl: 'https://picsum.photos/seed/story2/300/200.webp',
-      title: 'Chia tay để về quê hương',
-      subtitle: '50 người con theo mẹ lên núi, 50 người theo cha xuống biển',
-    },
-    {
-      id: '4',
-      imageUrl: 'https://picsum.photos/seed/story3/300/200.webp',
-      title: 'Tạo nên dân tộc Việt Nam',
-      subtitle: 'Từ đó hình thành nên dân tộc Việt Nam ngày nay',
-    },
-  ];
+  
+  const slideData = useMemo(() => {
+    return firstMiniTestTask?.question?.[moduleIndex]?.slide?.map((item) => ({
+      id: item.image,
+      imageUrl: env.IMAGE_QUESTION_BASE_API_URL + item.image,
+      title: firstMiniTestTask?.question?.[moduleIndex]?.description,
+      subtitle: item.content,
+    }))
+  }, [])
 
   const handleSlideChange = (index: number) => {
     console.log('Current slide index:', index);
