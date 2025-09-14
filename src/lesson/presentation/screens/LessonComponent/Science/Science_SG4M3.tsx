@@ -9,13 +9,17 @@ import React, {
   useRef,
   useState,
 } from 'react';
-import LessonComponent from './LessonComponent';
-import PrimaryButton from '../../components/PrimaryButton';
+import LessonComponent from '../LessonComponent';
+import PrimaryButton from '../../../components/PrimaryButton';
 import {FontFamily} from 'src/core/presentation/hooks/useFonts';
 import useGlobalStyle from 'src/core/presentation/hooks/useGlobalStyle';
 import {Task} from 'src/home/application/types/GetListQuestionResponse';
 import {COLORS} from 'src/core/presentation/constants/colors';
-import {getCorrectAnswer, isMMSS} from 'src/core/presentation/utils';
+import {
+  getCorrectAnswer,
+  isMMSS,
+  WIDTH_SCREEN,
+} from 'src/core/presentation/utils';
 import {scale, verticalScale} from 'react-native-size-matters';
 import Animated, {
   Easing,
@@ -25,19 +29,18 @@ import Animated, {
   withTiming,
 } from 'react-native-reanimated';
 import {TextToSpeechContext} from 'src/core/presentation/hooks/textToSpeech/TextToSpeechContext';
-import {useLessonStore} from '../../stores/LessonStore/useGetPostsStore';
-import {useSettingLesson} from '../../hooks/useSettingLesson';
+import {useLessonStore} from '../../../stores/LessonStore/useGetPostsStore';
+import {useSettingLesson} from '../../../hooks/useSettingLesson';
 import {useIsFocused} from '@react-navigation/native';
 import useAuthenticationStore from 'src/authentication/presentation/stores/useAuthenticationStore';
 import {observer} from 'mobx-react';
-import {LessonRef} from '../../types';
+import {LessonRef} from '../../../types';
 import useHomeStore from 'src/home/presentation/stores/useHomeStore';
 import SelectionAnswersQuestion, {
   SelectionAnswersQuestionRef,
-} from '../../components/SelectionAnswersQuestion';
-import TextHighlight from '../../components/TextHighlight';
+} from '../../../components/SelectionAnswersQuestion';
 import {useI18n} from 'src/core/presentation/hooks/useI18n';
-import VoiceButton from '../../components/VoiceButton';
+import VoiceButton from '../../../components/VoiceButton';
 
 type Props = {
   moduleIndex: number;
@@ -51,7 +54,7 @@ type Props = {
   characterImageFail?: string;
 };
 
-const Science_SG2M4 = observer(
+const Science_SG4M3 = observer(
   forwardRef<LessonRef, Props>(
     (
       {
@@ -69,7 +72,7 @@ const Science_SG2M4 = observer(
     ) => {
       const globalStyle = useGlobalStyle();
 
-      const {ttsSpeak} = useContext(TextToSpeechContext);
+      const {ttsSpeak, isSpeakDone} = useContext(TextToSpeechContext);
       const focus = useIsFocused();
       const answerRef = useRef<SelectionAnswersQuestionRef>(null);
 
@@ -78,6 +81,38 @@ const Science_SG2M4 = observer(
       const {trainingCount, getSetting} = useLessonStore();
 
       const {selectedChild} = useAuthenticationStore();
+
+      const isCorrectAnswer = useMemo(() => {
+        if (
+          typeof firstMiniTestTask?.question?.[moduleIndex]?.correctAnswer ===
+          'string'
+        ) {
+          return (
+            answerSelected.toLocaleLowerCase() ===
+            getCorrectAnswer(
+              firstMiniTestTask?.question?.[moduleIndex]?.correctAnswer,
+            ).toLocaleLowerCase()
+          );
+        } else if (
+          typeof firstMiniTestTask?.question?.[moduleIndex]?.correctAnswer ===
+          'object'
+        ) {
+          return (
+            firstMiniTestTask?.question?.[moduleIndex]
+              ?.correctAnswer as string[]
+          )?.some((item: string) => {
+            return (
+              answerSelected.toLocaleLowerCase() === item.toLocaleLowerCase()
+            );
+          });
+        }
+        return (
+          answerSelected.toLocaleLowerCase() ===
+          getCorrectAnswer(
+            firstMiniTestTask?.question?.[moduleIndex]?.correctAnswer,
+          ).toLocaleLowerCase()
+        );
+      }, [answerSelected, firstMiniTestTask?.question, moduleIndex]);
 
       const {
         isAnswerCorrect,
@@ -88,30 +123,16 @@ const Science_SG2M4 = observer(
         submit,
         toggleShowHint,
         resetLearning,
-        resetTesting,
       } = useSettingLesson({
         countDownTime: trainingCount <= 2 ? 0 : 5,
-        isCorrectAnswer:
-          answerSelected.trim().toLocaleLowerCase() ===
-          (firstMiniTestTask?.question?.[moduleIndex]?.correctAnswer as string)
-            .trim()
-            .toLocaleLowerCase(),
+        isCorrectAnswer: !!isCorrectAnswer,
         onSubmit: () => {
-          const prompt =
-            firstMiniTestTask?.type !== 'mini_test'
-              ? firstMiniTestTask?.question?.[moduleIndex]?.instruction
-                  ?.description ?? ''
-              : '';
-          ttsSpeak?.(prompt);
-          setTimeout(() => {
-            resetLearning();
-            resetTesting();
-            setAnswerSelected('');
-            nextModule(answerSelected.toString());
-            answerRef.current?.resetAnswerSelected?.();
-          }, prompt.length * 55);
+          setAnswerSelected('');
+          nextModule(answerSelected.toString());
+          answerRef.current?.resetAnswerSelected?.();
         },
         fullAnswer: firstMiniTestTask?.question?.[moduleIndex].fullAnswer,
+        totalTime: 5 * 60,
       });
 
       const {lessonSetting} = useHomeStore();
@@ -130,13 +151,17 @@ const Science_SG2M4 = observer(
 
       const onSpeechText = useCallback(() => {
         ttsSpeak?.(
-          firstMiniTestTask?.question?.[moduleIndex]?.description ?? '',
+          firstMiniTestTask?.question?.[moduleIndex]?.instruction
+            ?.description ?? '',
         );
       }, [firstMiniTestTask?.question, moduleIndex, ttsSpeak]);
 
       const opacity = useSharedValue(0);
       const scaleS = useSharedValue(1);
-
+      console.log(
+        'firstMiniTestTask?.question?.[moduleIndex]: ',
+        firstMiniTestTask?.question?.[moduleIndex],
+      );
       /**
        * * reset lại countdown khi lần làm thay đổi
        */
@@ -150,17 +175,26 @@ const Science_SG2M4 = observer(
           // Check if the component is focused
           const firstTimeout = setTimeout(() => {
             onSpeechText();
-
-            const secondTimeout = setTimeout(() => {
-              onSpeechText();
-            }, 2500);
-
-            return () => clearTimeout(secondTimeout);
           }, 1500);
 
           return () => clearTimeout(firstTimeout);
         }
-      }, [onSpeechText, focus]); // Added focus to the dependency array
+      }, [focus, onSpeechText]); // Added focus to the dependency array
+
+      const speakCount = useRef(0);
+      useEffect(() => {
+        if (focus) {
+          // Check if the component is focused
+          const firstTimeout = setTimeout(() => {
+            if (isSpeakDone && speakCount.current === 0) {
+              onSpeechText();
+              speakCount.current += 1;
+            }
+          }, 1500);
+
+          return () => clearTimeout(firstTimeout);
+        }
+      }, [focus, isSpeakDone, onSpeechText]); // Added focus to the dependency array
 
       useEffect(() => {
         opacity.value = withTiming(0, {duration: 500}, () => {
@@ -198,7 +232,6 @@ const Science_SG2M4 = observer(
         <LessonComponent
           backgroundImage={backgroundImage}
           characterImage={characterImage}
-          characterStyle={{marginBottom: scale(-34)}}
           lessonName={lessonName}
           module={moduleName}
           part={firstMiniTestTask?.name}
@@ -217,17 +250,20 @@ const Science_SG2M4 = observer(
           isAnswerCorrect={isAnswerCorrect}
           isShowCorrectContainer={isShowCorrectContainer}
           onPressFlower={toggleShowHint}
+          characterStyle={{
+            height: verticalScale(200),
+            marginBottom: -verticalScale(80),
+            marginLeft: -scale(14),
+            transform: [{scale: 1.5}],
+          }}
           buildQuestion={
             <View>
-              <Text style={[styles.fonts_SVN_Cherish, styles.textQuestion]}>
-                {firstMiniTestTask?.question?.[moduleIndex].descriptionImage}
-              </Text>
               <Animated.Image
                 resizeMode={'contain'}
                 style={[
                   {
-                    width: scale(200),
-                    height: verticalScale(140),
+                    width: WIDTH_SCREEN * 0.85,
+                    aspectRatio: 1.5,
                   },
                   animatedStyle,
                 ]}
@@ -256,15 +292,18 @@ const Science_SG2M4 = observer(
               </View>
               <SelectionAnswersQuestion
                 question={
-                  <TextHighlight
-                    content={
-                      firstMiniTestTask?.question?.[moduleIndex]?.content ?? ''
-                    }
-                    description={
-                      firstMiniTestTask?.question?.[moduleIndex]?.description ??
-                      ''
-                    }
-                  />
+                  <Text
+                    numberOfLines={2}
+                    adjustsFontSizeToFit
+                    allowFontScaling
+                    style={[
+                      styles.textQuestion,
+                      styles.textGreen,
+                      styles.mt8,
+                      {fontSize: scale(24)},
+                    ]}>
+                    {firstMiniTestTask?.question?.[moduleIndex].content}
+                  </Text>
                 }
                 answer={
                   (firstMiniTestTask?.question?.[moduleIndex]
@@ -273,7 +312,7 @@ const Science_SG2M4 = observer(
                 isShowCorrectContainer={isShowCorrectContainer}
                 isAnswerCorrect={!!isAnswerCorrect}
                 onSelectAnswer={(e: string[]) => {
-                  setAnswerSelected(e?.[0]);
+                  setAnswerSelected(e[0]);
                 }}
                 isSelectOne
                 learningTimer={learningTimer}
@@ -288,7 +327,6 @@ const Science_SG2M4 = observer(
                   {backgroundColor: settings.backgroundButtonColor},
                 ]}
                 onPress={submit}
-                disable={learningTimer !== 0}
               />
             </View>
           }
@@ -300,7 +338,7 @@ const Science_SG2M4 = observer(
   ),
 );
 
-export default Science_SG2M4;
+export default Science_SG4M3;
 
 const styles = StyleSheet.create({
   fill: {
@@ -313,12 +351,38 @@ const styles = StyleSheet.create({
     color: '#1C6349',
   },
   textQuestion: {
-    marginTop: verticalScale(24),
-    fontSize: verticalScale(24),
-    textAlign: 'center',
+    fontSize: verticalScale(15),
+    textAlign: 'left',
     color: COLORS.BLUE_258F78,
+    marginHorizontal: scale(10),
+  },
+  textGreen: {
+    color: '#258F78',
+  },
+  mt8: {
+    marginTop: verticalScale(8),
   },
 
+  center: {
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+
+  textVowel: {
+    fontFamily: FontFamily.SVNCherishMoment,
+    color: '#FBF8CC',
+    fontSize: verticalScale(28),
+  },
+  wapper: {
+    marginTop: 8,
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'center',
+    alignContent: 'center',
+  },
+  wrapCharContainer: {
+    flexDirection: 'row',
+  },
   wrapHeaderContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',

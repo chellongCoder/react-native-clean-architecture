@@ -10,8 +10,8 @@ import React, {
   useRef,
   useState,
 } from 'react';
-import LessonComponent from './LessonComponent';
-import PrimaryButton from '../../components/PrimaryButton';
+import LessonComponent from '../LessonComponent';
+import PrimaryButton from '../../../components/PrimaryButton';
 import {FontFamily} from 'src/core/presentation/hooks/useFonts';
 import useGlobalStyle from 'src/core/presentation/hooks/useGlobalStyle';
 import {Task} from 'src/home/application/types/GetListQuestionResponse';
@@ -25,20 +25,20 @@ import {
   withTiming,
 } from 'react-native-reanimated';
 import {TextToSpeechContext} from 'src/core/presentation/hooks/textToSpeech/TextToSpeechContext';
-import {useLessonStore} from '../../stores/LessonStore/useGetPostsStore';
-import {useSettingLesson} from '../../hooks/useSettingLesson';
+import {useLessonStore} from '../../../stores/LessonStore/useGetPostsStore';
+import {useSettingLesson} from '../../../hooks/useSettingLesson';
 import {useIsFocused} from '@react-navigation/native';
 import useAuthenticationStore from 'src/authentication/presentation/stores/useAuthenticationStore';
 import {observer} from 'mobx-react';
-import {LessonRef} from '../../types';
+import {LessonRef} from '../../../types';
 import useHomeStore from 'src/home/presentation/stores/useHomeStore';
-import {SelectionAnswersQuestionRef} from '../../components/SelectionAnswersQuestion';
+import {SelectionAnswersQuestionRef} from '../../../components/SelectionAnswersQuestion';
 import {useI18n} from 'src/core/presentation/hooks/useI18n';
-import VoiceButton from '../../components/VoiceButton';
-import DragItem from '../../components/Drag/DragSendItem';
-import {useDragContext} from '../../components/Drag/DragProvider';
+import VoiceButton from '../../../components/VoiceButton';
+import DragItem from '../../../components/Drag/DragSendItem';
+import {useDragContext} from '../../../components/Drag/DragProvider';
 import env from 'src/core/infrastructure/env';
-import TextHighlight from '../../components/TextHighlight';
+import TextHighlight from '../../../components/TextHighlight';
 import FastImage, {ResizeMode} from 'react-native-fast-image';
 
 type Props = {
@@ -86,13 +86,7 @@ const Science_SG2M8 = observer(
       const [isCorrectAnswer, setIsCorrectAnswer] = useState<
         boolean | undefined
       >(undefined);
-      console.log(
-        '🛠 LOG: 🚀 --> --------------------------------------------------🛠 LOG: 🚀 -->',
-      );
-      console.log('🛠 LOG: 🚀 --> ~ isCorrectAnswer:', isCorrectAnswer);
-      console.log(
-        '🛠 LOG: 🚀 --> --------------------------------------------------🛠 LOG: 🚀 -->',
-      );
+
       const {
         isAnswerCorrect,
         isShowCorrectContainer,

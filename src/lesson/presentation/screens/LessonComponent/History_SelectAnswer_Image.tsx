@@ -1,11 +1,4 @@
-import {
-  ImageBackground,
-  StyleProp,
-  StyleSheet,
-  Text,
-  View,
-  ViewStyle,
-} from 'react-native';
+import {StyleProp, StyleSheet, Text, View, ViewStyle} from 'react-native';
 import React, {
   forwardRef,
   useCallback,
@@ -20,7 +13,7 @@ import LessonComponent from './LessonComponent';
 import PrimaryButton from '../../components/PrimaryButton';
 import {FontFamily} from 'src/core/presentation/hooks/useFonts';
 import useGlobalStyle from 'src/core/presentation/hooks/useGlobalStyle';
-import {Task} from 'src/home/application/types/GetListQuestionResponse';
+import {Answer, Task} from 'src/home/application/types/GetListQuestionResponse';
 import {COLORS} from 'src/core/presentation/constants/colors';
 import {
   darkenColor,
@@ -29,9 +22,10 @@ import {
   isSubArray,
 } from 'src/core/presentation/utils';
 import {scale, verticalScale} from 'react-native-size-matters';
-import {
+import Animated, {
   Easing,
   ReduceMotion,
+  useAnimatedStyle,
   useSharedValue,
   withTiming,
 } from 'react-native-reanimated';
@@ -43,12 +37,12 @@ import useAuthenticationStore from 'src/authentication/presentation/stores/useAu
 import {observer} from 'mobx-react';
 import {LessonRef} from '../../types';
 import useHomeStore from 'src/home/presentation/stores/useHomeStore';
-import SelectionAnswersQuestion, {
-  SelectionAnswersQuestionRef,
-} from '../../components/SelectionAnswersQuestion';
+import {SelectionAnswersQuestionRef} from '../../components/SelectionAnswersQuestion';
 import TextHighlight from '../../components/TextHighlight';
 import {useI18n} from 'src/core/presentation/hooks/useI18n';
 import VoiceButton from '../../components/VoiceButton';
+import SelectionAnswersImage from '../../components/SelectionAnswersImage';
+import FastImage from 'react-native-fast-image';
 
 type Props = {
   moduleIndex: number;
@@ -63,7 +57,7 @@ type Props = {
   characterStyle?: StyleProp<ViewStyle>;
 };
 
-const Science_G5M1 = observer(
+const History_SelectAnswer_Image = observer(
   forwardRef<LessonRef, Props>(
     (
       {
@@ -82,9 +76,10 @@ const Science_G5M1 = observer(
     ) => {
       const globalStyle = useGlobalStyle();
 
-      const {ttsSpeak} = useContext(TextToSpeechContext);
+      const {ttsSpeak, ttsStop} = useContext(TextToSpeechContext);
       const focus = useIsFocused();
       const answerRef = useRef<SelectionAnswersQuestionRef>(null);
+      const [questionIndex, setQuestionIndex] = useState<0 | 1>(0);
 
       const [answerSelected, setAnswerSelected] = useState<string | string[]>(
         '',
@@ -95,16 +90,31 @@ const Science_G5M1 = observer(
       const {selectedChild} = useAuthenticationStore();
 
       const isCorrectAnswer = useMemo(() => {
-        const correctAnswer =
-          firstMiniTestTask?.question?.[moduleIndex]?.correctAnswer;
+        const correctAnswer = firstMiniTestTask?.question?.[moduleIndex]
+          ?.correctAnswer as string[][];
         const answerSelectedArray = (
           Array.isArray(answerSelected) ? answerSelected : [answerSelected]
         ).map(e => e?.toLocaleString().toLocaleLowerCase());
         const correctAnswerArray = (
-          Array.isArray(correctAnswer) ? correctAnswer : [correctAnswer]
+          Array.isArray(correctAnswer[questionIndex])
+            ? correctAnswer[questionIndex]
+            : [correctAnswer]
         ).map(e => e?.toLocaleString().toLocaleLowerCase());
-        return isSubArray(answerSelectedArray, correctAnswerArray);
-      }, [answerSelected, firstMiniTestTask?.question, moduleIndex]);
+
+        if (questionIndex === 0) {
+          return isSubArray(answerSelectedArray, correctAnswerArray);
+        } else {
+          return (
+            answerSelectedArray.length === correctAnswerArray.length &&
+            isSubArray(answerSelectedArray, correctAnswerArray)
+          );
+        }
+      }, [
+        answerSelected,
+        firstMiniTestTask?.question,
+        moduleIndex,
+        questionIndex,
+      ]);
 
       const {
         isAnswerCorrect,
@@ -120,7 +130,14 @@ const Science_G5M1 = observer(
         isCorrectAnswer: isCorrectAnswer,
         onSubmit: () => {
           setAnswerSelected('');
-          nextModule((answerSelected as string[]).toString());
+          setQuestionIndex(index => {
+            if (index === 1) {
+              nextModule((answerSelected as string[]).toString());
+              return 0;
+            }
+            return 1;
+          });
+
           answerRef.current?.resetAnswerSelected?.();
         },
         fullAnswer: firstMiniTestTask?.question?.[moduleIndex].fullAnswer,
@@ -152,10 +169,7 @@ const Science_G5M1 = observer(
 
       const opacity = useSharedValue(0);
       const scaleS = useSharedValue(1);
-      console.log(
-        'firstMiniTestTask?.question?.[moduleIndex]: ',
-        firstMiniTestTask?.question?.[moduleIndex],
-      );
+
       /**
        * * reset lại countdown khi lần làm thay đổi
        */
@@ -171,9 +185,12 @@ const Science_G5M1 = observer(
             onSpeechText();
           }, 1500);
 
-          return () => clearTimeout(firstTimeout);
+          return () => {
+            clearTimeout(firstTimeout);
+            ttsStop?.();
+          };
         }
-      }, [onSpeechText, focus]); // Added focus to the dependency array
+      }, [onSpeechText, focus, ttsStop]); // Added focus to the dependency array
 
       useEffect(() => {
         opacity.value = withTiming(0, {duration: 500}, () => {
@@ -188,6 +205,13 @@ const Science_G5M1 = observer(
         });
       }, [moduleIndex, opacity, scaleS]);
 
+      const animatedStyle = useAnimatedStyle(() => {
+        return {
+          opacity: opacity.value,
+          transform: [{scale: scaleS.value}],
+        };
+      });
+
       useImperativeHandle(ref, () => ({
         isAnswerCorrect,
         onChoiceCorrectedAnswer: () => {
@@ -199,6 +223,23 @@ const Science_G5M1 = observer(
           );
         },
       }));
+
+      // Get the main image data - using the first slide image or a default
+      const mainImageData = useMemo(() => {
+        const slide = firstMiniTestTask?.question?.[moduleIndex]?.slide?.[0];
+        if (slide) {
+          return {
+            imageUrl: env.IMAGE_QUESTION_BASE_API_URL + slide.image,
+            title: firstMiniTestTask?.question?.[moduleIndex]?.description,
+            subtitle: slide.content,
+          };
+        }
+        return null;
+      }, [
+        env.IMAGE_QUESTION_BASE_API_URL,
+        firstMiniTestTask?.question,
+        moduleIndex,
+      ]);
 
       return (
         <LessonComponent
@@ -224,38 +265,46 @@ const Science_G5M1 = observer(
           isShowCorrectContainer={isShowCorrectContainer}
           onPressFlower={toggleShowHint}
           buildQuestion={
-            <ImageBackground
-              source={{
-                uri:
-                  env.IMAGE_QUESTION_BASE_API_URL +
-                  firstMiniTestTask?.question?.[moduleIndex].image,
-              }}
-              resizeMode={'contain'}
-              style={{
-                width: scale(300),
-                height: scale(200),
-                justifyContent: 'flex-end',
-                alignItems: 'center',
-              }}>
-              <View
-                style={{
-                  width: scale(200),
-                  paddingHorizontal: 16,
-                  marginBottom: 16,
-                }}>
-                <Text
-                  style={[
-                    styles.fonts_SVN_Cherish,
-                    {
-                      fontSize: 16,
-                      color: COLORS.GREEN_157152,
-                      textAlign: 'center',
-                    },
-                  ]}>
-                  {firstMiniTestTask?.question?.[moduleIndex].content}
-                </Text>
-              </View>
-            </ImageBackground>
+            <Animated.View style={[styles.questionContainer, animatedStyle]}>
+              {mainImageData && (
+                <View style={styles.imageDisplayContainer}>
+                  {/* Title and subtitle */}
+                  <View style={styles.textContainer}>
+                    {mainImageData.title && (
+                      <Text
+                        numberOfLines={2}
+                        adjustsFontSizeToFit
+                        style={[
+                          styles.imageTitle,
+                          {color: settings.backgroundButtonColor},
+                        ]}>
+                        {mainImageData.title}
+                      </Text>
+                    )}
+                    {mainImageData.subtitle && (
+                      <Text
+                        numberOfLines={2}
+                        adjustsFontSizeToFit
+                        style={[
+                          styles.imageSubtitle,
+                          {color: COLORS.BLUE_258F78},
+                        ]}>
+                        {mainImageData.subtitle}
+                      </Text>
+                    )}
+                  </View>
+
+                  {/* Main Image */}
+                  <View style={styles.mainImageContainer}>
+                    <FastImage
+                      source={{uri: mainImageData.imageUrl}}
+                      style={styles.mainImage}
+                      resizeMode={FastImage.resizeMode.cover}
+                    />
+                  </View>
+                </View>
+              )}
+            </Animated.View>
           }
           buildAnswer={
             <View style={styles.fill}>
@@ -281,26 +330,28 @@ const Science_G5M1 = observer(
 
                 <VoiceButton onPress={onSpeechText} />
               </View>
-              <SelectionAnswersQuestion
+              <SelectionAnswersImage
                 question={
                   <TextHighlight
                     content={
-                      firstMiniTestTask?.question?.[moduleIndex].description ??
-                      ''
+                      firstMiniTestTask?.question?.[moduleIndex].highlight ?? ''
                     }
                     description={
-                      firstMiniTestTask?.question?.[moduleIndex].description ??
-                      ''
+                      firstMiniTestTask?.question?.[moduleIndex].content ?? ''
                     }
-                    styleHighlight={[
-                      styles.fonts_SVN_Cherish,
-                      {fontSize: scale(24)},
-                    ]}
                   />
                 }
                 answer={
-                  firstMiniTestTask?.question?.[moduleIndex]
-                    ?.answers as string[]
+                  (
+                    firstMiniTestTask?.question?.[moduleIndex]
+                      ?.answers as Answer[]
+                  ).map(q => q.content) ?? []
+                }
+                questionImage={
+                  (
+                    firstMiniTestTask?.question?.[moduleIndex]
+                      ?.answers as Answer[]
+                  ).map(q => env.IMAGE_QUESTION_BASE_API_URL + q.image) ?? []
                 }
                 answerStyle={styles.fonts_SVN_Cherish}
                 isShowCorrectContainer={isShowCorrectContainer}
@@ -308,10 +359,9 @@ const Science_G5M1 = observer(
                 onSelectAnswer={(e: string[]) => {
                   setAnswerSelected(e);
                 }}
+                isSelectOne
                 learningTimer={learningTimer}
                 ref={answerRef}
-                questionStyle={styles.fonts_SVN_Cherish}
-                isSelectOne
               />
 
               <PrimaryButton
@@ -332,11 +382,61 @@ const Science_G5M1 = observer(
   ),
 );
 
-export default Science_G5M1;
+export default History_SelectAnswer_Image;
 
 const styles = StyleSheet.create({
   fill: {
     flex: 1,
+  },
+  container: {
+    flex: 1,
+  },
+  questionContainer: {
+    height: verticalScale(240),
+    width: '100%',
+  },
+  imageDisplayContainer: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingHorizontal: scale(16),
+  },
+  textContainer: {
+    alignItems: 'center',
+    marginBottom: scale(12),
+  },
+  imageTitle: {
+    fontSize: scale(18),
+    fontFamily: FontFamily.SVNCherishMoment,
+    textAlign: 'center',
+    marginBottom: scale(4),
+    fontWeight: 'bold',
+  },
+  imageSubtitle: {
+    fontSize: scale(12),
+    fontFamily: FontFamily.SVNNeuzeitBold,
+    textAlign: 'center',
+    opacity: 0.9,
+  },
+  mainImageContainer: {
+    width: scale(200),
+    height: verticalScale(140),
+    borderRadius: scale(20),
+    overflow: 'hidden',
+    borderColor: COLORS.WHITE_FBF8CC,
+    borderWidth: 3,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 4,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 8,
+    elevation: 8,
+  },
+  mainImage: {
+    width: '100%',
+    height: '100%',
   },
   fonts_SVN_Cherish: {
     fontFamily: FontFamily.SVNCherishMoment,
@@ -349,7 +449,6 @@ const styles = StyleSheet.create({
     textAlign: 'left',
     color: COLORS.BLUE_258F78,
   },
-
   boxSelected: {
     backgroundColor: COLORS.WHITE_FBF8CC,
     height: verticalScale(220),
@@ -358,7 +457,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-
   wrapHeaderContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',

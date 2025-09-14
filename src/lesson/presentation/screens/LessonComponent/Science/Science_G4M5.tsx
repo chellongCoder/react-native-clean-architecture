@@ -9,8 +9,8 @@ import React, {
   useRef,
   useState,
 } from 'react';
-import LessonComponent from './LessonComponent';
-import PrimaryButton from '../../components/PrimaryButton';
+import LessonComponent from '../LessonComponent';
+import PrimaryButton from '../../../components/PrimaryButton';
 import {FontFamily} from 'src/core/presentation/hooks/useFonts';
 import useGlobalStyle from 'src/core/presentation/hooks/useGlobalStyle';
 import {Task} from 'src/home/application/types/GetListQuestionResponse';
@@ -22,29 +22,26 @@ import {
   isSubArray,
 } from 'src/core/presentation/utils';
 import {scale, verticalScale} from 'react-native-size-matters';
-import Animated, {
+import {
   Easing,
   ReduceMotion,
-  useAnimatedStyle,
   useSharedValue,
   withTiming,
 } from 'react-native-reanimated';
 import {TextToSpeechContext} from 'src/core/presentation/hooks/textToSpeech/TextToSpeechContext';
-import {useLessonStore} from '../../stores/LessonStore/useGetPostsStore';
-import {useSettingLesson} from '../../hooks/useSettingLesson';
+import {useLessonStore} from '../../../stores/LessonStore/useGetPostsStore';
+import {useSettingLesson} from '../../../hooks/useSettingLesson';
 import {useIsFocused} from '@react-navigation/native';
 import useAuthenticationStore from 'src/authentication/presentation/stores/useAuthenticationStore';
 import {observer} from 'mobx-react';
-import {LessonRef} from '../../types';
+import {LessonRef} from '../../../types';
 import useHomeStore from 'src/home/presentation/stores/useHomeStore';
-import {SelectionAnswersQuestionRef} from '../../components/SelectionAnswersQuestion';
+import SelectionAnswersQuestion, {
+  SelectionAnswersQuestionRef,
+} from '../../../components/SelectionAnswersQuestion';
+import TextHighlight from '../../../components/TextHighlight';
 import {useI18n} from 'src/core/presentation/hooks/useI18n';
-import VoiceButton from '../../components/VoiceButton';
-import FastImage from 'react-native-fast-image';
-import ExplainImage from '../../components/Science/ExplainImage';
-import SelectionAnswersImage from '../../components/SelectionAnswersImage';
-import TextHighlight from '../../components/TextHighlight';
-import TextShadow from '../../components/TextShadow';
+import VoiceButton from '../../../components/VoiceButton';
 
 type Props = {
   moduleIndex: number;
@@ -57,11 +54,9 @@ type Props = {
   characterImageSuccess?: string;
   characterImageFail?: string;
   characterStyle?: StyleProp<ViewStyle>;
-  contentContainerStyle?: StyleProp<ViewStyle>;
-  hasTitle?: boolean;
 };
 
-const Science_SelectAnswer_Explain_TextImageAnswer = observer(
+const Science_G4M5 = observer(
   forwardRef<LessonRef, Props>(
     (
       {
@@ -87,13 +82,6 @@ const Science_SelectAnswer_Explain_TextImageAnswer = observer(
       const [answerSelected, setAnswerSelected] = useState<string | string[]>(
         '',
       );
-      console.log(
-        '🛠 LOG: 🚀 --> ------------------------------------------------🛠 LOG: 🚀 -->',
-      );
-      console.log('🛠 LOG: 🚀 --> ~ answerSelected:', answerSelected);
-      console.log(
-        '🛠 LOG: 🚀 --> ------------------------------------------------🛠 LOG: 🚀 -->',
-      );
 
       const {trainingCount, getSetting} = useLessonStore();
 
@@ -111,13 +99,10 @@ const Science_SelectAnswer_Explain_TextImageAnswer = observer(
         return isSubArray(answerSelectedArray, correctAnswerArray);
       }, [answerSelected, firstMiniTestTask?.question, moduleIndex]);
 
-      const [isLearning, setIsLearning] = useState(true);
-
       const {
         isAnswerCorrect,
         isShowCorrectContainer,
         word,
-        env,
         learningTimer,
         submit,
         toggleShowHint,
@@ -148,27 +133,14 @@ const Science_SelectAnswer_Explain_TextImageAnswer = observer(
           : characterImageFail;
       }, [characterImageFail, characterImageSuccess, isAnswerCorrect]);
 
-      const onSpeechText = useCallback(
-        (callback?: () => void) => {
-          ttsSpeak?.(
-            firstMiniTestTask?.question?.[moduleIndex]?.instruction
-              ?.description ??
-              settings.prompt?.toString() ??
-              '',
-            callback,
-          );
-        },
-        [firstMiniTestTask?.question, moduleIndex, settings.prompt, ttsSpeak],
-      );
-
-      const handleSubmit = useCallback(() => {
-        setIsLearning(e => {
-          if (!e) {
-            submit();
-          }
-          return !e;
-        });
-      }, [submit]);
+      const onSpeechText = useCallback(() => {
+        ttsSpeak?.(
+          firstMiniTestTask?.question?.[moduleIndex]?.instruction
+            ?.description ??
+            settings.prompt?.toString() ??
+            '',
+        );
+      }, [firstMiniTestTask?.question, moduleIndex, settings.prompt, ttsSpeak]);
 
       const opacity = useSharedValue(0);
       const scaleS = useSharedValue(1);
@@ -185,9 +157,7 @@ const Science_SelectAnswer_Explain_TextImageAnswer = observer(
         if (focus) {
           // Check if the component is focused
           const firstTimeout = setTimeout(() => {
-            onSpeechText(() => {
-              onSpeechText();
-            });
+            onSpeechText();
           }, 1500);
 
           return () => clearTimeout(firstTimeout);
@@ -206,13 +176,6 @@ const Science_SelectAnswer_Explain_TextImageAnswer = observer(
           });
         });
       }, [moduleIndex, opacity, scaleS]);
-
-      const animatedStyle = useAnimatedStyle(() => {
-        return {
-          opacity: opacity.value,
-          transform: [{scale: scaleS.value}],
-        };
-      });
 
       useImperativeHandle(ref, () => ({
         isAnswerCorrect,
@@ -250,31 +213,16 @@ const Science_SelectAnswer_Explain_TextImageAnswer = observer(
           isShowCorrectContainer={isShowCorrectContainer}
           onPressFlower={toggleShowHint}
           buildQuestion={
-            <Animated.View style={[animatedStyle, {flex: 1}]}>
-              {firstMiniTestTask?.question?.[moduleIndex]?.highlight && (
-                <TextShadow
-                  textShadowColor={settings.backgroundColor}
-                  style={[
-                    [
-                      styles.description,
-                      {color: settings.backgroundButtonColor},
-                    ],
-                  ]}>
-                  {firstMiniTestTask?.question?.[moduleIndex]?.highlight}
-                </TextShadow>
-              )}
-              <View style={styles.imageContainer}>
-                <FastImage
-                  source={{
-                    uri:
-                      env.IMAGE_QUESTION_BASE_API_URL +
-                      firstMiniTestTask?.question?.[moduleIndex].image,
-                  }}
-                  style={[styles.image]}
-                  resizeMode="contain"
-                />
-              </View>
-            </Animated.View>
+            <View style={{marginTop: scale(32), paddingHorizontal: scale(48)}}>
+              <Text
+                style={[
+                  styles.fonts_SVN_Cherish,
+                  {fontSize: scale(24), color: settings.backgroundButtonColor},
+                  {textAlign: 'center'},
+                ]}>
+                {firstMiniTestTask?.question?.[moduleIndex].paragraph}
+              </Text>
+            </View>
           }
           buildAnswer={
             <View style={styles.fill}>
@@ -300,67 +248,37 @@ const Science_SelectAnswer_Explain_TextImageAnswer = observer(
 
                 <VoiceButton onPress={onSpeechText} />
               </View>
-
-              {!isLearning ? (
-                <SelectionAnswersImage
-                  question={
-                    <TextHighlight
-                      content={
-                        firstMiniTestTask?.question?.[moduleIndex].highlight ??
-                        ''
-                      }
-                      description={
-                        firstMiniTestTask?.question?.[
-                          moduleIndex
-                        ].content.toLocaleLowerCase() ?? ''
-                      }
-                    />
-                  }
-                  answer={
-                    (
-                      firstMiniTestTask?.question?.[moduleIndex]
-                        ?.answers as string[]
-                    ).map(q => q) ?? []
-                  }
-                  questionImage={
-                    (
-                      firstMiniTestTask?.question?.[moduleIndex]
-                        ?.answers as string[]
-                    ).map(
-                      _ =>
-                        env.IMAGE_QUESTION_BASE_API_URL +
-                        firstMiniTestTask?.question?.[moduleIndex]
-                          ?.answerImage?.[0],
-                    ) ?? []
-                  }
-                  answerStyle={styles.fonts_SVN_Cherish}
-                  isShowCorrectContainer={isShowCorrectContainer}
-                  isAnswerCorrect={!!isAnswerCorrect}
-                  onSelectAnswer={(e: string[]) => {
-                    setAnswerSelected(e);
-                  }}
-                  isSelectOne
-                  learningTimer={learningTimer}
-                  ref={answerRef}
-                />
-              ) : (
-                <ExplainImage
-                  title={
-                    firstMiniTestTask?.question?.[
-                      moduleIndex
-                    ]?.description?.split('/')?.[0]
-                  }
-                  description={
-                    firstMiniTestTask?.question?.[
-                      moduleIndex
-                    ]?.description?.split('/')?.[1]
-                  }
-                  imageUrl={
-                    env.IMAGE_QUESTION_BASE_API_URL +
-                    firstMiniTestTask?.question?.[moduleIndex].answerImage?.[0]
-                  }
-                />
-              )}
+              <SelectionAnswersQuestion
+                question={
+                  <TextHighlight
+                    content={
+                      firstMiniTestTask?.question?.[moduleIndex].description ??
+                      ''
+                    }
+                    description={
+                      firstMiniTestTask?.question?.[moduleIndex].content ?? ''
+                    }
+                    styleHighlight={[
+                      styles.fonts_SVN_Cherish,
+                      {fontSize: scale(24)},
+                    ]}
+                  />
+                }
+                answer={
+                  firstMiniTestTask?.question?.[moduleIndex]
+                    ?.answers as string[]
+                }
+                answerStyle={styles.fonts_SVN_Cherish}
+                isShowCorrectContainer={isShowCorrectContainer}
+                isAnswerCorrect={!!isAnswerCorrect}
+                onSelectAnswer={(e: string[]) => {
+                  setAnswerSelected(e);
+                }}
+                learningTimer={learningTimer}
+                ref={answerRef}
+                questionStyle={styles.fonts_SVN_Cherish}
+                isSelectOne
+              />
 
               <PrimaryButton
                 text={i18n.t('lesson.screens.Modules.submit')}
@@ -368,7 +286,7 @@ const Science_SelectAnswer_Explain_TextImageAnswer = observer(
                   styles.buttonContainer,
                   {backgroundColor: settings.backgroundButtonColor},
                 ]}
-                onPress={handleSubmit}
+                onPress={submit}
               />
             </View>
           }
@@ -380,7 +298,7 @@ const Science_SelectAnswer_Explain_TextImageAnswer = observer(
   ),
 );
 
-export default Science_SelectAnswer_Explain_TextImageAnswer;
+export default Science_G4M5;
 
 const styles = StyleSheet.create({
   fill: {
@@ -427,22 +345,5 @@ const styles = StyleSheet.create({
     fontFamily: FontFamily.SVNNeuzeitBold,
     fontSize: scale(14),
     color: COLORS.WHITE_FBF8CC,
-  },
-  image: {
-    width: scale(120),
-    height: scale(120),
-  },
-  imageContainer: {
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  descriptionItem: {},
-  descriptionContainer: {
-    width: '60%',
-  },
-  description: {
-    fontSize: scale(40),
-    fontFamily: FontFamily.SVNCherishMoment,
-    textAlign: 'center',
   },
 });

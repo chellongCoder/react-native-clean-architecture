@@ -34,7 +34,7 @@ import Env, {EnvToken} from 'src/core/domain/entities/Env';
 import {coreModuleContainer} from 'src/core/CoreModule';
 import {LessonRef} from '../types';
 import useHomeStore from 'src/home/presentation/stores/useHomeStore';
-import ScienceLesson from './LessonComponent/ScienceLesson';
+import ScienceLesson from './LessonComponent/Science/ScienceLesson';
 import OnBoardingScreen from 'src/core/presentation/screens/OnBoardingScreen';
 import Math_MG2M4 from './LessonComponent/Math_MG2M4';
 import English_EG4M23 from './LessonComponent/English_EG4M23';
@@ -50,11 +50,11 @@ import Mandarin_G6M31 from './LessonComponent/Mandarin_G6M31';
 import Mandarin_Kindergarten from './LessonComponent/Mandarin_Kindergarten';
 import Math_MG6M15 from './LessonComponent/Math_MG6M15';
 import Math_Kindergarten from './LessonComponent/Math_Kindergarten';
-import Science_G0M1 from './LessonComponent/Science_G0M1';
-import Science_SG2M4 from './LessonComponent/Science_SG2M4';
-import Science_SG4M3 from './LessonComponent/Science_SG4M3';
-import Science_SG5M5 from './LessonComponent/Science_SG5M5';
-import Science_SG3M9 from './LessonComponent/Science_SG3M9';
+import Science_G0M1 from './LessonComponent/Science/Science_G0M1';
+import Science_SG2M4 from './LessonComponent/Science/Science_SG2M4';
+import Science_SG4M3 from './LessonComponent/Science/Science_SG4M3';
+import Science_SG5M5 from './LessonComponent/Science/Science_SG5M5';
+import Science_SG3M9 from './LessonComponent/Science/Science_SG3M9';
 import VnG1M3Lesson from './LessonComponent/Vietnamese_VNG1M3_Lesson';
 import VnG2M8Lesson from './LessonComponent/Vietnamese_G2M8_lesson';
 import VnG0M2Lesson from './LessonComponent/Vietnamese_G0M2_lesson';
@@ -63,7 +63,7 @@ import VnG0M1Lesson from './LessonComponent/Vietnamese_G0M1_Leson';
 import VnG4M1Lesson from './LessonComponent/Vietnamese_G4M1_lesson';
 import VnG5M1Lesson from './LessonComponent/Vietnamese_G5M1_lesson';
 import Math_MG1M3_P4 from './LessonComponent/Math_MG1M3_P4';
-import Science_SG6M3 from './LessonComponent/Science_SG6M3';
+import Science_SG6M3 from './LessonComponent/Science/Science_SG6M3';
 import Math_MG4M16 from './LessonComponent/Math_MG4M16';
 import {useI18n} from 'src/core/presentation/hooks/useI18n';
 import VnG4M3Lesson from './LessonComponent/Vietnamese_G4M3_lesson';
@@ -109,29 +109,29 @@ import English_PronounciationRepeat from './LessonComponent/English_Pronounciati
 import Math_Text_SelectAnswer from './LessonComponent/Math_Text_SelectAnswer';
 import English_SelectAnswer_Paragraph from './LessonComponent/English_SelectAnswer_Paragraph';
 import English_QwertyKeyboard_Paragraph from './LessonComponent/English_QwertyKeyboard_Paragraph';
-import Science_Select_BGImageText from './LessonComponent/Science_Select_BGImageText';
-import Science_SG1M2 from './LessonComponent/Science_SG1M2';
-import Science_SelectAnswer from './LessonComponent/Science_SelectAnswer';
-import Science_SelectAnswer_Image_TextImageAnswer from './LessonComponent/Science_SelectAnswer_Image_TextImageAnswer';
-import Science_SelectAnswer_2Question from './LessonComponent/Science_SelectAnswer_2Question';
-import Science_SelectAnswer_Circle from './LessonComponent/Science_SelectAnswer_Circle';
-import Science_G4M2 from './LessonComponent/Science_G4M2';
-import Science_G4M5 from './LessonComponent/Science_G4M5';
-import Science_G4M4 from './LessonComponent/Science_G4M4';
-import Science_SelectAnswer_ImageLearning from './LessonComponent/Science_SelectAnswer_ImageLearning';
-import Science_SelectAnswer_Image_TextUnderline from './LessonComponent/Science_SelectAnswer_Image_TextUnderline';
-import Science_SelectAnswer_ParagraphImage from './LessonComponent/Science_SelectAnswer_ParagraphImage';
-import Science_SelectAnswer_Image_Text from './LessonComponent/Science_SelectAnswer_Image_Text';
-import Science_SelectAnswer_ImageMeaning_Image from './LessonComponent/Science_SelectAnswer_ImageMeaning_Image';
-import Science_SelectAnswer_ScrollQuestion from './LessonComponent/Science_SelectAnswer_ScrollQuestion';
-import Science_SG5M2 from './LessonComponent/Science_SG5M2';
-import Science_SG2M8 from './LessonComponent/Science_SG2M8';
-import Science_SelectAnswer_AnswerMeaning from './LessonComponent/Science_SelectAnswer_AnswerMeaning';
-import Science_SelectAnswer_Explain_TextImageAnswer from './LessonComponent/Science_SelectAnswer_Explain_TextImageAnswer';
-import Science_G5M1 from './LessonComponent/Science_G5M1';
-import Science_SelectAnswer_AnswerImage_MultipleQuestion from './LessonComponent/Science_SelectAnswer_AnswerImage_MultipleQuestion';
+import Science_SG1M2 from './LessonComponent/Science/Science_SG1M2';
+import Science_SelectAnswer from './LessonComponent/Science/Science_SelectAnswer';
+import Science_SelectAnswer_Image_TextImageAnswer from './LessonComponent/Science/Science_SelectAnswer_Image_TextImageAnswer';
+import Science_SelectAnswer_2Question from './LessonComponent/Science/Science_SelectAnswer_2Question';
+import Science_SelectAnswer_Circle from './LessonComponent/Science/Science_SelectAnswer_Circle';
+import Science_G4M2 from './LessonComponent/Science/Science_G4M2';
+import Science_G4M5 from './LessonComponent/Science/Science_G4M5';
+import Science_G4M4 from './LessonComponent/Science/Science_G4M4';
+import Science_SelectAnswer_ImageLearning from './LessonComponent/Science/Science_SelectAnswer_ImageLearning';
+import Science_SelectAnswer_Image_TextUnderline from './LessonComponent/Science/Science_SelectAnswer_Image_TextUnderline';
+import Science_SelectAnswer_ParagraphImage from './LessonComponent/Science/Science_SelectAnswer_ParagraphImage';
+import Science_SelectAnswer_Image_Text from './LessonComponent/Science/Science_SelectAnswer_Image_Text';
+import Science_SelectAnswer_ImageMeaning_Image from './LessonComponent/Science/Science_SelectAnswer_ImageMeaning_Image';
+import Science_SelectAnswer_ScrollQuestion from './LessonComponent/Science/Science_SelectAnswer_ScrollQuestion';
+import Science_SG5M2 from './LessonComponent/Science/Science_SG5M2';
+import Science_SG2M8 from './LessonComponent/Science/Science_SG2M8';
+import Science_SelectAnswer_AnswerMeaning from './LessonComponent/Science/Science_SelectAnswer_AnswerMeaning';
+import Science_SelectAnswer_Explain_TextImageAnswer from './LessonComponent/Science/Science_SelectAnswer_Explain_TextImageAnswer';
+import Science_G5M1 from './LessonComponent/Science/Science_G5M1';
+import Science_SelectAnswer_AnswerImage_MultipleQuestion from './LessonComponent/Science/Science_SelectAnswer_AnswerImage_MultipleQuestion';
 import History_Finding_Diff_Point from './LessonComponent/History_Finding_Diff_Point';
 import History_SelectAnswer_SwipeImage from './LessonComponent/History_SelectAnswer_SwipeImage';
+import History_SelectAnswer_Image from './LessonComponent/History_SelectAnswer_Image';
 
 export type TResult = {
   userId?: string;
@@ -889,7 +889,19 @@ const LESSON_PATTERNS = [
     component: History_SelectAnswer_SwipeImage,
     props,
   },
-  
+  {
+    pattern: /^HISTORY_HS1M(5)$/,
+    component: (type: string, testTask: any) => {
+      const componentMap: Record<string, any> = {
+        HISTORY_HS1M5_P1: History_SelectAnswer_SwipeImage,
+        HISTORY_HS1M5_P4: History_SelectAnswer_Image,
+      };
+      
+      return componentMap[type + `_P${testTask?.stt}`] || Science_G0M1;
+    },
+    wrapper: DragProvider,
+    props: {},
+  },
   
 ];
 

@@ -56,6 +56,42 @@
           ]
         }
       }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:827845646125:android:b0e95d75c133ae4af625a4",
+        "android_client_info": {
+          "package_name": "com.alphadex.tbd.app.dev"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "827845646125-49mekr1f87vgc0d40bj06llmoe2mvkq3.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAzTB4KlpzK2Tm4Yet9xTueYCq_MxqTA6c"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "827845646125-49mekr1f87vgc0d40bj06llmoe2mvkq3.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "827845646125-gle21suv3a6pe4tgdma4ch04h359c6ds.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.hisoft.tbd.app"
+              }
+            }
+          ]
+        }
+      }
     }
   ],
   "configuration_version": "1"

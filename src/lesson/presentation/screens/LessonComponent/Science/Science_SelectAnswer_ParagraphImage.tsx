@@ -9,17 +9,16 @@ import React, {
   useRef,
   useState,
 } from 'react';
-import LessonComponent from './LessonComponent';
-import PrimaryButton from '../../components/PrimaryButton';
+import LessonComponent from '../LessonComponent';
+import PrimaryButton from '../../../components/PrimaryButton';
 import {FontFamily} from 'src/core/presentation/hooks/useFonts';
 import useGlobalStyle from 'src/core/presentation/hooks/useGlobalStyle';
-import {Answer, Task} from 'src/home/application/types/GetListQuestionResponse';
+import {Task} from 'src/home/application/types/GetListQuestionResponse';
 import {COLORS} from 'src/core/presentation/constants/colors';
 import {
   darkenColor,
   getCorrectAnswer,
   isMMSS,
-  isSubArray,
 } from 'src/core/presentation/utils';
 import {scale, verticalScale} from 'react-native-size-matters';
 import Animated, {
@@ -30,19 +29,20 @@ import Animated, {
   withTiming,
 } from 'react-native-reanimated';
 import {TextToSpeechContext} from 'src/core/presentation/hooks/textToSpeech/TextToSpeechContext';
-import {useLessonStore} from '../../stores/LessonStore/useGetPostsStore';
-import {useSettingLesson} from '../../hooks/useSettingLesson';
+import {useLessonStore} from '../../../stores/LessonStore/useGetPostsStore';
+import {useSettingLesson} from '../../../hooks/useSettingLesson';
 import {useIsFocused} from '@react-navigation/native';
 import useAuthenticationStore from 'src/authentication/presentation/stores/useAuthenticationStore';
 import {observer} from 'mobx-react';
-import {LessonRef} from '../../types';
+import {LessonRef} from '../../../types';
 import useHomeStore from 'src/home/presentation/stores/useHomeStore';
-import {SelectionAnswersQuestionRef} from '../../components/SelectionAnswersQuestion';
-import TextHighlight from '../../components/TextHighlight';
+import SelectionAnswersQuestion, {
+  SelectionAnswersQuestionRef,
+} from '../../../components/SelectionAnswersQuestion';
+import TextHighlight from '../../../components/TextHighlight';
 import {useI18n} from 'src/core/presentation/hooks/useI18n';
-import VoiceButton from '../../components/VoiceButton';
-import SelectionAnswersImage from '../../components/SelectionAnswersImage';
-import FastImage from 'react-native-fast-image';
+import VoiceButton from '../../../components/VoiceButton';
+import ParagraphImageText from '../../../components/ParagraphImageText';
 
 type Props = {
   moduleIndex: number;
@@ -55,11 +55,9 @@ type Props = {
   characterImageSuccess?: string;
   characterImageFail?: string;
   characterStyle?: StyleProp<ViewStyle>;
-  contentContainerStyle?: StyleProp<ViewStyle>;
-  hasTitle?: boolean;
 };
 
-const Science_SelectAnswer_Image_TextImageAnswer = observer(
+const Science_SelectAnswer_ParagraphImage = observer(
   forwardRef<LessonRef, Props>(
     (
       {
@@ -73,7 +71,6 @@ const Science_SelectAnswer_Image_TextImageAnswer = observer(
         characterImageSuccess,
         characterImageFail,
         characterStyle,
-        contentContainerStyle,
       },
       ref,
     ) => {
@@ -85,13 +82,6 @@ const Science_SelectAnswer_Image_TextImageAnswer = observer(
 
       const [answerSelected, setAnswerSelected] = useState<string | string[]>(
         '',
-      );
-      console.log(
-        '🛠 LOG: 🚀 --> ------------------------------------------------🛠 LOG: 🚀 -->',
-      );
-      console.log('🛠 LOG: 🚀 --> ~ answerSelected:', answerSelected);
-      console.log(
-        '🛠 LOG: 🚀 --> ------------------------------------------------🛠 LOG: 🚀 -->',
       );
 
       const {trainingCount, getSetting} = useLessonStore();
@@ -107,7 +97,16 @@ const Science_SelectAnswer_Image_TextImageAnswer = observer(
         const correctAnswerArray = (
           Array.isArray(correctAnswer) ? correctAnswer : [correctAnswer]
         ).map(e => e?.toLocaleString().toLocaleLowerCase());
-        return isSubArray(answerSelectedArray, correctAnswerArray);
+
+        // Check if arrays have the same length
+        if (answerSelectedArray.length !== correctAnswerArray.length) {
+          return false;
+        }
+
+        // Check if every element at the same index matches
+        return answerSelectedArray.every(
+          (answer, index) => answer === correctAnswerArray[index],
+        );
       }, [answerSelected, firstMiniTestTask?.question, moduleIndex]);
 
       const {
@@ -170,12 +169,6 @@ const Science_SelectAnswer_Image_TextImageAnswer = observer(
           // Check if the component is focused
           const firstTimeout = setTimeout(() => {
             onSpeechText();
-
-            const secondTimeout = setTimeout(() => {
-              onSpeechText();
-            }, 2500);
-
-            return () => clearTimeout(secondTimeout);
           }, 1500);
 
           return () => clearTimeout(firstTimeout);
@@ -238,38 +231,16 @@ const Science_SelectAnswer_Image_TextImageAnswer = observer(
           isShowCorrectContainer={isShowCorrectContainer}
           onPressFlower={toggleShowHint}
           buildQuestion={
-            <Animated.View
-              style={[animatedStyle, {flex: 1}, contentContainerStyle]}>
-              {firstMiniTestTask?.question?.[moduleIndex]?.description && (
-                <View style={styles.descriptionContainer}>
-                  {firstMiniTestTask?.question?.[moduleIndex]?.description
-                    ?.split('\n')
-                    ?.map((description, index) => (
-                      <View key={index} style={styles.descriptionItem}>
-                        <Text
-                          style={[
-                            [
-                              styles.description,
-                              {color: settings.backgroundButtonColor},
-                            ],
-                          ]}>
-                          {description}
-                        </Text>
-                      </View>
-                    ))}
-                </View>
-              )}
-              <View style={styles.imageContainer}>
-                <FastImage
-                  source={{
-                    uri:
-                      env.IMAGE_QUESTION_BASE_API_URL +
-                      firstMiniTestTask?.question?.[moduleIndex].image,
-                  }}
-                  style={[styles.image]}
-                  resizeMode="contain"
-                />
-              </View>
+            <Animated.View style={[animatedStyle, {flex: 1}]}>
+              <ParagraphImageText
+                paragraph={
+                  firstMiniTestTask?.question?.[moduleIndex]?.paragraph ?? ''
+                }
+                imageUrl={
+                  env.IMAGE_QUESTION_BASE_API_URL +
+                  firstMiniTestTask?.question?.[moduleIndex].image
+                }
+              />
             </Animated.View>
           }
           buildAnswer={
@@ -296,31 +267,22 @@ const Science_SelectAnswer_Image_TextImageAnswer = observer(
 
                 <VoiceButton onPress={onSpeechText} />
               </View>
-
-              <SelectionAnswersImage
+              <SelectionAnswersQuestion
                 question={
                   <TextHighlight
                     content={
                       firstMiniTestTask?.question?.[moduleIndex].highlight ?? ''
                     }
                     description={
-                      firstMiniTestTask?.question?.[
-                        moduleIndex
-                      ].description.toLocaleLowerCase() ?? ''
+                      firstMiniTestTask?.question?.[moduleIndex].content ?? ''
                     }
                   />
                 }
                 answer={
                   (
                     firstMiniTestTask?.question?.[moduleIndex]
-                      ?.answers as Answer[]
-                  ).map(q => q.content) ?? []
-                }
-                questionImage={
-                  (
-                    firstMiniTestTask?.question?.[moduleIndex]
-                      ?.answers as Answer[]
-                  ).map(q => env.IMAGE_QUESTION_BASE_API_URL + q.image) ?? []
+                      ?.answers as string[]
+                  ).map(q => q) ?? []
                 }
                 answerStyle={styles.fonts_SVN_Cherish}
                 isShowCorrectContainer={isShowCorrectContainer}
@@ -328,7 +290,6 @@ const Science_SelectAnswer_Image_TextImageAnswer = observer(
                 onSelectAnswer={(e: string[]) => {
                   setAnswerSelected(e);
                 }}
-                isSelectOne
                 learningTimer={learningTimer}
                 ref={answerRef}
               />
@@ -351,7 +312,7 @@ const Science_SelectAnswer_Image_TextImageAnswer = observer(
   ),
 );
 
-export default Science_SelectAnswer_Image_TextImageAnswer;
+export default Science_SelectAnswer_ParagraphImage;
 
 const styles = StyleSheet.create({
   fill: {
@@ -398,23 +359,5 @@ const styles = StyleSheet.create({
     fontFamily: FontFamily.SVNNeuzeitBold,
     fontSize: scale(14),
     color: COLORS.WHITE_FBF8CC,
-  },
-  image: {
-    width: scale(120),
-    height: scale(120),
-  },
-  imageContainer: {
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  descriptionItem: {},
-  descriptionContainer: {
-    width: '60%',
-  },
-  description: {
-    fontSize: scale(19),
-    fontFamily: FontFamily.SVNCherishMoment,
-    lineHeight: scale(27),
-    textAlign: 'center',
   },
 });

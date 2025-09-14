@@ -16,8 +16,8 @@ import React, {
   useRef,
   useState,
 } from 'react';
-import LessonComponent from './LessonComponent';
-import PrimaryButton from '../../components/PrimaryButton';
+import LessonComponent from '../LessonComponent';
+import PrimaryButton from '../../../components/PrimaryButton';
 import {FontFamily} from 'src/core/presentation/hooks/useFonts';
 import useGlobalStyle from 'src/core/presentation/hooks/useGlobalStyle';
 import {Task} from 'src/home/application/types/GetListQuestionResponse';
@@ -36,19 +36,19 @@ import {
   withTiming,
 } from 'react-native-reanimated';
 import {TextToSpeechContext} from 'src/core/presentation/hooks/textToSpeech/TextToSpeechContext';
-import {useLessonStore} from '../../stores/LessonStore/useGetPostsStore';
-import {useSettingLesson} from '../../hooks/useSettingLesson';
+import {useLessonStore} from '../../../stores/LessonStore/useGetPostsStore';
+import {useSettingLesson} from '../../../hooks/useSettingLesson';
 import {useIsFocused} from '@react-navigation/native';
 import useAuthenticationStore from 'src/authentication/presentation/stores/useAuthenticationStore';
 import {observer} from 'mobx-react';
-import {LessonRef} from '../../types';
+import {LessonRef} from '../../../types';
 import useHomeStore from 'src/home/presentation/stores/useHomeStore';
 import SelectionAnswersQuestion, {
   SelectionAnswersQuestionRef,
-} from '../../components/SelectionAnswersQuestion';
-import TextHighlight from '../../components/TextHighlight';
+} from '../../../components/SelectionAnswersQuestion';
+import TextHighlight from '../../../components/TextHighlight';
 import {useI18n} from 'src/core/presentation/hooks/useI18n';
-import VoiceButton from '../../components/VoiceButton';
+import VoiceButton from '../../../components/VoiceButton';
 
 type Props = {
   moduleIndex: number;
@@ -63,7 +63,7 @@ type Props = {
   characterStyle?: StyleProp<ViewStyle>;
 };
 
-const Science_G4M2 = observer(
+const Science_G5M1 = observer(
   forwardRef<LessonRef, Props>(
     (
       {
@@ -152,7 +152,10 @@ const Science_G4M2 = observer(
 
       const opacity = useSharedValue(0);
       const scaleS = useSharedValue(1);
-
+      console.log(
+        'firstMiniTestTask?.question?.[moduleIndex]: ',
+        firstMiniTestTask?.question?.[moduleIndex],
+      );
       /**
        * * reset lại countdown khi lần làm thay đổi
        */
@@ -231,8 +234,28 @@ const Science_G4M2 = observer(
               style={{
                 width: scale(300),
                 height: scale(200),
-              }}
-            />
+                justifyContent: 'flex-end',
+                alignItems: 'center',
+              }}>
+              <View
+                style={{
+                  width: scale(200),
+                  paddingHorizontal: 16,
+                  marginBottom: 16,
+                }}>
+                <Text
+                  style={[
+                    styles.fonts_SVN_Cherish,
+                    {
+                      fontSize: 16,
+                      color: COLORS.GREEN_157152,
+                      textAlign: 'center',
+                    },
+                  ]}>
+                  {firstMiniTestTask?.question?.[moduleIndex].content}
+                </Text>
+              </View>
+            </ImageBackground>
           }
           buildAnswer={
             <View style={styles.fill}>
@@ -309,7 +332,7 @@ const Science_G4M2 = observer(
   ),
 );
 
-export default Science_G4M2;
+export default Science_G5M1;
 
 const styles = StyleSheet.create({
   fill: {

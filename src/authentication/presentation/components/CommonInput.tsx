@@ -15,6 +15,8 @@ import {
 import React, {useEffect, useRef, useState} from 'react';
 import useGlobalStyle from 'src/core/presentation/hooks/useGlobalStyle';
 import {useIsFocused} from '@react-navigation/native';
+import { FontFamily } from 'src/core/presentation/hooks/useFonts';
+import { scale, verticalScale } from 'react-native-size-matters';
 
 type Props = {
   textInputProp?: TextInputProps;
@@ -172,14 +174,17 @@ const styles = StyleSheet.create({
   },
   txtLabel: {
     color: '#1C6349',
-    paddingBottom: 8,
+    paddingBottom: verticalScale(8),
   },
   input: {
-    padding: 22,
+    padding: scale(22),
+    fontFamily: FontFamily.SVNNeuzeitRegular
   },
   inputPassword: {
     flex: 1,
     textAlign: 'center',
+    fontFamily: FontFamily.SVNNeuzeitRegular,
+    fontSize: scale(28)
   },
   w64: {
     width: 64,

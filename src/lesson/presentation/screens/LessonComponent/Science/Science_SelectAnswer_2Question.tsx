@@ -9,16 +9,15 @@ import React, {
   useRef,
   useState,
 } from 'react';
-import LessonComponent from './LessonComponent';
-import PrimaryButton from '../../components/PrimaryButton';
+import LessonComponent from '../LessonComponent';
+import PrimaryButton from '../../../components/PrimaryButton';
 import {FontFamily} from 'src/core/presentation/hooks/useFonts';
 import useGlobalStyle from 'src/core/presentation/hooks/useGlobalStyle';
-import {Task} from 'src/home/application/types/GetListQuestionResponse';
+import {Answer, Task} from 'src/home/application/types/GetListQuestionResponse';
 import {COLORS} from 'src/core/presentation/constants/colors';
 import {
   darkenColor,
   getCorrectAnswer,
-  arraysEqualWithExactItem,
   isMMSS,
   isSubArray,
 } from 'src/core/presentation/utils';
@@ -31,20 +30,20 @@ import Animated, {
   withTiming,
 } from 'react-native-reanimated';
 import {TextToSpeechContext} from 'src/core/presentation/hooks/textToSpeech/TextToSpeechContext';
-import {useLessonStore} from '../../stores/LessonStore/useGetPostsStore';
-import {useSettingLesson} from '../../hooks/useSettingLesson';
+import {useLessonStore} from '../../../stores/LessonStore/useGetPostsStore';
+import {useSettingLesson} from '../../../hooks/useSettingLesson';
 import {useIsFocused} from '@react-navigation/native';
 import useAuthenticationStore from 'src/authentication/presentation/stores/useAuthenticationStore';
 import {observer} from 'mobx-react';
-import {LessonRef} from '../../types';
+import {LessonRef} from '../../../types';
 import useHomeStore from 'src/home/presentation/stores/useHomeStore';
 import SelectionAnswersQuestion, {
   SelectionAnswersQuestionRef,
-} from '../../components/SelectionAnswersQuestion';
-import TextHighlight from '../../components/TextHighlight';
+} from '../../../components/SelectionAnswersQuestion';
+import TextHighlight from '../../../components/TextHighlight';
 import {useI18n} from 'src/core/presentation/hooks/useI18n';
-import VoiceButton from '../../components/VoiceButton';
-import LearningImage from '../../components/LearningImage';
+import VoiceButton from '../../../components/VoiceButton';
+import MultiQuestionList from '../../../components/Science/MultiQuestionList';
 
 type Props = {
   moduleIndex: number;
@@ -59,7 +58,8 @@ type Props = {
   characterStyle?: StyleProp<ViewStyle>;
 };
 
-const Science_SelectAnswer_ImageLearning = observer(
+type AnswerT = Answer[][];
+const Science_SelectAnswer_2Question = observer(
   forwardRef<LessonRef, Props>(
     (
       {
@@ -81,6 +81,7 @@ const Science_SelectAnswer_ImageLearning = observer(
       const {ttsSpeak} = useContext(TextToSpeechContext);
       const focus = useIsFocused();
       const answerRef = useRef<SelectionAnswersQuestionRef>(null);
+      const [questionIndex, setQuestionIndex] = useState<0 | 1>(0);
 
       const [answerSelected, setAnswerSelected] = useState<string | string[]>(
         '',
@@ -91,21 +92,37 @@ const Science_SelectAnswer_ImageLearning = observer(
       const {selectedChild} = useAuthenticationStore();
 
       const isCorrectAnswer = useMemo(() => {
-        const correctAnswer =
-          firstMiniTestTask?.question?.[moduleIndex]?.correctAnswer;
+        const correctAnswer = firstMiniTestTask?.question?.[moduleIndex]
+          ?.correctAnswer as string[][];
         const answerSelectedArray = (
           Array.isArray(answerSelected) ? answerSelected : [answerSelected]
         ).map(e => e?.toLocaleString().toLocaleLowerCase());
         const correctAnswerArray = (
-          Array.isArray(correctAnswer) ? correctAnswer : [correctAnswer]
+          Array.isArray(correctAnswer[questionIndex])
+            ? correctAnswer[questionIndex]
+            : [correctAnswer]
         ).map(e => e?.toLocaleString().toLocaleLowerCase());
-        return arraysEqualWithExactItem(answerSelectedArray, correctAnswerArray);
-      }, [answerSelected, firstMiniTestTask?.question, moduleIndex]);
+
+        if (questionIndex === 0) {
+          return isSubArray(answerSelectedArray, correctAnswerArray);
+        } else {
+          return (
+            answerSelectedArray.length === correctAnswerArray.length &&
+            isSubArray(answerSelectedArray, correctAnswerArray)
+          );
+        }
+      }, [
+        answerSelected,
+        firstMiniTestTask?.question,
+        moduleIndex,
+        questionIndex,
+      ]);
 
       const {
         isAnswerCorrect,
         isShowCorrectContainer,
         word,
+        env,
         learningTimer,
         submit,
         toggleShowHint,
@@ -115,7 +132,14 @@ const Science_SelectAnswer_ImageLearning = observer(
         isCorrectAnswer: isCorrectAnswer,
         onSubmit: () => {
           setAnswerSelected('');
-          nextModule((answerSelected as string[]).toString());
+          setQuestionIndex(index => {
+            if (index === 1) {
+              nextModule((answerSelected as string[]).toString());
+              return 0;
+            }
+            return 1;
+          });
+
           answerRef.current?.resetAnswerSelected?.();
         },
         fullAnswer: firstMiniTestTask?.question?.[moduleIndex].fullAnswer,
@@ -230,12 +254,20 @@ const Science_SelectAnswer_ImageLearning = observer(
           onPressFlower={toggleShowHint}
           buildQuestion={
             <Animated.View style={[animatedStyle, {flex: 1}]}>
-              <LearningImage
-                images={[
-                  firstMiniTestTask?.question?.[moduleIndex].image as string,
-                ]}
-                title={firstMiniTestTask?.question?.[moduleIndex].content}
-                titleStyle={{color: settings.backgroundButtonColor}}
+              <MultiQuestionList
+                title={
+                  firstMiniTestTask?.question?.[moduleIndex].description?.split(
+                    '/',
+                  )?.[moduleIndex] ?? ''
+                }
+                questions={
+                  firstMiniTestTask?.question?.[moduleIndex].content?.split(
+                    '/',
+                  ) ?? []
+                }
+                activeIndex={questionIndex}
+                backgroundColor={settings.backgroundColor}
+                questionColor={settings.backgroundButtonColor}
               />
             </Animated.View>
           }
@@ -264,21 +296,36 @@ const Science_SelectAnswer_ImageLearning = observer(
                 <VoiceButton onPress={onSpeechText} />
               </View>
               <SelectionAnswersQuestion
+                answerIsImage
                 question={
                   <TextHighlight
                     content={
-                      firstMiniTestTask?.question?.[moduleIndex].highlight ?? ''
+                      firstMiniTestTask?.question?.[
+                        moduleIndex
+                      ].highlight?.split('/')?.[questionIndex] ?? ''
                     }
                     description={
-                      firstMiniTestTask?.question?.[moduleIndex].content ?? ''
+                      firstMiniTestTask?.question?.[moduleIndex].content.split(
+                        '/',
+                      )?.[questionIndex] ?? ''
                     }
-                    styleHighlight={{color: COLORS.RED_FF6B6B}}
-                    style={styles.fonts_SVN_Cherish}
                   />
                 }
                 answer={
-                  (firstMiniTestTask?.question?.[moduleIndex]
-                    ?.answers as string[]) ?? []
+                  (
+                    (
+                      firstMiniTestTask?.question?.[moduleIndex]
+                        ?.answers as any as AnswerT
+                    )[questionIndex] as Answer[]
+                  ).map(q => q.content) ?? []
+                }
+                answerImage={
+                  (
+                    firstMiniTestTask?.question?.[moduleIndex]
+                      ?.answers as any as AnswerT
+                  )[questionIndex].map(
+                    q => env.IMAGE_QUESTION_BASE_API_URL + q.image.trim(),
+                  ) ?? []
                 }
                 answerStyle={styles.fonts_SVN_Cherish}
                 isShowCorrectContainer={isShowCorrectContainer}
@@ -286,6 +333,7 @@ const Science_SelectAnswer_ImageLearning = observer(
                 onSelectAnswer={(e: string[]) => {
                   setAnswerSelected(e);
                 }}
+                isSelectOne={questionIndex === 0}
                 learningTimer={learningTimer}
                 ref={answerRef}
               />
@@ -308,7 +356,7 @@ const Science_SelectAnswer_ImageLearning = observer(
   ),
 );
 
-export default Science_SelectAnswer_ImageLearning;
+export default Science_SelectAnswer_2Question;
 
 const styles = StyleSheet.create({
   fill: {

@@ -7,8 +7,8 @@ import React, {
   useRef,
   useState,
 } from 'react';
-import LessonComponent from './LessonComponent';
-import PrimaryButton from '../../components/PrimaryButton';
+import LessonComponent from '../LessonComponent';
+import PrimaryButton from '../../../components/PrimaryButton';
 import {FontFamily} from 'src/core/presentation/hooks/useFonts';
 import useGlobalStyle from 'src/core/presentation/hooks/useGlobalStyle';
 import {Task} from 'src/home/application/types/GetListQuestionResponse';
@@ -20,8 +20,8 @@ import {
   isAndroid,
   WIDTH_SCREEN,
 } from 'src/core/presentation/utils';
-import {useLessonStore} from '../../stores/LessonStore/useGetPostsStore';
-import {useSettingLesson} from '../../hooks/useSettingLesson';
+import {useLessonStore} from '../../../stores/LessonStore/useGetPostsStore';
+import {useSettingLesson} from '../../../hooks/useSettingLesson';
 import {COLORS} from 'src/core/presentation/constants/colors';
 import Tts from 'react-native-tts';
 import {
@@ -43,16 +43,16 @@ import Animated, {
 } from 'react-native-reanimated';
 import * as Haptics from 'expo-haptics';
 import useHomeStore from 'src/home/presentation/stores/useHomeStore';
-import LearningImage from '../../components/LearningImage';
+import LearningImage from '../../../components/LearningImage';
 import SelectionImagesQuestion, {
   SelectionAnswersQuestionRef,
-} from '../../components/SelectionImagesQuestion';
+} from '../../../components/SelectionImagesQuestion';
 import {SoundGlobalContext} from 'src/core/presentation/hooks/sound/SoundGlobalContext';
 import {soundTrack} from 'src/core/presentation/hooks/sound/SoundGlobalProvider';
 import {useIsFocused} from '@react-navigation/native';
-import TextHighlight from '../../components/TextHighlight';
+import TextHighlight from '../../../components/TextHighlight';
 import {useI18n} from 'src/core/presentation/hooks/useI18n';
-import VoiceButton from '../../components/VoiceButton';
+import VoiceButton from '../../../components/VoiceButton';
 import {observer} from 'mobx-react';
 
 type Props = {

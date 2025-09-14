@@ -1,11 +1,10 @@
 import {
+  ImageBackground,
   StyleProp,
   StyleSheet,
   Text,
   View,
   ViewStyle,
-  Image,
-  TouchableOpacity,
 } from 'react-native';
 import React, {
   forwardRef,
@@ -17,8 +16,8 @@ import React, {
   useRef,
   useState,
 } from 'react';
-import LessonComponent from './LessonComponent';
-import PrimaryButton from '../../components/PrimaryButton';
+import LessonComponent from '../LessonComponent';
+import PrimaryButton from '../../../components/PrimaryButton';
 import {FontFamily} from 'src/core/presentation/hooks/useFonts';
 import useGlobalStyle from 'src/core/presentation/hooks/useGlobalStyle';
 import {Task} from 'src/home/application/types/GetListQuestionResponse';
@@ -37,16 +36,19 @@ import {
   withTiming,
 } from 'react-native-reanimated';
 import {TextToSpeechContext} from 'src/core/presentation/hooks/textToSpeech/TextToSpeechContext';
-import {useLessonStore} from '../../stores/LessonStore/useGetPostsStore';
-import {useSettingLesson} from '../../hooks/useSettingLesson';
+import {useLessonStore} from '../../../stores/LessonStore/useGetPostsStore';
+import {useSettingLesson} from '../../../hooks/useSettingLesson';
 import {useIsFocused} from '@react-navigation/native';
 import useAuthenticationStore from 'src/authentication/presentation/stores/useAuthenticationStore';
 import {observer} from 'mobx-react';
-import {LessonRef} from '../../types';
+import {LessonRef} from '../../../types';
 import useHomeStore from 'src/home/presentation/stores/useHomeStore';
-import {SelectionAnswersQuestionRef} from '../../components/SelectionAnswersQuestion';
+import SelectionAnswersQuestion, {
+  SelectionAnswersQuestionRef,
+} from '../../../components/SelectionAnswersQuestion';
+import TextHighlight from '../../../components/TextHighlight';
 import {useI18n} from 'src/core/presentation/hooks/useI18n';
-import VoiceButton from '../../components/VoiceButton';
+import VoiceButton from '../../../components/VoiceButton';
 
 type Props = {
   moduleIndex: number;
@@ -61,7 +63,7 @@ type Props = {
   characterStyle?: StyleProp<ViewStyle>;
 };
 
-const Science_G4M4 = observer(
+const Science_G4M2 = observer(
   forwardRef<LessonRef, Props>(
     (
       {
@@ -109,6 +111,7 @@ const Science_G4M4 = observer(
         isShowCorrectContainer,
         word,
         env,
+        learningTimer,
         submit,
         toggleShowHint,
         resetLearning,
@@ -193,10 +196,7 @@ const Science_G4M4 = observer(
           );
         },
       }));
-      console.log(
-        'firstMiniTestTask?.question?.[moduleIndex]: ',
-        firstMiniTestTask?.question?.[moduleIndex],
-      );
+
       return (
         <LessonComponent
           backgroundImage={backgroundImage}
@@ -221,21 +221,27 @@ const Science_G4M4 = observer(
           isShowCorrectContainer={isShowCorrectContainer}
           onPressFlower={toggleShowHint}
           buildQuestion={
-            <View style={styles.questionContainer}>
-              <Text
-                style={[
-                  styles.fonts_SVN_Cherish,
-                  styles.questionText,
-                  {color: settings.backgroundButtonColor},
-                ]}>
-                {firstMiniTestTask?.question?.[moduleIndex].paragraph}
-              </Text>
-            </View>
+            <ImageBackground
+              source={{
+                uri:
+                  env.IMAGE_QUESTION_BASE_API_URL +
+                  firstMiniTestTask?.question?.[moduleIndex].image,
+              }}
+              resizeMode={'contain'}
+              style={{
+                width: scale(300),
+                height: scale(200),
+              }}
+            />
           }
           buildAnswer={
             <View style={styles.fill}>
               <View style={styles.wrapHeaderContainer}>
-                <View style={styles.headerTextContainer}>
+                <View
+                  style={{
+                    justifyContent: 'center',
+                    flex: 1,
+                  }}>
                   <Text
                     style={[
                       globalStyle.txtLabel,
@@ -252,71 +258,38 @@ const Science_G4M4 = observer(
 
                 <VoiceButton onPress={onSpeechText} />
               </View>
-
-              <View style={styles.answerBoxOuter}>
-                <Text
-                  style={[styles.fonts_SVN_Neuzeit, styles.answerDescription]}>
-                  {firstMiniTestTask?.question?.[moduleIndex].description}
-                </Text>
-                <View style={styles.answerBoxInnerWrapper}>
-                  <View style={styles.answerBoxInnerBorder}>
-                    <View style={styles.answerBoxInnerContent}>
-                      <TouchableOpacity
-                        style={[
-                          styles.answerBoxTrue,
-                          {
-                            backgroundColor:
-                              answerSelected === 'true'
-                                ? COLORS.GREEN_66C270
-                                : COLORS.YELLOW_F2B559,
-                          },
-                        ]}
-                        onPress={() => {
-                          setAnswerSelected('true');
-                        }}>
-                        <Text
-                          style={[
-                            styles.fonts_SVN_Cherish,
-                            styles.answerBoxTrueText,
-                          ]}>
-                          True
-                        </Text>
-                      </TouchableOpacity>
-                      <View style={styles.answerBoxImageWrapper}>
-                        <Image
-                          source={{
-                            uri:
-                              env.IMAGE_QUESTION_BASE_API_URL +
-                              firstMiniTestTask?.question?.[moduleIndex].image,
-                          }}
-                          style={styles.answerBoxImage}
-                        />
-                      </View>
-                      <TouchableOpacity
-                        style={[
-                          styles.answerBoxFalse,
-                          {
-                            backgroundColor:
-                              answerSelected === 'false'
-                                ? COLORS.GREEN_66C270
-                                : COLORS.YELLOW_F2B559,
-                          },
-                        ]}
-                        onPress={() => {
-                          setAnswerSelected('false');
-                        }}>
-                        <Text
-                          style={[
-                            styles.fonts_SVN_Cherish,
-                            styles.answerBoxTrueText,
-                          ]}>
-                          False
-                        </Text>
-                      </TouchableOpacity>
-                    </View>
-                  </View>
-                </View>
-              </View>
+              <SelectionAnswersQuestion
+                question={
+                  <TextHighlight
+                    content={
+                      firstMiniTestTask?.question?.[moduleIndex].description ??
+                      ''
+                    }
+                    description={
+                      firstMiniTestTask?.question?.[moduleIndex].description ??
+                      ''
+                    }
+                    styleHighlight={[
+                      styles.fonts_SVN_Cherish,
+                      {fontSize: scale(24)},
+                    ]}
+                  />
+                }
+                answer={
+                  firstMiniTestTask?.question?.[moduleIndex]
+                    ?.answers as string[]
+                }
+                answerStyle={styles.fonts_SVN_Cherish}
+                isShowCorrectContainer={isShowCorrectContainer}
+                isAnswerCorrect={!!isAnswerCorrect}
+                onSelectAnswer={(e: string[]) => {
+                  setAnswerSelected(e);
+                }}
+                learningTimer={learningTimer}
+                ref={answerRef}
+                questionStyle={styles.fonts_SVN_Cherish}
+                isSelectOne
+              />
 
               <PrimaryButton
                 text={i18n.t('lesson.screens.Modules.submit')}
@@ -336,7 +309,7 @@ const Science_G4M4 = observer(
   ),
 );
 
-export default Science_G4M4;
+export default Science_G4M2;
 
 const styles = StyleSheet.create({
   fill: {
@@ -345,88 +318,8 @@ const styles = StyleSheet.create({
   fonts_SVN_Cherish: {
     fontFamily: FontFamily.SVNCherishMoment,
   },
-  fonts_SVN_Neuzeit: {
-    fontFamily: FontFamily.SVNNeuzeitRegular,
-  },
-  questionContainer: {
-    marginTop: scale(32),
-    paddingHorizontal: scale(48),
-  },
-  questionText: {
-    fontSize: scale(24),
-    color: COLORS.CYAN_A5FFEF,
-    textAlign: 'center',
-  },
-  headerTextContainer: {
-    justifyContent: 'center',
-    flex: 1,
-  },
-  answerBoxOuter: {
-    flex: 1,
-    backgroundColor: COLORS.WHITE_FBF8CC,
-    padding: scale(16),
-    borderRadius: scale(30),
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  answerDescription: {
-    fontSize: scale(24),
-    color: COLORS.BLUE_258F78,
-  },
-  answerBoxInnerWrapper: {
-    flex: 1,
-    marginTop: scale(8),
-  },
-  answerBoxInnerBorder: {
-    height: scale(150),
-    width: scale(150),
-    borderRadius: 999,
-    borderWidth: 2,
-    borderColor: COLORS.YELLOW_F2B559,
-    borderStyle: 'dashed',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  answerBoxInnerContent: {
-    borderRadius: 999,
-    height: scale(100),
-    width: scale(200),
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    flexDirection: 'row',
-  },
-  answerBoxTrue: {
-    height: scale(48),
-    width: scale(48),
-    borderRadius: 999,
-    backgroundColor: COLORS.YELLOW_F2B559,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  answerBoxTrueText: {
-    fontSize: 20,
-    color: COLORS.WHITE_FBF8CC,
-  },
-  answerBoxImageWrapper: {
-    height: scale(64),
-    width: scale(64),
-    borderRadius: 999,
-    backgroundColor: COLORS.PURPLE_8F82E8,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  answerBoxImage: {
-    height: scale(56),
-    width: scale(56),
-    borderRadius: 999,
-  },
-  answerBoxFalse: {
-    height: scale(48),
-    width: scale(48),
-    borderRadius: 999,
-    backgroundColor: COLORS.YELLOW_F2B559,
-    justifyContent: 'center',
-    alignItems: 'center',
+  fonts_SVN_Neuzeit_Bold: {
+    fontFamily: FontFamily.SVNNeuzeitBold,
   },
   textQuestion: {
     fontSize: verticalScale(15),

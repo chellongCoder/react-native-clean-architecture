@@ -1,4 +1,4 @@
-import {StyleProp, StyleSheet, Text, View, ViewStyle} from 'react-native';
+import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import React, {
   forwardRef,
   useCallback,
@@ -9,16 +9,16 @@ import React, {
   useRef,
   useState,
 } from 'react';
-import LessonComponent from './LessonComponent';
-import PrimaryButton from '../../components/PrimaryButton';
+import LessonComponent from '../LessonComponent';
+import PrimaryButton from '../../../components/PrimaryButton';
 import {FontFamily} from 'src/core/presentation/hooks/useFonts';
 import useGlobalStyle from 'src/core/presentation/hooks/useGlobalStyle';
 import {Task} from 'src/home/application/types/GetListQuestionResponse';
 import {COLORS} from 'src/core/presentation/constants/colors';
 import {
-  darkenColor,
   getCorrectAnswer,
   isMMSS,
+  splitTextContent,
 } from 'src/core/presentation/utils';
 import {scale, verticalScale} from 'react-native-size-matters';
 import Animated, {
@@ -28,19 +28,21 @@ import Animated, {
   useSharedValue,
   withTiming,
 } from 'react-native-reanimated';
-import {TextToSpeechContext} from 'src/core/presentation/hooks/textToSpeech/TextToSpeechContext';
-import {useLessonStore} from '../../stores/LessonStore/useGetPostsStore';
-import {useSettingLesson} from '../../hooks/useSettingLesson';
+import {useLessonStore} from '../../../stores/LessonStore/useGetPostsStore';
+import {useSettingLesson} from '../../../hooks/useSettingLesson';
 import {useIsFocused} from '@react-navigation/native';
 import useAuthenticationStore from 'src/authentication/presentation/stores/useAuthenticationStore';
 import {observer} from 'mobx-react';
-import {LessonRef} from '../../types';
+import {LessonRef} from '../../../types';
 import useHomeStore from 'src/home/presentation/stores/useHomeStore';
-import {SelectionAnswersQuestionRef} from '../../components/SelectionAnswersQuestion';
-import SelectionImagesQuestion from '../../components/SelectionImagesQuestion';
+import SelectionAnswersQuestion, {
+  SelectionAnswersQuestionRef,
+} from '../../../components/SelectionAnswersQuestion';
+import CharScramble, {CharScrambleRep} from '../../../components/CharScramble';
+import {SoundGlobalContext} from 'src/core/presentation/hooks/sound/SoundGlobalContext';
+import TextHighlight from '../../../components/TextHighlight';
 import {useI18n} from 'src/core/presentation/hooks/useI18n';
-import VoiceButton from '../../components/VoiceButton';
-import TextHighlight from '../../components/TextHighlight';
+import VoiceButton from '../../../components/VoiceButton';
 
 type Props = {
   moduleIndex: number;
@@ -52,10 +54,9 @@ type Props = {
   backgroundImage?: string;
   characterImageSuccess?: string;
   characterImageFail?: string;
-  characterStyle?: StyleProp<ViewStyle>;
 };
 
-const Science_SelectAnswer_Image_TextUnderline = observer(
+const Science_G0M1 = observer(
   forwardRef<LessonRef, Props>(
     (
       {
@@ -68,48 +69,44 @@ const Science_SelectAnswer_Image_TextUnderline = observer(
         backgroundImage,
         characterImageSuccess,
         characterImageFail,
-        characterStyle,
       },
       ref,
     ) => {
       const globalStyle = useGlobalStyle();
 
-      const {ttsSpeak} = useContext(TextToSpeechContext);
       const focus = useIsFocused();
-      const answerRef = useRef<SelectionAnswersQuestionRef>(null);
+      const answerRef = useRef<SelectionAnswersQuestionRef>();
+      const {playSound} = useContext(SoundGlobalContext);
 
-      const [answerSelected, setAnswerSelected] = useState<string>('');
+      const [answerSelected, setAnswerSelected] = useState<string | string[]>(
+        '',
+      );
 
       const {trainingCount, getSetting} = useLessonStore();
 
-      const isCorrectAnswer = useMemo(() => {
-        return (
-          `${answerSelected.trim().toLocaleLowerCase()}` ===
-          firstMiniTestTask?.question?.[
-            moduleIndex
-          ]?.fullAnswer.toLocaleLowerCase()
-        );
-      }, [answerSelected, firstMiniTestTask?.question, moduleIndex]);
-
       const {selectedChild} = useAuthenticationStore();
+
+      const charScrambleRep = useRef<CharScrambleRep>(null);
 
       const {
         isAnswerCorrect,
         isShowCorrectContainer,
         word,
+        env,
         learningTimer,
         submit,
         toggleShowHint,
         resetLearning,
       } = useSettingLesson({
         countDownTime: trainingCount <= 2 ? 0 : 5,
-        isCorrectAnswer: !!isCorrectAnswer,
+        isCorrectAnswer:
+          answerSelected.toString() ===
+          (firstMiniTestTask?.question?.[moduleIndex]?.correctAnswer as string),
         onSubmit: () => {
           setAnswerSelected('');
-          nextModule(
-            `${answerSelected.trim().toLocaleLowerCase().replace('#', '')}.png`,
-          );
+          nextModule((answerSelected as string[]).toString());
           answerRef.current?.resetAnswerSelected?.();
+          charScrambleRep.current?.reset?.();
         },
         fullAnswer: firstMiniTestTask?.question?.[moduleIndex].fullAnswer,
         totalTime: 5 * 60,
@@ -130,11 +127,10 @@ const Science_SelectAnswer_Image_TextUnderline = observer(
       }, [characterImageFail, characterImageSuccess, isAnswerCorrect]);
 
       const onSpeechText = useCallback(() => {
-        ttsSpeak?.(
-          firstMiniTestTask?.question?.[moduleIndex]?.instruction.description ??
-            '',
+        playSound(
+          env.IMAGE_QUESTION_BASE_API_URL + `SGkM1Q${moduleIndex + 1}.mp3`,
         );
-      }, [firstMiniTestTask?.question, moduleIndex, ttsSpeak]);
+      }, [env.IMAGE_QUESTION_BASE_API_URL, moduleIndex, playSound]);
 
       const opacity = useSharedValue(0);
       const scaleS = useSharedValue(1);
@@ -189,8 +185,7 @@ const Science_SelectAnswer_Image_TextUnderline = observer(
         onChoiceCorrectedAnswer: () => {
           setAnswerSelected(
             getCorrectAnswer(
-              firstMiniTestTask?.question?.[moduleIndex]
-                ?.correctAnswer as string[],
+              firstMiniTestTask?.question?.[moduleIndex]?.correctAnswer,
             ),
           );
         },
@@ -200,7 +195,7 @@ const Science_SelectAnswer_Image_TextUnderline = observer(
         <LessonComponent
           backgroundImage={backgroundImage}
           characterImage={characterImage}
-          characterStyle={characterStyle}
+          characterStyle={{height: scale(200), marginBottom: scale(-34)}}
           lessonName={lessonName}
           module={moduleName}
           part={firstMiniTestTask?.name}
@@ -208,11 +203,7 @@ const Science_SelectAnswer_Image_TextUnderline = observer(
           backgroundAnswerColor={
             settings.backgroundAnswerColor ?? COLORS.GREEN_DDF598
           }
-          prompt={
-            firstMiniTestTask?.question?.[moduleIndex]?.instruction ?? {
-              description: settings.prompt?.toString() ?? '',
-            }
-          }
+          prompt={settings.prompt?.toString()}
           price="Free"
           score={selectedChild?.adsPoints}
           txtCountDown={word && !isMMSS(word) ? undefined : word}
@@ -220,36 +211,23 @@ const Science_SelectAnswer_Image_TextUnderline = observer(
           isShowCorrectContainer={isShowCorrectContainer}
           onPressFlower={toggleShowHint}
           buildQuestion={
-            <Animated.View style={[animatedStyle, {flex: 1, width: '80%'}]}>
-              
-              <TextHighlight
-                description={
-                  firstMiniTestTask?.question?.[moduleIndex].paragraph ?? ''
-                }
-                content={(firstMiniTestTask?.question?.[moduleIndex].highlight ?? []) as string[]}
+            <View>
+              <Animated.Image
+                resizeMode={'contain'}
                 style={[
-                  styles.contentText,
-                  styles.fonts_SVN_Cherish,
-                  {color: settings.backgroundButtonColor},
-                ]}
-                styleHighlight={{textDecorationLine: 'underline'}}
-              />
-              {firstMiniTestTask?.question?.[moduleIndex].paragraph?.split(
-                '\n',
-              )?.[1] && (
-                <Text
-                  style={[
-                    styles.descriptionText,
-                    {color: settings.backgroundColor},
-                  ]}>
                   {
-                    firstMiniTestTask?.question?.[moduleIndex].paragraph?.split(
-                      '\n',
-                    )?.[1]
-                  }
-                </Text>
-              )}
-            </Animated.View>
+                    width: scale(200),
+                    height: verticalScale(140),
+                  },
+                  animatedStyle,
+                ]}
+                source={{
+                  uri:
+                    env.IMAGE_QUESTION_BASE_API_URL +
+                    firstMiniTestTask?.question?.[moduleIndex].image,
+                }}
+              />
+            </View>
           }
           buildAnswer={
             <View style={styles.fill}>
@@ -259,36 +237,49 @@ const Science_SelectAnswer_Image_TextUnderline = observer(
                     justifyContent: 'center',
                     flex: 1,
                   }}>
-                  <Text
-                    style={[
-                      globalStyle.txtLabel,
-                      {
-                        color: darkenColor(
-                          settings.backgroundButtonColor ?? '',
-                          20,
-                        ),
-                      },
-                    ]}>
+                  <Text style={[globalStyle.txtLabel, styles.textColor]}>
                     {i18n.t('lesson.screens.Modules.chooseTheCorrectAnswer')}
                   </Text>
                 </View>
 
                 <VoiceButton onPress={onSpeechText} />
               </View>
-              <SelectionImagesQuestion
-                answers={
-                  (firstMiniTestTask?.question?.[moduleIndex]
-                    .answers as string[]) ?? []
-                }
-                isShowCorrectContainer={isShowCorrectContainer}
-                isAnswerCorrect={!!isAnswerCorrect}
-                onSelectAnswer={(e: string[]) => {
-                  setAnswerSelected(e[0]);
-                }}
-                learningTimer={learningTimer}
-                isSelectOne
-                ref={answerRef}
-              />
+              {firstMiniTestTask?.question?.[moduleIndex].answerType ===
+              'answer_arrange_word' ? (
+                <CharScramble
+                  ref={charScrambleRep}
+                  content={firstMiniTestTask?.question?.[moduleIndex]?.content}
+                  listChar={firstMiniTestTask?.question?.[moduleIndex]?.answers}
+                  learningTimer={learningTimer}
+                  onAnswerChanged={setAnswerSelected}
+                />
+              ) : (
+                <SelectionAnswersQuestion
+                  question={
+                    <TextHighlight
+                      content={
+                        firstMiniTestTask?.question?.[moduleIndex]?.content ??
+                        ''
+                      }
+                      description={
+                        firstMiniTestTask?.question?.[moduleIndex]
+                          ?.description ?? ''
+                      }
+                    />
+                  }
+                  answer={
+                    firstMiniTestTask?.question?.[moduleIndex].answers ?? []
+                  }
+                  isShowCorrectContainer={isShowCorrectContainer}
+                  isAnswerCorrect={!!isAnswerCorrect}
+                  onSelectAnswer={(e: string[]) => {
+                    setAnswerSelected(e);
+                  }}
+                  learningTimer={learningTimer}
+                  isSelectOne
+                  ref={answerRef}
+                />
+              )}
 
               <PrimaryButton
                 text={i18n.t('lesson.screens.Modules.submit')}
@@ -297,6 +288,7 @@ const Science_SelectAnswer_Image_TextUnderline = observer(
                   {backgroundColor: settings.backgroundButtonColor},
                 ]}
                 onPress={submit}
+                disable={learningTimer > 0}
               />
             </View>
           }
@@ -308,7 +300,7 @@ const Science_SelectAnswer_Image_TextUnderline = observer(
   ),
 );
 
-export default Science_SelectAnswer_Image_TextUnderline;
+export default Science_G0M1;
 
 const styles = StyleSheet.create({
   fill: {
@@ -317,14 +309,8 @@ const styles = StyleSheet.create({
   fonts_SVN_Cherish: {
     fontFamily: FontFamily.SVNCherishMoment,
   },
-  contentText: {
-    fontSize: scale(40),
-    textAlign: 'center',
-  },
-  descriptionText: {
-    fontFamily: FontFamily.SVNNeuzeitBold,
-    fontSize: scale(20),
-    textAlign: 'center',
+  textColor: {
+    color: '#003C82',
   },
   textQuestion: {
     fontSize: verticalScale(15),
@@ -348,6 +334,77 @@ const styles = StyleSheet.create({
   rowBetween: {
     flexDirection: 'row',
     justifyContent: 'space-between',
+  },
+  pr16: {
+    paddingRight: 16,
+  },
+  ph24: {
+    paddingHorizontal: 24,
+  },
+  pb8: {
+    paddingBottom: verticalScale(8),
+  },
+  pb16: {
+    paddingBottom: verticalScale(16),
+  },
+  pb32: {
+    paddingBottom: verticalScale(32),
+  },
+  mt8: {
+    marginTop: verticalScale(8),
+  },
+  mt16: {
+    marginTop: verticalScale(16),
+  },
+  mt24: {
+    marginTop: verticalScale(24),
+  },
+  mt32: {
+    marginTop: verticalScale(32),
+  },
+  alignSelfCenter: {
+    alignSelf: 'center',
+  },
+  center: {
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  boxItemAnswer: {
+    height: 94,
+    backgroundColor: '#F2B559',
+    borderRadius: 30,
+  },
+  boxSelected: {
+    backgroundColor: COLORS.WHITE_FBF8CC,
+    height: verticalScale(220),
+    flex: 1,
+    borderRadius: scale(30),
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  boxVowel: {
+    width: 56,
+    height: 56,
+    borderRadius: 10,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginHorizontal: 6,
+    marginVertical: 6,
+  },
+  textVowel: {
+    fontFamily: FontFamily.SVNCherishMoment,
+    color: '#FBF8CC',
+    fontSize: verticalScale(28),
+  },
+  wapper: {
+    marginTop: 8,
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'center',
+    alignContent: 'center',
+  },
+  wrapCharContainer: {
+    flexDirection: 'row',
   },
   wrapHeaderContainer: {
     flexDirection: 'row',

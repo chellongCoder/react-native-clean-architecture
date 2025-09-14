@@ -9,15 +9,16 @@ import React, {
   useRef,
   useState,
 } from 'react';
-import LessonComponent from './LessonComponent';
-import PrimaryButton from '../../components/PrimaryButton';
+import LessonComponent from '../LessonComponent';
+import PrimaryButton from '../../../components/PrimaryButton';
 import {FontFamily} from 'src/core/presentation/hooks/useFonts';
 import useGlobalStyle from 'src/core/presentation/hooks/useGlobalStyle';
-import {Task} from 'src/home/application/types/GetListQuestionResponse';
+import {Answer, Task} from 'src/home/application/types/GetListQuestionResponse';
 import {COLORS} from 'src/core/presentation/constants/colors';
 import {
   darkenColor,
   getCorrectAnswer,
+  arraysEqualWithExactItem,
   isMMSS,
   isSubArray,
 } from 'src/core/presentation/utils';
@@ -30,18 +31,20 @@ import Animated, {
   withTiming,
 } from 'react-native-reanimated';
 import {TextToSpeechContext} from 'src/core/presentation/hooks/textToSpeech/TextToSpeechContext';
-import {useLessonStore} from '../../stores/LessonStore/useGetPostsStore';
-import {useSettingLesson} from '../../hooks/useSettingLesson';
+import {useLessonStore} from '../../../stores/LessonStore/useGetPostsStore';
+import {useSettingLesson} from '../../../hooks/useSettingLesson';
 import {useIsFocused} from '@react-navigation/native';
 import useAuthenticationStore from 'src/authentication/presentation/stores/useAuthenticationStore';
 import {observer} from 'mobx-react';
-import {LessonRef} from '../../types';
+import {LessonRef} from '../../../types';
 import useHomeStore from 'src/home/presentation/stores/useHomeStore';
-import {SelectionAnswersQuestionRef} from '../../components/SelectionAnswersQuestion';
-import TextHighlight from '../../components/TextHighlight';
+import SelectionAnswersQuestion, {
+  SelectionAnswersQuestionRef,
+} from '../../../components/SelectionAnswersQuestion';
+import TextHighlight from '../../../components/TextHighlight';
 import {useI18n} from 'src/core/presentation/hooks/useI18n';
-import VoiceButton from '../../components/VoiceButton';
-import SelectionCircleAnswers from '../../components/Science/SelectionCircleAnswers';
+import VoiceButton from '../../../components/VoiceButton';
+import QuestionImageText from '../../../components/Science/QuestionImageText';
 
 type Props = {
   moduleIndex: number;
@@ -56,7 +59,7 @@ type Props = {
   characterStyle?: StyleProp<ViewStyle>;
 };
 
-const Science_SelectAnswer_Circle = observer(
+const Science_SelectAnswer = observer(
   forwardRef<LessonRef, Props>(
     (
       {
@@ -96,7 +99,7 @@ const Science_SelectAnswer_Circle = observer(
         const correctAnswerArray = (
           Array.isArray(correctAnswer) ? correctAnswer : [correctAnswer]
         ).map(e => e?.toLocaleString().toLocaleLowerCase());
-        return isSubArray(answerSelectedArray, correctAnswerArray);
+        return arraysEqualWithExactItem(answerSelectedArray, correctAnswerArray);
       }, [answerSelected, firstMiniTestTask?.question, moduleIndex]);
 
       const {
@@ -227,15 +230,20 @@ const Science_SelectAnswer_Circle = observer(
           isShowCorrectContainer={isShowCorrectContainer}
           onPressFlower={toggleShowHint}
           buildQuestion={
-            <Animated.View style={[animatedStyle, {flex: 1, width: '50%'}]}>
-              <Text
-                style={[
-                  styles.fonts_SVN_Cherish,
-                  styles.textDescription,
-                  {color: settings.backgroundColor},
-                ]}>
-                {firstMiniTestTask?.question?.[moduleIndex].description}
-              </Text>
+            <Animated.View style={[animatedStyle, {flex: 1}]}>
+              <QuestionImageText
+                title={firstMiniTestTask?.question?.[moduleIndex]?.highlight}
+                image={
+                  env.IMAGE_QUESTION_BASE_API_URL +
+                  firstMiniTestTask?.question?.[moduleIndex].image
+                }
+                descriptions={
+                  firstMiniTestTask?.question?.[moduleIndex]?.paragraph?.split(
+                    '\n',
+                  ) ?? []
+                }
+                backgroundColor="transparent"
+              />
             </Animated.View>
           }
           buildAnswer={
@@ -262,25 +270,32 @@ const Science_SelectAnswer_Circle = observer(
 
                 <VoiceButton onPress={onSpeechText} />
               </View>
-              <SelectionCircleAnswers
-                answer={
-                  firstMiniTestTask?.question?.[moduleIndex]
-                    ?.answers as string[]
-                }
-                isSelectOne
-                centerImage={
-                  env.IMAGE_QUESTION_BASE_API_URL +
-                  firstMiniTestTask?.question?.[moduleIndex].image
-                }
+              <SelectionAnswersQuestion
+                answerIsImage
                 question={
                   <TextHighlight
                     content={
                       firstMiniTestTask?.question?.[moduleIndex].highlight ?? ''
                     }
                     description={
-                      firstMiniTestTask?.question?.[moduleIndex].content ?? ''
+                      firstMiniTestTask?.question?.[moduleIndex].description ??
+                      ''
                     }
                   />
+                }
+                answer={
+                  (
+                    firstMiniTestTask?.question?.[moduleIndex]
+                      ?.answers as Answer[]
+                  ).map(q => q.content) ?? []
+                }
+                answerImage={
+                  (
+                    firstMiniTestTask?.question?.[moduleIndex]
+                      ?.answers as Answer[]
+                  ).map(
+                    q => env.IMAGE_QUESTION_BASE_API_URL + q.image.trim(),
+                  ) ?? []
                 }
                 answerStyle={styles.fonts_SVN_Cherish}
                 isShowCorrectContainer={isShowCorrectContainer}
@@ -310,14 +325,11 @@ const Science_SelectAnswer_Circle = observer(
   ),
 );
 
-export default Science_SelectAnswer_Circle;
+export default Science_SelectAnswer;
 
 const styles = StyleSheet.create({
   fill: {
     flex: 1,
-  },
-  textDescription: {
-    fontSize: scale(30),
   },
   fonts_SVN_Cherish: {
     fontFamily: FontFamily.SVNCherishMoment,
