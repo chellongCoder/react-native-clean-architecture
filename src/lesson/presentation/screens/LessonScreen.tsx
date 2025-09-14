@@ -133,6 +133,8 @@ import History_Finding_Diff_Point from './LessonComponent/History_Finding_Diff_P
 import History_SelectAnswer_SwipeImage from './LessonComponent/History_SelectAnswer_SwipeImage';
 import History_SelectAnswer_Image from './LessonComponent/History_SelectAnswer_Image';
 import History_SelectAnswer_Image_TextImageAnswer from './LessonComponent/History_SelectAnswer_Image_TextImageAnswer';
+import History_SelectAnswer_Image_TextImageAnswer_SlideQuestion from './LessonComponent/History_SelectAnswer_Image_TextImageAnswer_SlideQuestion';
+import History_SelectAnswer from './LessonComponent/History_SelectAnswer';
 
 export type TResult = {
   userId?: string;
@@ -907,6 +909,11 @@ const LESSON_PATTERNS = [
     },
     wrapper: DragProvider,
     props: {},
+  },
+  {
+    pattern: /^HISTORY_HS2M(2)_1$/,
+    component: History_SelectAnswer,
+    props,
   },
 ];
 

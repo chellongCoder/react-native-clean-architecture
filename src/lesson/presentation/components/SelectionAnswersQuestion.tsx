@@ -66,7 +66,7 @@ const SelectionAnswersQuestion: ForwardRefRenderFunction<
   } = props;
 
   const [answerSelected, setAnswerSelected] = useState<string[]>([]);
-  const isOneWord = !answer.some(
+  const isOneWord = !answer?.some(
     item => item.includes('/') || item.includes(' '),
   );
 
