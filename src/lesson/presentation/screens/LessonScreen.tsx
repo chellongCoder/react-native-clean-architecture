@@ -132,6 +132,9 @@ import Science_SelectAnswer_AnswerImage_MultipleQuestion from './LessonComponent
 import History_Finding_Diff_Point from './LessonComponent/History_Finding_Diff_Point';
 import History_SelectAnswer_SwipeImage from './LessonComponent/History_SelectAnswer_SwipeImage';
 import History_SelectAnswer_Image from './LessonComponent/History_SelectAnswer_Image';
+import History_SelectAnswer_Image_TextImageAnswer from './LessonComponent/History_SelectAnswer_Image_TextImageAnswer';
+import History_SelectAnswer_Image_TextImageAnswer_SlideQuestion from './LessonComponent/History_SelectAnswer_Image_TextImageAnswer_SlideQuestion';
+import History_SelectAnswer from './LessonComponent/History_SelectAnswer';
 
 export type TResult = {
   userId?: string;
@@ -883,7 +886,12 @@ const LESSON_PATTERNS = [
     }),
   },
 
-  // HIstory module 
+  // HIstory module
+  {
+    pattern: /^HISTORY_HS1M(1)$/,
+    component: History_SelectAnswer_Image_TextImageAnswer,
+    props,
+  },
   {
     pattern: /^HISTORY_HS1M(3)$/,
     component: History_SelectAnswer_SwipeImage,
@@ -896,13 +904,17 @@ const LESSON_PATTERNS = [
         HISTORY_HS1M5_P1: History_SelectAnswer_SwipeImage,
         HISTORY_HS1M5_P4: History_SelectAnswer_Image,
       };
-      
+
       return componentMap[type + `_P${testTask?.stt}`] || Science_G0M1;
     },
     wrapper: DragProvider,
     props: {},
   },
-  
+  {
+    pattern: /^HISTORY_HS2M(2)_1$/,
+    component: History_SelectAnswer,
+    props,
+  },
 ];
 
 const LessonScreen = observer(() => {
