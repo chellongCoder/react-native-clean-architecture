@@ -147,7 +147,7 @@ const SelectionAnswersImage: ForwardRefRenderFunction<
               style={[styles.questionImage, {opacity: isImageLoading ? 0 : 1}]}
               resizeMode={FastImage.resizeMode.cover}
               onLoadStart={() => {
-                if(progressRef.current === -0) {
+                if (progressRef.current === -0) {
                   return;
                 }
                 setIsImageLoading(true);
@@ -268,7 +268,7 @@ const styles = StyleSheet.create({
     borderRadius: scale(8),
     justifyContent: 'center',
     alignItems: 'center',
-    flexGrow: 1
+    flexGrow: 1,
   },
   answerText: {
     fontFamily: FontFamily.SVNNeuzeitBold,

@@ -1345,6 +1345,7 @@ const LessonScreen = observer(() => {
     characterImageFail:
       env.IMAGE_BACKGROUND_BASE_API_URL + lessonSetting?.figureFailImage,
     answer: testTask?.question?.[lessonIndex]?.answers,
+    stt: testTask?.stt,
   };
 
   const buildLesson = () => {
