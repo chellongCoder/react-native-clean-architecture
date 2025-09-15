@@ -13,11 +13,12 @@ export default {
         updateIgnored: 'Update ignored',
         updateFailed: 'Update failed',
         updateAvailable: 'Update available',
-        contentUpdate: 'A new update is available. Would you like to install it?',
+        contentUpdate:
+          'A new update is available. Would you like to install it?',
         later: 'Later',
         install: 'Install',
         mandatoryMessage: 'Mandatory update',
-      }
+      },
     },
     PurchaseSuccessScreen: {
       paymentSuccess: 'Payment\nSuccess',
@@ -217,6 +218,8 @@ export default {
         chooseTheCorrectAnswer: 'Choose the correct answer',
         chooseTheCorrectWord: 'Choose the correct WORD',
         chooseCorrectAnswer: 'Choose correct answer',
+        openSpeakerAndChooseAnswer:
+          'Open speaker to listen to the story and choose the correct answer',
         typeCorrectAnswer: 'Type correct answer',
         chooseALigagAsOn: 'Please choose a ligag as on',
         listening: 'Listening',

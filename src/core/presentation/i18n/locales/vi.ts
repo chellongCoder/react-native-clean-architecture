@@ -17,7 +17,7 @@ export default {
         later: 'Để sau',
         install: 'Cập nhật',
         mandatoryMessage: 'Cập nhật bắt buộc',
-      }
+      },
     },
     errors: {
       screenNotFound: 'Không tìm thấy màn hình',
@@ -195,6 +195,7 @@ export default {
         chooseTheCorrectAnswer: 'Chọn câu trả lời đúng',
         chooseTheCorrectWord: 'Chọn từ đúng',
         chooseCorrectAnswer: 'Chọn câu trả lời đúng',
+        openSpeakerAndChooseAnswer: 'Mở loa nghe kể chuyện và chọn đáp án đúng',
         typeCorrectAnswer: 'Nhập câu trả lời đúng',
         chooseALigagAsOn: 'Hãy chọn chữ cái ghép như từ trên',
         listening: 'Nghe',

@@ -133,8 +133,8 @@ import History_Finding_Diff_Point from './LessonComponent/History_Finding_Diff_P
 import History_SelectAnswer_SwipeImage from './LessonComponent/History_SelectAnswer_SwipeImage';
 import History_SelectAnswer_Image from './LessonComponent/History_SelectAnswer_Image';
 import History_SelectAnswer_Image_TextImageAnswer from './LessonComponent/History_SelectAnswer_Image_TextImageAnswer';
-import History_SelectAnswer_Image_TextImageAnswer_SlideQuestion from './LessonComponent/History_SelectAnswer_Image_TextImageAnswer_SlideQuestion';
 import History_SelectAnswer from './LessonComponent/History_SelectAnswer';
+import History_SelectAnswer_Slider from './LessonComponent/History_SelectAnswer_Slider';
 
 export type TResult = {
   userId?: string;
@@ -902,6 +902,7 @@ const LESSON_PATTERNS = [
     component: (type: string, testTask: any) => {
       const componentMap: Record<string, any> = {
         HISTORY_HS1M5_P1: History_SelectAnswer_SwipeImage,
+        HISTORY_HS1M5_P2: History_SelectImage_Description,
         HISTORY_HS1M5_P4: History_SelectAnswer_Image,
       };
 
@@ -914,6 +915,18 @@ const LESSON_PATTERNS = [
     pattern: /^HISTORY_HS2M(2)_1$/,
     component: History_SelectAnswer,
     props,
+  },
+  {
+    pattern: /^HISTORY_HS2M(2)_\d+$/,
+    component: (type: string, _testTask: any) => {
+      const componentMap: Record<string, any> = {
+        HISTORY_HS2M2_1: History_SelectAnswer_Slider,
+      };
+
+      return componentMap[type] || Science_G0M1;
+    },
+    wrapper: DragProvider,
+    props: {},
   },
 ];
 

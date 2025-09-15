@@ -79,7 +79,6 @@ const History_SelectAnswer_SwipeImage = observer(
       const {ttsSpeak, ttsStop} = useContext(TextToSpeechContext);
       const focus = useIsFocused();
       const answerRef = useRef<SelectionAnswersQuestionRef>(null);
-      const [questionIndex, setQuestionIndex] = useState<0 | 1>(0);
 
       const [answerSelected, setAnswerSelected] = useState<string | string[]>(
         '',
@@ -91,30 +90,20 @@ const History_SelectAnswer_SwipeImage = observer(
 
       const isCorrectAnswer = useMemo(() => {
         const correctAnswer = firstMiniTestTask?.question?.[moduleIndex]
-          ?.correctAnswer as string[][];
+          ?.correctAnswer as string[];
         const answerSelectedArray = (
           Array.isArray(answerSelected) ? answerSelected : [answerSelected]
         ).map(e => e?.toLocaleString().toLocaleLowerCase());
+
         const correctAnswerArray = (
-          Array.isArray(correctAnswer[questionIndex])
-            ? correctAnswer[questionIndex]
-            : [correctAnswer]
+          Array.isArray(correctAnswer) ? correctAnswer : [correctAnswer]
         ).map(e => e?.toLocaleString().toLocaleLowerCase());
 
-        if (questionIndex === 0) {
-          return isSubArray(answerSelectedArray, correctAnswerArray);
-        } else {
-          return (
-            answerSelectedArray.length === correctAnswerArray.length &&
-            isSubArray(answerSelectedArray, correctAnswerArray)
-          );
-        }
-      }, [
-        answerSelected,
-        firstMiniTestTask?.question,
-        moduleIndex,
-        questionIndex,
-      ]);
+        return (
+          answerSelectedArray.length === correctAnswerArray.length &&
+          isSubArray(answerSelectedArray, correctAnswerArray)
+        );
+      }, [answerSelected, firstMiniTestTask?.question, moduleIndex]);
 
       const {
         isAnswerCorrect,
@@ -130,13 +119,7 @@ const History_SelectAnswer_SwipeImage = observer(
         isCorrectAnswer: isCorrectAnswer,
         onSubmit: () => {
           setAnswerSelected('');
-          setQuestionIndex(index => {
-            if (index === 1) {
-              nextModule((answerSelected as string[]).toString());
-              return 0;
-            }
-            return 1;
-          });
+          nextModule((answerSelected as string[]).toString());
 
           answerRef.current?.resetAnswerSelected?.();
         },

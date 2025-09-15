@@ -66,8 +66,8 @@ const SlideSwipeImages: React.FC<SlideSwipeImagesProps> = ({
     if (autoPlay && data.length > 1) {
       const interval = setInterval(() => {
         if (carouselRef.current) {
-          const nextIndex = loop 
-            ? (activeSlide + 1) % data.length 
+          const nextIndex = loop
+            ? (activeSlide + 1) % data.length
             : Math.min(activeSlide + 1, data.length - 1);
           carouselRef.current.snapToItem(nextIndex);
         }
@@ -87,26 +87,34 @@ const SlideSwipeImages: React.FC<SlideSwipeImagesProps> = ({
       <View style={{flexDirection: 'column', gap: scale(4)}}>
         <View>
           {item.title && (
-              <Text numberOfLines={2} adjustsFontSizeToFit style={[styles.title, titleStyle]}>{item.title}</Text>
+            <Text
+              numberOfLines={2}
+              adjustsFontSizeToFit
+              style={[styles.title, titleStyle]}>
+              {item.title}
+            </Text>
           )}
           {item.subtitle && (
-              <Text numberOfLines={2} adjustsFontSizeToFit style={[styles.subtitle, subtitleStyle]}>{item.subtitle}</Text>
+            <Text
+              numberOfLines={3}
+              adjustsFontSizeToFit
+              style={[styles.subtitle, subtitleStyle]}>
+              {item.subtitle}
+            </Text>
           )}
         </View>
         <TouchableOpacity
           activeOpacity={0.8}
           onPress={() => onSlidePress?.(item, index)}
           style={[styles.slideContainer, imageStyle]}>
-        
-        <View style={styles.imageContainer}>
-          <FastImage
-            source={{uri: item.imageUrl}}
-            style={styles.slideImage}
-            resizeMode={FastImage.resizeMode.cover}
-          />
- 
-        </View>
-      </TouchableOpacity>
+          <View style={styles.imageContainer}>
+            <FastImage
+              source={{uri: item.imageUrl}}
+              style={styles.slideImage}
+              resizeMode={FastImage.resizeMode.cover}
+            />
+          </View>
+        </TouchableOpacity>
       </View>
     );
   };
@@ -121,8 +129,6 @@ const SlideSwipeImages: React.FC<SlideSwipeImagesProps> = ({
 
   return (
     <View style={[styles.container, {backgroundColor}, containerStyle]}>
- 
-
       {/* Carousel */}
       <View style={styles.carouselContainer}>
         <Carousel
@@ -146,11 +152,10 @@ const SlideSwipeImages: React.FC<SlideSwipeImagesProps> = ({
           containerCustomStyle={styles.carouselWrapper}
           contentContainerCustomStyle={styles.carouselContent}
         />
-
-
       </View>
 
-      
+      {/* Pagination */}
+
       {/* Swipe hint */}
       {showSwipeHint && (
         <View style={styles.swipeHintContainer}>
@@ -207,15 +212,13 @@ const styles = StyleSheet.create({
   carouselWrapper: {
     flex: 1,
   },
-  carouselContent: {
-  },
+  carouselContent: {},
   slideContainer: {
     height: verticalScale(120),
     borderRadius: scale(20),
     overflow: 'hidden',
     borderColor: COLORS.WHITE_FBF8CC,
-    borderWidth: 2
-
+    borderWidth: 2,
   },
   imageContainer: {
     width: '100%',
