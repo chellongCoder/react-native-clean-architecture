@@ -135,6 +135,7 @@ import History_SelectAnswer_Image from './LessonComponent/History_SelectAnswer_I
 import History_SelectAnswer_Image_TextImageAnswer from './LessonComponent/History_SelectAnswer_Image_TextImageAnswer';
 import History_SelectAnswer from './LessonComponent/History_SelectAnswer';
 import History_SelectAnswer_Slider from './LessonComponent/History_SelectAnswer_Slider';
+import History_SelectImage_Description from './LessonComponent/History_SelectImage_Description';
 
 export type TResult = {
   userId?: string;
@@ -918,12 +919,12 @@ const LESSON_PATTERNS = [
   },
   {
     pattern: /^HISTORY_HS2M(2)_\d+$/,
-    component: (type: string, _testTask: any) => {
+    component: (type: string, testTask: any) => {
       const componentMap: Record<string, any> = {
-        HISTORY_HS2M2_1: History_SelectAnswer_Slider,
+        HISTORY_HS2M2_P1: History_SelectAnswer_Slider,
       };
 
-      return componentMap[type] || Science_G0M1;
+      return componentMap[type + `_P${testTask?.stt}`] || Science_G0M1;
     },
     wrapper: DragProvider,
     props: {},
