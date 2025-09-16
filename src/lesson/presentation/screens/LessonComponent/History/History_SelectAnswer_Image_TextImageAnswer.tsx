@@ -1,16 +1,14 @@
 import {StyleProp, StyleSheet, Text, View, ViewStyle} from 'react-native';
 import React, {
   forwardRef,
-  useCallback,
-  useContext,
   useEffect,
   useImperativeHandle,
   useMemo,
   useRef,
   useState,
 } from 'react';
-import LessonComponent from './LessonComponent';
-import PrimaryButton from '../../components/PrimaryButton';
+import LessonComponent from '../LessonComponent';
+import PrimaryButton from '../../../components/PrimaryButton';
 import {FontFamily} from 'src/core/presentation/hooks/useFonts';
 import useGlobalStyle from 'src/core/presentation/hooks/useGlobalStyle';
 import {Answer, Task} from 'src/home/application/types/GetListQuestionResponse';
@@ -29,20 +27,19 @@ import Animated, {
   useSharedValue,
   withTiming,
 } from 'react-native-reanimated';
-import {TextToSpeechContext} from 'src/core/presentation/hooks/textToSpeech/TextToSpeechContext';
-import {useLessonStore} from '../../stores/LessonStore/useGetPostsStore';
-import {useSettingLesson} from '../../hooks/useSettingLesson';
-import {useIsFocused} from '@react-navigation/native';
+import {useLessonStore} from '../../../stores/LessonStore/useGetPostsStore';
+import {useSettingLesson} from '../../../hooks/useSettingLesson';
 import useAuthenticationStore from 'src/authentication/presentation/stores/useAuthenticationStore';
 import {observer} from 'mobx-react';
-import {LessonRef} from '../../types';
+import {LessonRef} from '../../../types';
 import useHomeStore from 'src/home/presentation/stores/useHomeStore';
-import {SelectionAnswersQuestionRef} from '../../components/SelectionAnswersQuestion';
-import TextHighlight from '../../components/TextHighlight';
+import {SelectionAnswersQuestionRef} from '../../../components/SelectionAnswersQuestion';
+import TextHighlight from '../../../components/TextHighlight';
 import {useI18n} from 'src/core/presentation/hooks/useI18n';
-import VoiceButton from '../../components/VoiceButton';
-import SelectionAnswersImage from '../../components/SelectionAnswersImage';
+import VoiceButton from '../../../components/VoiceButton';
+import SelectionAnswersImage from '../../../components/SelectionAnswersImage';
 import FastImage from 'react-native-fast-image';
+import {useHistoryModule} from './hook';
 
 type Props = {
   moduleIndex: number;
@@ -79,8 +76,6 @@ const History_SelectAnswer_Image_TextImageAnswer = observer(
     ) => {
       const globalStyle = useGlobalStyle();
 
-      const {ttsSpeak} = useContext(TextToSpeechContext);
-      const focus = useIsFocused();
       const answerRef = useRef<SelectionAnswersQuestionRef>(null);
 
       const [answerSelected, setAnswerSelected] = useState<string | string[]>(
@@ -138,14 +133,15 @@ const History_SelectAnswer_Image_TextImageAnswer = observer(
           : characterImageFail;
       }, [characterImageFail, characterImageSuccess, isAnswerCorrect]);
 
-      const onSpeechText = useCallback(() => {
-        ttsSpeak?.(
-          firstMiniTestTask?.question?.[moduleIndex]?.instruction
-            ?.description ??
-            settings.prompt?.toString() ??
-            '',
-        );
-      }, [firstMiniTestTask?.question, moduleIndex, settings.prompt, ttsSpeak]);
+      const {onSpeechText} = useHistoryModule({
+        text:
+          getCorrectAnswer(
+            firstMiniTestTask?.question?.[moduleIndex]?.instruction
+              ?.description ?? '',
+          ) ||
+          settings.prompt?.toString() ||
+          '',
+      });
 
       const opacity = useSharedValue(0);
       const scaleS = useSharedValue(1);
@@ -157,17 +153,6 @@ const History_SelectAnswer_Image_TextImageAnswer = observer(
         resetLearning();
         // eslint-disable-next-line react-hooks/exhaustive-deps
       }, [trainingCount]);
-
-      useEffect(() => {
-        if (focus) {
-          // Check if the component is focused
-          const firstTimeout = setTimeout(() => {
-            onSpeechText();
-          }, 1500);
-
-          return () => clearTimeout(firstTimeout);
-        }
-      }, [onSpeechText, focus]); // Added focus to the dependency array
 
       useEffect(() => {
         opacity.value = withTiming(0, {duration: 500}, () => {

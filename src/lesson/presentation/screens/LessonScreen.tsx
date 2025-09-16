@@ -129,15 +129,15 @@ import Science_SelectAnswer_AnswerMeaning from './LessonComponent/Science/Scienc
 import Science_SelectAnswer_Explain_TextImageAnswer from './LessonComponent/Science/Science_SelectAnswer_Explain_TextImageAnswer';
 import Science_G5M1 from './LessonComponent/Science/Science_G5M1';
 import Science_SelectAnswer_AnswerImage_MultipleQuestion from './LessonComponent/Science/Science_SelectAnswer_AnswerImage_MultipleQuestion';
-import History_Finding_Diff_Point from './LessonComponent/History_Finding_Diff_Point';
-import History_SelectAnswer_SwipeImage from './LessonComponent/History_SelectAnswer_SwipeImage';
-import History_SelectAnswer_Image from './LessonComponent/History_SelectAnswer_Image';
-import History_SelectAnswer_Image_TextImageAnswer from './LessonComponent/History_SelectAnswer_Image_TextImageAnswer';
-import History_SelectAnswer from './LessonComponent/History_SelectAnswer';
-import History_SelectAnswer_Slider from './LessonComponent/History_SelectAnswer_Slider';
-import History_SelectImage_Description from './LessonComponent/History_SelectImage_Description';
-import HistoryHS1M2 from './LessonComponent/History_HS1M2';
-import HistoryHS1M5P1 from './LessonComponent/History_HS1M5P1';
+import History_Finding_Diff_Point from './LessonComponent/History/History_Finding_Diff_Point';
+import History_SelectAnswer_SwipeImage from './LessonComponent/History/History_SelectAnswer_SwipeImage';
+import History_SelectAnswer_Image from './LessonComponent/History/History_SelectAnswer_Image';
+import History_SelectAnswer_Image_TextImageAnswer from './LessonComponent/History/History_SelectAnswer_Image_TextImageAnswer';
+import History_SelectAnswer from './LessonComponent/History/History_SelectAnswer';
+import History_SelectAnswer_Slider from './LessonComponent/History/History_SelectAnswer_Slider';
+import History_SelectImage_Description from './LessonComponent/History/History_SelectImage_Description';
+import HistoryHS1M2 from './LessonComponent/History/History_HS1M2';
+import HistoryHS1M5P1 from './LessonComponent/History/History_HS1M5P1';
 
 export type TResult = {
   userId?: string;
@@ -891,6 +891,11 @@ const LESSON_PATTERNS = [
 
   // HIstory module
   {
+    pattern: /^HISTORY_HS1M(1)$/,
+    component: History_SelectAnswer_Image_TextImageAnswer,
+    props,
+  },
+  {
     pattern: /^HISTORY_HS1M2$/,
     component: HistoryHS1M2,
     wrapper: DragProvider,
@@ -904,11 +909,7 @@ const LESSON_PATTERNS = [
   //   wrapper: DragProvider,
   //   props,
   // },
-  {
-    pattern: /^HISTORY_HS1M(1)$/,
-    component: History_SelectAnswer_Image_TextImageAnswer,
-    props,
-  },
+
   {
     pattern: /^HISTORY_HS1M(3)$/,
     component: History_SelectAnswer_SwipeImage,
@@ -928,22 +929,18 @@ const LESSON_PATTERNS = [
     wrapper: DragProvider,
     props: {},
   },
+
   {
-    pattern: /^HISTORY_HS2M(2)_1$/,
-    component: History_SelectAnswer,
-    props,
-  },
-  {
-    pattern: /^HISTORY_HS2M(2)_\d+$/,
+    pattern: /^HISTORY_HS2M(\d+)$/,
     component: (type: string, testTask: any) => {
       const componentMap: Record<string, any> = {
-        HISTORY_HS2M2_P1: History_SelectAnswer_Slider,
+        HISTORY_HS2M1_P1: History_SelectAnswer,
+        HISTORY_HS2M2_P1: History_SelectAnswer,
       };
 
       return componentMap[type + `_P${testTask?.stt}`] || Science_G0M1;
     },
-    wrapper: DragProvider,
-    props: {},
+    props,
   },
 ];
 

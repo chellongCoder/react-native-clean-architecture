@@ -1,19 +1,17 @@
 import {StyleProp, StyleSheet, Text, View, ViewStyle} from 'react-native';
 import React, {
   forwardRef,
-  useCallback,
-  useContext,
   useEffect,
   useImperativeHandle,
   useMemo,
   useRef,
   useState,
 } from 'react';
-import LessonComponent from './LessonComponent';
-import PrimaryButton from '../../components/PrimaryButton';
+import LessonComponent from '../LessonComponent';
+import PrimaryButton from '../../../components/PrimaryButton';
 import {FontFamily} from 'src/core/presentation/hooks/useFonts';
 import useGlobalStyle from 'src/core/presentation/hooks/useGlobalStyle';
-import {Task} from 'src/home/application/types/GetListQuestionResponse';
+import {Answer, Task} from 'src/home/application/types/GetListQuestionResponse';
 import {COLORS} from 'src/core/presentation/constants/colors';
 import {
   darkenColor,
@@ -29,20 +27,19 @@ import Animated, {
   useSharedValue,
   withTiming,
 } from 'react-native-reanimated';
-import {TextToSpeechContext} from 'src/core/presentation/hooks/textToSpeech/TextToSpeechContext';
-import {useLessonStore} from '../../stores/LessonStore/useGetPostsStore';
-import {useSettingLesson} from '../../hooks/useSettingLesson';
-import {useIsFocused} from '@react-navigation/native';
+import {useLessonStore} from '../../../stores/LessonStore/useGetPostsStore';
+import {useSettingLesson} from '../../../hooks/useSettingLesson';
 import useAuthenticationStore from 'src/authentication/presentation/stores/useAuthenticationStore';
 import {observer} from 'mobx-react';
-import {LessonRef} from '../../types';
+import {LessonRef} from '../../../types';
 import useHomeStore from 'src/home/presentation/stores/useHomeStore';
-import {SelectionAnswersQuestionRef} from '../../components/SelectionAnswersQuestion';
-import SelectionImagesQuestion from '../../components/SelectionImagesQuestion';
+import {SelectionAnswersQuestionRef} from '../../../components/SelectionAnswersQuestion';
+import TextHighlight from '../../../components/TextHighlight';
 import {useI18n} from 'src/core/presentation/hooks/useI18n';
-import VoiceButton from '../../components/VoiceButton';
-import ImageMeaningText from '../../components/ImageMeaningText';
-import FindDifferencePoint from '../../components/History/FindDifferencePoint';
+import VoiceButton from '../../../components/VoiceButton';
+import SelectionAnswersImage from '../../../components/SelectionAnswersImage';
+import SlideSwipeImages from '../../../components/History/SlideSwipeImages';
+import {useHistoryModule} from './hook';
 
 type Props = {
   moduleIndex: number;
@@ -57,7 +54,7 @@ type Props = {
   characterStyle?: StyleProp<ViewStyle>;
 };
 
-const History_Finding_Diff_Point = observer(
+const History_SelectAnswer_SwipeImage = observer(
   forwardRef<LessonRef, Props>(
     (
       {
@@ -76,45 +73,53 @@ const History_Finding_Diff_Point = observer(
     ) => {
       const globalStyle = useGlobalStyle();
 
-      const {ttsSpeak} = useContext(TextToSpeechContext);
-      const focus = useIsFocused();
       const answerRef = useRef<SelectionAnswersQuestionRef>(null);
-      const [answerSelected, setAnswerSelected] = useState<string>('');
-      const [circleCount, setCircleCount] = useState<number>(0);
-      const [isValidAnswer, setIsValidAnswer] = useState<boolean>(false);
+
+      const [answerSelected, setAnswerSelected] = useState<string | string[]>(
+        '',
+      );
 
       const {trainingCount, getSetting} = useLessonStore();
 
-      const isCorrectAnswer = useMemo(() => {
-        // For the find difference game, we check if exactly 5 circles are drawn
-        return circleCount === 5;
-      }, [circleCount]);
-
       const {selectedChild} = useAuthenticationStore();
+
+      const isCorrectAnswer = useMemo(() => {
+        const correctAnswer = firstMiniTestTask?.question?.[moduleIndex]
+          ?.correctAnswer as string[];
+        const answerSelectedArray = (
+          Array.isArray(answerSelected) ? answerSelected : [answerSelected]
+        ).map(e => e?.toLocaleString().toLocaleLowerCase());
+
+        const correctAnswerArray = (
+          Array.isArray(correctAnswer) ? correctAnswer : [correctAnswer]
+        ).map(e => e?.toLocaleString().toLocaleLowerCase());
+
+        return (
+          answerSelectedArray.length === correctAnswerArray.length &&
+          isSubArray(answerSelectedArray, correctAnswerArray)
+        );
+      }, [answerSelected, firstMiniTestTask?.question, moduleIndex]);
 
       const {
         isAnswerCorrect,
         isShowCorrectContainer,
         word,
+        env,
         learningTimer,
         submit,
         toggleShowHint,
         resetLearning,
       } = useSettingLesson({
         countDownTime: trainingCount <= 2 ? 0 : 5,
-        isCorrectAnswer: !!isCorrectAnswer,
+        isCorrectAnswer: isCorrectAnswer,
         onSubmit: () => {
-          
-          if (isCorrectAnswer) {
-            setTimeout(() => {
-              setCircleCount(0);
-              setIsValidAnswer(false);
-              nextModule('success.png');
-            }, 2000);
-          }
+          setAnswerSelected('');
+          nextModule((answerSelected as string[]).toString());
+
+          answerRef.current?.resetAnswerSelected?.();
         },
         fullAnswer: firstMiniTestTask?.question?.[moduleIndex].fullAnswer,
-        totalTime: 5 * 60,
+        totalTime: 60 * 5,
       });
 
       const {lessonSetting} = useHomeStore();
@@ -131,12 +136,22 @@ const History_Finding_Diff_Point = observer(
           : characterImageFail;
       }, [characterImageFail, characterImageSuccess, isAnswerCorrect]);
 
-      const onSpeechText = useCallback(() => {
-        ttsSpeak?.(
-          firstMiniTestTask?.question?.[moduleIndex]?.instruction.description ??
-            '',
-        );
-      }, [firstMiniTestTask?.question, moduleIndex, ttsSpeak]);
+      const {onSpeechText} = useHistoryModule({
+        text:
+          firstMiniTestTask?.question?.[moduleIndex]?.instruction
+            ?.description ??
+          settings.prompt?.toString() ??
+          '',
+      });
+
+      // const onSpeechText = useCallback(() => {
+      //   ttsSpeak?.(
+      //     firstMiniTestTask?.question?.[moduleIndex]?.instruction
+      //       ?.description ??
+      //       settings.prompt?.toString() ??
+      //       '',
+      //   );
+      // }, [firstMiniTestTask?.question, moduleIndex, settings.prompt, ttsSpeak]);
 
       const opacity = useSharedValue(0);
       const scaleS = useSharedValue(1);
@@ -149,22 +164,19 @@ const History_Finding_Diff_Point = observer(
         // eslint-disable-next-line react-hooks/exhaustive-deps
       }, [trainingCount]);
 
-      useEffect(() => {
-        if (focus) {
-          // Check if the component is focused
-          const firstTimeout = setTimeout(() => {
-            onSpeechText();
+      // useEffect(() => {
+      //   if (focus) {
+      //     // Check if the component is focused
+      //     const firstTimeout = setTimeout(() => {
+      //       onSpeechText();
+      //     }, 1500);
 
-            const secondTimeout = setTimeout(() => {
-              onSpeechText();
-            }, 2500);
-
-            return () => clearTimeout(secondTimeout);
-          }, 1500);
-
-          return () => clearTimeout(firstTimeout);
-        }
-      }, [onSpeechText, focus]); // Added focus to the dependency array
+      //     return () => {
+      //       clearTimeout(firstTimeout);
+      //       ttsStop?.();
+      //     };
+      //   }
+      // }, [onSpeechText, focus, ttsStop]); // Added focus to the dependency array
 
       useEffect(() => {
         opacity.value = withTiming(0, {duration: 500}, () => {
@@ -192,12 +204,34 @@ const History_Finding_Diff_Point = observer(
           setAnswerSelected(
             getCorrectAnswer(
               firstMiniTestTask?.question?.[moduleIndex]
-                ?.correctAnswer as string[],
+                ?.correctAnswer as string,
             ),
           );
         },
       }));
 
+      const slideData = useMemo(() => {
+        return firstMiniTestTask?.question?.[moduleIndex]?.slide?.map(item => ({
+          id: item.image,
+          imageUrl: env.IMAGE_QUESTION_BASE_API_URL + item.image,
+          title: firstMiniTestTask?.question?.[moduleIndex]?.description,
+          subtitle: item.content,
+        }));
+      }, [
+        env.IMAGE_QUESTION_BASE_API_URL,
+        firstMiniTestTask?.question,
+        moduleIndex,
+      ]);
+
+      const handleSlideChange = (index: number) => {
+        console.log('Current slide index:', index);
+        // Handle slide change logic here
+      };
+
+      const handleSlidePress = (item: any, index: number) => {
+        console.log('Slide pressed:', item, index);
+        // Handle slide press logic here
+      };
       return (
         <LessonComponent
           backgroundImage={backgroundImage}
@@ -224,26 +258,23 @@ const History_Finding_Diff_Point = observer(
           buildQuestion={
             <Animated.View
               style={[
-                {
-                  flex: 1,
-                  width: '60%',
-                  alignItems: 'center',
-                },
                 animatedStyle,
+                {height: verticalScale(240), width: '100%'},
               ]}>
-              <ImageMeaningText
-                title={firstMiniTestTask?.question?.[moduleIndex].description}
-                description={
-                  firstMiniTestTask?.question?.[moduleIndex].paragraph
-                }
-                image={
-                  firstMiniTestTask?.question?.[moduleIndex].image as string
-                }
-                style={{
-                  width: scale(200),
-                  height: scale(200),
+              <SlideSwipeImages
+                data={slideData ?? []}
+                onSlideChange={handleSlideChange}
+                onSlidePress={handleSlidePress}
+                autoPlay={false} // Set to true for auto-play
+                loop={true} // Enable looping
+                showPagination={true}
+                showSwipeHint={true}
+                containerStyle={styles.carouselContainer}
+                titleStyle={{
+                  color: settings.backgroundButtonColor,
+                  fontSize: scale(18),
                 }}
-                textColor={settings.backgroundButtonColor}
+                subtitleStyle={{color: COLORS.BLUE_258F78, fontSize: scale(12)}}
               />
             </Animated.View>
           }
@@ -265,15 +296,46 @@ const History_Finding_Diff_Point = observer(
                         ),
                       },
                     ]}>
-                    {i18n.t('lesson.screens.Modules.chooseTheCorrectAnswer')}
+                    {i18n.t('lesson.screens.Modules.chooseCorrectAnswer')}
                   </Text>
                 </View>
 
                 <VoiceButton onPress={onSpeechText} />
               </View>
-              <FindDifferencePoint 
-                
+              <SelectionAnswersImage
+                question={
+                  <TextHighlight
+                    content={
+                      firstMiniTestTask?.question?.[moduleIndex].highlight ?? ''
+                    }
+                    description={
+                      firstMiniTestTask?.question?.[moduleIndex].content ?? ''
+                    }
+                  />
+                }
+                answer={
+                  (
+                    firstMiniTestTask?.question?.[moduleIndex]
+                      ?.answers as Answer[]
+                  ).map(q => q.content) ?? []
+                }
+                questionImage={
+                  (
+                    firstMiniTestTask?.question?.[moduleIndex]
+                      ?.answers as Answer[]
+                  ).map(q => env.IMAGE_QUESTION_BASE_API_URL + q.image) ?? []
+                }
+                answerStyle={styles.fonts_SVN_Cherish}
+                isShowCorrectContainer={isShowCorrectContainer}
+                isAnswerCorrect={!!isAnswerCorrect}
+                onSelectAnswer={(e: string[]) => {
+                  setAnswerSelected(e);
+                }}
+                isSelectOne
+                learningTimer={learningTimer}
+                ref={answerRef}
               />
+
               <PrimaryButton
                 text={i18n.t('lesson.screens.Modules.submit')}
                 style={[
@@ -292,34 +354,49 @@ const History_Finding_Diff_Point = observer(
   ),
 );
 
-export default History_Finding_Diff_Point;
+export default History_SelectAnswer_SwipeImage;
 
 const styles = StyleSheet.create({
   fill: {
     flex: 1,
   },
+  container: {
+    flex: 1,
+  },
+  carouselContainer: {
+    flex: 1,
+    // paddingHorizontal: scale(16),
+    // paddingVertical: scale(20),
+  },
   fonts_SVN_Cherish: {
     fontFamily: FontFamily.SVNCherishMoment,
   },
-
+  fonts_SVN_Neuzeit_Bold: {
+    fontFamily: FontFamily.SVNNeuzeitBold,
+  },
   textQuestion: {
     fontSize: verticalScale(15),
     textAlign: 'left',
     color: COLORS.BLUE_258F78,
   },
-  textDescription: {
-    fontSize: verticalScale(30),
-    textAlign: 'center',
-    fontFamily: FontFamily.SVNCherishMoment,
+
+  boxSelected: {
+    backgroundColor: COLORS.WHITE_FBF8CC,
+    height: verticalScale(220),
+    flex: 1,
+    borderRadius: scale(30),
+    justifyContent: 'center',
+    alignItems: 'center',
   },
+
   wrapHeaderContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     marginBottom: verticalScale(8),
   },
   iconImageContainer: {
-    height: verticalScale(45),
-    width: verticalScale(40),
+    height: verticalScale(39),
+    width: verticalScale(34),
   },
   buttonContainer: {
     borderRadius: scale(52),
@@ -327,5 +404,10 @@ const styles = StyleSheet.create({
     paddingHorizontal: scale(24),
     marginTop: scale(16),
     backgroundColor: '#0877B6',
+  },
+  txtParagraph: {
+    fontFamily: FontFamily.SVNNeuzeitBold,
+    fontSize: scale(14),
+    color: COLORS.WHITE_FBF8CC,
   },
 });
