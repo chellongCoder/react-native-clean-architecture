@@ -161,7 +161,7 @@ const styles = StyleSheet.create({
     marginHorizontal: scale(12),
   },
   mt48: {
-    marginTop: scale(24),
+    marginTop: scale(32),
     // marginBottom: scale(48),
   },
   txtLink: {

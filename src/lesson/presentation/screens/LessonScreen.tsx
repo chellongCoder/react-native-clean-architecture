@@ -138,6 +138,7 @@ import History_SelectAnswer_Slider from './LessonComponent/History/History_Selec
 import History_SelectImage_Description from './LessonComponent/History/History_SelectImage_Description';
 import HistoryHS1M2 from './LessonComponent/History/History_HS1M2';
 import HistoryHS1M5P1 from './LessonComponent/History/History_HS1M5P1';
+import History_SelectImage_ImageDescription from './LessonComponent/History/History_SelectImage_ImageDescription';
 
 export type TResult = {
   userId?: string;
@@ -901,20 +902,13 @@ const LESSON_PATTERNS = [
     wrapper: DragProvider,
     props,
   },
-  // {
-  //   pattern: /^HISTORY_HS1M5$/,
-  //   component: (type: string, testTask: any) => {
-  //     return testTask?.firstMiniTestTask?.stt === 1 ? HistoryHS1M5P1 : View;
-  //   },
-  //   wrapper: DragProvider,
-  //   props,
-  // },
 
   {
-    pattern: /^HISTORY_HS1M(3)$/,
+    pattern: /^HISTORY_HS1M(3|4)$/,
     component: History_SelectAnswer_SwipeImage,
     props,
   },
+
   {
     pattern: /^HISTORY_HS1M(5)$/,
     component: (type: string, testTask: any) => {
@@ -931,12 +925,12 @@ const LESSON_PATTERNS = [
   },
 
   {
-    pattern: /^HISTORY_HS2M(\d+)$/,
+    pattern: /^HISTORY_HS(2|3|5|6)M(1|2|3|4|5)$/,
     component: (type: string, testTask: any) => {
       const componentMap: Record<string, any> = {
-        HISTORY_HS2M1_P1: History_SelectAnswer,
-        HISTORY_HS2M2_P1: History_SelectAnswer,
-      };
+        [`${type}_P1`]: History_SelectAnswer,
+        [`${type}_P2`]: History_SelectImage_ImageDescription,
+      };  
 
       return componentMap[type + `_P${testTask?.stt}`] || Science_G0M1;
     },

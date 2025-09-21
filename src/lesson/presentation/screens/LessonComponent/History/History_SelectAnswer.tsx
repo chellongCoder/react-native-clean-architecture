@@ -53,6 +53,7 @@ import {useI18n} from 'src/core/presentation/hooks/useI18n';
 import VoiceButton from '../../../components/VoiceButton';
 import QuestionImageText from '../../../components/Science/QuestionImageText';
 import Entypo from '@expo/vector-icons/Entypo';
+import { useHistoryModule } from './hook';
 
 type Props = {
   moduleIndex: number;
@@ -151,17 +152,19 @@ const History_SelectAnswer = observer(
           : characterImageFail;
       }, [characterImageFail, characterImageSuccess, isAnswerCorrect]);
 
-      const onSpeechText = useCallback(() => {
-        ttsSpeak?.(
-          firstMiniTestTask?.question?.[moduleIndex]?.instruction
-            ?.description ??
-            settings.prompt?.toString() ??
-            '',
-        );
-      }, [firstMiniTestTask?.question, moduleIndex, settings.prompt, ttsSpeak]);
-
+     
       const opacity = useSharedValue(0);
       const scaleS = useSharedValue(1);
+
+      const {onSpeechText} = useHistoryModule({
+        text:
+          getCorrectAnswer(
+            firstMiniTestTask?.question?.[moduleIndex]?.instruction
+              ?.description ?? '',
+          ) ||
+          settings.prompt?.toString() ||
+          '',
+      });
 
       /**
        * * reset lại countdown khi lần làm thay đổi
@@ -177,17 +180,6 @@ const History_SelectAnswer = observer(
           (firstMiniTestTask?.question?.[moduleIndex]?.stt || 1) - 1;
         setCurrentSlideIndex(initialIndex);
       }, [firstMiniTestTask?.question, moduleIndex]);
-
-      // useEffect(() => {
-      //   if (focus) {
-      //     // Check if the component is focused
-      //     const firstTimeout = setTimeout(() => {
-      //       onSpeechText();
-      //     }, 1500);
-
-      //     return () => clearTimeout(firstTimeout);
-      //   }
-      // }, [onSpeechText, focus]); // Added focus to the dependency array
 
       useEffect(() => {
         opacity.value = withTiming(0, {duration: 500}, () => {

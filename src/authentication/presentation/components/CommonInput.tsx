@@ -177,7 +177,7 @@ const styles = StyleSheet.create({
     paddingBottom: verticalScale(8),
   },
   input: {
-    padding: scale(22),
+    paddingLeft: scale(22),
     fontFamily: FontFamily.SVNNeuzeitRegular
   },
   inputPassword: {

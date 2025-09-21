@@ -10,11 +10,10 @@
 # Full example with multiple options
 cd .. &&
 code-push release-react ABeeCi-android android \
-  --deploymentName Staging \
-  --targetBinaryVersion "1.1" \
-  --description "Staging release v1.1" \
-  --mandatory true \
-  --rollout 100% \
+ --deploymentName Staging \
+ --targetBinaryVersion "1.1" \
+ --description "v13 - update $(date)" \
+ --rollout 100% \
   --verbose \
   --development false \
 

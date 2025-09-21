@@ -43,6 +43,7 @@ import {useI18n} from 'src/core/presentation/hooks/useI18n';
 import VoiceButton from '../../../components/VoiceButton';
 import SelectionAnswersImage from '../../../components/SelectionAnswersImage';
 import FastImage from 'react-native-fast-image';
+import { useHistoryModule } from './hook';
 
 type Props = {
   moduleIndex: number;
@@ -139,17 +140,19 @@ const History_SelectAnswer_Image = observer(
           : characterImageFail;
       }, [characterImageFail, characterImageSuccess, isAnswerCorrect]);
 
-      const onSpeechText = useCallback(() => {
-        ttsSpeak?.(
-          firstMiniTestTask?.question?.[moduleIndex]?.instruction
-            ?.description ??
-            settings.prompt?.toString() ??
-            '',
-        );
-      }, [firstMiniTestTask?.question, moduleIndex, settings.prompt, ttsSpeak]);
-
+ 
       const opacity = useSharedValue(0);
       const scaleS = useSharedValue(1);
+
+      const {onSpeechText} = useHistoryModule({
+        text:
+          getCorrectAnswer(
+            firstMiniTestTask?.question?.[moduleIndex]?.instruction
+              ?.description ?? '',
+          ) ||
+          settings.prompt?.toString() ||
+          '',
+      });
 
       /**
        * * reset lại countdown khi lần làm thay đổi
@@ -159,20 +162,7 @@ const History_SelectAnswer_Image = observer(
         // eslint-disable-next-line react-hooks/exhaustive-deps
       }, [trainingCount]);
 
-      useEffect(() => {
-        if (focus) {
-          // Check if the component is focused
-          const firstTimeout = setTimeout(() => {
-            onSpeechText();
-          }, 1500);
-
-          return () => {
-            clearTimeout(firstTimeout);
-            ttsStop?.();
-          };
-        }
-      }, [onSpeechText, focus, ttsStop]); // Added focus to the dependency array
-
+ 
       useEffect(() => {
         opacity.value = withTiming(0, {duration: 500}, () => {
           opacity.value = withTiming(1, {duration: 500});

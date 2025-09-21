@@ -42,6 +42,7 @@ import TextHighlight from '../../../components/TextHighlight';
 import {useI18n} from 'src/core/presentation/hooks/useI18n';
 import VoiceButton from '../../../components/VoiceButton';
 import SelectionImagesQuestion from '../../../components/SelectionImagesQuestion';
+import { useHistoryModule } from './hook';
 
 type Props = {
   moduleIndex: number;
@@ -132,20 +133,22 @@ const History_SelectImage_Description = observer(
         () => getSetting(lessonSetting),
         [getSetting, lessonSetting],
       );
+      
+      const {onSpeechText} = useHistoryModule({
+        text:
+          getCorrectAnswer(
+            firstMiniTestTask?.question?.[moduleIndex]?.instruction
+              ?.description ?? '',
+          ) ||
+          settings.prompt?.toString() ||
+          '',
+      });
+
       const characterImage = useMemo(() => {
         return isAnswerCorrect === true || isAnswerCorrect === undefined
           ? characterImageSuccess
           : characterImageFail;
       }, [characterImageFail, characterImageSuccess, isAnswerCorrect]);
-
-      const onSpeechText = useCallback(() => {
-        ttsSpeak?.(
-          firstMiniTestTask?.question?.[moduleIndex]?.instruction
-            ?.description ??
-            settings.prompt?.toString() ??
-            '',
-        );
-      }, [firstMiniTestTask?.question, moduleIndex, settings.prompt, ttsSpeak]);
 
       const opacity = useSharedValue(0);
       const scaleS = useSharedValue(1);
@@ -157,20 +160,6 @@ const History_SelectImage_Description = observer(
         resetLearning();
         // eslint-disable-next-line react-hooks/exhaustive-deps
       }, [trainingCount]);
-
-      useEffect(() => {
-        if (focus) {
-          // Check if the component is focused
-          const firstTimeout = setTimeout(() => {
-            onSpeechText();
-          }, 1500);
-
-          return () => {
-            clearTimeout(firstTimeout);
-            ttsStop?.();
-          };
-        }
-      }, [onSpeechText, focus, ttsStop]); // Added focus to the dependency array
 
       useEffect(() => {
         opacity.value = withTiming(0, {duration: 500}, () => {

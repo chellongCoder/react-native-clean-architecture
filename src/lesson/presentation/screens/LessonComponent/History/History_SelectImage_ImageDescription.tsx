@@ -1,6 +1,8 @@
 import {StyleProp, StyleSheet, Text, View, ViewStyle} from 'react-native';
 import React, {
   forwardRef,
+  useCallback,
+  useContext,
   useEffect,
   useImperativeHandle,
   useMemo,
@@ -11,13 +13,14 @@ import LessonComponent from '../LessonComponent';
 import PrimaryButton from '../../../components/PrimaryButton';
 import {FontFamily} from 'src/core/presentation/hooks/useFonts';
 import useGlobalStyle from 'src/core/presentation/hooks/useGlobalStyle';
-import {Answer, Task} from 'src/home/application/types/GetListQuestionResponse';
+import {Task} from 'src/home/application/types/GetListQuestionResponse';
 import {COLORS} from 'src/core/presentation/constants/colors';
 import {
   darkenColor,
   getCorrectAnswer,
   isMMSS,
   isSubArray,
+  WIDTH_SCREEN,
 } from 'src/core/presentation/utils';
 import {scale, verticalScale} from 'react-native-size-matters';
 import Animated, {
@@ -27,19 +30,19 @@ import Animated, {
   useSharedValue,
   withTiming,
 } from 'react-native-reanimated';
+import {TextToSpeechContext} from 'src/core/presentation/hooks/textToSpeech/TextToSpeechContext';
 import {useLessonStore} from '../../../stores/LessonStore/useGetPostsStore';
 import {useSettingLesson} from '../../../hooks/useSettingLesson';
+import {useIsFocused} from '@react-navigation/native';
 import useAuthenticationStore from 'src/authentication/presentation/stores/useAuthenticationStore';
 import {observer} from 'mobx-react';
 import {LessonRef} from '../../../types';
 import useHomeStore from 'src/home/presentation/stores/useHomeStore';
-import {SelectionAnswersQuestionRef} from '../../../components/SelectionAnswersQuestion';
+import SelectionAnswersQuestion, {SelectionAnswersQuestionRef} from '../../../components/SelectionAnswersQuestion';
 import TextHighlight from '../../../components/TextHighlight';
 import {useI18n} from 'src/core/presentation/hooks/useI18n';
 import VoiceButton from '../../../components/VoiceButton';
-import SelectionAnswersImage from '../../../components/SelectionAnswersImage';
-import SlideSwipeImages from '../../../components/History/SlideSwipeImages';
-import {useHistoryModule} from './hook';
+import { useHistoryModule } from './hook';
 
 type Props = {
   moduleIndex: number;
@@ -54,7 +57,7 @@ type Props = {
   characterStyle?: StyleProp<ViewStyle>;
 };
 
-const History_SelectAnswer_SwipeImage = observer(
+const History_SelectImage_ImageDescription = observer(
   forwardRef<LessonRef, Props>(
     (
       {
@@ -73,6 +76,8 @@ const History_SelectAnswer_SwipeImage = observer(
     ) => {
       const globalStyle = useGlobalStyle();
 
+      const {ttsSpeak, ttsStop} = useContext(TextToSpeechContext);
+      const focus = useIsFocused();
       const answerRef = useRef<SelectionAnswersQuestionRef>(null);
 
       const [answerSelected, setAnswerSelected] = useState<string | string[]>(
@@ -85,11 +90,10 @@ const History_SelectAnswer_SwipeImage = observer(
 
       const isCorrectAnswer = useMemo(() => {
         const correctAnswer = firstMiniTestTask?.question?.[moduleIndex]
-          ?.correctAnswer as string[];
+          ?.correctAnswer as string[][];
         const answerSelectedArray = (
           Array.isArray(answerSelected) ? answerSelected : [answerSelected]
         ).map(e => e?.toLocaleString().toLocaleLowerCase());
-
         const correctAnswerArray = (
           Array.isArray(correctAnswer) ? correctAnswer : [correctAnswer]
         ).map(e => e?.toLocaleString().toLocaleLowerCase());
@@ -130,21 +134,23 @@ const History_SelectAnswer_SwipeImage = observer(
         () => getSetting(lessonSetting),
         [getSetting, lessonSetting],
       );
+      
+      const {onSpeechText} = useHistoryModule({
+        text:
+          getCorrectAnswer(
+            firstMiniTestTask?.question?.[moduleIndex]?.instruction
+              ?.description ?? '',
+          ) ||
+          settings.prompt?.toString() ||
+          '',
+      });
+
       const characterImage = useMemo(() => {
         return isAnswerCorrect === true || isAnswerCorrect === undefined
           ? characterImageSuccess
           : characterImageFail;
       }, [characterImageFail, characterImageSuccess, isAnswerCorrect]);
 
-      const {onSpeechText} = useHistoryModule({
-        text:
-          firstMiniTestTask?.question?.[moduleIndex]?.instruction
-            ?.description ??
-          settings.prompt?.toString() ??
-          '',
-      });
-
- 
       const opacity = useSharedValue(0);
       const scaleS = useSharedValue(1);
 
@@ -155,8 +161,6 @@ const History_SelectAnswer_SwipeImage = observer(
         resetLearning();
         // eslint-disable-next-line react-hooks/exhaustive-deps
       }, [trainingCount]);
-
- 
 
       useEffect(() => {
         opacity.value = withTiming(0, {duration: 500}, () => {
@@ -189,29 +193,10 @@ const History_SelectAnswer_SwipeImage = observer(
           );
         },
       }));
+      console.log(`🛠 LOG: 🚀 --> ------------------------------------------------------------------------------------------------------------------------------------------------------------------🛠 LOG: 🚀 -->`);
+      console.log(`🛠 LOG: 🚀 --> ~ firstMiniTestTask?.question?.[moduleIndex].answers:`, firstMiniTestTask?.question?.[moduleIndex].answers);
+      console.log(`🛠 LOG: 🚀 --> ------------------------------------------------------------------------------------------------------------------------------------------------------------------🛠 LOG: 🚀 -->`);
 
-      const slideData = useMemo(() => {
-        return firstMiniTestTask?.question?.[moduleIndex]?.slide?.map(item => ({
-          id: item.image,
-          imageUrl: env.IMAGE_QUESTION_BASE_API_URL + item.image,
-          title: firstMiniTestTask?.question?.[moduleIndex]?.description,
-          subtitle: item.content,
-        }));
-      }, [
-        env.IMAGE_QUESTION_BASE_API_URL,
-        firstMiniTestTask?.question,
-        moduleIndex,
-      ]);
-
-      const handleSlideChange = (index: number) => {
-        console.log('Current slide index:', index);
-        // Handle slide change logic here
-      };
-
-      const handleSlidePress = (item: any, index: number) => {
-        console.log('Slide pressed:', item, index);
-        // Handle slide press logic here
-      };
       return (
         <LessonComponent
           backgroundImage={backgroundImage}
@@ -236,27 +221,57 @@ const History_SelectAnswer_SwipeImage = observer(
           isShowCorrectContainer={isShowCorrectContainer}
           onPressFlower={toggleShowHint}
           buildQuestion={
-            <Animated.View
-              style={[
-                animatedStyle,
-                {height: verticalScale(240), width: '100%'},
-              ]}>
-              <SlideSwipeImages
-                data={slideData ?? []}
-                onSlideChange={handleSlideChange}
-                onSlidePress={handleSlidePress}
-                autoPlay={false} // Set to true for auto-play
-                loop={true} // Enable looping
-                showPagination={true}
-                showSwipeHint={true}
-                containerStyle={styles.carouselContainer}
-                titleStyle={{
-                  color: settings.backgroundButtonColor,
-                  fontSize: scale(18),
-                }}
-                subtitleStyle={{color: COLORS.BLUE_258F78, fontSize: scale(12)}}
-              />
-            </Animated.View>
+            <View
+              style={{
+                backgroundColor: COLORS.WHITE_FBF8CC,
+                marginTop: verticalScale(32),
+                borderWidth: 5,
+                borderRadius: scale(30),
+                // paddingHorizontal: scale(20),
+                borderStyle: 'dashed',
+                borderColor: COLORS.YELLOW_F2B559,
+                height: verticalScale(150),
+                width: WIDTH_SCREEN * (0.75),
+                flexDirection: 'column',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+              }}>
+              <View>
+                <Animated.Image
+                  resizeMode={'cover'}
+                  style={[
+                    {
+                      width: WIDTH_SCREEN * 0.5,
+                      aspectRatio: 1.5,
+                      marginTop: -verticalScale(40),
+                      borderRadius: scale(30),
+                    },
+                    animatedStyle,
+                  ]}
+                  source={{
+                    uri:
+                      env.IMAGE_QUESTION_BASE_API_URL +
+                      firstMiniTestTask?.question?.[moduleIndex].image,
+                  }}
+                />
+              </View>
+              <View style={{paddingBottom: verticalScale(12)}}>
+                <Text
+                  style={[
+                    globalStyle.txtLabel,
+                    styles.textTitle,
+                    {
+                      fontSize: scale(15),
+                      color: darkenColor(
+                        settings.backgroundButtonColor ?? '',
+                        20,
+                      ),
+                    },
+                  ]}>
+                  {firstMiniTestTask?.question?.[moduleIndex].content}{' '}
+                </Text>
+              </View>
+            </View>
           }
           buildAnswer={
             <View style={styles.fill}>
@@ -276,13 +291,16 @@ const History_SelectAnswer_SwipeImage = observer(
                         ),
                       },
                     ]}>
-                    {i18n.t('lesson.screens.Modules.chooseCorrectAnswer')}
+                    {i18n.t(
+                      'lesson.screens.Modules.openSpeakerAndChooseAnswer',
+                    )}
                   </Text>
                 </View>
 
                 <VoiceButton onPress={onSpeechText} />
               </View>
-              <SelectionAnswersImage
+
+              <SelectionAnswersQuestion
                 question={
                   <TextHighlight
                     content={
@@ -294,28 +312,19 @@ const History_SelectAnswer_SwipeImage = observer(
                   />
                 }
                 answer={
-                  (
-                    firstMiniTestTask?.question?.[moduleIndex]
-                      ?.answers as Answer[]
-                  ).map(q => q.content) ?? []
+                  (firstMiniTestTask?.question?.[moduleIndex]
+                    .answers as string[]) ?? []
                 }
-                questionImage={
-                  (
-                    firstMiniTestTask?.question?.[moduleIndex]
-                      ?.answers as Answer[]
-                  ).map(q => env.IMAGE_QUESTION_BASE_API_URL + q.image) ?? []
-                }
-                answerStyle={styles.fonts_SVN_Cherish}
+
+                isSelectOne
                 isShowCorrectContainer={isShowCorrectContainer}
                 isAnswerCorrect={!!isAnswerCorrect}
                 onSelectAnswer={(e: string[]) => {
-                  setAnswerSelected(e);
+                  setAnswerSelected(e[0]);
                 }}
-                isSelectOne
                 learningTimer={learningTimer}
                 ref={answerRef}
               />
-
               <PrimaryButton
                 text={i18n.t('lesson.screens.Modules.submit')}
                 style={[
@@ -334,60 +343,43 @@ const History_SelectAnswer_SwipeImage = observer(
   ),
 );
 
-export default History_SelectAnswer_SwipeImage;
+export default History_SelectImage_ImageDescription;
 
 const styles = StyleSheet.create({
   fill: {
     flex: 1,
   },
-  container: {
-    flex: 1,
-  },
-  carouselContainer: {
-    flex: 1,
-    // paddingHorizontal: scale(16),
-    // paddingVertical: scale(20),
-  },
+
   fonts_SVN_Cherish: {
     fontFamily: FontFamily.SVNCherishMoment,
   },
   fonts_SVN_Neuzeit_Bold: {
     fontFamily: FontFamily.SVNNeuzeitBold,
   },
-  textQuestion: {
-    fontSize: verticalScale(15),
-    textAlign: 'left',
-    color: COLORS.BLUE_258F78,
-  },
 
-  boxSelected: {
-    backgroundColor: COLORS.WHITE_FBF8CC,
-    height: verticalScale(220),
-    flex: 1,
-    borderRadius: scale(30),
-    justifyContent: 'center',
-    alignItems: 'center',
+  textTitle: {
+    fontSize: scale(28),
+    lineHeight: scale(35),
+    fontFamily: FontFamily.SVNCherishMoment,
+    letterSpacing: 1.4,
   },
-
+  textDes: {
+    fontSize: scale(22),
+    lineHeight: scale(26.4),
+    fontFamily: FontFamily.SVNNeuzeitBold,
+    letterSpacing: -1.1,
+  },
   wrapHeaderContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     marginBottom: verticalScale(8),
   },
-  iconImageContainer: {
-    height: verticalScale(39),
-    width: verticalScale(34),
-  },
+
   buttonContainer: {
     borderRadius: scale(52),
     paddingVertical: verticalScale(9),
     paddingHorizontal: scale(24),
     marginTop: scale(16),
     backgroundColor: '#0877B6',
-  },
-  txtParagraph: {
-    fontFamily: FontFamily.SVNNeuzeitBold,
-    fontSize: scale(14),
-    color: COLORS.WHITE_FBF8CC,
   },
 });
