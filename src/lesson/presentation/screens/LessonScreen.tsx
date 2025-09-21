@@ -139,6 +139,8 @@ import History_SelectImage_Description from './LessonComponent/History/History_S
 import HistoryHS1M2 from './LessonComponent/History/History_HS1M2';
 import HistoryHS1M5P1 from './LessonComponent/History/History_HS1M5P1';
 import History_SelectImage_ImageDescription from './LessonComponent/History/History_SelectImage_ImageDescription';
+import HistoryHS2M2P3 from './LessonComponent/History_HS2M2P3';
+import HistoryHS1M5P3 from './LessonComponent/History_HS1M5P3';
 
 export type TResult = {
   userId?: string;
@@ -925,13 +927,24 @@ const LESSON_PATTERNS = [
   },
 
   {
+    pattern: /^HISTORY_HS1M(5)_3$/,
+    component: HistoryHS1M5P3,
+    props: {},
+  },
+  {
+    pattern: /^HISTORY_HS2M(2)_1$/,
+    component: History_SelectAnswer,
+    props,
+  },
+  {
+    
     pattern: /^HISTORY_HS(2|3|5|6)M(1|2|3|4|5)$/,
     component: (type: string, testTask: any) => {
       const componentMap: Record<string, any> = {
         [`${type}_P1`]: History_SelectAnswer,
         [`${type}_P2`]: History_SelectImage_ImageDescription,
-      };  
-
+        [`${type}_P3`]: HistoryHS2M2P3,
+      }; 
       return componentMap[type + `_P${testTask?.stt}`] || Science_G0M1;
     },
     props,
