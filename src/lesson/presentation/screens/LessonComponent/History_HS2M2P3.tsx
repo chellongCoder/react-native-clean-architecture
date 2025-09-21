@@ -148,7 +148,7 @@ const HistoryHS2M2P3 = observer(
       const scaleS = useSharedValue(1);
 
       const onSubmit = useCallback(() => {
-        const selectedFeature = listDragItem[+listDragItem[0].parentId]
+        const selectedFeature = listDragItem[+listDragItem?.[0]?.parentId]
 
         console.log(
           '🛠 LOG: 🚀 --> --------------------------------------------🛠 LOG: 🚀 -->',

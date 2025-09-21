@@ -249,8 +249,9 @@ const HistoryHS1M5P3 = observer(
                       setAnswerSelected(old => {
                         const emptyIndex = old.findIndex((e) => e == '');
                         if(emptyIndex >= 0) {
-                          old[emptyIndex] = item
-                          return [...old]
+                          const newArray = [...old];
+                          newArray[emptyIndex] = item;
+                          return newArray;
                         }
                         return [...old, item]
                       })
