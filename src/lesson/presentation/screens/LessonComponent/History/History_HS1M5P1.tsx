@@ -146,16 +146,9 @@ const HistoryHS1M5P1 = observer(
           firstMiniTestTask?.question?.[moduleIndex].correctAnswer;
 
         const isCorrect =
-          correctAnswers?.toString() === (selectedFeature[0]?.value).toString();
+          correctAnswers?.toString() === (selectedFeature[0]?.value)?.toString();
 
-        console.log(
-          '🛠 LOG: 🚀 --> ~ equalDropItem:',
-          correctAnswers?.toString(),
-          (selectedFeature[0]?.value).toString(),
-          isCorrect,
-        );
-
-        setIsCorrectAnswer(isCorrect);
+        setIsCorrectAnswer(!!isCorrect);
         isSubmitRef.current = false;
       }, [listDragItem, firstMiniTestTask?.question, moduleIndex]);
 

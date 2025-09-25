@@ -1,1 +1,1 @@
-export const TRAINING_COUNT = 3;
+export const TRAINING_COUNT = __DEV__ ? 1 : 3;

@@ -1,6 +1,4 @@
-/* eslint-disable react-native/no-inline-styles */
-/* eslint-disable react/no-unstable-nested-components */
-import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {StyleSheet, Text, View} from 'react-native';
 import React, {
   forwardRef,
   useCallback,
@@ -20,7 +18,6 @@ import {COLORS} from 'src/core/presentation/constants/colors';
 import {
   darkenColor,
   getCorrectAnswer,
-  isAndroid,
   WIDTH_SCREEN,
 } from 'src/core/presentation/utils';
 import {scale, verticalScale} from 'react-native-size-matters';
@@ -45,6 +42,7 @@ import DragItem from '../../components/Drag/DragSendItem';
 import {useDragContext} from '../../components/Drag/DragProvider';
 import FastImage from 'react-native-fast-image';
 import TextHighlight from '../../components/TextHighlight';
+import { useHistoryModule } from './History/hook';
 
 type Props = {
   moduleIndex: number;
@@ -136,49 +134,30 @@ const HistoryHS2M2P3 = observer(
           : characterImageFail;
       }, [characterImageFail, characterImageSuccess, isAnswerCorrect]);
 
-      const onSpeechText = useCallback(() => {
-        ttsSpeak?.(
+      const {onSpeechText} = useHistoryModule({
+        text:
           getCorrectAnswer(
-            firstMiniTestTask?.question?.[moduleIndex].instruction.description,
-          ),
-        );
-      }, [firstMiniTestTask?.question, moduleIndex, ttsSpeak]);
-
+            firstMiniTestTask?.question?.[moduleIndex]?.instruction
+              ?.description ?? '',
+          ) ||
+          settings.prompt?.toString() ||
+          '',
+      });
       const opacity = useSharedValue(0);
       const scaleS = useSharedValue(1);
 
       const onSubmit = useCallback(() => {
         const selectedFeature = listDragItem[+listDragItem?.[0]?.parentId]
 
-        console.log(
-          '🛠 LOG: 🚀 --> --------------------------------------------🛠 LOG: 🚀 -->',
-        );
-        console.log('🛠 LOG: 🚀 --> ~ listDragItem:', listDragItem);
-        console.log(
-          '🛠 LOG: 🚀 --> --------------------------------------------🛠 LOG: 🚀 -->',
-        );
-        console.log(
-          '🛠 LOG: 🚀 --> -----------------------------------------------------------------------🛠 LOG: 🚀 -->',
-        );
-        console.log(
-          '🛠 LOG: 🚀 --> ~ selectedActivity ~ selectedActivity:',
-          selectedFeature,
-        );
-        console.log(
-          '🛠 LOG: 🚀 --> -----------------------------------------------------------------------🛠 LOG: 🚀 -->',
-        );
+        
         const correctAnswers = (
           firstMiniTestTask?.question?.[moduleIndex].correctAnswer
         );
 
-        const isCorrect = correctAnswers?.toString() === (selectedFeature.value).toString();
+        const isCorrect = correctAnswers?.toString() === (selectedFeature?.value)?.toString();
+ 
 
-        console.log(
-          '🛠 LOG: 🚀 --> ~ equalDropItem:',
-          correctAnswers?.toString(), (selectedFeature.value).toString(), isCorrect,
-        );
-
-        setIsCorrectAnswer(isCorrect);
+        setIsCorrectAnswer(!!isCorrect);
         isSubmitRef.current = false;
       }, [listDragItem, firstMiniTestTask?.question, moduleIndex]);
 
@@ -199,22 +178,7 @@ const HistoryHS2M2P3 = observer(
         // eslint-disable-next-line react-hooks/exhaustive-deps
       }, [trainingCount]);
 
-      useEffect(() => {
-        if (focus) {
-          // Check if the component is focused
-          const firstTimeout = setTimeout(() => {
-            onSpeechText();
-
-            const secondTimeout = setTimeout(() => {
-              onSpeechText();
-            }, 2500);
-
-            return () => clearTimeout(secondTimeout);
-          }, 1500);
-
-          return () => clearTimeout(firstTimeout);
-        }
-      }, [onSpeechText, focus]); // Added focus to the dependency array
+     
 
       useEffect(() => {
         opacity.value = withTiming(0, {duration: 500}, () => {

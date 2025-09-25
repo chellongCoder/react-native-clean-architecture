@@ -917,18 +917,15 @@ const LESSON_PATTERNS = [
       const componentMap: Record<string, any> = {
         HISTORY_HS1M5_P1: HistoryHS1M5P1,
         HISTORY_HS1M5_P2: History_SelectImage_Description,
+        HISTORY_HS1M5_P3: HistoryHS1M5P3,
         HISTORY_HS1M5_P4: History_SelectAnswer_Image,
       };
 
-      return componentMap[type + `_P${testTask?.stt}`] || Science_G0M1;
+      const stt = testTask?.firstMiniTestTask?.type === 'mini_test' ? testTask?.firstMiniTestTask?.question?.[0]?.questionType : testTask?.stt;
+
+      return componentMap[type + `_P${stt}`] || Science_G0M1;
     },
     wrapper: DragProvider,
-    props: {},
-  },
-
-  {
-    pattern: /^HISTORY_HS1M(5)_3$/,
-    component: HistoryHS1M5P3,
     props: {},
   },
   {
@@ -941,11 +938,16 @@ const LESSON_PATTERNS = [
     pattern: /^HISTORY_HS(2|3|5|6)M(1|2|3|4|5)$/,
     component: (type: string, testTask: any) => {
       const componentMap: Record<string, any> = {
+        [`HISTORY_HS1_P3`]: <></>,
         [`${type}_P1`]: History_SelectAnswer,
         [`${type}_P2`]: History_SelectImage_ImageDescription,
         [`${type}_P3`]: HistoryHS2M2P3,
       }; 
-      return componentMap[type + `_P${testTask?.stt}`] || Science_G0M1;
+      if(testTask?.firstMiniTestTask?.type === 'mini_test') {
+        return componentMap[type + `_P${testTask?.firstMiniTestTask?.question?.[0]?.questionType}`] || Science_G0M1;
+      } else {
+        return componentMap[type + `_P${testTask?.stt}`] || Science_G0M1;
+      }
     },
     props,
   },
@@ -985,7 +987,7 @@ const LessonScreen = observer(() => {
     return __DEV__
       ? apiTasks.map(t => ({
           ...t,
-          question: __DEV__ ? t.question.slice(0, 6) : t.question,
+          question: __DEV__ ? t.question.slice(0, 1) : t.question,
         }))
       : apiTasks.map(t => ({
           ...t,

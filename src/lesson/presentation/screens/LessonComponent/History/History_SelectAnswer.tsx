@@ -267,7 +267,7 @@ const History_SelectAnswer = observer(
                     flexWrap: 'wrap',
                   },
                 ]}>
-                {firstMiniTestTask?.question?.[moduleIndex]?.content}
+                {firstMiniTestTask?.question?.[moduleIndex]?.description}
               </Text>
 
               {firstMiniTestTask?.question?.[moduleIndex]?.slide?.[
@@ -418,7 +418,7 @@ const History_SelectAnswer = observer(
                       firstMiniTestTask?.question?.[moduleIndex].highlight ?? ''
                     }
                     description={
-                      firstMiniTestTask?.question?.[moduleIndex].description ??
+                      firstMiniTestTask?.question?.[moduleIndex].content ??
                       ''
                     }
                   />
