@@ -141,6 +141,7 @@ import HistoryHS1M5P1 from './LessonComponent/History/History_HS1M5P1';
 import History_SelectImage_ImageDescription from './LessonComponent/History/History_SelectImage_ImageDescription';
 import HistoryHS2M2P3 from './LessonComponent/History_HS2M2P3';
 import HistoryHS1M5P3 from './LessonComponent/History_HS1M5P3';
+import HistoryHS2M1P3 from './LessonComponent/History_HS2M1P3 ';
 
 export type TResult = {
   userId?: string;
@@ -943,6 +944,9 @@ const LESSON_PATTERNS = [
         [`${type}_P2`]: History_SelectImage_ImageDescription,
         [`${type}_P3`]: HistoryHS2M2P3,
       }; 
+      if(type == 'HISTORY_HS2M1' && testTask?.stt == 3) {
+        return HistoryHS2M1P3;
+      }
       if(testTask?.firstMiniTestTask?.type === 'mini_test') {
         return componentMap[type + `_P${testTask?.firstMiniTestTask?.question?.[0]?.questionType}`] || Science_G0M1;
       } else {

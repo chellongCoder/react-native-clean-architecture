@@ -33,6 +33,7 @@ type Props = {
     builder?: (text: string, fontSize?: number) => React.ReactNode;
     show?: boolean;
   };
+  background?: React.ReactNode;
   disable?: boolean;
   matchDistance?: number;
   backgroundColor?: string;
@@ -279,6 +280,11 @@ const CanvasWrite = forwardRef<CanvasWriteRef, Props>((props: Props, ref) => {
             : null,
           ,
         ]}>
+        {props.background &&
+          <View style={{position:'absolute', width: '100%', height: '100%'}}>
+            {props.background}
+          </View>
+        }
         {props.text?.show &&
           (props.text?.builder?.(props.text?.content, fontSize) ?? (
             <Text
