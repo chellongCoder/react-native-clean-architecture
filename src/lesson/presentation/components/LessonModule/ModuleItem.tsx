@@ -57,15 +57,6 @@ const ModuleItem = observer((props: ModuleItemProps) => {
   }, [props.id, props.lessonName, props.title]);
 
   const onStartDoing = useCallback(async () => {
-    if (Number.isNaN(props.progress / props.totalQuestion)) {
-      Toast.show({
-        type: 'info', // or 'error', 'info'
-        text1: i18n.t('core.errors.info'),
-        text2: i18n.t('core.errors.inDeveloping'),
-      });
-      return;
-    }
-    gotoLesson();
     if (trialStatus === 'being_trial') {
       gotoLesson();
     } else {
