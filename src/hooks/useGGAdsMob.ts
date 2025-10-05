@@ -62,7 +62,7 @@ export const useGGAdsMob = () => {
     MobileAds()
       .setRequestConfiguration({
         // Update all future requests suitable for parental guidance
-        maxAdContentRating: MaxAdContentRating.PG,
+        maxAdContentRating: MaxAdContentRating.G,
 
         // Indicates that you want your content treated as child-directed for purposes of COPPA.
         tagForChildDirectedTreatment: true,
