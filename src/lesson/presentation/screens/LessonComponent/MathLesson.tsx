@@ -64,7 +64,7 @@ const MathLesson = forwardRef<LessonRef, Props>(
       return (
         answerSelected.trim().toLocaleLowerCase() ===
         getCorrectAnswer(
-          firstMiniTestTask?.question?.[moduleIndex]?.correctAnswer,
+          firstMiniTestTask?.question?.[moduleIndex]?.correctAnswer as string,
         )
           .trim()
           .toLocaleLowerCase()
@@ -95,7 +95,6 @@ const MathLesson = forwardRef<LessonRef, Props>(
         nextModule(answerSelected);
       },
       fullAnswer: firstMiniTestTask?.question?.[moduleIndex].fullAnswer,
-      totalTime: 20,
     });
 
     const characterImage = useMemo(() => {
@@ -199,7 +198,7 @@ const MathLesson = forwardRef<LessonRef, Props>(
                     zIndex: 999,
                     width: '100%',
                     opacity: 0.7,
-                    height: geometryHeight - scale(80),
+                    height: geometryHeight - verticalScale(80),
                   },
                 ]}
               />
@@ -219,63 +218,9 @@ const styles = StyleSheet.create({
   fill: {
     flex: 1,
   },
-  fonts_SVN_Cherish: {
-    fontFamily: FontFamily.SVNCherishMoment,
-  },
-  textLarge: {
-    fontSize: 140,
-    textAlign: 'center',
-    color: 'white',
-  },
-  textQuestion: {
-    fontSize: 40,
-    textAlign: 'center',
-    color: 'white',
-  },
-  txtWhite: {
-    color: 'white',
-  },
-  txtQuestionColor: {
-    color: '#1C6349',
-  },
-  rowAround: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-  },
-  rowAlignCenter: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  rowBetween: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-  },
-  ph24: {
-    paddingHorizontal: 24,
-  },
-  pr16: {
-    paddingRight: 16,
-  },
-  pb16: {
-    paddingBottom: 16,
-  },
-  pb32: {
-    paddingBottom: 32,
-  },
-  mt32: {
-    marginTop: 32,
-  },
   center: {
     justifyContent: 'center',
     alignItems: 'center',
-  },
-  alignSelfCenter: {
-    alignSelf: 'center',
-  },
-  boxItemAnswer: {
-    height: 94,
-    backgroundColor: COLORS.YELLOW_F2B559,
-    borderRadius: 15,
   },
   rulerContainer: {
     width: '100%',

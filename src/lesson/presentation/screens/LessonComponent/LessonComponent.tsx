@@ -12,7 +12,7 @@ import {FontFamily} from 'src/core/presentation/hooks/useFonts';
 import BookView from '../../components/BookView';
 import {assets, WIDTH_SCREEN} from 'src/core/presentation/utils';
 import {COLORS} from 'src/core/presentation/constants/colors';
-import {scale, verticalScale} from 'react-native-size-matters';
+import {moderateScale, scale, verticalScale} from 'react-native-size-matters';
 import useGlobalStyle from 'src/core/presentation/hooks/useGlobalStyle';
 import CustomSwitchNew from 'src/home/presentation/components/CustomSwitchNew';
 import {TYPOGRAPHY} from 'src/core/presentation/constants/typography';
@@ -312,18 +312,9 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: COLORS.GREEN_66C270,
   },
-  rowAlignCenter: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginTop: 8,
-  },
   rowBetween: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-  },
-  rowAround: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
   },
   center: {
     justifyContent: 'center',
@@ -342,7 +333,6 @@ const styles = StyleSheet.create({
     marginTop: 0,
     marginBottom: 0,
   },
-
   fonts_SVN_Cherish: {
     fontFamily: FontFamily.SVNCherishMoment,
   },
@@ -350,33 +340,25 @@ const styles = StyleSheet.create({
     fontSize: scale(30),
     color: COLORS.GREEN_1C6349,
   },
-
   textModule: {
     fontSize: scale(10),
     color: COLORS.BLUE_258F78,
   },
   textPart: {
-    fontSize: scale(10),
+    fontSize: moderateScale(8),
     color: COLORS.BLUE_258F78,
     fontWeight: '300',
-  },
-
-  textPrice: {
-    fontSize: scale(18),
-    color: COLORS.GREEN_1C6349,
   },
   boxQuestion: {
     flex: 1,
     alignItems: 'center',
     // zIndex: 999,
   },
-
   boxAnswer: {
     flex: 1,
     paddingVertical: verticalScale(24),
     paddingHorizontal: scale(10),
   },
-
   dotline: {
     height: 6,
     borderRadius: 6,

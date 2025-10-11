@@ -1,6 +1,6 @@
 import React, {useCallback, useState} from 'react';
 import {View, Text, StyleSheet, TouchableOpacity, Image} from 'react-native';
-import {scale, verticalScale} from 'react-native-size-matters';
+import {moderateScale, scale, verticalScale} from 'react-native-size-matters';
 import {COLORS} from 'src/core/presentation/constants/colors';
 import useGlobalStyle from 'src/core/presentation/hooks/useGlobalStyle';
 import {useI18n} from 'src/core/presentation/hooks/useI18n';
@@ -22,7 +22,7 @@ const GeometryComponent = ({
   selectedAnswer,
 }: GeometryComponentProps) => {
   const globalStyle = useGlobalStyle();
-  const listAnswer = question?.answers;
+  const listAnswer = question?.answers as string[];
 
   const i18n = useI18n();
 
@@ -52,14 +52,14 @@ const GeometryComponent = ({
 
           <Image
             source={imageUrl ? {uri: imageUrl} : assets.rectangle}
-            style={{width: scale(150), height: verticalScale(150)}}
+            style={{width: scale(150), height: verticalScale(120)}}
             resizeMode="contain"
           />
         </View>
 
         {/* List answer */}
         <View style={[{flex: 0.7}, styles.listAnswerContainer]}>
-          {listAnswer?.map(item => {
+          {listAnswer?.map((item: string) => {
             return (
               <TouchableOpacity
                 style={[
@@ -102,23 +102,23 @@ const styles = StyleSheet.create({
     color: '#003C82',
   },
   wrapBodyContainer: {
-    height: scale(230),
     borderRadius: scale(32),
     backgroundColor: '#FBF8CC',
     flexDirection: 'row',
-    padding: scale(16),
+    padding: 16,
   },
   questionContainer: {
     flexDirection: 'column',
     justifyContent: 'space-between',
   },
   questionTitle: {
-    fontSize: 35,
+    fontSize: moderateScale(35),
     color: '#FE311F',
   },
   listAnswerContainer: {
     flexDirection: 'column',
     justifyContent: 'space-between',
+    gap: 4,
   },
   answerContainer: {
     backgroundColor: COLORS.YELLOW_F2B559,
@@ -127,7 +127,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   answerTitle: {
-    fontSize: scale(20),
+    fontSize: moderateScale(20),
     color: '#FBF8CC',
   },
   wrapButtonContainer: {
@@ -137,12 +137,12 @@ const styles = StyleSheet.create({
     borderRadius: scale(52),
     paddingVertical: verticalScale(14),
     paddingHorizontal: scale(24),
-    marginTop: scale(16),
+    marginTop: verticalScale(16),
     backgroundColor: '#0877B6',
   },
   buttonTitle: {
     color: '#FBF8CC',
-    fontSize: 20,
+    fontSize: moderateScale(20),
   },
 });
 

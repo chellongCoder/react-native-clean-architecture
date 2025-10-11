@@ -16,7 +16,7 @@ import useGlobalStyle from 'src/core/presentation/hooks/useGlobalStyle';
 import {Task} from 'src/home/application/types/GetListQuestionResponse';
 import {COLORS} from 'src/core/presentation/constants/colors';
 import {getCorrectAnswer, WIDTH_SCREEN} from 'src/core/presentation/utils';
-import {scale, verticalScale} from 'react-native-size-matters';
+import {moderateScale, scale, verticalScale} from 'react-native-size-matters';
 import Animated, {
   Easing,
   ReduceMotion,
@@ -231,7 +231,7 @@ const Math_MG3_KeyboardNumber = observer(
               <Animated.Image
                 resizeMode={'contain'}
                 width={WIDTH_SCREEN}
-                height={scale(150)}
+                height={verticalScale(150)}
                 style={[{}, animatedStyle]}
                 source={{
                   uri:
@@ -266,7 +266,7 @@ const Math_MG3_KeyboardNumber = observer(
                       styles.fonts_SVN_Cherish,
                       styles.textQuestion,
                       {
-                        fontSize: scale(40),
+                        fontSize: moderateScale(40),
                         color: settings.backgroundButtonColor,
                       },
                     ]}>
@@ -277,13 +277,6 @@ const Math_MG3_KeyboardNumber = observer(
                 isShowCorrectContainer={isShowCorrectContainer}
                 isAnswerCorrect={!!isAnswerCorrect}
                 onSelectAnswer={(e: string[]) => {
-                  console.log(
-                    '🛠 LOG: 🚀 --> ----------------------🛠 LOG: 🚀 -->',
-                  );
-                  console.log('🛠 LOG: 🚀 --> ~ e:', e);
-                  console.log(
-                    '🛠 LOG: 🚀 --> ----------------------🛠 LOG: 🚀 -->',
-                  );
                   setAnswerSelected(e);
                 }}
                 learningTimer={learningTimer}
@@ -318,36 +311,17 @@ const styles = StyleSheet.create({
   fonts_SVN_Cherish: {
     fontFamily: FontFamily.SVNCherishMoment,
   },
-  fonts_SVN_Neu: {
-    fontFamily: FontFamily.SVNNeuzeitRegular,
-  },
   textColor: {
     color: '#1C6349',
   },
-  textLarge: {
-    fontSize: 140,
-    textAlign: 'center',
-    color: 'white',
-  },
   textQuestion: {
-    fontSize: verticalScale(34),
+    fontSize: moderateScale(34),
     textAlign: 'center',
     color: COLORS.BLUE_258F78,
-  },
-  textGreen: {
-    color: COLORS.BLUE_258F78,
-  },
-
-  alignSelfCenter: {
-    alignSelf: 'center',
   },
   center: {
     justifyContent: 'center',
     alignItems: 'center',
-  },
-
-  wrapCharContainer: {
-    flexDirection: 'row',
   },
   wrapHeaderContainer: {
     flexDirection: 'row',

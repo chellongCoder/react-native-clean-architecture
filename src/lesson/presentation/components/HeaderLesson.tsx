@@ -2,7 +2,7 @@ import {StyleSheet, Text, View} from 'react-native';
 import React, {useMemo} from 'react';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import useGlobalStyle from 'src/core/presentation/hooks/useGlobalStyle';
-import {scale, verticalScale} from 'react-native-size-matters';
+import {moderateScale, scale, verticalScale} from 'react-native-size-matters';
 import {FontFamily} from 'src/core/presentation/hooks/useFonts';
 import {COLORS} from 'src/core/presentation/constants/colors';
 
@@ -83,42 +83,23 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
   },
-  rowAlignCenter: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginTop: 8,
-  },
   fonts_SVN_Cherish: {
     fontFamily: FontFamily.SVNCherishMoment,
   },
   textTitle: {
-    fontSize: scale(30),
+    fontSize: moderateScale(30),
     color: COLORS.GREEN_1C6349,
   },
   alightEnd: {
     alignItems: 'flex-end',
   },
   textModule: {
-    fontSize: scale(10),
+    fontSize: moderateScale(10),
     color: COLORS.BLUE_258F78,
   },
   textPart: {
-    fontSize: scale(10),
+    fontSize: moderateScale(10),
     color: COLORS.BLUE_258F78,
     fontWeight: '300',
-  },
-  boxPrice: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    paddingVertical: 6,
-    paddingHorizontal: 10,
-    alignItems: 'center',
-    borderRadius: 100,
-    width: 90,
-    backgroundColor: '#FFE699',
-  },
-  textPrice: {
-    fontSize: 18,
-    color: '#1C6349',
   },
 });

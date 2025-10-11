@@ -14,7 +14,7 @@ import {
   TextStyle,
   StyleProp,
 } from 'react-native';
-import {scale, verticalScale} from 'react-native-size-matters';
+import {moderateScale, scale, verticalScale} from 'react-native-size-matters';
 import {COLORS} from 'src/core/presentation/constants/colors';
 import {FontFamily} from 'src/core/presentation/hooks/useFonts';
 import TextFraction from './TextFraction';
@@ -100,7 +100,7 @@ const SelectionCompare: ForwardRefRenderFunction<
                     minHeight,
                     backgroundColor: bg,
                     width: size,
-                    margin: scale(8), // Add spacing for clarity
+                    margin: scale(4), // Add spacing for clarity
                   },
                 ]}>
                 {contentAnswer?.(e) ?? (
@@ -123,7 +123,7 @@ const SelectionCompare: ForwardRefRenderFunction<
                   minHeight,
                   backgroundColor: bg,
                   width: size,
-                  margin: scale(8), // Add spacing for clarity
+                  margin: scale(4), // Add spacing for clarity
                 },
               ]}>
               {contentAnswer?.(e) ?? (
@@ -152,7 +152,8 @@ const SelectionCompare: ForwardRefRenderFunction<
           const bc = e === '' ? '#F2B559' : 'transparent';
           const size = scale(56);
 
-          const minHeight = answer.length === 3 ? scale(44) : scale(56);
+          const minHeight =
+            answer.length === 3 ? verticalScale(44) : verticalScale(56);
 
           const compareText =
             i > 0 ? (
@@ -202,7 +203,7 @@ const SelectionCompare: ForwardRefRenderFunction<
                     borderWidth: 2,
                     borderColor: bc,
                     borderStyle: 'dashed',
-                    margin: scale(8), // Add spacing for clarity
+                    margin: scale(4), // Add spacing for clarity
                   },
                 ]}>
                 {contentAnswer?.(e) ?? (
@@ -259,35 +260,17 @@ const styles = StyleSheet.create({
     // Add your styles here
     flexDirection: 'row',
     paddingHorizontal: scale(16),
-    paddingTop: scale(8),
-  },
-  fonts_SVN_Neu: {
-    // Add your styles here
-    fontFamily: FontFamily.SVNNeuzeitRegular,
-  },
-  textQuestion: {
-    // Add your styles here
-    fontSize: verticalScale(34),
-    textAlign: 'center',
-    color: COLORS.BLUE_258F78,
+    paddingTop: verticalScale(8),
   },
   textCompareContainer: {
     justifyContent: 'center',
     alignItems: 'center',
   },
   textCompare: {
-    fontSize: verticalScale(28),
+    fontSize: moderateScale(28),
     textAlign: 'center',
     color: '#9587EC',
     fontWeight: 'bold',
-  },
-  textGreen: {
-    // Add your styles here
-    color: COLORS.BLUE_258F78,
-  },
-  mt8: {
-    // Add your styles here
-    marginTop: verticalScale(8),
   },
   wapper: {
     // Add your styles here
@@ -297,15 +280,11 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     flexWrap: 'wrap', // Add this to enable wrapping
   },
-  fill: {
-    // Add your styles here
-    flex: 1,
-  },
   boxVowel: {
     // Add your styles here
     width: scale(56),
-    minHeight: scale(56),
-    maxHeight: scale(76),
+    minHeight: verticalScale(56),
+    maxHeight: verticalScale(76),
     borderRadius: scale(10),
     justifyContent: 'center',
   },
@@ -313,7 +292,7 @@ const styles = StyleSheet.create({
     // Add your styles here
     fontFamily: FontFamily.SVNNeuzeitBold,
     color: COLORS.WHITE_FBF8CC,
-    fontSize: verticalScale(14),
+    fontSize: moderateScale(14),
     flexWrap: 'wrap',
     textAlign: 'center',
   },
