@@ -1,93 +1,50 @@
 {
   "project_info": {
-    "project_number": "827845646125",
-    "project_id": "lithe-site-441407-r6",
-    "storage_bucket": "lithe-site-441407-r6.firebasestorage.app"
+    "project_number": "595720239925",
+    "project_id": "optimal-analogy-473307-k3",
+    "storage_bucket": "optimal-analogy-473307-k3.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:827845646125:android:61618b15b8dab04bf625a4",
+        "mobilesdk_app_id": "1:595720239925:android:ed1b5e7b1885f37c46ea7c",
         "android_client_info": {
-          "package_name": "com.alphadex.tbd.app"
+          "package_name": "com.algorz.abeeci.app"
         }
       },
       "oauth_client": [
         {
-          "client_id": "827845646125-192sjfs61v1ublbvfhm8u5nmh1rp71vh.apps.googleusercontent.com",
+          "client_id": "595720239925-9d7ob6r1soil9a6chlvova4i8gn3isq5.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.alphadex.tbd.app",
-            "certificate_hash": "5e8f16062ea3cd2c4a0d547876baa6f38cabf625"
-          }
-        },
-        {
-          "client_id": "827845646125-fhicjm453lreoo706avk911mpvd31v5g.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.alphadex.tbd.app",
+            "package_name": "com.algorz.abeeci.app",
             "certificate_hash": "5d9d7ed6a24f1b68c9af5b38c788458f43677ef3"
           }
         },
         {
-          "client_id": "827845646125-49mekr1f87vgc0d40bj06llmoe2mvkq3.apps.googleusercontent.com",
+          "client_id": "595720239925-psksrkb7cebh76cdjosi501ju5at1okv.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.algorz.abeeci.app",
+            "certificate_hash": "5e8f16062ea3cd2c4a0d547876baa6f38cabf625"
+          }
+        },
+        {
+          "client_id": "595720239925-07lrrs6cdtn8h7782puuogi591ln8umu.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyAzTB4KlpzK2Tm4Yet9xTueYCq_MxqTA6c"
+          "current_key": "AIzaSyAlGu_GUbq0DmMYnCTJdGH7I7FGe1GZ6JA"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "827845646125-49mekr1f87vgc0d40bj06llmoe2mvkq3.apps.googleusercontent.com",
+              "client_id": "595720239925-07lrrs6cdtn8h7782puuogi591ln8umu.apps.googleusercontent.com",
               "client_type": 3
-            },
-            {
-              "client_id": "827845646125-gle21suv3a6pe4tgdma4ch04h359c6ds.apps.googleusercontent.com",
-              "client_type": 2,
-              "ios_info": {
-                "bundle_id": "com.hisoft.tbd.app"
-              }
-            }
-          ]
-        }
-      }
-    },
-    {
-      "client_info": {
-        "mobilesdk_app_id": "1:827845646125:android:b0e95d75c133ae4af625a4",
-        "android_client_info": {
-          "package_name": "com.alphadex.tbd.app.dev"
-        }
-      },
-      "oauth_client": [
-        {
-          "client_id": "827845646125-49mekr1f87vgc0d40bj06llmoe2mvkq3.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
-      "api_key": [
-        {
-          "current_key": "AIzaSyAzTB4KlpzK2Tm4Yet9xTueYCq_MxqTA6c"
-        }
-      ],
-      "services": {
-        "appinvite_service": {
-          "other_platform_oauth_client": [
-            {
-              "client_id": "827845646125-49mekr1f87vgc0d40bj06llmoe2mvkq3.apps.googleusercontent.com",
-              "client_type": 3
-            },
-            {
-              "client_id": "827845646125-gle21suv3a6pe4tgdma4ch04h359c6ds.apps.googleusercontent.com",
-              "client_type": 2,
-              "ios_info": {
-                "bundle_id": "com.hisoft.tbd.app"
-              }
             }
           ]
         }
