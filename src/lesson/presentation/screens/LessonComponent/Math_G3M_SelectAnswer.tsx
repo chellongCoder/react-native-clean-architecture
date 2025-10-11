@@ -20,7 +20,7 @@ import {
   isMMSS,
   WIDTH_SCREEN,
 } from 'src/core/presentation/utils';
-import {scale, verticalScale} from 'react-native-size-matters';
+import {moderateScale, scale, verticalScale} from 'react-native-size-matters';
 import Animated, {
   Easing,
   ReduceMotion,
@@ -227,7 +227,7 @@ const Math_G3M_SelectAnswer = observer(
                   <Animated.Image
                     resizeMode={'contain'}
                     width={scale(200)}
-                    height={scale(150)}
+                    height={verticalScale(150)}
                     style={[animatedStyle]}
                     source={{
                       uri:
@@ -268,7 +268,7 @@ const Math_G3M_SelectAnswer = observer(
             characterStyle ?? {
               height: verticalScale(300),
               marginBottom: -verticalScale(130),
-              marginLeft: -scale(40),
+              marginLeft: -scale(16),
             }
           }
           buildAnswer={
@@ -300,7 +300,7 @@ const Math_G3M_SelectAnswer = observer(
                     .answers as string[]) ?? []
                 }
                 answerStyle={{
-                  fontSize: scale(24),
+                  fontSize: moderateScale(24),
                 }}
                 isShowCorrectContainer={isShowCorrectContainer}
                 isAnswerCorrect={!!isAnswerCorrect}
@@ -336,9 +336,6 @@ const styles = StyleSheet.create({
   fill: {
     flex: 1,
   },
-  fonts_SVN_Cherish: {
-    fontFamily: FontFamily.SVNCherishMoment,
-  },
   fonts_NeuzeitBold: {
     fontFamily: FontFamily.SVNNeuzeitBold,
   },
@@ -346,36 +343,25 @@ const styles = StyleSheet.create({
     color: COLORS.GREEN_DDF598,
   },
   textQuestion: {
-    fontSize: verticalScale(32),
+    fontSize: moderateScale(32),
     textAlign: 'left',
     color: COLORS.BLUE_258F78,
     alignSelf: 'center',
   },
-
   center: {
     justifyContent: 'center',
     alignItems: 'center',
   },
-  boxSelected: {
-    backgroundColor: COLORS.WHITE_FBF8CC,
-    height: verticalScale(220),
-    flex: 1,
-    borderRadius: scale(30),
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-
   wrapHeaderContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     marginBottom: verticalScale(8),
   },
-
   buttonContainer: {
     borderRadius: scale(52),
     paddingVertical: verticalScale(9),
     paddingHorizontal: scale(24),
-    marginTop: scale(16),
+    marginTop: verticalScale(16),
     backgroundColor: '#0877B6',
   },
 });

@@ -16,7 +16,7 @@ import useGlobalStyle from 'src/core/presentation/hooks/useGlobalStyle';
 import {Task} from 'src/home/application/types/GetListQuestionResponse';
 import {COLORS} from 'src/core/presentation/constants/colors';
 import {getCorrectAnswer, isMMSS} from 'src/core/presentation/utils';
-import {scale, verticalScale} from 'react-native-size-matters';
+import {moderateScale, scale, verticalScale} from 'react-native-size-matters';
 import Animated, {
   Easing,
   ReduceMotion,
@@ -226,7 +226,11 @@ const Math_Text_SelectAnswer = observer(
           onPressFlower={toggleShowHint}
           buildQuestion={
             <Animated.View style={[styles.fill, styles.center, animatedStyle]}>
-              <Text>
+              <Text
+                style={[
+                  styles.textQuestion,
+                  {color: settings.backgroundButtonColor},
+                ]}>
                 {firstMiniTestTask?.question?.[moduleIndex]?.description}
               </Text>
             </Animated.View>
@@ -272,7 +276,7 @@ const Math_Text_SelectAnswer = observer(
                   />
                 }
                 answerStyle={{
-                  fontSize: scale(24),
+                  fontSize: moderateScale(24),
                 }}
                 isShowCorrectContainer={isShowCorrectContainer}
                 isAnswerCorrect={!!isAnswerCorrect}
@@ -308,45 +312,28 @@ const styles = StyleSheet.create({
   fill: {
     flex: 1,
   },
-  fonts_SVN_Cherish: {
-    fontFamily: FontFamily.SVNCherishMoment,
-  },
-  fonts_NeuzeitBold: {
-    fontFamily: FontFamily.SVNNeuzeitBold,
-  },
   textQuestion: {
-    fontSize: verticalScale(32),
+    fontSize: moderateScale(32),
     textAlign: 'center',
     fontFamily: FontFamily.SVNCherishMoment,
   },
   textColor: {
     color: COLORS.GREEN_DDF598,
   },
-
   center: {
     justifyContent: 'center',
     alignItems: 'center',
   },
-  boxSelected: {
-    backgroundColor: COLORS.WHITE_FBF8CC,
-    height: verticalScale(220),
-    flex: 1,
-    borderRadius: scale(30),
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-
   wrapHeaderContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     marginBottom: verticalScale(8),
   },
-
   buttonContainer: {
     borderRadius: scale(52),
     paddingVertical: verticalScale(9),
     paddingHorizontal: scale(24),
-    marginTop: scale(16),
+    marginTop: verticalScale(16),
     backgroundColor: '#0877B6',
   },
 });

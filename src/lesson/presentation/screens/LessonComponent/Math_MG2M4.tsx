@@ -20,7 +20,7 @@ import {
   isAndroid,
   WIDTH_SCREEN,
 } from 'src/core/presentation/utils';
-import {scale, verticalScale} from 'react-native-size-matters';
+import {moderateScale, scale, verticalScale} from 'react-native-size-matters';
 import Animated, {
   Easing,
   ReduceMotion,
@@ -260,7 +260,7 @@ const Math_MG2M4 = observer(
               <Animated.Image
                 resizeMode={'contain'}
                 width={WIDTH_SCREEN}
-                height={scale(180)}
+                height={verticalScale(180)}
                 style={[{}, animatedStyle]}
                 source={{
                   uri:
@@ -295,7 +295,7 @@ const Math_MG2M4 = observer(
                       styles.fonts_SVN_Cherish,
                       styles.textQuestion,
                       styles.textGreen,
-                      {fontSize: scale(40)},
+                      {fontSize: moderateScale(40)},
                     ]}>
                     {descriptionWithAnswers}
                   </Text>
@@ -338,36 +338,20 @@ const styles = StyleSheet.create({
   fonts_SVN_Cherish: {
     fontFamily: FontFamily.SVNCherishMoment,
   },
-  fonts_SVN_Neu: {
-    fontFamily: FontFamily.SVNNeuzeitRegular,
-  },
   textColor: {
     color: '#1C6349',
   },
-  textLarge: {
-    fontSize: 140,
-    textAlign: 'center',
-    color: 'white',
-  },
   textQuestion: {
-    fontSize: verticalScale(34),
+    fontSize: moderateScale(34),
     textAlign: 'center',
     color: COLORS.BLUE_258F78,
   },
   textGreen: {
     color: COLORS.BLUE_258F78,
   },
-
-  alignSelfCenter: {
-    alignSelf: 'center',
-  },
   center: {
     justifyContent: 'center',
     alignItems: 'center',
-  },
-
-  wrapCharContainer: {
-    flexDirection: 'row',
   },
   wrapHeaderContainer: {
     flexDirection: 'row',

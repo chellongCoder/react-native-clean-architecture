@@ -1,6 +1,6 @@
 import {StyleProp, StyleSheet, Text, TextStyle} from 'react-native';
 import React, {useMemo} from 'react';
-import {verticalScale} from 'react-native-size-matters';
+import {moderateScale, verticalScale} from 'react-native-size-matters';
 import {COLORS} from 'src/core/presentation/constants/colors';
 
 type Props = {
@@ -76,7 +76,7 @@ export default TextHighlight;
 
 const styles = StyleSheet.create({
   textQuestion: {
-    fontSize: verticalScale(15),
+    fontSize: moderateScale(15),
     textAlign: 'center',
     color: COLORS.BLUE_258F78,
   },
