@@ -83,3 +83,4 @@ ios/.xcode.env.local
 .xcode.env.local
 ios/.xcode.env.local
 assets/screen_shot
+android/app/google-services.json
