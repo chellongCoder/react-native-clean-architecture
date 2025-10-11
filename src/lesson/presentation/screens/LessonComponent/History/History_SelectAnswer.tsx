@@ -5,6 +5,8 @@ import {
   View,
   ViewStyle,
   Image,
+  TextInput,
+  Keyboard,
 } from 'react-native';
 import React, {
   forwardRef,
@@ -53,7 +55,7 @@ import {useI18n} from 'src/core/presentation/hooks/useI18n';
 import VoiceButton from '../../../components/VoiceButton';
 import QuestionImageText from '../../../components/Science/QuestionImageText';
 import Entypo from '@expo/vector-icons/Entypo';
-import { useHistoryModule } from './hook';
+import {useHistoryModule} from './hook';
 
 type Props = {
   moduleIndex: number;
@@ -97,6 +99,8 @@ const History_SelectAnswer = observer(
 
       // State to track current slide index
       const [currentSlideIndex, setCurrentSlideIndex] = useState<number>(0);
+      const [currentSlideIndexInput, setCurrentSlideIndexInput] =
+        useState<string>('1');
 
       const {trainingCount, getSetting} = useLessonStore();
 
@@ -152,7 +156,6 @@ const History_SelectAnswer = observer(
           : characterImageFail;
       }, [characterImageFail, characterImageSuccess, isAnswerCorrect]);
 
-     
       const opacity = useSharedValue(0);
       const scaleS = useSharedValue(1);
 
@@ -223,9 +226,19 @@ const History_SelectAnswer = observer(
             setCurrentSlideIndex(prev =>
               prev < slideLength - 1 ? prev + 1 : prev,
             );
+            setCurrentSlideIndexInput(prev =>
+              Number(prev) < slideLength
+                ? (Number(prev) + 1).toString()
+                : prev.toString(),
+            );
           } else {
             // Move to previous slide if not at the beginning
             setCurrentSlideIndex(prev => (prev > 0 ? prev - 1 : prev));
+            setCurrentSlideIndexInput(prev =>
+              Number(prev) > 0
+                ? (Number(prev) - 1).toString()
+                : prev.toString(),
+            );
           }
         },
         [firstMiniTestTask?.question, moduleIndex],
@@ -332,23 +345,53 @@ const History_SelectAnswer = observer(
                         currentSlideIndex > 0 && onPressChangeImage(false)
                       }
                     />
-                    <View
-                      style={{
-                        paddingHorizontal: 8,
-                        backgroundColor: COLORS.WHITE_FBF8CC,
-                      }}>
-                      <Text
-                        style={[
-                          styles.fonts_SVN_Neuzeit_Bold,
-                          {
-                            textAlign: 'center',
-                            fontSize: 15,
-                            color: COLORS.GREEN_258F78,
-                          },
-                        ]}>
-                        {currentSlideIndex + 1}
-                      </Text>
-                    </View>
+                    <TextInput
+                      style={[
+                        styles.fonts_SVN_Neuzeit_Bold,
+                        {
+                          paddingHorizontal: 8,
+                          backgroundColor: COLORS.WHITE_FBF8CC,
+                          textAlign: 'center',
+                          fontSize: 15,
+                          color: COLORS.GREEN_258F78,
+                        },
+                      ]}
+                      value={currentSlideIndexInput.toString() || ''}
+                      onChangeText={text => {
+                        setCurrentSlideIndexInput(text);
+                      }}
+                      onBlur={() => {
+                        Keyboard.dismiss();
+                      }}
+                      onSubmitEditing={() => {
+                        if (currentSlideIndexInput === '0') {
+                          setCurrentSlideIndex(0);
+                          setCurrentSlideIndexInput('1');
+                        } else if (
+                          Number(currentSlideIndexInput) >
+                          (firstMiniTestTask?.question?.[moduleIndex]?.slide
+                            ?.length || 1)
+                        ) {
+                          setCurrentSlideIndex(
+                            (firstMiniTestTask?.question?.[moduleIndex]?.slide
+                              ?.length || 1) - 1,
+                          );
+                          setCurrentSlideIndexInput(
+                            (
+                              firstMiniTestTask?.question?.[moduleIndex]?.slide
+                                ?.length || 1
+                            ).toString(),
+                          );
+                        } else {
+                          setCurrentSlideIndex(
+                            Number(currentSlideIndexInput) - 1,
+                          );
+                        }
+                      }}
+                      returnKeyType="done"
+                      blurOnSubmit
+                      keyboardType="number-pad"
+                    />
 
                     <Entypo
                       name="triangle-right"
@@ -418,8 +461,7 @@ const History_SelectAnswer = observer(
                       firstMiniTestTask?.question?.[moduleIndex].highlight ?? ''
                     }
                     description={
-                      firstMiniTestTask?.question?.[moduleIndex].content ??
-                      ''
+                      firstMiniTestTask?.question?.[moduleIndex].content ?? ''
                     }
                   />
                 }

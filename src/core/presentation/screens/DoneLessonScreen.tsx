@@ -7,6 +7,7 @@ import React, {
   ImageBackground,
   BackHandler,
   ActivityIndicator,
+  ScrollView,
 } from 'react-native';
 import useGlobalStyle from '../hooks/useGlobalStyle';
 import {STACK_NAVIGATOR} from '../navigation/ConstantNavigator';
@@ -23,7 +24,7 @@ import {useGetUserSetting} from 'src/hooks/useGetUserSetting';
 import useAuthenticationStore from 'src/authentication/presentation/stores/useAuthenticationStore';
 import BookView from 'src/lesson/presentation/components/BookView';
 import {assets} from '../utils';
-import {scale} from 'react-native-size-matters';
+import {moderateScale, scale, verticalScale} from 'react-native-size-matters';
 import {COLORS} from '../constants/colors';
 import {CustomTextStyle} from '../constants/typography';
 import HeaderLesson from 'src/lesson/presentation/components/HeaderLesson';
@@ -46,6 +47,7 @@ import {observer} from 'mobx-react';
 import useAuthenStore from 'src/authentication/presentation/hooks/useAuthenStore';
 import {Module} from 'src/home/application/types/GetListLessonResponse';
 import {usePopupTrialMode} from '../hooks/popup/usePopupTrialMode';
+import {isTablet} from '../constants/common';
 
 export type RouteParamsDone = {
   totalResult: TResult[];
@@ -382,7 +384,7 @@ const DoneLessonScreen = observer(({}) => {
                 ? {uri: route.andieImage}
                 : route.andieImage
             }
-            style={{height: scale(200), width: scale(200)}}
+            style={{height: verticalScale(180), width: scale(180)}}
             resizeMode="contain"
           />
         </ImageBackground>
@@ -489,19 +491,13 @@ const styles = StyleSheet.create({
   },
   text: {
     fontWeight: '400',
-    fontSize: scale(40),
+    fontSize: moderateScale(40),
     textAlign: 'center',
   },
-  content: {marginTop: 80, marginBottom: 0, flex: 1},
-  subText: {
-    fontSize: 20,
-    textAlign: 'center',
-    color: '#258F78',
-    marginTop: 30,
-  },
-  boxAnswer: {
+  content: {
+    marginTop: verticalScale(32),
+    marginBottom: 0,
     flex: 1,
-    padding: 32,
   },
   achievementContainer: {
     flex: 1,
@@ -531,12 +527,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   wrapperContent: {
-    marginTop: 100,
-    marginLeft: 30,
-    marginRight: 30,
+    marginTop: verticalScale(48),
   },
   contentTitle: {
-    fontSize: scale(24),
+    fontSize: moderateScale(24),
     color: '#4CB572',
     marginBottom: 10,
     textAlign: 'center',
@@ -564,37 +558,17 @@ const styles = StyleSheet.create({
     fontSize: scale(12),
   },
   contentDescription: {
-    fontSize: scale(8),
+    fontSize: moderateScale(8),
     color: '#1C6349',
     textAlign: 'center',
-  },
-  wrapperDot: {
-    width: '100%',
-    marginTop: 30,
-    justifyContent: 'center',
-    alignItems: 'center',
-    flexDirection: 'row',
-    gap: 10,
-  },
-  Dot: {
-    width: 39,
-    height: 39,
-    borderRadius: 100,
-    backgroundColor: '#66C270',
-  },
-  numberDot: {
-    fontSize: 15,
-    color: '#1C6349',
-    fontWeight: 'bold',
   },
   wrapperButton: {
     width: '100%',
     justifyContent: 'center',
     alignItems: 'center',
-    marginTop: 30,
+    marginTop: verticalScale(24),
     flexDirection: 'row',
-    gap: 30,
-    marginBottom: 16,
+    marginBottom: verticalScale(24),
   },
   button: {
     backgroundColor: COLORS.YELLOW_F2B559,

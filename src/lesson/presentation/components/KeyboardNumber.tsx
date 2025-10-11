@@ -101,7 +101,12 @@ const KeyboardNumber: ForwardRefRenderFunction<
           <FastImage
             resizeMode="contain"
             source={assets.icon_delete}
-            style={[{width: scale(20), height: scale(20)}]}
+            style={[
+              {
+                width: scale(20),
+                height: verticalScale(20),
+              },
+            ]}
           />
         </TouchableOpacity>
       </View>
@@ -132,7 +137,7 @@ const KeyboardNumber: ForwardRefRenderFunction<
                   {
                     backgroundColor: bg,
                     width: scale(29),
-                    height: scale(41),
+                    height: verticalScale(41),
                     margin: scale(4), // Add spacing for clarity
                     paddingHorizontal: scale(4),
                   },
@@ -182,24 +187,6 @@ const styles = StyleSheet.create({
     width: '80%',
     justifyContent: 'center',
   },
-  fonts_SVN_Neu: {
-    // Add your styles here
-    fontFamily: FontFamily.SVNNeuzeitRegular,
-  },
-  textQuestion: {
-    // Add your styles here
-    fontSize: verticalScale(34),
-    textAlign: 'center',
-    color: COLORS.BLUE_258F78,
-  },
-  textGreen: {
-    // Add your styles here
-    color: COLORS.BLUE_258F78,
-  },
-  mt8: {
-    // Add your styles here
-    marginTop: verticalScale(8),
-  },
   wapper: {
     // Add your styles here
     marginTop: scale(8),
@@ -207,10 +194,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignSelf: 'center',
     flexWrap: 'wrap', // Add this to enable wrapping
-  },
-  fill: {
-    // Add your styles here
-    flex: 1,
   },
   boxVowel: {
     // Add your styles here

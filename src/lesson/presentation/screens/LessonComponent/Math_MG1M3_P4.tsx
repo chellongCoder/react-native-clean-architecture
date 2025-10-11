@@ -16,7 +16,7 @@ import useGlobalStyle from 'src/core/presentation/hooks/useGlobalStyle';
 import {Task} from 'src/home/application/types/GetListQuestionResponse';
 import {COLORS} from 'src/core/presentation/constants/colors';
 import {isSubArray} from 'src/core/presentation/utils';
-import {scale, verticalScale} from 'react-native-size-matters';
+import {moderateScale, scale, verticalScale} from 'react-native-size-matters';
 import {
   Easing,
   ReduceMotion,
@@ -184,10 +184,7 @@ const Math_MG1M3_P4 = observer(
           );
         },
       }));
-      console.log(
-        'firstMiniTestTask?.question?.[ moduleIndex]: ',
-        firstMiniTestTask?.question?.[moduleIndex],
-      );
+
       return (
         <LessonComponent
           backgroundImage={backgroundImage}
@@ -258,7 +255,7 @@ const Math_MG1M3_P4 = observer(
                               styles.textQuestion,
                               styles.textGreen,
                               styles.mt8,
-                              {fontSize: scale(40)},
+                              {fontSize: moderateScale(40)},
                             ]}>
                             {e}
                           </Text>
@@ -304,122 +301,34 @@ const styles = StyleSheet.create({
   fonts_SVN_Cherish: {
     fontFamily: FontFamily.SVNCherishMoment,
   },
-  fonts_SVN_Neu: {
-    fontFamily: FontFamily.SVNNeuzeitRegular,
-  },
   textColor: {
     color: '#1C6349',
   },
-  textLarge: {
-    fontSize: 140,
-    textAlign: 'center',
-    color: 'white',
-  },
   textQuestion: {
-    fontSize: 20,
+    fontSize: moderateScale(20),
     textAlign: 'center',
     color: COLORS.BLUE_258F78,
   },
   textGreen: {
     color: COLORS.BLUE_245CC7,
   },
-  txtWhite: {
-    color: 'white',
-  },
-  rowAround: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-  },
-  rowAlignCenter: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  rowBetween: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-  },
-  pr16: {
-    paddingRight: 16,
-  },
-  ph24: {
-    paddingHorizontal: 24,
-  },
-  pb8: {
-    paddingBottom: verticalScale(8),
-  },
-  pb16: {
-    paddingBottom: verticalScale(16),
-  },
-  pb32: {
-    paddingBottom: verticalScale(32),
-  },
   mt8: {
     marginTop: verticalScale(8),
-  },
-  mt16: {
-    marginTop: verticalScale(16),
-  },
-  mt24: {
-    marginTop: verticalScale(24),
-  },
-  mt32: {
-    marginTop: verticalScale(32),
-  },
-  alignSelfCenter: {
-    alignSelf: 'center',
   },
   center: {
     justifyContent: 'center',
     alignItems: 'center',
-  },
-  boxItemAnswer: {
-    height: 94,
-    backgroundColor: '#F2B559',
-    borderRadius: 30,
-  },
-  boxSelected: {
-    backgroundColor: COLORS.WHITE_FBF8CC,
-    height: verticalScale(220),
-    flex: 1,
-    borderRadius: scale(30),
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  boxVowel: {
-    width: 56,
-    height: 56,
-    borderRadius: 10,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginHorizontal: 6,
-    marginVertical: 6,
-  },
-  textVowel: {
-    fontFamily: FontFamily.SVNCherishMoment,
-    color: '#FBF8CC',
-    fontSize: verticalScale(28),
-  },
-  wapper: {
-    marginTop: 8,
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignContent: 'center',
-    flexWrap: 'wrap', // Add this to enable wrapping
-  },
-  wrapCharContainer: {
-    flexDirection: 'row',
   },
   wrapHeaderContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     marginBottom: 8,
   },
-  iconImageContainer: {height: 45, width: 40},
   buttonContainer: {
     borderRadius: scale(52),
-    paddingVertical: verticalScale(9),
+    paddingVertical: verticalScale(8),
     paddingHorizontal: scale(24),
-    marginTop: scale(16),
+    marginTop: verticalScale(16),
     backgroundColor: '#0877B6',
   },
   wrapAnswerContainer: {
@@ -431,16 +340,5 @@ const styles = StyleSheet.create({
     width: scale(67),
     height: verticalScale(58),
     marginRight: scale(4),
-  },
-  wrapQuestionContainer: {
-    padding: 16,
-    borderTopLeftRadius: 16,
-    borderTopRightRadius: 16,
-    borderBottomRightRadius: 16,
-    backgroundColor: COLORS.WHITE_FBF8CC,
-    marginTop: 16,
-    alignSelf: 'flex-start',
-    marginLeft: 110,
-    marginRight: 16,
   },
 });
