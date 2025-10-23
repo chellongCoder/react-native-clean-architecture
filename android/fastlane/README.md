@@ -87,6 +87,22 @@ Build and upload AAB to closed testing on Play Console
 
 Build and upload AAB to internal testing on Play Console
 
+### android download_metadata
+
+```sh
+[bundle exec] fastlane android download_metadata
+```
+
+Download metadata from Play Store
+
+### android upload_metadata
+
+```sh
+[bundle exec] fastlane android upload_metadata
+```
+
+Upload metadata (store listing, graphics, screenshots) to Play Console
+
 ----
 
 This README.md is auto-generated and will be re-generated every time [_fastlane_](https://fastlane.tools) is run.

@@ -14,12 +14,28 @@
   <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
   <uses-permission android:name="android.permission.RECORD_AUDIO" />
   <uses-permission android:name="com.android.vending.BILLING" />
+  
+  <!-- CRITICAL: Remove advertising ID for Families Policy Compliance -->
   <uses-permission
     android:name="com.google.android.gms.permission.AD_ID"
     tools:node="remove" />
-  <!-- Optionally also ensure READ_PHONE_STATE is not included -->
+  
+  <!-- Remove phone state permission -->
   <uses-permission
     android:name="android.permission.READ_PHONE_STATE"
+    tools:node="remove" />
+  
+  <!-- Remove ACCESS_WIFI_STATE to prevent BSSID/MAC collection -->
+  <uses-permission
+    android:name="android.permission.ACCESS_WIFI_STATE"
+    tools:node="remove" />
+  
+  <!-- Remove location permissions to prevent device tracking -->
+  <uses-permission
+    android:name="android.permission.ACCESS_FINE_LOCATION"
+    tools:node="remove" />
+  <uses-permission
+    android:name="android.permission.ACCESS_COARSE_LOCATION"
     tools:node="remove" />
 
   <queries>
@@ -48,6 +64,18 @@
     <meta-data
     android:name="com.google.android.gms.ads.AD_MANAGER_APP"
     android:value="true" />
+    
+    <!-- CRITICAL: Tag for child-directed treatment (Families Policy) -->
+    <meta-data
+        android:name="com.google.android.gms.ads.flag.DENY_CHILD_DIRECTED_TREATMENT"
+        android:value="false"/>
+    <meta-data
+        android:name="com.google.android.gms.ads.flag.TAG_FOR_CHILD_DIRECTED_TREATMENT"
+        android:value="true"/>
+    <meta-data
+        android:name="com.google.android.gms.ads.flag.TAG_FOR_UNDER_AGE_OF_CONSENT"
+        android:value="true"/>
+    
     <activity android:name=".MainActivity" android:label="@string/app_name" android:configChanges="keyboard|keyboardHidden|orientation|screenSize|uiMode" android:launchMode="singleTask" android:windowSoftInputMode="adjustPan" android:theme="@style/Theme.App.SplashScreen" android:exported="true" android:screenOrientation="portrait">
     <meta-data
         android:name="com.google.android.gms.ads.APPLICATION_ID"

@@ -9,8 +9,8 @@ import React, {
   useRef,
   useState,
 } from 'react';
-import LessonComponent from './LessonComponent';
-import PrimaryButton from '../../components/PrimaryButton';
+import LessonComponent from '../LessonComponent';
+import PrimaryButton from '../../../components/PrimaryButton';
 import {FontFamily} from 'src/core/presentation/hooks/useFonts';
 import useGlobalStyle from 'src/core/presentation/hooks/useGlobalStyle';
 import {Task} from 'src/home/application/types/GetListQuestionResponse';
@@ -28,21 +28,22 @@ import {
   withTiming,
 } from 'react-native-reanimated';
 import {TextToSpeechContext} from 'src/core/presentation/hooks/textToSpeech/TextToSpeechContext';
-import {useLessonStore} from '../../stores/LessonStore/useGetPostsStore';
-import {useSettingLesson} from '../../hooks/useSettingLesson';
+import {useLessonStore} from '../../../stores/LessonStore/useGetPostsStore';
+import {useSettingLesson} from '../../../hooks/useSettingLesson';
 import {useIsFocused} from '@react-navigation/native';
 import useAuthenticationStore from 'src/authentication/presentation/stores/useAuthenticationStore';
 import {observer} from 'mobx-react';
-import {LessonRef} from '../../types';
+import {LessonRef} from '../../../types';
 import useHomeStore from 'src/home/presentation/stores/useHomeStore';
-import {SelectionAnswersQuestionRef} from '../../components/SelectionAnswersQuestion';
+import {SelectionAnswersQuestionRef} from '../../../components/SelectionAnswersQuestion';
 import {useI18n} from 'src/core/presentation/hooks/useI18n';
-import VoiceButton from '../../components/VoiceButton';
-import DragItem from '../../components/Drag/DragSendItem';
-import {useDragContext} from '../../components/Drag/DragProvider';
+import VoiceButton from '../../../components/VoiceButton';
+import DragItem from '../../../components/Drag/DragSendItem';
+import {useDragContext} from '../../../components/Drag/DragProvider';
 import FastImage from 'react-native-fast-image';
-import TextHighlight from '../../components/TextHighlight';
-import { useHistoryModule } from './History/hook';
+import TextHighlight from '../../../components/TextHighlight';
+import { useHistoryModule } from './hook';
+import CanvasWrite, {CanvasWriteRef} from '../../../components/CanvasWrite';
 
 type Props = {
   moduleIndex: number;
@@ -56,7 +57,7 @@ type Props = {
   characterImageFail?: string;
 };
 
-const HistoryHS2M2P3 = observer(
+const HistoryHS2M1P3 = observer(
   forwardRef<LessonRef, Props>(
     (
       {
@@ -77,10 +78,7 @@ const HistoryHS2M2P3 = observer(
       const {ttsSpeak} = useContext(TextToSpeechContext);
       const focus = useIsFocused();
       const answerRef = useRef<SelectionAnswersQuestionRef>();
-
-      const {clear, listDragItem} = useDragContext();
-
-      const [answerSelected, setAnswerSelected] = useState('');
+      const canvasWriteRef = useRef<CanvasWriteRef>(null);
 
       const {trainingCount, getSetting} = useLessonStore();
 
@@ -109,10 +107,9 @@ const HistoryHS2M2P3 = observer(
         countDownTime: trainingCount <= 2 ? 0 : 5,
         isCorrectAnswer: isCorrectAnswer,
         onSubmit: () => {
-          clear();
-          setAnswerSelected('');
           setIsCorrectAnswer(undefined);
-          nextModule(answerSelected);
+          canvasWriteRef.current?.reset();
+          nextModule('');
           answerRef.current?.resetAnswerSelected?.();
         },
         fullAnswer: firstMiniTestTask?.question?.[moduleIndex].fullAnswer,
@@ -146,29 +143,16 @@ const HistoryHS2M2P3 = observer(
       const opacity = useSharedValue(0);
       const scaleS = useSharedValue(1);
 
-      const onSubmit = useCallback(() => {
-        const selectedFeature = listDragItem[+listDragItem?.[0]?.parentId]
+      const onSubmit = () => {
+        const strokesNumber = canvasWriteRef.current?.getResult().strokesNumber;
+        setIsCorrectAnswer(strokesNumber == 5);
+      }
 
-        
-        const correctAnswers = (
-          firstMiniTestTask?.question?.[moduleIndex].correctAnswer
-        );
-
-        const isCorrect = correctAnswers?.toString() === (selectedFeature?.value)?.toString();
- 
-
-        setIsCorrectAnswer(!!isCorrect);
-        isSubmitRef.current = false;
-      }, [listDragItem, firstMiniTestTask?.question, moduleIndex]);
-
-      /**
-       * * submit khi đúng
-       */
-      useEffect(() => {
-        if (isCorrectAnswer !== undefined) {
+      useEffect (() => {
+        if(isCorrectAnswer != null) {
           submit();
         }
-      }, [isCorrectAnswer, submit]);
+      }, [isCorrectAnswer])
 
       /**
        * * reset lại countdown khi lần làm thay đổi
@@ -177,8 +161,6 @@ const HistoryHS2M2P3 = observer(
         resetLearning();
         // eslint-disable-next-line react-hooks/exhaustive-deps
       }, [trainingCount]);
-
-     
 
       useEffect(() => {
         opacity.value = withTiming(0, {duration: 500}, () => {
@@ -201,34 +183,6 @@ const HistoryHS2M2P3 = observer(
           );
         },
       }));
-
-      const buildItemAnswer = useCallback(
-        (items: string[], item: string, index: number) => {
-          // console.log('🛠 LOG: 🚀 --> ~ item:', item);
-          return (
-            <DragItem
-              index={100 + index}
-              value={item}
-              canSwap={false}
-              createItem={({value}) => {
-                return (
-                  <FastImage
-                    resizeMode={'contain'}
-                    source={{
-                      uri: env?.IMAGE_QUESTION_BASE_API_URL + value,
-                    }}
-                    style={{
-                      width: (WIDTH_SCREEN - scale(100)) / 2,
-                      height: scale(70),
-                    }}
-                  />
-                );
-              }}
-            />
-          );
-        },
-        [],
-      );
 
       return (
         <LessonComponent
@@ -261,16 +215,11 @@ const HistoryHS2M2P3 = observer(
             <View style={{
               alignItems: 'center',
             }}>
-            <Text style={styles.textQuestion}>
-              {
-                firstMiniTestTask?.question?.[moduleIndex].description
-              }
-            </Text>
             <View
               style={{
                 width: scale(180),
                 minHeight: scale(100),
-                marginTop: verticalScale(20),
+                marginTop: verticalScale(28),
                 backgroundColor: COLORS.WHITE_FBF8CC,
                 flexDirection: 'row',
                 flexWrap: 'wrap',
@@ -280,24 +229,15 @@ const HistoryHS2M2P3 = observer(
                 borderStyle: 'dashed',
                 borderColor: COLORS.GREEN_009C6F,
               }}>
-              {<DragItem
-                      key={firstMiniTestTask?.question?.[moduleIndex].correctAnswer.toString()}
-                      index={0}
-                      value={' '}
-                      createItem={({value}) => {
-                        return (
-                          <FastImage
-                            source={{
-                              uri: env?.IMAGE_QUESTION_BASE_API_URL + value,
-                            }}
-                            style={{
-                              width: scale(180),
-                              height: scale(100),
-                            }}
-                          />
-                        );
-                      }}
-                    />}
+              <FastImage
+                source={{
+                  uri: env?.IMAGE_QUESTION_BASE_API_URL + firstMiniTestTask?.question?.[moduleIndex].image[0],
+                }}
+                style={{
+                  width: scale(180),
+                  height: scale(100),
+                }}
+              />
             </View>
             </View>
           }
@@ -341,37 +281,23 @@ const HistoryHS2M2P3 = observer(
                       firstMiniTestTask?.question?.[moduleIndex].content ?? ''
                     }
                   />
-                <View
-                  style={{
-                    marginTop: verticalScale(10),
-                    flexDirection: 'row',
-                    justifyContent: 'center',
-                    flexWrap: 'wrap',
-                    alignItems: 'center',
-                  }}
-                >
-                  {(
-                    firstMiniTestTask?.question?.[moduleIndex]
-                      .answers as string[]
-                  ).map((item, index) => {
-                    return (
-                      <View
-                        key={index}
-                        style={{
-                          marginTop: verticalScale(10),
-                          marginHorizontal: scale(4),
-                          width: (WIDTH_SCREEN - scale(100)) / 2,
-                          height: scale(70),
-                          alignItems: 'center',
-                          justifyContent: 'center',
-                          padding: scale(2),
-                          borderRadius: scale(4),
-                        }}>
-                        {buildItemAnswer([], item, index + 100)}
-                      </View>
-                    );
-                  })}
-                </View>
+                
+                  <View style={{height: scale(170), width:'100%', marginTop: verticalScale(6)}}>
+                    <CanvasWrite
+                      ref={canvasWriteRef}
+                      background={
+                        <FastImage
+                          source={{
+                            uri: env?.IMAGE_QUESTION_BASE_API_URL + firstMiniTestTask?.question?.[moduleIndex].image[0],
+                          }}
+                          style={{
+                            width: '100%',
+                            height: '100%',
+                          }}
+                        />
+                      }
+                    />
+                  </View>
               </View>
 
               <PrimaryButton
@@ -392,7 +318,7 @@ const HistoryHS2M2P3 = observer(
   ),
 );
 
-export default HistoryHS2M2P3;
+export default HistoryHS2M1P3;
 
 const styles = StyleSheet.create({
   fill: {

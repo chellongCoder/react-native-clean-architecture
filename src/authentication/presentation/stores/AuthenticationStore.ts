@@ -27,7 +27,8 @@ import GetUserProfileResponse, {
 } from 'src/authentication/application/types/GetUserProfileResponse';
 import ChangeParentNameUseCase from 'src/authentication/application/useCases/ChangeParentNameUsecase';
 import {ChangeParentNamePayload} from 'src/authentication/application/types/ChangeParentNamePayload';
-import {getAndroidId, getDeviceToken} from 'react-native-device-info';
+// REMOVED: getAndroidId, getDeviceToken - violates Families Policy
+import {v4 as uuidv4} from 'uuid';
 import AssignChildrenUseCase from 'src/authentication/application/useCases/AssignChildrenUsecase';
 import {isAndroid} from 'src/core/presentation/utils';
 import DeleteChildrenUseCase from 'src/authentication/application/useCases/DeleteChildrenUsecase';
@@ -279,17 +280,24 @@ export class AuthenticationStore implements AuthenticationStoreState {
   public async setSelectedChild(child: children) {
     this.selectedChild = child;
 
+    // FAMILIES POLICY COMPLIANT: Use app-scoped UUID instead of device identifiers
     let deviceToken;
-
-    if (isAndroid) {
-      await getAndroidId().then((androidId: string) => {
-        deviceToken = androidId;
-      });
-    } else {
-      await getDeviceToken().then((iosId: string) => {
-        deviceToken = iosId;
-      });
+    
+    try {
+      // Try to get existing UUID from storage
+      const storedToken = await AsyncStorage.getItem('@app_device_token');
+      if (storedToken) {
+        deviceToken = storedToken;
+      } else {
+        // Generate new UUID (not a device identifier, just app-scoped)
+        deviceToken = uuidv4();
+        await AsyncStorage.setItem('@app_device_token', deviceToken);
+      }
+    } catch (error) {
+      console.log('Error getting device token:', error);
+      deviceToken = uuidv4(); // Fallback to temporary UUID
     }
+    
     const response = await this.assignChildrenUseCase.execute({
       deviceToken: deviceToken || '',
       childrenId: child._id,

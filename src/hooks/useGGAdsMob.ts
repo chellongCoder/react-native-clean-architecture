@@ -73,6 +73,7 @@ export const useGGAdsMob = () => {
 
         // An array of test device IDs to allow.
         testDeviceIdentifiers: ['EMULATOR'],
+
       })
       .then(async () => {
         // Request config successfully set!
