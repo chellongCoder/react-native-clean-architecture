@@ -142,6 +142,7 @@ import History_SelectImage_ImageDescription from './LessonComponent/History/Hist
 import HistoryHS2M2P3 from './LessonComponent/History_HS2M2P3';
 import HistoryHS1M5P3 from './LessonComponent/History_HS1M5P3';
 import HistoryHS2M1P3 from './LessonComponent/History_HS2M1P3';
+import HistoryHS4M1P2 from './LessonComponent/History_HS4M1P2';
 
 export type TResult = {
   userId?: string;
@@ -953,6 +954,17 @@ const LESSON_PATTERNS = [
         return componentMap[type + `_P${testTask?.stt}`] || Science_G0M1;
       }
     },
+    props,
+  },
+  {
+    pattern: /^HISTORY_HS4M1$/,
+    component: (type: string, testTask: any) => {
+      const componentMap: Record<string, any> = {
+        [`${type}_P2`]: HistoryHS4M1P2,
+      }; 
+      return componentMap[type + `_P${testTask?.stt}`] || null;
+    },
+    wrapper: DragProvider,
     props,
   },
 ];

@@ -155,7 +155,7 @@ Props) => {
           onLayout={e => {
             if (canDrag) {
               e.target.measureInWindow((x, y, width, height) => {
-                console.log('measureInWindow ', value, x, y, width, height);
+                // console.log('measureInWindow ', value, x, y, width, height);
                 attachView(x, y);
               });
             }
