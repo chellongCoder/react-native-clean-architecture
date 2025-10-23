@@ -44,17 +44,17 @@ const appConfig: ExpoConfig = {
     WEB_CLIENT_ID:
       '827845646125-49mekr1f87vgc0d40bj06llmoe2mvkq3.apps.googleusercontent.com',
     IMAGE_QUESTION_BASE_API_URL:
-      'https://storage.googleapis.com/alphadex-image-abeeci/question-image/',
+      'https://storage.googleapis.com/algorz-image-abeeci/question-image/',
     IMAGE_MODULE_BASE_API_URL:
-      'https://storage.googleapis.com/alphadex-image-abeeci/module-images/',
+      'https://storage.googleapis.com/algorz-image-abeeci/module-images/',
     IMAGE_BACKGROUND_BASE_API_URL:
-      'https://storage.googleapis.com/alphadex-image-abeeci/backgrounds/',
+      'https://storage.googleapis.com/algorz-image-abeeci/backgrounds/',
     CODEPUSH_SERVER_URL: 'https://code-push.tbd-alphadex.com/',
     CODEPUSH_DEPLOYMENT_KEY: '0Stgs2wPTZDLsxQQlEsaSQ7XKBr74ksvOXqog'
   },
 };
-//storage.googleapis.com/alphadex-image-abeeci/backgrounds/
-//storage.googleapis.com/alphadex-image-abeeci/module-images/
-//storage.googleapis.com/alphadex-image-abeeci/question-image/
+//storage.googleapis.com/algorz-image-abeeci/backgrounds/
+//storage.googleapis.com/algorz-image-abeeci/module-images/
+//storage.googleapis.com/algorz-image-abeeci/question-image/
 
 export default appConfig;

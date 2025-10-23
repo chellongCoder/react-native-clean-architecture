@@ -33,6 +33,7 @@ import SpInAppUpdates, {
 } from 'sp-react-native-in-app-updates';
 import DeviceInfo from 'react-native-device-info';
 import appsFlyer from 'react-native-appsflyer';
+import analytics from '@react-native-firebase/analytics';
 
 LogBox.ignoreLogs(['Warning: ...']); // Ignore log notification by message
 LogBox.ignoreAllLogs(); //Ignore all log notifications
@@ -55,6 +56,8 @@ const App = () => {
         console.error('appsFlyer error: ', error);
       },
     );
+    // Disable data collection for children
+    appsFlyer.anonymizeUser(true);
   };
 
   const routeNameRef = useRef<string>();
@@ -126,7 +129,8 @@ const App = () => {
 
   useEffect(() => {
     crashlytics().log('App mounted.');
-
+    // When user is under 13:
+    analytics().setAnalyticsCollectionEnabled(false);
     !isAndroid && requestScreenTime();
   }, []);
 

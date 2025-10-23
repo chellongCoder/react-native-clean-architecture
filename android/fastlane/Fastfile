@@ -75,8 +75,8 @@ platform :android do
 
   desc "Build AAB and upload to public testing on Play Console"
   lane :build_and_upload_aab do
+    
     increment_version_code
-
     gradle(task: "bundleRelease")
 
      # Ensure the path to the AAB file is correct
@@ -100,7 +100,7 @@ platform :android do
   lane :build_and_upload_aab_closed do
     gradle(task: 'bundle', build_type: 'Release')
 
-    aab_path = "/Users/mac/Workspaces/ReactNative/tbd-frontend/android/app/build/outputs/bundle/release/app-release.aab"
+    aab_path = "/Users/mac/Workspaces/ReactNative/tbd-frontend/android/app/build/outputs/bundle/prodRelease/app-prod-release.aab"
 
     supply(
       track: 'closed',
@@ -118,7 +118,7 @@ platform :android do
 
     gradle(task: 'bundle', build_type: 'Release')
 
-    aab_path = "/Users/mac/Workspaces/ReactNative/tbd-frontend/android/app/build/outputs/bundle/release/app-release.aab"
+    aab_path = "/Users/mac/Workspaces/ReactNative/tbd-frontend/android/app/build/outputs/bundle/prodRelease/app-prod-release.aab"
     unless File.exist?(aab_path)
       UI.user_error!("Could not find AAB file at path '#{aab_path}'")
     end
@@ -131,6 +131,34 @@ platform :android do
       skip_upload_images: true,
       skip_upload_screenshots: true,
       release_status: "completed"
+    )
+  end
+
+  desc "Download metadata from Play Store"
+  lane :download_metadata do
+    supply(
+      track: 'beta', # or 'beta', 'alpha', 'internal'
+      skip_upload_apk: true,
+      skip_upload_aab: true,
+      skip_upload_metadata: false,
+      skip_upload_images: false,
+      skip_upload_screenshots: false,
+      download_metadata: true
+    )
+  end
+
+  desc "Upload metadata (store listing, graphics, screenshots) to Play Console"
+  lane :upload_metadata do
+    supply(
+      # If you have android/fastlane/Appfile configured, you can omit json_key/package_name
+      # json_key: "android/fastlane/play-store-key.json",
+      # package_name: "com.your.app",
+
+      metadata_path: "metadata/android",  # e.g. android/fastlane/metadata/android/*
+      skip_upload_metadata: false,
+      skip_upload_images: false,
+      skip_upload_screenshots: false,
+      # validate_only: true,  # uncomment to dry-run validation without uploading
     )
   end
 end

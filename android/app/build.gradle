@@ -81,14 +81,21 @@ android {
 
     namespace "com.alphadex.tbd.app"
     defaultConfig {
-        applicationId "com.algorz.abeeci.app"
+        applicationId "com.alphadex.tbd.app"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 154
-        versionName "1.1"
+        versionCode 157
+        versionName "1.1.1"
         missingDimensionStrategy "store", "play"
         ndk {
             abiFilters "armeabi-v7a", "arm64-v8a"
+        }
+        
+        // Add these lines for 16KB page size support
+        externalNativeBuild {
+            cmake {
+                arguments "-DANDROID_PAGE_SIZE=16384"
+            }
         }
     }
     

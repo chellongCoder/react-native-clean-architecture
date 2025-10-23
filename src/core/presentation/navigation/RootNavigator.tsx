@@ -18,7 +18,9 @@ import {useI18n} from '../hooks/useI18n';
 import appsFlyer from 'react-native-appsflyer';
 import { useCampaign } from 'src/authentication/presentation/hooks/useCampaign';
 import { isAndroid } from '../utils';
-import { getAndroidId, getDeviceToken } from 'react-native-device-info';
+// REMOVED: getAndroidId, getDeviceToken - violates Families Policy
+import {v4 as uuidv4} from 'uuid';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export const AppStack = createStackNavigator();
 
@@ -45,17 +47,24 @@ const RootNavigator: FC = () => {
         const referralCode = attrData.referral_code; // if you passed it in link
 
         console.log("Install from:", mediaSource, "Campaign:", campaign, "Referral:", referralCode);
+        
+        // FAMILIES POLICY COMPLIANT: Use app-scoped UUID instead of device identifiers
         let deviceToken;
-
-        if (isAndroid) {
-          await getAndroidId().then((androidId: string) => {
-            deviceToken = androidId;
-          });
-        } else {
-          await getDeviceToken().then((iosId: string) => {
-            deviceToken = iosId;
-          });
+        try {
+          // Try to get existing UUID from storage
+          const storedToken = await AsyncStorage.getItem('@app_device_token');
+          if (storedToken) {
+            deviceToken = storedToken;
+          } else {
+            // Generate new UUID (not a device identifier, just app-scoped)
+            deviceToken = uuidv4();
+            await AsyncStorage.setItem('@app_device_token', deviceToken);
+          }
+        } catch (error) {
+          console.log('Error getting device token:', error);
+          deviceToken = uuidv4(); // Fallback to temporary UUID
         }
+        
         postCampaign({
           mediaSource: mediaSource ?? 'string',
           campaignName: campaign ?? 'string',

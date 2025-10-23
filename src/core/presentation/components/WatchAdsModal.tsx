@@ -11,7 +11,6 @@ import Animated, {
 } from 'react-native-reanimated';
 import {ActivityIndicator} from 'react-native';
 import {withProviders} from '../utils/withProviders';
-import {AdsNativeProvider} from '../hooks/adsnative/AdsNativeProvider';
 import {CustomTextStyle} from '../constants/typography';
 
 type Props = {
@@ -71,7 +70,7 @@ const WatchAdsModal = ({onWatchRewardAds, loadedAds}: Props) => {
   );
 };
 
-export default withProviders(AdsNativeProvider)(WatchAdsModal);
+export default WatchAdsModal;
 
 const styles = StyleSheet.create({
   container: {
