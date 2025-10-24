@@ -969,6 +969,8 @@ const LESSON_PATTERNS = [
         return componentMap[type + `_P${testTask?.stt}`] || <></>;
       }
     },
+    wrapper: DragProvider,
+
     props,
   },
   {
