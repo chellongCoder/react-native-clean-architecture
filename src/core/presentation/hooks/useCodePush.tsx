@@ -20,6 +20,8 @@ const CodePushProvider: React.FC<Props> = ({children}) => {
     const env = coreModuleContainer.getProvided<Env>(EnvToken)
   const [progress, setProgress] = useState<number>(-1);
   const [statusUpdate, setStatusUpdate] = useState<string>('');
+  console.log(`🛠 LOG: 🚀 --> ~ CodePushProvider ~ statusUpdate:`, statusUpdate);
+
   const [metaData, setMetaData] = useState<LocalPackage | null>(null);
   const i18n = useI18n()
 
@@ -56,55 +58,66 @@ const CodePushProvider: React.FC<Props> = ({children}) => {
 
   useEffect(() => {
     const checkForUpdates = async () => {
-      try {
-        // First, silently check for updates without showing dialog
+    try {
+        console.log('🔍 Checking for updates with deployment key:', env.CODEPUSH_DEPLOYMENT_KEY);
+        
+        // Check current app version info
+        const currentPackage = await CodePush.getUpdateMetadata();
+        console.log('📦 Current package (any state):', currentPackage);
+        
+        // Check if running on binary or CodePush bundle
+        if (!currentPackage) {
+          console.log('ℹ️ Running on binary version (no CodePush update installed yet)');
+        } else {
+          console.log('✅ Running on CodePush bundle:', {
+            label: currentPackage.label,
+            appVersion: currentPackage.appVersion,
+            deploymentKey: currentPackage.deploymentKey,
+          });
+        }
+
+        // Check for remote updates
         const remotePackage = await CodePush.checkForUpdate(env.CODEPUSH_DEPLOYMENT_KEY);
         
         if (!remotePackage) {
-          // No update available
-          setStatusUpdate(i18n.t('core.screens.codepush.upToDate'));
-          setProgress(-1);
-          return;
+          console.log('✅ App is up to date - no remote updates available');
+        } else {
+          console.log('🆕 Update available:', {
+            label: remotePackage.label,
+            appVersion: remotePackage.appVersion,
+            description: remotePackage.description,
+            isMandatory: remotePackage.isMandatory,
+            packageSize: remotePackage.packageSize,
+          });
         }
-
-        // Get current package info
-        const currentPackage = await CodePush.getUpdateMetadata();
         
-        // Compare bundle versions to avoid showing dialog for identical bundles
-        if (currentPackage && remotePackage.packageHash === currentPackage.packageHash) {
-          // Same bundle, don't show dialog
-          setStatusUpdate(i18n.t('core.screens.codepush.upToDate'));
-          setProgress(-1);
-          return;
-        }
-
-        // Different bundle detected, proceed with sync and show dialog
-        CodePush.sync(
-          {
-            deploymentKey: env.CODEPUSH_DEPLOYMENT_KEY,
-            updateDialog: {
-              title: i18n.t('core.screens.codepush.updateAvailable'),
-              optionalUpdateMessage: i18n.t('core.screens.codepush.contentUpdate'),
-              optionalIgnoreButtonLabel: i18n.t('core.screens.codepush.later'),
-              optionalInstallButtonLabel: i18n.t('core.screens.codepush.install'),
-              mandatoryUpdateMessage: i18n.t('core.screens.codepush.mandatoryMessage'),
-              mandatoryContinueButtonLabel: i18n.t('core.screens.codepush.install'),
-            },
-            installMode: CodePush.InstallMode.IMMEDIATE,
-          },
-          codePushStatusDidChange,
-          downloadProgressCallback,
-        );
-
       } catch (error) {
-        console.log('CodePush check failed:', error);
+        console.error('❌ CodePush check failed:', error);
         setProgress(-1);
       }
     };
+  
+  checkForUpdates();
+    // If deploymentKey is omitted here, native-configured key is used (from Info.plist / BuildConfig)
+    CodePush.sync(
+      {
+        deploymentKey: env.CODEPUSH_DEPLOYMENT_KEY,
+        updateDialog: {
+          title: i18n.t('core.screens.codepush.updateAvailable'),
+          optionalUpdateMessage: i18n.t('core.screens.codepush.contentUpdate'),
+          optionalIgnoreButtonLabel: i18n.t('core.screens.codepush.later'),
+          optionalInstallButtonLabel: i18n.t('core.screens.codepush.install'),
+          mandatoryUpdateMessage: i18n.t('core.screens.codepush.mandatoryMessage'),
+          mandatoryContinueButtonLabel: i18n.t('core.screens.codepush.install'),
+        },
+        installMode: CodePush.InstallMode.IMMEDIATE,
+      },
+      codePushStatusDidChange,
+      downloadProgressCallback,
+    );
 
-    checkForUpdates();
     CodePush.getUpdateMetadata().then(setMetaData).catch(() => undefined);
-  }, [downloadProgressCallback, env.CODEPUSH_DEPLOYMENT_KEY, i18n]);
+  }, [downloadProgressCallback]);
 
   const contextValue = useMemo<CodePushContextValue>(
     () => ({setProgress, metaData}),
