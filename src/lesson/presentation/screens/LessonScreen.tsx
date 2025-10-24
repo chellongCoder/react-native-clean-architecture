@@ -950,6 +950,7 @@ const LESSON_PATTERNS = [
         return componentMap[type + `_P${testTask?.stt}`] || Science_G0M1;
       }
     },
+    wrapper: DragProvider,
     props,
   },
   {
@@ -957,6 +958,17 @@ const LESSON_PATTERNS = [
     component: (type: string, testTask: any) => {
       const componentMap: Record<string, any> = {
         [`${type}_P2`]: HistoryHS4M1P2,
+      }; 
+      return componentMap[type + `_P${testTask?.stt}`] || null;
+    },
+    wrapper: DragProvider,
+    props,
+  },
+  {
+    pattern: /^HISTORY_HS6M2$/,
+    component: (type: string, testTask: any) => {
+      const componentMap: Record<string, any> = {
+        [`${type}_P1`]: HistoryHS4M1P2,
       }; 
       return componentMap[type + `_P${testTask?.stt}`] || null;
     },
