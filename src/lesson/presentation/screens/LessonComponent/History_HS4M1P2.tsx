@@ -282,44 +282,47 @@ const HistoryHS4M1P2 = observer(
               }}>
                 {(firstMiniTestTask?.question?.[moduleIndex].image as string[])
                   .map((item, index) => {
-                    return <View style={{width: scale(120)}}>
-                        <View
-                        style={{
-                          minHeight: scale(100),
-                          marginTop: verticalScale(20),
-                          marginHorizontal: scale(6),
-                          backgroundColor: COLORS.WHITE_FBF8CC,
-                          justifyContent: 'center',
-                          alignItems: 'center',
-                          borderWidth: 2,
-                          borderRadius: 12,
-                          borderStyle: 'dashed',
-                          borderColor: COLORS.YELLOW_E6960B,
-                        }}>
+                    return <View key={index} style={{width: scale(120), marginHorizontal: scale(6)}}>
+                        
                         {<DragItem
                             key={item + index}
                             index={index}
                             value={item}
                             createItem={({value}) => {
-                              if(value != item) {
-                                return <View style={{paddingHorizontal: 4, paddingVertical: 6}}>
-                                  <Text style={styles.textAnswer}>{value}</Text>
-                                </View>
-                              }
-                              return (
-                                <FastImage
-                                  source={{
-                                    uri: env?.IMAGE_QUESTION_BASE_API_URL + value,
-                                  }}
-                                  style={{
-                                    width: scale(120),
-                                    height: scale(100),
-                                  }}
-                                />
-                              );
-                            }}
+                              return <View
+                              style={{
+                                width: scale(120),
+                                minHeight: scale(100),
+                                marginTop: verticalScale(20),
+                                backgroundColor: COLORS.WHITE_FBF8CC,
+                                justifyContent: 'center',
+                                alignItems: 'center',
+                                borderWidth: 2,
+                                borderRadius: 12,
+                                borderStyle: 'dashed',
+                                borderColor: COLORS.YELLOW_E6960B,
+                                overflow: 'hidden',
+                              }}>
+                                {
+                                  value != item ? 
+                                  <View style={{paddingHorizontal: 4, paddingVertical: 6}}>
+                                    <Text style={styles.textAnswer}>{value}</Text>
+                                  </View>
+                                  : (
+                                    <FastImage
+                                      source={{
+                                        uri: env?.IMAGE_QUESTION_BASE_API_URL + value,
+                                      }}
+                                      style={{
+                                        width: scale(120),
+                                        height: scale(100),
+                                      }}
+                                    />
+                                  )
+                                }
+                              </View>
+                              }}
                           />}
-                      </View>
                       <Text style={styles.textQuestion}>
                         {firstMiniTestTask?.question?.[moduleIndex].descriptionImage[index]}
                       </Text>
