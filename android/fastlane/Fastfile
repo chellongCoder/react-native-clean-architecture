@@ -56,9 +56,9 @@ platform :android do
   desc "Build and upload APK to Firebase App Distribution"
   lane :upload_to_firebase do
 
-    increment_version_code
+    # increment_version_code
 
-    gradle(task: "assembleRelease")
+    # gradle(task: "assembleRelease")
 
 
     firebase_app_distribution(
