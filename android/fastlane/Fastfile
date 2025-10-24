@@ -114,7 +114,6 @@ platform :android do
 
   desc "Build and upload AAB to internal testing on Play Console"
   lane :build_and_upload_aab_internal do
-    # increment_version_code
 
     gradle(task: 'bundle', build_type: 'Release')
 

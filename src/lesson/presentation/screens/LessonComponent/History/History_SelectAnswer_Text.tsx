@@ -39,7 +39,7 @@ import SelectionAnswersQuestion, {
 import TextHighlight from '../../../components/TextHighlight';
 import {useI18n} from 'src/core/presentation/hooks/useI18n';
 import VoiceButton from '../../../components/VoiceButton';
-import { useHistoryModule } from '../History/hook';
+import { useHistoryModule } from './hook';
 
 type Props = {
   moduleIndex: number;
@@ -54,7 +54,7 @@ type Props = {
   characterStyle?: StyleProp<ViewStyle>;
 };
 
-const Science_G4M5 = observer(
+const History_SelectAnswer_Text = observer(
   forwardRef<LessonRef, Props>(
     (
       {
@@ -199,14 +199,15 @@ const Science_G4M5 = observer(
           isShowCorrectContainer={isShowCorrectContainer}
           onPressFlower={toggleShowHint}
           buildQuestion={
-            <View style={{marginTop: scale(32), paddingHorizontal: scale(48)}}>
+            <View style={{ height: verticalScale(200), marginHorizontal: scale(32)}}>
               <Text
                 style={[
                   styles.fonts_SVN_Cherish,
                   {fontSize: scale(24), color: settings.backgroundButtonColor},
-                  {textAlign: 'center'},
-                ]}>
-                {firstMiniTestTask?.question?.[moduleIndex].paragraph}
+                  {textAlign: 'center', lineHeight: verticalScale(36), letterSpacing: 1.2,},
+                ]}
+                >
+                {firstMiniTestTask?.question?.[moduleIndex].description}
               </Text>
             </View>
           }
@@ -284,7 +285,7 @@ const Science_G4M5 = observer(
   ),
 );
 
-export default Science_G4M5;
+export default History_SelectAnswer_Text;
 
 const styles = StyleSheet.create({
   fill: {
