@@ -9,8 +9,8 @@ import React, {
   useRef,
   useState,
 } from 'react';
-import LessonComponent from './LessonComponent';
-import PrimaryButton from '../../components/PrimaryButton';
+import LessonComponent from '../LessonComponent';
+import PrimaryButton from '../../../components/PrimaryButton';
 import {FontFamily} from 'src/core/presentation/hooks/useFonts';
 import useGlobalStyle from 'src/core/presentation/hooks/useGlobalStyle';
 import {Task} from 'src/home/application/types/GetListQuestionResponse';
@@ -28,21 +28,21 @@ import {
   withTiming,
 } from 'react-native-reanimated';
 import {TextToSpeechContext} from 'src/core/presentation/hooks/textToSpeech/TextToSpeechContext';
-import {useLessonStore} from '../../stores/LessonStore/useGetPostsStore';
-import {useSettingLesson} from '../../hooks/useSettingLesson';
+import {useLessonStore} from '../../../stores/LessonStore/useGetPostsStore';
+import {useSettingLesson} from '../../../hooks/useSettingLesson';
 import {useIsFocused} from '@react-navigation/native';
 import useAuthenticationStore from 'src/authentication/presentation/stores/useAuthenticationStore';
 import {observer} from 'mobx-react';
-import {LessonRef} from '../../types';
+import {LessonRef} from '../../../types';
 import useHomeStore from 'src/home/presentation/stores/useHomeStore';
-import {SelectionAnswersQuestionRef} from '../../components/SelectionAnswersQuestion';
+import {SelectionAnswersQuestionRef} from '../../../components/SelectionAnswersQuestion';
 import {useI18n} from 'src/core/presentation/hooks/useI18n';
-import VoiceButton from '../../components/VoiceButton';
-import DragItem from '../../components/Drag/DragSendItem';
-import {useDragContext} from '../../components/Drag/DragProvider';
+import VoiceButton from '../../../components/VoiceButton';
+import DragItem from '../../../components/Drag/DragSendItem';
+import {useDragContext} from '../../../components/Drag/DragProvider';
 import FastImage from 'react-native-fast-image';
-import TextHighlight from '../../components/TextHighlight';
-import { useHistoryModule } from './History/hook';
+import TextHighlight from '../../../components/TextHighlight';
+import { useHistoryModule } from './hook';
 
 type Props = {
   moduleIndex: number;
@@ -271,12 +271,14 @@ const HistoryHS4M1P2 = observer(
           buildQuestion={
             <View style={{
               alignItems: 'center',
+              maxWidth: '50%',
             }}>
               <Text style={styles.textQuestion}>
                 {
                   firstMiniTestTask?.question?.[moduleIndex].description
                 }
               </Text>
+
               <View style={{
                 flexDirection: 'row',
               }}>
@@ -425,9 +427,7 @@ const styles = StyleSheet.create({
   fonts_SVN_Cherish: {
     fontFamily: FontFamily.SVNCherishMoment,
   },
-  textColor: {
-    color: '#1C6349',
-  },
+   
   textParagraph: {
     fontSize: verticalScale(26),
     textAlign: 'center',
@@ -439,10 +439,15 @@ const styles = StyleSheet.create({
   textQuestion: {
     marginTop: verticalScale(6),
     marginHorizontal: scale(14),
-    fontSize: verticalScale(14),
+    fontSize: verticalScale(18),
     textAlign: 'center',
     fontFamily: FontFamily.SVNCherishMoment,
     color: COLORS.ORANGE_E5592C,
+  },
+  textDes: {
+    fontSize: verticalScale(18),
+    fontFamily: FontFamily.SVNNeuzeitBold,
+    color: COLORS.GREEN_009C6F,
   },
   textAnswer: {
     fontSize: verticalScale(14),
@@ -450,97 +455,9 @@ const styles = StyleSheet.create({
     fontFamily: FontFamily.SVNCherishMoment,
     color: COLORS.YELLOW_E6960B,
   },
-  textGreen: {
-    color: '#258F78',
-  },
-  txtWhite: {
-    color: 'white',
-  },
-  rowAround: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-  },
-  rowAlignCenter: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  rowBetween: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-  },
-  pr16: {
-    paddingRight: 16,
-  },
-  ph24: {
-    paddingHorizontal: 24,
-  },
-  pb8: {
-    paddingBottom: verticalScale(8),
-  },
-  pb16: {
-    paddingBottom: verticalScale(16),
-  },
-  pb32: {
-    paddingBottom: verticalScale(32),
-  },
-  mt8: {
-    marginTop: verticalScale(8),
-  },
-  mt16: {
-    marginTop: verticalScale(16),
-  },
-  mt24: {
-    marginTop: verticalScale(24),
-  },
-  mt32: {
-    marginTop: verticalScale(32),
-  },
-  alignSelfCenter: {
-    alignSelf: 'center',
-  },
-  center: {
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  boxItemAnswer: {
-    height: 94,
-    backgroundColor: '#F2B559',
-    borderRadius: 30,
-  },
-  boxSelected: {
-    backgroundColor: COLORS.WHITE_FBF8CC,
-    height: verticalScale(220),
-    flex: 1,
-    borderRadius: scale(30),
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  boxVowel: {
-    width: 56,
-    height: 56,
-    borderRadius: 10,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginHorizontal: 6,
-    marginVertical: 6,
-  },
-  textVowel: {
-    fontFamily: FontFamily.SVNCherishMoment,
-    color: '#FBF8CC',
-    fontSize: verticalScale(14),
-    textAlign: 'center',
-  },
-  wapper: {
-    marginTop: 8,
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    justifyContent: 'center',
-    alignContent: 'center',
-  },
-  wrapCharContainer: {
-    flexDirection: 'row',
-  },
-  wrapHeaderContainer: {
+   
+   
+   wrapHeaderContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     marginBottom: verticalScale(8),

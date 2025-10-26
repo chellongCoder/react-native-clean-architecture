@@ -247,13 +247,13 @@ const HistoryHS6M1P3 = observer(
                 alignItems: 'center',
                 gap: scale(16),
               }}>
-              <Image
+              {/* <Image
                 source={require('../../../../../../assets/images/historyDefaultImage.png')}
                 style={{
                   width: scale(100),
                   height: scale(100),
                 }}
-              />
+              /> */}
               <Text style={[styles.fonts_SVN_Cherish, styles.centerTitle]}>
                 {mockData[0].question}
               </Text>

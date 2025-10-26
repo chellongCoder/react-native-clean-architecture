@@ -230,9 +230,6 @@ const HistoryHS2M2P3 = observer(
         [],
       );
 
-      console.log(`🛠 LOG: 🚀 --> ----------------------------------------------------------------------------🛠 LOG: 🚀 -->`);
-      console.log(`🛠 LOG: 🚀 --> ~ firstMiniTestTask?.question?:`, firstMiniTestTask?.question);
-      console.log(`🛠 LOG: 🚀 --> ----------------------------------------------------------------------------🛠 LOG: 🚀 -->`);
       return (
         <LessonComponent
           backgroundImage={backgroundImage}

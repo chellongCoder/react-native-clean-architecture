@@ -5,8 +5,9 @@ import {
   TouchableOpacity,
   StyleProp,
   ViewStyle,
+  ScrollView,
 } from 'react-native';
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useState, useRef} from 'react';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {FontFamily} from 'src/core/presentation/hooks/useFonts';
 import BookView from '../../components/BookView';
@@ -74,16 +75,44 @@ const LessonComponent = ({
   const [source, setSource] = useState<number | Source | undefined>({
     uri: backgroundImage,
   });
+  
+  const hideTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const isScrollingRef = useRef(false);
 
   const handleError = () => {
     setSource(assets.background_vowels);
   };
 
+  const handleScrollBegin = () => {
+    // User started scrolling - cancel any pending hide
+    isScrollingRef.current = true;
+    if (hideTimeoutRef.current) {
+      clearTimeout(hideTimeoutRef.current);
+      hideTimeoutRef.current = null;
+    }
+  };
+
+  const handleScrollEnd = () => {
+    // User stopped scrolling - hide prompt after 1 second
+    isScrollingRef.current = false;
+    hideTimeoutRef.current = setTimeout(() => {
+      setIsShowPrompt(false);
+    }, 1000);
+  };
+
   useEffect(() => {
     setIsShowPrompt(true);
     setTimeout(() => {
-      setIsShowPrompt(false);
+      if (!isScrollingRef.current) {
+        setIsShowPrompt(false);
+      }
     }, 3000);
+
+    return () => {
+      if (hideTimeoutRef.current) {
+        clearTimeout(hideTimeoutRef.current);
+      }
+    };
   }, [moduleIndex]);
 
   return (
@@ -215,7 +244,14 @@ const LessonComponent = ({
             {isShowPrompt && (
               <>
                 {typeof prompt === 'object' && prompt?.description ? (
-                  <View style={styles.wrapCorrectContainer}>
+                  <ScrollView
+                    style={styles.wrapCorrectContainer}
+                    contentContainerStyle={styles.scrollContentContainer}
+                    showsVerticalScrollIndicator={false}
+                    onScrollBeginDrag={handleScrollBegin}
+                    onScrollEndDrag={handleScrollEnd}
+                    onMomentumScrollEnd={handleScrollEnd}
+                    nestedScrollEnabled={true}>
                     <View style={[{flexDirection: 'row', maxWidth: '100%'}]}>
                       {prompt.number !== undefined && (
                         <View style={[styles.promptNumberBg]}>
@@ -233,9 +269,16 @@ const LessonComponent = ({
                         {prompt?.description}
                       </Text>
                     </View>
-                  </View>
+                  </ScrollView>
                 ) : typeof prompt === 'string' ? (
-                  <View style={styles.wrapCorrectContainer}>
+                  <ScrollView
+                    style={styles.wrapCorrectContainer}
+                    contentContainerStyle={styles.scrollContentContainer}
+                    showsVerticalScrollIndicator={false}
+                    onScrollBeginDrag={handleScrollBegin}
+                    onScrollEndDrag={handleScrollEnd}
+                    onMomentumScrollEnd={handleScrollEnd}
+                    nestedScrollEnabled={true}>
                     <Text
                       style={[
                         styles.promptContent,
@@ -243,7 +286,7 @@ const LessonComponent = ({
                       ]}>
                       {prompt as string}
                     </Text>
-                  </View>
+                  </ScrollView>
                 ) : null}
               </>
             )}
@@ -371,15 +414,19 @@ const styles = StyleSheet.create({
   },
   wrapCorrectContainer: {
     maxWidth: '100%',
+    maxHeight: verticalScale(100), // Add max height for scrolling
     marginRight: scale(8),
     backgroundColor: COLORS.CUSTOM(COLORS.WHITE_FBF8CC, 0.4),
     padding: scale(12),
     borderTopLeftRadius: scale(36),
     borderTopRightRadius: scale(36),
     borderBottomRightRadius: scale(36),
-    alignItems: 'center',
     alignSelf: 'flex-start',
     zIndex: 998,
+  },
+  scrollContentContainer: {
+    alignItems: 'center',
+    flexGrow: 1,
   },
   correctTitle: {
     color: COLORS.GREEN_1C6A59,

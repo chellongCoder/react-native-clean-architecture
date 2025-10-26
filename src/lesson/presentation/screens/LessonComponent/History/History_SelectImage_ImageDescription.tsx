@@ -268,7 +268,7 @@ const History_SelectImage_ImageDescription = observer(
                       ),
                     },
                   ]}>
-                  {firstMiniTestTask?.question?.[moduleIndex].content}{' '}
+                  {firstMiniTestTask?.question?.[moduleIndex].description}{' '}
                 </Text>
               </View>
             </View>
