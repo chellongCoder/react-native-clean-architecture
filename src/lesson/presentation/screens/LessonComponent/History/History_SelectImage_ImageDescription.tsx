@@ -257,6 +257,9 @@ const History_SelectImage_ImageDescription = observer(
               </View>
               <View style={{paddingBottom: verticalScale(12)}}>
                 <Text
+                  numberOfLines={2}
+                  allowFontScaling
+                  adjustsFontSizeToFit
                   style={[
                     globalStyle.txtLabel,
                     styles.textTitle,
@@ -359,7 +362,7 @@ const styles = StyleSheet.create({
 
   textTitle: {
     fontSize: scale(28),
-    lineHeight: scale(35),
+    lineHeight: scale(25),
     fontFamily: FontFamily.SVNCherishMoment,
     letterSpacing: 1.4,
   },

@@ -98,7 +98,8 @@ platform :android do
 
   desc "Build and upload AAB to closed testing on Play Console"
   lane :build_and_upload_aab_closed do
-    gradle(task: 'bundle', build_type: 'Release')
+    # gradle(task: 'bundle', build_type: 'Release')
+    # increment_version_code
 
     aab_path = "/Users/mac/Workspaces/ReactNative/tbd-frontend/android/app/build/outputs/bundle/prodRelease/app-prod-release.aab"
 

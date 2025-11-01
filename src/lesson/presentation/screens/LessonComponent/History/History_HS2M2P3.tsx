@@ -261,7 +261,10 @@ const HistoryHS2M2P3 = observer(
             <View style={{
               alignItems: 'center',
             }}>
-            <Text style={styles.textQuestion}>
+            <Text style={[styles.textQuestion, {color: darkenColor(
+                          settings.backgroundButtonColor ?? '',
+                          20,
+                        ),}]}>
               {
                 firstMiniTestTask?.question?.[moduleIndex].description
               }

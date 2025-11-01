@@ -279,10 +279,8 @@ const HistoryHS1M5P1 = observer(
                               uri: env?.IMAGE_QUESTION_BASE_API_URL + value,
                             }}
                             style={{
-                              width: scale(60),
-                              height: scale(60),
-                              marginHorizontal: scale(12),
-                              marginVertical: verticalScale(6),
+                              width: scale(120),
+                              height: scale(120),
                             }}
                           />
                         );

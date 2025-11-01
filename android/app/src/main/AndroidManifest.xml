@@ -17,8 +17,7 @@
   
   <!-- CRITICAL: Remove advertising ID for Families Policy Compliance -->
   <uses-permission
-    android:name="com.google.android.gms.permission.AD_ID"
-    tools:node="remove" />
+    android:name="com.google.android.gms.permission.AD_ID" />
   
   <!-- Remove phone state permission -->
   <uses-permission

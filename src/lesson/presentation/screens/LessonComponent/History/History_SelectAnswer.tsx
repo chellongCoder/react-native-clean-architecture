@@ -269,14 +269,17 @@ const History_SelectAnswer = observer(
           onPressFlower={toggleShowHint}
           buildQuestion={
             <Animated.View
-              style={[animatedStyle, {flex: 1, paddingHorizontal: 36, gap: 8}]}>
+              style={[animatedStyle, {height: verticalScale(300), width: '80%', gap: verticalScale(10)}]}>
               <Text
+                numberOfLines={1}
+                allowFontScaling
+                adjustsFontSizeToFit
                 style={[
                   styles.fonts_SVN_Cherish,
                   {
                     textAlign: 'center',
-                    fontSize: 20,
-                    color: COLORS.GREEN_157152,
+                    fontSize: scale(20),
+                    color: settings.backgroundButtonColor,
                     flexWrap: 'wrap',
                   },
                 ]}>
@@ -290,16 +293,18 @@ const History_SelectAnswer = observer(
                   style={{
                     justifyContent: 'center',
                     alignItems: 'center',
-                    gap: 4,
-                    marginTop: 24,
+                    gap: verticalScale(4),
                   }}>
                   <Text
+                    numberOfLines={2}
+                    allowFontScaling
+                    adjustsFontSizeToFit
                     style={[
                       styles.fonts_SVN_Neuzeit_Bold,
                       {
                         textAlign: 'center',
-                        fontSize: 18,
-                        color: COLORS.GREEN_157152,
+                        fontSize: scale(18),
+                        color: darkenColor(settings.backgroundColor!, 30),
                       },
                     ]}>
                     {
@@ -317,8 +322,8 @@ const History_SelectAnswer = observer(
                         ].image,
                     }}
                     style={{
-                      height: 140,
-                      width: 210,
+                      height: verticalScale(140),
+                      width: scale(210),
                       borderRadius: 22,
                       borderWidth: 3,
                       borderColor: COLORS.WHITE_FBF8CC,

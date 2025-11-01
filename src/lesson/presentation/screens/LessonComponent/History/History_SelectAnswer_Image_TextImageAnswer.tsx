@@ -219,6 +219,8 @@ const History_SelectAnswer_Image_TextImageAnswer = observer(
                     ?.map((description, index) => (
                       <View key={index} style={styles.descriptionItem}>
                         <Text
+                          adjustsFontSizeToFit
+                          allowFontScaling
                           style={[
                             [
                               styles.description,
@@ -372,8 +374,8 @@ const styles = StyleSheet.create({
     color: COLORS.WHITE_FBF8CC,
   },
   image: {
-    width: scale(120),
-    height: scale(120),
+    width: scale(140),
+    height: scale(140),
   },
   imageContainer: {
     alignItems: 'center',
@@ -382,6 +384,9 @@ const styles = StyleSheet.create({
   descriptionItem: {},
   descriptionContainer: {
     width: '60%',
+    height: verticalScale(80),
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   description: {
     fontSize: scale(19),

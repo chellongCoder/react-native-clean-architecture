@@ -1,5 +1,5 @@
-json_key_file("./fastlane/optimal-analogy-473307-k3-368690b7e0fa.json") # Path to the json secret file - Follow https://docs.fastlane.tools/actions/supply/#setup to get one
-package_name("com.alphadex.tbd.app") # e.g. com.krausefx.app
 # json_key_file("./fastlane/optimal-analogy-473307-k3-368690b7e0fa.json") # Path to the json secret file - Follow https://docs.fastlane.tools/actions/supply/#setup to get one
-# package_name("com.algorz.abeeci.app") # e.g. com.krausefx.app
+# package_name("com.alphadex.tbd.app") # e.g. com.krausefx.app
+json_key_file("./fastlane/optimal-analogy-473307-k3-368690b7e0fa.json") # Path to the json secret file - Follow https://docs.fastlane.tools/actions/supply/#setup to get one
+package_name("com.algorz.abeeci.app") # e.g. com.krausefx.app
 

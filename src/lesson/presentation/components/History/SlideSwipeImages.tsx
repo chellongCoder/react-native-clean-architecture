@@ -84,7 +84,7 @@ const SlideSwipeImages: React.FC<SlideSwipeImagesProps> = ({
 
   const renderSlideItem = ({item, index}: {item: SlideItem; index: number}) => {
     return (
-      <View style={{flexDirection: 'column', gap: scale(4)}}>
+      <View pointerEvents='none' style={{flexDirection: 'column', gap: scale(4)}}>
         <View>
           {item.title && (
             <Text
@@ -96,16 +96,15 @@ const SlideSwipeImages: React.FC<SlideSwipeImagesProps> = ({
           )}
           {item.subtitle && (
             <Text
-              numberOfLines={3}
+              numberOfLines={2}
               adjustsFontSizeToFit
+              allowFontScaling
               style={[styles.subtitle, subtitleStyle]}>
               {item.subtitle}
             </Text>
           )}
         </View>
-        <TouchableOpacity
-          activeOpacity={0.8}
-          onPress={() => onSlidePress?.(item, index)}
+        <View
           style={[styles.slideContainer, imageStyle]}>
           <View style={styles.imageContainer}>
             <FastImage
@@ -114,7 +113,7 @@ const SlideSwipeImages: React.FC<SlideSwipeImagesProps> = ({
               resizeMode={FastImage.resizeMode.cover}
             />
           </View>
-        </TouchableOpacity>
+        </View>
       </View>
     );
   };

@@ -217,11 +217,11 @@ const History_SelectImage_Description = observer(
           isShowCorrectContainer={isShowCorrectContainer}
           onPressFlower={toggleShowHint}
           buildQuestion={
-            <Animated.View style={[animatedStyle, {flex: 1}]}>
-              <Text style={styles.textTitle}>
+            <Animated.View style={[animatedStyle, {flex: 1, width: '80%'}]}>
+              <Text style={[styles.textTitle, {color: settings.backgroundButtonColor}]}>
                 {firstMiniTestTask?.question?.[moduleIndex].content ?? ''}
               </Text>
-              <Text style={styles.textDes}>
+              <Text style={[styles.textDes, {color: settings.backgroundColor}]}>
                 {firstMiniTestTask?.question?.[moduleIndex].description ?? ''}
               </Text>
             </Animated.View>
@@ -313,12 +313,15 @@ const styles = StyleSheet.create({
     lineHeight: scale(35),
     fontFamily: FontFamily.SVNCherishMoment,
     letterSpacing: 1.4,
+    textAlign: 'center'
   },
   textDes: {
     fontSize: scale(22),
     lineHeight: scale(26.4),
     fontFamily: FontFamily.SVNNeuzeitBold,
     letterSpacing: -1.1,
+    marginTop: verticalScale(12),
+    textAlign: 'center'
   },
   wrapHeaderContainer: {
     flexDirection: 'row',

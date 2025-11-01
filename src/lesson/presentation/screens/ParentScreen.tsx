@@ -161,7 +161,7 @@ const ParentScreen = observer(() => {
   const i18n = useI18n();
 
   const {isShowAuth: isAuthenSetting, changeIsShowAuth} = useAuthParent();
-  const isShowAuth = isAuthenSetting;
+  const isShowAuth = __DEV__ ? false : isAuthenSetting;
 
   const loadingGlobal = useLoadingGlobal();
   useGetUserSetting(deviceToken, selectedChild?._id ?? '', lesson);
