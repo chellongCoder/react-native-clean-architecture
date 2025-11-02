@@ -1035,17 +1035,6 @@ const LESSON_PATTERNS = [
     wrapper: DragProvider,
     props,
   },
-  {
-    pattern: /^HISTORY_HS4M1$/,
-    component: (type: string, testTask: any) => {
-      const componentMap: Record<string, any> = {
-        [`${type}_P2`]: HistoryHS4M1P2,
-      };
-      return componentMap[type + `_P${testTask?.stt}`] || null;
-    },
-    wrapper: DragProvider,
-    props,
-  },
 ];
 
 const LessonScreen = observer(() => {
