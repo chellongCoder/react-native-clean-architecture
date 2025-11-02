@@ -194,11 +194,6 @@ const HistoryHS6M1P1 = observer(
       const opacity = useSharedValue(0);
       const scaleS = useSharedValue(1);
 
-      console.log(
-        'firstMiniTestTask?.question?.[moduleIndex]: ',
-        firstMiniTestTask?.question?.[moduleIndex],
-      );
-
       /**
        * * reset lại countdown khi lần làm thay đổi
        */
