@@ -165,7 +165,6 @@ const HistoryHS6M1P3 = observer(
           );
         },
       }));
-
       return (
         <LessonComponent
           backgroundImage={backgroundImage}
