@@ -37,6 +37,7 @@ import {useDragContext} from '../../../components/Drag/DragProvider';
 import FastImage from 'react-native-fast-image';
 import TextHighlight from '../../../components/TextHighlight';
 import {useHistoryModule} from './hook';
+import {H6M1P1AnswerI} from 'src/home/application/types/GetListQuestionResponse';
 
 type Props = {
   moduleIndex: number;
@@ -70,10 +71,10 @@ const HistoryHS6M1P1 = observer(
 
       const answerRef = useRef<SelectionAnswersQuestionRef>();
 
-      const {clear, listDragItem} = useDragContext();
-
       const [answerSelected, setAnswerSelected] = useState('');
-      const [selectedItem, setSelectedItem] = useState(null as any);
+      const [selectedItem, setSelectedItem] = useState<H6M1P1AnswerI | null>(
+        null,
+      );
 
       const {trainingCount, getSetting} = useLessonStore();
 
@@ -102,7 +103,6 @@ const HistoryHS6M1P1 = observer(
         countDownTime: trainingCount <= 2 ? 0 : 5,
         isCorrectAnswer: isCorrectAnswer,
         onSubmit: () => {
-          clear();
           setAnswerSelected('');
           setSelectedItem(null);
           setIsCorrectAnswer(undefined);
@@ -118,67 +118,64 @@ const HistoryHS6M1P1 = observer(
       const i18n = useI18n();
       const isSubmitRef = useRef(false);
 
-      const mockData = [
-        {
-          id: 1,
-          title: 'Khái niệm lịch sử',
-          question: [
-            {
-              id: 1,
-              title: 'Lịch sử là gì?',
-              description:
-                'là tất cả những gì đã diễn ra trong quá khứ. Những sự kiện, hiện tượng, con người đã tồn tại đều để lại dấu ấn trong lịch sử.',
-              imageUrl:
-                'https://cdn.pixabay.com/photo/2024/05/26/10/15/bird-8788491_1280.jpg',
-            },
-            {
-              id: 2,
-              title: 'Lịch sử loài người',
-              description:
-                'Lịch sử loài người là toàn bộ hoạt động của con người trong quá khứ: lao động, sinh sống, sáng tạo công cụ, dựng xây xã hội.',
-              imageUrl:
-                'https://cdn.pixabay.com/photo/2024/05/26/10/15/bird-8788491_1280.jpg',
-            },
-            {
-              id: 3,
-              title: 'Khoa học lịch sử',
-              description:
-                'Khoa học Lịch sử là ngành nghiên cứu và phục dựng lại hoạt động của xã hội loài người trong quá khứ, dựa trên tư liệu để hiểu chính xác những gì đã xảy ra.',
-              imageUrl:
-                'https://cdn.pixabay.com/photo/2024/05/26/10/15/bird-8788491_1280.jpg',
-            },
-          ],
-        },
-      ];
-
       // Handle item selection
       const handleItemSelection = (item: any) => {
-        setAnswerSelected(item.title);
+        setIsCorrectAnswer(true);
         setSelectedItem(item);
+      };
+
+      // Calculate circular positions for items
+      const calculateCircularPositions = (itemCount: number) => {
+        const maxItems = Math.min(itemCount, 5);
+        const containerSize = scale(213);
+        const itemSize = scale(92);
+        const containerCenter = containerSize / 2;
+        const itemRadius = itemSize / 2;
+        // Position items on the circumference - adjust radius to balance distance from center
+        // Original items were positioned further out than 0.7 but not as far as 1.15
+        const positioningRadius = containerCenter; // Balanced radius for items closer to middle
+
+        const positions = [];
+        for (let i = 0; i < maxItems; i++) {
+          // Calculate angle: evenly distribute around circle, starting from top (-π/2)
+          const angle = (2 * Math.PI * i) / maxItems - Math.PI / 2;
+          // Calculate x and y positions relative to container center, then convert to absolute
+          const centerX = containerCenter + positioningRadius * Math.cos(angle);
+          const centerY = containerCenter + positioningRadius * Math.sin(angle);
+
+          // Position the item's top-left corner (accounting for item radius)
+          const x = centerX - itemRadius;
+          const y = centerY - itemRadius;
+
+          positions.push({
+            style: {
+              top: y,
+              left: x,
+            },
+          });
+        }
+        return positions;
       };
 
       // Render mapped items
       const renderMappedItems = () => {
-        const items = mockData[0].question;
-        const positions = [
-          {style: styles.itemTopLeft},
-          {style: styles.itemBottomLeft},
-          {style: styles.itemRight},
-        ];
+        const items = firstMiniTestTask?.question?.[moduleIndex].answers;
+        const itemCount = (items as H6M1P1AnswerI[])?.length || 0;
+        const positions = calculateCircularPositions(itemCount);
 
-        return items.map((item, index) => (
+        return (items as H6M1P1AnswerI[])?.map((item, index) => (
           <TouchableOpacity
-            key={item.id}
+            key={index}
             style={[
               styles.circularItem,
               positions[index]?.style,
-              selectedItem?.id === item.id && {
+              selectedItem?.content === item.content && {
                 backgroundColor: COLORS.PRIMARY,
               },
             ]}
             onPress={() => handleItemSelection(item)}>
             <Text style={[styles.circularItemText, styles.fonts_SVN_Cherish]}>
-              {item.title}
+              {item.content}
             </Text>
           </TouchableOpacity>
         ));
@@ -197,37 +194,10 @@ const HistoryHS6M1P1 = observer(
       const opacity = useSharedValue(0);
       const scaleS = useSharedValue(1);
 
-      const onSubmit = useCallback(() => {
-        const selectedFeature = (() => {
-          const listFeature = Object.keys(listDragItem).filter(
-            (index: string) => listDragItem[+index].parentId >= 0,
-          );
-
-          return listFeature
-            .filter(e => +e >= 100)
-            .map(item => {
-              return listDragItem[+item];
-            });
-        })();
-
-        const correctAnswers =
-          firstMiniTestTask?.question?.[moduleIndex].correctAnswer;
-
-        const isCorrect =
-          correctAnswers?.toString() === selectedFeature[0]?.value?.toString();
-
-        setIsCorrectAnswer(!!isCorrect);
-        isSubmitRef.current = false;
-      }, [listDragItem, firstMiniTestTask?.question, moduleIndex]);
-
-      /**
-       * * submit khi đúng
-       */
-      useEffect(() => {
-        if (isCorrectAnswer !== undefined) {
-          submit();
-        }
-      }, [isCorrectAnswer, submit]);
+      console.log(
+        'firstMiniTestTask?.question?.[moduleIndex]: ',
+        firstMiniTestTask?.question?.[moduleIndex],
+      );
 
       /**
        * * reset lại countdown khi lần làm thay đổi
@@ -258,33 +228,6 @@ const HistoryHS6M1P1 = observer(
           );
         },
       }));
-
-      const buildItemAnswer = useCallback(
-        (items: string[], item: string, index: number) => {
-          // console.log('🛠 LOG: 🚀 --> ~ item:', item);
-          return (
-            <DragItem
-              index={100 + index}
-              value={item}
-              createItem={({value}) => {
-                return (
-                  <FastImage
-                    resizeMode={'contain'}
-                    source={{
-                      uri: env?.IMAGE_QUESTION_BASE_API_URL + value,
-                    }}
-                    style={{
-                      width: scale(50),
-                      height: scale(50),
-                    }}
-                  />
-                );
-              }}
-            />
-          );
-        },
-        [env?.IMAGE_QUESTION_BASE_API_URL],
-      );
 
       return (
         <LessonComponent
@@ -317,7 +260,7 @@ const HistoryHS6M1P1 = observer(
             <View>
               <View style={styles.circularContainer}>
                 <Text style={[styles.fonts_SVN_Cherish, styles.centerTitle]}>
-                  {mockData[0].title}
+                  {firstMiniTestTask?.question?.[moduleIndex].content}
                 </Text>
                 {renderMappedItems()}
               </View>
@@ -365,7 +308,9 @@ const HistoryHS6M1P1 = observer(
                     <View style={styles.contentRow}>
                       <FastImage
                         source={{
-                          uri: selectedItem.imageUrl,
+                          uri:
+                            env.IMAGE_QUESTION_BASE_API_URL +
+                            selectedItem.image,
                         }}
                         style={styles.imageContainer}
                       />
@@ -399,7 +344,7 @@ const HistoryHS6M1P1 = observer(
                   styles.buttonContainer,
                   {backgroundColor: settings.backgroundButtonColor},
                 ]}
-                onPress={onSubmit}
+                onPress={submit}
               />
             </View>
           }
@@ -485,18 +430,6 @@ const styles = StyleSheet.create({
     fontSize: 17,
     color: COLORS.WHITE_FBF8CC,
     textAlign: 'center',
-  },
-  itemTopLeft: {
-    top: scale(-30),
-    left: scale(0),
-  },
-  itemBottomLeft: {
-    top: scale(138),
-    left: scale(0),
-  },
-  itemRight: {
-    top: scale(46),
-    right: scale(-46),
   },
 
   // Content display styles
