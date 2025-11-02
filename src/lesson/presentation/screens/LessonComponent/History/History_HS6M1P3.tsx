@@ -165,7 +165,6 @@ const HistoryHS6M1P3 = observer(
           );
         },
       }));
-
       return (
         <LessonComponent
           backgroundImage={backgroundImage}
@@ -223,7 +222,9 @@ const HistoryHS6M1P3 = observer(
                     }}
                   />
                   <Text style={[styles.fonts_SVN_Cherish, styles.centerTitle]}>
-                    {firstMiniTestTask?.question?.[moduleIndex].content}
+                    {firstMiniTestTask?.question?.[moduleIndex].content
+                      ? firstMiniTestTask?.question?.[moduleIndex].content
+                      : firstMiniTestTask?.question?.[moduleIndex].description}
                   </Text>
                 </>
               )}
