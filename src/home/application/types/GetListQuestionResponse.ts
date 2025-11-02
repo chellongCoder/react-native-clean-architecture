@@ -1,4 +1,4 @@
-export type Answer = {content: string; image: string};
+export type Answer = {content: string; image: string; description?: string};
 export interface Question {
   content: string;
   highlight: string;
