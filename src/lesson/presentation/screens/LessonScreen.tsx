@@ -149,7 +149,6 @@ import History_HS6M1P2 from './LessonComponent/History/History_HS6M1P2';
 import HistoryHS6M1P3 from './LessonComponent/History/History_HS6M1P3';
 import History_HS6M3P1 from './LessonComponent/History/History_HS6M3P1';
 
-
 export type TResult = {
   userId?: string;
   taskId?: string;
@@ -1041,7 +1040,7 @@ const LESSON_PATTERNS = [
     component: (type: string, testTask: any) => {
       const componentMap: Record<string, any> = {
         [`${type}_P2`]: HistoryHS4M1P2,
-      }; 
+      };
       return componentMap[type + `_P${testTask?.stt}`] || null;
     },
     wrapper: DragProvider,
