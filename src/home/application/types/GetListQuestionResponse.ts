@@ -5,7 +5,7 @@ export interface Question {
   correctAnswer: string | string[] | string[][];
   createdAt: string;
   description: string;
-  answerDescription: string;
+  answerDescription: string | string[];
   isDeleted: false;
   point: number;
   stt: number;
