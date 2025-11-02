@@ -38,11 +38,13 @@ import useAuthenticationStore from 'src/authentication/presentation/stores/useAu
 import {observer} from 'mobx-react';
 import {LessonRef} from '../../../types';
 import useHomeStore from 'src/home/presentation/stores/useHomeStore';
-import SelectionAnswersQuestion, {SelectionAnswersQuestionRef} from '../../../components/SelectionAnswersQuestion';
+import SelectionAnswersQuestion, {
+  SelectionAnswersQuestionRef,
+} from '../../../components/SelectionAnswersQuestion';
 import TextHighlight from '../../../components/TextHighlight';
 import {useI18n} from 'src/core/presentation/hooks/useI18n';
 import VoiceButton from '../../../components/VoiceButton';
-import { useHistoryModule } from './hook';
+import {useHistoryModule} from './hook';
 
 type Props = {
   moduleIndex: number;
@@ -134,7 +136,7 @@ const History_SelectImage_ImageDescription = observer(
         () => getSetting(lessonSetting),
         [getSetting, lessonSetting],
       );
-      
+
       const {onSpeechText} = useHistoryModule({
         text:
           getCorrectAnswer(
@@ -193,9 +195,6 @@ const History_SelectImage_ImageDescription = observer(
           );
         },
       }));
-      console.log(`🛠 LOG: 🚀 --> ------------------------------------------------------------------------------------------------------------------------------------------------------------------🛠 LOG: 🚀 -->`);
-      console.log(`🛠 LOG: 🚀 --> ~ firstMiniTestTask?.question?.[moduleIndex].answers:`, firstMiniTestTask?.question?.[moduleIndex].answers);
-      console.log(`🛠 LOG: 🚀 --> ------------------------------------------------------------------------------------------------------------------------------------------------------------------🛠 LOG: 🚀 -->`);
 
       return (
         <LessonComponent
@@ -231,7 +230,7 @@ const History_SelectImage_ImageDescription = observer(
                 borderStyle: 'dashed',
                 borderColor: COLORS.YELLOW_F2B559,
                 height: verticalScale(150),
-                width: WIDTH_SCREEN * (0.75),
+                width: WIDTH_SCREEN * 0.75,
                 flexDirection: 'column',
                 alignItems: 'center',
                 justifyContent: 'space-between',
@@ -269,6 +268,7 @@ const History_SelectImage_ImageDescription = observer(
                         settings.backgroundButtonColor ?? '',
                         20,
                       ),
+                      textAlign: 'center',
                     },
                   ]}>
                   {firstMiniTestTask?.question?.[moduleIndex].description}{' '}
@@ -318,7 +318,6 @@ const History_SelectImage_ImageDescription = observer(
                   (firstMiniTestTask?.question?.[moduleIndex]
                     .answers as string[]) ?? []
                 }
-
                 isSelectOne
                 isShowCorrectContainer={isShowCorrectContainer}
                 isAnswerCorrect={!!isAnswerCorrect}

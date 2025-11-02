@@ -1029,7 +1029,7 @@ const LESSON_PATTERNS = [
     component: (type: string, testTask: any) => {
       const componentMap: Record<string, any> = {
         [`${type}_P1`]: History_SelectAnswer,
-        [`${type}_P2`]: HistoryHS4M1P2,
+        [`${type}_P2`]: History_SelectImage_ImageDescription,
       };
       return componentMap[type + `_P${testTask?.stt}`] || null;
     },
