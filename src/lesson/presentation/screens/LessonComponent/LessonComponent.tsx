@@ -242,11 +242,11 @@ const LessonComponent = ({
               </View>
             )}
             {isShowPrompt && (
-              <>
+              <View>
                 {typeof prompt === 'object' && prompt?.description ? (
                   <ScrollView
-                    style={styles.wrapCorrectContainer}
-                    contentContainerStyle={styles.scrollContentContainer}
+                    style={[styles.wrapCorrectContainer]}
+                    // contentContainerStyle={styles.scrollContentContainer}
                     showsVerticalScrollIndicator={false}
                     onScrollBeginDrag={handleScrollBegin}
                     onScrollEndDrag={handleScrollEnd}
@@ -273,7 +273,7 @@ const LessonComponent = ({
                 ) : typeof prompt === 'string' ? (
                   <ScrollView
                     style={styles.wrapCorrectContainer}
-                    contentContainerStyle={styles.scrollContentContainer}
+                    // contentContainerStyle={styles.scrollContentContainer}
                     showsVerticalScrollIndicator={false}
                     onScrollBeginDrag={handleScrollBegin}
                     onScrollEndDrag={handleScrollEnd}
@@ -288,7 +288,7 @@ const LessonComponent = ({
                     </Text>
                   </ScrollView>
                 ) : null}
-              </>
+              </View>
             )}
             <View style={[styles.tabs]}>
               {Array.from(
