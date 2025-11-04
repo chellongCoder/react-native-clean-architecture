@@ -26,6 +26,7 @@ export interface Question {
   isAcreage?: boolean;
   color?: string;
   slide?: {content: string, image: string}[]
+  prompt?: string;
 }
 
 export interface Instruction {

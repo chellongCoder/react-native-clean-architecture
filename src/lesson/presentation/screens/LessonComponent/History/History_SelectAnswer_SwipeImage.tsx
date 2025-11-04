@@ -225,8 +225,8 @@ const History_SelectAnswer_SwipeImage = observer(
             settings.backgroundAnswerColor ?? COLORS.GREEN_DDF598
           }
           prompt={
-            firstMiniTestTask?.question?.[moduleIndex]?.instruction ?? {
-              description: settings.prompt?.toString() ?? '',
+            {
+              description: firstMiniTestTask?.question?.[moduleIndex]?.prompt ?? settings.prompt?.toString() ?? '',
             }
           }
           price="Free"
