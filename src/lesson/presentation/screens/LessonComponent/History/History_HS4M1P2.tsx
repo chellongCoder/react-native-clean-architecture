@@ -42,7 +42,7 @@ import DragItem from '../../../components/Drag/DragSendItem';
 import {useDragContext} from '../../../components/Drag/DragProvider';
 import FastImage from 'react-native-fast-image';
 import TextHighlight from '../../../components/TextHighlight';
-import { useHistoryModule } from './hook';
+import {useHistoryModule} from './hook';
 
 type Props = {
   moduleIndex: number;
@@ -159,12 +159,15 @@ const HistoryHS4M1P2 = observer(
             });
         })();
 
-        const correctAnswers = firstMiniTestTask?.question?.[moduleIndex]
-          .correctAnswer;
+        const correctAnswers =
+          firstMiniTestTask?.question?.[moduleIndex].correctAnswer;
 
         const isCorrect =
           correctAnswers?.toString().toLocaleLowerCase() ===
-          selectedFeature.map(e => e.value).join('/').toLocaleLowerCase();
+          selectedFeature
+            .map(e => e.value)
+            .join('/')
+            .toLocaleLowerCase();
 
         setIsCorrectAnswer(!!isCorrect);
         isSubmitRef.current = false;
@@ -186,8 +189,6 @@ const HistoryHS4M1P2 = observer(
         resetLearning();
         // eslint-disable-next-line react-hooks/exhaustive-deps
       }, [trainingCount]);
-
-     
 
       useEffect(() => {
         opacity.value = withTiming(0, {duration: 500}, () => {
@@ -221,16 +222,17 @@ const HistoryHS4M1P2 = observer(
               canSwap={false}
               createItem={({value}) => {
                 return (
-                  <View style={{
-                    borderWidth: 2,
-                    borderColor: COLORS.YELLOW_E6960B,
-                    paddingHorizontal: scale(6),
-                    padding: scale(10),
-                    borderRadius: 12,
-                    width: (WIDTH_SCREEN - scale(100)) / 4,
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                  }}>
+                  <View
+                    style={{
+                      borderWidth: 2,
+                      borderColor: COLORS.YELLOW_E6960B,
+                      paddingHorizontal: scale(6),
+                      padding: scale(10),
+                      borderRadius: 12,
+                      width: (WIDTH_SCREEN - scale(100)) / 4,
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                    }}>
                     <Text style={styles.textAnswer}>{value}</Text>
                   </View>
                 );
@@ -240,7 +242,10 @@ const HistoryHS4M1P2 = observer(
         },
         [],
       );
-
+      console.log(
+        'firstMiniTestTask?.question?.[moduleIndex]: ',
+        firstMiniTestTask?.question?.[moduleIndex],
+      );
       return (
         <LessonComponent
           backgroundImage={backgroundImage}
@@ -269,68 +274,58 @@ const HistoryHS4M1P2 = observer(
           isShowCorrectContainer={isShowCorrectContainer}
           onPressFlower={toggleShowHint}
           buildQuestion={
-            <View style={{
-              alignItems: 'center',
-              maxWidth: '50%',
-            }}>
+            <View
+              style={{
+                alignItems: 'center',
+                maxWidth: '50%',
+              }}>
               <Text style={styles.textQuestion}>
-                {
-                  firstMiniTestTask?.question?.[moduleIndex].description
-                }
+                {firstMiniTestTask?.question?.[moduleIndex].description}
               </Text>
 
-              <View style={{
-                flexDirection: 'row',
-              }}>
-                {(firstMiniTestTask?.question?.[moduleIndex].image as string[])
-                  .map((item, index) => {
-                    return <View key={index} style={{width: scale(120), marginHorizontal: scale(6)}}>
-                        
-                        {<DragItem
-                            key={item + index}
-                            index={index}
-                            value={item}
-                            createItem={({value}) => {
-                              return <View
+              <View
+                style={{
+                  flexDirection: 'row',
+                }}>
+                <View style={{width: scale(120), marginHorizontal: scale(6)}}>
+                  {
+                    <DragItem
+                      index={0}
+                      value={
+                        firstMiniTestTask?.question?.[moduleIndex]
+                          ?.image as string
+                      }
+                      createItem={({value}) => {
+                        return (
+                          <View
+                            style={{
+                              width: scale(120),
+                              minHeight: scale(100),
+                              marginTop: verticalScale(20),
+                              backgroundColor: COLORS.WHITE_FBF8CC,
+                              justifyContent: 'center',
+                              alignItems: 'center',
+                              borderWidth: 2,
+                              borderRadius: 12,
+                              borderStyle: 'dashed',
+                              borderColor: COLORS.YELLOW_E6960B,
+                              overflow: 'hidden',
+                            }}>
+                            <FastImage
+                              source={{
+                                uri: env?.IMAGE_QUESTION_BASE_API_URL + value,
+                              }}
                               style={{
                                 width: scale(120),
-                                minHeight: scale(100),
-                                marginTop: verticalScale(20),
-                                backgroundColor: COLORS.WHITE_FBF8CC,
-                                justifyContent: 'center',
-                                alignItems: 'center',
-                                borderWidth: 2,
-                                borderRadius: 12,
-                                borderStyle: 'dashed',
-                                borderColor: COLORS.YELLOW_E6960B,
-                                overflow: 'hidden',
-                              }}>
-                                {
-                                  value != item ? 
-                                  <View style={{paddingHorizontal: 4, paddingVertical: 6}}>
-                                    <Text style={styles.textAnswer}>{value}</Text>
-                                  </View>
-                                  : (
-                                    <FastImage
-                                      source={{
-                                        uri: env?.IMAGE_QUESTION_BASE_API_URL + value,
-                                      }}
-                                      style={{
-                                        width: scale(120),
-                                        height: scale(100),
-                                      }}
-                                    />
-                                  )
-                                }
-                              </View>
+                                height: scale(100),
                               }}
-                          />}
-                      <Text style={styles.textQuestion}>
-                        {firstMiniTestTask?.question?.[moduleIndex].descriptionImage[index]}
-                      </Text>
-                    </View>
-                  })
-                }
+                            />
+                          </View>
+                        );
+                      }}
+                    />
+                  }
+                </View>
               </View>
             </View>
           }
@@ -367,32 +362,32 @@ const HistoryHS4M1P2 = observer(
                   borderRadius: scale(10),
                   padding: scale(10),
                 }}>
-                  <TextHighlight
-                    content={
-                      firstMiniTestTask?.question?.[moduleIndex].highlight ?? ''
-                    }
-                    description={
-                      firstMiniTestTask?.question?.[moduleIndex].content ?? ''
-                    }
-                  />
+                <TextHighlight
+                  content={
+                    firstMiniTestTask?.question?.[moduleIndex].highlight ?? ''
+                  }
+                  description={
+                    firstMiniTestTask?.question?.[moduleIndex].content ?? ''
+                  }
+                />
                 <View
                   style={{
                     marginTop: verticalScale(10),
                     flexDirection: 'row',
                     justifyContent: 'space-between',
                     alignItems: 'stretch',
-                  }}
-                >
+                  }}>
                   {(
                     firstMiniTestTask?.question?.[moduleIndex]
                       .answers as string[]
                   ).map((item, index) => {
                     return (
-                      <View style={{
-                        flex: 1,
-                        marginTop: verticalScale(10),
-                        alignItems: 'center',
-                      }}>
+                      <View
+                        style={{
+                          flex: 1,
+                          marginTop: verticalScale(10),
+                          alignItems: 'center',
+                        }}>
                         {buildItemAnswer([], item, index + 100)}
                       </View>
                     );
@@ -427,7 +422,7 @@ const styles = StyleSheet.create({
   fonts_SVN_Cherish: {
     fontFamily: FontFamily.SVNCherishMoment,
   },
-   
+
   textParagraph: {
     fontSize: verticalScale(26),
     textAlign: 'center',
@@ -455,9 +450,8 @@ const styles = StyleSheet.create({
     fontFamily: FontFamily.SVNCherishMoment,
     color: COLORS.YELLOW_E6960B,
   },
-   
-   
-   wrapHeaderContainer: {
+
+  wrapHeaderContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     marginBottom: verticalScale(8),

@@ -1,8 +1,6 @@
 import {StyleProp, StyleSheet, Text, View, ViewStyle} from 'react-native';
 import React, {
   forwardRef,
-  useCallback,
-  useContext,
   useEffect,
   useImperativeHandle,
   useMemo,
@@ -13,14 +11,13 @@ import LessonComponent from '../LessonComponent';
 import PrimaryButton from '../../../components/PrimaryButton';
 import {FontFamily} from 'src/core/presentation/hooks/useFonts';
 import useGlobalStyle from 'src/core/presentation/hooks/useGlobalStyle';
-import {Task} from 'src/home/application/types/GetListQuestionResponse';
+import {Answer, Task} from 'src/home/application/types/GetListQuestionResponse';
 import {COLORS} from 'src/core/presentation/constants/colors';
 import {
   darkenColor,
   getCorrectAnswer,
+  arraysEqualWithExactItem,
   isMMSS,
-  isSubArray,
-  WIDTH_SCREEN,
 } from 'src/core/presentation/utils';
 import {scale, verticalScale} from 'react-native-size-matters';
 import Animated, {
@@ -30,10 +27,8 @@ import Animated, {
   useSharedValue,
   withTiming,
 } from 'react-native-reanimated';
-import {TextToSpeechContext} from 'src/core/presentation/hooks/textToSpeech/TextToSpeechContext';
 import {useLessonStore} from '../../../stores/LessonStore/useGetPostsStore';
 import {useSettingLesson} from '../../../hooks/useSettingLesson';
-import {useIsFocused} from '@react-navigation/native';
 import useAuthenticationStore from 'src/authentication/presentation/stores/useAuthenticationStore';
 import {observer} from 'mobx-react';
 import {LessonRef} from '../../../types';
@@ -59,7 +54,7 @@ type Props = {
   characterStyle?: StyleProp<ViewStyle>;
 };
 
-const History_SelectImage_ImageDescription = observer(
+const History_HS6M3P1 = observer(
   forwardRef<LessonRef, Props>(
     (
       {
@@ -78,31 +73,27 @@ const History_SelectImage_ImageDescription = observer(
     ) => {
       const globalStyle = useGlobalStyle();
 
-      const {ttsSpeak, ttsStop} = useContext(TextToSpeechContext);
-      const focus = useIsFocused();
       const answerRef = useRef<SelectionAnswersQuestionRef>(null);
 
       const [answerSelected, setAnswerSelected] = useState<string | string[]>(
         '',
       );
-
       const {trainingCount, getSetting} = useLessonStore();
 
       const {selectedChild} = useAuthenticationStore();
 
       const isCorrectAnswer = useMemo(() => {
-        const correctAnswer = firstMiniTestTask?.question?.[moduleIndex]
-          ?.correctAnswer as string[][];
+        const correctAnswer =
+          firstMiniTestTask?.question?.[moduleIndex]?.correctAnswer;
         const answerSelectedArray = (
           Array.isArray(answerSelected) ? answerSelected : [answerSelected]
         ).map(e => e?.toLocaleString().toLocaleLowerCase());
         const correctAnswerArray = (
           Array.isArray(correctAnswer) ? correctAnswer : [correctAnswer]
         ).map(e => e?.toLocaleString().toLocaleLowerCase());
-
-        return (
-          answerSelectedArray.length === correctAnswerArray.length &&
-          isSubArray(answerSelectedArray, correctAnswerArray)
+        return arraysEqualWithExactItem(
+          answerSelectedArray,
+          correctAnswerArray,
         );
       }, [answerSelected, firstMiniTestTask?.question, moduleIndex]);
 
@@ -121,7 +112,6 @@ const History_SelectImage_ImageDescription = observer(
         onSubmit: () => {
           setAnswerSelected('');
           nextModule((answerSelected as string[]).toString());
-
           answerRef.current?.resetAnswerSelected?.();
         },
         fullAnswer: firstMiniTestTask?.question?.[moduleIndex].fullAnswer,
@@ -136,7 +126,14 @@ const History_SelectImage_ImageDescription = observer(
         () => getSetting(lessonSetting),
         [getSetting, lessonSetting],
       );
+      const characterImage = useMemo(() => {
+        return isAnswerCorrect === true || isAnswerCorrect === undefined
+          ? characterImageSuccess
+          : characterImageFail;
+      }, [characterImageFail, characterImageSuccess, isAnswerCorrect]);
 
+      const opacity = useSharedValue(0);
+      const scaleS = useSharedValue(1);
       const {onSpeechText} = useHistoryModule({
         text:
           getCorrectAnswer(
@@ -146,15 +143,6 @@ const History_SelectImage_ImageDescription = observer(
           settings.prompt?.toString() ||
           '',
       });
-
-      const characterImage = useMemo(() => {
-        return isAnswerCorrect === true || isAnswerCorrect === undefined
-          ? characterImageSuccess
-          : characterImageFail;
-      }, [characterImageFail, characterImageSuccess, isAnswerCorrect]);
-
-      const opacity = useSharedValue(0);
-      const scaleS = useSharedValue(1);
 
       /**
        * * reset lại countdown khi lần làm thay đổi
@@ -209,8 +197,8 @@ const History_SelectImage_ImageDescription = observer(
             settings.backgroundAnswerColor ?? COLORS.GREEN_DDF598
           }
           prompt={
-            {
-              description: firstMiniTestTask?.question?.[moduleIndex]?.prompt ?? settings.prompt?.toString() ?? '',
+            firstMiniTestTask?.question?.[moduleIndex]?.instruction ?? {
+              description: settings.prompt?.toString() ?? '',
             }
           }
           price="Free"
@@ -220,61 +208,33 @@ const History_SelectImage_ImageDescription = observer(
           isShowCorrectContainer={isShowCorrectContainer}
           onPressFlower={toggleShowHint}
           buildQuestion={
-            <View
-              style={{
-                backgroundColor: COLORS.WHITE_FBF8CC,
-                marginTop: verticalScale(32),
-                borderWidth: 5,
-                borderRadius: scale(30),
-                // paddingHorizontal: scale(20),
-                borderStyle: 'dashed',
-                borderColor: COLORS.YELLOW_F2B559,
-                height: verticalScale(150),
-                width: WIDTH_SCREEN * 0.75,
-                flexDirection: 'column',
-                alignItems: 'center',
-                justifyContent: 'space-between',
-              }}>
-              <View>
-                <Animated.Image
-                  resizeMode={'cover'}
-                  style={[
-                    {
-                      width: WIDTH_SCREEN * 0.5,
-                      aspectRatio: 1.5,
-                      marginTop: -verticalScale(40),
-                      borderRadius: scale(30),
-                    },
-                    animatedStyle,
-                  ]}
-                  source={{
-                    uri:
-                      env.IMAGE_QUESTION_BASE_API_URL +
-                      firstMiniTestTask?.question?.[moduleIndex].image,
-                  }}
-                />
-              </View>
-              <View style={{paddingBottom: verticalScale(12)}}>
-                <Text
-                  numberOfLines={2}
-                  allowFontScaling
-                  adjustsFontSizeToFit
-                  style={[
-                    globalStyle.txtLabel,
-                    styles.textTitle,
-                    {
-                      fontSize: scale(15),
-                      color: darkenColor(
-                        settings.backgroundButtonColor ?? '',
-                        20,
-                      ),
-                      textAlign: 'center',
-                    },
-                  ]}>
-                  {firstMiniTestTask?.question?.[moduleIndex].description}{' '}
-                </Text>
-              </View>
-            </View>
+            <Animated.View
+              style={[animatedStyle, {flex: 1, paddingHorizontal: 36, gap: 8}]}>
+              <Text
+                style={[
+                  styles.fonts_SVN_Cherish,
+                  {
+                    textAlign: 'center',
+                    fontSize: 28,
+                    color: COLORS.GREEN_157152,
+                    flexWrap: 'wrap',
+                  },
+                ]}>
+                {firstMiniTestTask?.question?.[moduleIndex]?.description}
+              </Text>
+              <Text
+                style={[
+                  styles.fonts_SVN_Neuzeit_Bold,
+                  {
+                    textAlign: 'center',
+                    fontSize: 24,
+                    color: COLORS.GREEN_18A470,
+                    flexWrap: 'wrap',
+                  },
+                ]}>
+                {firstMiniTestTask?.question?.[moduleIndex]?.paragraph}
+              </Text>
+            </Animated.View>
           }
           buildAnswer={
             <View style={styles.fill}>
@@ -294,15 +254,12 @@ const History_SelectImage_ImageDescription = observer(
                         ),
                       },
                     ]}>
-                    {i18n.t(
-                      'lesson.screens.Modules.openSpeakerAndChooseAnswer',
-                    )}
+                    {i18n.t('lesson.screens.Modules.chooseCorrectAnswer')}
                   </Text>
                 </View>
 
                 <VoiceButton onPress={onSpeechText} />
               </View>
-
               <SelectionAnswersQuestion
                 question={
                   <TextHighlight
@@ -315,18 +272,37 @@ const History_SelectImage_ImageDescription = observer(
                   />
                 }
                 answer={
-                  (firstMiniTestTask?.question?.[moduleIndex]
-                    .answers as string[]) ?? []
+                  (
+                    firstMiniTestTask?.question?.[moduleIndex]
+                      ?.answers as Answer[]
+                  ).map(q => q.content) ?? []
+                }
+                answerImage={
+                  (
+                    firstMiniTestTask?.question?.[moduleIndex]
+                      ?.answers as Answer[]
+                  ).map(
+                    q => env.IMAGE_QUESTION_BASE_API_URL + q.image.trim(),
+                  ) ?? []
+                }
+                answerDescription={
+                  (
+                    firstMiniTestTask?.question?.[moduleIndex]
+                      ?.answers as Answer[]
+                  ).map(q => q.description ?? '') ?? []
                 }
                 isSelectOne
+                answerIsImage
+                answerStyle={styles.fonts_SVN_Cherish}
                 isShowCorrectContainer={isShowCorrectContainer}
                 isAnswerCorrect={!!isAnswerCorrect}
                 onSelectAnswer={(e: string[]) => {
-                  setAnswerSelected(e[0]);
+                  setAnswerSelected(e);
                 }}
                 learningTimer={learningTimer}
                 ref={answerRef}
               />
+
               <PrimaryButton
                 text={i18n.t('lesson.screens.Modules.submit')}
                 style={[
@@ -345,43 +321,55 @@ const History_SelectImage_ImageDescription = observer(
   ),
 );
 
-export default History_SelectImage_ImageDescription;
+export default History_HS6M3P1;
 
 const styles = StyleSheet.create({
   fill: {
     flex: 1,
   },
-
   fonts_SVN_Cherish: {
     fontFamily: FontFamily.SVNCherishMoment,
   },
   fonts_SVN_Neuzeit_Bold: {
     fontFamily: FontFamily.SVNNeuzeitBold,
   },
+  fonts_SVN_Neuzeit: {
+    fontFamily: FontFamily.SVNNeuzeitRegular,
+  },
+  textQuestion: {
+    fontSize: verticalScale(15),
+    textAlign: 'left',
+    color: COLORS.BLUE_258F78,
+  },
 
-  textTitle: {
-    fontSize: scale(28),
-    lineHeight: scale(25),
-    fontFamily: FontFamily.SVNCherishMoment,
-    letterSpacing: 1.4,
+  boxSelected: {
+    backgroundColor: COLORS.WHITE_FBF8CC,
+    height: verticalScale(220),
+    flex: 1,
+    borderRadius: scale(30),
+    justifyContent: 'center',
+    alignItems: 'center',
   },
-  textDes: {
-    fontSize: scale(22),
-    lineHeight: scale(26.4),
-    fontFamily: FontFamily.SVNNeuzeitBold,
-    letterSpacing: -1.1,
-  },
+
   wrapHeaderContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     marginBottom: verticalScale(8),
   },
-
+  iconImageContainer: {
+    height: verticalScale(39),
+    width: verticalScale(34),
+  },
   buttonContainer: {
     borderRadius: scale(52),
     paddingVertical: verticalScale(9),
     paddingHorizontal: scale(24),
     marginTop: scale(16),
     backgroundColor: '#0877B6',
+  },
+  txtParagraph: {
+    fontFamily: FontFamily.SVNNeuzeitBold,
+    fontSize: scale(14),
+    color: COLORS.WHITE_FBF8CC,
   },
 });

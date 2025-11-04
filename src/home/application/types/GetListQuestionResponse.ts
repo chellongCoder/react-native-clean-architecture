@@ -1,11 +1,11 @@
-export type Answer = {content: string; image: string};
+export type Answer = {content: string; image: string; description?: string};
 export interface Question {
   content: string;
   highlight: string;
   correctAnswer: string | string[] | string[][];
   createdAt: string;
   description: string;
-  answerDescription: string;
+  answerDescription: string | string[];
   isDeleted: false;
   point: number;
   stt: number;
@@ -13,8 +13,7 @@ export interface Question {
   type: string;
   updatedAt: string;
   _id: string;
-  answers: Answer[] | string | string[];
-  slide?: Answer[]
+  answers: Answer[] | string | string[] | H6M1P1AnswerI[];
   fullAnswer: string;
   image: string | string[];
   answerImage: string[];
@@ -27,6 +26,18 @@ export interface Question {
   color?: string;
   slide?: {content: string, image: string}[]
   prompt?: string;
+}
+
+export interface H6M1P1AnswerI {
+  content: string,
+  description: string,
+  image: string
+}
+
+export interface H6M1P1AnswerI {
+  content: string,
+  description: string,
+  image: string
 }
 
 export interface Instruction {

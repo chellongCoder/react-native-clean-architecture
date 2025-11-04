@@ -35,6 +35,7 @@ interface SelectionAnswersQuestionProps {
   answerStyle?: StyleProp<TextStyle>;
   answerIsImage?: boolean;
   answerImage?: string[];
+  answerDescription?: string[];
   styleItem?: StyleProp<ViewStyle>;
 }
 
@@ -63,8 +64,8 @@ const SelectionAnswersQuestion: ForwardRefRenderFunction<
     answerIsImage,
     answerImage,
     styleItem,
+    answerDescription,
   } = props;
-
   const [answerSelected, setAnswerSelected] = useState<string[]>([]);
   const isOneWord = !answer?.some(
     item => item.includes('/') || item.includes(' '),
@@ -154,48 +155,58 @@ const SelectionAnswersQuestion: ForwardRefRenderFunction<
           } else if (answerIsImage) {
             const isRightSide = i % 2 !== 0;
             return (
-              <TouchableOpacity
-                key={i}
-                onPress={() => handleSelectAnswer(e)}
-                style={[
-                  styles.boxVowel,
-                  styles.boxImage,
-                  {
-                    minHeight,
-                    backgroundColor: bg,
-                    width: size,
-                    margin: scale(4),
-                    padding: scale(4),
-                    flexDirection: isRightSide ? 'row-reverse' : 'row',
-                  },
-                ]}>
-                <FastImage
-                  source={{
-                    uri: answerImage?.[i],
-                  }}
-                  style={{
-                    height: minHeight,
-                    width: size / 2,
-                    position: 'absolute',
-                  }}
-                />
-                <View style={{flex: 1}}>
-                  <Text
-                    allowFontScaling
-                    adjustsFontSizeToFit
-                    style={[
-                      styles.textVowel,
-                      fontFamily && {fontFamily},
-                      answerStyle,
-                      {textAlign: isRightSide ? 'right' : 'left'},
-                    ]}>
-                    {e
-                      .replace(/\s*-\s*/, '-')
-                      .replace(/(?<!\S)\s+(?!\S)/g, '\n')
-                      .trim()}
-                  </Text>
-                </View>
-              </TouchableOpacity>
+              <>
+                <TouchableOpacity
+                  key={i}
+                  onPress={() => handleSelectAnswer(e)}
+                  style={[
+                    styles.boxVowel,
+                    styles.boxImage,
+                    {
+                      minHeight,
+                      backgroundColor: bg,
+                      width: size,
+                      margin: scale(4),
+                      padding: scale(4),
+                      flexDirection: isRightSide ? 'row-reverse' : 'row',
+                    },
+                  ]}>
+                  <FastImage
+                    source={{
+                      uri: answerImage?.[i],
+                    }}
+                    style={{
+                      height: minHeight,
+                      width: size / 2,
+                      position: 'absolute',
+                    }}
+                  />
+                  {answerDescription ? (
+                    <View style={{position: 'absolute', bottom: -40}}>
+                      <Text style={styles.imageDescription}>
+                        {answerDescription?.[i]}
+                      </Text>
+                    </View>
+                  ) : (
+                    <View style={{flex: 1}}>
+                      <Text
+                        allowFontScaling
+                        adjustsFontSizeToFit
+                        style={[
+                          styles.textVowel,
+                          fontFamily && {fontFamily},
+                          answerStyle,
+                          {textAlign: isRightSide ? 'right' : 'left'},
+                        ]}>
+                        {e
+                          .replace(/\s*-\s*/, '-')
+                          .replace(/(?<!\S)\s+(?!\S)/g, '\n')
+                          .trim()}
+                      </Text>
+                    </View>
+                  )}
+                </TouchableOpacity>
+              </>
             );
           }
           return (
@@ -292,6 +303,13 @@ const styles = StyleSheet.create({
   },
   boxImage: {
     flexDirection: 'row',
+  },
+  imageDescription: {
+    fontSize: 24,
+    lineHeight: 32,
+    fontFamily: FontFamily.SVNCherishMoment,
+    color: COLORS.YELLOW_F2B559,
+    textAlign: 'center',
   },
 });
 

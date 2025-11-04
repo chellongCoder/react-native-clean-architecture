@@ -147,7 +147,7 @@ import History_SelectAnswer_Text from './LessonComponent/History/History_SelectA
 import HistoryHS6M1P1 from './LessonComponent/History/History_HS6M1P1';
 import History_HS6M1P2 from './LessonComponent/History/History_HS6M1P2';
 import HistoryHS6M1P3 from './LessonComponent/History/History_HS6M1P3';
-
+import History_HS6M3P1 from './LessonComponent/History/History_HS6M3P1';
 
 export type TResult = {
   userId?: string;
@@ -928,15 +928,17 @@ const LESSON_PATTERNS = [
         HISTORY_HS1M5_P4: History_SelectAnswer_Image,
       };
 
-      const stt = testTask?.firstMiniTestTask?.type === 'mini_test' ? testTask?.firstMiniTestTask?.question?.[0]?.questionType : testTask?.stt;
+      const stt =
+        testTask?.firstMiniTestTask?.type === 'mini_test'
+          ? testTask?.firstMiniTestTask?.question?.[0]?.questionType
+          : testTask?.stt;
 
       return componentMap[type + `_P${stt}`] || Science_G0M1;
     },
     wrapper: DragProvider,
     props: {},
   },
-  
-  {  
+  {
     pattern: /^HISTORY_HS(2|3)M(1|2|3|4|5)$/,
     component: (type: string, testTask: any) => {
       const componentMap: Record<string, any> = {
@@ -944,13 +946,17 @@ const LESSON_PATTERNS = [
         [`${type}_P1`]: History_SelectAnswer,
         [`${type}_P2`]: History_SelectImage_ImageDescription,
         [`${type}_P3`]: HistoryHS2M2P3,
-
-      }; 
-      if(type == 'HISTORY_HS2M1' && testTask?.stt == 3) {
+      };
+      if (type == 'HISTORY_HS2M1' && testTask?.stt == 3) {
         return HistoryHS2M1P3;
       }
-      if(testTask?.firstMiniTestTask?.type === 'mini_test') {
-        return componentMap[type + `_P${testTask?.firstMiniTestTask?.question?.[0]?.questionType}`] || Science_G0M1;
+      if (testTask?.firstMiniTestTask?.type === 'mini_test') {
+        return (
+          componentMap[
+            type +
+              `_P${testTask?.firstMiniTestTask?.question?.[0]?.questionType}`
+          ] || Science_G0M1
+        );
       } else {
         return componentMap[type + `_P${testTask?.stt}`] || <></>;
       }
@@ -958,17 +964,21 @@ const LESSON_PATTERNS = [
     wrapper: DragProvider,
     props,
   },
-  {  
+  {
     pattern: /^HISTORY_HS(4|5)M(1|2|3|4|5|6|7|8|9|10)$/,
     component: (type: string, testTask: any) => {
       const componentMap: Record<string, any> = {
         [`${type}_P1`]: History_SelectAnswer,
         [`${type}_P2`]: HistoryHS4M1P2,
         [`${type}_P3`]: History_SelectAnswer_Text,
-
-      }; 
-      if(testTask?.firstMiniTestTask?.type === 'mini_test') {
-        return componentMap[type + `_P${testTask?.firstMiniTestTask?.question?.[0]?.questionType}`] || <></>;
+      };
+      if (testTask?.firstMiniTestTask?.type === 'mini_test') {
+        return (
+          componentMap[
+            type +
+              `_P${testTask?.firstMiniTestTask?.question?.[0]?.questionType}`
+          ] || <></>
+        );
       } else {
         return componentMap[type + `_P${testTask?.stt}`] || <></>;
       }
@@ -984,7 +994,7 @@ const LESSON_PATTERNS = [
         [`${type}_P1`]: HistoryHS6M1P1,
         [`${type}_P2`]: History_HS6M1P2,
         [`${type}_P3`]: HistoryHS6M1P3,
-      }; 
+      };
       return componentMap[type + `_P${testTask?.stt}`] || null;
     },
     wrapper: DragProvider,
@@ -995,7 +1005,19 @@ const LESSON_PATTERNS = [
     component: (type: string, testTask: any) => {
       const componentMap: Record<string, any> = {
         [`${type}_P1`]: HistoryHS4M1P2,
-      }; 
+      };
+      return componentMap[type + `_P${testTask?.stt}`] || null;
+    },
+    wrapper: DragProvider,
+    props,
+  },
+  {
+    pattern: /^HISTORY_HS6M3$/,
+    component: (type: string, testTask: any) => {
+      const componentMap: Record<string, any> = {
+        [`${type}_P1`]: History_HS6M3P1,
+        [`${type}_P2`]: HistoryHS6M1P3,
+      };
       return componentMap[type + `_P${testTask?.stt}`] || null;
     },
     wrapper: DragProvider,
@@ -1006,19 +1028,8 @@ const LESSON_PATTERNS = [
     component: (type: string, testTask: any) => {
       const componentMap: Record<string, any> = {
         [`${type}_P1`]: History_SelectAnswer,
-        [`${type}_P2`]: HistoryHS4M1P2,
-      }; 
-      return componentMap[type + `_P${testTask?.stt}`] || null;
-    },
-    wrapper: DragProvider,
-    props,
-  },
-  {
-    pattern: /^HISTORY_HS4M1$/,
-    component: (type: string, testTask: any) => {
-      const componentMap: Record<string, any> = {
-        [`${type}_P2`]: HistoryHS4M1P2,
-      }; 
+        [`${type}_P2`]: History_SelectImage_ImageDescription,
+      };
       return componentMap[type + `_P${testTask?.stt}`] || null;
     },
     wrapper: DragProvider,
@@ -1445,7 +1456,7 @@ const LessonScreen = observer(() => {
 
   const buildLesson = () => {
     const questionType = testTask?.question?.[lessonIndex]?.type.trim();
-
+    console.log('questionType: ', questionType);
     if (!questionType) {
       return <OnBoardingScreen />;
     }

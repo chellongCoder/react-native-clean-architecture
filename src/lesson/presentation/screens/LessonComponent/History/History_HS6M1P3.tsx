@@ -116,26 +116,12 @@ const HistoryHS6M1P3 = observer(
           answerRef.current?.resetAnswerSelected?.();
         },
         fullAnswer: firstMiniTestTask?.question?.[moduleIndex].fullAnswer,
-        totalTime: 10,
+        totalTime: 5 * 60,
       });
-
       const {lessonSetting} = useHomeStore();
 
       const i18n = useI18n();
       const isSubmitRef = useRef(false);
-
-      const mockData = [
-        {
-          id: 1,
-          question: 'Một thiên niên kỷ bằng bao nhiêu năm?',
-          questionImageUrl:
-            'https://cdn.pixabay.com/photo/2024/05/26/10/15/bird-8788491_1280.jpg',
-          answer: ['10', '100', '1000', '10000'],
-          correctAnswer: '1000',
-          answerDescription:
-            'Đơn vị thời gian trong lịch sử giúp ta tính khoảng cách giữa các sự kiện. 10 năm gọi là một thập kỉ, 100 năm gọi là một thế kỉ, và 1000 năm gọi là một thiên niên kỉ.',
-        },
-      ];
 
       const settings = useMemo(
         () => getSetting(lessonSetting),
@@ -149,38 +135,6 @@ const HistoryHS6M1P3 = observer(
 
       const opacity = useSharedValue(0);
       const scaleS = useSharedValue(1);
-
-      const onSubmit = useCallback(() => {
-        const selectedFeature = (() => {
-          const listFeature = Object.keys(listDragItem).filter(
-            (index: string) => listDragItem[+index].parentId >= 0,
-          );
-
-          return listFeature
-            .filter(e => +e >= 100)
-            .map(item => {
-              return listDragItem[+item];
-            });
-        })();
-
-        const correctAnswers =
-          firstMiniTestTask?.question?.[moduleIndex].correctAnswer;
-
-        const isCorrect =
-          correctAnswers?.toString() === selectedFeature[0]?.value?.toString();
-
-        setIsCorrectAnswer(!!isCorrect);
-        isSubmitRef.current = false;
-      }, [listDragItem, firstMiniTestTask?.question, moduleIndex]);
-
-      /**
-       * * submit khi đúng
-       */
-      useEffect(() => {
-        if (isCorrectAnswer !== undefined) {
-          submit();
-        }
-      }, [isCorrectAnswer, submit]);
 
       /**
        * * reset lại countdown khi lần làm thay đổi
@@ -247,16 +201,34 @@ const HistoryHS6M1P3 = observer(
                 alignItems: 'center',
                 gap: scale(16),
               }}>
-              {/* <Image
-                source={require('../../../../../../assets/images/historyDefaultImage.png')}
-                style={{
-                  width: scale(100),
-                  height: scale(100),
-                }}
-              /> */}
-              <Text style={[styles.fonts_SVN_Cherish, styles.centerTitle]}>
-                {mockData[0].question}
-              </Text>
+              {isShowAnswerDesc ? (
+                <Image
+                  source={{
+                    uri:
+                      env.IMAGE_QUESTION_BASE_API_URL +
+                      firstMiniTestTask?.question?.[moduleIndex].image,
+                  }}
+                  style={{
+                    width: scale(210),
+                    height: scale(140),
+                  }}
+                />
+              ) : (
+                <>
+                  <Image
+                    source={require('../../../../../../assets/images/historyDefaultImage.png')}
+                    style={{
+                      width: scale(100),
+                      height: scale(100),
+                    }}
+                  />
+                  <Text style={[styles.fonts_SVN_Cherish, styles.centerTitle]}>
+                    {firstMiniTestTask?.question?.[moduleIndex].content
+                      ? firstMiniTestTask?.question?.[moduleIndex].content
+                      : firstMiniTestTask?.question?.[moduleIndex].description}
+                  </Text>
+                </>
+              )}
             </View>
           }
           buildAnswer={
@@ -306,14 +278,49 @@ const HistoryHS6M1P3 = observer(
                         padding: scale(16),
                       },
                     ]}>
-                    <Text
-                      style={[
-                        styles.fonts_SVN_Cherish,
-                        styles.centerTitle,
-                        {color: COLORS.WHITE_FBF8CC, fontSize: scale(14)},
-                      ]}>
-                      {mockData[0].answerDescription}
-                    </Text>
+                    {Array.isArray(
+                      firstMiniTestTask?.question?.[moduleIndex]
+                        ?.answerDescription,
+                    ) ? (
+                      <View style={{alignItems: 'center'}}>
+                        <Text
+                          style={[
+                            styles.fonts_SVN_Cherish,
+                            {
+                              color: COLORS.WHITE_FBF8CC,
+                              fontSize: scale(14),
+                              fontWeight: 'bold',
+                              textAlign: 'center',
+                              marginBottom: scale(8),
+                            },
+                          ]}>
+                          {firstMiniTestTask?.question?.[moduleIndex]
+                            ?.answerDescription?.[0] ?? ''}
+                        </Text>
+                        <Text
+                          style={[
+                            styles.fonts_SVN_Cherish,
+                            {
+                              color: COLORS.WHITE_FBF8CC,
+                              fontSize: scale(14),
+                              textAlign: 'center',
+                            },
+                          ]}>
+                          {firstMiniTestTask?.question?.[moduleIndex]
+                            ?.answerDescription?.[1] ?? ''}
+                        </Text>
+                      </View>
+                    ) : (
+                      <Text
+                        style={[
+                          styles.fonts_SVN_Cherish,
+                          styles.centerTitle,
+                          {color: COLORS.WHITE_FBF8CC, fontSize: scale(14)},
+                        ]}>
+                        {firstMiniTestTask?.question?.[moduleIndex]
+                          ?.answerDescription ?? ''}
+                      </Text>
+                    )}
                   </View>
                 </View>
               ) : (
@@ -329,7 +336,10 @@ const HistoryHS6M1P3 = observer(
                       }
                     />
                   }
-                  answer={mockData[0].answer}
+                  answer={
+                    firstMiniTestTask?.question?.[moduleIndex]
+                      ?.answers as string[]
+                  }
                   isSelectOne
                   answerStyle={styles.fonts_SVN_Cherish}
                   isShowCorrectContainer={isShowCorrectContainer}
