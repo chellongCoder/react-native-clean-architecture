@@ -3,7 +3,6 @@ package com.alphadexscreentime
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.Service
-import android.app.usage.UsageEvents
 import android.app.usage.UsageStatsManager
 import android.content.Context
 import android.content.Intent
@@ -19,7 +18,6 @@ class ForegroundService : Service(), Window.HomeButtonListener {
   private var timer: Timer = Timer()
   private var isTimerStarted = false
   private var timerReload: Long = 500
-  private var currentAppActivityList = arrayListOf<String>()
   private var mHomeWatcher = HomeWatcher(this)
   private lateinit var window: Window
 
@@ -57,7 +55,7 @@ class ForegroundService : Service(), Window.HomeButtonListener {
       "Channel human readable title",
       NotificationManager.IMPORTANCE_DEFAULT
     )
-    (getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager).createNotificationChannel(channel)
+    (getSystemService(NOTIFICATION_SERVICE) as NotificationManager).createNotificationChannel(channel)
   }
 
   private fun startForegroundService() {
@@ -94,7 +92,6 @@ class ForegroundService : Service(), Window.HomeButtonListener {
 
   private fun handleHomePressed(window: Window) {
     println("Home button pressed")
-    currentAppActivityList.clear()
     if (window.isOpen()) {
       window.close()
     }
@@ -110,55 +107,37 @@ class ForegroundService : Service(), Window.HomeButtonListener {
   }
 
   private fun isServiceRunning(window: Window) {
-    val saveAppData: SharedPreferences = this.getSharedPreferences("save_app_data", Context.MODE_PRIVATE)
+    val saveAppData: SharedPreferences = getSharedPreferences("save_app_data", MODE_PRIVATE)
     val lockedAppList: List<*> = saveAppData.getString("app_data", "AppList")!!.replace("[", "").replace("]", "").split(",")
 
-    val mUsageStatsManager = getSystemService(USAGE_STATS_SERVICE) as UsageStatsManager
-    val time = System.currentTimeMillis()
-    val usageEvents = mUsageStatsManager.queryEvents(time - timerReload, time)
-    val event = UsageEvents.Event()
-
-    run breaking@{
-      while (usageEvents.hasNextEvent()) {
-        usageEvents.getNextEvent(event)
-        for (element in lockedAppList) {
-          if (event.packageName.toString().trim() == element.toString().trim()) {
-            handleUsageEvent(event, window)
-            return@breaking
+    val foregroundApp = getForegroundApp()
+    if (foregroundApp != null) {
+      for (element in lockedAppList) {
+        if (foregroundApp.trim() == element.toString().trim()) {
+          if (window.isOpen()) {
+            // Already locked
+          } else {
+            Handler(Looper.getMainLooper()).post { window.open() }
           }
+          return
         }
       }
     }
   }
 
-  private fun handleUsageEvent(event: UsageEvents.Event, window: Window) {
-    when (event.eventType) {
-      UsageEvents.Event.ACTIVITY_RESUMED -> {
-        if (currentAppActivityList.isEmpty()) {
-          currentAppActivityList.add(event.className)
-          println("$currentAppActivityList-----List--added")
-          Handler(Looper.getMainLooper()).post { window.open() }
-        } else if (!currentAppActivityList.contains(event.className)) {
-          currentAppActivityList.add(event.className)
-          println("$currentAppActivityList-----List--added")
-        }
-      }
-//      UsageEvents.Event.ACTIVITY_PAUSED -> {
-//        if (currentAppActivityList.isEmpty()) {
-//          currentAppActivityList.add(event.className)
-//          println("$currentAppActivityList-----List--added")
-//          Handler(Looper.getMainLooper()).post { window.open() }
-//        } else if (!currentAppActivityList.contains(event.className)) {
-//          currentAppActivityList.add(event.className)
-//          println("$currentAppActivityList-----List--added")
-//        }
-//      }
-      UsageEvents.Event.ACTIVITY_STOPPED -> {
-        if (currentAppActivityList.contains(event.className)) {
-          currentAppActivityList.remove(event.className)
-          println("$currentAppActivityList-----List--remained")
-        }
+  private fun getForegroundApp(): String? {
+    var currentApp: String? = null
+    val mUsageStatsManager = getSystemService(USAGE_STATS_SERVICE) as UsageStatsManager
+    val time = System.currentTimeMillis()
+    // We get usage stats for the last 10 seconds
+    val stats = mUsageStatsManager.queryUsageStats(UsageStatsManager.INTERVAL_DAILY, time - 1000 * 10, time)
+    // Sort the stats by the last time used
+    if (stats != null) {
+      val sortedStats = stats.sortedByDescending { it.lastTimeUsed }
+      if (sortedStats.isNotEmpty()) {
+        currentApp = sortedStats[0].packageName
       }
     }
+    return currentApp
   }
 }

@@ -42,7 +42,7 @@ const appConfig: ExpoConfig = {
     EXPO_IOS_CLIENT_ID:
       '827845646125-gle21suv3a6pe4tgdma4ch04h359c6ds.apps.googleusercontent.com',
     WEB_CLIENT_ID:
-      '827845646125-49mekr1f87vgc0d40bj06llmoe2mvkq3.apps.googleusercontent.com',
+      '595720239925-07lrrs6cdtn8h7782puuogi591ln8umu.apps.googleusercontent.com',
     IMAGE_QUESTION_BASE_API_URL:
       'https://storage.googleapis.com/algorz-image-abeeci/question-image/',
     IMAGE_MODULE_BASE_API_URL:
