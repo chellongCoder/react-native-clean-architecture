@@ -1,5 +1,12 @@
 /* eslint-disable react/no-unstable-nested-components */
-import {StyleSheet, Text, TouchableOpacity, View, Image} from 'react-native';
+import {
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+  Image,
+  ImageBackground,
+} from 'react-native';
 import React, {
   forwardRef,
   useCallback,
@@ -39,6 +46,7 @@ import {useDragContext} from '../../../components/Drag/DragProvider';
 import FastImage from 'react-native-fast-image';
 import TextHighlight from '../../../components/TextHighlight';
 import {useHistoryModule} from './hook';
+import {assets} from 'src/core/presentation/utils';
 
 type Props = {
   moduleIndex: number;
@@ -119,7 +127,6 @@ const HistoryHS6M1P3 = observer(
         totalTime: 5 * 60,
       });
       const {lessonSetting} = useHomeStore();
-
       const i18n = useI18n();
       const isSubmitRef = useRef(false);
 
@@ -165,7 +172,6 @@ const HistoryHS6M1P3 = observer(
           );
         },
       }));
-
       return (
         <LessonComponent
           backgroundImage={backgroundImage}
@@ -177,11 +183,12 @@ const HistoryHS6M1P3 = observer(
           backgroundAnswerColor={
             settings.backgroundAnswerColor ?? COLORS.GREEN_DDF598
           }
-          prompt={
-            {
-              description: firstMiniTestTask?.question?.[moduleIndex]?.prompt ?? settings.prompt?.toString() ?? '',
-            }
-          }
+          prompt={{
+            description:
+              firstMiniTestTask?.question?.[moduleIndex]?.prompt ??
+              settings.prompt?.toString() ??
+              '',
+          }}
           price="Free"
           score={selectedChild?.adsPoints}
           txtCountDown={
@@ -215,13 +222,23 @@ const HistoryHS6M1P3 = observer(
                 />
               ) : (
                 <>
-                  <Image
-                    source={require('../../../../../../assets/images/historyDefaultImage.png')}
+                  <ImageBackground
+                    source={assets.historyDefaultImage}
                     style={{
-                      width: scale(100),
-                      height: scale(100),
-                    }}
-                  />
+                      width: scale(120),
+                      height: scale(120),
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                    }}>
+                    <Text
+                      style={[
+                        styles.fonts_SVN_Cherish,
+                        {fontSize: 36, color: COLORS.WHITE_FBF8CC},
+                      ]}
+                      adjustsFontSizeToFit>
+                      {word?.toString()}
+                    </Text>
+                  </ImageBackground>
                   <Text style={[styles.fonts_SVN_Cherish, styles.centerTitle]}>
                     {firstMiniTestTask?.question?.[moduleIndex].content
                       ? firstMiniTestTask?.question?.[moduleIndex].content

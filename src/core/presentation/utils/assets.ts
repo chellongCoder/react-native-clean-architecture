@@ -67,4 +67,5 @@ export const assets = {
   icon_delete: require('assets/images/icon_delete.png'),
   buyMoreImage: require('assets/images/buyMoreImage.png'),
   closeBuyMore: require('assets/images/closeBuyMore.png'),
+  historyDefaultImage: require('assets/images/historyDefaultImage.png')
 };
