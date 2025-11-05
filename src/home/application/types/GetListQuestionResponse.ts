@@ -40,6 +40,12 @@ export interface H6M1P1AnswerI {
   image: string
 }
 
+export interface H6M1P1AnswerI {
+  content: string,
+  description: string,
+  image: string
+}
+
 export interface Instruction {
   description: string;
   number?: number;
