@@ -9,18 +9,12 @@ import Toast from 'react-native-toast-message';
 
 const adUnitId = __DEV__
   ? TestIds.REWARDED_INTERSTITIAL
-  : 'ca-app-pub-9069193131931191/1910380480';
+  : 'ca-app-pub-9069193131931191/7991611635';
 
 type Props = {};
 export const useGGAdsMob = () => {
   const [loaded, setLoaded] = useState(false);
-  console.log(
-    '🛠 LOG: 🚀 --> ----------------------------------------------🛠 LOG: 🚀 -->',
-  );
-  console.log('🛠 LOG: 🚀 --> ~ useGGAdsMob ~ loaded:', loaded);
-  console.log(
-    '🛠 LOG: 🚀 --> ----------------------------------------------🛠 LOG: 🚀 -->',
-  );
+
 
   const [adsId, setAdsId] = useState<string | null>(adUnitId);
   const {
@@ -36,21 +30,7 @@ export const useGGAdsMob = () => {
   } = useRewardedInterstitialAd(adsId, {
     requestNonPersonalizedAdsOnly: true,
   });
-  console.log(
-    '🛠 LOG: 🚀 --> ------------------------------------------------------------------------🛠 LOG: 🚀 -->',
-  );
-  console.log(
-    '🛠 LOG: 🚀 --> ~ useGGAdsMob ~ isLoaded, isClosed, isEarnedReward, error, isOpened:',
-    isLoaded,
-    isClosed,
-    isEarnedReward,
-    reward,
-    error,
-    isOpened,
-  );
-  console.log(
-    '🛠 LOG: 🚀 --> ------------------------------------------------------------------------🛠 LOG: 🚀 -->',
-  );
+
 
   useEffect(() => {
     if (isClosed) {
