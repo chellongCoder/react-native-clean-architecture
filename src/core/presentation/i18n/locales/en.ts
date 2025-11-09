@@ -70,7 +70,7 @@ export default {
         anotherAccount: 'Another account?',
         hiWelcomeBack: 'Hi, Welcome back',
         logout: 'Logout',
-        enter: 'Enter',
+        enter: 'Confirm',
       },
       Register: {
         emailOrPhone: 'Email or phone number',
