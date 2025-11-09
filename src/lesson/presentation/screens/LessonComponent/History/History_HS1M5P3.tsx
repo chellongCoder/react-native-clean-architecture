@@ -305,6 +305,7 @@ const HistoryHS1M5P3 = observer(
                   backgroundColor: COLORS.WHITE_FBF8CC,
                   borderRadius: scale(10),
                   padding: scale(10),
+                  flex: 1,
                 }}>
                   <TextHighlight
                     content={

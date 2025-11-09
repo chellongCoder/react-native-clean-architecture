@@ -268,7 +268,7 @@ const HistoryHS1M5P1 = observer(
                 ).map((item, index) => {
                   return (
                     <DragItem
-                      key={index}
+                      key={index + item + moduleIndex}
                       index={index}
                       value={item}
                       canSwap={false}
@@ -344,7 +344,7 @@ const HistoryHS1M5P1 = observer(
                   ).map((item, index) => {
                     return (
                       <View
-                        key={index}
+                        key={index + item + moduleIndex}
                         style={{
                           marginTop: verticalScale(20),
                           marginHorizontal: scale(12),
