@@ -119,7 +119,7 @@ const History_SelectAnswer_SwipeImage = observer(
           answerRef.current?.resetAnswerSelected?.();
         },
         fullAnswer: firstMiniTestTask?.question?.[moduleIndex].fullAnswer,
-        totalTime: 60 * 5,
+        totalTime: 60 * 5 * 60,
       });
 
       const {lessonSetting} = useHomeStore();
@@ -144,7 +144,6 @@ const History_SelectAnswer_SwipeImage = observer(
           '',
       });
 
- 
       const opacity = useSharedValue(0);
       const scaleS = useSharedValue(1);
 
@@ -155,8 +154,6 @@ const History_SelectAnswer_SwipeImage = observer(
         resetLearning();
         // eslint-disable-next-line react-hooks/exhaustive-deps
       }, [trainingCount]);
-
- 
 
       useEffect(() => {
         opacity.value = withTiming(0, {duration: 500}, () => {
@@ -224,11 +221,12 @@ const History_SelectAnswer_SwipeImage = observer(
           backgroundAnswerColor={
             settings.backgroundAnswerColor ?? COLORS.GREEN_DDF598
           }
-          prompt={
-            {
-              description: firstMiniTestTask?.question?.[moduleIndex]?.prompt ?? settings.prompt?.toString() ?? '',
-            }
-          }
+          prompt={{
+            description:
+              firstMiniTestTask?.question?.[moduleIndex]?.prompt ??
+              settings.prompt?.toString() ??
+              '',
+          }}
           price="Free"
           score={selectedChild?.adsPoints}
           txtCountDown={word && !isMMSS(word) ? undefined : word}
