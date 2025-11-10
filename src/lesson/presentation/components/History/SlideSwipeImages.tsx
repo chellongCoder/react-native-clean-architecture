@@ -4,7 +4,6 @@ import {
   Text,
   StyleSheet,
   Dimensions,
-  TouchableOpacity,
   StyleProp,
   ViewStyle,
   TextStyle,
@@ -82,30 +81,29 @@ const SlideSwipeImages: React.FC<SlideSwipeImagesProps> = ({
     onSlideChange?.(index);
   };
 
+  const capitalizeFirstLetter = (text: string): string => {
+    if (!text) return text;
+    return text.charAt(0).toUpperCase() + text.slice(1).toLowerCase();
+  };
+
   const renderSlideItem = ({item, index}: {item: SlideItem; index: number}) => {
     return (
-      <View pointerEvents='none' style={{flexDirection: 'column', gap: scale(4)}}>
+      <View
+        pointerEvents="none"
+        style={{flexDirection: 'column', gap: scale(4)}}>
         <View>
           {item.title && (
-            <Text
-              numberOfLines={2}
-              adjustsFontSizeToFit
-              style={[styles.title, titleStyle]}>
+            <Text numberOfLines={2} style={[styles.title, titleStyle]}>
               {item.title}
             </Text>
           )}
           {item.subtitle && (
-            <Text
-              numberOfLines={2}
-              adjustsFontSizeToFit
-              allowFontScaling
-              style={[styles.subtitle, subtitleStyle]}>
-              {item.subtitle}
+            <Text numberOfLines={2} style={[styles.subtitle, subtitleStyle]}>
+              {capitalizeFirstLetter(item.subtitle)}
             </Text>
           )}
         </View>
-        <View
-          style={[styles.slideContainer, imageStyle]}>
+        <View style={[styles.slideContainer, imageStyle]}>
           <View style={styles.imageContainer}>
             <FastImage
               source={{uri: item.imageUrl}}
@@ -174,35 +172,6 @@ const styles = StyleSheet.create({
     // justifyContent: 'flex-start',
     alignItems: 'center',
   },
-  headerContainer: {
-    alignItems: 'center',
-    marginBottom: scale(20),
-  },
-  mainTitle: {
-    fontSize: scale(32),
-    fontFamily: FontFamily.SVNCherishMoment,
-    color: '#E67E22',
-    textAlign: 'center',
-    fontWeight: 'bold',
-    letterSpacing: scale(2),
-  },
-  mainSubtitle: {
-    fontSize: scale(28),
-    fontFamily: FontFamily.SVNCherishMoment,
-    color: '#E67E22',
-    textAlign: 'center',
-    fontWeight: 'bold',
-    letterSpacing: scale(1),
-    marginTop: scale(4),
-  },
-  description: {
-    fontSize: scale(18),
-    fontFamily: FontFamily.Eina01Regular,
-    color: '#52C4A0',
-    textAlign: 'center',
-    marginTop: scale(12),
-    lineHeight: scale(24),
-  },
   carouselContainer: {
     flex: 1,
     justifyContent: 'center',
@@ -228,15 +197,6 @@ const styles = StyleSheet.create({
     width: '100%',
     height: '100%',
   },
-  contentOverlay: {
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
-    right: 0,
-    backgroundColor: 'rgba(0, 0, 0, 0.6)',
-    paddingVertical: scale(12),
-    paddingHorizontal: scale(16),
-  },
   title: {
     fontSize: scale(18),
     fontFamily: FontFamily.SVNCherishMoment,
@@ -251,30 +211,16 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     opacity: 0.9,
   },
-  paginationContainer: {
-    // paddingTop: scale(16),
-    // paddingBottom: 0,
-    // height: 20
-  },
-  paginationDot: {
-    width: scale(10),
-    height: scale(10),
-    borderRadius: scale(5),
-    backgroundColor: '#E67E22',
-    marginHorizontal: scale(4),
-  },
-  paginationInactiveDot: {
-    backgroundColor: 'rgba(230, 126, 34, 0.3)',
-  },
   swipeHintContainer: {
     flexDirection: 'row',
     alignItems: 'center',
+    gap: scale(8),
+    marginBottom: scale(16),
   },
   swipeHintText: {
     fontSize: scale(12),
     fontFamily: FontFamily.SVNNeuzeitBold,
     color: '#E67E22',
-    marginRight: scale(8),
   },
   swipeHintEmoji: {
     fontSize: scale(20),

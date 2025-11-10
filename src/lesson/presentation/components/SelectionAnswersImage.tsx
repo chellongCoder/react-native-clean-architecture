@@ -207,8 +207,6 @@ const SelectionAnswersImage: ForwardRefRenderFunction<
                   },
                 ]}>
                 <Text
-                  allowFontScaling
-                  adjustsFontSizeToFit
                   numberOfLines={2}
                   style={[
                     styles.answerText,
@@ -273,7 +271,7 @@ const styles = StyleSheet.create({
   answerText: {
     fontFamily: FontFamily.SVNNeuzeitBold,
     color: COLORS.WHITE_FBF8CC,
-    fontSize: verticalScale(16),
+    fontSize: 16,
     textAlign: 'center',
   },
   timerOverlay: {
