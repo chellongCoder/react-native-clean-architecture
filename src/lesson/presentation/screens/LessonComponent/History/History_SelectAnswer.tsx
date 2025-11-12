@@ -256,11 +256,12 @@ const History_SelectAnswer = observer(
           backgroundAnswerColor={
             settings.backgroundAnswerColor ?? COLORS.GREEN_DDF598
           }
-          prompt={
-            {
-              description: firstMiniTestTask?.question?.[moduleIndex]?.prompt ?? settings.prompt?.toString() ?? '',
-            }
-          }
+          prompt={{
+            description:
+              firstMiniTestTask?.question?.[moduleIndex]?.prompt ??
+              settings.prompt?.toString() ??
+              '',
+          }}
           price="Free"
           score={selectedChild?.adsPoints}
           txtCountDown={word && !isMMSS(word) ? undefined : word}
@@ -269,7 +270,14 @@ const History_SelectAnswer = observer(
           onPressFlower={toggleShowHint}
           buildQuestion={
             <Animated.View
-              style={[animatedStyle, {height: verticalScale(300), width: '80%', gap: verticalScale(10)}]}>
+              style={[
+                animatedStyle,
+                {
+                  height: verticalScale(300),
+                  width: '80%',
+                  gap: verticalScale(10),
+                },
+              ]}>
               <Text
                 numberOfLines={1}
                 allowFontScaling
