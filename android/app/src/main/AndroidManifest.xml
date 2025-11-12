@@ -77,6 +77,12 @@
     <meta-data
         android:name="com.google.android.gms.ads.APPLICATION_ID"
         android:value="ca-app-pub-9069193131931191~7436243713"/>
+    <meta-data
+        android:name="com.appsflyer.AF_DEV_KEY"
+        android:value="WgiQWB8TNKSTGf96jjqBXa"/>
+    <meta-data
+        android:name="com.appsflyer.AF_IS_DEBUG"
+        android:value="true"/>
       <intent-filter>
         <action android:name="android.intent.action.MAIN"/>
         <category android:name="android.intent.category.LAUNCHER"/>

@@ -43,7 +43,7 @@ const App = () => {
     appsFlyer.initSdk(
       {
         devKey: 'WgiQWB8TNKSTGf96jjqBXa', // Get from dashboard
-        isDebug: false,
+        isDebug: !!__DEV__,
         appId: '41*****44', // iOS only
         onInstallConversionDataListener: true, //Optional
         onDeepLinkListener: true, //Optional
