@@ -48,6 +48,8 @@ const App = () => {
         onInstallConversionDataListener: true, //Optional
         onDeepLinkListener: true, //Optional
         timeToWaitForATTUserAuthorization: 10, //for iOS 14.5
+        // CRITICAL: Disable AAID collection
+        manualStart: false,
       },
       result => {
         console.log('appsFlyer result: ', result);
@@ -58,6 +60,9 @@ const App = () => {
     );
     // Disable data collection for children
     appsFlyer.anonymizeUser(true);
+    // Disable advertising identifier collection
+    appsFlyer.setCollectAndroidID(false);
+    appsFlyer.setCollectIMEI(false);
   };
 
   const routeNameRef = useRef<string>();

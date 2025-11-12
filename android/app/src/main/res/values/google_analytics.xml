@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <bool name="google_analytics_adid_collection_enabled">false</bool>
+    <string name="google_analytics_default_allow_ad_personalization_signals">false</string>
+</resources>
