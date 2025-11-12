@@ -125,15 +125,15 @@ platform :android do
       UI.user_error!("Could not find AAB file at path '#{aab_path}'")
     end
 
-    supply(
-      track: 'internal',
-      aab: aab_path,
-      skip_upload_apk: true, # Skip uploading APK files
-      skip_upload_metadata: true,
-      skip_upload_images: true,
-      skip_upload_screenshots: true,
-      release_status: "completed"
-    )
+    # supply(
+    #   track: 'internal',
+    #   aab: aab_path,
+    #   skip_upload_apk: true, # Skip uploading APK files
+    #   skip_upload_metadata: true,
+    #   skip_upload_images: true,
+    #   skip_upload_screenshots: true,
+    #   release_status: "completed"
+    # )
   end
 
   desc "Download metadata from Play Store"
