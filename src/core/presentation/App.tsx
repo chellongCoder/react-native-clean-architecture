@@ -61,8 +61,11 @@ const App = () => {
     // Disable data collection for children
     appsFlyer.anonymizeUser(true);
     // Disable advertising identifier collection
-    appsFlyer.setCollectAndroidID(false);
-    appsFlyer.setCollectIMEI(false);
+    if(isAndroid) {
+      appsFlyer.setCollectAndroidID(false);
+      appsFlyer.setCollectIMEI(false);
+    }
+    
   };
 
   const routeNameRef = useRef<string>();
