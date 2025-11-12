@@ -61,7 +61,7 @@ export default {
         anotherAccount: 'Tài khoản khác?',
         hiWelcomeBack: 'Chào mừng trở lại',
         logout: 'Đăng xuất',
-        enter: 'Nhập',
+        enter: 'Xác nhận',
       },
       Register: {
         emailOrPhone: 'Email hoặc số điện thoại',
