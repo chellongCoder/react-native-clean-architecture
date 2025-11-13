@@ -29,3 +29,7 @@ export type RootStackScreenProps<Screen extends keyof RootStackParamList> =
 
 export type RootScreenNavigationProp<Screen extends keyof RootStackParamList> =
   NativeStackNavigationProp<RootStackParamList, Screen>;
+
+export enum CampaignE {
+  INFLUENCER_AFFILIATE = 'influencer_affiliate'
+}

@@ -59,7 +59,7 @@ react {
 /**
  * Set this to true to Run Proguard on Release builds to minify the Java bytecode.
  */
-def enableProguardInReleaseBuilds = false
+def enableProguardInReleaseBuilds = true
 
 /**
  * The preferred build flavor of JavaScriptCore (JSC)
@@ -84,7 +84,7 @@ android {
         applicationId "com.algorz.abeeci.app"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 171
+        versionCode 173
         versionName "1.1.5"
         missingDimensionStrategy "store", "play"
         ndk {
@@ -129,14 +129,26 @@ android {
     buildTypes {
         debug {
             signingConfig signingConfigs.debug
+            // Disable minification in debug for faster builds
+            minifyEnabled false
+            shrinkResources false
         }
         release {
             // Caution! In production, you need to generate your own keystore file.
             // see https://reactnative.dev/docs/signed-apk-android.
-            minifyEnabled true
             signingConfig signingConfigs.release
+            // Enable code minification with R8
             minifyEnabled enableProguardInReleaseBuilds
-            proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
+            
+            // Enable resource shrinking to remove unused resources
+            shrinkResources enableProguardInReleaseBuilds
+            
+            // Use optimized ProGuard configuration file for better optimization
+            proguardFiles getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro"
+
+            // Keep raw resources (credentials file)
+            resValue "bool", "keep_raw_resources", "true"
+
         }
     }
     packagingOptions {

@@ -21,6 +21,7 @@ import { isAndroid } from '../utils';
 // REMOVED: getAndroidId, getDeviceToken - violates Families Policy
 import {v4 as uuidv4} from 'uuid';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { CampaignE } from './types';
 
 export const AppStack = createStackNavigator();
 
@@ -43,9 +44,9 @@ const RootNavigator: FC = () => {
       if (data.type === "onInstallConversionDataLoaded") {
         const attrData = data.data;
         const mediaSource = attrData.media_source;   // e.g. facebook / instagram / tiktok_int
-        const campaign = attrData.campaign;          // campaign name
-        const referralCode = attrData.referral_code; // if you passed it in link
-
+        const campaign = attrData.campaign as CampaignE;          // campaign name
+        const referralCode = attrData.path; // if you passed it in link
+        const influencerId = attrData.influencer_id; // get influencer id if any
         console.log("Install from:", mediaSource, "Campaign:", campaign, "Referral:", referralCode);
         
         // FAMILIES POLICY COMPLIANT: Use app-scoped UUID instead of device identifiers
@@ -70,6 +71,7 @@ const RootNavigator: FC = () => {
           campaignName: campaign ?? 'string',
           referCode: referralCode ?? 'string',
           deviceToken: deviceToken ?? 'string',
+          influencerId: influencerId ?? '',
           token: 'alphadex',
         });
       }
@@ -84,6 +86,19 @@ const RootNavigator: FC = () => {
     listenAttribution();
   }, []);
 
+  useEffect(() => {
+    const deepLinkListener = appsFlyer.onDeepLink(res => {
+      console.log('Deep link data:', res);
+      if (res.status === 'success' && res.deepLinkStatus === 'FOUND' && res.data?.influencer_id) {
+        const influencerId = res.data.influencer_id;
+        // Handle free diamonds or tracking here
+      }
+    });
+
+    return () => {
+      deepLinkListener(); // unsubscribe
+    };
+  }, []);
 
   useEffect(() => {
     const getDataFromStore = async () => {
