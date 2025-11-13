@@ -4,4 +4,5 @@ export interface PostCampaignPayload {
   referCode: string;
   deviceToken: string;
   token: string;
+  influencerId?: string;
 }

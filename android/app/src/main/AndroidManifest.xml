@@ -61,7 +61,6 @@
     <meta-data
     android:name="com.google.android.gms.ads.AD_MANAGER_APP"
     android:value="true" />
-    
     <!-- CRITICAL: Tag for child-directed treatment (Families Policy) -->
     <meta-data
         android:name="com.google.android.gms.ads.flag.DENY_CHILD_DIRECTED_TREATMENT"
@@ -102,9 +101,11 @@
         <category android:name="android.intent.category.BROWSABLE" />
 
         <!-- Replace "onelink-basic-app" with your OneLink domain -->
-        <data
-            android:host="alphadex-abeeci.onelink.me"
-            android:scheme="https" />
+      <data android:scheme="https"
+            android:host="algorz-abeeci-dev.onelink.me" />
+      <data android:scheme="https"
+            android:host="algorz-abeeci.onelink.me" />
+
       </intent-filter>
     </activity>
     <activity android:name="com.facebook.react.devsupport.DevSettingsActivity" android:exported="false"/>
