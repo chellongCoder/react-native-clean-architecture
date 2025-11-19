@@ -561,6 +561,11 @@ const LESSON_PATTERNS = [
     }),
   },
   {
+    pattern: /^SCIENCE_SG1M(3)$/,
+    component: Science_SelectAnswer,
+    props,
+  },
+  {
     pattern: /^SCIENCE_SG2M(1|3)$/,
     component: Science_SelectAnswer_Image_TextImageAnswer,
     props: (dataProps: any) => ({
@@ -597,7 +602,10 @@ const LESSON_PATTERNS = [
   {
     pattern: /^SCIENCE_SG3M(1)$/,
     component: Science_SelectAnswer_ImageLearning,
-    props,
+    props: (dataProps: any) => ({
+      ...dataProps,
+      isSelectOne: true,
+    }),
   },
   {
     pattern: /^SCIENCE_SG3M(2)$/,
@@ -605,9 +613,12 @@ const LESSON_PATTERNS = [
     props,
   },
   {
-    pattern: /^SCIENCE_SG(1|3)M(3)$/,
+    pattern: /^SCIENCE_SG3M(3)$/,
     component: Science_SelectAnswer,
-    props,
+    props: (dataProps: any) => ({
+      ...dataProps,
+      isSelectOne: true,
+    }),
   },
   {
     pattern: /^SCIENCE_SG3M(6)$/,

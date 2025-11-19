@@ -57,6 +57,7 @@ type Props = {
   characterImageSuccess?: string;
   characterImageFail?: string;
   characterStyle?: StyleProp<ViewStyle>;
+  isSelectOne?: boolean;
 };
 
 const Science_SelectAnswer_ImageLearning = observer(
@@ -73,6 +74,7 @@ const Science_SelectAnswer_ImageLearning = observer(
         characterImageSuccess,
         characterImageFail,
         characterStyle,
+        isSelectOne,
       },
       ref,
     ) => {
@@ -99,7 +101,10 @@ const Science_SelectAnswer_ImageLearning = observer(
         const correctAnswerArray = (
           Array.isArray(correctAnswer) ? correctAnswer : [correctAnswer]
         ).map(e => e?.toLocaleString().toLocaleLowerCase());
-        return arraysEqualWithExactItem(answerSelectedArray, correctAnswerArray);
+        return arraysEqualWithExactItem(
+          answerSelectedArray,
+          correctAnswerArray,
+        );
       }, [answerSelected, firstMiniTestTask?.question, moduleIndex]);
 
       const {
@@ -289,6 +294,7 @@ const Science_SelectAnswer_ImageLearning = observer(
                 }}
                 learningTimer={learningTimer}
                 ref={answerRef}
+                isSelectOne={isSelectOne}
               />
 
               <PrimaryButton
