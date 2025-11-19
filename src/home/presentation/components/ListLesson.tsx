@@ -134,7 +134,7 @@ const ListLesson = () => {
             voice.name.toLowerCase().includes('vietnamese'),
         );
         updateDefaultVoice?.(vietnameseVoices[0]?.id, 'Vie (Vietnamese)');
-        updateSpeechPitch?.(10);
+        updateSpeechPitch?.(1);
       } else {
         const engVoice = voices.find(
           voice => voice.language === listLanguage['US English'],
@@ -206,7 +206,11 @@ const ListLesson = () => {
           console.log(
             '🛠 LOG: 🚀 --> -----------------------------------------------------🛠 LOG: 🚀 -->',
           );
-          console.log('🛠 LOG: 🚀 --> ~ ListLesson ~ slideIndex:',index, slideIndex);
+          console.log(
+            '🛠 LOG: 🚀 --> ~ ListLesson ~ slideIndex:',
+            index,
+            slideIndex,
+          );
           console.log(
             '🛠 LOG: 🚀 --> -----------------------------------------------------🛠 LOG: 🚀 -->',
           );
