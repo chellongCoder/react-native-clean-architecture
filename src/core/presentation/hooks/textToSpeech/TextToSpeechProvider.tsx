@@ -336,10 +336,22 @@ export const TextToSpeechProvider = ({children}: PropsWithChildren) => {
       '🛠 LOG: 🚀 --> -----------------------------------------------------------------------------------------------------------------------------------------🛠 LOG: 🚀 -->',
     );
     if (language) {
-      await Tts.setDefaultLanguage(listLanguage[language]);
+      await Tts.setDefaultLanguage(listLanguage[language])
+        .then(res => {
+          console.log('voice setDefaultLanguage res: ', res);
+        })
+        .catch(err => {
+          console.log('voice setDefaultLanguage err: ', err);
+        });
     }
     if (voiceId) {
-      await Tts.setDefaultVoice(voiceId);
+      await Tts.setDefaultVoice(voiceId)
+        .then(res => {
+          console.log('voice setDefaultVoice res: ', res);
+        })
+        .catch(err => {
+          console.log('voice setDefaultVoice err: ', err);
+        });
     }
   };
 
@@ -359,7 +371,7 @@ export const TextToSpeechProvider = ({children}: PropsWithChildren) => {
     Tts.setDefaultRate(isAndroid ? 0.5 : 1);
 
     // Độ ấm của giọng càng thấp giọng càng trầm ấm
-    Tts.setDefaultPitch(20);
+    Tts.setDefaultPitch(1.0);
 
     // Ignore the silent switch on the device, allowing TTS to play even if the device is set to silent
     Tts.setIgnoreSilentSwitch('ignore');
