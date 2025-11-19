@@ -119,7 +119,7 @@ const History_SelectAnswer_SwipeImage = observer(
           answerRef.current?.resetAnswerSelected?.();
         },
         fullAnswer: firstMiniTestTask?.question?.[moduleIndex].fullAnswer,
-        totalTime: 60 * 5 * 60,
+        totalTime: 60 * 5,
       });
 
       const {lessonSetting} = useHomeStore();
