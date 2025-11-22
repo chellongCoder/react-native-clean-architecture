@@ -91,7 +91,7 @@
         <category android:name="android.intent.category.DEFAULT"/>
         <category android:name="android.intent.category.BROWSABLE"/>
         <data android:scheme="com.alphadex.tbd.app"/>
-        <data android:scheme="exp+react-native-clean-architecture"/>
+        <data android:scheme="exp+com.alphadex.tbd.app"/>
         <data android:host="abeeci" android:scheme="affiliate" />
       </intent-filter>
       <intent-filter android:autoVerify="true">

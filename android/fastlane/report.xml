@@ -5,32 +5,32 @@
     
     
       
-      <testcase classname="fastlane.lanes" name="0: default_platform" time="0.000444">
+      <testcase classname="fastlane.lanes" name="0: default_platform" time="0.000373">
         
       </testcase>
     
       
-      <testcase classname="fastlane.lanes" name="1: Switch to android increment_version_code lane" time="0.000171">
+      <testcase classname="fastlane.lanes" name="1: Switch to android increment_version_code lane" time="0.000175">
         
       </testcase>
     
       
-      <testcase classname="fastlane.lanes" name="2: grep versionCode ../app/build.gradle | awk &apos;{print $2}&apos;" time="0.01142">
+      <testcase classname="fastlane.lanes" name="2: grep versionCode ../app/build.gradle | awk &apos;{print $2}&apos;" time="0.014468">
         
       </testcase>
     
       
-      <testcase classname="fastlane.lanes" name="3: sed -i &apos;&apos; &apos;s/versionCode 172/versionCode 173/&apos; ../app/build.gradle" time="0.00987">
+      <testcase classname="fastlane.lanes" name="3: sed -i &apos;&apos; &apos;s/versionCode 173/versionCode 174/&apos; ../app/build.gradle" time="0.018427">
         
       </testcase>
     
       
-      <testcase classname="fastlane.lanes" name="4: bundleRelease" time="1362.407439">
+      <testcase classname="fastlane.lanes" name="4: bundleRelease" time="571.290687">
         
       </testcase>
     
       
-      <testcase classname="fastlane.lanes" name="5: supply" time="90.135634">
+      <testcase classname="fastlane.lanes" name="5: supply" time="108.011979">
         
       </testcase>
     
