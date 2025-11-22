@@ -15,13 +15,7 @@ import {usePermissionApplock} from 'src/hooks/usePermissionApplock';
 import useHydration from 'src/hooks/useHydration';
 import {PopupModalGlobalProvider} from '../hooks/popup/PopupModalGlobalProvider';
 import {useI18n} from '../hooks/useI18n';
-import appsFlyer from 'react-native-appsflyer';
-import { useCampaign } from 'src/authentication/presentation/hooks/useCampaign';
-import { isAndroid } from '../utils';
-// REMOVED: getAndroidId, getDeviceToken - violates Families Policy
-import {v4 as uuidv4} from 'uuid';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { CampaignE } from './types';
+import useDeeplink from '../hooks/appsflyer/useDeeplink';
 
 export const AppStack = createStackNavigator();
 
@@ -31,74 +25,14 @@ const RootNavigator: FC = () => {
   const i18n = useI18n();
 
   const isHydrated = useHydration();
-  const {postCampaign} = useCampaign();
 
   useFonts();
   usePermissionApplock();
 
   const [userProfile, setUserProfile] = useState();
 
-  // Listen to conversion data
-  const listenAttribution = async () => {
-    appsFlyer.onInstallConversionData(async (data) => {
-      if (data.type === "onInstallConversionDataLoaded") {
-        const attrData = data.data;
-        const mediaSource = attrData.media_source;   // e.g. facebook / instagram / tiktok_int
-        const campaign = attrData.campaign as CampaignE;          // campaign name
-        const referralCode = attrData.path; // if you passed it in link
-        const influencerId = attrData.influencer_id; // get influencer id if any
-        console.log("Install from:", mediaSource, "Campaign:", campaign, "Referral:", referralCode);
-        
-        // FAMILIES POLICY COMPLIANT: Use app-scoped UUID instead of device identifiers
-        let deviceToken;
-        try {
-          // Try to get existing UUID from storage
-          const storedToken = await AsyncStorage.getItem('@app_device_token');
-          if (storedToken) {
-            deviceToken = storedToken;
-          } else {
-            // Generate new UUID (not a device identifier, just app-scoped)
-            deviceToken = uuidv4();
-            await AsyncStorage.setItem('@app_device_token', deviceToken);
-          }
-        } catch (error) {
-          console.log('Error getting device token:', error);
-          deviceToken = uuidv4(); // Fallback to temporary UUID
-        }
-        
-        postCampaign({
-          mediaSource: mediaSource ?? 'string',
-          campaignName: campaign ?? 'string',
-          referCode: referralCode ?? 'string',
-          deviceToken: deviceToken ?? 'string',
-          influencerId: influencerId ?? '',
-          token: 'alphadex',
-        });
-      }
-    });
-
-    appsFlyer.onInstallConversionFailure((error) => {
-      console.error("Attribution error:", error);
-    });
-  };
-
-  useEffect(() => {
-    listenAttribution();
-  }, []);
-
-  useEffect(() => {
-    const deepLinkListener = appsFlyer.onDeepLink(res => {
-      console.log('Deep link data:', res);
-      if (res.status === 'success' && res.deepLinkStatus === 'FOUND' && res.data?.influencer_id) {
-        const influencerId = res.data.influencer_id;
-        // Handle free diamonds or tracking here
-      }
-    });
-
-    return () => {
-      deepLinkListener(); // unsubscribe
-    };
-  }, []);
+  // Attach AppsFlyer attribution + deep link listeners
+  useDeeplink();
 
   useEffect(() => {
     const getDataFromStore = async () => {

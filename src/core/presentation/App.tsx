@@ -32,41 +32,14 @@ import SpInAppUpdates, {
   IAUInstallStatus,
 } from 'sp-react-native-in-app-updates';
 import DeviceInfo from 'react-native-device-info';
-import appsFlyer from 'react-native-appsflyer';
 import analytics from '@react-native-firebase/analytics';
+import useDeeplink from './hooks/appsflyer/useDeeplink';
 
 LogBox.ignoreLogs(['Warning: ...']); // Ignore log notification by message
 LogBox.ignoreAllLogs(); //Ignore all log notifications
 
 const App = () => {
-  const initializeAppsFlyer = () => {
-    appsFlyer.initSdk(
-      {
-        devKey: 'WgiQWB8TNKSTGf96jjqBXa', // Get from dashboard
-        isDebug: !!__DEV__,
-        appId: '41*****44', // iOS only
-        onInstallConversionDataListener: true, //Optional
-        onDeepLinkListener: true, //Optional
-        timeToWaitForATTUserAuthorization: 10, //for iOS 14.5
-        // CRITICAL: Disable AAID collection
-        manualStart: false,
-      },
-      result => {
-        console.log('appsFlyer result: ', result);
-      },
-      error => {
-        console.error('appsFlyer error: ', error);
-      },
-    );
-    // Disable data collection for children
-    appsFlyer.anonymizeUser(true);
-    // Disable advertising identifier collection
-    if(isAndroid) {
-      appsFlyer.setCollectAndroidID(false);
-      appsFlyer.setCollectIMEI(false);
-    }
-    
-  };
+  useDeeplink({initializeSdk: true});
 
   const routeNameRef = useRef<string>();
 
@@ -130,10 +103,6 @@ const App = () => {
       routeNameRef.current = currentRouteName;
     }
   };
-
-  useEffect(() => {
-    initializeAppsFlyer();
-  }, []);
 
   useEffect(() => {
     crashlytics().log('App mounted.');
