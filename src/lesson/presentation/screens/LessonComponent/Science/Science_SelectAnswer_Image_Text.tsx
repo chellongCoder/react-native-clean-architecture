@@ -16,6 +16,7 @@ import useGlobalStyle from 'src/core/presentation/hooks/useGlobalStyle';
 import {Task} from 'src/home/application/types/GetListQuestionResponse';
 import {COLORS} from 'src/core/presentation/constants/colors';
 import {
+  arraysEqualWithExactItem,
   darkenColor,
   getCorrectAnswer,
   isMMSS,
@@ -79,7 +80,7 @@ const Science_SelectAnswer_Image_Text = observer(
       const focus = useIsFocused();
       const answerRef = useRef<SelectionAnswersQuestionRef>(null);
 
-      const [answerSelected, setAnswerSelected] = useState<string>('');
+      const [answerSelected, setAnswerSelected] = useState<string[]>([]);
 
       const {trainingCount, getSetting} = useLessonStore();
 
@@ -92,7 +93,7 @@ const Science_SelectAnswer_Image_Text = observer(
         const correctAnswerArray = (
           Array.isArray(correctAnswer) ? correctAnswer : [correctAnswer]
         ).map(e => e?.toLocaleString().toLocaleLowerCase());
-        return isSubArray(answerSelectedArray, correctAnswerArray);
+        return arraysEqualWithExactItem(answerSelectedArray.sort(), correctAnswerArray.sort());
       }, [answerSelected, firstMiniTestTask?.question, moduleIndex]);
 
       const {selectedChild} = useAuthenticationStore();
@@ -110,9 +111,9 @@ const Science_SelectAnswer_Image_Text = observer(
         countDownTime: trainingCount <= 2 ? 0 : 5,
         isCorrectAnswer: !!isCorrectAnswer,
         onSubmit: () => {
-          setAnswerSelected('');
+          setAnswerSelected([]);
           nextModule(
-            `${answerSelected.trim().toLocaleLowerCase().replace('#', '')}.png`,
+            `${answerSelected.toString().trim().toLocaleLowerCase().replace('#', '')}.png`,
           );
           answerRef.current?.resetAnswerSelected?.();
         },
@@ -187,11 +188,10 @@ const Science_SelectAnswer_Image_Text = observer(
       useImperativeHandle(ref, () => ({
         isAnswerCorrect,
         onChoiceCorrectedAnswer: () => {
+          const correct = firstMiniTestTask?.question?.[moduleIndex]
+                ?.correctAnswer;
           setAnswerSelected(
-            getCorrectAnswer(
-              firstMiniTestTask?.question?.[moduleIndex]
-                ?.correctAnswer as string[],
-            ),
+            Array.isArray(correct) ? correct as string[] : [correct as string],
           );
         },
       }));
@@ -283,7 +283,7 @@ const Science_SelectAnswer_Image_Text = observer(
                 isShowCorrectContainer={isShowCorrectContainer}
                 isAnswerCorrect={!!isAnswerCorrect}
                 onSelectAnswer={(e: string[]) => {
-                  setAnswerSelected(e[0]);
+                  setAnswerSelected(e);
                 }}
                 learningTimer={learningTimer}
                 ref={answerRef}
