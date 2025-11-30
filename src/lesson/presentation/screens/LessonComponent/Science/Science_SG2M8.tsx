@@ -238,16 +238,17 @@ const Science_SG2M8 = observer(
           // console.log('🛠 LOG: 🚀 --> ~ item:', item);
           return (
             <DragItem
+              key={index + item + moduleIndex}
               index={100 + index}
               value={item}
               createItem={({value, index}) => {
-                console.log(
-                  '🛠 LOG: 🚀 --> ------------------------------🛠 LOG: 🚀 -->',
-                );
-                console.log('🛠 LOG: 🚀 --> ~ index:', index);
-                console.log(
-                  '🛠 LOG: 🚀 --> ------------------------------🛠 LOG: 🚀 -->',
-                );
+                // console.log(
+                //   '🛠 LOG: 🚀 --> ------------------------------🛠 LOG: 🚀 -->',
+                // );
+                // console.log('🛠 LOG: 🚀 --> ~ index:', index);
+                // console.log(
+                //   '🛠 LOG: 🚀 --> ------------------------------🛠 LOG: 🚀 -->',
+                // );
                 let width, height;
                 let resizeMode = 'contain';
                 let marginRight = -scale(20);
@@ -352,7 +353,7 @@ const Science_SG2M8 = observer(
                 ).map((item, index) => {
                   return (
                     <DragItem
-                      key={index}
+                      key={index + moduleIndex}
                       index={index}
                       value={item}
                       canSwap={false}
@@ -417,6 +418,7 @@ const Science_SG2M8 = observer(
                   }
                 />
                 <View
+                  key={moduleIndex}
                   style={{
                     flexDirection: 'row',
                     flexWrap: 'wrap',

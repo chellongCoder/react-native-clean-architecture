@@ -269,6 +269,7 @@ const Science_SelectAnswer_ImageLearning = observer(
                 <VoiceButton onPress={onSpeechText} />
               </View>
               <SelectionAnswersQuestion
+                isSelectOne={typeof firstMiniTestTask?.question?.[moduleIndex].correctAnswer === 'string'}
                 question={
                   <TextHighlight
                     content={
