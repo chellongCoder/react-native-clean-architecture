@@ -5,6 +5,7 @@ import {
   Text,
   TouchableOpacity,
   View,
+  Image,
 } from 'react-native';
 import React, {useState} from 'react';
 import PrimaryButton from '../components/PrimaryButton';
@@ -20,6 +21,7 @@ import useGoogleLogin from 'src/hooks/useGoogleLogin';
 import {COLORS} from 'src/core/presentation/constants/colors';
 import {useI18n} from 'src/core/presentation/hooks/useI18n';
 import DropdownChangeLang from 'src/core/presentation/components/DropdownChangeLang';
+import FastImage from 'react-native-fast-image';
 
 const LoginScreen = observer(() => {
   const {handleLoginWithCredentials} = useLoginWithCredentials();
@@ -100,6 +102,7 @@ const LoginScreen = observer(() => {
             }}
             text={i18n.t('authentication.screens.Login.google')}
             wrapContent={false}
+            icon={<FastImage resizeMode='cover' style={{width: '100%', height: '100%'}} source={{uri: 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c1/Google_%22G%22_logo.svg/1024px-Google_%22G%22_logo.svg.png'}} />}
             style={[
               {
                 backgroundColor: COLORS.YELLOW_F2B559,
@@ -110,6 +113,7 @@ const LoginScreen = observer(() => {
             <Text
               style={[globalStyle.txtLabel, styles.txtLink, styles.textCenter]}>
               {i18n.t('authentication.screens.Login.dontHaveAccount')}
+              {' '}
               <Text
                 style={{
                   textDecorationLine: 'underline',
@@ -148,15 +152,6 @@ const styles = StyleSheet.create({
     flex: 1,
   },
 
-  arrowIcon: {
-    // width: 22,
-    // height: 22,
-    // borderRadius: 11,
-    marginLeft: scale(5),
-  },
-  ph16: {
-    paddingHorizontal: scale(16),
-  },
   mh12: {
     marginHorizontal: scale(12),
   },
@@ -175,14 +170,5 @@ const styles = StyleSheet.create({
   },
   rowAround: {
     flexDirection: 'row',
-  },
-  logoContainer: {
-    alignItems: 'center',
-    marginTop: verticalScale(20),
-  },
-  logo: {
-    width: scale(150),
-    height: scale(150),
-    resizeMode: 'contain',
   },
 });

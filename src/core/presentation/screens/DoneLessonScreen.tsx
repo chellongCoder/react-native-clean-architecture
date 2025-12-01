@@ -91,6 +91,35 @@ const DoneLessonScreen = observer(({}) => {
   useGetUserSetting(deviceToken, selectedChild?._id ?? '', lessonStore);
   const ggadsHook = useGoogleAdsmob();
 
+  const blockedModule = lessonStore.blockedModules?.find(
+    module => module.moduleId === route.module?.lessonId,
+  );
+
+  const isSuccess = useMemo(() => {
+    if (route.isMiniTest && blockedModule) {
+      // * nếu check ra mini test
+      if (
+        blockedModule?.percent <=
+        (totalCorrectAnswer / totalResultLength) * 100
+      ) {
+        // * nếu đủ điểm unlock
+        return true;
+      } else {
+        return false;
+      }
+    } else {
+      // * nếu ko phải mini test
+      return true;
+    }
+  }, [
+    lessonStore.blockedModules,
+    route.isMiniTest,
+    route.module,
+    totalCorrectAnswer,
+    totalResultLength,
+  ]);
+
+
   const onEarnReward = useCallback(
     async (reward?: RewardedAdReward) => {
       setIsShowWatchAds(false);
@@ -113,34 +142,6 @@ const DoneLessonScreen = observer(({}) => {
     },
     [getUserProfile, lessonStore, selectedChild?._id, setSelectedChild],
   );
-
-  const isSuccess = useMemo(() => {
-    const blockedModule = lessonStore.blockedModules?.find(
-      module => module.moduleId === route.module?.lessonId,
-    );
-
-    if (route.isMiniTest && blockedModule) {
-      // * nếu check ra mini test
-      if (
-        blockedModule?.percent <=
-        (totalCorrectAnswer / totalResultLength) * 100
-      ) {
-        // * nếu ko đủ điểm unlock
-        return true;
-      } else {
-        return false;
-      }
-    } else {
-      // * nếu ko phải mini test
-      return true;
-    }
-  }, [
-    lessonStore.blockedModules,
-    route.isMiniTest,
-    route.module,
-    totalCorrectAnswer,
-    totalResultLength,
-  ]);
 
   const onUnlockAppSetting = useCallback(async () => {
     if (isSuccess) {

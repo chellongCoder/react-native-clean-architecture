@@ -92,6 +92,7 @@ import {coreModuleContainer} from 'src/core/CoreModule';
 import I18n from 'src/core/presentation/i18n';
 import useHomeStore from 'src/home/presentation/stores/useHomeStore';
 import {useLoadingGlobal} from 'src/core/presentation/hooks/loading/useLoadingGlobal';
+import { FontFamily } from 'src/core/presentation/hooks/useFonts';
 
 // ... existing imports ...
 
@@ -155,6 +156,7 @@ const ParentScreen = observer(() => {
     setSelectedChild,
     deviceToken,
     deleteChildren,
+    handleUserLogOut,
   } = useAuthenticationStore();
   const homeStore = useHomeStore();
   const {listSubject, rootSubject, showTutorial} = homeStore;
@@ -661,7 +663,7 @@ The blockAppsSystem function is an asynchronous function that awaits the result 
                   {selectedChild && (
                     <SelectApp
                       appName={
-                        selectedOption.trim() !== ''
+                         typeof selectedOption === 'string'
                           ? selectedOption
                           : 'select apps'
                       }
@@ -1003,6 +1005,11 @@ The blockAppsSystem function is an asynchronous function that awaits the result 
                 />
               </View>
             </View>
+            <TouchableOpacity onPress={handleUserLogOut} style={[styles.logoutContainer]}>
+              <Text style={[globalStyle.txtNote, styles.btnLogout]}>
+                {i18n.t('authentication.screens.ListChildren.logout')}
+              </Text>
+            </TouchableOpacity>
           </ScrollView>
         </BookView>
       </KeyboardAvoidingView>
@@ -1035,12 +1042,12 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.WHITE_FBF8CC,
   },
   btnLogout: {
-    backgroundColor: '#66C270',
-    marginTop: 8,
-    paddingVertical: 10,
-    paddingHorizontal: 16,
-    alignSelf: 'flex-start',
-    borderRadius: 50,
+    padding: verticalScale(10),
+    alignItems: 'center',
+    fontSize: scale(16),
+    color: COLORS.RED_F28759,
+    textDecorationLine: 'underline',
+    fontFamily: FontFamily.Eina01Bold
   },
   txtLogout: {
     color: '#1C6349',
@@ -1258,4 +1265,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginTop: verticalScale(8),
   },
+  logoutContainer: {
+    alignItems: 'center',
+    marginVertical: verticalScale(24),
+  }
 });
