@@ -20,6 +20,7 @@ import Tts from 'react-native-tts';
 import {iosVoice} from 'src/core/presentation/hooks/textToSpeech/TextToSpeechProvider';
 import {TextToSpeechContext} from 'src/core/presentation/hooks/textToSpeech/TextToSpeechContext';
 import FastImage from 'react-native-fast-image';
+import Toast from 'react-native-toast-message';
 
 const {width: screenWidth} = Dimensions.get('window');
 
@@ -46,6 +47,14 @@ const ListLesson = () => {
 
   const debouncedSnapToPrev = () => {
     if (!isButtonDisabled) {
+      if(lessonStore.isLoadingModulesBySubject) {
+        Toast.show({
+          type: 'info',
+          text1: 'Please wait',
+          text2: 'Modules are still loading...',
+        });
+        return;
+      }
       setIsButtonDisabled(true);
       snapToPrev();
       setTimeout(() => setIsButtonDisabled(false), 1000); // 500ms debounce time
@@ -54,6 +63,14 @@ const ListLesson = () => {
 
   const debouncedSnapToNext = () => {
     if (!isButtonDisabled) {
+      if(lessonStore.isLoadingModulesBySubject) {
+        Toast.show({
+          type: 'info',
+          text1: 'Please wait',
+          text2: 'Modules are still loading...',
+        });
+        return;
+      }
       setIsButtonDisabled(true);
       snapToNext();
       setTimeout(() => setIsButtonDisabled(false), 1000); // 500ms debounce time

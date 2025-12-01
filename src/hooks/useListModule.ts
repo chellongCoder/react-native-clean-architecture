@@ -15,53 +15,7 @@ export const useListModule = () => {
   const [modules, setModules] = useState<Module[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const authStore = useAuthenStore();
-
-  const getListModules = useCallback(
-    (childrenId: string, subjectId: string) => {
-      globalLoading.toggleLoading(true, 'listModule');
-      setIsLoading(true);
-      homeStore
-        .getListModules({
-          subjectId: subjectId,
-          childrenId: childrenId,
-        })
-        .then(response => {
-          const listTitle = response.data.map(item => item.description);
-          const listDesc = response.data.map(
-            item => item.tasks?.map(task => task.description).toString() ?? '',
-          );
-          Promise.all([
-            lessonStore.translateText({
-              text: listTitle,
-              targetLanguage: i18n.deviceLocale,
-            }),
-            lessonStore.translateText({
-              text: listDesc,
-              targetLanguage: i18n.deviceLocale,
-            }),
-          ])
-            .then(([resTitle, resDesc]) => {
-              const translatedModules = response.data.map((item, index) => ({
-                ...item,
-                name: resTitle.data[index],
-                tasks: item.tasks?.map((task, i) => ({
-                  ...task,
-                  description: (resDesc.data[index] ?? '').split(',')[i], // split by comma and get the index of the task
-                })),
-              }));
-              setModules(translatedModules);
-            })
-            .catch(() => {
-              setModules(response.data);
-            });
-        })
-        .finally(() => {
-          globalLoading.toggleLoading(false, 'listModule');
-          setIsLoading(false);
-        });
-    },
-    [],
-  );
+ 
   
   useEffect(() => {
     setModules(lessonStore.modulesBySubject);
@@ -80,7 +34,6 @@ export const useListModule = () => {
     selectedSubject: homeStore.listSubject.find(
       subject => subject._id === homeStore.subjectId,
     ),
-    isLoading,
-    getListModules,
+    isLoading: lessonStore.isLoadingModulesBySubject,
   };
 };

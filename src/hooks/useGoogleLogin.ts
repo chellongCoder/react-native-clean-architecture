@@ -13,6 +13,7 @@ import analytics from '@react-native-firebase/analytics';
 import useNavigateAuth from 'src/authentication/presentation/hooks/useNavigateAuthSuccess';
 import {ActionE} from 'src/home/application/types/LoggingActionPayload';
 import useHomeStore from 'src/home/presentation/stores/useHomeStore';
+import { logCustomEvent, logTutorialBegin, logTutorialComplete } from 'src/core/presentation/utils/analyticsHelper';
 
 GoogleSignIn.configure({
   scopes: ['email', 'profile'],
@@ -41,9 +42,12 @@ const useGoogleLogin = () => {
   const handleGoogleSignInResponse = useCallback(
     async (value: SignInResponse) => {
       setIsLoading(true);
-      await analytics().logEvent('google_sign_in_response', {
+      
+      logTutorialBegin();
+      logCustomEvent('google_sign_in_response', {
         idToken: value.data?.idToken ? 'present' : 'absent',
       });
+      
 
       homeStore.putLoggingAction({
         action: ActionE.VIEW_DATA,
@@ -65,14 +69,17 @@ const useGoogleLogin = () => {
           })
           .catch(async error => {
             setIsLoading(false);
-            await analytics().logEvent('google_sign_in_error', {
+            
+            logCustomEvent('google_sign_in_error', {
               error: error.message,
             });
           })
           .finally(async () => {
             globalLoading.toggleLoading(false, 'google');
-            await analytics().logEvent('google_sign_in_finally');
+            logTutorialComplete();
           });
+      } else {
+        logTutorialComplete();
       }
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps

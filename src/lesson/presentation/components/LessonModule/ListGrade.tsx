@@ -42,7 +42,7 @@ const ListGrade = forwardRef((_, ref) => {
         setIndex(0);
         setSubjectId(gradeObjs[0]._id);
         authStore.selectedChild && lessonStore.handleGetModulesBySubject(homeStore, i18n, authStore.selectedChild?._id, gradeObjs[0]._id);
-      }, 1000);
+      }, 200);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [rootSubject, gradeObjs]);
