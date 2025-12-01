@@ -238,6 +238,7 @@ const Mandarin_G3M37 = observer(
                 </View>
               </View>
               <SelectionAnswersQuestion
+                isSelectOne
                 question={
                   <Text
                     style={[
