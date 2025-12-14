@@ -1046,6 +1046,94 @@ const LESSON_PATTERNS = [
     wrapper: DragProvider,
     props,
   },
+  {
+    pattern: /^HISTORY_HS6M5$/,
+    component: (type: string, testTask: any) => {
+      const componentMap: Record<string, any> = {
+        [`${type}_P1`]: HistoryHS6M1P1,
+        [`${type}_P2`]: History_SelectAnswer_Text,
+      };
+      return componentMap[type + `_P${testTask?.stt}`] || null;
+    },
+    wrapper: DragProvider,
+    props,
+  },
+  {
+    pattern: /^HISTORY_HS6M6$/,
+    component: (type: string, testTask: any) => {
+      const componentMap: Record<string, any> = {
+        [`${type}_P1`]: History_SelectAnswer,
+        [`${type}_P2`]: History_HS6M3P1,
+      };
+      return componentMap[type + `_P${testTask?.stt}`] || null;
+    },
+    wrapper: DragProvider,
+    props,
+  },
+  {
+    pattern: /^HISTORY_HS6M7$/,
+    component: (type: string, testTask: any) => {
+      const componentMap: Record<string, any> = {
+        [`${type}_P1`]: HistoryHS6M1P1,
+        [`${type}_P2`]: History_HS6M1P2,
+        [`${type}_P3`]: History_SelectAnswer_Text,
+      };
+      return componentMap[type + `_P${testTask?.stt}`] || null;
+    },
+    wrapper: DragProvider,
+    props,
+  },
+  {
+    pattern: /^HISTORY_HS6M8$/,
+    component: (type: string, testTask: any) => {
+      const componentMap: Record<string, any> = {
+        [`${type}_P1`]: History_HS6M3P1,
+        [`${type}_P2`]: HistoryHS6M1P3,
+      };
+      return componentMap[type + `_P${testTask?.stt}`] || null;
+    },
+    wrapper: DragProvider,
+    props,
+  },
+  {
+    pattern: /^HISTORY_HS6M9$/,
+    component: (type: string, testTask: any) => {
+      const componentMap: Record<string, any> = {
+        [`${type}_P1`]: HistoryHS6M1P1,
+        [`${type}_P2`]: History_HS6M1P2,
+        [`${type}_P3`]: History_SelectAnswer_Text,
+      };
+      return componentMap[type + `_P${testTask?.stt}`] || null;
+    },
+    wrapper: DragProvider,
+    props,
+  },
+  {
+    pattern: /^HISTORY_HS6M10$/,
+    component: (type: string, testTask: any) => {
+      const componentMap: Record<string, any> = {
+        [`${type}_P1`]: HistoryHS6M1P1,
+        [`${type}_P2`]: History_HS6M1P2,
+        [`${type}_P3`]: History_SelectAnswer_Text,
+      };
+      return componentMap[type + `_P${testTask?.stt}`] || null;
+    },
+    wrapper: DragProvider,
+    props,
+  },
+  {
+    pattern: /^HISTORY_HS6M11$/,
+    component: (type: string, testTask: any) => {
+      const componentMap: Record<string, any> = {
+        [`${type}_P1`]: HistoryHS6M1P1,
+        [`${type}_P2`]: History_HS6M1P2,
+        [`${type}_P3`]: History_SelectAnswer_Text,
+      };
+      return componentMap[type + `_P${testTask?.stt}`] || null;
+    },
+    wrapper: DragProvider,
+    props,
+  },
 ];
 
 const LessonScreen = observer(() => {
