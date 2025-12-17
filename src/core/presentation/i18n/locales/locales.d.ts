@@ -3,6 +3,13 @@ type GenericLocale = {
   'core.screens': string;
   'core.screens.NotFound': string;
   'core.screens.NotFound.goHome': string;
+  'core.screens.permission': string;
+  'core.screens.permission.title': string;
+  'core.screens.permission.systemOverlayTitle': string;
+  'core.screens.permission.systemOverlayMessage': string;
+  'core.screens.permission.useAccessTitle': string;
+  'core.screens.permission.useAccessMessage': string;
+  'core.screens.permission.pushNotiTitle': string;
   'core.screens.codepush': string;
   'core.screens.codepush.checkingForUpdate': string;
   'core.screens.codepush.downloadingUpdate': string;
