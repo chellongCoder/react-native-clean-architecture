@@ -30,9 +30,11 @@ import {
 import PrimaryButton from '../../components/PrimaryButton';
 import IconTickCircle from 'assets/svg/IconTickCircle';
 import {isAndroid} from 'src/core/presentation/utils';
+import { useI18n } from 'src/core/presentation/hooks/useI18n';
 
 export const LessonStoreProvider = observer(({children}: PropsWithChildren) => {
   const value = lessonModuleContainer.getProvided(LessonStore);
+  const i18n = useI18n();
 
   const {isOverlay, isPushNoti, isUsageStats} = value;
 
@@ -47,7 +49,7 @@ export const LessonStoreProvider = observer(({children}: PropsWithChildren) => {
           <BottomSheetCustom
             snapPoints={['70']}
             ref={value.bottomSheetPermissionRef}
-            title="ABeeCi needs system permissions to work with:"
+            title={i18n.t('core.screens.permission.title')}
             enablePanDownToClose={false}
             backgroundColor={COLORS.GREEN_66C270}
             enableOverDrag={false}
@@ -69,6 +71,8 @@ export const LessonStoreProvider = observer(({children}: PropsWithChildren) => {
 });
 
 const ItemPermission = observer(({lesson}: {lesson: LessonStore}) => {
+  const i18n = useI18n();
+
   const globalStyle = useGlobalStyle();
   const timeRef = useRef<NodeJS.Timeout>();
   const {isOverlay, isPushNoti, isUsageStats} = lesson;
@@ -127,7 +131,7 @@ const ItemPermission = observer(({lesson}: {lesson: LessonStore}) => {
             !errors.isOverlay && {borderColor: COLORS.ERROR},
             !errors.isOverlay && {backgroundColor: COLORS.WHITE_FBF8CC},
           ]}>
-          <Text>System overlay</Text>
+          <Text>{i18n.t('core.screens.permission.systemOverlayTitle')}</Text>
           <View>
             <IconTickCircle
               isTick={isOverlay}
@@ -137,8 +141,7 @@ const ItemPermission = observer(({lesson}: {lesson: LessonStore}) => {
           </View>
         </TouchableOpacity>
         <Text style={[globalStyle.txtNote, {marginVertical: verticalScale(5)}]}>
-          This permission allows an app to lock other apps you're using. This
-          may interfere with your use of other apps
+          {i18n.t('core.screens.permission.systemOverlayMessage')}
         </Text>
       </>
       <>
@@ -154,7 +157,7 @@ const ItemPermission = observer(({lesson}: {lesson: LessonStore}) => {
             !errors.isUsageStats && {borderColor: COLORS.ERROR},
             !errors.isUsageStats && {backgroundColor: COLORS.WHITE_FBF8CC},
           ]}>
-          <Text>Usage access</Text>
+          <Text>{i18n.t('core.screens.permission.useAccessTitle')}</Text>
           <View>
             <IconTickCircle
               isTick={isUsageStats}
@@ -164,9 +167,7 @@ const ItemPermission = observer(({lesson}: {lesson: LessonStore}) => {
           </View>
         </TouchableOpacity>
         <Text style={[globalStyle.txtNote, {marginVertical: verticalScale(5)}]}>
-          Allow app to monitor which other apps you use and how often and
-          identify your service provider, language settings, and other usage
-          data.
+          {i18n.t('core.screens.permission.useAccessMessage')}
         </Text>
       </>
       <>
@@ -183,7 +184,7 @@ const ItemPermission = observer(({lesson}: {lesson: LessonStore}) => {
             !errors.isPushNoti && {borderColor: COLORS.ERROR},
             !errors.isPushNoti && {backgroundColor: COLORS.WHITE_FBF8CC},
           ]}>
-          <Text>Push notification</Text>
+          <Text>{i18n.t('core.screens.permission.pushNotiTitle')}</Text>
           <View>
             <IconTickCircle
               isTick={isPushNoti}
