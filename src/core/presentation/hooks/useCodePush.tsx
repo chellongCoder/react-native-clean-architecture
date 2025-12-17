@@ -4,6 +4,9 @@ import CodePush, {DownloadProgress, LocalPackage} from 'react-native-code-push';
 import { coreModuleContainer } from 'src/core/CoreModule';
 import Env, { EnvToken } from 'src/core/domain/entities/Env';
 import { useI18n } from './useI18n';
+import { lessonModuleContainer } from 'src/lesson/LessonModule';
+import { LessonStore } from 'src/lesson/presentation/stores/LessonStore/LessonStore';
+import { observer } from 'mobx-react';
 
 export type CodePushContextValue = {
   setProgress: React.Dispatch<React.SetStateAction<number>>;
@@ -16,8 +19,17 @@ export const useCodePush = () => useContext(CodePushContext);
 
 type Props = {children: React.ReactNode};
 
-const CodePushProvider: React.FC<Props> = ({children}) => {
-    const env = coreModuleContainer.getProvided<Env>(EnvToken)
+const CodePushProvider: React.FC<Props> = observer(({children}) => {
+  const env = coreModuleContainer.getProvided<Env>(EnvToken)
+  const value = lessonModuleContainer.getProvided(LessonStore);
+
+  const {isOverlay, isPushNoti, isUsageStats} = value;
+
+  const isConfirm = useMemo(
+    () => isOverlay && isPushNoti && isUsageStats,
+    [isOverlay, isPushNoti, isUsageStats],
+  );
+
   const [progress, setProgress] = useState<number>(-1);
   const [statusUpdate, setStatusUpdate] = useState<string>('');
   console.log(`🛠 LOG: 🚀 --> ~ CodePushProvider ~ statusUpdate:`, statusUpdate);
@@ -89,6 +101,7 @@ const CodePushProvider: React.FC<Props> = ({children}) => {
             isMandatory: remotePackage.isMandatory,
             packageSize: remotePackage.packageSize,
           });
+          
         }
         
       } catch (error) {
@@ -97,8 +110,8 @@ const CodePushProvider: React.FC<Props> = ({children}) => {
       }
     };
   
-  checkForUpdates();
-    // If deploymentKey is omitted here, native-configured key is used (from Info.plist / BuildConfig)
+  if(isConfirm) {
+    checkForUpdates();
     CodePush.sync(
       {
         deploymentKey: env.CODEPUSH_DEPLOYMENT_KEY,
@@ -117,7 +130,10 @@ const CodePushProvider: React.FC<Props> = ({children}) => {
     );
 
     CodePush.getUpdateMetadata().then(setMetaData).catch(() => undefined);
-  }, [downloadProgressCallback]);
+  }
+  // If deploymentKey is omitted here, native-configured key is used (from Info.plist / BuildConfig)
+    
+  }, [downloadProgressCallback, isConfirm]);
 
   const contextValue = useMemo<CodePushContextValue>(
     () => ({setProgress, metaData}),
@@ -138,7 +154,7 @@ const CodePushProvider: React.FC<Props> = ({children}) => {
       )}
     </CodePushContext.Provider>
   );
-};
+});
 
 export default CodePushProvider;
 

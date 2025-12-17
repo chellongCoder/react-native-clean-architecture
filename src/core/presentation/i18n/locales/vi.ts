@@ -4,6 +4,15 @@ export default {
       NotFound: {
         goHome: 'Đi đến màn hình chính',
       },
+      permission: {
+        title: "ABeeCi needs system permissions to work with:",
+        systemOverlayTitle: 'Giao diện hệ thống',
+        systemOverlayMessage: "Quyền này cho phép một ứng dụng khóa các ứng dụng khác mà bạn đang sử dụng. Điều",
+        useAccessTitle: 'Quyền truy cập sử dụng',
+        useAccessMessage: "Cho phép ứng dụng theo dõi các ứng dụng khác mà bạn sử dụng và tần suất sử dụng cũng như xác định nhà cung cấp dịch vụ, cài đặt ngôn ngữ và các dữ liệu sử dụng khác.",
+        pushNotiTitle: 'Thông báo đẩy',
+
+      },
       codepush: {
         checkingForUpdate: 'Kiểm tra cập nhật',
         downloadingUpdate: 'Đang tải cập nhật',

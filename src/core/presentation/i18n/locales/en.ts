@@ -4,6 +4,14 @@ export default {
       NotFound: {
         goHome: 'Go to home screen',
       },
+      permission: {
+        title: "ABeeCi needs system permissions to work with:",
+        systemOverlayTitle: 'System overlay',
+        systemOverlayMessage: "This permission allows an app to lock other apps you're using. This may interfere with your use of other apps",
+        useAccessTitle: 'Usage access',
+        useAccessMessage: "Allow app to monitor which other apps you use and how often and identify your service provider, language settings, and other usage data.",
+        pushNotiTitle: 'Push notification',
+      },
       codepush: {
         checkingForUpdate: 'Checking for updates',
         downloadingUpdate: 'Downloading update',
