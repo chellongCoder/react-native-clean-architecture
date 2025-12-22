@@ -23,6 +23,7 @@ import {LessonStoreProvider} from 'src/lesson/presentation/stores/LessonStore/Le
 import {withProviders} from '../utils/withProviders';
 import useReportProgressChildren from 'src/lesson/presentation/hooks/useReportProgressChildren';
 import Dropdown from 'src/core/components/dropdown/Dropdown';
+import ErrorBoundary from '../components/ErrorBoundary';
 const {width} = Dimensions.get('window');
 
 const dataMonth = [
@@ -40,7 +41,70 @@ const dataMonth = [
   'Dec',
 ];
 
-const ProfileScreen = observer(({route, navigation}) => {
+/**
+ * Fallback UI component shown when ProfileScreen crashes
+ */
+const ProfileScreenFallback = ({onRetry}: {onRetry?: () => void}) => {
+  const {selectedChild} = useAuthenticationStore();
+  const styleHook = useGlobalStyle();
+  const isMale = selectedChild?.gender === 'male';
+
+  return (
+    <View
+      style={[
+        styles.container,
+        {backgroundColor: isMale ? '#C2F0FF' : '#FFDFE4'},
+      ]}>
+      <View style={[styles.avatarContainer]}>
+        <View style={styles.wrapperAvatar}>
+          <View
+            style={[
+              styles.circle,
+              {backgroundColor: isMale ? '#5dc7ea' : '#FFB29F'},
+            ]}>
+            <View style={styles.avatar}>
+              <IconUser width={82} height={87} />
+            </View>
+          </View>
+          <View
+            style={[
+              styles.square,
+              {backgroundColor: isMale ? '#5dc7ea' : '#FFB29F'},
+            ]}
+          />
+        </View>
+      </View>
+      <View style={styles.contentContainer}>
+        <View style={styles.contentBorder}>
+          <View style={styles.backgroundLeft} />
+          <View style={styles.backgroundRight} />
+        </View>
+        <View
+          style={[
+            styles.fallbackContainer,
+            {justifyContent: 'center', alignItems: 'center'},
+          ]}>
+          <Text style={[styleHook.txtLabel, styles.fallbackTitle]}>
+            Oops! Something went wrong
+          </Text>
+          <Text style={[styleHook.txtNote, styles.fallbackMessage]}>
+            We're sorry, but we encountered an issue loading your profile.
+            Please try again.
+          </Text>
+          {onRetry && (
+            <TouchableOpacity
+              style={[styles.button, {backgroundColor: '#DDF598'}]}
+              onPress={onRetry}>
+              <Text style={styles.textBtn}>Try Again</Text>
+            </TouchableOpacity>
+          )}
+        </View>
+      </View>
+    </View>
+  );
+};
+
+const ProfileScreenContent = observer(() => {
   const {selectedChild} = useAuthenticationStore();
   const {statisticsByMonth, totalPoint, getReportByMonth} =
     useReportProgressChildren();
@@ -252,6 +316,23 @@ const ProfileScreen = observer(({route, navigation}) => {
     </View>
   );
 });
+
+const ProfileScreen = () => {
+  const [retryKey, setRetryKey] = useState(0);
+
+  const handleRetry = () => {
+    setRetryKey(prev => prev + 1);
+  };
+
+  return (
+    <ErrorBoundary
+      resetKey={retryKey}
+      fallback={<ProfileScreenFallback onRetry={handleRetry} />}>
+      <ProfileScreenContent />
+    </ErrorBoundary>
+  );
+};
+
 export default withProviders(LessonStoreProvider)(ProfileScreen);
 const styles = StyleSheet.create({
   container: {
@@ -451,5 +532,24 @@ const styles = StyleSheet.create({
     height: 4.6,
     backgroundColor: '#F2B559',
     borderRadius: 100,
+  },
+  fallbackContainer: {
+    flex: 1,
+    padding: scale(20),
+    paddingTop: 100,
+  },
+  fallbackTitle: {
+    fontSize: 18,
+    color: '#1C6349',
+    marginBottom: 16,
+    textAlign: 'center',
+    fontWeight: 'bold',
+  },
+  fallbackMessage: {
+    fontSize: 12,
+    color: '#1C6349',
+    textAlign: 'center',
+    marginBottom: 24,
+    lineHeight: 18,
   },
 });

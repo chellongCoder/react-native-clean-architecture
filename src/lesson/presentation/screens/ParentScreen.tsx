@@ -92,7 +92,8 @@ import {coreModuleContainer} from 'src/core/CoreModule';
 import I18n from 'src/core/presentation/i18n';
 import useHomeStore from 'src/home/presentation/stores/useHomeStore';
 import {useLoadingGlobal} from 'src/core/presentation/hooks/loading/useLoadingGlobal';
-import { FontFamily } from 'src/core/presentation/hooks/useFonts';
+import {FontFamily} from 'src/core/presentation/hooks/useFonts';
+import ErrorBoundary from 'src/core/presentation/components/ErrorBoundary';
 
 // ... existing imports ...
 
@@ -116,7 +117,64 @@ const setingOptions = [
   {id: TabSettingE.THEME, name: TabSettingE.THEME, icon: IconTheme},
 ];
 
-const ParentScreen = observer(() => {
+/**
+ * Fallback UI component shown when ParentScreen crashes
+ */
+const ParentScreenFallback = ({onRetry}: {onRetry?: () => void}) => {
+  const insets = useSafeAreaInsets();
+  const globalStyle = useGlobalStyle();
+  const {userProfile} = useAuthenticationStore();
+  const i18n = useI18n();
+
+  return (
+    <View style={[styles.fill, styles.bg, {paddingTop: insets.top}]}>
+      <View style={[styles.head]}>
+        <View style={[styles.rowBetween]}>
+          <AccountStatus
+            isShowLogout={true}
+            isShowDiamond={true}
+            diamond={userProfile?.diamond ?? 0}
+          />
+        </View>
+        <View style={[styles.profile_border]}>
+          <View style={[styles.profile]}>
+            <IconUser width={70} height={70} />
+          </View>
+        </View>
+        <Username />
+      </View>
+      <View style={[styles.fill]}>
+        <BookView style={[styles.mt16, styles.fill]}>
+          <ScrollView
+            showsVerticalScrollIndicator={false}
+            contentContainerStyle={[
+              styles.bookContent,
+              {justifyContent: 'center', alignItems: 'center', flex: 1},
+            ]}>
+            <View style={[styles.fallbackContainer]}>
+              <Text style={[globalStyle.txtLabel, styles.fallbackTitle]}>
+                Oops! Something went wrong
+              </Text>
+              <Text style={[globalStyle.txtNote, styles.fallbackMessage]}>
+                We're sorry, but we encountered an issue loading the parent
+                screen. Please try again.
+              </Text>
+              {onRetry && (
+                <PrimaryButton
+                  text="Try Again"
+                  style={[styles.btnCommon, styles.fallbackButton]}
+                  onPress={onRetry}
+                />
+              )}
+            </View>
+          </ScrollView>
+        </BookView>
+      </View>
+    </View>
+  );
+};
+
+const ParentScreenContent = observer(() => {
   const TabParentE = {
     APP_BLOCK: coreModuleContainer
       .getProvided(I18n)
@@ -484,6 +542,8 @@ The blockAppsSystem function is an asynchronous function that awaits the result 
         return setingOptions;
       case TabParentE.PURCHASE:
         return purchaseOptions;
+      default:
+        return blockOptions;
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [tabParent, blockOptions]);
@@ -663,7 +723,7 @@ The blockAppsSystem function is an asynchronous function that awaits the result 
                   {selectedChild && (
                     <SelectApp
                       appName={
-                         typeof selectedOption === 'string'
+                        typeof selectedOption === 'string'
                           ? selectedOption
                           : 'select apps'
                       }
@@ -1005,7 +1065,9 @@ The blockAppsSystem function is an asynchronous function that awaits the result 
                 />
               </View>
             </View>
-            <TouchableOpacity onPress={handleUserLogOut} style={[styles.logoutContainer]}>
+            <TouchableOpacity
+              onPress={handleUserLogOut}
+              style={[styles.logoutContainer]}>
               <Text style={[globalStyle.txtNote, styles.btnLogout]}>
                 {i18n.t('authentication.screens.ListChildren.logout')}
               </Text>
@@ -1032,6 +1094,22 @@ The blockAppsSystem function is an asynchronous function that awaits the result 
   );
 });
 
+const ParentScreen = () => {
+  const [retryKey, setRetryKey] = useState(0);
+
+  const handleRetry = () => {
+    setRetryKey(prev => prev + 1);
+  };
+
+  return (
+    <ErrorBoundary
+      resetKey={retryKey}
+      fallback={<ParentScreenFallback onRetry={handleRetry} />}>
+      <ParentScreenContent />
+    </ErrorBoundary>
+  );
+};
+
 export default withProviders(LessonStoreProvider, HomeProvider)(ParentScreen);
 
 const styles = StyleSheet.create({
@@ -1047,7 +1125,7 @@ const styles = StyleSheet.create({
     fontSize: scale(16),
     color: COLORS.RED_F28759,
     textDecorationLine: 'underline',
-    fontFamily: FontFamily.Eina01Bold
+    fontFamily: FontFamily.Eina01Bold,
   },
   txtLogout: {
     color: '#1C6349',
@@ -1268,5 +1346,31 @@ const styles = StyleSheet.create({
   logoutContainer: {
     alignItems: 'center',
     marginVertical: verticalScale(24),
-  }
+  },
+  fallbackContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: scale(20),
+    minHeight: 400,
+  },
+  fallbackTitle: {
+    fontSize: 18,
+    color: COLORS.BLUE_1C6349,
+    marginBottom: 16,
+    textAlign: 'center',
+    fontWeight: 'bold',
+  },
+  fallbackMessage: {
+    fontSize: 12,
+    color: COLORS.BLUE_1C6349,
+    textAlign: 'center',
+    marginBottom: 24,
+    lineHeight: 18,
+    paddingHorizontal: scale(20),
+  },
+  fallbackButton: {
+    width: scale(120),
+    marginTop: scale(16),
+  },
 });
