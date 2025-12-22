@@ -166,6 +166,11 @@
 -keep class com.facebook.react.turbomodule.** { *; }
 
 # ============================================
+# React Native Skia
+# ============================================
+-keep class com.shopify.reactnative.skia.SkiaDomView {*;}
+
+# ============================================
 # Fast Image (Glide & Fresco)
 # ============================================
 -keep public class com.dylanvann.fastimage.* {*;}
