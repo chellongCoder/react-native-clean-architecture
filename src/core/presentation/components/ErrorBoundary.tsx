@@ -5,6 +5,7 @@ import {COLORS} from '../constants/colors';
 interface Props {
   children: ReactNode;
   fallback?: ReactNode;
+  resetKey?: number | string;
 }
 
 interface State {
@@ -13,12 +14,15 @@ interface State {
 }
 
 class ErrorBoundary extends Component<Props, State> {
+  private previousResetKey: number | string | undefined;
+
   constructor(props: Props) {
     super(props);
     this.state = {
       hasError: false,
       error: null,
     };
+    this.previousResetKey = props.resetKey;
   }
 
   static getDerivedStateFromError(error: Error): State {
@@ -26,6 +30,20 @@ class ErrorBoundary extends Component<Props, State> {
       hasError: true,
       error,
     };
+  }
+
+  componentDidUpdate(prevProps: Props): void {
+    // Reset error state when resetKey changes
+    if (
+      this.state.hasError &&
+      this.props.resetKey !== undefined &&
+      this.props.resetKey !== prevProps.resetKey
+    ) {
+      this.setState({
+        hasError: false,
+        error: null,
+      });
+    }
   }
 
   componentDidCatch(error: Error, errorInfo: ErrorInfo): void {
@@ -69,28 +87,28 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     padding: 20,
-    backgroundColor: COLORS.white,
+    backgroundColor: COLORS.WHITE,
   },
   title: {
     fontSize: 20,
     fontWeight: 'bold',
     marginBottom: 10,
-    color: COLORS.red,
+    color: COLORS.ERROR,
   },
   message: {
     fontSize: 16,
     textAlign: 'center',
     marginBottom: 20,
-    color: COLORS.black,
+    color: COLORS.BLACK,
   },
   button: {
-    backgroundColor: COLORS.blue,
+    backgroundColor: COLORS.BLUE_20A7FF,
     paddingVertical: 10,
     paddingHorizontal: 20,
     borderRadius: 5,
   },
   buttonText: {
-    color: COLORS.white,
+    color: COLORS.WHITE,
     fontSize: 16,
     fontWeight: 'bold',
   },
