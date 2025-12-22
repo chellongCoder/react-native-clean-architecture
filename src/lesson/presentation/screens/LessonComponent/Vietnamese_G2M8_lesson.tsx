@@ -76,7 +76,7 @@ const VnG2M8Lesson = observer(
 
       const {ttsSpeak} = useContext(TextToSpeechContext);
       const focus = useIsFocused();
-      const answerRef = useRef<SelectionAnswersQuestionRef>();
+      const answerRef = useRef<SelectionAnswersQuestionRef>(null);
 
       const [answerSelected, setAnswerSelected] = useState('');
 
@@ -134,6 +134,61 @@ const VnG2M8Lesson = observer(
 
       const opacity = useSharedValue(0);
       const scaleS = useSharedValue(1);
+
+      const renderTextWithUnderline = (
+        text: string,
+        baseStyle: StyleProp<any>,
+      ): React.ReactElement => {
+        const parts: Array<{text: string; underlined: boolean}> = [];
+        let currentIndex = 0;
+        const regex = /<u>(.*?)<\/u>/g;
+        let match;
+
+        while ((match = regex.exec(text)) !== null) {
+          // Add text before the tag
+          if (match.index > currentIndex) {
+            parts.push({
+              text: text.substring(currentIndex, match.index),
+              underlined: false,
+            });
+          }
+          // Add the content inside the tag (underlined)
+          parts.push({
+            text: match[1],
+            underlined: true,
+          });
+          currentIndex = match.index + match[0].length;
+        }
+
+        // Add remaining text after the last tag
+        if (currentIndex < text.length) {
+          parts.push({
+            text: text.substring(currentIndex),
+            underlined: false,
+          });
+        }
+
+        // If no tags were found, return the text as is
+        if (parts.length === 0) {
+          return <Text style={baseStyle}>{text}</Text>;
+        }
+
+        return (
+          <Text style={baseStyle}>
+            {parts.map((part, index) => (
+              <Text
+                key={index}
+                style={
+                  part.underlined
+                    ? {textDecorationLine: 'underline'}
+                    : undefined
+                }>
+                {part.text}
+              </Text>
+            ))}
+          </Text>
+        );
+      };
 
       /**
        * * reset lại countdown khi lần làm thay đổi
@@ -270,7 +325,9 @@ const VnG2M8Lesson = observer(
                 onSelectAnswer={(e: string[]) => {
                   setAnswerSelected(e.toString().trim());
                 }}
-                contentAnswer={e => <Text style={[styles.textVowel]}>{e}</Text>}
+                contentAnswer={e =>
+                  renderTextWithUnderline(e, styles.textVowel)
+                }
                 learningTimer={learningTimer}
                 isSelectOne
                 ref={answerRef}

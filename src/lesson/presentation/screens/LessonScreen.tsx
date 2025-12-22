@@ -408,6 +408,21 @@ const LESSON_PATTERNS = [
     props,
   },
   {
+    pattern: /^(writing|MANDARIN_MDG2M(16|19|22|25))$/,
+    component: Mandarin_G4M_DrawCharacter,
+    props,
+  },
+  {
+    pattern: /^MANDARIN_MDG2M(17|20|23)$/,
+    component: Mandarin_G4M_SelectAnswer,
+    props,
+  },
+  {
+    pattern: /^MANDARIN_MDG2M(18|21|24)$/,
+    component: Mandarin_G4_Pronunciation,
+    props,
+  },
+  {
     pattern: /^MANDARIN_MDG2M25$/,
     component: Mandarin_G2M25,
     props: {},

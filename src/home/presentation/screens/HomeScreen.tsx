@@ -1,5 +1,11 @@
 import React, {Fragment, useState} from 'react';
-import {ScrollView, StyleSheet, View, ActivityIndicator} from 'react-native';
+import {
+  ScrollView,
+  StyleSheet,
+  View,
+  ActivityIndicator,
+  Text,
+} from 'react-native';
 import ListSubject from '../components/subjects/ListSubject';
 import AccountStatus from '../components/AccountStatus';
 import {scale} from 'react-native-size-matters';
@@ -13,8 +19,72 @@ import {coreModuleContainer} from 'src/core/CoreModule';
 import Env, {EnvToken} from 'src/core/domain/entities/Env';
 import {COLORS} from 'src/core/presentation/constants/colors';
 import {assets} from 'src/core/presentation/utils';
+import ErrorBoundary from 'src/core/presentation/components/ErrorBoundary';
+import PrimaryButton from 'src/lesson/presentation/components/PrimaryButton';
+import useGlobalStyle from 'src/core/presentation/hooks/useGlobalStyle';
 
-const HomeScreen = observer(() => {
+/**
+ * Fallback UI component shown when HomeScreen crashes
+ */
+const HomeScreenFallback = ({onRetry}: {onRetry?: () => void}) => {
+  const inset = useSafeAreaInsets();
+  const globalStyle = useGlobalStyle();
+
+  return (
+    <Fragment>
+      <View style={[styles.container]}>
+        <ScrollView
+          style={[styles.container]}
+          contentContainerStyle={{alignItems: 'flex-start'}}
+          showsVerticalScrollIndicator={false}
+          bounces={false}>
+          <View style={styles.imageWrapper}>
+            {/* Fallback background image */}
+            <FastImage
+              source={assets.bee_bg}
+              style={[
+                styles.image,
+                {height: WIDTH_SCREEN * 3.35, width: '100%', opacity: 0.5},
+              ]}
+              resizeMode="contain"
+            />
+          </View>
+
+          <View
+            style={[[styles.wrapContentContainer, {paddingTop: inset.top}]]}>
+            <View
+              style={{
+                position: 'absolute',
+                right: scale(10),
+                zIndex: 999,
+                top: inset.top,
+              }}>
+              <AccountStatus />
+            </View>
+            <View style={styles.fallbackContainer}>
+              <Text style={[globalStyle.txtLabel, styles.fallbackTitle]}>
+                Oops! Something went wrong
+              </Text>
+              <Text style={[globalStyle.txtNote, styles.fallbackMessage]}>
+                We're sorry, but we encountered an issue loading the home
+                screen. Please try again.
+              </Text>
+              {onRetry && (
+                <PrimaryButton
+                  text="Try Again"
+                  style={[styles.fallbackButton]}
+                  onPress={onRetry}
+                />
+              )}
+            </View>
+          </View>
+        </ScrollView>
+      </View>
+    </Fragment>
+  );
+};
+
+const HomeScreenContent = observer(() => {
   const inset = useSafeAreaInsets();
   const env = coreModuleContainer.getProvided<Env>(EnvToken);
 
@@ -141,6 +211,22 @@ const HomeScreen = observer(() => {
   );
 });
 
+const HomeScreen = () => {
+  const [retryKey, setRetryKey] = useState(0);
+
+  const handleRetry = () => {
+    setRetryKey(prev => prev + 1);
+  };
+
+  return (
+    <ErrorBoundary
+      resetKey={retryKey}
+      fallback={<HomeScreenFallback onRetry={handleRetry} />}>
+      <HomeScreenContent />
+    </ErrorBoundary>
+  );
+};
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -185,6 +271,33 @@ const styles = StyleSheet.create({
     height: '100%',
     backgroundColor: COLORS.GREEN_66C270,
     borderRadius: scale(2),
+  },
+  fallbackContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: scale(20),
+    minHeight: 400,
+    marginTop: scale(100),
+  },
+  fallbackTitle: {
+    fontSize: 18,
+    color: COLORS.BLUE_1C6349,
+    marginBottom: 16,
+    textAlign: 'center',
+    fontWeight: 'bold',
+  },
+  fallbackMessage: {
+    fontSize: 12,
+    color: COLORS.BLUE_1C6349,
+    textAlign: 'center',
+    marginBottom: 24,
+    lineHeight: 18,
+    paddingHorizontal: scale(20),
+  },
+  fallbackButton: {
+    width: scale(120),
+    marginTop: scale(16),
   },
 });
 

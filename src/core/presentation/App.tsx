@@ -14,7 +14,7 @@ import {requestScreenTime} from 'react-native-alphadex-screentime';
 import {isAndroid} from './utils';
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
 import {SoundGlobalProvider} from './hooks/sound/SoundGlobalProvider';
-import {LogBox, Platform, StatusBar} from 'react-native';
+import {LogBox, Platform, StatusBar, TextInput, Text} from 'react-native';
 import {SoundBackgroundGlobalProvider} from './hooks/sound/SoundBackgroundGlobalProvider';
 import {OfflineProvider} from './hooks/offline/OfflineProvider';
 import {TextToSpeechProvider} from './hooks/textToSpeech/TextToSpeechProvider';
@@ -30,6 +30,7 @@ import SpInAppUpdates, {
   IosStartUpdateOptions,
   AndroidStartUpdateOptions,
   IAUInstallStatus,
+  StatusUpdateEvent,
 } from 'sp-react-native-in-app-updates';
 import DeviceInfo from 'react-native-device-info';
 import analytics from '@react-native-firebase/analytics';
@@ -44,44 +45,47 @@ const App = () => {
   const routeNameRef = useRef<string>();
 
   const checkForUpdate = () => {
-    const version = DeviceInfo.getVersion();
-    const inAppUpdates = new SpInAppUpdates(
-      false, // isDebug
-    );
+    const inAppUpdates = new SpInAppUpdates(false);
 
     inAppUpdates
-      .checkNeedsUpdate({curVersion: version})
+      .checkNeedsUpdate()
       .then(result => {
-        if (result.shouldUpdate) {
-          let updateOptions: IosStartUpdateOptions | AndroidStartUpdateOptions;
-          if (Platform.OS === 'ios') {
-            updateOptions = {
-              title: 'Update available',
-              message:
-                'There is a new version of the app available on the App Store, do you want to update it?',
-              buttonUpgradeText: 'Update',
-              buttonCancelText: 'Cancel',
-            };
-          } else {
-            updateOptions = {
-              updateType: IAUUpdateKind.FLEXIBLE,
-            };
-          }
-          inAppUpdates.addStatusUpdateListener(downloadStatus => {
-            console.log('download status', downloadStatus);
-            if (downloadStatus.status === IAUInstallStatus.DOWNLOADED) {
-              console.log('downloaded');
-              inAppUpdates.installUpdate();
-              inAppUpdates.removeStatusUpdateListener(finalStatus => {
-                console.log('final status', finalStatus);
-              });
-            }
-          });
-          inAppUpdates.startUpdate(updateOptions);
+        if (!result.shouldUpdate) return;
+
+        let updateOptions: IosStartUpdateOptions | AndroidStartUpdateOptions;
+
+        if (Platform.OS === 'ios') {
+          updateOptions = {
+            title: 'Update available',
+            message:
+              'A new version of the app is available. Do you want to update?',
+            buttonUpgradeText: 'Update',
+            buttonCancelText: 'Cancel',
+          };
+        } else {
+          updateOptions = {
+            updateType: IAUUpdateKind.FLEXIBLE,
+          };
         }
+
+        const listener = (downloadStatus: StatusUpdateEvent) => {
+          console.log('download status:', downloadStatus);
+
+          if (downloadStatus.status === IAUInstallStatus.DOWNLOADED) {
+            console.log('downloaded');
+            inAppUpdates.installUpdate();
+            inAppUpdates.removeStatusUpdateListener(listener);
+          }
+        };
+
+        // Add listener
+        inAppUpdates.addStatusUpdateListener(listener);
+
+        // Start update flow
+        inAppUpdates.startUpdate(updateOptions);
       })
       .catch(err => {
-        console.log('checkForUpdate err: ', err);
+        console.log('checkForUpdate err:', err);
       });
   };
 
@@ -93,6 +97,7 @@ const App = () => {
       // store?.rootStore?.dispatch(setAppReady());
     }
   };
+
   const changeRouteName = () => {
     const previousRouteName = routeNameRef.current;
     const currentRoute = RootNavigation.current?.getCurrentRoute();
@@ -103,6 +108,14 @@ const App = () => {
       routeNameRef.current = currentRouteName;
     }
   };
+
+  useEffect(() => {
+    (Text as any).defaultProps = (Text as any).defaultProps || {};
+    (Text as any).defaultProps.allowFontScaling = false;
+
+    (TextInput as any).defaultProps = (TextInput as any).defaultProps || {};
+    (TextInput as any).defaultProps.allowFontScaling = false;
+  }, []);
 
   useEffect(() => {
     crashlytics().log('App mounted.');
