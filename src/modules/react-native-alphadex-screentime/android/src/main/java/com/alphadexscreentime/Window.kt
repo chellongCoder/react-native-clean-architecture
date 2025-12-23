@@ -1,7 +1,9 @@
 package com.alphadexscreentime
 
 import PinCodeActivity
+import android.Manifest
 import android.annotation.SuppressLint
+import android.app.ActivityManager
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
@@ -15,6 +17,8 @@ import android.view.View
 import android.view.WindowManager
 import android.widget.Button
 import android.widget.TextView
+import androidx.annotation.RequiresPermission
+
 //import com.andrognito.pinlockview.IndicatorDots
 //import com.andrognito.pinlockview.PinLockListener
 //import com.andrognito.pinlockview.PinLockView
@@ -32,6 +36,7 @@ class Window(
   private val layoutInflater: LayoutInflater
 
   private var homeButtonListener: HomeButtonListener? = null
+  private var currentLockedApp: String? = null
 
   interface HomeButtonListener {
       fun onHomeButtonPressed()
@@ -41,7 +46,11 @@ class Window(
       this.homeButtonListener = listener
   }
 
-//  private var mPinLockView: PinLockView? = null
+  fun setCurrentLockedApp(packageName: String?) {
+      this.currentLockedApp = packageName
+  }
+
+  //  private var mPinLockView: PinLockView? = null
 //  private var mIndicatorDots: IndicatorDots? = null
 //  private val mPinLockListener: PinLockListener = object : PinLockListener {
 //
@@ -106,6 +115,41 @@ class Window(
     }
   }
 
+  @RequiresPermission(Manifest.permission.KILL_BACKGROUND_PROCESSES)
+  private fun killAndRemoveApp(packageName: String) {
+    try {
+      val activityManager = context.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
+
+      // Get recent tasks
+      val recentTasks = activityManager.appTasks
+
+      // Remove from recent apps
+      for (task in recentTasks) {
+        try {
+          val taskInfo = task.taskInfo
+          if (taskInfo.baseIntent?.component?.packageName == packageName) {
+            Log.d("Window", "Removing $packageName from recent tasks")
+            task.finishAndRemoveTask()
+          }
+        } catch (e: Exception) {
+          Log.e("Window", "Error removing task: ${e.message}")
+        }
+      }
+
+      // Kill the app process
+      try {
+        activityManager.killBackgroundProcesses(packageName)
+        Log.d("Window", "Killed background processes for $packageName")
+      } catch (e: Exception) {
+        Log.e("Window", "Error killing processes: ${e.message}")
+      }
+
+    } catch (e: Exception) {
+      Log.e("Window", "Error in killAndRemoveApp: ${e.message}")
+      e.printStackTrace()
+    }
+  }
+
   init {
 
     mParams = WindowManager.LayoutParams(
@@ -135,12 +179,24 @@ class Window(
 //			 doneButton()
 //		}
 		btnClose!!.setOnClickListener {
+			 // Kill and remove the currently locked app
+			 currentLockedApp?.let { packageName ->
+			 	 Log.d("Window", "Killing and removing app: $packageName")
+			 	 killAndRemoveApp(packageName)
+			 }
+
+			 // Go to home screen
 			 val intent = Intent(Intent.ACTION_MAIN).apply {
 			 	addCategory(Intent.CATEGORY_HOME)
 			 	flags = Intent.FLAG_ACTIVITY_NEW_TASK
 			 }
 			 context.startActivity(intent)
-//      close()
+
+			 // Close the overlay window after a short delay to ensure the home screen is shown
+			 val windowCloseDelayMs = 300L
+			 Handler(Looper.getMainLooper()).postDelayed({
+			 	 close()
+			 }, windowCloseDelayMs)
 //      homeButtonListener?.onHomeButtonPressed()
 
 		}
