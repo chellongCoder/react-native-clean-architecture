@@ -9,5 +9,7 @@ module.exports = {
   rules: {
     'prettier/prettier': ['error', {endOfLine: 'auto'}, {usePrettierrc: true}],
     'react-native/no-inline-styles': 'off',
+    'react-hooks/rules-of-hooks': 'error',
+    'react-hooks/exhaustive-deps': 'warn',
   },
 };

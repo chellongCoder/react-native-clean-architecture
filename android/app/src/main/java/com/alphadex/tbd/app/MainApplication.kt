@@ -2,6 +2,10 @@ package com.alphadex.tbd.app
 
 import android.app.Application
 import android.content.res.Configuration
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleObserver
+import androidx.lifecycle.OnLifecycleEvent
+import androidx.lifecycle.ProcessLifecycleOwner
 import com.alphadexscreentime.ViewModulePackage
 import com.facebook.react.PackageList
 import com.facebook.react.ReactApplication
@@ -15,8 +19,15 @@ import com.facebook.soloader.SoLoader
 import expo.modules.ApplicationLifecycleDispatcher
 import expo.modules.ReactNativeHostWrapper
 import com.microsoft.codepush.react.CodePush
+import android.util.Log
 
-class MainApplication : Application(), ReactApplication {
+class MainApplication : Application(), ReactApplication, LifecycleObserver {
+
+  companion object {
+    private const val TAG = "MainApplication"
+    var isAppInForeground = false
+    private set
+  }
 
   override val reactNativeHost: ReactNativeHost =
       ReactNativeHostWrapper(this, object : DefaultReactNativeHost(this) {
@@ -51,6 +62,25 @@ class MainApplication : Application(), ReactApplication {
       load()
     }
     ApplicationLifecycleDispatcher.onApplicationCreate(this)
+
+    // Register lifecycle observer to detect foreground/background changes
+    ProcessLifecycleOwner.get().lifecycle.addObserver(this)
+  }
+
+  @OnLifecycleEvent(Lifecycle.Event.ON_START)
+  fun onAppForegrounded() {
+    isAppInForeground = true
+    Log.d(TAG, "App moved to FOREGROUND")
+    // Notify that app is in foreground
+    sendBroadcast(android.content.Intent("$packageName.APP_FOREGROUND"))
+  }
+
+  @OnLifecycleEvent(Lifecycle.Event.ON_STOP)
+  fun onAppBackgrounded() {
+    isAppInForeground = false
+    Log.d(TAG, "App moved to BACKGROUND")
+    // Notify that app is in background
+    sendBroadcast(android.content.Intent("$packageName.APP_BACKGROUND"))
   }
 
    override fun onConfigurationChanged(newConfig: Configuration) {
