@@ -18,6 +18,7 @@
   <uses-permission android:name="com.android.vending.BILLING" />
   <uses-permission android:name="android.permission.KILL_BACKGROUND_PROCESSES" />
   <uses-permission android:name="android.permission.REORDER_TASKS" />
+  <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 
   <!-- Remove phone state permission -->
   <uses-permission
@@ -115,13 +116,16 @@
         android:name="com.alphadexscreentime.BootUpReceiver"
         android:enabled="true"
         android:exported="true"
+        android:directBootAware="true"
         >
       <intent-filter>
         <action android:name="android.intent.action.BOOT_COMPLETED" />
         <action android:name="android.intent.action.QUICKBOOT_POWERON" />
+        <action android:name="android.intent.action.LOCKED_BOOT_COMPLETED" />
         <category android:name="android.intent.category.DEFAULT" />
       </intent-filter>
     </receiver>
+
     <service android:name="com.alphadexscreentime.ForegroundService" android:foregroundServiceType="specialUse"
         tools:ignore="ForegroundServicePermission">
       <property android:name="android.app.PROPERTY_SPECIAL_USE_FGS_SUBTYPE"
