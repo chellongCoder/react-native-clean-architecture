@@ -84,7 +84,7 @@ android {
         applicationId "com.algorz.abeeci.app"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 183
+        versionCode 184
         versionName "1.1.5"
         missingDimensionStrategy "store", "play"
         ndk {
