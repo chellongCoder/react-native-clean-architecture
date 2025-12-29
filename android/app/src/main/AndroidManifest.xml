@@ -115,18 +115,17 @@
     <receiver
         android:name="com.alphadexscreentime.BootUpReceiver"
         android:enabled="true"
-        android:exported="true"
-        android:directBootAware="true"
-        >
+        android:exported="false">
       <intent-filter>
+        <!-- Only restart after the user unlocks (matches restrictions + requirement) -->
         <action android:name="android.intent.action.BOOT_COMPLETED" />
-        <action android:name="android.intent.action.QUICKBOOT_POWERON" />
         <action android:name="android.intent.action.LOCKED_BOOT_COMPLETED" />
-        <category android:name="android.intent.category.DEFAULT" />
+        <action android:name="android.intent.action.USER_UNLOCKED" />
       </intent-filter>
     </receiver>
 
-    <service android:name="com.alphadexscreentime.ForegroundService" android:foregroundServiceType="specialUse"
+    <service android:name="com.alphadexscreentime.ForegroundService"
+        android:foregroundServiceType="specialUse"
         tools:ignore="ForegroundServicePermission">
       <property android:name="android.app.PROPERTY_SPECIAL_USE_FGS_SUBTYPE"
           android:value="explanation_for_special_use"/>
