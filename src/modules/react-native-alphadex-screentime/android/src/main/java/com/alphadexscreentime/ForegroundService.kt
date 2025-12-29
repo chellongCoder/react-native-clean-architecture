@@ -4,12 +4,15 @@ import android.app.ActivityManager
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.Service
+import android.app.usage.UsageEvents
+import android.app.usage.UsageStats
 import android.app.usage.UsageStatsManager
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.content.SharedPreferences
+import android.content.pm.PackageManager
 import android.os.Handler
 import android.os.IBinder
 import android.os.Looper
@@ -30,7 +33,7 @@ class ForegroundService : Service(), Window.HomeButtonListener {
   /**
     * BroadcastReceiver to detect when user interacts with recent apps
     * or home button, and when own app goes to foreground/background
-    * 
+    *
    */
   // BroadcastReceiver to detect when user interacts with recent apps
   private val taskChangeReceiver = object : BroadcastReceiver() {
@@ -111,8 +114,10 @@ class ForegroundService : Service(), Window.HomeButtonListener {
   private fun startForegroundService() {
     val channelId = "AppLock-10"
     val notification = NotificationCompat.Builder(this, channelId)
-      .setContentTitle("")
-      .setContentText("")
+      .setSmallIcon(android.R.drawable.ic_lock_lock)
+      .setContentTitle("App protection active")
+      .setContentText("Monitoring locked apps")
+      .setOngoing(true)
       .build()
     startForeground(1, notification)
   }
@@ -160,7 +165,7 @@ class ForegroundService : Service(), Window.HomeButtonListener {
     * Check the currently foreground app and lock if necessary
     * @param window The Window instance to manage app locking
     * @return Unit
-    * 
+    *
    */
   private fun isServiceRunning(window: Window) {
     val saveAppData: SharedPreferences = getSharedPreferences("save_app_data", MODE_PRIVATE)
@@ -170,31 +175,27 @@ class ForegroundService : Service(), Window.HomeButtonListener {
 
     // MAIN LOGIC: Detect app switching and trigger lock mechanism
     // This runs every 500ms (timerReload) to continuously monitor which app is in foreground
-    
     // CASE 1: App has CHANGED (user switched to a different app)
     if (foregroundApp != null && foregroundApp != lastForegroundApp) {
-      
       // SUBCASE 1A: App was opened from RECENT APPS menu
       // This requires special handling because the recent apps dialog needs to close first
       if (isFromRecentApps) {
         println("App opened from recent apps: $foregroundApp")
         isFromRecentApps = false // Reset flag after handling
-        
         // Post to main thread to ensure UI operations happen on correct thread
         // This prevents race conditions where window might try to open before recents menu closes
         Handler(Looper.getMainLooper()).post {
           checkAndLockApp(foregroundApp, lockedAppList, window)
         }
-      } 
+      }
       // SUBCASE 1B: App was opened NORMALLY (not from recents)
       // Direct switch between apps - can check immediately without Handler
       else {
         checkAndLockApp(foregroundApp, lockedAppList, window)
       }
-      
       // Update tracking variable to detect future app switches
       lastForegroundApp = foregroundApp
-    } 
+    }
     // CASE 2: SAME app is still in foreground (no app switch)
     // Continue checking to ensure lock window stays open if app is locked
     // This handles cases where user might try to close the lock window
@@ -229,6 +230,45 @@ class ForegroundService : Service(), Window.HomeButtonListener {
     }
   }
 
+  fun getDefaultLauncherPackage(context: Context): String? {
+    val pm: PackageManager = context.packageManager
+    val intent = Intent(Intent.ACTION_MAIN).addCategory(Intent.CATEGORY_HOME)
+
+    val resolveInfo = pm.resolveActivity(intent, PackageManager.MATCH_DEFAULT_ONLY)
+    val pkg = resolveInfo?.activityInfo?.packageName
+
+    // Some devices can return "android" as a fallback; treat as unknown.
+    return if (pkg.isNullOrBlank() || pkg == "android") null else pkg
+  }
+
+  fun isOnHomeScreen(context: Context, foregroundPackage: String?): Boolean {
+    val launcherPkg = getDefaultLauncherPackage(context) ?: return false
+    return foregroundPackage != null && foregroundPackage == launcherPkg
+  }
+
+  fun getForegroundPackageName(context: Context, lookbackMs: Long = 10_000L): String? {
+    val usm = context.getSystemService(Context.USAGE_STATS_SERVICE) as UsageStatsManager
+    val end = System.currentTimeMillis()
+    val begin = end - lookbackMs
+
+    val events = usm.queryEvents(begin, end)
+    val event = UsageEvents.Event()
+
+    var lastForegroundPkg: String? = null
+    var lastForegroundTime = 0L
+
+    while (events.hasNextEvent()) {
+      events.getNextEvent(event)
+      if (event.eventType == UsageEvents.Event.MOVE_TO_FOREGROUND) {
+        if (event.timeStamp >= lastForegroundTime) {
+          lastForegroundTime = event.timeStamp
+          lastForegroundPkg = event.packageName
+        }
+      }
+    }
+    return lastForegroundPkg
+  }
+
   private fun getForegroundApp(): String? {
     var currentApp: String? = null
     val mUsageStatsManager = getSystemService(USAGE_STATS_SERVICE) as UsageStatsManager
@@ -239,7 +279,20 @@ class ForegroundService : Service(), Window.HomeButtonListener {
     if (stats != null) {
       val sortedStats = stats.sortedByDescending { it.lastTimeUsed }
       if (sortedStats.isNotEmpty()) {
-        currentApp = sortedStats[0].packageName
+        val foregroundPkg = getForegroundPackageName(this)
+
+        val isOnHomeScreen = isOnHomeScreen(this, foregroundPkg)
+        if(isOnHomeScreen == false) {
+          val newStats = sortedStats.fold(mutableListOf<UsageStats>()) { usageStats, acc ->
+            if (acc.packageName != "com.android.launcher") {
+              usageStats.add(acc)
+            }
+            usageStats
+          }
+          currentApp = newStats[0].packageName
+        } else {
+          currentApp = sortedStats[0].packageName
+        }
       }
     }
     return currentApp
