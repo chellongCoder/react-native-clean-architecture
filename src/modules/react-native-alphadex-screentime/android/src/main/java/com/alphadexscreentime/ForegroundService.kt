@@ -16,6 +16,7 @@ import android.content.pm.PackageManager
 import android.os.Handler
 import android.os.IBinder
 import android.os.Looper
+import android.util.Log
 import androidx.core.app.NotificationCompat
 import java.util.Timer
 import java.util.TimerTask
@@ -281,7 +282,13 @@ class ForegroundService : Service(), Window.HomeButtonListener {
       if (sortedStats.isNotEmpty()) {
         val foregroundPkg = getForegroundPackageName(this)
 
-        val isOnHomeScreen = isOnHomeScreen(this, foregroundPkg)
+        var isOnHomeScreen: Boolean? = true
+        if(foregroundPkg != null) {
+          isOnHomeScreen = isOnHomeScreen(this, foregroundPkg)
+        } else {
+          isOnHomeScreen = true
+        }
+        Log.d("ForegroundService getForegroundApp", "Foreground package: $foregroundPkg, isOnHomeScreen: $isOnHomeScreen")
         if(isOnHomeScreen == false) {
           val newStats = sortedStats.fold(mutableListOf<UsageStats>()) { usageStats, acc ->
             if (acc.packageName != "com.android.launcher") {

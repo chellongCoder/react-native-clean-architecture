@@ -6,7 +6,7 @@
     "dev": "expo start --dev-client",
     "web": "expo start --web --dev-client",
     "android": "expo run:android --variant 'devDebug' --device",
-    "android:release": "expo run:android --variant 'prodDebug'",
+    "android:release": "expo run:android --variant 'devRelease' --device",
     "ios": "expo run:ios",
     "eject": "expo eject",
     "lint": "eslint ./src --ext .ts,.tsx --max-warnings 0",

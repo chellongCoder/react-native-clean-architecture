@@ -1,6 +1,7 @@
 package com.alphadexscreentime
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.AlertDialog
 import android.app.AppOpsManager
@@ -13,6 +14,7 @@ import android.content.pm.PackageInfo
 import android.content.pm.PackageManager
 import android.content.pm.ResolveInfo
 import android.graphics.Bitmap
+import android.net.Uri
 import android.os.Build
 import android.provider.Settings
 import androidx.annotation.RequiresApi
@@ -33,6 +35,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import androidx.core.net.toUri
 
 class AlphadexScreentimeModule(reactContext: ReactApplicationContext) : ReactContextBaseJavaModule(reactContext), ActivityEventListener, PermissionListener {
   val SYSTEM_APP_MASK = ApplicationInfo.FLAG_SYSTEM or ApplicationInfo.FLAG_UPDATED_SYSTEM_APP
@@ -80,11 +83,17 @@ class AlphadexScreentimeModule(reactContext: ReactApplicationContext) : ReactCon
     promise.resolve(Settings.canDrawOverlays(reactApplicationContext))
   }
 
+  @SuppressLint("BatteryLife")
   @ReactMethod
   fun startUsageStatsPermission(promise: Promise) {
     val myIntent = Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS)
     myIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
     reactApplicationContext.startActivity(myIntent)
+    val intent = Intent(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS)
+    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+    intent.data = ("package:" + reactApplicationContext.packageName).toUri()
+    reactApplicationContext.startActivity(intent)
+
     promise.resolve(hasUsageStatsPermission(promise))
   }
 
@@ -253,6 +262,9 @@ class AlphadexScreentimeModule(reactContext: ReactApplicationContext) : ReactCon
           params.putString("status", "success")
           params.putString("message", "Foreground service started successfully")
           sendEvent("onAppBlockingComplete", params)
+
+          // Keep periodic recovery work scheduled across reboots
+          BootWorkScheduler.schedule(reactApplicationContext)
 
           // Switch to main thread for UI operations
             withContext(Dispatchers.Main) {
