@@ -202,7 +202,7 @@ const ParentScreenContent = observer(() => {
   const lesson = useLessonStore();
   const {handleGetModulesField, listModuleByField} = lesson;
   const {iapState, makePurchase} = useContext(IapContext);
-  const {homeState, fetchListSubject} = useContext(HomeContext);
+  const {homeState} = useContext(HomeContext);
 
   // ---------------------------------------------------------------------------
   // Store & Context Hooks
@@ -215,9 +215,10 @@ const ParentScreenContent = observer(() => {
     deviceToken,
     deleteChildren,
     handleUserLogOut,
+    getListAllSubject,
   } = useAuthenticationStore();
   const homeStore = useHomeStore();
-  const {listSubject, rootSubject, showTutorial} = homeStore;
+  const {listSubject, rootSubject, showTutorial, getListSubject} = homeStore;
   const i18n = useI18n();
 
   const {isShowAuth: isAuthenSetting, changeIsShowAuth} = useAuthParent();
@@ -614,8 +615,8 @@ The blockAppsSystem function is an asynchronous function that awaits the result 
 
   const handleSelectedSubject = useCallback(
     (field: GetListSubjectPayload) => {
-      fetchListSubject({_id: field.fieldId} as any).then(v => {
-        setSubjectsInField(v ?? []);
+      getListSubject({fieldId: field.fieldId, hasCache: false}).then(v => {
+        setSubjectsInField(v.data ?? []);
       });
 
       handleGetModulesField(field).then(v => {
@@ -623,16 +624,16 @@ The blockAppsSystem function is an asynchronous function that awaits the result 
         setSelectedModule(v.data?.[0]);
       });
     },
-    [fetchListSubject, handleGetModulesField, lesson.blockedModules],
+    [getListSubject, handleGetModulesField, lesson.blockedModules],
   );
 
   const handleGetListSubjectInField = useCallback(
     (field: GetListSubjectPayload) => {
-      fetchListSubject({_id: field.fieldId} as any).then(v => {
-        setSubjectInSelectedPurchaseField(v ?? []);
+      getListSubject({fieldId: field.fieldId, hasCache: false}).then(v => {
+        setSubjectInSelectedPurchaseField(v.data ?? []);
       });
     },
-    [fetchListSubject],
+    [getListSubject],
   );
 
   // ---------------------------------------------------------------------------

@@ -120,12 +120,12 @@ export class HomeStore implements HomeStoreState {
   }
 
   @action
-  public async getListSubject(fieldId: GetListSubjectPayload) {
+  public async getListSubject({hasCache = true, ...params}: GetListSubjectPayload) {
     this.setIsLoading(true);
     const response = await this.getListSubjectUseCase.execute({
-      fieldId: fieldId.fieldId,
+      fieldId: params.fieldId,
     });
-    if (response.data) {
+    if (response.data && hasCache) {
       this.listSubject = response.data;
     }
     this.setIsLoading(false);
