@@ -94,8 +94,15 @@
         <action android:name="android.intent.action.VIEW"/>
         <category android:name="android.intent.category.DEFAULT"/>
         <category android:name="android.intent.category.BROWSABLE"/>
-        <data android:scheme="com.alphadex.tbd.app"/>
-        <data android:scheme="exp+com.alphadex.tbd.app"/>
+        <data android:scheme="com.algorz.abeeci.app"/>
+        <data android:scheme="exp+com.algorz.abeeci.app"/>
+        <data android:scheme="exp+com.algorz.abeeci.app.dev"/>
+        <data android:scheme="abeeci"/>
+      </intent-filter>
+      <intent-filter>
+        <action android:name="android.intent.action.VIEW"/>
+        <category android:name="android.intent.category.DEFAULT"/>
+        <category android:name="android.intent.category.BROWSABLE"/>
         <data android:host="abeeci" android:scheme="affiliate" />
       </intent-filter>
       <intent-filter android:autoVerify="true">
