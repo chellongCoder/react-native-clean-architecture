@@ -4,9 +4,8 @@ import packageJson from './package.json';
 const appConfig: ExpoConfig = {
   name: 'ABeeCi',
   slug: 'abeeci',
-  scheme: 'rnca',
+  scheme: 'abeeci',
   version: packageJson.version,
-  entryPoint: './index.js',
   orientation: 'portrait',
   icon: './assets/images/icon.png',
   userInterfaceStyle: 'light',
@@ -23,7 +22,7 @@ const appConfig: ExpoConfig = {
     supportsTablet: true,
   },
   android: {
-    package: 'com.carlossalasamper.reactnativecleanarchitecture',
+    package: 'com.algorz.abeeci.app',
     adaptiveIcon: {
       foregroundImage: './assets/images/adaptive-icon.png',
       backgroundColor: '#FFFFFF',
