@@ -244,6 +244,7 @@ const styles = StyleSheet.create({
   subtitle: {
     color: COLORS.GREEN_1C6349,
     maxWidth: scale(120),
+    paddingVertical: verticalScale(10),
   },
   buttonContainer: {
     alignItems: 'center',

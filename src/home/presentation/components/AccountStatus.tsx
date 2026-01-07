@@ -11,6 +11,7 @@ import useAuthenticationStore from 'src/authentication/presentation/stores/useAu
 import Diamond from './Diamond';
 import {goBack} from 'src/core/presentation/navigation/actions/RootNavigationActions';
 import {useI18n} from 'src/core/presentation/hooks/useI18n';
+import { useNavigation } from '@react-navigation/native';
 
 type TProps = {
   title?: string;
@@ -27,9 +28,10 @@ const AccountStatus = (props: TProps) => {
   const i18n = useI18n();
 
   const [isEnabled, setIsEnabled] = useState(false);
+  const navigation = useNavigation();
 
   const onLogout = () => {
-    goBack();
+    navigation.goBack();
   };
 
   return (

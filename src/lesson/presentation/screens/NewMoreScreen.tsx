@@ -140,7 +140,6 @@ const NewMoreScreen = observer((props: Props) => {
               {item.name}
             </Text>
             <Text
-              numberOfLines={2}
               style={[globalStyle.txtNote, styles.textColor]}>
               {item.description}
             </Text>
@@ -214,7 +213,7 @@ const NewMoreScreen = observer((props: Props) => {
       </View>
 
       <BookView
-        style={[styles.mt16, styles.fill, {paddingHorizontal: 16}]}
+        style={[styles.mt16, styles.fill, {paddingHorizontal: scale(16)}]}
         colorBg={COLORS.WHITE_FFE699}
         contentStyle={styles.fill}>
         <View style={styles.title}>
@@ -286,11 +285,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   profile: {
-    height: 120,
-    width: 120,
+    height: verticalScale(120),
+    width: verticalScale(120),
     backgroundColor: COLORS.YELLOW_FFE699,
-    borderRadius: 60,
-    borderWidth: 6,
+    borderRadius: verticalScale(60),
+    borderWidth: verticalScale(6),
     borderColor: COLORS.YELLOW_F2B559,
     alignItems: 'center',
     justifyContent: 'center',
@@ -350,12 +349,12 @@ const styles = StyleSheet.create({
   },
   item: {
     backgroundColor: COLORS.WHITE_FBF8CC,
-    borderRadius: scale(32),
+    borderRadius: verticalScale(32),
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    marginBottom: 16,
-    padding: 16,
+    marginBottom: verticalScale(16),
+    padding: verticalScale(16),
   },
   itemContent: {
     flexDirection: 'column',
@@ -375,8 +374,8 @@ const styles = StyleSheet.create({
   },
   button: {
     backgroundColor: COLORS.GREEN_66C270,
-    padding: 8,
-    borderRadius: scale(10),
+    padding: verticalScale(8),
+    borderRadius: verticalScale(10),
     alignItems: 'center',
   },
   w70: {},

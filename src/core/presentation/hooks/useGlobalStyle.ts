@@ -8,7 +8,7 @@ export default function useGlobalStyle() {
     txtNote: {
       fontSize: moderateScale(8),
       fontFamily: FontFamily.SVNNeuzeitRegular,
-      lineHeight: verticalScale(10),
+      lineHeight: verticalScale(12),
       color: COLORS.BACKGROUND,
     },
     txtLabel: {
