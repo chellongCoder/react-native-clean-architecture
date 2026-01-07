@@ -45,6 +45,7 @@ const TrialModulePopup: React.FC<TrialModulePopupProps> = ({
   }, [authStore.userProfile, homeStore]);
 
   const onUpdate = async () => {
+
     if (homeStore.moduleItem) {
       handleToggleTrialPopup(() => {
         navigateScreen(STACK_NAVIGATOR.HOME.LESSON, {
@@ -52,13 +53,20 @@ const TrialModulePopup: React.FC<TrialModulePopupProps> = ({
           lessonName: homeStore.moduleItem?.lessonName,
           moduleName: homeStore.moduleItem?.title,
         });
+        
       });
       authStore.updateTrialModules({});
     } else {
       homeStore.setIsGotoBuyModule(true);
       handleToggleTrialPopup();
-      resetNavigator(STACK_NAVIGATOR.HOME.HOME_SCREEN, {});
-      navigateScreen(STACK_NAVIGATOR.BOTTOM_TAB.PARENT_TAB, {});
+      const selectedSubject = homeStore.listSubject.find(
+        (subject) => subject._id === homeStore.subjectId,
+      );
+      
+      navigateScreen(STACK_NAVIGATOR.PARENT.MORE_MODULE_SCREEN, {
+        subject: selectedSubject,
+        userProfile: authStore.userProfile,
+      });
     }
   };
 
@@ -67,7 +75,7 @@ const TrialModulePopup: React.FC<TrialModulePopupProps> = ({
       animationType="slide"
       transparent={true}
       visible={isVisible}
-      style={{height: 500, width: '100%'}}
+      style={{height: verticalScale(300), width: '100%'}}
       onRequestClose={onClose}>
       <TouchableOpacity
         activeOpacity={1}
@@ -76,7 +84,7 @@ const TrialModulePopup: React.FC<TrialModulePopupProps> = ({
       />
       <View style={styles.contentContainer}>
         <View style={styles.wrapContentContainer}>
-          <Text style={[styles.title, {marginVertical: 24, marginTop: 64}]}>
+          <Text style={[styles.title, {marginVertical: verticalScale(24), marginTop: verticalScale(64)}]}>
             {isStart
               ? i18n.t('popup.TrialModule.title')
               : i18n.t('popup.TrialModule.endTrial')}
@@ -157,8 +165,8 @@ const styles = StyleSheet.create({
   wrapImageContainer: {
     position: 'absolute',
     width: '100%',
-    height: scale(150),
-    top: -verticalScale(80),
+    height: verticalScale(150),
+    top: '-10%',
   },
   title: {
     fontSize: scale(28),
@@ -173,7 +181,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   description: {
-    fontSize: scale(16),
+    fontSize: verticalScale(16),
     fontFamily: TYPOGRAPHY.FAMILY.SVNNeuzeitRegular,
     color: COLORS.GREEN_1C6349,
     textAlign: 'center',

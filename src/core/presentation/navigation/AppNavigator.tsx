@@ -167,6 +167,16 @@ export const HomeStackScreens = (): React.ReactElement => {
           },
         })}
       />
+      <HomeStack.Screen
+        name={STACK_NAVIGATOR.PARENT.MORE_MODULE_SCREEN}
+        key={STACK_NAVIGATOR.PARENT.MORE_MODULE_SCREEN}
+        component={NewMoreScreen}
+        listeners={({navigation: navBottom}) => ({
+          focus: () => {
+            hideBottomTab(navBottom);
+          },
+        })}
+      />
     </HomeStack.Navigator>
   );
 };
