@@ -16,6 +16,8 @@ export type DragItemT = {
   value: string;
   posX: number;
   posY: number;
+  w: number;
+  h: number;
   translateX: SharedValue<number>;
   translateY: SharedValue<number>;
   isFocus: boolean;
@@ -81,25 +83,41 @@ const DragProvider = ({children}: PropsWithChildren) => {
   }, []);
 
   // kiểm tra nếu item có vị trí pos + translate gần khi vực item có pos khác thì return true
-  const getNearItem = (id: number) => {
+  const getNearItem = (id: number): DragItemT | undefined => {
     const item = listItem.current[id];
     if (item) {
       const posX = item.posX + item.translateX.value;
       const posY = item.posY + item.translateY.value;
-      return Object.values(listItem.current).find(i => {
+      let maxOverlap = 0;
+      let nearItem: DragItemT | undefined = undefined;
+      Object.values(listItem.current).map(i => {
         if (i.id !== id && i.canSwap) {
-          const distance = Math.sqrt(
-            Math.pow(posX - i.posX, 2) + Math.pow(posY - i.posY, 2),
-          );
-
-          if (distance < 50) {
-            return true;
+          const overlap = overlapArea(item, i);
+          if (overlap >= maxOverlap) {
+            maxOverlap = overlap;
+            nearItem = i;
           }
         }
-        return false;
       });
+      return maxOverlap > 100 ? nearItem : undefined;
     }
   };
+
+  function overlapArea(item1: DragItemT, item2: DragItemT): number {
+    const posX1 = item1.posX + item1.translateX.value;
+    const posY1 = item1.posY + item1.translateY.value;
+    const xOverlap = Math.max(
+      0,
+      Math.min(posX1 + item1.w, item2.posX + item2.w) - Math.max(posX1, item2.posX)
+    );
+
+    const yOverlap = Math.max(
+      0,
+      Math.min(posY1 + item1.h, item2.posY + item2.h) - Math.max(posY1, item2.posY)
+    );
+
+    return xOverlap * yOverlap;
+  }
 
   const getItemMatch = (id: number) => {
     return Object.values(listItem.current).filter(
