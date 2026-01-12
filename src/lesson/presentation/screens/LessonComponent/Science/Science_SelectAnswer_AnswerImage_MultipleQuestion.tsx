@@ -50,13 +50,11 @@ import TextHighlight from '../../../components/TextHighlight';
 import {useI18n} from 'src/core/presentation/hooks/useI18n';
 import VoiceButton from '../../../components/VoiceButton';
 import useStateCustom from 'src/hooks/useStateCommon';
-import {SoundGlobalContext} from 'src/core/presentation/hooks/sound/SoundGlobalContext';
-import {soundTrack} from 'src/core/presentation/hooks/sound/SoundGlobalProvider';
 
 type Props = {
   moduleIndex: number;
   totalModule: number;
-  nextModule: (e: string) => void;
+  nextModule: (e: string, isCorrectAnswer?: boolean) => void;
   lessonName: string;
   moduleName: string;
   firstMiniTestTask?: Task;
@@ -105,28 +103,29 @@ const Science_SelectAnswer_AnswerImage_MultipleQuestion = observer(
           questionIndex: 0,
           answerSelected: [],
           answerHasSelected: [],
-          correctImage: null,
+          correctImage: firstMiniTestTask?.question?.[moduleIndex].image as string,
         });
 
       const {trainingCount, getSetting} = useLessonStore();
-      const {playSound} = useContext(SoundGlobalContext);
       const {selectedChild} = useAuthenticationStore();
 
       const isCorrectAnswer = useMemo(() => {
-        const correctAnswer = (
-          firstMiniTestTask?.question?.[moduleIndex].correctAnswer as string[][]
-        ).flat();
-
         const answerHasSelectedArray =
-          multiQuestionAnswerSelected.answerHasSelected ?? [];
+          multiQuestionAnswerSelected.answerSelected ?? [];
 
-        return arraysEqualWithExactItem(correctAnswer, answerHasSelectedArray);
+        for (const element of firstMiniTestTask?.question?.[moduleIndex].correctAnswer as string[][]) {
+          const check = arraysEqualWithExactItem(element, answerHasSelectedArray);
+          if (check) {
+            return true;
+          }
+        }
+        return false;
       }, [
         firstMiniTestTask?.question,
         moduleIndex,
-        multiQuestionAnswerSelected.answerHasSelected,
+        multiQuestionAnswerSelected.answerSelected,
       ]);
-
+   
       const {
         isAnswerCorrect,
         isShowCorrectContainer,
@@ -141,7 +140,7 @@ const Science_SelectAnswer_AnswerImage_MultipleQuestion = observer(
         isCorrectAnswer: isCorrectAnswer,
         onSubmit: () => {
           setAnswerSelected('');
-          nextModule((answerSelected as string[]).toString());
+          nextModule((answerSelected as string[], isCorrectAnswer).toString());
           answerRef.current?.resetAnswerSelected?.();
         },
         fullAnswer: firstMiniTestTask?.question?.[moduleIndex].fullAnswer,
@@ -183,66 +182,10 @@ const Science_SelectAnswer_AnswerImage_MultipleQuestion = observer(
         });
       };
 
-      const onCheckResult = useCallback(() => {
-        if (
-          JSON.stringify(
-            firstMiniTestTask?.question?.[moduleIndex].correctAnswer?.[
-              multiQuestionAnswerSelected.questionIndex ?? 0
-            ],
-          ) === JSON.stringify(multiQuestionAnswerSelected.answerSelected)
-        ) {
-          playSound(soundTrack.bell_ding_sound);
-          setMultiQuestionAnswerSelected({
-            questionIndex: (multiQuestionAnswerSelected.questionIndex ?? 0) + 1,
-            answerHasSelected: [
-              ...(multiQuestionAnswerSelected.answerHasSelected ?? []),
-              ...(multiQuestionAnswerSelected.answerSelected ?? []),
-            ],
-            correctImage:
-              firstMiniTestTask?.question?.[moduleIndex].image?.[
-                multiQuestionAnswerSelected.questionIndex ?? 0
-              ],
-          });
-          const tout = setTimeout(() => {
-            clearTimeout(tout);
-            setMultiQuestionAnswerSelected({
-              answerSelected: [],
-              correctImage: null,
-            });
-          }, 2000);
-        } else {
-          playSound(soundTrack.oh_no_sound);
-          setMultiQuestionAnswerSelected({
-            answerSelected: [],
-          });
-        }
-      }, [
-        firstMiniTestTask?.question,
-        moduleIndex,
-        multiQuestionAnswerSelected.answerHasSelected,
-        multiQuestionAnswerSelected.answerSelected,
-        multiQuestionAnswerSelected.questionIndex,
-        playSound,
-        setMultiQuestionAnswerSelected,
-      ]);
-
+      
       const onMultiQuestionSubmit = useCallback(() => {
-        if (
-          (multiQuestionAnswerSelected.questionIndex ?? 0) >
-          (Number(
-            firstMiniTestTask?.question?.[moduleIndex].correctAnswer?.length,
-          ) ?? 0) -
-            1
-        ) {
-          submit();
-        } else {
-          onCheckResult();
-        }
+        submit();
       }, [
-        firstMiniTestTask?.question,
-        moduleIndex,
-        multiQuestionAnswerSelected.questionIndex,
-        onCheckResult,
         submit,
       ]);
 
@@ -357,7 +300,7 @@ const Science_SelectAnswer_AnswerImage_MultipleQuestion = observer(
                           }}
                           style={[
                             styles.wrapAnswerItemImage,
-                            {borderRadius: 20},
+                            {borderRadius: verticalScale(20)},
                           ]}
                         />
                       )}
@@ -377,9 +320,9 @@ const Science_SelectAnswer_AnswerImage_MultipleQuestion = observer(
                                   .answers as string[]
                               ).find(
                                 item =>
-                                  item ===
-                                  multiQuestionAnswerSelected
-                                    .answerSelected?.[1],
+                                  item
+                                  .includes(multiQuestionAnswerSelected
+                                    .answerSelected?.[1] ?? ''),
                               ),
                           }}
                           style={[
@@ -435,9 +378,8 @@ const Science_SelectAnswer_AnswerImage_MultipleQuestion = observer(
                   description={
                     firstMiniTestTask?.question?.[moduleIndex].description ?? ''
                   }
-                  styleHighlight={[
-                    styles.fonts_SVN_Cherish,
-                    {fontSize: scale(24)},
+                  style={[
+                    {fontSize: scale(20)},
                   ]}
                 />
                 <View style={[styles.fill, {gap: 8, marginTop: 16}]}>
@@ -449,7 +391,7 @@ const Science_SelectAnswer_AnswerImage_MultipleQuestion = observer(
                         Array.isArray(row) &&
                         row.map((item, index) => {
                           const isSelected =
-                            multiQuestionAnswerSelected.answerHasSelected?.includes(
+                            multiQuestionAnswerSelected.answerSelected?.includes(
                               item as string,
                             );
                           return isSelected ? (

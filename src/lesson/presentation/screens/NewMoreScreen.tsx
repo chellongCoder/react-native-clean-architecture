@@ -139,8 +139,7 @@ const NewMoreScreen = observer((props: Props) => {
               style={[globalStyle.txtLabel, styles.textColor]}>
               {item.name}
             </Text>
-            <Text
-              style={[globalStyle.txtNote, styles.textColor]}>
+            <Text style={[globalStyle.txtNote, styles.textColor]}>
               {item.description}
             </Text>
           </View>

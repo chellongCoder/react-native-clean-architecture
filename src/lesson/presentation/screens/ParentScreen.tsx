@@ -514,7 +514,7 @@ The blockAppsSystem function is an asynchronous function that awaits the result 
         loadingGlobal.toggleLoading(true, 'blocking');
         setTimeout(() => {
           loadingGlobal.toggleLoading(false, 'blocking');
-        }, 5000);
+        }, 7000);
         await addToLockedApps(
           lesson.blockedListAppsSystem.map(v => ({
             app_name: v.app_name ?? '',
