@@ -84,13 +84,15 @@ Props) => {
     };
   });
 
-  const attachView = (x: number, y: number) => {
+  const attachView = (x: number, y: number, w: number, h: number) => {
     if (canDrag) {
       attachSendView({
         id: index,
         value: getValue(index) || value,
         posX: x,
         posY: y,
+        w: w,
+        h: h,
         translateX: translateX,
         translateY: translateY,
         isFocus: listDragItem[index]?.isFocus ?? false,
@@ -106,8 +108,7 @@ Props) => {
   useEffect(() => {
     setTimeout(() => {
       ref.current?.measureInWindow((x, y, width, height) => {
-        console.log('measureInWindow ', value, x, y, width, height);
-        attachView(x, y);
+        attachView(x, y, width, height);
       });
     }, 300);
   }, [value]);
@@ -155,8 +156,7 @@ Props) => {
           onLayout={e => {
             if (canDrag) {
               e.target.measureInWindow((x, y, width, height) => {
-                // console.log('measureInWindow ', value, x, y, width, height);
-                attachView(x, y);
+                attachView(x, y, width, height);
               });
             }
           }}>
