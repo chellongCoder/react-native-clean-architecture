@@ -29,7 +29,7 @@ const TextHighlight = ({
 
       // Split by the regex and keep the separators
       const parts = description
-        ? description.split(regex)
+        ? description.toLocaleLowerCase().split(regex)
         : content.map(e => e.toLocaleLowerCase());
 
       return parts.map(part => ({

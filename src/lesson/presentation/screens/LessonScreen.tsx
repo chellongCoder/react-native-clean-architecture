@@ -1185,7 +1185,7 @@ const LessonScreen = observer(() => {
     return __DEV__
       ? apiTasks.map(t => ({
           ...t,
-          question: __DEV__ ? t.question.slice(0, 1) : t.question,
+          question: __DEV__ ? t.question.slice(0, 3) : t.question,
         }))
       : apiTasks.map(t => ({
           ...t,
@@ -1202,6 +1202,8 @@ const LessonScreen = observer(() => {
     result: [],
     trainingResult: [],
   });
+  console.log(`🛠 LOG: 🚀 --> ~ lessonState:`, lessonState);
+
 
   const firstMiniTestTask = tasks.find(task => task.type === 'mini_test');
 
@@ -1377,20 +1379,18 @@ const LessonScreen = observer(() => {
   );
 
   const nextModule = useCallback(
-    (answerSelected: string) => {
-      console.log(
-        '🛠 LOG: 🚀 --> --------------------------------------------------------------------------------------------🛠 LOG: 🚀 -->',
-      );
-      console.log(
-        '🛠 LOG: 🚀 --> ~ file: LessonScreen.tsx:345 ~ LessonScreen ~ answerSelected:',
-        answerSelected,
-      );
-      console.log(
-        '🛠 LOG: 🚀 --> --------------------------------------------------------------------------------------------🛠 LOG: 🚀 -->',
-      );
+    (answerSelected: string, isCorrectAnswer = false) => {
+
 
       // * bỏ đi các khoảng trống ở câu trả lời
       const finalAnswer = answerSelected.trim();
+      let status: 'completed' | 'failed' = 'failed';
+      const isString = typeof answerSelected === 'string' && typeof firstMiniTestTask?.question?.[lessonIndex].correctAnswer === 'string'
+      if(isString) {
+        status = finalAnswer === firstMiniTestTask?.question?.[lessonIndex].correctAnswer.toString() ? 'completed' : 'failed'
+      } else {
+        status = isCorrectAnswer ? 'completed' : 'failed'
+      }
 
       // * check điều kiện là đang đến part mini test
       if (testTask?.type === firstMiniTestTask?.type) {
@@ -1399,11 +1399,7 @@ const LessonScreen = observer(() => {
           userId: selectedChild?._id,
           taskId: firstMiniTestTask?.question?.[lessonIndex].taskId,
           questionId: firstMiniTestTask?.question?.[lessonIndex]._id,
-          status:
-            finalAnswer ===
-            firstMiniTestTask?.question?.[lessonIndex].correctAnswer.toString()
-              ? 'completed'
-              : 'failed',
+          status: status,
           point: firstMiniTestTask?.question?.[lessonIndex].point,
         };
 
@@ -1576,10 +1572,7 @@ const LessonScreen = observer(() => {
     }
     // Find matching pattern
     const matchedPattern = LESSON_PATTERNS.find(pattern => {
-      console.log(
-        '🛠 LOG: 🚀 --> ~ file: LessonScreen.tsx:1046 ~ LessonScreen ~ matchedPattern:',
-        pattern,
-      );
+     
       return pattern.pattern.test(questionType);
     });
 
