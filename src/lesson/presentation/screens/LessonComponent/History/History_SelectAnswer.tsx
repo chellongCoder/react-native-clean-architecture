@@ -11,7 +11,6 @@ import {
 import React, {
   forwardRef,
   useCallback,
-  useContext,
   useEffect,
   useImperativeHandle,
   useMemo,
@@ -22,14 +21,13 @@ import LessonComponent from '../LessonComponent';
 import PrimaryButton from '../../../components/PrimaryButton';
 import {FontFamily} from 'src/core/presentation/hooks/useFonts';
 import useGlobalStyle from 'src/core/presentation/hooks/useGlobalStyle';
-import {Answer, Task} from 'src/home/application/types/GetListQuestionResponse';
+import {Task} from 'src/home/application/types/GetListQuestionResponse';
 import {COLORS} from 'src/core/presentation/constants/colors';
 import {
   darkenColor,
   getCorrectAnswer,
   arraysEqualWithExactItem,
   isMMSS,
-  isSubArray,
 } from 'src/core/presentation/utils';
 import {scale, verticalScale} from 'react-native-size-matters';
 import Animated, {
@@ -39,10 +37,8 @@ import Animated, {
   useSharedValue,
   withTiming,
 } from 'react-native-reanimated';
-import {TextToSpeechContext} from 'src/core/presentation/hooks/textToSpeech/TextToSpeechContext';
 import {useLessonStore} from '../../../stores/LessonStore/useGetPostsStore';
 import {useSettingLesson} from '../../../hooks/useSettingLesson';
-import {useIsFocused} from '@react-navigation/native';
 import useAuthenticationStore from 'src/authentication/presentation/stores/useAuthenticationStore';
 import {observer} from 'mobx-react';
 import {LessonRef} from '../../../types';
@@ -53,7 +49,6 @@ import SelectionAnswersQuestion, {
 import TextHighlight from '../../../components/TextHighlight';
 import {useI18n} from 'src/core/presentation/hooks/useI18n';
 import VoiceButton from '../../../components/VoiceButton';
-import QuestionImageText from '../../../components/Science/QuestionImageText';
 import Entypo from '@expo/vector-icons/Entypo';
 import {useHistoryModule} from './hook';
 
@@ -89,8 +84,6 @@ const History_SelectAnswer = observer(
     ) => {
       const globalStyle = useGlobalStyle();
 
-      const {ttsSpeak} = useContext(TextToSpeechContext);
-      const focus = useIsFocused();
       const answerRef = useRef<SelectionAnswersQuestionRef>(null);
 
       const [answerSelected, setAnswerSelected] = useState<string | string[]>(
@@ -278,7 +271,7 @@ const History_SelectAnswer = observer(
                   gap: verticalScale(10),
                 },
               ]}>
-              <Text
+              {/* <Text
                 numberOfLines={1}
                 allowFontScaling
                 adjustsFontSizeToFit
@@ -292,7 +285,7 @@ const History_SelectAnswer = observer(
                   },
                 ]}>
                 {firstMiniTestTask?.question?.[moduleIndex]?.description}
-              </Text>
+              </Text> */}
 
               {firstMiniTestTask?.question?.[moduleIndex]?.slide?.[
                 currentSlideIndex
@@ -305,14 +298,12 @@ const History_SelectAnswer = observer(
                   }}>
                   <Text
                     numberOfLines={2}
-                    allowFontScaling
-                    adjustsFontSizeToFit
                     style={[
                       styles.fonts_SVN_Neuzeit_Bold,
                       {
                         textAlign: 'center',
                         fontSize: scale(18),
-                        color: darkenColor(settings.backgroundColor!, 30),
+                        color: darkenColor(settings.backgroundColor!, 50),
                       },
                     ]}>
                     {

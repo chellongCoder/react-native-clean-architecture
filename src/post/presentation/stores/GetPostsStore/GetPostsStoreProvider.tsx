@@ -1,3 +1,4 @@
+import React from 'react';
 import {PropsWithChildren} from 'react';
 import {GetPostsStore} from './GetPostsStore';
 import {GetPostsStoreContext} from './GetPostsStoreContext';

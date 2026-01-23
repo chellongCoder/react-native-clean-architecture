@@ -33,7 +33,7 @@ platform :android do
   desc "Deploy a new version to the Google Play"
   lane :deploy do
     gradle(task: "clean assembleRelease")
-    upload_to_play_store
+    # upload_to_play_store
   end
 
   desc "Build AAB"
@@ -58,7 +58,7 @@ platform :android do
 
     # increment_version_code
 
-    # gradle(task: "assembleRelease")
+    gradle(task: "assembleRelease")
 
 
     firebase_app_distribution(

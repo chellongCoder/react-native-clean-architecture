@@ -8,6 +8,7 @@ import {lessonModuleContainer} from 'src/lesson/LessonModule';
 import {LessonStore} from 'src/lesson/presentation/stores/LessonStore/LessonStore';
 import RootNavigation from '../../navigation/actions/RootNavigationActions';
 import {STACK_NAVIGATOR} from '../../navigation/ConstantNavigator';
+import {VolumeManager} from 'react-native-volume-manager';
 
 export const SoundBackgroundGlobalProvider = ({
   children,
@@ -45,6 +46,7 @@ export const SoundBackgroundGlobalProvider = ({
 
   useEffect(() => {
     setVolumeBackground(lesson.backgroundSound);
+    VolumeManager.setVolume(lesson.backgroundSound);
   }, [lesson.backgroundSound, setVolumeBackground]);
 
   useEffect(() => {

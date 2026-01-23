@@ -1,8 +1,6 @@
-/* eslint-disable react/no-unstable-nested-components */
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import React, {
   forwardRef,
-  useCallback,
   useEffect,
   useImperativeHandle,
   useMemo,
@@ -32,8 +30,6 @@ import useHomeStore from 'src/home/presentation/stores/useHomeStore';
 import {SelectionAnswersQuestionRef} from '../../../components/SelectionAnswersQuestion';
 import {useI18n} from 'src/core/presentation/hooks/useI18n';
 import VoiceButton from '../../../components/VoiceButton';
-import DragItem from '../../../components/Drag/DragSendItem';
-import {useDragContext} from '../../../components/Drag/DragProvider';
 import FastImage from 'react-native-fast-image';
 import TextHighlight from '../../../components/TextHighlight';
 import {useHistoryModule} from './hook';

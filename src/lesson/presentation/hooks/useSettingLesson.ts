@@ -15,7 +15,6 @@ import {coreModuleContainer} from 'src/core/CoreModule';
 import Env, {EnvToken} from 'src/core/domain/entities/Env';
 import {VolumeManager} from 'react-native-volume-manager';
 import {useLessonStore} from '../stores/LessonStore/useGetPostsStore';
-import {useAsyncEffect} from 'src/core/presentation/hooks';
 import useAuthenticationStore from 'src/authentication/presentation/stores/useAuthenticationStore';
 import Toast from 'react-native-toast-message';
 import {useSpeechToText} from './useSpeechToText';
@@ -251,6 +250,7 @@ export const useSettingLesson = ({
       playSoundRef.current = true;
     }
     return () => {
+      playSoundRef.current = true;
       pauseSound();
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -259,20 +259,11 @@ export const useSettingLesson = ({
   /**
    * * set âm lượng được lưu trong config khi vào màn làm bài
    */
-  useAsyncEffect(async () => {
-    const currentLevel = await VolumeManager.getVolume();
-
-    VolumeManager.setVolume(Number(lessonStore.charSound));
-
-    return () => {
-      VolumeManager.setVolume(parseFloat(currentLevel.volume + ''));
-    };
-  }, [lessonStore.backgroundSound, lessonStore.charSound]);
-
   useEffect(() => {
-    VolumeManager.addVolumeListener(result => {
-      lessonStore.setCharSound(result.volume);
-    });
+    VolumeManager.setVolume(lessonStore.charSound);
+    return () => {
+      VolumeManager.setVolume(lessonStore.backgroundSound);
+    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -280,7 +271,8 @@ export const useSettingLesson = ({
     return () => {
       stopRecord();
     };
-  }, [stopRecord]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   /**
    * * Translate question description based on firstMiniTestTask and moduleIndex

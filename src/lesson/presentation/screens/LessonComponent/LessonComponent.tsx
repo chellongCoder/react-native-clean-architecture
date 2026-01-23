@@ -75,7 +75,7 @@ const LessonComponent = ({
   const [source, setSource] = useState<number | Source | undefined>({
     uri: backgroundImage,
   });
-  
+
   const hideTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const isScrollingRef = useRef(false);
 

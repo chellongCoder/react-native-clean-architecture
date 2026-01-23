@@ -165,7 +165,7 @@ const styles = StyleSheet.create({
   wrapImageContainer: {
     position: 'absolute',
     width: '100%',
-    height: verticalScale(150),
+    height: verticalScale(100),
     top: '-10%',
   },
   title: {

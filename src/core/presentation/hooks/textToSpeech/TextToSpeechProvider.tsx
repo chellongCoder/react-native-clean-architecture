@@ -407,12 +407,12 @@ export const TextToSpeechProvider = ({children}: PropsWithChildren) => {
     });
   }, [init, onFinish]);
 
-  useEffect(() => {
-    const setVolume = async () => {
-      await VolumeManager.setVolume(lesson.charSound);
-    };
-    setVolume();
-  }, [lesson.charSound]);
+  // useEffect(() => {
+  //   const setVolume = async () => {
+  //     await VolumeManager.setVolume(lesson.charSound);
+  //   };
+  //   setVolume();
+  // }, [lesson.charSound]);
 
   return (
     <TextToSpeechContext.Provider

@@ -19,7 +19,6 @@ import {
   darkenColor,
   getCorrectAnswer,
   isMMSS,
-  isSubArray,
 } from 'src/core/presentation/utils';
 import {scale, verticalScale} from 'react-native-size-matters';
 import Animated, {
@@ -38,7 +37,6 @@ import {observer} from 'mobx-react';
 import {LessonRef} from '../../../types';
 import useHomeStore from 'src/home/presentation/stores/useHomeStore';
 import {SelectionAnswersQuestionRef} from '../../../components/SelectionAnswersQuestion';
-import SelectionImagesQuestion from '../../../components/SelectionImagesQuestion';
 import {useI18n} from 'src/core/presentation/hooks/useI18n';
 import VoiceButton from '../../../components/VoiceButton';
 import ImageMeaningText from '../../../components/ImageMeaningText';
@@ -104,7 +102,6 @@ const History_Finding_Diff_Point = observer(
         countDownTime: trainingCount <= 2 ? 0 : 5,
         isCorrectAnswer: !!isCorrectAnswer,
         onSubmit: () => {
-          
           if (isCorrectAnswer) {
             setTimeout(() => {
               setCircleCount(0);
@@ -210,11 +207,12 @@ const History_Finding_Diff_Point = observer(
           backgroundAnswerColor={
             settings.backgroundAnswerColor ?? COLORS.GREEN_DDF598
           }
-          prompt={
-            {
-              description: firstMiniTestTask?.question?.[moduleIndex]?.prompt ?? settings.prompt?.toString() ?? '',
-            }
-          }
+          prompt={{
+            description:
+              firstMiniTestTask?.question?.[moduleIndex]?.prompt ??
+              settings.prompt?.toString() ??
+              '',
+          }}
           price="Free"
           score={selectedChild?.adsPoints}
           txtCountDown={word && !isMMSS(word) ? undefined : word}
@@ -271,9 +269,7 @@ const History_Finding_Diff_Point = observer(
 
                 <VoiceButton onPress={onSpeechText} />
               </View>
-              <FindDifferencePoint 
-                
-              />
+              <FindDifferencePoint />
               <PrimaryButton
                 text={i18n.t('lesson.screens.Modules.submit')}
                 style={[

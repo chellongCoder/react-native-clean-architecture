@@ -32,7 +32,6 @@ import SpInAppUpdates, {
   IAUInstallStatus,
   StatusUpdateEvent,
 } from 'sp-react-native-in-app-updates';
-import DeviceInfo from 'react-native-device-info';
 import analytics from '@react-native-firebase/analytics';
 import useDeeplink from './hooks/appsflyer/useDeeplink';
 
@@ -50,7 +49,9 @@ const App = () => {
     inAppUpdates
       .checkNeedsUpdate()
       .then(result => {
-        if (!result.shouldUpdate) return;
+        if (!result.shouldUpdate) {
+          return;
+        }
 
         let updateOptions: IosStartUpdateOptions | AndroidStartUpdateOptions;
 

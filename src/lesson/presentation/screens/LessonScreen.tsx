@@ -148,6 +148,7 @@ import HistoryHS6M1P1 from './LessonComponent/History/History_HS6M1P1';
 import History_HS6M1P2 from './LessonComponent/History/History_HS6M1P2';
 import HistoryHS6M1P3 from './LessonComponent/History/History_HS6M1P3';
 import History_HS6M3P1 from './LessonComponent/History/History_HS6M3P1';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 export type TResult = {
   userId?: string;
@@ -968,7 +969,7 @@ const LESSON_PATTERNS = [
     pattern: /^HISTORY_HS(2|3)M(1|2|3|4|5)$/,
     component: (type: string, testTask: any) => {
       const componentMap: Record<string, any> = {
-        [`HISTORY_HS1_P3`]: <></>,
+        ['HISTORY_HS1_P3']: <></>,
         [`${type}_P1`]: History_SelectAnswer,
         [`${type}_P2`]: History_SelectImage_ImageDescription,
         [`${type}_P3`]: HistoryHS2M2P3,
@@ -1202,8 +1203,7 @@ const LessonScreen = observer(() => {
     result: [],
     trainingResult: [],
   });
-  console.log(`🛠 LOG: 🚀 --> ~ lessonState:`, lessonState);
-
+  console.log('🛠 LOG: 🚀 --> ~ lessonState:', lessonState);
 
   const firstMiniTestTask = tasks.find(task => task.type === 'mini_test');
 
@@ -1380,16 +1380,21 @@ const LessonScreen = observer(() => {
 
   const nextModule = useCallback(
     (answerSelected: string, isCorrectAnswer = false) => {
-
-
       // * bỏ đi các khoảng trống ở câu trả lời
       const finalAnswer = answerSelected.trim();
       let status: 'completed' | 'failed' = 'failed';
-      const isString = typeof answerSelected === 'string' && typeof firstMiniTestTask?.question?.[lessonIndex].correctAnswer === 'string'
-      if(isString) {
-        status = finalAnswer === firstMiniTestTask?.question?.[lessonIndex].correctAnswer.toString() ? 'completed' : 'failed'
+      const isString =
+        typeof answerSelected === 'string' &&
+        typeof firstMiniTestTask?.question?.[lessonIndex].correctAnswer ===
+          'string';
+      if (isString) {
+        status =
+          finalAnswer ===
+          firstMiniTestTask?.question?.[lessonIndex].correctAnswer.toString()
+            ? 'completed'
+            : 'failed';
       } else {
-        status = isCorrectAnswer ? 'completed' : 'failed'
+        status = isCorrectAnswer ? 'completed' : 'failed';
       }
 
       // * check điều kiện là đang đến part mini test
@@ -1572,7 +1577,6 @@ const LessonScreen = observer(() => {
     }
     // Find matching pattern
     const matchedPattern = LESSON_PATTERNS.find(pattern => {
-     
       return pattern.pattern.test(questionType);
     });
 
@@ -1620,8 +1624,10 @@ const LessonScreen = observer(() => {
     );
   };
 
+  const insets = useSafeAreaInsets().bottom;
+  const ins = Math.max(insets, 16);
   return (
-    <View style={[styles.fill]}>
+    <View style={[styles.fill, {paddingBottom: ins}]}>
       {buildLesson()}
       {isShowHint && buildHint()}
     </View>
