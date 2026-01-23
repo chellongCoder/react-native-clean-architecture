@@ -34,40 +34,42 @@
 	</array>
 	<key>CFBundleVersion</key>
 	<string>$(CURRENT_PROJECT_VERSION)</string>
+	<key>CodePushDeploymentKey</key>
+	<string>$(CODEPUSH_DEPLOYMENT_KEY)</string>
+	<key>CodePushServerURL</key>
+	<string>https://code-push.tbd-alphadex.com</string>
 	<key>LSApplicationCategoryType</key>
-	<string/>
+	<string></string>
 	<key>LSRequiresIPhoneOS</key>
-	<true/>	
+	<true/>
 	<key>NSAppTransportSecurity</key>
 	<dict>
 		<key>NSAllowsArbitraryLoads</key>
 		<false/>
 		<key>NSAllowsLocalNetworking</key>
 		<true/>
-
 		<key>NSExceptionDomains</key>
 		<dict>
 			<key>34.30.145.97</key>
-            <dict>
-                <key>NSIncludesSubdomains</key>
-				<true/>
+			<dict>
 				<key>NSExceptionAllowsInsecureHTTPLoads</key>
 				<true/>
-            </dict>
+				<key>NSIncludesSubdomains</key>
+				<true/>
+			</dict>
 			<key>code-push.tbd-alphadex.com</key>
-            <dict>
-                <key>NSIncludesSubdomains</key>
-				<true/>
+			<dict>
 				<key>NSExceptionAllowsInsecureHTTPLoads</key>
 				<true/>
-            </dict>
+				<key>NSIncludesSubdomains</key>
+				<true/>
+			</dict>
 		</dict>
-
 	</dict>
 	<key>NSAppleMusicUsageDescription</key>
 	<string>To select local pictures from library, and change your information photo in our application, allow us to access your Media</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string/>
+	<string></string>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>$(PRODUCT_NAME) would like to use your microphone (for searching)</string>
 	<key>NSSpeechRecognitionUsageDescription</key>
@@ -103,9 +105,5 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
-	<key>CodePushDeploymentKey</key>
-	<string>$(CODEPUSH_DEPLOYMENT_KEY)</string>
-	<key>CodePushServerURL</key>
-	<string>https://code-push.tbd-alphadex.com</string>
 </dict>
 </plist>
