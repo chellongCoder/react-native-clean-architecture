@@ -69,6 +69,7 @@
     "react-native-device-info": "^11.1.0",
     "react-native-dropdown-picker": "^5.4.6",
     "react-native-fast-image": "^8.6.3",
+    "react-native-fbsdk-next": "^13.4.1",
     "react-native-gesture-handler": "~2.14.0",
     "react-native-get-random-values": "^1.11.0",
     "react-native-google-mobile-ads": "14.2.3",

@@ -105,5 +105,19 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
+	<key>FacebookAppID</key>
+	<string>1449810890482738</string>
+
+	<key>FacebookClientToken</key>
+	<string>23ef88bd7f1f41e46b1cf1a42e6004f1</string>
+
+	<key>FacebookDisplayName</key>
+	<string>ABeeCi</string>
+
+	<key>LSApplicationQueriesSchemes</key>
+	<array>
+	<string>fbapi</string>
+	<string>fb-messenger-share-api</string>
+	</array>
 </dict>
 </plist>

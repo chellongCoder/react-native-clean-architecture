@@ -34,9 +34,13 @@ import SpInAppUpdates, {
 } from 'sp-react-native-in-app-updates';
 import analytics from '@react-native-firebase/analytics';
 import useDeeplink from './hooks/appsflyer/useDeeplink';
+import {Settings, AppEventsLogger} from 'react-native-fbsdk-next';
 
 LogBox.ignoreLogs(['Warning: ...']); // Ignore log notification by message
 LogBox.ignoreAllLogs(); //Ignore all log notifications
+// Ask for consent first if necessary
+// Possibly only do this for iOS if no need to handle a GDPR-type flow
+Settings.initializeSDK();
 
 const App = () => {
   useDeeplink({initializeSdk: true});
@@ -122,6 +126,10 @@ const App = () => {
     crashlytics().log('App mounted.');
     // When user is under 13:
     analytics().setAnalyticsCollectionEnabled(false);
+    analytics().logAppOpen();
+
+    AppEventsLogger.logEvent('fb_mobile_activate_app');
+
     !isAndroid && requestScreenTime();
   }, []);
 
