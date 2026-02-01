@@ -7,7 +7,6 @@ import React, {
   ImageBackground,
   BackHandler,
   ActivityIndicator,
-  ScrollView,
 } from 'react-native';
 import useGlobalStyle from '../hooks/useGlobalStyle';
 import {STACK_NAVIGATOR} from '../navigation/ConstantNavigator';
@@ -47,7 +46,7 @@ import {observer} from 'mobx-react';
 import useAuthenStore from 'src/authentication/presentation/hooks/useAuthenStore';
 import {Module} from 'src/home/application/types/GetListLessonResponse';
 import {usePopupTrialMode} from '../hooks/popup/usePopupTrialMode';
-import {isTablet} from '../constants/common';
+import {SafeAreaView, useSafeAreaInsets} from 'react-native-safe-area-context';
 
 export type RouteParamsDone = {
   totalResult: TResult[];
@@ -79,6 +78,7 @@ const DoneLessonScreen = observer(({}) => {
   const homeStore = useHomeStore();
   const authStore = useAuthenStore();
   const popupHook = usePopupTrialMode();
+  const insets = useSafeAreaInsets();
 
   const {deviceToken, selectedChild, getUserProfile, setSelectedChild} =
     useAuthenticationStore();
@@ -111,14 +111,7 @@ const DoneLessonScreen = observer(({}) => {
       // * nếu ko phải mini test
       return true;
     }
-  }, [
-    lessonStore.blockedModules,
-    route.isMiniTest,
-    route.module,
-    totalCorrectAnswer,
-    totalResultLength,
-  ]);
-
+  }, [blockedModule, route.isMiniTest, totalCorrectAnswer, totalResultLength]);
 
   const onEarnReward = useCallback(
     async (reward?: RewardedAdReward) => {
@@ -336,7 +329,7 @@ const DoneLessonScreen = observer(({}) => {
               </Text>
             </View>
           </View>
-          <View style={styles.wrapperButton}>
+          <View style={[styles.wrapperButton]}>
             <TouchableOpacity
               onPress={onSubmit}
               style={[
@@ -565,11 +558,8 @@ const styles = StyleSheet.create({
   },
   wrapperButton: {
     width: '100%',
-    justifyContent: 'center',
-    alignItems: 'center',
     marginTop: verticalScale(24),
-    flexDirection: 'row',
-    marginBottom: verticalScale(24),
+    marginBottom: verticalScale(44),
   },
   button: {
     backgroundColor: COLORS.YELLOW_F2B559,

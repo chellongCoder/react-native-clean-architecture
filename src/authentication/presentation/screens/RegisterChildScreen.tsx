@@ -12,7 +12,7 @@ import {
   ScrollView,
 } from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
-import {scale} from 'react-native-size-matters';
+import {scale, verticalScale} from 'react-native-size-matters';
 import {COLORS} from 'src/core/presentation/constants/colors';
 import {CustomTextStyle} from 'src/core/presentation/constants/typography';
 import useStateCustom from 'src/hooks/useStateCommon';
@@ -139,10 +139,11 @@ const RegisterChildScreen: React.FC = () => {
       source={require('../../../../assets/images/authBackground.png')}>
       <View style={styles.overlay} />
       <SafeAreaView style={styles.container}>
-        <DropdownChangeLang />
-
         <View style={styles.wrapContainer}>
           {/* <ScrollView contentContainerStyle={{flex: 1}}> */}
+          <View style={{zIndex: 999}}>
+            <DropdownChangeLang />
+          </View>
           <KeyboardAvoidingView
             style={[styles.fill]}
             behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
@@ -205,7 +206,7 @@ const RegisterChildScreen: React.FC = () => {
           </KeyboardAvoidingView>
           {/* </ScrollView> */}
         </View>
-        <View style={styles.buttonContainer}>
+        <View style={[styles.buttonContainer]}>
           <TouchableOpacity
             style={styles.wrapButtonContainer}
             onPress={onCreateAccount}>
@@ -234,13 +235,12 @@ const styles = StyleSheet.create({
   wrapContainer: {
     flex: 1,
     paddingHorizontal: scale(16),
-    paddingBottom: scale(32),
   },
   wrapHeaderContainer: {
     flexDirection: 'row',
     alignItems: 'center',
     backgroundColor: COLORS.WHITE_FFE699,
-    paddingVertical: scale(4),
+    paddingVertical: verticalScale(4),
     borderRadius: 30,
     paddingLeft: scale(12),
     width: '20%',
@@ -252,6 +252,7 @@ const styles = StyleSheet.create({
   },
   wrapBodyContainer: {
     flex: 1,
+    marginTop: verticalScale(24),
   },
   genderAgeContainer: {
     flexDirection: 'row',
@@ -266,6 +267,7 @@ const styles = StyleSheet.create({
   },
   buttonContainer: {
     alignItems: 'center',
+    paddingVertical: verticalScale(12),
   },
   wrapButtonContainer: {
     paddingVertical: scale(8),
@@ -294,20 +296,20 @@ const styles = StyleSheet.create({
     color: COLORS.BLUE_1C6349,
   },
   pb32: {
-    paddingBottom: 32,
+    paddingBottom: verticalScale(32),
   },
   txtLabel: {
     color: '#1C6349',
-    paddingBottom: 8,
+    paddingBottom: verticalScale(8),
   },
   boxInput: {
-    backgroundColor: '#DDF598',
-    height: 64,
-    borderRadius: 15,
+    backgroundColor: COLORS.GREEN_DDF598,
+    height: verticalScale(64),
+    borderRadius: scale(12),
     flexDirection: 'row',
   },
   input: {
-    padding: 22,
+    padding: scale(12),
   },
 });
 

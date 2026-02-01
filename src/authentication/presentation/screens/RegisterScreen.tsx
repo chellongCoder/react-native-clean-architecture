@@ -22,6 +22,7 @@ import {FontFamily} from 'src/core/presentation/hooks/useFonts';
 import {scale} from 'react-native-size-matters';
 import {useI18n} from 'src/core/presentation/hooks/useI18n';
 import DropdownChangeLang from 'src/core/presentation/components/DropdownChangeLang';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 interface TRegisterError {
   emailOrPhoneError?: string;
@@ -52,6 +53,7 @@ const RegisterScreen: React.FC = observer(() => {
   const {handleRegister} = useLoginWithCredentials();
   useLoadingGlobal();
   const i18n = useI18n();
+  const insets = useSafeAreaInsets();
 
   const [registerState, setRegisterState] =
     useStateCustom<TRegister>(initialRegisterState);
@@ -142,11 +144,14 @@ const RegisterScreen: React.FC = observer(() => {
 
   return (
     <ImageBackground
-      style={[styles.container]}
+      style={[[styles.container, {paddingTop: insets.top}]]}
       source={require('../../../../assets/images/authBackground.png')}>
       <View style={styles.overlay} />
+
       <ScrollView contentContainerStyle={styles.fill}>
-        <DropdownChangeLang />
+        <View style={{zIndex: 999}}>
+          <DropdownChangeLang />
+        </View>
         <KeyboardAvoidingView
           style={[styles.fill, styles.justifyCenter]}
           behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
@@ -214,7 +219,7 @@ const RegisterScreen: React.FC = observer(() => {
             }
           />
         </KeyboardAvoidingView>
-        <View style={styles.rowAround}>
+        <View style={[styles.rowAround, {marginBottom: insets.bottom}]}>
           <View style={{justifyContent: 'center', alignItems: 'center'}}>
             <PrimaryButton
               text={i18n.t('authentication.screens.Register.logIn')}
@@ -250,30 +255,13 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
-    backgroundColor: '#fbf8cc',
-    paddingHorizontal: 30,
-    paddingVertical: 40,
+    paddingHorizontal: scale(30),
   },
-  boxLang: {
-    backgroundColor: '#FFE699',
-    flexDirection: 'row',
-    alignItems: 'center',
-    alignSelf: 'flex-start',
-    height: 40,
-    padding: 5,
-    borderRadius: 30,
-  },
-  arrowIcon: {
-    width: 22,
-    height: 22,
-    borderRadius: 11,
-  },
-  ph16: {
-    paddingHorizontal: 16,
-  },
+
   rowAround: {
     flexDirection: 'row',
     justifyContent: 'space-around',
+    alignItems: 'center',
   },
   errorMsg: {
     ...CustomTextStyle.body2,

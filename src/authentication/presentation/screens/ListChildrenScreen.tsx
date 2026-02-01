@@ -170,12 +170,12 @@ const ListChildrenScreen = observer(() => {
                     <View
                       style={{
                         alignItems: 'center',
-                        opacity: userProfile?.children.length > 0 ? 0.5 : 1,
+                        opacity: userProfile?.children.length === 1 ? 0.5 : 1,
                       }}>
                       <TouchableOpacity
                         style={styles.addChildContainer}
                         onPress={onAddChild}
-                        disabled={userProfile?.children.length > 0}>
+                        disabled={userProfile?.children.length === 1}>
                         <ICAddChild />
                       </TouchableOpacity>
                     </View>

@@ -30,9 +30,18 @@ const PrimaryButton = (props: Props) => {
         style={[styles.button, {alignSelf: alignSelf}, props.style]}
         onPress={props.onPress}
         disabled={props.disabled}>
-        {props.icon && <View style={{width: scale(24), height: scale(24), position: 'absolute', left: scale(16), top: '50%',}}>
-          {props.icon}
-        </View>}
+        {props.icon && (
+          <View
+            style={{
+              width: scale(24),
+              height: scale(24),
+              position: 'absolute',
+              left: scale(16),
+              top: '50%',
+            }}>
+            {props.icon}
+          </View>
+        )}
         <Text style={[styles.text, commonStyle.txtLabel]}>{props.text}</Text>
       </TouchableOpacity>
     </>

@@ -5,7 +5,6 @@ import {
   Text,
   TouchableOpacity,
   View,
-  Image,
 } from 'react-native';
 import React, {useState} from 'react';
 import PrimaryButton from '../components/PrimaryButton';
@@ -102,7 +101,15 @@ const LoginScreen = observer(() => {
             }}
             text={i18n.t('authentication.screens.Login.google')}
             wrapContent={false}
-            icon={<FastImage resizeMode='cover' style={{width: '100%', height: '100%'}} source={{uri: 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c1/Google_%22G%22_logo.svg/1024px-Google_%22G%22_logo.svg.png'}} />}
+            icon={
+              <FastImage
+                resizeMode="cover"
+                style={{width: '100%', height: '100%'}}
+                source={{
+                  uri: 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c1/Google_%22G%22_logo.svg/1024px-Google_%22G%22_logo.svg.png',
+                }}
+              />
+            }
             style={[
               {
                 backgroundColor: COLORS.YELLOW_F2B559,
@@ -112,8 +119,7 @@ const LoginScreen = observer(() => {
           <TouchableOpacity onPress={onRegister}>
             <Text
               style={[globalStyle.txtLabel, styles.txtLink, styles.textCenter]}>
-              {i18n.t('authentication.screens.Login.dontHaveAccount')}
-              {' '}
+              {i18n.t('authentication.screens.Login.dontHaveAccount')}{' '}
               <Text
                 style={{
                   textDecorationLine: 'underline',

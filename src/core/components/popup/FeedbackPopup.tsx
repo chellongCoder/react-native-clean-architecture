@@ -63,12 +63,14 @@ const FeedbackPopup: React.FC<FeedbackPopupProps> = ({isVisible, onClose}) => {
         if (res) {
           onClose({isShowFeedBack: false, isShowReceived: true});
         }
-      } catch (error) {
+      } catch (error: any) {
         console.log('post report fail: ', error);
         Toast.show({
           type: 'error',
           text1: i18n.t('popup.Feedback.error'),
-          text2: i18n.t('popup.Feedback.errorContent'),
+          text2:
+            error?.response?.data?.message ??
+            i18n.t('popup.Feedback.errorContent'),
         });
       } finally {
         loading.toggleLoading(false, 'LoadingFeedback');
