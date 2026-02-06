@@ -375,33 +375,6 @@ const LESSON_PATTERNS = [
     component: English_SelectAnswer_Paragraph,
     props,
   },
-  // Mandarin Lessons
-  {
-    pattern: /^MANDARIN_MDG0M[1-3]$/,
-    component: Mandarin_Kindergarten,
-    props: {},
-  },
-  {
-    pattern: /^MANDARIN_MDG5M25$/,
-    component: Mandarin_G5M25,
-    props: {},
-  },
-  {
-    pattern: /^(writing|MANDARIN_MDG[1-6]M(1|4|7|10|13|16|19|22|25|28|31))$/,
-    component: Mandarin_G4M_DrawCharacter,
-    props,
-  },
-  {
-    pattern: /^MANDARIN_MDG[1-6]M(2|5|8|11|14|17|20|23|26|29|32)$/,
-    component: Mandarin_G4M_SelectAnswer,
-    props,
-  },
-  {
-    pattern: /^MANDARIN_MDG[1-6]M(3|6|9|12|15|18|21|24|27|30|33)$/,
-    component: Mandarin_G4_Pronunciation,
-    props,
-  },
-
   // * Mandarin G2
   {
     pattern: /^MANDARIN_MDG[2-6]M4$/,
@@ -439,11 +412,41 @@ const LESSON_PATTERNS = [
     props: {},
   },
   {
+    pattern: /^MANDARIN_MDG5M(21|24)$/,
+    component: Mandarin_G4M_SelectAnswer,
+    props,
+  },
+  {
     pattern: /^MANDARIN_MDG6M31$/,
     component: Mandarin_G6M31,
     props: {},
   },
-
+  // Mandarin Lessons
+  {
+    pattern: /^MANDARIN_MDG0M[1-3]$/,
+    component: Mandarin_Kindergarten,
+    props: {},
+  },
+  {
+    pattern: /^MANDARIN_MDG5M25$/,
+    component: Mandarin_G5M25,
+    props: {},
+  },
+  {
+    pattern: /^(writing|MANDARIN_MDG[1-6]M(1|4|7|10|13|16|19|22|25|28|31))$/,
+    component: Mandarin_G4M_DrawCharacter,
+    props,
+  },
+  {
+    pattern: /^MANDARIN_MDG[1-6]M(2|5|8|11|14|17|20|23|26|29|32)$/,
+    component: Mandarin_G4M_SelectAnswer,
+    props,
+  },
+  {
+    pattern: /^MANDARIN_MDG[1-6]M(3|6|9|12|15|18|21|24|27|30|33)$/,
+    component: Mandarin_G4_Pronunciation,
+    props,
+  },
   // Vietnamese Lessons
   {
     pattern: /^VIETNAMESE_VNG(0M1|2M2|3M9|4M2)$/,
