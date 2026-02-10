@@ -19,16 +19,17 @@ class HttpClient implements IHttpClient {
       requestConfig.baseURL = this.env.EXPO_BASE_V1_API_DOMAIN;
 
       // Get the authentication store to access deviceToken
-      const store = authenticationModuleContainer.getProvided(AuthenticationStore);
-      
+      const store =
+        authenticationModuleContainer.getProvided(AuthenticationStore);
+
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
       requestConfig.headers = {
+        ...requestConfig.headers,
         'Content-Type': 'application/json; charset=utf-8',
         Accept: 'application/json',
         Origin: this.env.EXPO_BASE_V1_API_DOMAIN,
-        ...(store.deviceToken && { 'X-Device-Token': store.deviceToken }),
-        ...requestConfig.headers,
+        ...(store.deviceToken && {'X-Device-Token': store.deviceToken}),
       };
 
       requestConfig.timeout = 5000;
