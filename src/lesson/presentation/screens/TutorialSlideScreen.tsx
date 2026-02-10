@@ -79,7 +79,7 @@ const TutorialSlideScreen = () => {
 
   const handleScroll = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
     const contentOffsetX = event.nativeEvent.contentOffset.x;
-    const index = Math.floor(contentOffsetX / width);
+    const index = Math.floor((contentOffsetX + 0.5) / width);
     setCurrentSlide(index);
   };
 
