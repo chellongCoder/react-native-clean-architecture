@@ -5,7 +5,7 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
 	<key>CFBundleDisplayName</key>
-	<string>TBD-Edu</string>
+	<string>ABeeCi (Parents)</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -112,7 +112,7 @@
 	<string>23ef88bd7f1f41e46b1cf1a42e6004f1</string>
 
 	<key>FacebookDisplayName</key>
-	<string>ABeeCi</string>
+	<string>ABeeCi (Parents)</string>
 
 	<key>LSApplicationQueriesSchemes</key>
 	<array>

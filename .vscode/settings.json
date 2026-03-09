@@ -10,4 +10,5 @@
     "typescriptreact"
   ],
   "files.eol": "\n",
+  "java.compile.nullAnalysis.mode": "automatic",
 }

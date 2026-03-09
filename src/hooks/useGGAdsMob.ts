@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useRef, useState} from 'react';
+import {useCallback, useEffect, useRef, useState} from 'react';
 import {
   MaxAdContentRating,
   MobileAds,
@@ -9,28 +9,16 @@ import Toast from 'react-native-toast-message';
 
 const adUnitId = __DEV__
   ? TestIds.REWARDED_INTERSTITIAL
-  : 'ca-app-pub-9069193131931191/7991611635';
+  : 'ca-app-pub-5805531559546260/7009381303';
 
-type Props = {};
 export const useGGAdsMob = () => {
   const [loaded, setLoaded] = useState(false);
 
-
   const [adsId, setAdsId] = useState<string | null>(adUnitId);
-  const {
-    isLoaded,
-    isClosed,
-    load,
-    show,
-    isClicked,
-    isEarnedReward,
-    reward,
-    error,
-    isOpened,
-  } = useRewardedInterstitialAd(adsId, {
-    requestNonPersonalizedAdsOnly: true,
-  });
-
+  const {isLoaded, isClosed, load, show, isEarnedReward, reward} =
+    useRewardedInterstitialAd(adsId, {
+      requestNonPersonalizedAdsOnly: true,
+    });
 
   useEffect(() => {
     if (isClosed) {
@@ -53,7 +41,6 @@ export const useGGAdsMob = () => {
 
         // An array of test device IDs to allow.
         testDeviceIdentifiers: ['EMULATOR'],
-
       })
       .then(async () => {
         // Request config successfully set!

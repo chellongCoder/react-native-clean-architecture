@@ -1,11 +1,11 @@
 {
-"name": "TBD-Edu",
-"displayName": "TBD-Edu",
-"react-native-google-mobile-ads": {
-  "android_app_id": "ca-app-pub-9069193131931191~3861756404",
-  "ios_app_id": "ca-app-pub-9069193131931191~1945807999",
-  "user_tracking_usage_description": "This identifier will be used to deliver personalized ads to you.",
-  "sk_ad_network_items": [
+  "name": "TBD-Edu",
+  "displayName": "ABeeCi (Parents)",
+  "react-native-google-mobile-ads": {
+    "android_app_id": "ca-app-pub-5805531559546260~4810118019",
+    "ios_app_id": "ca-app-pub-9069193131931191~1945807999",
+    "user_tracking_usage_description": "This identifier will be used to deliver personalized ads to you.",
+    "sk_ad_network_items": [
       "cstr6suwn9.skadnetwork",
       "4fzdc2evr5.skadnetwork",
       "4pfyvq9l8r.skadnetwork",
@@ -55,14 +55,16 @@
       "zq492l623r.skadnetwork",
       "3rd42ekr43.skadnetwork",
       "3qcr597p9d.skadnetwork"
-  ]
-},
-"expo": {
+    ]
+  },
+  "expo": {
     "plugins": [
       [
         "expo-font",
         {
-          "fonts": ["./assets/fonts/SVN_Cherish.otf"]
+          "fonts": [
+            "./assets/fonts/SVN_Cherish.otf"
+          ]
         },
         "expo-build-properties",
         {
@@ -72,7 +74,7 @@
         },
         "react-native-google-mobile-ads",
         {
-          "android_app_id": "ca-app-pub-9069193131931191~3861756404",
+          "android_app_id": "ca-app-pub-5805531559546260~4810118019",
           "ios_app_id": "ca-app-pub-9069193131931191~1945807999",
           "skAdNetworkItems": [
             "cstr6suwn9.skadnetwork",

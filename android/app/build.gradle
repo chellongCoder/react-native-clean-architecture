@@ -84,7 +84,7 @@ android {
         applicationId "com.algorz.abeeci.app"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 192
+        versionCode 199
         versionName "1.1.5"
         missingDimensionStrategy "store", "play"
         ndk {
@@ -104,11 +104,11 @@ android {
         dev {
             dimension "environment"
             applicationIdSuffix ".dev"
-            resValue "string", "app_name", "ABeeCi Dev"
+            resValue "string", "app_name", "ABeeCi (Parents) Dev"
         }
         prod {
             dimension "environment"
-            resValue "string", "app_name", "ABeeCi"
+            resValue "string", "app_name", "ABeeCi (Parents)"
         }
     }
     

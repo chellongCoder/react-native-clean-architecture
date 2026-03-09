@@ -9,7 +9,7 @@
 
 # Full example with multiple options
 cd .. &&
-code-push release-react ABeeCi-android android \
+npx code-push release-react ABeeCi-android android \
  --deploymentName Staging \
  --targetBinaryVersion "1.1.5" \
  --description "v13 - update $(date)" \

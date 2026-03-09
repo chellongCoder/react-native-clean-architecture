@@ -1189,7 +1189,7 @@ const LessonScreen = observer(() => {
     return __DEV__
       ? apiTasks.map(t => ({
           ...t,
-          question: __DEV__ ? t.question.slice(0, 3) : t.question,
+          question: __DEV__ ? t.question : t.question,
         }))
       : apiTasks.map(t => ({
           ...t,
@@ -1197,6 +1197,7 @@ const LessonScreen = observer(() => {
         }));
   }, [apiTasks]);
 
+  console.log('🛠 LOG: 🚀 --> ~ tasks:', tasks);
   const [activeTaskIndex, setActiveTaskIndex] = useState(0);
   const {selectedChild, getUserProfile, setSelectedChild} =
     useAuthenticationStore();
@@ -1218,6 +1219,8 @@ const LessonScreen = observer(() => {
     }
   }, [activeTaskIndex, firstMiniTestTask, tasks]);
 
+  console.log('🛠 LOG: 🚀 --> ~ testTask:', testTask);
+
   const settings = useMemo(
     () => getSetting(lessonSetting),
     [getSetting, lessonSetting],
@@ -1225,6 +1228,7 @@ const LessonScreen = observer(() => {
 
   const submitModule = useCallback(
     async (item: TResult) => {
+      console.log('🛠 LOG: 🚀 --> ~ item:', item);
       playSound(soundTrack.good_result);
       if (lessonState.result) {
         const totalResult = [...lessonState.result];
@@ -1383,17 +1387,20 @@ const LessonScreen = observer(() => {
 
   const nextModule = useCallback(
     (answerSelected: string, isCorrectAnswer = false) => {
+      console.log('answerSelected', answerSelected);
+      console.log('isCorrectAnswer', isCorrectAnswer);
+      console.log('lessonIndex', lessonIndex, testTask?.question);
       // * bỏ đi các khoảng trống ở câu trả lời
       const finalAnswer = answerSelected.trim();
       let status: 'completed' | 'failed' = 'failed';
       const isString =
         typeof answerSelected === 'string' &&
-        typeof firstMiniTestTask?.question?.[lessonIndex].correctAnswer ===
+        typeof testTask?.question?.[lessonIndex].correctAnswer ===
           'string';
       if (isString) {
         status =
           finalAnswer ===
-          firstMiniTestTask?.question?.[lessonIndex].correctAnswer.toString()
+          testTask?.question?.[lessonIndex].correctAnswer.toString()
             ? 'completed'
             : 'failed';
       } else {
@@ -1401,14 +1408,14 @@ const LessonScreen = observer(() => {
       }
 
       // * check điều kiện là đang đến part mini test
-      if (testTask?.type === firstMiniTestTask?.type) {
+      if (testTask?.type === testTask?.type) {
         playSound(soundTrack.menu_selection_sound);
         const resultByAnswer: TResult = {
           userId: selectedChild?._id,
-          taskId: firstMiniTestTask?.question?.[lessonIndex].taskId,
-          questionId: firstMiniTestTask?.question?.[lessonIndex]._id,
+          taskId: testTask?.question?.[lessonIndex].taskId,
+          questionId: testTask?.question?.[lessonIndex]._id,
           status: status,
-          point: firstMiniTestTask?.question?.[lessonIndex].point,
+          point: testTask?.question?.[lessonIndex].point,
         };
 
         // * set vào mảng kết quả đã trả lời
@@ -1416,10 +1423,10 @@ const LessonScreen = observer(() => {
           result: [...(lessonState.result || []), resultByAnswer],
         });
         /**
-         * The lessonIndex >= (firstMiniTestTask?.question.length ?? 1) - 1 condition checks if the lessonIndex is greater than or equal to the index of the last question in the question array. If it is, the condition evaluates to true; otherwise, it evaluates to false.
+         * The lessonIndex >= (testTask?.question.length ?? 1) - 1 condition checks if the lessonIndex is greater than or equal to the index of the last question in the question array. If it is, the condition evaluates to true; otherwise, it evaluates to false.
          * If the condition evaluates to true, the code inside the if statement block will be executed. In this case, it calls the submitModule function and passes resultByAnswer as an argument.
          */
-        if (lessonIndex >= (firstMiniTestTask?.question.length ?? 1) - 1) {
+        if (lessonIndex >= (testTask?.question.length ?? 1) - 1) {
           submitModule(resultByAnswer);
           return;
         }
@@ -1449,7 +1456,7 @@ const LessonScreen = observer(() => {
         isShowHint && toggleUseHint();
 
         /**
-         * The lessonIndex >= (firstMiniTestTask?.question.length ?? 1) - 1 condition checks if the lessonIndex is greater than or equal to the index of the last question in the question array. If it is, the condition evaluates to true; otherwise, it evaluates to false.
+         * The lessonIndex >= (testTask?.question.length ?? 1) - 1 condition checks if the lessonIndex is greater than or equal to the index of the last question in the question array. If it is, the condition evaluates to true; otherwise, it evaluates to false.
          * If the condition evaluates to true, the code inside the if statement block will be executed. In this case, it calls the submitModule function and passes resultByAnswer as an argument.
          */
         if (lessonIndex >= (testTask?.question.length ?? 1) - 1) {
@@ -1460,8 +1467,8 @@ const LessonScreen = observer(() => {
       }
     },
     [
-      firstMiniTestTask?.question,
-      firstMiniTestTask?.type,
+      testTask?.question,
+      testTask?.type,
       isShowHint,
       lessonIndex,
       lessonState.result,

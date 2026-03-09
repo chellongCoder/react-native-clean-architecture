@@ -1011,7 +1011,7 @@
 				DEVELOPMENT_TEAM = 9NQMKGZ43G;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = TBDEdu/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = "TBD-Edu";
+				INFOPLIST_KEY_CFBundleDisplayName = "ABeeCi (Parents)";
 				INFOPLIST_KEY_NSSupportsLiveActivities = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.6;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -1050,7 +1050,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 9NQMKGZ43G;
 				INFOPLIST_FILE = TBDEdu/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = "TBD-Edu";
+				INFOPLIST_KEY_CFBundleDisplayName = "ABeeCi (Parents)";
 				INFOPLIST_KEY_NSSupportsLiveActivities = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.6;
 				LD_RUNPATH_SEARCH_PATHS = (

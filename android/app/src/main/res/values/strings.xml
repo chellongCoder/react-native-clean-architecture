@@ -1,5 +1,5 @@
 <resources>
-  <string name="app_name">ABeeCi</string>
+  <string name="app_name">ABeeCi (Parents)</string>
   <string name="expo_splash_screen_resize_mode" translatable="false">cover</string>
   <string name="expo_splash_screen_status_bar_translucent" translatable="false">false</string>
   <string moduleConfig="true" name="CodePushServerUrl">https://code-push.tbd-alphadex.com</string>

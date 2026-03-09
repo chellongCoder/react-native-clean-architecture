@@ -106,10 +106,14 @@ const English_CharSelector_Meaning = observer(
           answerSelected.toString() ===
           (firstMiniTestTask?.question?.[moduleIndex]?.correctAnswer as string),
         onSubmit: () => {
-          setAnswerSelected('');
-          nextModule((answerSelected as string[]).toString());
-          answerRef.current?.resetAnswerSelected?.();
-          charScrambleRep.current?.reset?.();
+          try {
+            setAnswerSelected('');
+            nextModule((answerSelected as string[]).toString());
+            answerRef.current?.resetAnswerSelected?.();
+            charScrambleRep.current?.reset?.();
+          } catch (error) {
+            console.log('error', error, moduleIndex);
+          }
         },
         fullAnswer: firstMiniTestTask?.question?.[moduleIndex].fullAnswer,
         totalTime: 60 * 2, // 2 minutes
