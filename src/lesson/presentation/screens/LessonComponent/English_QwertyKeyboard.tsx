@@ -108,6 +108,7 @@ const English_QwertyKeyboard = observer(
           nextModule((answerSelected as string[]).join(''));
         },
         fullAnswer: firstMiniTestTask?.question?.[moduleIndex].fullAnswer,
+        totalTime: 60 * 2, // 2 minutes
       });
 
       const {lessonSetting} = useHomeStore();
@@ -245,7 +246,7 @@ const English_QwertyKeyboard = observer(
               ]}>
               <FastImage
                 resizeMode={'contain'}
-                style={{width: '100%', height: scale(180)}}
+                style={{width: '100%', height: verticalScale(180)}}
                 source={{
                   uri:
                     env.IMAGE_QUESTION_BASE_API_URL +

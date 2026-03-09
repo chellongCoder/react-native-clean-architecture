@@ -1187,9 +1187,9 @@ const LessonScreen = observer(() => {
   // TODO: check task
   const tasks = useMemo(() => {
     return __DEV__
-      ? apiTasks.map(t => ({
+      ? apiTasks.slice(1, apiTasks.length).map(t => ({
           ...t,
-          question: __DEV__ ? t.question : t.question,
+          question: __DEV__ ? t.question.slice(0, 5) : t.question,
         }))
       : apiTasks.map(t => ({
           ...t,
