@@ -29,7 +29,8 @@ const appConfig: ExpoConfig = {
     },
   },
   plugins: [
-    // your other plugins...
+    "expo-font",
+    "expo-localization"
   ],
   web: {
     favicon: './assets/images/favicon.png',
