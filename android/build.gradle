@@ -1,15 +1,15 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 
-buildscript {
-    ext {
-        buildToolsVersion = findProperty('android.buildToolsVersion') ?: '35.0.0'
-        minSdkVersion = Integer.parseInt(findProperty('android.minSdkVersion') ?: '26')
-        compileSdkVersion = Integer.parseInt(findProperty('android.compileSdkVersion') ?: '35')
-        targetSdkVersion = Integer.parseInt(findProperty('android.targetSdkVersion') ?: '34')
-        kotlinVersion = findProperty('android.kotlinVersion') ?: '1.9.25'
+ext {
+    compileSdkVersion = 35
+    targetSdkVersion = 34
+    minSdkVersion = 26
+    buildToolsVersion = "35.0.0"
+    kotlinVersion = "1.9.25"
+    ndkVersion = "27.1.12297006"
+}
 
-        ndkVersion = "26.1.10909125"
-    }
+buildscript {
     repositories {
         google()
         mavenCentral()
@@ -24,6 +24,35 @@ buildscript {
 apply plugin: "com.facebook.react.rootproject"
 
 allprojects {
+    ext {
+        compileSdkVersion = 35
+        targetSdkVersion = 34
+        minSdkVersion = 26
+        buildToolsVersion = "35.0.0"
+        kotlinVersion = "1.9.25"
+        ndkVersion = "27.1.12297006"
+    }
+
+    // Force NDK version and 16KB page size for all subprojects that have the 'android' extension
+    project.plugins.withType(com.android.build.gradle.BasePlugin) {
+        project.android {
+            ndkVersion = "27.1.12297006"
+            defaultConfig {
+                externalNativeBuild {
+                    cmake {
+                        // Pass linker flags to CMake correctly
+                        arguments "-DCMAKE_SHARED_LINKER_FLAGS=-Wl,-z,common-page-size=16384 -Wl,-z,max-page-size=16384",
+                                  "-DCMAKE_EXE_LINKER_FLAGS=-Wl,-z,common-page-size=16384 -Wl,-z,max-page-size=16384"
+                    }
+                    ndkBuild {
+                        // Pass to ndk-build via APP_LDFLAGS
+                        arguments "APP_LDFLAGS+=-Wl,-z,common-page-size=16384 -Wl,-z,max-page-size=16384"
+                    }
+                }
+            }
+        }
+    }
+
     repositories {
         maven {
             // All of React Native (JS, Obj-C sources, Android binaries) is installed from npm
