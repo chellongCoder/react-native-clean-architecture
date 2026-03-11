@@ -5,7 +5,7 @@
     "prepare": "husky install",
     "dev": "expo start --dev-client",
     "web": "expo start --web --dev-client",
-    "android": "expo run:android --variant debug --device",
+    "android": "expo run:android --variant devDebug --device",
     "android:release": "expo run:android --variant release --device",
     "ios": "expo run:ios",
     "eject": "expo eject",

@@ -7,7 +7,8 @@ import {
 // import GlobalModal from 'services/globalModal';
 import RootNavigator from './navigation/RootNavigator';
 import RootNavigation from './navigation/actions/RootNavigationActions';
-import {screenTracking} from './utils/ScreenTracking';
+import {screenTracking} from './utils/ScreenTracking'; 
+
 import {LoadingGlobalProvider} from './hooks/loading/LoadingGlobalProvider';
 import Toast from 'react-native-toast-message';
 import {requestScreenTime} from 'react-native-alphadex-screentime';
@@ -150,26 +151,26 @@ const App = () => {
       <SafeAreaProvider initialMetrics={initialWindowMetrics}>
         <GestureHandlerRootView style={{flex: 1}}>
           <LoadingGlobalProvider>
-            {/* <FirebaseCrashlyticProvider> */}
+            <FirebaseCrashlyticProvider>
             <OfflineProvider>
               <SoundGlobalProvider>
                 <SoundBackgroundGlobalProvider>
                   <TextToSpeechProvider>
                     <AuthenticationProvider>
                       <IapProvider>
-                        {/* <CodePushProvider> */}
+                        <CodePushProvider>
                         <ErrorBoundary>
                           <RootNavigator />
                         </ErrorBoundary>
                         <Toast />
-                        {/* </CodePushProvider> */}
+                        </CodePushProvider>
                       </IapProvider>
                     </AuthenticationProvider>
                   </TextToSpeechProvider>
                 </SoundBackgroundGlobalProvider>
               </SoundGlobalProvider>
             </OfflineProvider>
-            {/* </FirebaseCrashlyticProvider> */}
+            </FirebaseCrashlyticProvider>
           </LoadingGlobalProvider>
         </GestureHandlerRootView>
       </SafeAreaProvider>
