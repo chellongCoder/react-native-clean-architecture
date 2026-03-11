@@ -7,6 +7,9 @@ buildscript {
         compileSdkVersion = Integer.parseInt(findProperty('android.compileSdkVersion') ?: '35')
         targetSdkVersion = Integer.parseInt(findProperty('android.targetSdkVersion') ?: '34')
         kotlinVersion = findProperty('android.kotlinVersion') ?: '1.9.25'
+        androidXVersion = findProperty('android.androidXVersion') ?: '1.9.0'
+        androidXAnnotation = findProperty('android.androidXAnnotation') ?: '1.8.2'
+        androidXBrowser = findProperty('android.androidXBrowser') ?: '1.8.0'
 
         ndkVersion = "26.1.10909125"
     }
@@ -37,5 +40,11 @@ allprojects {
         google()
         mavenCentral()
         maven { url 'https://www.jitpack.io' }
+    }
+
+    configurations.all {
+        resolutionStrategy.dependencySubstitution {
+            substitute module('com.android.support:appcompat-v7') using module('androidx.appcompat:appcompat:1.7.0')
+        }
     }
 }

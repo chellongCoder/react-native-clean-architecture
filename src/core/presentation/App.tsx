@@ -122,16 +122,16 @@ const App = () => {
     (TextInput as any).defaultProps.allowFontScaling = false;
   }, []);
 
-  useEffect(() => {
-    crashlytics().log('App mounted.');
-    // When user is under 13:
-    analytics().setAnalyticsCollectionEnabled(false);
-    analytics().logAppOpen();
+  // useEffect(() => {
+  //   crashlytics().log('App mounted.');
+  //   // When user is under 13:
+  //   analytics().setAnalyticsCollectionEnabled(false);
+  //   analytics().logAppOpen();
 
-    AppEventsLogger.logEvent('fb_mobile_activate_app');
+  //   AppEventsLogger.logEvent('fb_mobile_activate_app');
 
-    !isAndroid && requestScreenTime();
-  }, []);
+  //   !isAndroid && requestScreenTime();
+  // }, []);
 
   useEffect(() => {
     if (__DEV__) {
@@ -150,26 +150,26 @@ const App = () => {
       <SafeAreaProvider initialMetrics={initialWindowMetrics}>
         <GestureHandlerRootView style={{flex: 1}}>
           <LoadingGlobalProvider>
-            <FirebaseCrashlyticProvider>
-              <OfflineProvider>
-                <SoundGlobalProvider>
-                  <SoundBackgroundGlobalProvider>
-                    <TextToSpeechProvider>
-                      <AuthenticationProvider>
-                        <IapProvider>
-                          <CodePushProvider>
-                            <ErrorBoundary>
-                              <RootNavigator />
-                            </ErrorBoundary>
-                            <Toast />
-                          </CodePushProvider>
-                        </IapProvider>
-                      </AuthenticationProvider>
-                    </TextToSpeechProvider>
-                  </SoundBackgroundGlobalProvider>
-                </SoundGlobalProvider>
-              </OfflineProvider>
-            </FirebaseCrashlyticProvider>
+            {/* <FirebaseCrashlyticProvider> */}
+            <OfflineProvider>
+              <SoundGlobalProvider>
+                <SoundBackgroundGlobalProvider>
+                  <TextToSpeechProvider>
+                    <AuthenticationProvider>
+                      <IapProvider>
+                        {/* <CodePushProvider> */}
+                        <ErrorBoundary>
+                          <RootNavigator />
+                        </ErrorBoundary>
+                        <Toast />
+                        {/* </CodePushProvider> */}
+                      </IapProvider>
+                    </AuthenticationProvider>
+                  </TextToSpeechProvider>
+                </SoundBackgroundGlobalProvider>
+              </SoundGlobalProvider>
+            </OfflineProvider>
+            {/* </FirebaseCrashlyticProvider> */}
           </LoadingGlobalProvider>
         </GestureHandlerRootView>
       </SafeAreaProvider>
