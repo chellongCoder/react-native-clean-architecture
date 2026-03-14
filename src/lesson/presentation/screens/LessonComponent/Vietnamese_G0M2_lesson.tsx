@@ -40,13 +40,7 @@ import useHomeStore from 'src/home/presentation/stores/useHomeStore';
 import SelectionAnswersQuestion, {
   SelectionAnswersQuestionRef,
 } from '../../components/SelectionAnswersQuestion';
-import LearningImage from '../../components/LearningImage';
 import TextHighlight from '../../components/TextHighlight';
-import Tts from 'react-native-tts';
-import {
-  iosVoice,
-  listLanguage,
-} from 'src/core/presentation/hooks/textToSpeech/TextToSpeechProvider';
 import {useI18n} from 'src/core/presentation/hooks/useI18n';
 import VoiceButton from '../../components/VoiceButton';
 

@@ -24,26 +24,26 @@ export interface Question {
   instruction: Instruction;
   isAcreage?: boolean;
   color?: string;
-  slide?: {content: string, image: string}[]
+  slide?: {content: string; image: string}[];
   prompt?: string;
 }
 
 export interface H6M1P1AnswerI {
-  content: string,
-  description: string,
-  image: string
+  content: string;
+  description: string;
+  image: string;
 }
 
 export interface H6M1P1AnswerI {
-  content: string,
-  description: string,
-  image: string
+  content: string;
+  description: string;
+  image: string;
 }
 
 export interface H6M1P1AnswerI {
-  content: string,
-  description: string,
-  image: string
+  content: string;
+  description: string;
+  image: string;
 }
 
 export interface Instruction {

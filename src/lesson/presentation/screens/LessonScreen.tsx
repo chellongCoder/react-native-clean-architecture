@@ -1187,7 +1187,7 @@ const LessonScreen = observer(() => {
   // TODO: check task
   const tasks = useMemo(() => {
     return __DEV__
-      ? apiTasks.slice(1, apiTasks.length).map(t => ({
+      ? apiTasks.slice(0, apiTasks.length).map(t => ({
           ...t,
           question: __DEV__ ? t.question.slice(0, 5) : t.question,
         }))
@@ -1197,7 +1197,7 @@ const LessonScreen = observer(() => {
         }));
   }, [apiTasks]);
 
-  console.log('🛠 LOG: 🚀 --> ~ tasks:', tasks);
+  console.log('🛠 LOG: 🚀 --> ~ tasks:', tasks, apiTasks);
   const [activeTaskIndex, setActiveTaskIndex] = useState(0);
   const {selectedChild, getUserProfile, setSelectedChild} =
     useAuthenticationStore();
@@ -1395,8 +1395,7 @@ const LessonScreen = observer(() => {
       let status: 'completed' | 'failed' = 'failed';
       const isString =
         typeof answerSelected === 'string' &&
-        typeof testTask?.question?.[lessonIndex].correctAnswer ===
-          'string';
+        typeof testTask?.question?.[lessonIndex].correctAnswer === 'string';
       if (isString) {
         status =
           finalAnswer ===
