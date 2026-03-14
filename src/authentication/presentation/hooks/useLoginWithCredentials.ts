@@ -183,6 +183,7 @@ const useLoginWithCredentials = () => {
         }
         resetForm();
       } catch (error: any) {
+        console.log('handleLoginWithCredentials: ', error);
         handleNavigateAuthenticationFail();
         const errorTimeout = (error.message as string).includes('timeout')
           ? 'Lost connection to server. Please try again!'
@@ -194,7 +195,8 @@ const useLoginWithCredentials = () => {
         if (isAxiosError(error)) {
           handleErrorLoginCredentials(error as AxiosError);
         }
-      } finally {
+      }
+       finally {
         setIsLoading(false);
         globalLoading.toggleLoading?.(false, 'login');
       }

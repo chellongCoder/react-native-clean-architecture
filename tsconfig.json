@@ -3,9 +3,17 @@
   "compilerOptions": {
     "strict": true,
     "baseUrl": ".",
+    "jsx": "react-native",
+    "skipLibCheck": true,
+    "skipDefaultLibCheck": true,
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true
-  }
+  },
+  "include": [
+    "src",
+    "App.tsx",
+    "index.js"
+  ]
 }

@@ -176,6 +176,7 @@ export class AuthenticationStore implements AuthenticationStoreState {
     this.setIsLoading(true);
     const response = await this.loginUsernamePasswordUseCase.execute(args);
     if (response.error) {
+      this.setIsLoading(false);
       return response;
     }
     this.setCurrentCredentials(response);

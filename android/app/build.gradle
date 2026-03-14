@@ -195,7 +195,8 @@ android {
 dependencies {
     // The version of react-native is set by the React Native Gradle Plugin
     implementation("com.facebook.react:react-android")
-implementation "androidx.test:core:1.4.0"
+    implementation project(':react-native-code-push')
+
     addExpoModulesDependencies(delegate, project)
 
     def isGifEnabled = (findProperty('expo.gif.enabled') ?: "") == "true";
@@ -223,5 +224,8 @@ implementation "androidx.test:core:1.4.0"
     }
 }
 
-
-
+// Firebase Google Services plugin - phải đặt ở cuối file
+// để xử lý google-services.json và tự động khởi tạo Firebase
+apply plugin: 'com.google.gms.google-services'
+// Firebase Crashlytics plugin - inject build ID cho Crashlytics SDK
+apply plugin: 'com.google.firebase.crashlytics'

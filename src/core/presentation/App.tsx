@@ -7,7 +7,8 @@ import {
 // import GlobalModal from 'services/globalModal';
 import RootNavigator from './navigation/RootNavigator';
 import RootNavigation from './navigation/actions/RootNavigationActions';
-import {screenTracking} from './utils/ScreenTracking';
+import {screenTracking} from './utils/ScreenTracking'; 
+
 import {LoadingGlobalProvider} from './hooks/loading/LoadingGlobalProvider';
 import Toast from 'react-native-toast-message';
 import {requestScreenTime} from 'react-native-alphadex-screentime';
@@ -122,16 +123,16 @@ const App = () => {
     (TextInput as any).defaultProps.allowFontScaling = false;
   }, []);
 
-  useEffect(() => {
-    crashlytics().log('App mounted.');
-    // When user is under 13:
-    analytics().setAnalyticsCollectionEnabled(false);
-    analytics().logAppOpen();
+  // useEffect(() => {
+  //   crashlytics().log('App mounted.');
+  //   // When user is under 13:
+  //   analytics().setAnalyticsCollectionEnabled(false);
+  //   analytics().logAppOpen();
 
-    AppEventsLogger.logEvent('fb_mobile_activate_app');
+  //   AppEventsLogger.logEvent('fb_mobile_activate_app');
 
-    !isAndroid && requestScreenTime();
-  }, []);
+  //   !isAndroid && requestScreenTime();
+  // }, []);
 
   useEffect(() => {
     if (__DEV__) {
@@ -151,24 +152,24 @@ const App = () => {
         <GestureHandlerRootView style={{flex: 1}}>
           <LoadingGlobalProvider>
             <FirebaseCrashlyticProvider>
-              <OfflineProvider>
-                <SoundGlobalProvider>
-                  <SoundBackgroundGlobalProvider>
-                    <TextToSpeechProvider>
-                      <AuthenticationProvider>
-                        <IapProvider>
-                          <CodePushProvider>
-                            <ErrorBoundary>
-                              <RootNavigator />
-                            </ErrorBoundary>
-                            <Toast />
-                          </CodePushProvider>
-                        </IapProvider>
-                      </AuthenticationProvider>
-                    </TextToSpeechProvider>
-                  </SoundBackgroundGlobalProvider>
-                </SoundGlobalProvider>
-              </OfflineProvider>
+            <OfflineProvider>
+              <SoundGlobalProvider>
+                <SoundBackgroundGlobalProvider>
+                  <TextToSpeechProvider>
+                    <AuthenticationProvider>
+                      <IapProvider>
+                        <CodePushProvider>
+                        <ErrorBoundary>
+                          <RootNavigator />
+                        </ErrorBoundary>
+                        <Toast />
+                        </CodePushProvider>
+                      </IapProvider>
+                    </AuthenticationProvider>
+                  </TextToSpeechProvider>
+                </SoundBackgroundGlobalProvider>
+              </SoundGlobalProvider>
+            </OfflineProvider>
             </FirebaseCrashlyticProvider>
           </LoadingGlobalProvider>
         </GestureHandlerRootView>

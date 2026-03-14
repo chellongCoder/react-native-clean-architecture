@@ -1,37 +1,3 @@
-diff --git a/node_modules/react-native-iap/android/.project b/node_modules/react-native-iap/android/.project
-new file mode 100644
-index 0000000..fcc2dd1
---- /dev/null
-+++ b/node_modules/react-native-iap/android/.project
-@@ -0,0 +1,28 @@
-+<?xml version="1.0" encoding="UTF-8"?>
-+<projectDescription>
-+	<name>react-native-iap</name>
-+	<comment>Project react-native-iap created by Buildship.</comment>
-+	<projects>
-+	</projects>
-+	<buildSpec>
-+		<buildCommand>
-+			<name>org.eclipse.buildship.core.gradleprojectbuilder</name>
-+			<arguments>
-+			</arguments>
-+		</buildCommand>
-+	</buildSpec>
-+	<natures>
-+		<nature>org.eclipse.buildship.core.gradleprojectnature</nature>
-+	</natures>
-+	<filteredResources>
-+		<filter>
-+			<id>1773033441040</id>
-+			<name></name>
-+			<type>30</type>
-+			<matcher>
-+				<id>org.eclipse.core.resources.regexFilterMatcher</id>
-+				<arguments>node_modules|\.git|__CREATED_BY_JAVA_LANGUAGE_SERVER__</arguments>
-+			</matcher>
-+		</filter>
-+	</filteredResources>
-+</projectDescription>
 diff --git a/node_modules/react-native-iap/android/build/generated/source/buildConfig/play/debug/com/dooboolab/rniap/BuildConfig.java b/node_modules/react-native-iap/android/build/generated/source/buildConfig/play/debug/com/dooboolab/rniap/BuildConfig.java
 new file mode 100644
 index 0000000..3219ecd
@@ -118,21 +84,48 @@ Binary files /dev/null and b/node_modules/react-native-iap/android/build/interme
 diff --git a/node_modules/react-native-iap/android/build/intermediates/compile_symbol_list/playDebug/generatePlayDebugRFile/R.txt b/node_modules/react-native-iap/android/build/intermediates/compile_symbol_list/playDebug/generatePlayDebugRFile/R.txt
 new file mode 100644
 index 0000000..e69de29
+diff --git a/node_modules/react-native-iap/android/build/intermediates/incremental/mergePlayDebugJniLibFolders/merger.xml b/node_modules/react-native-iap/android/build/intermediates/incremental/mergePlayDebugJniLibFolders/merger.xml
+new file mode 100644
+index 0000000..4466490
+--- /dev/null
++++ b/node_modules/react-native-iap/android/build/intermediates/incremental/mergePlayDebugJniLibFolders/merger.xml
+@@ -0,0 +1,2 @@
++<?xml version="1.0" encoding="utf-8"?>
++<merger version="3"><dataSet config="main" ignore_pattern="!.svn:!.git:!.ds_store:!*.scc:.*:&lt;dir>_*:!CVS:!thumbs.db:!picasa.ini:!*~"><source path="/Users/pro14inch/Desktop/Code/ReactNative/tbd-frontend/node_modules/react-native-iap/android/src/main/jniLibs"/></dataSet><dataSet config="play" ignore_pattern="!.svn:!.git:!.ds_store:!*.scc:.*:&lt;dir>_*:!CVS:!thumbs.db:!picasa.ini:!*~"><source path="/Users/pro14inch/Desktop/Code/ReactNative/tbd-frontend/node_modules/react-native-iap/android/src/play/jniLibs"/></dataSet><dataSet config="debug" ignore_pattern="!.svn:!.git:!.ds_store:!*.scc:.*:&lt;dir>_*:!CVS:!thumbs.db:!picasa.ini:!*~"><source path="/Users/pro14inch/Desktop/Code/ReactNative/tbd-frontend/node_modules/react-native-iap/android/src/debug/jniLibs"/></dataSet><dataSet config="variant" ignore_pattern="!.svn:!.git:!.ds_store:!*.scc:.*:&lt;dir>_*:!CVS:!thumbs.db:!picasa.ini:!*~"><source path="/Users/pro14inch/Desktop/Code/ReactNative/tbd-frontend/node_modules/react-native-iap/android/src/playDebug/jniLibs"/></dataSet></merger>
+\ No newline at end of file
+diff --git a/node_modules/react-native-iap/android/build/intermediates/incremental/mergePlayDebugShaders/merger.xml b/node_modules/react-native-iap/android/build/intermediates/incremental/mergePlayDebugShaders/merger.xml
+new file mode 100644
+index 0000000..ede1e2d
+--- /dev/null
++++ b/node_modules/react-native-iap/android/build/intermediates/incremental/mergePlayDebugShaders/merger.xml
+@@ -0,0 +1,2 @@
++<?xml version="1.0" encoding="utf-8"?>
++<merger version="3"><dataSet config="main" ignore_pattern="!.svn:!.git:!.ds_store:!*.scc:.*:&lt;dir>_*:!CVS:!thumbs.db:!picasa.ini:!*~"><source path="/Users/pro14inch/Desktop/Code/ReactNative/tbd-frontend/node_modules/react-native-iap/android/src/main/shaders"/></dataSet><dataSet config="play" ignore_pattern="!.svn:!.git:!.ds_store:!*.scc:.*:&lt;dir>_*:!CVS:!thumbs.db:!picasa.ini:!*~"><source path="/Users/pro14inch/Desktop/Code/ReactNative/tbd-frontend/node_modules/react-native-iap/android/src/play/shaders"/></dataSet><dataSet config="debug" ignore_pattern="!.svn:!.git:!.ds_store:!*.scc:.*:&lt;dir>_*:!CVS:!thumbs.db:!picasa.ini:!*~"><source path="/Users/pro14inch/Desktop/Code/ReactNative/tbd-frontend/node_modules/react-native-iap/android/src/debug/shaders"/></dataSet><dataSet config="variant" ignore_pattern="!.svn:!.git:!.ds_store:!*.scc:.*:&lt;dir>_*:!CVS:!thumbs.db:!picasa.ini:!*~"><source path="/Users/pro14inch/Desktop/Code/ReactNative/tbd-frontend/node_modules/react-native-iap/android/src/playDebug/shaders"/></dataSet></merger>
+\ No newline at end of file
+diff --git a/node_modules/react-native-iap/android/build/intermediates/incremental/packagePlayDebugAssets/merger.xml b/node_modules/react-native-iap/android/build/intermediates/incremental/packagePlayDebugAssets/merger.xml
+new file mode 100644
+index 0000000..1ed9a8c
+--- /dev/null
++++ b/node_modules/react-native-iap/android/build/intermediates/incremental/packagePlayDebugAssets/merger.xml
+@@ -0,0 +1,2 @@
++<?xml version="1.0" encoding="utf-8"?>
++<merger version="3"><dataSet config="main" ignore_pattern="!.svn:!.git:!.ds_store:!*.scc:.*:&lt;dir>_*:!CVS:!thumbs.db:!picasa.ini:!*~"><source path="/Users/pro14inch/Desktop/Code/ReactNative/tbd-frontend/node_modules/react-native-iap/android/src/main/assets"/></dataSet><dataSet config="play" ignore_pattern="!.svn:!.git:!.ds_store:!*.scc:.*:&lt;dir>_*:!CVS:!thumbs.db:!picasa.ini:!*~"><source path="/Users/pro14inch/Desktop/Code/ReactNative/tbd-frontend/node_modules/react-native-iap/android/src/play/assets"/></dataSet><dataSet config="debug" ignore_pattern="!.svn:!.git:!.ds_store:!*.scc:.*:&lt;dir>_*:!CVS:!thumbs.db:!picasa.ini:!*~"><source path="/Users/pro14inch/Desktop/Code/ReactNative/tbd-frontend/node_modules/react-native-iap/android/src/debug/assets"/></dataSet><dataSet config="variant" ignore_pattern="!.svn:!.git:!.ds_store:!*.scc:.*:&lt;dir>_*:!CVS:!thumbs.db:!picasa.ini:!*~"><source path="/Users/pro14inch/Desktop/Code/ReactNative/tbd-frontend/node_modules/react-native-iap/android/src/playDebug/assets"/></dataSet><dataSet config="generated" ignore_pattern="!.svn:!.git:!.ds_store:!*.scc:.*:&lt;dir>_*:!CVS:!thumbs.db:!picasa.ini:!*~"><source path="/Users/pro14inch/Desktop/Code/ReactNative/tbd-frontend/node_modules/react-native-iap/android/build/intermediates/shader_assets/playDebug/compilePlayDebugShaders/out"/></dataSet></merger>
+\ No newline at end of file
 diff --git a/node_modules/react-native-iap/android/build/intermediates/incremental/playDebug/packagePlayDebugResources/compile-file-map.properties b/node_modules/react-native-iap/android/build/intermediates/incremental/playDebug/packagePlayDebugResources/compile-file-map.properties
 new file mode 100644
-index 0000000..34a1477
+index 0000000..3d4a145
 --- /dev/null
 +++ b/node_modules/react-native-iap/android/build/intermediates/incremental/playDebug/packagePlayDebugResources/compile-file-map.properties
 @@ -0,0 +1 @@
-+#Tue Mar 10 20:20:22 ICT 2026
++#Wed Mar 11 15:07:52 ICT 2026
 diff --git a/node_modules/react-native-iap/android/build/intermediates/incremental/playDebug/packagePlayDebugResources/merger.xml b/node_modules/react-native-iap/android/build/intermediates/incremental/playDebug/packagePlayDebugResources/merger.xml
 new file mode 100644
-index 0000000..3ce8c31
+index 0000000..f900541
 --- /dev/null
 +++ b/node_modules/react-native-iap/android/build/intermediates/incremental/playDebug/packagePlayDebugResources/merger.xml
 @@ -0,0 +1,2 @@
 +<?xml version="1.0" encoding="utf-8"?>
-+<merger version="3"><dataSet aapt-namespace="http://schemas.android.com/apk/res-auto" config="main$Generated" generated="true" ignore_pattern="!.svn:!.git:!.ds_store:!*.scc:.*:&lt;dir>_*:!CVS:!thumbs.db:!picasa.ini:!*~"><source path="/Users/mac/Workspaces/ReactNative/tbd-frontend/node_modules/react-native-iap/android/src/main/res"/></dataSet><dataSet aapt-namespace="http://schemas.android.com/apk/res-auto" config="main" generated-set="main$Generated" ignore_pattern="!.svn:!.git:!.ds_store:!*.scc:.*:&lt;dir>_*:!CVS:!thumbs.db:!picasa.ini:!*~"><source path="/Users/mac/Workspaces/ReactNative/tbd-frontend/node_modules/react-native-iap/android/src/main/res"/></dataSet><dataSet aapt-namespace="http://schemas.android.com/apk/res-auto" config="play$Generated" generated="true" ignore_pattern="!.svn:!.git:!.ds_store:!*.scc:.*:&lt;dir>_*:!CVS:!thumbs.db:!picasa.ini:!*~"><source path="/Users/mac/Workspaces/ReactNative/tbd-frontend/node_modules/react-native-iap/android/src/play/res"/></dataSet><dataSet aapt-namespace="http://schemas.android.com/apk/res-auto" config="play" generated-set="play$Generated" ignore_pattern="!.svn:!.git:!.ds_store:!*.scc:.*:&lt;dir>_*:!CVS:!thumbs.db:!picasa.ini:!*~"><source path="/Users/mac/Workspaces/ReactNative/tbd-frontend/node_modules/react-native-iap/android/src/play/res"/></dataSet><dataSet aapt-namespace="http://schemas.android.com/apk/res-auto" config="debug$Generated" generated="true" ignore_pattern="!.svn:!.git:!.ds_store:!*.scc:.*:&lt;dir>_*:!CVS:!thumbs.db:!picasa.ini:!*~"><source path="/Users/mac/Workspaces/ReactNative/tbd-frontend/node_modules/react-native-iap/android/src/debug/res"/></dataSet><dataSet aapt-namespace="http://schemas.android.com/apk/res-auto" config="debug" generated-set="debug$Generated" ignore_pattern="!.svn:!.git:!.ds_store:!*.scc:.*:&lt;dir>_*:!CVS:!thumbs.db:!picasa.ini:!*~"><source path="/Users/mac/Workspaces/ReactNative/tbd-frontend/node_modules/react-native-iap/android/src/debug/res"/></dataSet><dataSet aapt-namespace="http://schemas.android.com/apk/res-auto" config="generated$Generated" generated="true" ignore_pattern="!.svn:!.git:!.ds_store:!*.scc:.*:&lt;dir>_*:!CVS:!thumbs.db:!picasa.ini:!*~"><source path="/Users/mac/Workspaces/ReactNative/tbd-frontend/node_modules/react-native-iap/android/build/generated/res/resValues/play/debug"/></dataSet><dataSet aapt-namespace="http://schemas.android.com/apk/res-auto" config="generated" generated-set="generated$Generated" ignore_pattern="!.svn:!.git:!.ds_store:!*.scc:.*:&lt;dir>_*:!CVS:!thumbs.db:!picasa.ini:!*~"><source path="/Users/mac/Workspaces/ReactNative/tbd-frontend/node_modules/react-native-iap/android/build/generated/res/resValues/play/debug"/></dataSet><dataSet aapt-namespace="http://schemas.android.com/apk/res-auto" config="variant$Generated" generated="true" ignore_pattern="!.svn:!.git:!.ds_store:!*.scc:.*:&lt;dir>_*:!CVS:!thumbs.db:!picasa.ini:!*~"><source path="/Users/mac/Workspaces/ReactNative/tbd-frontend/node_modules/react-native-iap/android/src/playDebug/res"/></dataSet><dataSet aapt-namespace="http://schemas.android.com/apk/res-auto" config="variant" generated-set="variant$Generated" ignore_pattern="!.svn:!.git:!.ds_store:!*.scc:.*:&lt;dir>_*:!CVS:!thumbs.db:!picasa.ini:!*~"><source path="/Users/mac/Workspaces/ReactNative/tbd-frontend/node_modules/react-native-iap/android/src/playDebug/res"/></dataSet><mergedItems/></merger>
++<merger version="3"><dataSet aapt-namespace="http://schemas.android.com/apk/res-auto" config="main$Generated" generated="true" ignore_pattern="!.svn:!.git:!.ds_store:!*.scc:.*:&lt;dir>_*:!CVS:!thumbs.db:!picasa.ini:!*~"><source path="/Users/pro14inch/Desktop/Code/ReactNative/tbd-frontend/node_modules/react-native-iap/android/src/main/res"/></dataSet><dataSet aapt-namespace="http://schemas.android.com/apk/res-auto" config="main" generated-set="main$Generated" ignore_pattern="!.svn:!.git:!.ds_store:!*.scc:.*:&lt;dir>_*:!CVS:!thumbs.db:!picasa.ini:!*~"><source path="/Users/pro14inch/Desktop/Code/ReactNative/tbd-frontend/node_modules/react-native-iap/android/src/main/res"/></dataSet><dataSet aapt-namespace="http://schemas.android.com/apk/res-auto" config="play$Generated" generated="true" ignore_pattern="!.svn:!.git:!.ds_store:!*.scc:.*:&lt;dir>_*:!CVS:!thumbs.db:!picasa.ini:!*~"><source path="/Users/pro14inch/Desktop/Code/ReactNative/tbd-frontend/node_modules/react-native-iap/android/src/play/res"/></dataSet><dataSet aapt-namespace="http://schemas.android.com/apk/res-auto" config="play" generated-set="play$Generated" ignore_pattern="!.svn:!.git:!.ds_store:!*.scc:.*:&lt;dir>_*:!CVS:!thumbs.db:!picasa.ini:!*~"><source path="/Users/pro14inch/Desktop/Code/ReactNative/tbd-frontend/node_modules/react-native-iap/android/src/play/res"/></dataSet><dataSet aapt-namespace="http://schemas.android.com/apk/res-auto" config="debug$Generated" generated="true" ignore_pattern="!.svn:!.git:!.ds_store:!*.scc:.*:&lt;dir>_*:!CVS:!thumbs.db:!picasa.ini:!*~"><source path="/Users/pro14inch/Desktop/Code/ReactNative/tbd-frontend/node_modules/react-native-iap/android/src/debug/res"/></dataSet><dataSet aapt-namespace="http://schemas.android.com/apk/res-auto" config="debug" generated-set="debug$Generated" ignore_pattern="!.svn:!.git:!.ds_store:!*.scc:.*:&lt;dir>_*:!CVS:!thumbs.db:!picasa.ini:!*~"><source path="/Users/pro14inch/Desktop/Code/ReactNative/tbd-frontend/node_modules/react-native-iap/android/src/debug/res"/></dataSet><dataSet aapt-namespace="http://schemas.android.com/apk/res-auto" config="generated$Generated" generated="true" ignore_pattern="!.svn:!.git:!.ds_store:!*.scc:.*:&lt;dir>_*:!CVS:!thumbs.db:!picasa.ini:!*~"><source path="/Users/pro14inch/Desktop/Code/ReactNative/tbd-frontend/node_modules/react-native-iap/android/build/generated/res/resValues/play/debug"/></dataSet><dataSet aapt-namespace="http://schemas.android.com/apk/res-auto" config="generated" generated-set="generated$Generated" ignore_pattern="!.svn:!.git:!.ds_store:!*.scc:.*:&lt;dir>_*:!CVS:!thumbs.db:!picasa.ini:!*~"><source path="/Users/pro14inch/Desktop/Code/ReactNative/tbd-frontend/node_modules/react-native-iap/android/build/generated/res/resValues/play/debug"/></dataSet><dataSet aapt-namespace="http://schemas.android.com/apk/res-auto" config="variant$Generated" generated="true" ignore_pattern="!.svn:!.git:!.ds_store:!*.scc:.*:&lt;dir>_*:!CVS:!thumbs.db:!picasa.ini:!*~"><source path="/Users/pro14inch/Desktop/Code/ReactNative/tbd-frontend/node_modules/react-native-iap/android/src/playDebug/res"/></dataSet><dataSet aapt-namespace="http://schemas.android.com/apk/res-auto" config="variant" generated-set="variant$Generated" ignore_pattern="!.svn:!.git:!.ds_store:!*.scc:.*:&lt;dir>_*:!CVS:!thumbs.db:!picasa.ini:!*~"><source path="/Users/pro14inch/Desktop/Code/ReactNative/tbd-frontend/node_modules/react-native-iap/android/src/playDebug/res"/></dataSet><mergedItems/></merger>
 \ No newline at end of file
 diff --git a/node_modules/react-native-iap/android/build/intermediates/local_only_symbol_list/playDebug/parsePlayDebugLocalResources/R-def.txt b/node_modules/react-native-iap/android/build/intermediates/local_only_symbol_list/playDebug/parsePlayDebugLocalResources/R-def.txt
 new file mode 100644
@@ -196,57 +189,56 @@ index 0000000..99886e7
 +com.dooboolab.rniap
 diff --git a/node_modules/react-native-iap/android/build/kotlin/compilePlayDebugKotlin/cacheable/dirty-sources.txt b/node_modules/react-native-iap/android/build/kotlin/compilePlayDebugKotlin/cacheable/dirty-sources.txt
 new file mode 100644
-index 0000000..bf10d31
+index 0000000..7501684
 --- /dev/null
 +++ b/node_modules/react-native-iap/android/build/kotlin/compilePlayDebugKotlin/cacheable/dirty-sources.txt
 @@ -0,0 +1,6 @@
-+/Users/mac/Workspaces/ReactNative/tbd-frontend/node_modules/react-native-iap/android/src/main/java/com/dooboolab/rniap/PromiseUtils.kt
-+/Users/mac/Workspaces/ReactNative/tbd-frontend/node_modules/react-native-iap/android/src/play/java/com/dooboolab/rniap/RNIapPackage.kt
-+/Users/mac/Workspaces/ReactNative/tbd-frontend/node_modules/react-native-iap/android/src/play/java/com/dooboolab/rniap/RNIapActivityListener.kt
-+/Users/mac/Workspaces/ReactNative/tbd-frontend/node_modules/react-native-iap/android/src/play/java/com/dooboolab/rniap/RNIapModule.kt
-+/Users/mac/Workspaces/ReactNative/tbd-frontend/node_modules/react-native-iap/android/src/play/java/com/dooboolab/rniap/PlayUtils.kt
-+/Users/mac/Workspaces/ReactNative/tbd-frontend/node_modules/react-native-iap/android/src/main/java/com/dooboolab/rniap/PromiseUtlis.kt
++/Users/pro14inch/Desktop/Code/ReactNative/tbd-frontend/node_modules/react-native-iap/android/src/play/java/com/dooboolab/rniap/RNIapPackage.kt
++/Users/pro14inch/Desktop/Code/ReactNative/tbd-frontend/node_modules/react-native-iap/android/src/main/java/com/dooboolab/rniap/PromiseUtils.kt
++/Users/pro14inch/Desktop/Code/ReactNative/tbd-frontend/node_modules/react-native-iap/android/src/play/java/com/dooboolab/rniap/PlayUtils.kt
++/Users/pro14inch/Desktop/Code/ReactNative/tbd-frontend/node_modules/react-native-iap/android/src/main/java/com/dooboolab/rniap/PromiseUtlis.kt
++/Users/pro14inch/Desktop/Code/ReactNative/tbd-frontend/node_modules/react-native-iap/android/src/play/java/com/dooboolab/rniap/RNIapModule.kt
++/Users/pro14inch/Desktop/Code/ReactNative/tbd-frontend/node_modules/react-native-iap/android/src/play/java/com/dooboolab/rniap/RNIapActivityListener.kt
 \ No newline at end of file
 diff --git a/node_modules/react-native-iap/android/build/kotlin/compilePlayDebugKotlin/local-state/build-history.bin b/node_modules/react-native-iap/android/build/kotlin/compilePlayDebugKotlin/local-state/build-history.bin
 new file mode 100644
-index 0000000..27b7dfc
+index 0000000..5ef4acb
 Binary files /dev/null and b/node_modules/react-native-iap/android/build/kotlin/compilePlayDebugKotlin/local-state/build-history.bin differ
 diff --git a/node_modules/react-native-iap/android/build/outputs/logs/manifest-merger-play-debug-report.txt b/node_modules/react-native-iap/android/build/outputs/logs/manifest-merger-play-debug-report.txt
 new file mode 100644
-index 0000000..f81e856
+index 0000000..8e588f5
 --- /dev/null
 +++ b/node_modules/react-native-iap/android/build/outputs/logs/manifest-merger-play-debug-report.txt
 @@ -0,0 +1,19 @@
 +-- Merging decision tree log ---
 +manifest
-+ADDED from /Users/mac/Workspaces/ReactNative/tbd-frontend/node_modules/react-native-iap/android/src/main/AndroidManifest.xml:1:1-5:12
-+INJECTED from /Users/mac/Workspaces/ReactNative/tbd-frontend/node_modules/react-native-iap/android/src/main/AndroidManifest.xml:1:1-5:12
++ADDED from /Users/pro14inch/Desktop/Code/ReactNative/tbd-frontend/node_modules/react-native-iap/android/src/main/AndroidManifest.xml:1:1-5:12
++INJECTED from /Users/pro14inch/Desktop/Code/ReactNative/tbd-frontend/node_modules/react-native-iap/android/src/main/AndroidManifest.xml:1:1-5:12
 +	package
-+		ADDED from /Users/mac/Workspaces/ReactNative/tbd-frontend/node_modules/react-native-iap/android/src/main/AndroidManifest.xml:3:11-40
-+		INJECTED from /Users/mac/Workspaces/ReactNative/tbd-frontend/node_modules/react-native-iap/android/src/main/AndroidManifest.xml
++		ADDED from /Users/pro14inch/Desktop/Code/ReactNative/tbd-frontend/node_modules/react-native-iap/android/src/main/AndroidManifest.xml:3:11-40
++		INJECTED from /Users/pro14inch/Desktop/Code/ReactNative/tbd-frontend/node_modules/react-native-iap/android/src/main/AndroidManifest.xml
 +	android:exported
-+		ADDED from /Users/mac/Workspaces/ReactNative/tbd-frontend/node_modules/react-native-iap/android/src/main/AndroidManifest.xml:2:11-34
++		ADDED from /Users/pro14inch/Desktop/Code/ReactNative/tbd-frontend/node_modules/react-native-iap/android/src/main/AndroidManifest.xml:2:11-34
 +	xmlns:android
-+		ADDED from /Users/mac/Workspaces/ReactNative/tbd-frontend/node_modules/react-native-iap/android/src/main/AndroidManifest.xml:1:11-69
++		ADDED from /Users/pro14inch/Desktop/Code/ReactNative/tbd-frontend/node_modules/react-native-iap/android/src/main/AndroidManifest.xml:1:11-69
 +uses-sdk
-+INJECTED from /Users/mac/Workspaces/ReactNative/tbd-frontend/node_modules/react-native-iap/android/src/main/AndroidManifest.xml reason: use-sdk injection requested
-+INJECTED from /Users/mac/Workspaces/ReactNative/tbd-frontend/node_modules/react-native-iap/android/src/main/AndroidManifest.xml
-+INJECTED from /Users/mac/Workspaces/ReactNative/tbd-frontend/node_modules/react-native-iap/android/src/main/AndroidManifest.xml
++INJECTED from /Users/pro14inch/Desktop/Code/ReactNative/tbd-frontend/node_modules/react-native-iap/android/src/main/AndroidManifest.xml reason: use-sdk injection requested
++INJECTED from /Users/pro14inch/Desktop/Code/ReactNative/tbd-frontend/node_modules/react-native-iap/android/src/main/AndroidManifest.xml
++INJECTED from /Users/pro14inch/Desktop/Code/ReactNative/tbd-frontend/node_modules/react-native-iap/android/src/main/AndroidManifest.xml
 +	android:targetSdkVersion
-+		INJECTED from /Users/mac/Workspaces/ReactNative/tbd-frontend/node_modules/react-native-iap/android/src/main/AndroidManifest.xml
++		INJECTED from /Users/pro14inch/Desktop/Code/ReactNative/tbd-frontend/node_modules/react-native-iap/android/src/main/AndroidManifest.xml
 +	android:minSdkVersion
-+		INJECTED from /Users/mac/Workspaces/ReactNative/tbd-frontend/node_modules/react-native-iap/android/src/main/AndroidManifest.xml
++		INJECTED from /Users/pro14inch/Desktop/Code/ReactNative/tbd-frontend/node_modules/react-native-iap/android/src/main/AndroidManifest.xml
 diff --git a/node_modules/react-native-iap/android/src/main/java/com/dooboolab/rniap/PromiseUtlis.kt b/node_modules/react-native-iap/android/src/main/java/com/dooboolab/rniap/PromiseUtlis.kt
-index c1bc5af..a06af70 100644
+index c1bc5af..0dd83c1 100644
 --- a/node_modules/react-native-iap/android/src/main/java/com/dooboolab/rniap/PromiseUtlis.kt
 +++ b/node_modules/react-native-iap/android/src/main/java/com/dooboolab/rniap/PromiseUtlis.kt
-@@ -37,7 +37,8 @@ fun Promise.safeReject(
+@@ -37,7 +37,7 @@ fun Promise.safeReject(
      throwable: Throwable?,
  ) {
      try {
 -        this.reject(code, message, throwable)
-+        // Cung cấp giá trị mặc định cho "code" nếu nó là null để tránh lỗi type mismatch trong Kotlin.
-+        this.reject(code ?: "iap-error", message, throwable)
++        this.reject(code ?: "E_UNKNOWN", message, throwable)
      } catch (oce: ObjectAlreadyConsumedException) {
          Log.d(TAG, "Already consumed ${oce.message}")
      }

@@ -15,6 +15,7 @@ import com.facebook.soloader.SoLoader
 
 import expo.modules.ApplicationLifecycleDispatcher
 import expo.modules.ReactNativeHostWrapper
+import com.microsoft.codepush.react.CodePush
 
 class MainApplication : Application(), ReactApplication {
 
@@ -25,10 +26,15 @@ class MainApplication : Application(), ReactApplication {
             val packages = PackageList(this).packages
             // Packages that cannot be autolinked yet can be added manually here, for example:
             // packages.add(new MyReactNativePackage());
+            packages.add(CodePush(application.resources.getString(R.string.CodePushDeploymentKey), application, BuildConfig.DEBUG))
             return packages
           }
 
           override fun getJSMainModuleName(): String = ".expo/.virtual-metro-entry"
+
+          override fun getJSBundleFile(): String? {
+            return CodePush.getJSBundleFile()
+          }
 
           override fun getUseDeveloperSupport(): Boolean = BuildConfig.DEBUG
 

@@ -18,6 +18,10 @@ buildscript {
         classpath('com.android.tools.build:gradle')
         classpath('com.facebook.react:react-native-gradle-plugin')
         classpath('org.jetbrains.kotlin:kotlin-gradle-plugin')
+        // Firebase Google Services plugin - cần thiết để xử lý google-services.json
+        classpath('com.google.gms:google-services:4.4.2')
+        // Firebase Crashlytics plugin - cần thiết để inject build ID cho Crashlytics
+        classpath('com.google.firebase:firebase-crashlytics-gradle:3.0.2')
     }
 }
 
@@ -66,5 +70,11 @@ allprojects {
         google()
         mavenCentral()
         maven { url 'https://www.jitpack.io' }
+    }
+
+    configurations.all {
+        resolutionStrategy.dependencySubstitution {
+            substitute module('com.android.support:appcompat-v7') using module('androidx.appcompat:appcompat:1.7.0')
+        }
     }
 }
