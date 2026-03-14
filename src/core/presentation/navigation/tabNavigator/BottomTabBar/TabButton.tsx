@@ -1,5 +1,5 @@
 import React, {useCallback, useEffect} from 'react';
-import {View, Text, TouchableOpacity, Dimensions, Image} from 'react-native';
+import {Text, TouchableOpacity, Dimensions, Image} from 'react-native';
 import Animated, {
   useSharedValue,
   useAnimatedStyle,
@@ -14,6 +14,7 @@ import {STACK_NAVIGATOR} from '../../ConstantNavigator';
 import {assets} from 'src/core/presentation/utils';
 import {useI18n} from 'src/core/presentation/hooks/useI18n';
 import {observer} from 'mobx-react';
+import {BottomTabNavigationOptions} from '@react-navigation/bottom-tabs';
 
 const {BOTTOM_TAB} = STACK_NAVIGATOR;
 
@@ -34,9 +35,8 @@ const TitleTabBar = observer(
   ({name, isFocused}: {name: string; isFocused: boolean}) => {
     const i18n = useI18n();
 
-    const titles = {
+    const titles: Record<string, string> = {
       [BOTTOM_TAB.HOME_TAB]: i18n.t('core.bottomTab.home'),
-      [BOTTOM_TAB.TARGET_TAB]: i18n.t(''),
       [BOTTOM_TAB.PARENT_TAB]: i18n.t('core.bottomTab.parent'),
       [BOTTOM_TAB.CHILD_TAB]: i18n.t('core.bottomTab.child'),
       [BOTTOM_TAB.ACHIEVEMENT_TAB]: i18n.t('core.bottomTab.archivement'),
@@ -72,6 +72,15 @@ const BottomTabIcon = (name: string) => {
   return icon;
 };
 
+interface TabButtonProps {
+  options: BottomTabNavigationOptions;
+  onPress: () => void;
+  route: {name: string; key: string; params?: object};
+  isFocused: boolean;
+  numberOfTab: {name: string; key: string; params?: object}[];
+  viewIndex: number;
+}
+
 const TabButton = ({
   options,
   onPress,
@@ -79,10 +88,8 @@ const TabButton = ({
   isFocused,
   numberOfTab,
   viewIndex,
-}) => {
-  const index = numberOfTab.findIndex((tab: string) => tab.name === route.name);
-  const isFirst = index === 0;
-  const isLast = index === numberOfTab.length - 1;
+}: TabButtonProps) => {
+  const index = numberOfTab.findIndex(tab => tab.name === route.name);
   const lengthTab = numberOfTab.length;
 
   const translate = useSharedValue(0);
@@ -105,7 +112,7 @@ const TabButton = ({
     handleAnimated();
   }, [isFocused, handleAnimated]);
 
-  const translateStyles = useAnimatedStyle(() => {
+  const iconWrapperStyles = useAnimatedStyle(() => {
     return {
       transform: [
         {
@@ -184,7 +191,8 @@ const TabButton = ({
           },
         ]}
         activeOpacity={1}>
-        <Animated.View style={[styles.wrapBottomTabContainer, translateStyles]}>
+        <Animated.View
+          style={[styles.wrapBottomTabContainer, iconWrapperStyles]}>
           <Animated.View
             style={[
               styles.bottomTabIcon,
