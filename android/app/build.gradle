@@ -94,16 +94,16 @@ android {
         applicationId 'com.algorz.abeeci.app'
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 199
-        versionName "1.1.5"
-        missingDimensionStrategy "store", "play"
-        ndk {
-            abiFilters "armeabi-v7a", "arm64-v8a"
-        }
-        // Add these lines for 16KB page size support
+        versionCode 1
+        versionName "1.0.0"
+
+        // Resolve dimensions for libraries like react-native-iap
+        missingDimensionStrategy 'store', 'play'
+
         externalNativeBuild {
             cmake {
-                arguments "-DANDROID_PAGE_SIZE=16384"
+                // Ép linker sử dụng 16KB page size cho các đoạn LOAD
+                cppFlags "-Wl,-z,common-page-size=16384 -Wl,-z,max-page-size=16384"
             }
         }
     }
@@ -113,13 +113,14 @@ android {
         dev {
             dimension "environment"
             applicationIdSuffix ".dev"
-            resValue "string", "app_name", "ABeeCi (Parents) Dev"
+            resValue "string", "app_name", "ABeeCi (Dev)"
         }
         prod {
             dimension "environment"
-            resValue "string", "app_name", "ABeeCi (Parents)"
+            resValue "string", "app_name", "ABeeCi"
         }
     }
+
     signingConfigs {
         debug {
             storeFile file('debug.keystore')
@@ -128,10 +129,17 @@ android {
             keyPassword 'android'
         }
         release {
-            storeFile file('release-key.keystore')
-            storePassword 'longnn'
-            keyAlias 'my-key-alias'
-            keyPassword 'longnn'
+            if (project.hasProperty('MYAPP_UPLOAD_STORE_FILE')) {
+                storeFile file(MYAPP_UPLOAD_STORE_FILE)
+                storePassword MYAPP_UPLOAD_STORE_PASSWORD
+                keyAlias MYAPP_UPLOAD_KEY_ALIAS
+                keyPassword MYAPP_UPLOAD_KEY_PASSWORD
+            } else {
+                storeFile file('release-key.keystore')
+                storePassword 'longnn'
+                keyAlias 'my-key-alias'
+                keyPassword 'longnn'
+            }
         }
     }
     buildTypes {
@@ -153,10 +161,10 @@ android {
             useLegacyPackaging (findProperty('expo.useLegacyPackaging')?.toBoolean() ?: false)
         }
         resources {
+            // Loại bỏ file INDEX.LIST trùng lặp gây lỗi MergeJavaRes
             excludes += "/META-INF/INDEX.LIST"
+            // Loại bỏ các file META-INF thông thường khác nếu cần tránh xung đột trong tương lai
             excludes += "/META-INF/DEPENDENCIES"
-            excludes += "/META-INF/LICENSE"
-            excludes += "/META-INF/NOTICE"
         }
     }
     androidResources {

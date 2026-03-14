@@ -1,0 +1,1496 @@
+diff --git a/node_modules/@react-native-voice/voice/.DS_Store b/node_modules/@react-native-voice/voice/.DS_Store
+new file mode 100644
+index 0000000..e69de29
+diff --git a/node_modules/@react-native-voice/voice/android/build.gradle b/node_modules/@react-native-voice/voice/android/build.gradle
+index 8fce879..efa4563 100644
+--- a/node_modules/@react-native-voice/voice/android/build.gradle
++++ b/node_modules/@react-native-voice/voice/android/build.gradle
+@@ -64,4 +64,16 @@ dependencies {
+     testImplementation 'junit:junit:4.12'
+     implementation "com.android.support:appcompat-v7:${supportVersion}"
+     implementation 'com.facebook.react:react-native:+'
++
++    implementation 'com.google.cloud:google-cloud-speech:1.29.1'
++    implementation 'com.google.auth:google-auth-library-oauth2-http:0.26.0'
++    implementation 'io.grpc:grpc-okhttp:1.38.1'
++    implementation 'io.grpc:grpc-stub:1.38.1'
++    implementation 'com.google.api:gax:1.58.0'
++
++    implementation 'com.google.cloud:google-cloud-speech:1.29.1'
++    implementation 'com.google.auth:google-auth-library-oauth2-http:0.26.0'
++    implementation 'io.grpc:grpc-okhttp:1.38.1'
++    implementation 'io.grpc:grpc-stub:1.38.1'
++    implementation 'com.google.api:gax:1.58.0'
+ }
+diff --git a/node_modules/@react-native-voice/voice/android/build/.transforms/60ec3c4fa50fd5c2a663613375ab86d6/results.bin b/node_modules/@react-native-voice/voice/android/build/.transforms/60ec3c4fa50fd5c2a663613375ab86d6/results.bin
+new file mode 100644
+index 0000000..0d259dd
+--- /dev/null
++++ b/node_modules/@react-native-voice/voice/android/build/.transforms/60ec3c4fa50fd5c2a663613375ab86d6/results.bin
+@@ -0,0 +1 @@
++o/classes
+diff --git a/node_modules/@react-native-voice/voice/android/build/.transforms/60ec3c4fa50fd5c2a663613375ab86d6/transformed/classes/classes_dex/classes.dex b/node_modules/@react-native-voice/voice/android/build/.transforms/60ec3c4fa50fd5c2a663613375ab86d6/transformed/classes/classes_dex/classes.dex
+new file mode 100644
+index 0000000..9ec3022
+Binary files /dev/null and b/node_modules/@react-native-voice/voice/android/build/.transforms/60ec3c4fa50fd5c2a663613375ab86d6/transformed/classes/classes_dex/classes.dex differ
+diff --git a/node_modules/@react-native-voice/voice/android/build/generated/source/buildConfig/debug/com/wenkesj/voice/BuildConfig.java b/node_modules/@react-native-voice/voice/android/build/generated/source/buildConfig/debug/com/wenkesj/voice/BuildConfig.java
+new file mode 100644
+index 0000000..990e562
+--- /dev/null
++++ b/node_modules/@react-native-voice/voice/android/build/generated/source/buildConfig/debug/com/wenkesj/voice/BuildConfig.java
+@@ -0,0 +1,10 @@
++/**
++ * Automatically generated file. DO NOT MODIFY
++ */
++package com.wenkesj.voice;
++
++public final class BuildConfig {
++  public static final boolean DEBUG = Boolean.parseBoolean("true");
++  public static final String LIBRARY_PACKAGE_NAME = "com.wenkesj.voice";
++  public static final String BUILD_TYPE = "debug";
++}
+diff --git a/node_modules/@react-native-voice/voice/android/build/generated/source/buildConfig/release/com/wenkesj/voice/BuildConfig.java b/node_modules/@react-native-voice/voice/android/build/generated/source/buildConfig/release/com/wenkesj/voice/BuildConfig.java
+new file mode 100644
+index 0000000..f42ea9e
+--- /dev/null
++++ b/node_modules/@react-native-voice/voice/android/build/generated/source/buildConfig/release/com/wenkesj/voice/BuildConfig.java
+@@ -0,0 +1,10 @@
++/**
++ * Automatically generated file. DO NOT MODIFY
++ */
++package com.wenkesj.voice;
++
++public final class BuildConfig {
++  public static final boolean DEBUG = false;
++  public static final String LIBRARY_PACKAGE_NAME = "com.wenkesj.voice";
++  public static final String BUILD_TYPE = "release";
++}
+diff --git a/node_modules/@react-native-voice/voice/android/build/intermediates/aapt_friendly_merged_manifests/debug/aapt/AndroidManifest.xml b/node_modules/@react-native-voice/voice/android/build/intermediates/aapt_friendly_merged_manifests/debug/aapt/AndroidManifest.xml
+new file mode 100644
+index 0000000..0da71f0
+--- /dev/null
++++ b/node_modules/@react-native-voice/voice/android/build/intermediates/aapt_friendly_merged_manifests/debug/aapt/AndroidManifest.xml
+@@ -0,0 +1,13 @@
++<?xml version="1.0" encoding="utf-8"?>
++<manifest xmlns:android="http://schemas.android.com/apk/res/android"
++    xmlns:tools="http://schemas.android.com/tools"
++    package="com.wenkesj.voice" >
++
++    <uses-sdk
++        android:minSdkVersion="15"
++        tools:overrideLibrary="com.facebook.react" />
++
++    <uses-permission android:name="android.permission.RECORD_AUDIO" />
++    <uses-permission android:name="android.permission.INTERNET" />
++
++</manifest>
+\ No newline at end of file
+diff --git a/node_modules/@react-native-voice/voice/android/build/intermediates/aapt_friendly_merged_manifests/debug/aapt/output-metadata.json b/node_modules/@react-native-voice/voice/android/build/intermediates/aapt_friendly_merged_manifests/debug/aapt/output-metadata.json
+new file mode 100644
+index 0000000..635eb61
+--- /dev/null
++++ b/node_modules/@react-native-voice/voice/android/build/intermediates/aapt_friendly_merged_manifests/debug/aapt/output-metadata.json
+@@ -0,0 +1,18 @@
++{
++  "version": 3,
++  "artifactType": {
++    "type": "AAPT_FRIENDLY_MERGED_MANIFESTS",
++    "kind": "Directory"
++  },
++  "applicationId": "com.wenkesj.voice",
++  "variantName": "debug",
++  "elements": [
++    {
++      "type": "SINGLE",
++      "filters": [],
++      "attributes": [],
++      "outputFile": "AndroidManifest.xml"
++    }
++  ],
++  "elementType": "File"
++}
+\ No newline at end of file
+diff --git a/node_modules/@react-native-voice/voice/android/build/intermediates/aapt_friendly_merged_manifests/release/aapt/AndroidManifest.xml b/node_modules/@react-native-voice/voice/android/build/intermediates/aapt_friendly_merged_manifests/release/aapt/AndroidManifest.xml
+new file mode 100644
+index 0000000..0da71f0
+--- /dev/null
++++ b/node_modules/@react-native-voice/voice/android/build/intermediates/aapt_friendly_merged_manifests/release/aapt/AndroidManifest.xml
+@@ -0,0 +1,13 @@
++<?xml version="1.0" encoding="utf-8"?>
++<manifest xmlns:android="http://schemas.android.com/apk/res/android"
++    xmlns:tools="http://schemas.android.com/tools"
++    package="com.wenkesj.voice" >
++
++    <uses-sdk
++        android:minSdkVersion="15"
++        tools:overrideLibrary="com.facebook.react" />
++
++    <uses-permission android:name="android.permission.RECORD_AUDIO" />
++    <uses-permission android:name="android.permission.INTERNET" />
++
++</manifest>
+\ No newline at end of file
+diff --git a/node_modules/@react-native-voice/voice/android/build/intermediates/aapt_friendly_merged_manifests/release/aapt/output-metadata.json b/node_modules/@react-native-voice/voice/android/build/intermediates/aapt_friendly_merged_manifests/release/aapt/output-metadata.json
+new file mode 100644
+index 0000000..635eb61
+--- /dev/null
++++ b/node_modules/@react-native-voice/voice/android/build/intermediates/aapt_friendly_merged_manifests/release/aapt/output-metadata.json
+@@ -0,0 +1,18 @@
++{
++  "version": 3,
++  "artifactType": {
++    "type": "AAPT_FRIENDLY_MERGED_MANIFESTS",
++    "kind": "Directory"
++  },
++  "applicationId": "com.wenkesj.voice",
++  "variantName": "debug",
++  "elements": [
++    {
++      "type": "SINGLE",
++      "filters": [],
++      "attributes": [],
++      "outputFile": "AndroidManifest.xml"
++    }
++  ],
++  "elementType": "File"
++}
+\ No newline at end of file
+diff --git a/node_modules/@react-native-voice/voice/android/build/intermediates/aar_main_jar/release/classes.jar b/node_modules/@react-native-voice/voice/android/build/intermediates/aar_main_jar/release/classes.jar
+new file mode 100644
+index 0000000..215e0df
+Binary files /dev/null and b/node_modules/@react-native-voice/voice/android/build/intermediates/aar_main_jar/release/classes.jar differ
+diff --git a/node_modules/@react-native-voice/voice/android/build/intermediates/aar_metadata/debug/aar-metadata.properties b/node_modules/@react-native-voice/voice/android/build/intermediates/aar_metadata/debug/aar-metadata.properties
+new file mode 100644
+index 0000000..776557e
+--- /dev/null
++++ b/node_modules/@react-native-voice/voice/android/build/intermediates/aar_metadata/debug/aar-metadata.properties
+@@ -0,0 +1,5 @@
++aarFormatVersion=1.0
++aarMetadataVersion=1.0
++minCompileSdk=1
++minCompileSdkExtension=0
++minAndroidGradlePluginVersion=1.0.0
+diff --git a/node_modules/@react-native-voice/voice/android/build/intermediates/aar_metadata/release/aar-metadata.properties b/node_modules/@react-native-voice/voice/android/build/intermediates/aar_metadata/release/aar-metadata.properties
+new file mode 100644
+index 0000000..776557e
+--- /dev/null
++++ b/node_modules/@react-native-voice/voice/android/build/intermediates/aar_metadata/release/aar-metadata.properties
+@@ -0,0 +1,5 @@
++aarFormatVersion=1.0
++aarMetadataVersion=1.0
++minCompileSdk=1
++minCompileSdkExtension=0
++minAndroidGradlePluginVersion=1.0.0
+diff --git a/node_modules/@react-native-voice/voice/android/build/intermediates/annotation_processor_list/debug/annotationProcessors.json b/node_modules/@react-native-voice/voice/android/build/intermediates/annotation_processor_list/debug/annotationProcessors.json
+new file mode 100644
+index 0000000..9e26dfe
+--- /dev/null
++++ b/node_modules/@react-native-voice/voice/android/build/intermediates/annotation_processor_list/debug/annotationProcessors.json
+@@ -0,0 +1 @@
++{}
+\ No newline at end of file
+diff --git a/node_modules/@react-native-voice/voice/android/build/intermediates/annotation_processor_list/release/annotationProcessors.json b/node_modules/@react-native-voice/voice/android/build/intermediates/annotation_processor_list/release/annotationProcessors.json
+new file mode 100644
+index 0000000..9e26dfe
+--- /dev/null
++++ b/node_modules/@react-native-voice/voice/android/build/intermediates/annotation_processor_list/release/annotationProcessors.json
+@@ -0,0 +1 @@
++{}
+\ No newline at end of file
+diff --git a/node_modules/@react-native-voice/voice/android/build/intermediates/annotations_typedef_file/release/typedefs.txt b/node_modules/@react-native-voice/voice/android/build/intermediates/annotations_typedef_file/release/typedefs.txt
+new file mode 100644
+index 0000000..e69de29
+diff --git a/node_modules/@react-native-voice/voice/android/build/intermediates/compile_library_classes_jar/debug/classes.jar b/node_modules/@react-native-voice/voice/android/build/intermediates/compile_library_classes_jar/debug/classes.jar
+new file mode 100644
+index 0000000..e936a9e
+Binary files /dev/null and b/node_modules/@react-native-voice/voice/android/build/intermediates/compile_library_classes_jar/debug/classes.jar differ
+diff --git a/node_modules/@react-native-voice/voice/android/build/intermediates/compile_library_classes_jar/release/classes.jar b/node_modules/@react-native-voice/voice/android/build/intermediates/compile_library_classes_jar/release/classes.jar
+new file mode 100644
+index 0000000..2788070
+Binary files /dev/null and b/node_modules/@react-native-voice/voice/android/build/intermediates/compile_library_classes_jar/release/classes.jar differ
+diff --git a/node_modules/@react-native-voice/voice/android/build/intermediates/compile_r_class_jar/debug/R.jar b/node_modules/@react-native-voice/voice/android/build/intermediates/compile_r_class_jar/debug/R.jar
+new file mode 100644
+index 0000000..108eecb
+Binary files /dev/null and b/node_modules/@react-native-voice/voice/android/build/intermediates/compile_r_class_jar/debug/R.jar differ
+diff --git a/node_modules/@react-native-voice/voice/android/build/intermediates/compile_r_class_jar/release/R.jar b/node_modules/@react-native-voice/voice/android/build/intermediates/compile_r_class_jar/release/R.jar
+new file mode 100644
+index 0000000..108eecb
+Binary files /dev/null and b/node_modules/@react-native-voice/voice/android/build/intermediates/compile_r_class_jar/release/R.jar differ
+diff --git a/node_modules/@react-native-voice/voice/android/build/intermediates/compile_symbol_list/debug/R.txt b/node_modules/@react-native-voice/voice/android/build/intermediates/compile_symbol_list/debug/R.txt
+new file mode 100644
+index 0000000..a620506
+--- /dev/null
++++ b/node_modules/@react-native-voice/voice/android/build/intermediates/compile_symbol_list/debug/R.txt
+@@ -0,0 +1,2 @@
++int raw credentials 0x0
++int raw voice 0x0
+diff --git a/node_modules/@react-native-voice/voice/android/build/intermediates/compile_symbol_list/release/R.txt b/node_modules/@react-native-voice/voice/android/build/intermediates/compile_symbol_list/release/R.txt
+new file mode 100644
+index 0000000..a620506
+--- /dev/null
++++ b/node_modules/@react-native-voice/voice/android/build/intermediates/compile_symbol_list/release/R.txt
+@@ -0,0 +1,2 @@
++int raw credentials 0x0
++int raw voice 0x0
+diff --git a/node_modules/@react-native-voice/voice/android/build/intermediates/compiled_local_resources/debug/out/raw_credentials.json.flat b/node_modules/@react-native-voice/voice/android/build/intermediates/compiled_local_resources/debug/out/raw_credentials.json.flat
+new file mode 100644
+index 0000000..676f464
+Binary files /dev/null and b/node_modules/@react-native-voice/voice/android/build/intermediates/compiled_local_resources/debug/out/raw_credentials.json.flat differ
+diff --git a/node_modules/@react-native-voice/voice/android/build/intermediates/compiled_local_resources/debug/out/raw_voice.json.flat b/node_modules/@react-native-voice/voice/android/build/intermediates/compiled_local_resources/debug/out/raw_voice.json.flat
+new file mode 100644
+index 0000000..c4c218a
+Binary files /dev/null and b/node_modules/@react-native-voice/voice/android/build/intermediates/compiled_local_resources/debug/out/raw_voice.json.flat differ
+diff --git a/node_modules/@react-native-voice/voice/android/build/intermediates/full_jar/release/full.jar b/node_modules/@react-native-voice/voice/android/build/intermediates/full_jar/release/full.jar
+new file mode 100644
+index 0000000..734a845
+Binary files /dev/null and b/node_modules/@react-native-voice/voice/android/build/intermediates/full_jar/release/full.jar differ
+diff --git a/node_modules/@react-native-voice/voice/android/build/intermediates/incremental/debug/packageDebugResources/compile-file-map.properties b/node_modules/@react-native-voice/voice/android/build/intermediates/incremental/debug/packageDebugResources/compile-file-map.properties
+new file mode 100644
+index 0000000..9292b48
+--- /dev/null
++++ b/node_modules/@react-native-voice/voice/android/build/intermediates/incremental/debug/packageDebugResources/compile-file-map.properties
+@@ -0,0 +1,3 @@
++#Mon Nov 03 18:10:09 ICT 2025
++com.wenkesj.voice.react-native-voice_voice-main-6\:/raw/credentials.json=/Users/mac/Workspaces/ReactNative/tbd-frontend/node_modules/@react-native-voice/voice/android/build/intermediates/packaged_res/debug/raw/credentials.json
++com.wenkesj.voice.react-native-voice_voice-main-6\:/raw/voice.json=/Users/mac/Workspaces/ReactNative/tbd-frontend/node_modules/@react-native-voice/voice/android/build/intermediates/packaged_res/debug/raw/voice.json
+diff --git a/node_modules/@react-native-voice/voice/android/build/intermediates/incremental/debug/packageDebugResources/merger.xml b/node_modules/@react-native-voice/voice/android/build/intermediates/incremental/debug/packageDebugResources/merger.xml
+new file mode 100644
+index 0000000..e12fda1
+--- /dev/null
++++ b/node_modules/@react-native-voice/voice/android/build/intermediates/incremental/debug/packageDebugResources/merger.xml
+@@ -0,0 +1,2 @@
++<?xml version="1.0" encoding="utf-8"?>
++<merger version="3"><dataSet aapt-namespace="http://schemas.android.com/apk/res-auto" config="main$Generated" generated="true" ignore_pattern="!.svn:!.git:!.ds_store:!*.scc:.*:&lt;dir>_*:!CVS:!thumbs.db:!picasa.ini:!*~"><source path="/Users/mac/Workspaces/ReactNative/tbd-frontend/node_modules/@react-native-voice/voice/android/src/main/res"/></dataSet><dataSet aapt-namespace="http://schemas.android.com/apk/res-auto" config="main" generated-set="main$Generated" ignore_pattern="!.svn:!.git:!.ds_store:!*.scc:.*:&lt;dir>_*:!CVS:!thumbs.db:!picasa.ini:!*~"><source path="/Users/mac/Workspaces/ReactNative/tbd-frontend/node_modules/@react-native-voice/voice/android/src/main/res"><file name="credentials" path="/Users/mac/Workspaces/ReactNative/tbd-frontend/node_modules/@react-native-voice/voice/android/src/main/res/raw/credentials.json" qualifiers="" type="raw"/><file name="voice" path="/Users/mac/Workspaces/ReactNative/tbd-frontend/node_modules/@react-native-voice/voice/android/src/main/res/raw/voice.json" qualifiers="" type="raw"/></source></dataSet><dataSet aapt-namespace="http://schemas.android.com/apk/res-auto" config="debug$Generated" generated="true" ignore_pattern="!.svn:!.git:!.ds_store:!*.scc:.*:&lt;dir>_*:!CVS:!thumbs.db:!picasa.ini:!*~"><source path="/Users/mac/Workspaces/ReactNative/tbd-frontend/node_modules/@react-native-voice/voice/android/src/debug/res"/></dataSet><dataSet aapt-namespace="http://schemas.android.com/apk/res-auto" config="debug" generated-set="debug$Generated" ignore_pattern="!.svn:!.git:!.ds_store:!*.scc:.*:&lt;dir>_*:!CVS:!thumbs.db:!picasa.ini:!*~"><source path="/Users/mac/Workspaces/ReactNative/tbd-frontend/node_modules/@react-native-voice/voice/android/src/debug/res"/></dataSet><dataSet aapt-namespace="http://schemas.android.com/apk/res-auto" config="generated$Generated" generated="true" ignore_pattern="!.svn:!.git:!.ds_store:!*.scc:.*:&lt;dir>_*:!CVS:!thumbs.db:!picasa.ini:!*~"><source path="/Users/mac/Workspaces/ReactNative/tbd-frontend/node_modules/@react-native-voice/voice/android/build/generated/res/resValues/debug"/></dataSet><dataSet aapt-namespace="http://schemas.android.com/apk/res-auto" config="generated" generated-set="generated$Generated" ignore_pattern="!.svn:!.git:!.ds_store:!*.scc:.*:&lt;dir>_*:!CVS:!thumbs.db:!picasa.ini:!*~"><source path="/Users/mac/Workspaces/ReactNative/tbd-frontend/node_modules/@react-native-voice/voice/android/build/generated/res/resValues/debug"/></dataSet><mergedItems/></merger>
+\ No newline at end of file
+diff --git a/node_modules/@react-native-voice/voice/android/build/intermediates/incremental/release-mergeJavaRes/merge-state b/node_modules/@react-native-voice/voice/android/build/intermediates/incremental/release-mergeJavaRes/merge-state
+new file mode 100644
+index 0000000..1c983fc
+Binary files /dev/null and b/node_modules/@react-native-voice/voice/android/build/intermediates/incremental/release-mergeJavaRes/merge-state differ
+diff --git a/node_modules/@react-native-voice/voice/android/build/intermediates/incremental/release/packageReleaseResources/compile-file-map.properties b/node_modules/@react-native-voice/voice/android/build/intermediates/incremental/release/packageReleaseResources/compile-file-map.properties
+new file mode 100644
+index 0000000..9a10c57
+--- /dev/null
++++ b/node_modules/@react-native-voice/voice/android/build/intermediates/incremental/release/packageReleaseResources/compile-file-map.properties
+@@ -0,0 +1,5 @@
++#Mon Nov 03 17:37:40 ICT 2025
++com.wenkesj.voice.react-native-voice_voice-main-5\:/raw/credential_prod.json=/Users/mac/Workspaces/ReactNative/tbd-frontend/node_modules/@react-native-voice/voice/android/build/intermediates/packaged_res/release/raw/credential_prod.json
++com.wenkesj.voice.react-native-voice_voice-main-5\:/raw/credentials.json=/Users/mac/Workspaces/ReactNative/tbd-frontend/node_modules/@react-native-voice/voice/android/build/intermediates/packaged_res/release/raw/credentials.json
++com.wenkesj.voice.react-native-voice_voice-main-5\:/raw/credentials1.json=/Users/mac/Workspaces/ReactNative/tbd-frontend/node_modules/@react-native-voice/voice/android/build/intermediates/packaged_res/release/raw/credentials1.json
++com.wenkesj.voice.react-native-voice_voice-main-5\:/raw/voice.json=/Users/mac/Workspaces/ReactNative/tbd-frontend/node_modules/@react-native-voice/voice/android/build/intermediates/packaged_res/release/raw/voice.json
+diff --git a/node_modules/@react-native-voice/voice/android/build/intermediates/incremental/release/packageReleaseResources/merger.xml b/node_modules/@react-native-voice/voice/android/build/intermediates/incremental/release/packageReleaseResources/merger.xml
+new file mode 100644
+index 0000000..bce3151
+--- /dev/null
++++ b/node_modules/@react-native-voice/voice/android/build/intermediates/incremental/release/packageReleaseResources/merger.xml
+@@ -0,0 +1,2 @@
++<?xml version="1.0" encoding="utf-8"?>
++<merger version="3"><dataSet aapt-namespace="http://schemas.android.com/apk/res-auto" config="main$Generated" generated="true" ignore_pattern="!.svn:!.git:!.ds_store:!*.scc:.*:&lt;dir>_*:!CVS:!thumbs.db:!picasa.ini:!*~"><source path="/Users/mac/Workspaces/ReactNative/tbd-frontend/node_modules/@react-native-voice/voice/android/src/main/res"/></dataSet><dataSet aapt-namespace="http://schemas.android.com/apk/res-auto" config="main" generated-set="main$Generated" ignore_pattern="!.svn:!.git:!.ds_store:!*.scc:.*:&lt;dir>_*:!CVS:!thumbs.db:!picasa.ini:!*~"><source path="/Users/mac/Workspaces/ReactNative/tbd-frontend/node_modules/@react-native-voice/voice/android/src/main/res"><file name="credentials" path="/Users/mac/Workspaces/ReactNative/tbd-frontend/node_modules/@react-native-voice/voice/android/src/main/res/raw/credentials.json" qualifiers="" type="raw"/><file name="voice" path="/Users/mac/Workspaces/ReactNative/tbd-frontend/node_modules/@react-native-voice/voice/android/src/main/res/raw/voice.json" qualifiers="" type="raw"/></source></dataSet><dataSet aapt-namespace="http://schemas.android.com/apk/res-auto" config="release$Generated" generated="true" ignore_pattern="!.svn:!.git:!.ds_store:!*.scc:.*:&lt;dir>_*:!CVS:!thumbs.db:!picasa.ini:!*~"><source path="/Users/mac/Workspaces/ReactNative/tbd-frontend/node_modules/@react-native-voice/voice/android/src/release/res"/></dataSet><dataSet aapt-namespace="http://schemas.android.com/apk/res-auto" config="release" generated-set="release$Generated" ignore_pattern="!.svn:!.git:!.ds_store:!*.scc:.*:&lt;dir>_*:!CVS:!thumbs.db:!picasa.ini:!*~"><source path="/Users/mac/Workspaces/ReactNative/tbd-frontend/node_modules/@react-native-voice/voice/android/src/release/res"/></dataSet><dataSet aapt-namespace="http://schemas.android.com/apk/res-auto" config="generated$Generated" generated="true" ignore_pattern="!.svn:!.git:!.ds_store:!*.scc:.*:&lt;dir>_*:!CVS:!thumbs.db:!picasa.ini:!*~"><source path="/Users/mac/Workspaces/ReactNative/tbd-frontend/node_modules/@react-native-voice/voice/android/build/generated/res/resValues/release"/></dataSet><dataSet aapt-namespace="http://schemas.android.com/apk/res-auto" config="generated" generated-set="generated$Generated" ignore_pattern="!.svn:!.git:!.ds_store:!*.scc:.*:&lt;dir>_*:!CVS:!thumbs.db:!picasa.ini:!*~"><source path="/Users/mac/Workspaces/ReactNative/tbd-frontend/node_modules/@react-native-voice/voice/android/build/generated/res/resValues/release"/></dataSet><mergedItems/></merger>
+\ No newline at end of file
+diff --git a/node_modules/@react-native-voice/voice/android/build/intermediates/javac/debug/classes/com/wenkesj/voice/BuildConfig.class b/node_modules/@react-native-voice/voice/android/build/intermediates/javac/debug/classes/com/wenkesj/voice/BuildConfig.class
+new file mode 100644
+index 0000000..ba860f2
+Binary files /dev/null and b/node_modules/@react-native-voice/voice/android/build/intermediates/javac/debug/classes/com/wenkesj/voice/BuildConfig.class differ
+diff --git a/node_modules/@react-native-voice/voice/android/build/intermediates/javac/debug/classes/com/wenkesj/voice/VoiceModule$1$1.class b/node_modules/@react-native-voice/voice/android/build/intermediates/javac/debug/classes/com/wenkesj/voice/VoiceModule$1$1.class
+new file mode 100644
+index 0000000..2507119
+Binary files /dev/null and b/node_modules/@react-native-voice/voice/android/build/intermediates/javac/debug/classes/com/wenkesj/voice/VoiceModule$1$1.class differ
+diff --git a/node_modules/@react-native-voice/voice/android/build/intermediates/javac/debug/classes/com/wenkesj/voice/VoiceModule$1$2.class b/node_modules/@react-native-voice/voice/android/build/intermediates/javac/debug/classes/com/wenkesj/voice/VoiceModule$1$2.class
+new file mode 100644
+index 0000000..31ab818
+Binary files /dev/null and b/node_modules/@react-native-voice/voice/android/build/intermediates/javac/debug/classes/com/wenkesj/voice/VoiceModule$1$2.class differ
+diff --git a/node_modules/@react-native-voice/voice/android/build/intermediates/javac/debug/classes/com/wenkesj/voice/VoiceModule$1.class b/node_modules/@react-native-voice/voice/android/build/intermediates/javac/debug/classes/com/wenkesj/voice/VoiceModule$1.class
+new file mode 100644
+index 0000000..9211f81
+Binary files /dev/null and b/node_modules/@react-native-voice/voice/android/build/intermediates/javac/debug/classes/com/wenkesj/voice/VoiceModule$1.class differ
+diff --git a/node_modules/@react-native-voice/voice/android/build/intermediates/javac/debug/classes/com/wenkesj/voice/VoiceModule$10.class b/node_modules/@react-native-voice/voice/android/build/intermediates/javac/debug/classes/com/wenkesj/voice/VoiceModule$10.class
+new file mode 100644
+index 0000000..70bb664
+Binary files /dev/null and b/node_modules/@react-native-voice/voice/android/build/intermediates/javac/debug/classes/com/wenkesj/voice/VoiceModule$10.class differ
+diff --git a/node_modules/@react-native-voice/voice/android/build/intermediates/javac/debug/classes/com/wenkesj/voice/VoiceModule$2.class b/node_modules/@react-native-voice/voice/android/build/intermediates/javac/debug/classes/com/wenkesj/voice/VoiceModule$2.class
+new file mode 100644
+index 0000000..93b1885
+Binary files /dev/null and b/node_modules/@react-native-voice/voice/android/build/intermediates/javac/debug/classes/com/wenkesj/voice/VoiceModule$2.class differ
+diff --git a/node_modules/@react-native-voice/voice/android/build/intermediates/javac/debug/classes/com/wenkesj/voice/VoiceModule$3$1.class b/node_modules/@react-native-voice/voice/android/build/intermediates/javac/debug/classes/com/wenkesj/voice/VoiceModule$3$1.class
+new file mode 100644
+index 0000000..16cf16a
+Binary files /dev/null and b/node_modules/@react-native-voice/voice/android/build/intermediates/javac/debug/classes/com/wenkesj/voice/VoiceModule$3$1.class differ
+diff --git a/node_modules/@react-native-voice/voice/android/build/intermediates/javac/debug/classes/com/wenkesj/voice/VoiceModule$3.class b/node_modules/@react-native-voice/voice/android/build/intermediates/javac/debug/classes/com/wenkesj/voice/VoiceModule$3.class
+new file mode 100644
+index 0000000..2abcd65
+Binary files /dev/null and b/node_modules/@react-native-voice/voice/android/build/intermediates/javac/debug/classes/com/wenkesj/voice/VoiceModule$3.class differ
+diff --git a/node_modules/@react-native-voice/voice/android/build/intermediates/javac/debug/classes/com/wenkesj/voice/VoiceModule$4$1.class b/node_modules/@react-native-voice/voice/android/build/intermediates/javac/debug/classes/com/wenkesj/voice/VoiceModule$4$1.class
+new file mode 100644
+index 0000000..029c65d
+Binary files /dev/null and b/node_modules/@react-native-voice/voice/android/build/intermediates/javac/debug/classes/com/wenkesj/voice/VoiceModule$4$1.class differ
+diff --git a/node_modules/@react-native-voice/voice/android/build/intermediates/javac/debug/classes/com/wenkesj/voice/VoiceModule$4.class b/node_modules/@react-native-voice/voice/android/build/intermediates/javac/debug/classes/com/wenkesj/voice/VoiceModule$4.class
+new file mode 100644
+index 0000000..bcc3bb4
+Binary files /dev/null and b/node_modules/@react-native-voice/voice/android/build/intermediates/javac/debug/classes/com/wenkesj/voice/VoiceModule$4.class differ
+diff --git a/node_modules/@react-native-voice/voice/android/build/intermediates/javac/debug/classes/com/wenkesj/voice/VoiceModule$5.class b/node_modules/@react-native-voice/voice/android/build/intermediates/javac/debug/classes/com/wenkesj/voice/VoiceModule$5.class
+new file mode 100644
+index 0000000..c515f4d
+Binary files /dev/null and b/node_modules/@react-native-voice/voice/android/build/intermediates/javac/debug/classes/com/wenkesj/voice/VoiceModule$5.class differ
+diff --git a/node_modules/@react-native-voice/voice/android/build/intermediates/javac/debug/classes/com/wenkesj/voice/VoiceModule$6.class b/node_modules/@react-native-voice/voice/android/build/intermediates/javac/debug/classes/com/wenkesj/voice/VoiceModule$6.class
+new file mode 100644
+index 0000000..a5dfc06
+Binary files /dev/null and b/node_modules/@react-native-voice/voice/android/build/intermediates/javac/debug/classes/com/wenkesj/voice/VoiceModule$6.class differ
+diff --git a/node_modules/@react-native-voice/voice/android/build/intermediates/javac/debug/classes/com/wenkesj/voice/VoiceModule$7.class b/node_modules/@react-native-voice/voice/android/build/intermediates/javac/debug/classes/com/wenkesj/voice/VoiceModule$7.class
+new file mode 100644
+index 0000000..0973467
+Binary files /dev/null and b/node_modules/@react-native-voice/voice/android/build/intermediates/javac/debug/classes/com/wenkesj/voice/VoiceModule$7.class differ
+diff --git a/node_modules/@react-native-voice/voice/android/build/intermediates/javac/debug/classes/com/wenkesj/voice/VoiceModule$8.class b/node_modules/@react-native-voice/voice/android/build/intermediates/javac/debug/classes/com/wenkesj/voice/VoiceModule$8.class
+new file mode 100644
+index 0000000..fcd613e
+Binary files /dev/null and b/node_modules/@react-native-voice/voice/android/build/intermediates/javac/debug/classes/com/wenkesj/voice/VoiceModule$8.class differ
+diff --git a/node_modules/@react-native-voice/voice/android/build/intermediates/javac/debug/classes/com/wenkesj/voice/VoiceModule$9.class b/node_modules/@react-native-voice/voice/android/build/intermediates/javac/debug/classes/com/wenkesj/voice/VoiceModule$9.class
+new file mode 100644
+index 0000000..23c39ae
+Binary files /dev/null and b/node_modules/@react-native-voice/voice/android/build/intermediates/javac/debug/classes/com/wenkesj/voice/VoiceModule$9.class differ
+diff --git a/node_modules/@react-native-voice/voice/android/build/intermediates/javac/debug/classes/com/wenkesj/voice/VoiceModule.class b/node_modules/@react-native-voice/voice/android/build/intermediates/javac/debug/classes/com/wenkesj/voice/VoiceModule.class
+new file mode 100644
+index 0000000..4d644ef
+Binary files /dev/null and b/node_modules/@react-native-voice/voice/android/build/intermediates/javac/debug/classes/com/wenkesj/voice/VoiceModule.class differ
+diff --git a/node_modules/@react-native-voice/voice/android/build/intermediates/javac/debug/classes/com/wenkesj/voice/VoicePackage.class b/node_modules/@react-native-voice/voice/android/build/intermediates/javac/debug/classes/com/wenkesj/voice/VoicePackage.class
+new file mode 100644
+index 0000000..649224c
+Binary files /dev/null and b/node_modules/@react-native-voice/voice/android/build/intermediates/javac/debug/classes/com/wenkesj/voice/VoicePackage.class differ
+diff --git a/node_modules/@react-native-voice/voice/android/build/intermediates/javac/debug/classes/com/wenkesj/voice/VoiceRecorder$Callback.class b/node_modules/@react-native-voice/voice/android/build/intermediates/javac/debug/classes/com/wenkesj/voice/VoiceRecorder$Callback.class
+new file mode 100644
+index 0000000..ff9c42f
+Binary files /dev/null and b/node_modules/@react-native-voice/voice/android/build/intermediates/javac/debug/classes/com/wenkesj/voice/VoiceRecorder$Callback.class differ
+diff --git a/node_modules/@react-native-voice/voice/android/build/intermediates/javac/debug/classes/com/wenkesj/voice/VoiceRecorder$ProcessVoice.class b/node_modules/@react-native-voice/voice/android/build/intermediates/javac/debug/classes/com/wenkesj/voice/VoiceRecorder$ProcessVoice.class
+new file mode 100644
+index 0000000..caa16df
+Binary files /dev/null and b/node_modules/@react-native-voice/voice/android/build/intermediates/javac/debug/classes/com/wenkesj/voice/VoiceRecorder$ProcessVoice.class differ
+diff --git a/node_modules/@react-native-voice/voice/android/build/intermediates/javac/debug/classes/com/wenkesj/voice/VoiceRecorder.class b/node_modules/@react-native-voice/voice/android/build/intermediates/javac/debug/classes/com/wenkesj/voice/VoiceRecorder.class
+new file mode 100644
+index 0000000..d9497f9
+Binary files /dev/null and b/node_modules/@react-native-voice/voice/android/build/intermediates/javac/debug/classes/com/wenkesj/voice/VoiceRecorder.class differ
+diff --git a/node_modules/@react-native-voice/voice/android/build/intermediates/javac/release/classes/com/wenkesj/voice/BuildConfig.class b/node_modules/@react-native-voice/voice/android/build/intermediates/javac/release/classes/com/wenkesj/voice/BuildConfig.class
+new file mode 100644
+index 0000000..cb4ebc2
+Binary files /dev/null and b/node_modules/@react-native-voice/voice/android/build/intermediates/javac/release/classes/com/wenkesj/voice/BuildConfig.class differ
+diff --git a/node_modules/@react-native-voice/voice/android/build/intermediates/javac/release/classes/com/wenkesj/voice/VoiceModule$1$1.class b/node_modules/@react-native-voice/voice/android/build/intermediates/javac/release/classes/com/wenkesj/voice/VoiceModule$1$1.class
+new file mode 100644
+index 0000000..2507119
+Binary files /dev/null and b/node_modules/@react-native-voice/voice/android/build/intermediates/javac/release/classes/com/wenkesj/voice/VoiceModule$1$1.class differ
+diff --git a/node_modules/@react-native-voice/voice/android/build/intermediates/javac/release/classes/com/wenkesj/voice/VoiceModule$1$2.class b/node_modules/@react-native-voice/voice/android/build/intermediates/javac/release/classes/com/wenkesj/voice/VoiceModule$1$2.class
+new file mode 100644
+index 0000000..31ab818
+Binary files /dev/null and b/node_modules/@react-native-voice/voice/android/build/intermediates/javac/release/classes/com/wenkesj/voice/VoiceModule$1$2.class differ
+diff --git a/node_modules/@react-native-voice/voice/android/build/intermediates/javac/release/classes/com/wenkesj/voice/VoiceModule$1.class b/node_modules/@react-native-voice/voice/android/build/intermediates/javac/release/classes/com/wenkesj/voice/VoiceModule$1.class
+new file mode 100644
+index 0000000..9211f81
+Binary files /dev/null and b/node_modules/@react-native-voice/voice/android/build/intermediates/javac/release/classes/com/wenkesj/voice/VoiceModule$1.class differ
+diff --git a/node_modules/@react-native-voice/voice/android/build/intermediates/javac/release/classes/com/wenkesj/voice/VoiceModule$10.class b/node_modules/@react-native-voice/voice/android/build/intermediates/javac/release/classes/com/wenkesj/voice/VoiceModule$10.class
+new file mode 100644
+index 0000000..70bb664
+Binary files /dev/null and b/node_modules/@react-native-voice/voice/android/build/intermediates/javac/release/classes/com/wenkesj/voice/VoiceModule$10.class differ
+diff --git a/node_modules/@react-native-voice/voice/android/build/intermediates/javac/release/classes/com/wenkesj/voice/VoiceModule$2.class b/node_modules/@react-native-voice/voice/android/build/intermediates/javac/release/classes/com/wenkesj/voice/VoiceModule$2.class
+new file mode 100644
+index 0000000..93b1885
+Binary files /dev/null and b/node_modules/@react-native-voice/voice/android/build/intermediates/javac/release/classes/com/wenkesj/voice/VoiceModule$2.class differ
+diff --git a/node_modules/@react-native-voice/voice/android/build/intermediates/javac/release/classes/com/wenkesj/voice/VoiceModule$3$1.class b/node_modules/@react-native-voice/voice/android/build/intermediates/javac/release/classes/com/wenkesj/voice/VoiceModule$3$1.class
+new file mode 100644
+index 0000000..16cf16a
+Binary files /dev/null and b/node_modules/@react-native-voice/voice/android/build/intermediates/javac/release/classes/com/wenkesj/voice/VoiceModule$3$1.class differ
+diff --git a/node_modules/@react-native-voice/voice/android/build/intermediates/javac/release/classes/com/wenkesj/voice/VoiceModule$3.class b/node_modules/@react-native-voice/voice/android/build/intermediates/javac/release/classes/com/wenkesj/voice/VoiceModule$3.class
+new file mode 100644
+index 0000000..2abcd65
+Binary files /dev/null and b/node_modules/@react-native-voice/voice/android/build/intermediates/javac/release/classes/com/wenkesj/voice/VoiceModule$3.class differ
+diff --git a/node_modules/@react-native-voice/voice/android/build/intermediates/javac/release/classes/com/wenkesj/voice/VoiceModule$4$1.class b/node_modules/@react-native-voice/voice/android/build/intermediates/javac/release/classes/com/wenkesj/voice/VoiceModule$4$1.class
+new file mode 100644
+index 0000000..029c65d
+Binary files /dev/null and b/node_modules/@react-native-voice/voice/android/build/intermediates/javac/release/classes/com/wenkesj/voice/VoiceModule$4$1.class differ
+diff --git a/node_modules/@react-native-voice/voice/android/build/intermediates/javac/release/classes/com/wenkesj/voice/VoiceModule$4.class b/node_modules/@react-native-voice/voice/android/build/intermediates/javac/release/classes/com/wenkesj/voice/VoiceModule$4.class
+new file mode 100644
+index 0000000..bcc3bb4
+Binary files /dev/null and b/node_modules/@react-native-voice/voice/android/build/intermediates/javac/release/classes/com/wenkesj/voice/VoiceModule$4.class differ
+diff --git a/node_modules/@react-native-voice/voice/android/build/intermediates/javac/release/classes/com/wenkesj/voice/VoiceModule$5.class b/node_modules/@react-native-voice/voice/android/build/intermediates/javac/release/classes/com/wenkesj/voice/VoiceModule$5.class
+new file mode 100644
+index 0000000..c515f4d
+Binary files /dev/null and b/node_modules/@react-native-voice/voice/android/build/intermediates/javac/release/classes/com/wenkesj/voice/VoiceModule$5.class differ
+diff --git a/node_modules/@react-native-voice/voice/android/build/intermediates/javac/release/classes/com/wenkesj/voice/VoiceModule$6.class b/node_modules/@react-native-voice/voice/android/build/intermediates/javac/release/classes/com/wenkesj/voice/VoiceModule$6.class
+new file mode 100644
+index 0000000..a5dfc06
+Binary files /dev/null and b/node_modules/@react-native-voice/voice/android/build/intermediates/javac/release/classes/com/wenkesj/voice/VoiceModule$6.class differ
+diff --git a/node_modules/@react-native-voice/voice/android/build/intermediates/javac/release/classes/com/wenkesj/voice/VoiceModule$7.class b/node_modules/@react-native-voice/voice/android/build/intermediates/javac/release/classes/com/wenkesj/voice/VoiceModule$7.class
+new file mode 100644
+index 0000000..0973467
+Binary files /dev/null and b/node_modules/@react-native-voice/voice/android/build/intermediates/javac/release/classes/com/wenkesj/voice/VoiceModule$7.class differ
+diff --git a/node_modules/@react-native-voice/voice/android/build/intermediates/javac/release/classes/com/wenkesj/voice/VoiceModule$8.class b/node_modules/@react-native-voice/voice/android/build/intermediates/javac/release/classes/com/wenkesj/voice/VoiceModule$8.class
+new file mode 100644
+index 0000000..fcd613e
+Binary files /dev/null and b/node_modules/@react-native-voice/voice/android/build/intermediates/javac/release/classes/com/wenkesj/voice/VoiceModule$8.class differ
+diff --git a/node_modules/@react-native-voice/voice/android/build/intermediates/javac/release/classes/com/wenkesj/voice/VoiceModule$9.class b/node_modules/@react-native-voice/voice/android/build/intermediates/javac/release/classes/com/wenkesj/voice/VoiceModule$9.class
+new file mode 100644
+index 0000000..23c39ae
+Binary files /dev/null and b/node_modules/@react-native-voice/voice/android/build/intermediates/javac/release/classes/com/wenkesj/voice/VoiceModule$9.class differ
+diff --git a/node_modules/@react-native-voice/voice/android/build/intermediates/javac/release/classes/com/wenkesj/voice/VoiceModule.class b/node_modules/@react-native-voice/voice/android/build/intermediates/javac/release/classes/com/wenkesj/voice/VoiceModule.class
+new file mode 100644
+index 0000000..4d644ef
+Binary files /dev/null and b/node_modules/@react-native-voice/voice/android/build/intermediates/javac/release/classes/com/wenkesj/voice/VoiceModule.class differ
+diff --git a/node_modules/@react-native-voice/voice/android/build/intermediates/javac/release/classes/com/wenkesj/voice/VoicePackage.class b/node_modules/@react-native-voice/voice/android/build/intermediates/javac/release/classes/com/wenkesj/voice/VoicePackage.class
+new file mode 100644
+index 0000000..649224c
+Binary files /dev/null and b/node_modules/@react-native-voice/voice/android/build/intermediates/javac/release/classes/com/wenkesj/voice/VoicePackage.class differ
+diff --git a/node_modules/@react-native-voice/voice/android/build/intermediates/javac/release/classes/com/wenkesj/voice/VoiceRecorder$Callback.class b/node_modules/@react-native-voice/voice/android/build/intermediates/javac/release/classes/com/wenkesj/voice/VoiceRecorder$Callback.class
+new file mode 100644
+index 0000000..ff9c42f
+Binary files /dev/null and b/node_modules/@react-native-voice/voice/android/build/intermediates/javac/release/classes/com/wenkesj/voice/VoiceRecorder$Callback.class differ
+diff --git a/node_modules/@react-native-voice/voice/android/build/intermediates/javac/release/classes/com/wenkesj/voice/VoiceRecorder$ProcessVoice.class b/node_modules/@react-native-voice/voice/android/build/intermediates/javac/release/classes/com/wenkesj/voice/VoiceRecorder$ProcessVoice.class
+new file mode 100644
+index 0000000..caa16df
+Binary files /dev/null and b/node_modules/@react-native-voice/voice/android/build/intermediates/javac/release/classes/com/wenkesj/voice/VoiceRecorder$ProcessVoice.class differ
+diff --git a/node_modules/@react-native-voice/voice/android/build/intermediates/javac/release/classes/com/wenkesj/voice/VoiceRecorder.class b/node_modules/@react-native-voice/voice/android/build/intermediates/javac/release/classes/com/wenkesj/voice/VoiceRecorder.class
+new file mode 100644
+index 0000000..d9497f9
+Binary files /dev/null and b/node_modules/@react-native-voice/voice/android/build/intermediates/javac/release/classes/com/wenkesj/voice/VoiceRecorder.class differ
+diff --git a/node_modules/@react-native-voice/voice/android/build/intermediates/lint_model_metadata/release/lint-model-metadata.properties b/node_modules/@react-native-voice/voice/android/build/intermediates/lint_model_metadata/release/lint-model-metadata.properties
+new file mode 100644
+index 0000000..b9f696f
+--- /dev/null
++++ b/node_modules/@react-native-voice/voice/android/build/intermediates/lint_model_metadata/release/lint-model-metadata.properties
+@@ -0,0 +1,2 @@
++mavenArtifactId=react-native-voice_voice
++mavenGroupId=TBD-Edu
+\ No newline at end of file
+diff --git a/node_modules/@react-native-voice/voice/android/build/intermediates/local_aar_for_lint/release/out.aar b/node_modules/@react-native-voice/voice/android/build/intermediates/local_aar_for_lint/release/out.aar
+new file mode 100644
+index 0000000..f9f710b
+Binary files /dev/null and b/node_modules/@react-native-voice/voice/android/build/intermediates/local_aar_for_lint/release/out.aar differ
+diff --git a/node_modules/@react-native-voice/voice/android/build/intermediates/local_only_symbol_list/debug/R-def.txt b/node_modules/@react-native-voice/voice/android/build/intermediates/local_only_symbol_list/debug/R-def.txt
+new file mode 100644
+index 0000000..26f77cd
+--- /dev/null
++++ b/node_modules/@react-native-voice/voice/android/build/intermediates/local_only_symbol_list/debug/R-def.txt
+@@ -0,0 +1,4 @@
++R_DEF: Internal format may change without notice
++local
++raw credentials
++raw voice
+diff --git a/node_modules/@react-native-voice/voice/android/build/intermediates/local_only_symbol_list/release/R-def.txt b/node_modules/@react-native-voice/voice/android/build/intermediates/local_only_symbol_list/release/R-def.txt
+new file mode 100644
+index 0000000..26f77cd
+--- /dev/null
++++ b/node_modules/@react-native-voice/voice/android/build/intermediates/local_only_symbol_list/release/R-def.txt
+@@ -0,0 +1,4 @@
++R_DEF: Internal format may change without notice
++local
++raw credentials
++raw voice
+diff --git a/node_modules/@react-native-voice/voice/android/build/intermediates/manifest_merge_blame_file/debug/manifest-merger-blame-debug-report.txt b/node_modules/@react-native-voice/voice/android/build/intermediates/manifest_merge_blame_file/debug/manifest-merger-blame-debug-report.txt
+new file mode 100644
+index 0000000..4a1c0c5
+--- /dev/null
++++ b/node_modules/@react-native-voice/voice/android/build/intermediates/manifest_merge_blame_file/debug/manifest-merger-blame-debug-report.txt
+@@ -0,0 +1,19 @@
++1<?xml version="1.0" encoding="utf-8"?>
++2<manifest xmlns:android="http://schemas.android.com/apk/res/android"
++3    xmlns:tools="http://schemas.android.com/tools"
++4    package="com.wenkesj.voice" >
++5
++6    <uses-sdk
++6-->/Users/mac/Workspaces/ReactNative/tbd-frontend/node_modules/@react-native-voice/voice/android/src/main/AndroidManifest.xml:5:5-60
++7        android:minSdkVersion="15"
++8        tools:overrideLibrary="com.facebook.react" />
++8-->/Users/mac/Workspaces/ReactNative/tbd-frontend/node_modules/@react-native-voice/voice/android/src/main/AndroidManifest.xml:5:15-57
++9
++10    <uses-permission android:name="android.permission.RECORD_AUDIO" />
++10-->/Users/mac/Workspaces/ReactNative/tbd-frontend/node_modules/@react-native-voice/voice/android/src/main/AndroidManifest.xml:6:5-71
++10-->/Users/mac/Workspaces/ReactNative/tbd-frontend/node_modules/@react-native-voice/voice/android/src/main/AndroidManifest.xml:6:22-68
++11    <uses-permission android:name="android.permission.INTERNET" />
++11-->/Users/mac/Workspaces/ReactNative/tbd-frontend/node_modules/@react-native-voice/voice/android/src/main/AndroidManifest.xml:7:5-67
++11-->/Users/mac/Workspaces/ReactNative/tbd-frontend/node_modules/@react-native-voice/voice/android/src/main/AndroidManifest.xml:7:22-64
++12
++13</manifest>
+diff --git a/node_modules/@react-native-voice/voice/android/build/intermediates/manifest_merge_blame_file/release/manifest-merger-blame-release-report.txt b/node_modules/@react-native-voice/voice/android/build/intermediates/manifest_merge_blame_file/release/manifest-merger-blame-release-report.txt
+new file mode 100644
+index 0000000..4a1c0c5
+--- /dev/null
++++ b/node_modules/@react-native-voice/voice/android/build/intermediates/manifest_merge_blame_file/release/manifest-merger-blame-release-report.txt
+@@ -0,0 +1,19 @@
++1<?xml version="1.0" encoding="utf-8"?>
++2<manifest xmlns:android="http://schemas.android.com/apk/res/android"
++3    xmlns:tools="http://schemas.android.com/tools"
++4    package="com.wenkesj.voice" >
++5
++6    <uses-sdk
++6-->/Users/mac/Workspaces/ReactNative/tbd-frontend/node_modules/@react-native-voice/voice/android/src/main/AndroidManifest.xml:5:5-60
++7        android:minSdkVersion="15"
++8        tools:overrideLibrary="com.facebook.react" />
++8-->/Users/mac/Workspaces/ReactNative/tbd-frontend/node_modules/@react-native-voice/voice/android/src/main/AndroidManifest.xml:5:15-57
++9
++10    <uses-permission android:name="android.permission.RECORD_AUDIO" />
++10-->/Users/mac/Workspaces/ReactNative/tbd-frontend/node_modules/@react-native-voice/voice/android/src/main/AndroidManifest.xml:6:5-71
++10-->/Users/mac/Workspaces/ReactNative/tbd-frontend/node_modules/@react-native-voice/voice/android/src/main/AndroidManifest.xml:6:22-68
++11    <uses-permission android:name="android.permission.INTERNET" />
++11-->/Users/mac/Workspaces/ReactNative/tbd-frontend/node_modules/@react-native-voice/voice/android/src/main/AndroidManifest.xml:7:5-67
++11-->/Users/mac/Workspaces/ReactNative/tbd-frontend/node_modules/@react-native-voice/voice/android/src/main/AndroidManifest.xml:7:22-64
++12
++13</manifest>
+diff --git a/node_modules/@react-native-voice/voice/android/build/intermediates/merged_java_res/release/feature-react-native-voice_voice.jar b/node_modules/@react-native-voice/voice/android/build/intermediates/merged_java_res/release/feature-react-native-voice_voice.jar
+new file mode 100644
+index 0000000..15cb0ec
+Binary files /dev/null and b/node_modules/@react-native-voice/voice/android/build/intermediates/merged_java_res/release/feature-react-native-voice_voice.jar differ
+diff --git a/node_modules/@react-native-voice/voice/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml b/node_modules/@react-native-voice/voice/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml
+new file mode 100644
+index 0000000..0da71f0
+--- /dev/null
++++ b/node_modules/@react-native-voice/voice/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml
+@@ -0,0 +1,13 @@
++<?xml version="1.0" encoding="utf-8"?>
++<manifest xmlns:android="http://schemas.android.com/apk/res/android"
++    xmlns:tools="http://schemas.android.com/tools"
++    package="com.wenkesj.voice" >
++
++    <uses-sdk
++        android:minSdkVersion="15"
++        tools:overrideLibrary="com.facebook.react" />
++
++    <uses-permission android:name="android.permission.RECORD_AUDIO" />
++    <uses-permission android:name="android.permission.INTERNET" />
++
++</manifest>
+\ No newline at end of file
+diff --git a/node_modules/@react-native-voice/voice/android/build/intermediates/merged_manifest/release/AndroidManifest.xml b/node_modules/@react-native-voice/voice/android/build/intermediates/merged_manifest/release/AndroidManifest.xml
+new file mode 100644
+index 0000000..0da71f0
+--- /dev/null
++++ b/node_modules/@react-native-voice/voice/android/build/intermediates/merged_manifest/release/AndroidManifest.xml
+@@ -0,0 +1,13 @@
++<?xml version="1.0" encoding="utf-8"?>
++<manifest xmlns:android="http://schemas.android.com/apk/res/android"
++    xmlns:tools="http://schemas.android.com/tools"
++    package="com.wenkesj.voice" >
++
++    <uses-sdk
++        android:minSdkVersion="15"
++        tools:overrideLibrary="com.facebook.react" />
++
++    <uses-permission android:name="android.permission.RECORD_AUDIO" />
++    <uses-permission android:name="android.permission.INTERNET" />
++
++</manifest>
+\ No newline at end of file
+diff --git a/node_modules/@react-native-voice/voice/android/build/intermediates/navigation_json/debug/navigation.json b/node_modules/@react-native-voice/voice/android/build/intermediates/navigation_json/debug/navigation.json
+new file mode 100644
+index 0000000..0637a08
+--- /dev/null
++++ b/node_modules/@react-native-voice/voice/android/build/intermediates/navigation_json/debug/navigation.json
+@@ -0,0 +1 @@
++[]
+\ No newline at end of file
+diff --git a/node_modules/@react-native-voice/voice/android/build/intermediates/navigation_json/release/navigation.json b/node_modules/@react-native-voice/voice/android/build/intermediates/navigation_json/release/navigation.json
+new file mode 100644
+index 0000000..0637a08
+--- /dev/null
++++ b/node_modules/@react-native-voice/voice/android/build/intermediates/navigation_json/release/navigation.json
+@@ -0,0 +1 @@
++[]
+\ No newline at end of file
+diff --git a/node_modules/@react-native-voice/voice/android/build/intermediates/packaged_res/debug/raw/credentials.json b/node_modules/@react-native-voice/voice/android/build/intermediates/packaged_res/debug/raw/credentials.json
+new file mode 100644
+index 0000000..90879f9
+--- /dev/null
++++ b/node_modules/@react-native-voice/voice/android/build/intermediates/packaged_res/debug/raw/credentials.json
+@@ -0,0 +1,13 @@
++{
++  "type": "service_account",
++  "project_id": "optimal-analogy-473307-k3",
++  "private_key_id": "8357683e4d2377dc0c7ac70de4ee4fcd8dbdcecf",
++  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQC7r9cQqSHOySkb\nAmNGpShfeS+8kt0epgkQLFDc48s5KbCmVb8IOadIfGvriTd8BA88tz6RddXtOqG2\nBK7jQ1rD50dOPgSfmA11APrCXKE3SB9F++mz+A112bh6kKyja0OQKJd8El9usF/u\nGFUzzZZdRJAhqSQnIEutLl6XHdAq5gcO8sGVdel5FBQs+uCUyHp0wq/R8rzUYIAm\nSS9JbsRF7hE9NG9iBinwPi7xr+hA9gDtW89o3pGy5V5lMV/Jl00VZ4DGMIU8Jg4y\nVeB7ueH4cs00avWnGvWzrdrxC47auPJGtAeo0R88r/ZG6R8/JcVesiRviqqDwKs1\n04uJwkDPAgMBAAECggEABw2Bak3CVV5t+ubykXq7hlofJwA2N4rrgURhDFCx1/9b\nweX4xgraLeYH08CCwyUpG2t5YIbwiusVA5CwFh5d7UmmGAF9mmLg2Po4WHbM069H\nbMS3UGN5KGoN8Oq51tdwVDaQrRr8ChFHpMKDHrpSTni4/8+dNt+TggaUvsUu7hJ8\nevXKmPMVicN7tzODebaZKusUa1onTJsz3Nwo2OYXAkEidUz0rCYcrQzuM7scjUgi\nQMIc+wEHKg7wK8srr0uSubQahwhV5/RjYNTIMsZXskLLGxGyL46n1J+cawuD9ZfA\nmcIJckkkv0MmLgQM5SY+Bl00o3Wax015gp5d4dQhDQKBgQDme+fZ67HkVLXf9Pb9\nzuOC4vHc0Pj8+n3+DIV8h/kkBmsAZRGgFZDuwG0tRaEsjR4qjrnX0Cwrn7MmOVTz\nZbHzCowU7+SRPzjoyRFOfnQTWQPMHKP2HzKVTXJ5fn2GmLHXO3Ba7o7Sr0mfqx3b\nG7YgMMf+ik7AkBpZEG6iNdOWMwKBgQDQdwffvOJasFCep+JX4aGZM4GpY5DDlk5c\nTC2nmyj7bePvtiHV3i2QmMZokRdc6Qv0bDZSaqf3ISq7XVEJrpQh+UP+H538teMJ\n511OuihfB/UVa0/oAFH4oJXwOorkeiZP+Yls45H0BvCJZxPNT+cGchJ1vmoNwxlc\nr/k9LNh29QKBgQDBwtKUAjAHyysm/rIRhzb+lrlLsKZRTmhTBcXGfiz1myujJlRd\n5yNzg3OFBq9LW8tLbbdQdeJcPiKGdNY01H532psPEultLeAy2q3g9i+xADlQA5fX\nVjzZBUXCW5M9buq7DW4UE88f0Vqsj1dHFxHSGBBZrX4tJjfwPf80ANpCvwKBgER0\noghNzYL8XS0Mcl5rgJZ/fHe0c2hW5lqWxXNBl36hQnWIOKozcIEIOjdCVgqzmLJm\nCpyb25ZitNacOS1Vv908LqC3nzjKPckVyeU9al5yjX/AIphL6p8blMEzaELI/eXL\nSt6QCHC7CqgESlNkhrfuI7O4mLj2NVDjlJQLMvY1AoGBAMo0lr4YCfertZUtjcpj\noAGuZoHcM9bsBlr0KKHUaoWPVMoEzDGx/YZU1AJQm+tqOQh00HtW7oCebmvgEWXT\ncnwehXZAM41wC9yR64iOUFh82yOT00UdExBIzuPYzyxOvVBlUam2Gkd8CEhUIyn2\nsoCMwwlb5LTNl1ysSEesSl+n\n-----END PRIVATE KEY-----\n",
++  "client_email": "daniel-service-acc@optimal-analogy-473307-k3.iam.gserviceaccount.com",
++  "client_id": "102830051831083502946",
++  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
++  "token_uri": "https://oauth2.googleapis.com/token",
++  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
++  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/daniel-service-acc%40optimal-analogy-473307-k3.iam.gserviceaccount.com",
++  "universe_domain": "googleapis.com"
++}
+diff --git a/node_modules/@react-native-voice/voice/android/build/intermediates/packaged_res/debug/raw/voice.json b/node_modules/@react-native-voice/voice/android/build/intermediates/packaged_res/debug/raw/voice.json
+new file mode 100644
+index 0000000..90879f9
+--- /dev/null
++++ b/node_modules/@react-native-voice/voice/android/build/intermediates/packaged_res/debug/raw/voice.json
+@@ -0,0 +1,13 @@
++{
++  "type": "service_account",
++  "project_id": "optimal-analogy-473307-k3",
++  "private_key_id": "8357683e4d2377dc0c7ac70de4ee4fcd8dbdcecf",
++  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQC7r9cQqSHOySkb\nAmNGpShfeS+8kt0epgkQLFDc48s5KbCmVb8IOadIfGvriTd8BA88tz6RddXtOqG2\nBK7jQ1rD50dOPgSfmA11APrCXKE3SB9F++mz+A112bh6kKyja0OQKJd8El9usF/u\nGFUzzZZdRJAhqSQnIEutLl6XHdAq5gcO8sGVdel5FBQs+uCUyHp0wq/R8rzUYIAm\nSS9JbsRF7hE9NG9iBinwPi7xr+hA9gDtW89o3pGy5V5lMV/Jl00VZ4DGMIU8Jg4y\nVeB7ueH4cs00avWnGvWzrdrxC47auPJGtAeo0R88r/ZG6R8/JcVesiRviqqDwKs1\n04uJwkDPAgMBAAECggEABw2Bak3CVV5t+ubykXq7hlofJwA2N4rrgURhDFCx1/9b\nweX4xgraLeYH08CCwyUpG2t5YIbwiusVA5CwFh5d7UmmGAF9mmLg2Po4WHbM069H\nbMS3UGN5KGoN8Oq51tdwVDaQrRr8ChFHpMKDHrpSTni4/8+dNt+TggaUvsUu7hJ8\nevXKmPMVicN7tzODebaZKusUa1onTJsz3Nwo2OYXAkEidUz0rCYcrQzuM7scjUgi\nQMIc+wEHKg7wK8srr0uSubQahwhV5/RjYNTIMsZXskLLGxGyL46n1J+cawuD9ZfA\nmcIJckkkv0MmLgQM5SY+Bl00o3Wax015gp5d4dQhDQKBgQDme+fZ67HkVLXf9Pb9\nzuOC4vHc0Pj8+n3+DIV8h/kkBmsAZRGgFZDuwG0tRaEsjR4qjrnX0Cwrn7MmOVTz\nZbHzCowU7+SRPzjoyRFOfnQTWQPMHKP2HzKVTXJ5fn2GmLHXO3Ba7o7Sr0mfqx3b\nG7YgMMf+ik7AkBpZEG6iNdOWMwKBgQDQdwffvOJasFCep+JX4aGZM4GpY5DDlk5c\nTC2nmyj7bePvtiHV3i2QmMZokRdc6Qv0bDZSaqf3ISq7XVEJrpQh+UP+H538teMJ\n511OuihfB/UVa0/oAFH4oJXwOorkeiZP+Yls45H0BvCJZxPNT+cGchJ1vmoNwxlc\nr/k9LNh29QKBgQDBwtKUAjAHyysm/rIRhzb+lrlLsKZRTmhTBcXGfiz1myujJlRd\n5yNzg3OFBq9LW8tLbbdQdeJcPiKGdNY01H532psPEultLeAy2q3g9i+xADlQA5fX\nVjzZBUXCW5M9buq7DW4UE88f0Vqsj1dHFxHSGBBZrX4tJjfwPf80ANpCvwKBgER0\noghNzYL8XS0Mcl5rgJZ/fHe0c2hW5lqWxXNBl36hQnWIOKozcIEIOjdCVgqzmLJm\nCpyb25ZitNacOS1Vv908LqC3nzjKPckVyeU9al5yjX/AIphL6p8blMEzaELI/eXL\nSt6QCHC7CqgESlNkhrfuI7O4mLj2NVDjlJQLMvY1AoGBAMo0lr4YCfertZUtjcpj\noAGuZoHcM9bsBlr0KKHUaoWPVMoEzDGx/YZU1AJQm+tqOQh00HtW7oCebmvgEWXT\ncnwehXZAM41wC9yR64iOUFh82yOT00UdExBIzuPYzyxOvVBlUam2Gkd8CEhUIyn2\nsoCMwwlb5LTNl1ysSEesSl+n\n-----END PRIVATE KEY-----\n",
++  "client_email": "daniel-service-acc@optimal-analogy-473307-k3.iam.gserviceaccount.com",
++  "client_id": "102830051831083502946",
++  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
++  "token_uri": "https://oauth2.googleapis.com/token",
++  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
++  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/daniel-service-acc%40optimal-analogy-473307-k3.iam.gserviceaccount.com",
++  "universe_domain": "googleapis.com"
++}
+diff --git a/node_modules/@react-native-voice/voice/android/build/intermediates/packaged_res/release/raw/credentials.json b/node_modules/@react-native-voice/voice/android/build/intermediates/packaged_res/release/raw/credentials.json
+new file mode 100644
+index 0000000..90879f9
+--- /dev/null
++++ b/node_modules/@react-native-voice/voice/android/build/intermediates/packaged_res/release/raw/credentials.json
+@@ -0,0 +1,13 @@
++{
++  "type": "service_account",
++  "project_id": "optimal-analogy-473307-k3",
++  "private_key_id": "8357683e4d2377dc0c7ac70de4ee4fcd8dbdcecf",
++  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQC7r9cQqSHOySkb\nAmNGpShfeS+8kt0epgkQLFDc48s5KbCmVb8IOadIfGvriTd8BA88tz6RddXtOqG2\nBK7jQ1rD50dOPgSfmA11APrCXKE3SB9F++mz+A112bh6kKyja0OQKJd8El9usF/u\nGFUzzZZdRJAhqSQnIEutLl6XHdAq5gcO8sGVdel5FBQs+uCUyHp0wq/R8rzUYIAm\nSS9JbsRF7hE9NG9iBinwPi7xr+hA9gDtW89o3pGy5V5lMV/Jl00VZ4DGMIU8Jg4y\nVeB7ueH4cs00avWnGvWzrdrxC47auPJGtAeo0R88r/ZG6R8/JcVesiRviqqDwKs1\n04uJwkDPAgMBAAECggEABw2Bak3CVV5t+ubykXq7hlofJwA2N4rrgURhDFCx1/9b\nweX4xgraLeYH08CCwyUpG2t5YIbwiusVA5CwFh5d7UmmGAF9mmLg2Po4WHbM069H\nbMS3UGN5KGoN8Oq51tdwVDaQrRr8ChFHpMKDHrpSTni4/8+dNt+TggaUvsUu7hJ8\nevXKmPMVicN7tzODebaZKusUa1onTJsz3Nwo2OYXAkEidUz0rCYcrQzuM7scjUgi\nQMIc+wEHKg7wK8srr0uSubQahwhV5/RjYNTIMsZXskLLGxGyL46n1J+cawuD9ZfA\nmcIJckkkv0MmLgQM5SY+Bl00o3Wax015gp5d4dQhDQKBgQDme+fZ67HkVLXf9Pb9\nzuOC4vHc0Pj8+n3+DIV8h/kkBmsAZRGgFZDuwG0tRaEsjR4qjrnX0Cwrn7MmOVTz\nZbHzCowU7+SRPzjoyRFOfnQTWQPMHKP2HzKVTXJ5fn2GmLHXO3Ba7o7Sr0mfqx3b\nG7YgMMf+ik7AkBpZEG6iNdOWMwKBgQDQdwffvOJasFCep+JX4aGZM4GpY5DDlk5c\nTC2nmyj7bePvtiHV3i2QmMZokRdc6Qv0bDZSaqf3ISq7XVEJrpQh+UP+H538teMJ\n511OuihfB/UVa0/oAFH4oJXwOorkeiZP+Yls45H0BvCJZxPNT+cGchJ1vmoNwxlc\nr/k9LNh29QKBgQDBwtKUAjAHyysm/rIRhzb+lrlLsKZRTmhTBcXGfiz1myujJlRd\n5yNzg3OFBq9LW8tLbbdQdeJcPiKGdNY01H532psPEultLeAy2q3g9i+xADlQA5fX\nVjzZBUXCW5M9buq7DW4UE88f0Vqsj1dHFxHSGBBZrX4tJjfwPf80ANpCvwKBgER0\noghNzYL8XS0Mcl5rgJZ/fHe0c2hW5lqWxXNBl36hQnWIOKozcIEIOjdCVgqzmLJm\nCpyb25ZitNacOS1Vv908LqC3nzjKPckVyeU9al5yjX/AIphL6p8blMEzaELI/eXL\nSt6QCHC7CqgESlNkhrfuI7O4mLj2NVDjlJQLMvY1AoGBAMo0lr4YCfertZUtjcpj\noAGuZoHcM9bsBlr0KKHUaoWPVMoEzDGx/YZU1AJQm+tqOQh00HtW7oCebmvgEWXT\ncnwehXZAM41wC9yR64iOUFh82yOT00UdExBIzuPYzyxOvVBlUam2Gkd8CEhUIyn2\nsoCMwwlb5LTNl1ysSEesSl+n\n-----END PRIVATE KEY-----\n",
++  "client_email": "daniel-service-acc@optimal-analogy-473307-k3.iam.gserviceaccount.com",
++  "client_id": "102830051831083502946",
++  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
++  "token_uri": "https://oauth2.googleapis.com/token",
++  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
++  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/daniel-service-acc%40optimal-analogy-473307-k3.iam.gserviceaccount.com",
++  "universe_domain": "googleapis.com"
++}
+diff --git a/node_modules/@react-native-voice/voice/android/build/intermediates/packaged_res/release/raw/voice.json b/node_modules/@react-native-voice/voice/android/build/intermediates/packaged_res/release/raw/voice.json
+new file mode 100644
+index 0000000..90879f9
+--- /dev/null
++++ b/node_modules/@react-native-voice/voice/android/build/intermediates/packaged_res/release/raw/voice.json
+@@ -0,0 +1,13 @@
++{
++  "type": "service_account",
++  "project_id": "optimal-analogy-473307-k3",
++  "private_key_id": "8357683e4d2377dc0c7ac70de4ee4fcd8dbdcecf",
++  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQC7r9cQqSHOySkb\nAmNGpShfeS+8kt0epgkQLFDc48s5KbCmVb8IOadIfGvriTd8BA88tz6RddXtOqG2\nBK7jQ1rD50dOPgSfmA11APrCXKE3SB9F++mz+A112bh6kKyja0OQKJd8El9usF/u\nGFUzzZZdRJAhqSQnIEutLl6XHdAq5gcO8sGVdel5FBQs+uCUyHp0wq/R8rzUYIAm\nSS9JbsRF7hE9NG9iBinwPi7xr+hA9gDtW89o3pGy5V5lMV/Jl00VZ4DGMIU8Jg4y\nVeB7ueH4cs00avWnGvWzrdrxC47auPJGtAeo0R88r/ZG6R8/JcVesiRviqqDwKs1\n04uJwkDPAgMBAAECggEABw2Bak3CVV5t+ubykXq7hlofJwA2N4rrgURhDFCx1/9b\nweX4xgraLeYH08CCwyUpG2t5YIbwiusVA5CwFh5d7UmmGAF9mmLg2Po4WHbM069H\nbMS3UGN5KGoN8Oq51tdwVDaQrRr8ChFHpMKDHrpSTni4/8+dNt+TggaUvsUu7hJ8\nevXKmPMVicN7tzODebaZKusUa1onTJsz3Nwo2OYXAkEidUz0rCYcrQzuM7scjUgi\nQMIc+wEHKg7wK8srr0uSubQahwhV5/RjYNTIMsZXskLLGxGyL46n1J+cawuD9ZfA\nmcIJckkkv0MmLgQM5SY+Bl00o3Wax015gp5d4dQhDQKBgQDme+fZ67HkVLXf9Pb9\nzuOC4vHc0Pj8+n3+DIV8h/kkBmsAZRGgFZDuwG0tRaEsjR4qjrnX0Cwrn7MmOVTz\nZbHzCowU7+SRPzjoyRFOfnQTWQPMHKP2HzKVTXJ5fn2GmLHXO3Ba7o7Sr0mfqx3b\nG7YgMMf+ik7AkBpZEG6iNdOWMwKBgQDQdwffvOJasFCep+JX4aGZM4GpY5DDlk5c\nTC2nmyj7bePvtiHV3i2QmMZokRdc6Qv0bDZSaqf3ISq7XVEJrpQh+UP+H538teMJ\n511OuihfB/UVa0/oAFH4oJXwOorkeiZP+Yls45H0BvCJZxPNT+cGchJ1vmoNwxlc\nr/k9LNh29QKBgQDBwtKUAjAHyysm/rIRhzb+lrlLsKZRTmhTBcXGfiz1myujJlRd\n5yNzg3OFBq9LW8tLbbdQdeJcPiKGdNY01H532psPEultLeAy2q3g9i+xADlQA5fX\nVjzZBUXCW5M9buq7DW4UE88f0Vqsj1dHFxHSGBBZrX4tJjfwPf80ANpCvwKBgER0\noghNzYL8XS0Mcl5rgJZ/fHe0c2hW5lqWxXNBl36hQnWIOKozcIEIOjdCVgqzmLJm\nCpyb25ZitNacOS1Vv908LqC3nzjKPckVyeU9al5yjX/AIphL6p8blMEzaELI/eXL\nSt6QCHC7CqgESlNkhrfuI7O4mLj2NVDjlJQLMvY1AoGBAMo0lr4YCfertZUtjcpj\noAGuZoHcM9bsBlr0KKHUaoWPVMoEzDGx/YZU1AJQm+tqOQh00HtW7oCebmvgEWXT\ncnwehXZAM41wC9yR64iOUFh82yOT00UdExBIzuPYzyxOvVBlUam2Gkd8CEhUIyn2\nsoCMwwlb5LTNl1ysSEesSl+n\n-----END PRIVATE KEY-----\n",
++  "client_email": "daniel-service-acc@optimal-analogy-473307-k3.iam.gserviceaccount.com",
++  "client_id": "102830051831083502946",
++  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
++  "token_uri": "https://oauth2.googleapis.com/token",
++  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
++  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/daniel-service-acc%40optimal-analogy-473307-k3.iam.gserviceaccount.com",
++  "universe_domain": "googleapis.com"
++}
+diff --git a/node_modules/@react-native-voice/voice/android/build/intermediates/runtime_library_classes_jar/debug/classes.jar b/node_modules/@react-native-voice/voice/android/build/intermediates/runtime_library_classes_jar/debug/classes.jar
+new file mode 100644
+index 0000000..04898d2
+Binary files /dev/null and b/node_modules/@react-native-voice/voice/android/build/intermediates/runtime_library_classes_jar/debug/classes.jar differ
+diff --git a/node_modules/@react-native-voice/voice/android/build/intermediates/runtime_library_classes_jar/release/classes.jar b/node_modules/@react-native-voice/voice/android/build/intermediates/runtime_library_classes_jar/release/classes.jar
+new file mode 100644
+index 0000000..238d345
+Binary files /dev/null and b/node_modules/@react-native-voice/voice/android/build/intermediates/runtime_library_classes_jar/release/classes.jar differ
+diff --git a/node_modules/@react-native-voice/voice/android/build/intermediates/symbol_list_with_package_name/debug/package-aware-r.txt b/node_modules/@react-native-voice/voice/android/build/intermediates/symbol_list_with_package_name/debug/package-aware-r.txt
+new file mode 100644
+index 0000000..39dbc63
+--- /dev/null
++++ b/node_modules/@react-native-voice/voice/android/build/intermediates/symbol_list_with_package_name/debug/package-aware-r.txt
+@@ -0,0 +1,3 @@
++com.wenkesj.voice
++raw credentials
++raw voice
+diff --git a/node_modules/@react-native-voice/voice/android/build/intermediates/symbol_list_with_package_name/release/package-aware-r.txt b/node_modules/@react-native-voice/voice/android/build/intermediates/symbol_list_with_package_name/release/package-aware-r.txt
+new file mode 100644
+index 0000000..39dbc63
+--- /dev/null
++++ b/node_modules/@react-native-voice/voice/android/build/intermediates/symbol_list_with_package_name/release/package-aware-r.txt
+@@ -0,0 +1,3 @@
++com.wenkesj.voice
++raw credentials
++raw voice
+diff --git a/node_modules/@react-native-voice/voice/android/build/outputs/logs/manifest-merger-debug-report.txt b/node_modules/@react-native-voice/voice/android/build/outputs/logs/manifest-merger-debug-report.txt
+new file mode 100644
+index 0000000..5880c2b
+--- /dev/null
++++ b/node_modules/@react-native-voice/voice/android/build/outputs/logs/manifest-merger-debug-report.txt
+@@ -0,0 +1,29 @@
++-- Merging decision tree log ---
++manifest
++ADDED from /Users/mac/Workspaces/ReactNative/tbd-frontend/node_modules/@react-native-voice/voice/android/src/main/AndroidManifest.xml:1:1-8:12
++INJECTED from /Users/mac/Workspaces/ReactNative/tbd-frontend/node_modules/@react-native-voice/voice/android/src/main/AndroidManifest.xml:1:1-8:12
++	package
++		ADDED from /Users/mac/Workspaces/ReactNative/tbd-frontend/node_modules/@react-native-voice/voice/android/src/main/AndroidManifest.xml:2:5-32
++		INJECTED from /Users/mac/Workspaces/ReactNative/tbd-frontend/node_modules/@react-native-voice/voice/android/src/main/AndroidManifest.xml
++	xmlns:tools
++		ADDED from /Users/mac/Workspaces/ReactNative/tbd-frontend/node_modules/@react-native-voice/voice/android/src/main/AndroidManifest.xml:3:5-51
++	xmlns:android
++		ADDED from /Users/mac/Workspaces/ReactNative/tbd-frontend/node_modules/@react-native-voice/voice/android/src/main/AndroidManifest.xml:1:11-69
++uses-sdk
++ADDED from /Users/mac/Workspaces/ReactNative/tbd-frontend/node_modules/@react-native-voice/voice/android/src/main/AndroidManifest.xml:5:5-60
++INJECTED from /Users/mac/Workspaces/ReactNative/tbd-frontend/node_modules/@react-native-voice/voice/android/src/main/AndroidManifest.xml:5:5-60
++INJECTED from /Users/mac/Workspaces/ReactNative/tbd-frontend/node_modules/@react-native-voice/voice/android/src/main/AndroidManifest.xml:5:5-60
++	tools:overrideLibrary
++		ADDED from /Users/mac/Workspaces/ReactNative/tbd-frontend/node_modules/@react-native-voice/voice/android/src/main/AndroidManifest.xml:5:15-57
++	android:targetSdkVersion
++		INJECTED from /Users/mac/Workspaces/ReactNative/tbd-frontend/node_modules/@react-native-voice/voice/android/src/main/AndroidManifest.xml
++	android:minSdkVersion
++		INJECTED from /Users/mac/Workspaces/ReactNative/tbd-frontend/node_modules/@react-native-voice/voice/android/src/main/AndroidManifest.xml
++uses-permission#android.permission.RECORD_AUDIO
++ADDED from /Users/mac/Workspaces/ReactNative/tbd-frontend/node_modules/@react-native-voice/voice/android/src/main/AndroidManifest.xml:6:5-71
++	android:name
++		ADDED from /Users/mac/Workspaces/ReactNative/tbd-frontend/node_modules/@react-native-voice/voice/android/src/main/AndroidManifest.xml:6:22-68
++uses-permission#android.permission.INTERNET
++ADDED from /Users/mac/Workspaces/ReactNative/tbd-frontend/node_modules/@react-native-voice/voice/android/src/main/AndroidManifest.xml:7:5-67
++	android:name
++		ADDED from /Users/mac/Workspaces/ReactNative/tbd-frontend/node_modules/@react-native-voice/voice/android/src/main/AndroidManifest.xml:7:22-64
+diff --git a/node_modules/@react-native-voice/voice/android/build/outputs/logs/manifest-merger-release-report.txt b/node_modules/@react-native-voice/voice/android/build/outputs/logs/manifest-merger-release-report.txt
+new file mode 100644
+index 0000000..5880c2b
+--- /dev/null
++++ b/node_modules/@react-native-voice/voice/android/build/outputs/logs/manifest-merger-release-report.txt
+@@ -0,0 +1,29 @@
++-- Merging decision tree log ---
++manifest
++ADDED from /Users/mac/Workspaces/ReactNative/tbd-frontend/node_modules/@react-native-voice/voice/android/src/main/AndroidManifest.xml:1:1-8:12
++INJECTED from /Users/mac/Workspaces/ReactNative/tbd-frontend/node_modules/@react-native-voice/voice/android/src/main/AndroidManifest.xml:1:1-8:12
++	package
++		ADDED from /Users/mac/Workspaces/ReactNative/tbd-frontend/node_modules/@react-native-voice/voice/android/src/main/AndroidManifest.xml:2:5-32
++		INJECTED from /Users/mac/Workspaces/ReactNative/tbd-frontend/node_modules/@react-native-voice/voice/android/src/main/AndroidManifest.xml
++	xmlns:tools
++		ADDED from /Users/mac/Workspaces/ReactNative/tbd-frontend/node_modules/@react-native-voice/voice/android/src/main/AndroidManifest.xml:3:5-51
++	xmlns:android
++		ADDED from /Users/mac/Workspaces/ReactNative/tbd-frontend/node_modules/@react-native-voice/voice/android/src/main/AndroidManifest.xml:1:11-69
++uses-sdk
++ADDED from /Users/mac/Workspaces/ReactNative/tbd-frontend/node_modules/@react-native-voice/voice/android/src/main/AndroidManifest.xml:5:5-60
++INJECTED from /Users/mac/Workspaces/ReactNative/tbd-frontend/node_modules/@react-native-voice/voice/android/src/main/AndroidManifest.xml:5:5-60
++INJECTED from /Users/mac/Workspaces/ReactNative/tbd-frontend/node_modules/@react-native-voice/voice/android/src/main/AndroidManifest.xml:5:5-60
++	tools:overrideLibrary
++		ADDED from /Users/mac/Workspaces/ReactNative/tbd-frontend/node_modules/@react-native-voice/voice/android/src/main/AndroidManifest.xml:5:15-57
++	android:targetSdkVersion
++		INJECTED from /Users/mac/Workspaces/ReactNative/tbd-frontend/node_modules/@react-native-voice/voice/android/src/main/AndroidManifest.xml
++	android:minSdkVersion
++		INJECTED from /Users/mac/Workspaces/ReactNative/tbd-frontend/node_modules/@react-native-voice/voice/android/src/main/AndroidManifest.xml
++uses-permission#android.permission.RECORD_AUDIO
++ADDED from /Users/mac/Workspaces/ReactNative/tbd-frontend/node_modules/@react-native-voice/voice/android/src/main/AndroidManifest.xml:6:5-71
++	android:name
++		ADDED from /Users/mac/Workspaces/ReactNative/tbd-frontend/node_modules/@react-native-voice/voice/android/src/main/AndroidManifest.xml:6:22-68
++uses-permission#android.permission.INTERNET
++ADDED from /Users/mac/Workspaces/ReactNative/tbd-frontend/node_modules/@react-native-voice/voice/android/src/main/AndroidManifest.xml:7:5-67
++	android:name
++		ADDED from /Users/mac/Workspaces/ReactNative/tbd-frontend/node_modules/@react-native-voice/voice/android/src/main/AndroidManifest.xml:7:22-64
+diff --git a/node_modules/@react-native-voice/voice/android/build/tmp/compileDebugJavaWithJavac/previous-compilation-data.bin b/node_modules/@react-native-voice/voice/android/build/tmp/compileDebugJavaWithJavac/previous-compilation-data.bin
+new file mode 100644
+index 0000000..107b8ef
+Binary files /dev/null and b/node_modules/@react-native-voice/voice/android/build/tmp/compileDebugJavaWithJavac/previous-compilation-data.bin differ
+diff --git a/node_modules/@react-native-voice/voice/android/build/tmp/compileReleaseJavaWithJavac/previous-compilation-data.bin b/node_modules/@react-native-voice/voice/android/build/tmp/compileReleaseJavaWithJavac/previous-compilation-data.bin
+new file mode 100644
+index 0000000..108eddd
+Binary files /dev/null and b/node_modules/@react-native-voice/voice/android/build/tmp/compileReleaseJavaWithJavac/previous-compilation-data.bin differ
+diff --git a/node_modules/@react-native-voice/voice/android/src/main/java/com/wenkesj/voice/VoiceModule.java b/node_modules/@react-native-voice/voice/android/src/main/java/com/wenkesj/voice/VoiceModule.java
+index f22833e..4b0a663 100644
+--- a/node_modules/@react-native-voice/voice/android/src/main/java/com/wenkesj/voice/VoiceModule.java
++++ b/node_modules/@react-native-voice/voice/android/src/main/java/com/wenkesj/voice/VoiceModule.java
+@@ -1,12 +1,13 @@
+ package com.wenkesj.voice;
+ 
+ import android.Manifest;
+-import android.content.ComponentName;
+ import android.content.Intent;
+ import android.content.pm.PackageManager;
+ import android.content.pm.ResolveInfo;
++import android.content.res.Resources;
+ import android.os.Bundle;
+ import android.os.Handler;
++import android.os.HandlerThread;
+ import android.speech.RecognitionListener;
+ import android.speech.RecognitionService;
+ import android.speech.RecognizerIntent;
+@@ -22,13 +23,27 @@ import com.facebook.react.bridge.ReactContextBaseJavaModule;
+ import com.facebook.react.bridge.ReactMethod;
+ import com.facebook.react.bridge.ReadableMap;
+ import com.facebook.react.bridge.ReadableMapKeySetIterator;
++import com.facebook.react.bridge.UiThreadUtil;
+ import com.facebook.react.bridge.WritableArray;
+ import com.facebook.react.bridge.WritableMap;
+ import com.facebook.react.modules.core.DeviceEventManagerModule;
+ import com.facebook.react.modules.core.PermissionAwareActivity;
+ import com.facebook.react.modules.core.PermissionListener;
+-
++import com.google.api.gax.core.FixedCredentialsProvider;
++import com.google.auth.oauth2.GoogleCredentials;
++import com.google.cloud.speech.v1.RecognitionAudio;
++import com.google.cloud.speech.v1.RecognitionConfig;
++import com.google.cloud.speech.v1.RecognizeRequest;
++import com.google.cloud.speech.v1.RecognizeResponse;
++import com.google.cloud.speech.v1.SpeechClient;
++import com.google.cloud.speech.v1.SpeechRecognitionResult;
++import com.google.cloud.speech.v1.SpeechSettings;
++import com.google.protobuf.ByteString;
++
++import java.io.ByteArrayOutputStream;
++import java.io.IOException;
+ import java.util.ArrayList;
++import java.util.Arrays;
+ import java.util.List;
+ import java.util.Locale;
+ 
+@@ -40,12 +55,254 @@ public class VoiceModule extends ReactContextBaseJavaModule implements Recogniti
+   private SpeechRecognizer speech = null;
+   private boolean isRecognizing = false;
+   private String locale = null;
++  private SpeechClient speechClient;
++  private VoiceRecorder mVoiceRecorder;
++  private byte[] byteArray;
++  private Thread recordingThread;
++  private int transcribeCallCount = 0;
++  private Handler backgroundHandler;
++  private HandlerThread backgroundThread;
++
++
++  private final VoiceRecorder.Callback mVoiceCallback = new VoiceRecorder.Callback() {
++    @Override
++    public void onVoiceStart() {
++      // Run on UI thread to ensure proper event emission
++      UiThreadUtil.runOnUiThread(new Runnable() {
++        @Override
++        public void run() {
++          WritableMap event = Arguments.createMap();
++          event.putBoolean("error", false);
++          sendEvent("onSpeechStart", event);
++        }
++      });
++      transcribeCallCount = 0;
++    }
++
++    @Override
++    public void onVoice(byte[] data, int size) {
++      byteArray = appendByteArrays(byteArray != null ? byteArray : new byte[0], data);
++    }
++
++    @Override
++    public void onVoiceEnd() {
++      // Run on UI thread to ensure proper event emission
++      UiThreadUtil.runOnUiThread(new Runnable() {
++        @Override
++        public void run() {
++          WritableMap event = Arguments.createMap();
++          event.putBoolean("error", false);
++          sendEvent("onSpeechEnd", event);
++          Log.d("ASR", "onEndOfSpeech()");
++        }
++      });
++      
++      isRecognizing = false;
++      Log.e("kya",""+byteArray);
++      
++      // Create a copy of the byte array to avoid race conditions
++      final byte[] audioDataCopy = byteArray != null ? Arrays.copyOf(byteArray, byteArray.length) : null;
++      
++      if (audioDataCopy != null) {
++        transcribeRecording(audioDataCopy);
++      }
++    }
++
++    @Override
++    public void onVoiceError(Exception error) {
++      onError(error.hashCode());
++      stopVoiceRecorder();
++    }
++};
+ 
+   public VoiceModule(ReactApplicationContext reactContext) {
+     super(reactContext);
+     this.reactContext = reactContext;
+   }
+ 
++  @Override
++  public void initialize() {
++    super.initialize();
++    initializeSpeechClient();
++
++    backgroundThread = new HandlerThread("VoiceModuleBackground");
++    backgroundThread.start();
++    backgroundHandler = new Handler(backgroundThread.getLooper());
++
++  }
++
++  private byte[] appendByteArrays(byte[] array1, byte[] array2) {
++    ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
++
++    try {
++      outputStream.write(array1);
++      outputStream.write(array2);
++    } catch (Exception e) {
++      e.printStackTrace();
++    }
++
++    return outputStream.toByteArray();
++  }
++
++  private void transcribeRecording(byte[] data) {
++    try {
++
++      if (transcribeCallCount == 3) {
++        throw new Exception("transcribeRecording called 3 times", new Throwable("transcribeRecording called 3 times"));
++      }
++
++      Log.e("API_CALL", "API CALL STARTED...");
++
++      recordingThread = new Thread(new Runnable() {
++        @Override
++        public void run() {
++          try {
++            RecognizeResponse response = speechClient.recognize(createRecognizeRequestFromVoice(data));
++
++            // Log the results
++            for (SpeechRecognitionResult result : response.getResultsList()) {
++              Log.d("VoiceModule", "Result: " + result.toString());
++            }
++
++            for (SpeechRecognitionResult result : response.getResultsList()) {
++              String transcript = result.getAlternativesList().get(0).getTranscript();
++              updateResult(transcript);
++              transcribeCallCount = 0;
++            }
++          } catch (Exception e) {
++            Log.e("SEECOLE", "" + e.getMessage());
++            onError(e.hashCode());
++            stopVoiceRecorder();
++            transcribeCallCount = 0;
++          }
++
++        }
++      });
++      transcribeCallCount++;
++      recordingThread.start();
++    } catch (Exception e) {
++      Log.e("SEECOLE", "" + e.getMessage());
++      onError(e.hashCode());
++      stopVoiceRecorder();
++    }
++  }
++
++  @NonNull
++  private RecognizeRequest createRecognizeRequestFromVoice(byte[] audioData) {
++    RecognitionAudio audioBytes = RecognitionAudio.newBuilder().setContent(ByteString.copyFrom(audioData)).build();
++    RecognitionConfig config = RecognitionConfig.newBuilder()
++            .setEncoding(RecognitionConfig.AudioEncoding.LINEAR16)
++            .setSampleRateHertz(16000)
++            .setProfanityFilter(false)  // Disable profanity filter
++            .setLanguageCode(this.locale)
++            .setUseEnhanced(true) // Use enhanced model
++            .build();
++    return RecognizeRequest.newBuilder()
++            .setConfig(config)
++            .setAudio(audioBytes)
++            .build();
++  }
++
++  private void clearByteArray(byte[] array) {
++    if (array == null) {
++      return;
++    }
++    // Set each element to zero
++    Arrays.fill(array, (byte) 0);
++  }
++
++  private void clearByteArray() {
++    byteArray = null;
++  }
++
++  private void updateResult(final String transcript) {
++    UiThreadUtil.runOnUiThread(new Runnable() {
++      @Override
++      public void run() {
++        WritableMap event = Arguments.createMap();
++        event.putString("value", transcript);
++
++        sendEvent("onSpeechResults", event);
++        clearByteArray(byteArray);
++
++        stopSpeech(new Callback() {
++          @Override
++          public void invoke(Object... args) {
++            Log.e("kya", "Stopped");
++          }
++        });
++      }
++    });
++  }
++
++  private void initializeSpeechClient() {
++    try {
++      Resources resources = this.reactContext.getResources();
++      GoogleCredentials credentials = GoogleCredentials.fromStream(resources.openRawResource(R.raw.credentials));
++      FixedCredentialsProvider credentialsProvider = FixedCredentialsProvider.create(credentials);
++      speechClient = SpeechClient.create(SpeechSettings.newBuilder().setCredentialsProvider(credentialsProvider).build());
++      Log.i("kya", "SpeechClient initialized");
++    } catch (IOException e) {
++
++      Log.e("kya", "InitException" + e.getMessage());
++    }
++  }
++
++  private void stopVoiceRecorder() {
++    // Move operations to background thread
++    if(backgroundHandler == null) {
++      return;
++    }
++    backgroundHandler.post(new Runnable() {
++        @Override
++        public void run() {
++            if (mVoiceRecorder != null) {
++                mVoiceRecorder.stop();
++                mVoiceRecorder = null;
++            }
++
++            if (recordingThread != null) {
++                recordingThread.interrupt();
++                try {
++                    recordingThread.join();
++                } catch (InterruptedException e) {
++                    e.printStackTrace();
++                }
++                recordingThread = null;
++            }
++
++            // Run UI updates on main thread
++            UiThreadUtil.runOnUiThread(new Runnable() {
++                @Override
++                public void run() {
++                    clearByteArray();
++                }
++            });
++        }
++    });
++  }
++
++
++  private void restartVoiceRecorder() {
++    // Stop the current voice recorder if it is running
++    if (mVoiceRecorder != null) {
++      mVoiceRecorder.stop();
++      mVoiceRecorder = null;
++    }
++
++    // Reinitialize and start the voice recorder
++    mVoiceRecorder = new VoiceRecorder(mVoiceCallback);
++  }
++
++  private void startVoiceRecorder() {
++
++    if (mVoiceRecorder != null) {
++      mVoiceRecorder.stop();
++    }
++    mVoiceRecorder = new VoiceRecorder(mVoiceCallback);
++    mVoiceRecorder.start();
++  }
++
+   private String getLocale(String locale) {
+     if (locale != null && !locale.equals("")) {
+       return locale;
+@@ -63,8 +320,9 @@ public class VoiceModule extends ReactContextBaseJavaModule implements Recogniti
+     if(opts.hasKey("RECOGNIZER_ENGINE")) {
+       switch (opts.getString("RECOGNIZER_ENGINE")) {
+         case "GOOGLE": {
+-          speech = SpeechRecognizer.createSpeechRecognizer(this.reactContext, ComponentName.unflattenFromString("com.google.android.googlequicksearchbox/com.google.android.voicesearch.serviceapi.GoogleRecognitionService"));
+-          break;
++//          speech = SpeechRecognizer.createSpeechRecognizer(this.reactContext, ComponentName.unflattenFromString("com.google.android.googlequicksearchbox/com.google.android.voicesearch.serviceapi.GoogleRecognitionService"));
++          startVoiceRecorder();
++          return;
+         }
+         default:
+           speech = SpeechRecognizer.createSpeechRecognizer(this.reactContext);
+@@ -185,6 +443,7 @@ public class VoiceModule extends ReactContextBaseJavaModule implements Recogniti
+           }
+           isRecognizing = false;
+           callback.invoke(false);
++          stopVoiceRecorder();
+         } catch(Exception e) {
+           callback.invoke(e.getMessage());
+         }
+@@ -213,23 +472,36 @@ public class VoiceModule extends ReactContextBaseJavaModule implements Recogniti
+ 
+   @ReactMethod
+   public void destroySpeech(final Callback callback) {
+-    Handler mainHandler = new Handler(this.reactContext.getMainLooper());
+-    mainHandler.post(new Runnable() {
+-      @Override
+-      public void run() {
+-        try {
+-          if (speech != null) {
+-            speech.destroy();
++      Handler mainHandler = new Handler(this.reactContext.getMainLooper());
++      mainHandler.post(new Runnable() {
++          @Override
++          public void run() {
++              try {
++                  if (speech != null) {
++                      speech.destroy();
++                  }
++                  speech = null;
++                  isRecognizing = false;
++
++                stopVoiceRecorder();
++
++                // Clean up background thread
++//                  if (backgroundThread != null) {
++//                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
++//                      backgroundThread.quitSafely();
++//                    }
++//                    backgroundThread = null;
++//                    backgroundHandler = null;
++//                  }
++
++
++                  callback.invoke(false);
++              } catch(Exception e) {
++                  callback.invoke(e.getMessage());
++              }
+           }
+-          speech = null;
+-          isRecognizing = false;
+-          callback.invoke(false);
+-        } catch(Exception e) {
+-          callback.invoke(e.getMessage());
+-        }
+-      }
+-    });
+-  }
++      });
++}
+ 
+   @ReactMethod
+   public void isSpeechAvailable(final Callback callback) {
+@@ -322,8 +594,10 @@ public class VoiceModule extends ReactContextBaseJavaModule implements Recogniti
+     WritableArray arr = Arguments.createArray();
+ 
+     ArrayList<String> matches = results.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
+-    for (String result : matches) {
+-      arr.pushString(result);
++    if (matches != null) {
++      for (String result : matches) {
++        arr.pushString(result);
++      }
+     }
+ 
+     WritableMap event = Arguments.createMap();
+@@ -345,8 +619,10 @@ public class VoiceModule extends ReactContextBaseJavaModule implements Recogniti
+     WritableArray arr = Arguments.createArray();
+ 
+     ArrayList<String> matches = results.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
+-    for (String result : matches) {
+-      arr.pushString(result);
++    if (matches != null) {
++      for (String result : matches) {
++        arr.pushString(result);
++      }
+     }
+ 
+     WritableMap event = Arguments.createMap();
+diff --git a/node_modules/@react-native-voice/voice/android/src/main/java/com/wenkesj/voice/VoiceRecorder.java b/node_modules/@react-native-voice/voice/android/src/main/java/com/wenkesj/voice/VoiceRecorder.java
+new file mode 100644
+index 0000000..0db3bb0
+--- /dev/null
++++ b/node_modules/@react-native-voice/voice/android/src/main/java/com/wenkesj/voice/VoiceRecorder.java
+@@ -0,0 +1,245 @@
++package com.wenkesj.voice;
++
++import android.media.AudioFormat;
++import android.media.AudioRecord;
++import android.media.MediaRecorder;
++import android.util.Log;
++
++import androidx.annotation.Keep;
++import androidx.annotation.NonNull;
++
++import java.util.concurrent.ExecutorService;
++import java.util.concurrent.Executors;
++
++public class VoiceRecorder {
++    private static final String TAG = "VoiceRecorder";
++
++    private static final int[] SAMPLE_RATE_CANDIDATES = new int[]{16000, 11025, 22050, 44100};
++
++    private static final int CHANNEL = AudioFormat.CHANNEL_IN_MONO;
++    private static final int ENCODING = AudioFormat.ENCODING_PCM_16BIT;
++
++    private static final int AMPLITUDE_THRESHOLD = 1500;
++    private static final int SPEECH_TIMEOUT_MILLIS = 3000;
++    private static final int MAX_SPEECH_LENGTH_MILLIS = 10 * 1000;
++
++    public static abstract class Callback {
++
++        /**
++         * Called when the recorder starts hearing voice.
++         */
++        public void onVoiceStart() {
++        }
++
++        /**
++         * Called when the recorder is hearing voice.
++         *
++         * @param data The audio data in {@link AudioFormat#ENCODING_PCM_16BIT}.
++         * @param size The size of the actual data in {@code data}.
++         */
++        public void onVoice(byte[] data, int size) {
++        }
++
++        /**
++         * Called when the recorder stops hearing voice.
++         */
++        public void onVoiceEnd() {
++        }
++
++        /**
++         * Called when an error occurs during recording.
++         *
++         * @param error The error message.
++         */
++        public void onVoiceError(Exception error) {
++        }
++    }
++
++    public final Callback mCallback;
++
++    private AudioRecord mAudioRecord;
++
++    private Thread mThread;
++
++    private byte[] mBuffer;
++
++    private final Object mLock = new Object();
++
++    private ExecutorService executor = Executors.newSingleThreadExecutor();
++
++    /** The timestamp of the last time that voice is heard. */
++    private long mLastVoiceHeardMillis = Long.MAX_VALUE;
++
++    /** The timestamp when the current voice is started. */
++    private long mVoiceStartedMillis;
++
++    @Keep
++    public VoiceRecorder(@NonNull Callback callback) {
++        this.mCallback = callback;
++    }
++
++
++    /**
++     * Starts recording audio.
++     *
++     * <p>The caller is responsible for calling {@link #stop()} later.</p>
++     */
++    public void start() {
++        // Stop recording if it is currently ongoing.
++        stop();
++        // Try to create a new recording session.
++        mAudioRecord = createAudioRecord();
++        if (mAudioRecord == null) {
++            throw new RuntimeException("Cannot instantiate VoiceRecorder");
++        }
++        // Start recording.
++        mAudioRecord.startRecording();
++
++        // Start processing the captured audio.
++        Log.d(TAG, "Audio recording started");
++
++         // Reinitialize the executor if it has been shut down
++        if (executor.isShutdown()) {
++            executor = Executors.newSingleThreadExecutor();
++        }
++        executor.submit(new ProcessVoice());
++
++    }
++
++    /**
++     * Stops recording audio.
++     */
++    public void stop() {
++        synchronized (mLock) {
++            // dismiss();
++            // if (mThread != null) {
++            //     mThread.interrupt();
++            //     mThread = null;
++            // }
++            // if (mAudioRecord != null) {
++            //     mAudioRecord.stop();
++            //     mAudioRecord.release();
++            //     mAudioRecord = null;
++            // }
++            // mBuffer = null;
++
++            dismiss();
++            if (mAudioRecord != null) {
++                mAudioRecord.stop();
++                mAudioRecord.release();
++                mAudioRecord = null;
++            }
++            mBuffer = null;
++            executor.shutdownNow(); // Shut down the executor immediately
++        }
++    }
++
++    /**
++     * Dismisses the currently ongoing utterance.
++     */
++    public void dismiss() {
++        if (mLastVoiceHeardMillis != Long.MAX_VALUE) {
++            mLastVoiceHeardMillis = Long.MAX_VALUE;
++            mCallback.onVoiceEnd();
++        }
++    }
++
++    /**
++     * Retrieves the sample rate currently used to record audio.
++     *
++     * @return The sample rate of recorded audio.
++     */
++    public int getSampleRate() {
++        if (mAudioRecord != null) {
++            return mAudioRecord.getSampleRate();
++        }
++        return 0;
++    }
++
++    /**
++     * Creates a new {@link AudioRecord}.
++     *
++     * @return A newly created {@link AudioRecord}, or null if it cannot be created (missing
++     * permissions?).
++     */
++    private AudioRecord createAudioRecord() {
++        for (int sampleRate : SAMPLE_RATE_CANDIDATES) {
++            final int sizeInBytes = AudioRecord.getMinBufferSize(sampleRate, CHANNEL, ENCODING);
++            if (sizeInBytes == AudioRecord.ERROR_BAD_VALUE) {
++                continue;
++            }
++            final AudioRecord audioRecord = new AudioRecord(MediaRecorder.AudioSource.MIC,
++                    sampleRate, CHANNEL, ENCODING, sizeInBytes);
++            if (audioRecord.getState() == AudioRecord.STATE_INITIALIZED) {
++                mBuffer = new byte[sizeInBytes];
++                return audioRecord;
++            } else {
++                audioRecord.release();
++            }
++        }
++        return null;
++    }
++
++
++    /**
++     * Continuously processes the captured audio and notifies {@link #mCallback} of corresponding
++     * events.
++     */
++    private class ProcessVoice implements Runnable {
++
++        @Override
++        public void run() {
++            Log.d(TAG, "ProcessVoice run method started");
++            try {
++                while (true) {
++                    synchronized (mLock) {
++                       if (Thread.currentThread().isInterrupted()) {
++                         break;
++                       }
++                       final int size = mAudioRecord.read(mBuffer, 0, mBuffer.length);
++                       final long now = System.currentTimeMillis();
++                       if (isHearingVoice(mBuffer, size)) {
++                           if (mLastVoiceHeardMillis == Long.MAX_VALUE) {
++                                mVoiceStartedMillis = now;
++                                mCallback.onVoiceStart();
++                            }
++                            mCallback.onVoice(mBuffer, size);
++                            mLastVoiceHeardMillis = now;
++                            if (now - mVoiceStartedMillis > MAX_SPEECH_LENGTH_MILLIS) {
++                                end();
++                            }
++                        } else if (mLastVoiceHeardMillis != Long.MAX_VALUE) {
++                            mCallback.onVoice(mBuffer, size);
++                            if (now - mLastVoiceHeardMillis > SPEECH_TIMEOUT_MILLIS) {
++                                end();
++                            }
++                       }
++                    }
++                }
++            } catch (Exception e) {
++                mCallback.onVoiceError(e);
++            }
++            Log.d(TAG, "ProcessVoice run method ended");
++        }
++
++        private void end() {
++            mLastVoiceHeardMillis = Long.MAX_VALUE;
++            mCallback.onVoiceEnd();
++        }
++
++        private boolean isHearingVoice(byte[] buffer, int size) {
++            for (int i = 0; i < size - 1; i += 2) {
++                // The buffer has LINEAR16 in little endian.
++                int s = buffer[i + 1];
++                if (s < 0) s *= -1;
++                s <<= 8;
++                s += Math.abs(buffer[i]);
++                if (s > AMPLITUDE_THRESHOLD) {
++                    return true;
++                }
++            }
++            return false;
++        }
++
++    }
++}
+diff --git a/node_modules/@react-native-voice/voice/android/src/main/res/.DS_Store b/node_modules/@react-native-voice/voice/android/src/main/res/.DS_Store
+new file mode 100644
+index 0000000..c2ea0e4
+Binary files /dev/null and b/node_modules/@react-native-voice/voice/android/src/main/res/.DS_Store differ
+diff --git a/node_modules/@react-native-voice/voice/android/src/main/res/raw/credentials.json b/node_modules/@react-native-voice/voice/android/src/main/res/raw/credentials.json
+new file mode 100644
+index 0000000..90879f9
+--- /dev/null
++++ b/node_modules/@react-native-voice/voice/android/src/main/res/raw/credentials.json
+@@ -0,0 +1,13 @@
++{
++  "type": "service_account",
++  "project_id": "optimal-analogy-473307-k3",
++  "private_key_id": "8357683e4d2377dc0c7ac70de4ee4fcd8dbdcecf",
++  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQC7r9cQqSHOySkb\nAmNGpShfeS+8kt0epgkQLFDc48s5KbCmVb8IOadIfGvriTd8BA88tz6RddXtOqG2\nBK7jQ1rD50dOPgSfmA11APrCXKE3SB9F++mz+A112bh6kKyja0OQKJd8El9usF/u\nGFUzzZZdRJAhqSQnIEutLl6XHdAq5gcO8sGVdel5FBQs+uCUyHp0wq/R8rzUYIAm\nSS9JbsRF7hE9NG9iBinwPi7xr+hA9gDtW89o3pGy5V5lMV/Jl00VZ4DGMIU8Jg4y\nVeB7ueH4cs00avWnGvWzrdrxC47auPJGtAeo0R88r/ZG6R8/JcVesiRviqqDwKs1\n04uJwkDPAgMBAAECggEABw2Bak3CVV5t+ubykXq7hlofJwA2N4rrgURhDFCx1/9b\nweX4xgraLeYH08CCwyUpG2t5YIbwiusVA5CwFh5d7UmmGAF9mmLg2Po4WHbM069H\nbMS3UGN5KGoN8Oq51tdwVDaQrRr8ChFHpMKDHrpSTni4/8+dNt+TggaUvsUu7hJ8\nevXKmPMVicN7tzODebaZKusUa1onTJsz3Nwo2OYXAkEidUz0rCYcrQzuM7scjUgi\nQMIc+wEHKg7wK8srr0uSubQahwhV5/RjYNTIMsZXskLLGxGyL46n1J+cawuD9ZfA\nmcIJckkkv0MmLgQM5SY+Bl00o3Wax015gp5d4dQhDQKBgQDme+fZ67HkVLXf9Pb9\nzuOC4vHc0Pj8+n3+DIV8h/kkBmsAZRGgFZDuwG0tRaEsjR4qjrnX0Cwrn7MmOVTz\nZbHzCowU7+SRPzjoyRFOfnQTWQPMHKP2HzKVTXJ5fn2GmLHXO3Ba7o7Sr0mfqx3b\nG7YgMMf+ik7AkBpZEG6iNdOWMwKBgQDQdwffvOJasFCep+JX4aGZM4GpY5DDlk5c\nTC2nmyj7bePvtiHV3i2QmMZokRdc6Qv0bDZSaqf3ISq7XVEJrpQh+UP+H538teMJ\n511OuihfB/UVa0/oAFH4oJXwOorkeiZP+Yls45H0BvCJZxPNT+cGchJ1vmoNwxlc\nr/k9LNh29QKBgQDBwtKUAjAHyysm/rIRhzb+lrlLsKZRTmhTBcXGfiz1myujJlRd\n5yNzg3OFBq9LW8tLbbdQdeJcPiKGdNY01H532psPEultLeAy2q3g9i+xADlQA5fX\nVjzZBUXCW5M9buq7DW4UE88f0Vqsj1dHFxHSGBBZrX4tJjfwPf80ANpCvwKBgER0\noghNzYL8XS0Mcl5rgJZ/fHe0c2hW5lqWxXNBl36hQnWIOKozcIEIOjdCVgqzmLJm\nCpyb25ZitNacOS1Vv908LqC3nzjKPckVyeU9al5yjX/AIphL6p8blMEzaELI/eXL\nSt6QCHC7CqgESlNkhrfuI7O4mLj2NVDjlJQLMvY1AoGBAMo0lr4YCfertZUtjcpj\noAGuZoHcM9bsBlr0KKHUaoWPVMoEzDGx/YZU1AJQm+tqOQh00HtW7oCebmvgEWXT\ncnwehXZAM41wC9yR64iOUFh82yOT00UdExBIzuPYzyxOvVBlUam2Gkd8CEhUIyn2\nsoCMwwlb5LTNl1ysSEesSl+n\n-----END PRIVATE KEY-----\n",
++  "client_email": "daniel-service-acc@optimal-analogy-473307-k3.iam.gserviceaccount.com",
++  "client_id": "102830051831083502946",
++  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
++  "token_uri": "https://oauth2.googleapis.com/token",
++  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
++  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/daniel-service-acc%40optimal-analogy-473307-k3.iam.gserviceaccount.com",
++  "universe_domain": "googleapis.com"
++}
+diff --git a/node_modules/@react-native-voice/voice/android/src/main/res/raw/voice.json b/node_modules/@react-native-voice/voice/android/src/main/res/raw/voice.json
+new file mode 100644
+index 0000000..90879f9
+--- /dev/null
++++ b/node_modules/@react-native-voice/voice/android/src/main/res/raw/voice.json
+@@ -0,0 +1,13 @@
++{
++  "type": "service_account",
++  "project_id": "optimal-analogy-473307-k3",
++  "private_key_id": "8357683e4d2377dc0c7ac70de4ee4fcd8dbdcecf",
++  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQC7r9cQqSHOySkb\nAmNGpShfeS+8kt0epgkQLFDc48s5KbCmVb8IOadIfGvriTd8BA88tz6RddXtOqG2\nBK7jQ1rD50dOPgSfmA11APrCXKE3SB9F++mz+A112bh6kKyja0OQKJd8El9usF/u\nGFUzzZZdRJAhqSQnIEutLl6XHdAq5gcO8sGVdel5FBQs+uCUyHp0wq/R8rzUYIAm\nSS9JbsRF7hE9NG9iBinwPi7xr+hA9gDtW89o3pGy5V5lMV/Jl00VZ4DGMIU8Jg4y\nVeB7ueH4cs00avWnGvWzrdrxC47auPJGtAeo0R88r/ZG6R8/JcVesiRviqqDwKs1\n04uJwkDPAgMBAAECggEABw2Bak3CVV5t+ubykXq7hlofJwA2N4rrgURhDFCx1/9b\nweX4xgraLeYH08CCwyUpG2t5YIbwiusVA5CwFh5d7UmmGAF9mmLg2Po4WHbM069H\nbMS3UGN5KGoN8Oq51tdwVDaQrRr8ChFHpMKDHrpSTni4/8+dNt+TggaUvsUu7hJ8\nevXKmPMVicN7tzODebaZKusUa1onTJsz3Nwo2OYXAkEidUz0rCYcrQzuM7scjUgi\nQMIc+wEHKg7wK8srr0uSubQahwhV5/RjYNTIMsZXskLLGxGyL46n1J+cawuD9ZfA\nmcIJckkkv0MmLgQM5SY+Bl00o3Wax015gp5d4dQhDQKBgQDme+fZ67HkVLXf9Pb9\nzuOC4vHc0Pj8+n3+DIV8h/kkBmsAZRGgFZDuwG0tRaEsjR4qjrnX0Cwrn7MmOVTz\nZbHzCowU7+SRPzjoyRFOfnQTWQPMHKP2HzKVTXJ5fn2GmLHXO3Ba7o7Sr0mfqx3b\nG7YgMMf+ik7AkBpZEG6iNdOWMwKBgQDQdwffvOJasFCep+JX4aGZM4GpY5DDlk5c\nTC2nmyj7bePvtiHV3i2QmMZokRdc6Qv0bDZSaqf3ISq7XVEJrpQh+UP+H538teMJ\n511OuihfB/UVa0/oAFH4oJXwOorkeiZP+Yls45H0BvCJZxPNT+cGchJ1vmoNwxlc\nr/k9LNh29QKBgQDBwtKUAjAHyysm/rIRhzb+lrlLsKZRTmhTBcXGfiz1myujJlRd\n5yNzg3OFBq9LW8tLbbdQdeJcPiKGdNY01H532psPEultLeAy2q3g9i+xADlQA5fX\nVjzZBUXCW5M9buq7DW4UE88f0Vqsj1dHFxHSGBBZrX4tJjfwPf80ANpCvwKBgER0\noghNzYL8XS0Mcl5rgJZ/fHe0c2hW5lqWxXNBl36hQnWIOKozcIEIOjdCVgqzmLJm\nCpyb25ZitNacOS1Vv908LqC3nzjKPckVyeU9al5yjX/AIphL6p8blMEzaELI/eXL\nSt6QCHC7CqgESlNkhrfuI7O4mLj2NVDjlJQLMvY1AoGBAMo0lr4YCfertZUtjcpj\noAGuZoHcM9bsBlr0KKHUaoWPVMoEzDGx/YZU1AJQm+tqOQh00HtW7oCebmvgEWXT\ncnwehXZAM41wC9yR64iOUFh82yOT00UdExBIzuPYzyxOvVBlUam2Gkd8CEhUIyn2\nsoCMwwlb5LTNl1ysSEesSl+n\n-----END PRIVATE KEY-----\n",
++  "client_email": "daniel-service-acc@optimal-analogy-473307-k3.iam.gserviceaccount.com",
++  "client_id": "102830051831083502946",
++  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
++  "token_uri": "https://oauth2.googleapis.com/token",
++  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
++  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/daniel-service-acc%40optimal-analogy-473307-k3.iam.gserviceaccount.com",
++  "universe_domain": "googleapis.com"
++}
+diff --git a/node_modules/@react-native-voice/voice/ios/Voice/Voice.m b/node_modules/@react-native-voice/voice/ios/Voice/Voice.m
+index fd9dad8..ee331bc 100644
+--- a/node_modules/@react-native-voice/voice/ios/Voice/Voice.m
++++ b/node_modules/@react-native-voice/voice/ios/Voice/Voice.m
+@@ -41,12 +41,23 @@ -(BOOL) setupAudioSession {
+     }
+     
+     NSError* audioSessionError = nil;
++    self.audioSession = [AVAudioSession sharedInstance];
+     
+     // Activate the audio session
+-    [self.audioSession setActive:YES withOptions:AVAudioSessionSetActiveOptionNotifyOthersOnDeactivation error:&audioSessionError];
++    [self.audioSession setCategory:AVAudioSessionCategoryRecord error:&audioSessionError];
+     
++   if (audioSessionError != nil) {
++        [self sendResult:RCTMakeError([audioSessionError localizedDescription], nil, nil) :nil :nil :nil];
++        return NO;
++    }
++    [self.audioSession setMode:AVAudioSessionModeMeasurement error:&audioSessionError];
+     if (audioSessionError != nil) {
+-        [self sendResult:@{@"code": @"audio", @"message": [audioSessionError localizedDescription]} :nil :nil :nil];
++        [self sendResult:RCTMakeError([audioSessionError localizedDescription], nil, nil) :nil :nil :nil];
++        return NO;
++    }
++    [self.audioSession setActive:YES withOptions:AVAudioSessionSetActiveOptionNotifyOthersOnDeactivation error:&audioSessionError];
++    if (audioSessionError != nil) {
++        [self sendResult:RCTMakeError([audioSessionError localizedDescription], nil, nil) :nil :nil :nil];
+         return NO;
+     }
+ 
