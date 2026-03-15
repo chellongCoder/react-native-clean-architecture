@@ -933,7 +933,7 @@ const LESSON_PATTERNS = [
   {
     pattern: /^HISTORY_HS1M(1)$/,
     component: History_SelectAnswer_Image_TextImageAnswer,
-    props,
+    props: {},
   },
   {
     pattern: /^HISTORY_HS1M2$/,
@@ -945,7 +945,7 @@ const LESSON_PATTERNS = [
   {
     pattern: /^HISTORY_HS1M(3|4)$/,
     component: History_SelectAnswer_SwipeImage,
-    props,
+    props: {},
   },
 
   {
@@ -1425,7 +1425,6 @@ const LessonScreen = observer(() => {
          * The lessonIndex >= (testTask?.question.length ?? 1) - 1 condition checks if the lessonIndex is greater than or equal to the index of the last question in the question array. If it is, the condition evaluates to true; otherwise, it evaluates to false.
          * If the condition evaluates to true, the code inside the if statement block will be executed. In this case, it calls the submitModule function and passes resultByAnswer as an argument.
          */
-
 
         if (lessonIndex >= (testTask?.question.length ?? 1) - 1) {
           submitModule(resultByAnswer);

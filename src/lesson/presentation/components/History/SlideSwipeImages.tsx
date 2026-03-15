@@ -82,7 +82,9 @@ const SlideSwipeImages: React.FC<SlideSwipeImagesProps> = ({
   };
 
   const capitalizeFirstLetter = (text: string): string => {
-    if (!text) return text;
+    if (!text) {
+      return text;
+    }
     return text.charAt(0).toUpperCase() + text.slice(1).toLowerCase();
   };
 
