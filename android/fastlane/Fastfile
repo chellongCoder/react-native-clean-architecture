@@ -1,0 +1,170 @@
+# This file contains the fastlane.tools configuration
+# You can find the documentation at https://docs.fastlane.tools
+#
+# For a list of all available actions, check out
+#
+#     https://docs.fastlane.tools/actions
+#
+# For a list of all available plugins, check out
+#
+#     https://docs.fastlane.tools/plugins/available-plugins
+#
+
+# Uncomment the line if you want fastlane to automatically update itself
+# update_fastlane
+
+default_platform(:android)
+
+platform :android do
+  desc "Runs all the tests"
+  lane :test do
+    gradle(task: "test")
+  end
+
+  desc "Submit a new Beta Build to Crashlytics Beta"
+  lane :beta do
+    gradle(task: "clean assembleRelease")
+    crashlytics
+  
+    # sh "your_script.sh"
+    # You can also use other beta testing services here
+  end
+
+  desc "Deploy a new version to the Google Play"
+  lane :deploy do
+    gradle(task: "clean assembleRelease")
+    # upload_to_play_store
+  end
+
+  desc "Build AAB"
+  lane :buildAab do
+    gradle(task: "clean bundleRelease")
+  end
+
+  desc "Increment versionCode"
+  lane :increment_version_code do
+    # Read the current versionCode from build.gradle
+    version_code = sh("grep versionCode ../app/build.gradle | awk '{print $2}'").to_i
+    new_version_code = version_code + 1
+
+    # Update the versionCode in build.gradle
+    sh("sed -i '' 's/versionCode #{version_code}/versionCode #{new_version_code}/' ../app/build.gradle")
+
+    UI.message("Incremented versionCode to #{new_version_code}")
+  end
+
+  desc "Build and upload APK to Firebase App Distribution"
+  lane :upload_to_firebase do
+
+    increment_version_code
+
+    gradle(task: "assembleRelease")
+
+
+    firebase_app_distribution(
+      app: "1:595720239925:android:ed1b5e7b1885f37c46ea7c",
+      firebase_cli_token: "1//0eOB0G4Ef-rQ-CgYIARAAGA4SNwF-L9Irnu_Uji_pZv0Cc2X30UzZl2Wa8wsFC-oa9MTZRuEjf3FRZvk3C3YxbWe11XADyebMW_c",
+      apk_path: "./app/build/outputs/apk/prod/release/app-prod-release.apk",
+      release_notes: "New release",
+      testers: "longnn17.developer@gmail.com",
+      groups: "qa-team", # Comma-separated list of groups
+      debug: false
+    )
+  end
+
+
+  desc "Build AAB and upload to public testing on Play Console"
+  lane :build_and_upload_aab do
+    
+    # increment_version_code
+    gradle(task: "bundleRelease")
+
+     # Ensure the path to the AAB file is correct
+    aab_path = "/Users/mac/Workspaces/ReactNative/tbd-frontend/android/app/build/outputs/bundle/prodRelease/app-prod-release.aab"
+    unless File.exist?(aab_path)
+      UI.user_error!("Could not find AAB file at path '#{aab_path}'")
+    end
+
+    supply(
+      json_key: "./fastlane/optimal-analogy-473307-k3-f8609bd0cebc.json",
+      package_name: "com.algorz.abeeci.app",
+      track: "beta", # Use "beta" for public testing track
+      aab: aab_path,
+      skip_upload_apk: true, # Skip uploading APK files
+      skip_upload_metadata: true,
+      skip_upload_images: true,
+      skip_upload_screenshots: true,
+      release_status: "completed"
+    )
+  end
+
+  desc "Build and upload AAB to closed testing on Play Console"
+  lane :build_and_upload_aab_closed do
+    # increment_version_code
+
+    gradle(task: 'bundle', build_type: 'Release')
+
+    aab_path = "/Users/mac/Workspaces/ReactNative/tbd-frontend/android/app/build/outputs/bundle/prodRelease/app-prod-release.aab"
+
+    supply(
+      json_key: "./fastlane/optimal-analogy-473307-k3-f8609bd0cebc.json",
+      package_name: "com.algorz.abeeci.app",
+      track: 'closed',
+      aab: aab_path,
+      skip_upload_metadata: true,
+      skip_upload_images: true,
+      skip_upload_screenshots: true,
+      release_status: "completed"
+    )
+  end
+
+  desc "Build and upload AAB to internal testing on Play Console"
+  lane :build_and_upload_aab_internal do
+    increment_version_code
+
+    gradle(task: 'bundle', build_type: 'Release')
+
+    aab_path = "/Users/mac/Workspaces/ReactNative/tbd-frontend/android/app/build/outputs/bundle/prodRelease/app-prod-release.aab"
+    unless File.exist?(aab_path)
+      UI.user_error!("Could not find AAB file at path '#{aab_path}'")
+    end
+
+    # supply(
+    #   track: 'internal',
+    #   aab: aab_path,
+    #   skip_upload_apk: true, # Skip uploading APK files
+    #   skip_upload_metadata: true,
+    #   skip_upload_images: true,
+    #   skip_upload_screenshots: true,
+    #   release_status: "completed"
+    # )
+  end
+
+  desc "Download metadata from Play Store"
+  lane :download_metadata do
+    supply(
+      track: 'beta', # or 'beta', 'alpha', 'internal'
+      skip_upload_apk: true,
+      skip_upload_aab: true,
+      skip_upload_metadata: false,
+      skip_upload_images: false,
+      skip_upload_screenshots: false,
+      download_metadata: true
+    )
+  end
+
+  desc "Upload metadata (store listing, graphics, screenshots) to Play Console"
+  lane :upload_metadata do
+    supply(
+      # If you have android/fastlane/Appfile configured, you can omit json_key/package_name
+      # json_key: "android/fastlane/play-store-key.json",
+      # package_name: "com.your.app",
+
+      metadata_path: "metadata/android",  # e.g. android/fastlane/metadata/android/*
+      skip_upload_metadata: false,
+      skip_upload_images: false,
+      skip_upload_screenshots: false,
+      # validate_only: true,  # uncomment to dry-run validation without uploading
+    )
+  end
+end

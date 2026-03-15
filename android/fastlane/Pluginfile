@@ -1,0 +1,6 @@
+# Pluginfile
+# This file contains a list of plugins for Fastlane
+
+# Example of including a plugin
+gem 'fastlane-plugin-firebase_app_distribution'
+gem 'fastlane-plugin-firebase_app_distribution'
