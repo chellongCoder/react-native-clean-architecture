@@ -190,7 +190,7 @@ const LESSON_PATTERNS = [
   {
     pattern: /^ENGLISH_EG1M[1-8]$/,
     component: EssayLesson,
-    props,
+    props: {},
   },
   {
     pattern: /^ENGLISH_EG1M(9|10|11|12|13|14|15|16|17)$/,
@@ -451,7 +451,7 @@ const LESSON_PATTERNS = [
   {
     pattern: /^VIETNAMESE_VNG(0M1|2M2|3M9|4M2)$/,
     component: VnG0M1Lesson,
-    props,
+    props: {},
   },
   {
     pattern: /^VIETNAMESE_VNG0M2$/,
@@ -483,6 +483,26 @@ const LESSON_PATTERNS = [
     props: {},
   },
   {
+    pattern: /^VIETNAMESE_VNG2M1$/,
+    component: VnG2M1Lesson,
+    props: {},
+  },
+  {
+    pattern: /^VIETNAMESE_VNG2M(3|4|5|6|8|9|10)$/,
+    component: VnG2M8Lesson,
+    props: {},
+  },
+  {
+    pattern: /^VIETNAMESE_VNG2M(7|8)$/,
+    component: VnG1M7Lesson,
+    props: {},
+  },
+  {
+    pattern: /^VIETNAMESE_VNG2M(11|12)$/,
+    component: VnG2M12Lesson,
+    props: {},
+  },
+  {
     pattern: /^VIETNAMESE_VNG3M(1|2|3|4|5|6|7|8|10)$/,
     component: (type: string) => {
       const componentMap: Record<string, any> = {
@@ -499,26 +519,6 @@ const LESSON_PATTERNS = [
       return componentMap[type] || VnG0M1Lesson;
     },
     props,
-  },
-  {
-    pattern: /^VIETNAMESE_VNG2M1$/,
-    component: VnG2M1Lesson,
-    props: {},
-  },
-  {
-    pattern: /^VIETNAMESE_VNG2M(3|4|5|6|8|9|10)$/,
-    component: VnG2M8Lesson,
-    props,
-  },
-  {
-    pattern: /^VIETNAMESE_VNG2M(7|8)$/,
-    component: VnG1M7Lesson,
-    props: {},
-  },
-  {
-    pattern: /^VIETNAMESE_VNG2M(11|12)$/,
-    component: VnG2M12Lesson,
-    props: {},
   },
   {
     pattern: /^VIETNAMESE_VNG4M3$/,
@@ -1407,7 +1407,7 @@ const LessonScreen = observer(() => {
       }
 
       // * check điều kiện là đang đến part mini test
-      if (testTask?.type === testTask?.type) {
+      if (testTask?.type === firstMiniTestTask?.type) {
         playSound(soundTrack.menu_selection_sound);
         const resultByAnswer: TResult = {
           userId: selectedChild?._id,
@@ -1425,6 +1425,8 @@ const LessonScreen = observer(() => {
          * The lessonIndex >= (testTask?.question.length ?? 1) - 1 condition checks if the lessonIndex is greater than or equal to the index of the last question in the question array. If it is, the condition evaluates to true; otherwise, it evaluates to false.
          * If the condition evaluates to true, the code inside the if statement block will be executed. In this case, it calls the submitModule function and passes resultByAnswer as an argument.
          */
+
+
         if (lessonIndex >= (testTask?.question.length ?? 1) - 1) {
           submitModule(resultByAnswer);
           return;
@@ -1477,8 +1479,6 @@ const LessonScreen = observer(() => {
       selectedChild?._id,
       setLessonState,
       submitModule,
-      testTask?.question,
-      testTask?.type,
       toggleUseHint,
     ],
   );
@@ -1593,10 +1593,13 @@ const LessonScreen = observer(() => {
       return <OnBoardingScreen />;
     }
 
-    // Get component
-    let Component = matchedPattern.component;
-    if (typeof Component === 'function' && Component.length > 0) {
-      Component = Component(questionType, dataProps);
+    // Get component - cast về React.ComponentType để TypeScript hiểu đây là JSX component
+    let Component: React.ComponentType<any> = matchedPattern.component as any;
+    if (
+      typeof matchedPattern.component === 'function' &&
+      matchedPattern.component.length > 0
+    ) {
+      Component = (matchedPattern.component as any)(questionType, dataProps);
     }
 
     // Get props

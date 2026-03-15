@@ -1,10 +1,11 @@
 import {useCallback} from 'react';
 import {AuthenticationStore} from '../stores/AuthenticationStore';
 import {PostCampaignPayload} from 'src/authentication/application/types/PostCampaignPayload';
-import { authenticationModuleContainer } from 'src/authentication/AuthenticationModule';
+import {authenticationModuleContainer} from 'src/authentication/AuthenticationModule';
 
 export const useCampaign = () => {
-  const authStore = authenticationModuleContainer.getProvided(AuthenticationStore);
+  const authStore =
+    authenticationModuleContainer.getProvided(AuthenticationStore);
 
   const postCampaign = useCallback(
     async (campaignData: PostCampaignPayload) => {

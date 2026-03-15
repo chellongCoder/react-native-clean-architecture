@@ -47,7 +47,7 @@ const ListLesson = () => {
 
   const debouncedSnapToPrev = () => {
     if (!isButtonDisabled) {
-      if(lessonStore.isLoadingModulesBySubject) {
+      if (lessonStore.isLoadingModulesBySubject) {
         Toast.show({
           type: 'info',
           text1: 'Please wait',
@@ -63,7 +63,7 @@ const ListLesson = () => {
 
   const debouncedSnapToNext = () => {
     if (!isButtonDisabled) {
-      if(lessonStore.isLoadingModulesBySubject) {
+      if (lessonStore.isLoadingModulesBySubject) {
         Toast.show({
           type: 'info',
           text1: 'Please wait',

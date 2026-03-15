@@ -11,8 +11,6 @@ import {screenTracking} from './utils/ScreenTracking';
 
 import {LoadingGlobalProvider} from './hooks/loading/LoadingGlobalProvider';
 import Toast from 'react-native-toast-message';
-import {requestScreenTime} from 'react-native-alphadex-screentime';
-import {isAndroid} from './utils';
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
 import {SoundGlobalProvider} from './hooks/sound/SoundGlobalProvider';
 import {LogBox, Platform, StatusBar, TextInput, Text} from 'react-native';
@@ -33,9 +31,8 @@ import SpInAppUpdates, {
   IAUInstallStatus,
   StatusUpdateEvent,
 } from 'sp-react-native-in-app-updates';
-import analytics from '@react-native-firebase/analytics';
 import useDeeplink from './hooks/appsflyer/useDeeplink';
-import {Settings, AppEventsLogger} from 'react-native-fbsdk-next';
+import {Settings} from 'react-native-fbsdk-next';
 
 LogBox.ignoreLogs(['Warning: ...']); // Ignore log notification by message
 LogBox.ignoreAllLogs(); //Ignore all log notifications
