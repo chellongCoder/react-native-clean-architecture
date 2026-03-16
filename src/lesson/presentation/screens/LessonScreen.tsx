@@ -1,4 +1,4 @@
-import {View, StyleSheet} from 'react-native';
+import {View, StyleSheet, ActivityIndicator} from 'react-native';
 import React, {
   useCallback,
   useContext,
@@ -6,8 +6,348 @@ import React, {
   useMemo,
   useRef,
   useState,
+  lazy,
+  Suspense,
 } from 'react';
-import MathLesson from './LessonComponent/MathLesson';
+// Lazy loaded lesson components for code splitting
+const MathLesson = lazy(() => import('./LessonComponent/MathLesson'));
+const VowelsLesson = lazy(() => import('./LessonComponent/VowelsLesson'));
+const EssayLesson = lazy(() => import('./LessonComponent/EssayLesson'));
+const PronunciationLesson = lazy(
+  () => import('./LessonComponent/PronunciationLesson'),
+);
+const MultiPronunciationLesson = lazy(
+  () => import('./LessonComponent/MultiPronunciationLesson'),
+);
+const OnBoardingScreen = lazy(
+  () => import('src/core/presentation/screens/OnBoardingScreen'),
+);
+const Math_MG2M4 = lazy(() => import('./LessonComponent/Math_MG2M4'));
+const English_EG4M23 = lazy(() => import('./LessonComponent/English_EG4M23'));
+const English_G5M16 = lazy(() => import('./LessonComponent/English_G5M16'));
+const English_G6M26 = lazy(() => import('./LessonComponent/English_G6M26'));
+const English_CharSelector = lazy(
+  () => import('./LessonComponent/English_CharSelector_Meaning'),
+);
+const Mandarin_G2M25 = lazy(() => import('./LessonComponent/Mandarin_G2M25'));
+const Mandarin_G3M37 = lazy(() => import('./LessonComponent/Mandarin_G3M37'));
+const Mandarin_G4M27 = lazy(() => import('./LessonComponent/Mandarin_G4M27'));
+const Mandarin_G5M25 = lazy(() => import('./LessonComponent/Mandarin_G5M25'));
+const Mandarin_G6M31 = lazy(() => import('./LessonComponent/Mandarin_G6M31'));
+const Mandarin_Kindergarten = lazy(
+  () => import('./LessonComponent/Mandarin_Kindergarten'),
+);
+const Math_MG6M15 = lazy(() => import('./LessonComponent/Math_MG6M15'));
+const Math_Kindergarten = lazy(
+  () => import('./LessonComponent/Math_Kindergarten'),
+);
+const ScienceLesson = lazy(
+  () => import('./LessonComponent/Science/ScienceLesson'),
+);
+const Science_G0M1 = lazy(
+  () => import('./LessonComponent/Science/Science_G0M1'),
+);
+const Science_SG2M4 = lazy(
+  () => import('./LessonComponent/Science/Science_SG2M4'),
+);
+const Science_SG4M3 = lazy(
+  () => import('./LessonComponent/Science/Science_SG4M3'),
+);
+const Science_SG5M5 = lazy(
+  () => import('./LessonComponent/Science/Science_SG5M5'),
+);
+const Science_SG3M9 = lazy(
+  () => import('./LessonComponent/Science/Science_SG3M9'),
+);
+const VnG1M3Lesson = lazy(
+  () => import('./LessonComponent/Vietnamese_VNG1M3_Lesson'),
+);
+const VnG2M8Lesson = lazy(
+  () => import('./LessonComponent/Vietnamese_G2M8_lesson'),
+);
+const VnG0M2Lesson = lazy(
+  () => import('./LessonComponent/Vietnamese_G0M2_lesson'),
+);
+const VnG0M3Lesson = lazy(
+  () => import('./LessonComponent/Vietnamese_G0M3_lesson'),
+);
+const VnG0M1Lesson = lazy(
+  () => import('./LessonComponent/Vietnamese_G0M1_Leson'),
+);
+const VnG4M1Lesson = lazy(
+  () => import('./LessonComponent/Vietnamese_G4M1_lesson'),
+);
+const VnG5M1Lesson = lazy(
+  () => import('./LessonComponent/Vietnamese_G5M1_lesson'),
+);
+const Math_MG1M3_P4 = lazy(() => import('./LessonComponent/Math_MG1M3_P4'));
+const Science_SG6M3 = lazy(
+  () => import('./LessonComponent/Science/Science_SG6M3'),
+);
+const Math_MG4M16 = lazy(() => import('./LessonComponent/Math_MG4M16'));
+const VnG4M3Lesson = lazy(
+  () => import('./LessonComponent/Vietnamese_G4M3_lesson'),
+);
+const VNG5M1NLesson = lazy(
+  () => import('./LessonComponent/Vietnamese_G5M1_N_Leson'),
+);
+const VnG1M1Lesson = lazy(
+  () => import('./LessonComponent/Vietnamese_SelectAnswer'),
+);
+const VnG1M4Lesson = lazy(
+  () => import('./LessonComponent/Vietnamese_VNG1M4_Lesson'),
+);
+const VnG1M5Lesson = lazy(
+  () => import('./LessonComponent/Vietnamese_VNG1M5_Lesson'),
+);
+const VnG1M7Lesson = lazy(
+  () => import('./LessonComponent/Vietnamese_VNG1M7_Lesson'),
+);
+const VnG1M8Lesson = lazy(
+  () => import('./LessonComponent/Vietnamese_VNG1M8_Lesson'),
+);
+const VnG1M9Lesson = lazy(
+  () => import('./LessonComponent/Vietnamese_VNG1M9_Lesson'),
+);
+const VnG1M10Lesson = lazy(
+  () => import('./LessonComponent/Vietnamese_VNG1M10_Lesson'),
+);
+const VnG1M2Lesson = lazy(
+  () => import('./LessonComponent/Vietnamese_VNG1M2_Lesson'),
+);
+const VnG1M6Lesson = lazy(
+  () => import('./LessonComponent/Vietnamese_G1M6_lesson'),
+);
+const VnG2M1Lesson = lazy(
+  () => import('./LessonComponent/Vietnamese_VNG2M1_Lesson'),
+);
+const VnG2M12Lesson = lazy(
+  () => import('./LessonComponent/Vietnamese_G2M12_lesson'),
+);
+const VnG3M1Lesson = lazy(
+  () => import('./LessonComponent/Vietnamese_G3M1_lesson'),
+);
+const VnG3M2Lesson = lazy(
+  () => import('./LessonComponent/Vietnamese_G3M2_lesson'),
+);
+const VnG3M3Lesson = lazy(
+  () => import('./LessonComponent/Vietnamese_G3M3_lesson'),
+);
+const VnG3M4Lesson = lazy(
+  () => import('./LessonComponent/Vietnamese_G3M4_lesson'),
+);
+const VnG3M5Lesson = lazy(
+  () => import('./LessonComponent/Vietnamese_G3M5_lesson'),
+);
+const VnG3M6Lesson = lazy(
+  () => import('./LessonComponent/Vietnamese_G3M6_lesson'),
+);
+const VnG3M7Lesson = lazy(
+  () => import('./LessonComponent/Vietnamese_G3M7_lesson'),
+);
+const VnG3M8Lesson = lazy(
+  () => import('./LessonComponent/Vietnamese_G3M8_lesson'),
+);
+const VnG3M10Lesson = lazy(
+  () => import('./LessonComponent/Vietnamese_G3M10_lesson'),
+);
+const Mandarin_G4M_DrawCharacter = lazy(
+  () => import('./LessonComponent/Mandarin_G4M_DrawCharacter'),
+);
+const Mandarin_G4M_SelectAnswer = lazy(
+  () => import('./LessonComponent/Mandarin_G4M_SelectAnswer'),
+);
+const Mandarin_G4_Pronunciation = lazy(
+  () => import('./LessonComponent/Mandarin_G4_Pronunciation'),
+);
+const Math_MG3_KeyboardNumber = lazy(
+  () => import('./LessonComponent/Math_MG3_KeyboardNumber'),
+);
+const Math_G3M_SelectAnswer = lazy(
+  () => import('./LessonComponent/Math_G3M_SelectAnswer'),
+);
+const Math_G4M_SelectAnswer = lazy(
+  () => import('./LessonComponent/Math_G4M_SelectAnswer'),
+);
+const Math_MG2M11 = lazy(() => import('./LessonComponent/Math_MG2M11'));
+const LatinLesson = lazy(() => import('./LessonComponent/LatinLesson'));
+const English_Pronounciation = lazy(
+  () => import('./LessonComponent/English_Pronounciation'),
+);
+const English_SelectAnswer = lazy(
+  () => import('./LessonComponent/English_SelectAnswer'),
+);
+const English_DrawerCharacter = lazy(
+  () => import('./LessonComponent/English_DrawerCharacter'),
+);
+const English_SelectText = lazy(
+  () => import('./LessonComponent/English_SelectText'),
+);
+const English_QwertyKeyboard = lazy(
+  () => import('./LessonComponent/English_QwertyKeyboard'),
+);
+const English_CharSelector_Meaning = lazy(
+  () => import('./LessonComponent/English_CharSelector_Meaning'),
+);
+const English_Pronounciation_Meaning = lazy(
+  () => import('./LessonComponent/English_Pronounciation_Meaning'),
+);
+const English_CombineSentences = lazy(
+  () => import('./LessonComponent/English_CombineSentences'),
+);
+const English_PronounciationRepeat = lazy(
+  () => import('./LessonComponent/English_PronounciationRepeat'),
+);
+const Math_Text_SelectAnswer = lazy(
+  () => import('./LessonComponent/Math_Text_SelectAnswer'),
+);
+const English_SelectAnswer_Paragraph = lazy(
+  () => import('./LessonComponent/English_SelectAnswer_Paragraph'),
+);
+const English_QwertyKeyboard_Paragraph = lazy(
+  () => import('./LessonComponent/English_QwertyKeyboard_Paragraph'),
+);
+const Science_SG1M2 = lazy(
+  () => import('./LessonComponent/Science/Science_SG1M2'),
+);
+const Science_SelectAnswer = lazy(
+  () => import('./LessonComponent/Science/Science_SelectAnswer'),
+);
+const Science_SelectAnswer_Image_TextImageAnswer = lazy(
+  () =>
+    import(
+      './LessonComponent/Science/Science_SelectAnswer_Image_TextImageAnswer'
+    ),
+);
+const Science_SelectAnswer_2Question = lazy(
+  () => import('./LessonComponent/Science/Science_SelectAnswer_2Question'),
+);
+const Science_SelectAnswer_Circle = lazy(
+  () => import('./LessonComponent/Science/Science_SelectAnswer_Circle'),
+);
+const Science_G4M2 = lazy(
+  () => import('./LessonComponent/Science/Science_G4M2'),
+);
+const Science_G4M5 = lazy(
+  () => import('./LessonComponent/Science/Science_G4M5'),
+);
+const Science_G4M4 = lazy(
+  () => import('./LessonComponent/Science/Science_G4M4'),
+);
+const Science_SelectAnswer_ImageLearning = lazy(
+  () => import('./LessonComponent/Science/Science_SelectAnswer_ImageLearning'),
+);
+const Science_SelectAnswer_Image_TextUnderline = lazy(
+  () =>
+    import(
+      './LessonComponent/Science/Science_SelectAnswer_Image_TextUnderline'
+    ),
+);
+const Science_SelectAnswer_ParagraphImage = lazy(
+  () => import('./LessonComponent/Science/Science_SelectAnswer_ParagraphImage'),
+);
+const Science_SelectAnswer_Image_Text = lazy(
+  () => import('./LessonComponent/Science/Science_SelectAnswer_Image_Text'),
+);
+const Science_SelectAnswer_ImageMeaning_Image = lazy(
+  () =>
+    import('./LessonComponent/Science/Science_SelectAnswer_ImageMeaning_Image'),
+);
+const Science_SelectAnswer_ScrollQuestion = lazy(
+  () => import('./LessonComponent/Science/Science_SelectAnswer_ScrollQuestion'),
+);
+const Science_SG5M2 = lazy(
+  () => import('./LessonComponent/Science/Science_SG5M2'),
+);
+const Science_SG2M8 = lazy(
+  () => import('./LessonComponent/Science/Science_SG2M8'),
+);
+const Science_SelectAnswer_AnswerMeaning = lazy(
+  () => import('./LessonComponent/Science/Science_SelectAnswer_AnswerMeaning'),
+);
+const Science_SelectAnswer_Explain_TextImageAnswer = lazy(
+  () =>
+    import(
+      './LessonComponent/Science/Science_SelectAnswer_Explain_TextImageAnswer'
+    ),
+);
+const Science_G5M1 = lazy(
+  () => import('./LessonComponent/Science/Science_G5M1'),
+);
+const Science_SelectAnswer_AnswerImage_MultipleQuestion = lazy(
+  () =>
+    import(
+      './LessonComponent/Science/Science_SelectAnswer_AnswerImage_MultipleQuestion'
+    ),
+);
+const History_Finding_Diff_Point = lazy(
+  () => import('./LessonComponent/History/History_Finding_Diff_Point'),
+);
+const History_SelectAnswer_SwipeImage = lazy(
+  () => import('./LessonComponent/History/History_SelectAnswer_SwipeImage'),
+);
+const History_SelectAnswer_Image = lazy(
+  () => import('./LessonComponent/History/History_SelectAnswer_Image'),
+);
+const History_SelectAnswer_Image_TextImageAnswer = lazy(
+  () =>
+    import(
+      './LessonComponent/History/History_SelectAnswer_Image_TextImageAnswer'
+    ),
+);
+const History_SelectAnswer = lazy(
+  () => import('./LessonComponent/History/History_SelectAnswer'),
+);
+const History_SelectAnswer_Slider = lazy(
+  () => import('./LessonComponent/History/History_SelectAnswer_Slider'),
+);
+const History_SelectImage_Description = lazy(
+  () => import('./LessonComponent/History/History_SelectImage_Description'),
+);
+const HistoryHS1M2 = lazy(
+  () => import('./LessonComponent/History/History_HS1M2'),
+);
+const HistoryHS1M5P1 = lazy(
+  () => import('./LessonComponent/History/History_HS1M5P1'),
+);
+const History_SelectImage_ImageDescription = lazy(
+  () =>
+    import('./LessonComponent/History/History_SelectImage_ImageDescription'),
+);
+const HistoryHS2M2P3 = lazy(
+  () => import('./LessonComponent/History/History_HS2M2P3'),
+);
+const HistoryHS1M5P3 = lazy(
+  () => import('./LessonComponent/History/History_HS1M5P3'),
+);
+const HistoryHS2M1P3 = lazy(
+  () => import('./LessonComponent/History/History_HS2M1P3'),
+);
+const HistoryHS4M1P2 = lazy(
+  () => import('./LessonComponent/History/History_HS4M1P2'),
+);
+const History_SelectAnswer_Text = lazy(
+  () => import('./LessonComponent/History/History_SelectAnswer_Text'),
+);
+const HistoryHS6M1P1 = lazy(
+  () => import('./LessonComponent/History/History_HS6M1P1'),
+);
+const History_HS6M1P2 = lazy(
+  () => import('./LessonComponent/History/History_HS6M1P2'),
+);
+const HistoryHS6M1P3 = lazy(
+  () => import('./LessonComponent/History/History_HS6M1P3'),
+);
+const History_HS6M3P1 = lazy(
+  () => import('./LessonComponent/History/History_HS6M3P1'),
+);
+
+const DragProvider = lazy(() => import('../components/Drag/DragProvider'));
+const UseHintModal = lazy(
+  () => import('src/core/presentation/components/UseHintModal'),
+);
+
+// Re-export commonly used components for pattern matching
 import {
   navigateScreen,
   resetNavigator,
@@ -16,7 +356,6 @@ import {STACK_NAVIGATOR} from 'src/core/presentation/navigation/ConstantNavigato
 import {withProviders} from 'src/core/presentation/utils/withProviders';
 import {LessonStoreProvider} from '../stores/LessonStore/LessonStoreProvider';
 import {observer} from 'mobx-react';
-import VowelsLesson from './LessonComponent/VowelsLesson';
 import {useListQuestions} from 'src/hooks/useListQuestion';
 import {RouteProp, useRoute} from '@react-navigation/native';
 import useStateCustom from 'src/hooks/useStateCommon';
@@ -24,130 +363,14 @@ import useAuthenticationStore from 'src/authentication/presentation/stores/useAu
 import {SoundGlobalContext} from 'src/core/presentation/hooks/sound/SoundGlobalContext';
 import {soundTrack} from 'src/core/presentation/hooks/sound/SoundGlobalProvider';
 import {RouteParamsDone} from 'src/core/presentation/screens/DoneLessonScreen';
-import EssayLesson from './LessonComponent/EssayLesson';
 import {TRAINING_COUNT} from 'src/core/domain/enums/ModuleE';
-import UseHintModal from 'src/core/presentation/components/UseHintModal';
 import {lessonModuleContainer} from 'src/lesson/LessonModule';
 import {LessonStore} from '../stores/LessonStore/LessonStore';
-import PronunciationLesson from './LessonComponent/PronunciationLesson';
 import Env, {EnvToken} from 'src/core/domain/entities/Env';
 import {coreModuleContainer} from 'src/core/CoreModule';
 import {LessonRef} from '../types';
 import useHomeStore from 'src/home/presentation/stores/useHomeStore';
-import ScienceLesson from './LessonComponent/Science/ScienceLesson';
-import OnBoardingScreen from 'src/core/presentation/screens/OnBoardingScreen';
-import Math_MG2M4 from './LessonComponent/Math_MG2M4';
-import English_EG4M23 from './LessonComponent/English_EG4M23';
-import MultiPronunciationLesson from './LessonComponent/MultiPronunciationLesson';
-import English_G5M16 from './LessonComponent/English_G5M16';
-import English_G6M26 from './LessonComponent/English_G6M26';
-import English_CharSelector from './LessonComponent/English_CharSelector_Meaning';
-import Mandarin_G2M25 from './LessonComponent/Mandarin_G2M25';
-import Mandarin_G3M37 from './LessonComponent/Mandarin_G3M37';
-import Mandarin_G4M27 from './LessonComponent/Mandarin_G4M27';
-import Mandarin_G5M25 from './LessonComponent/Mandarin_G5M25';
-import Mandarin_G6M31 from './LessonComponent/Mandarin_G6M31';
-import Mandarin_Kindergarten from './LessonComponent/Mandarin_Kindergarten';
-import Math_MG6M15 from './LessonComponent/Math_MG6M15';
-import Math_Kindergarten from './LessonComponent/Math_Kindergarten';
-import Science_G0M1 from './LessonComponent/Science/Science_G0M1';
-import Science_SG2M4 from './LessonComponent/Science/Science_SG2M4';
-import Science_SG4M3 from './LessonComponent/Science/Science_SG4M3';
-import Science_SG5M5 from './LessonComponent/Science/Science_SG5M5';
-import Science_SG3M9 from './LessonComponent/Science/Science_SG3M9';
-import VnG1M3Lesson from './LessonComponent/Vietnamese_VNG1M3_Lesson';
-import VnG2M8Lesson from './LessonComponent/Vietnamese_G2M8_lesson';
-import VnG0M2Lesson from './LessonComponent/Vietnamese_G0M2_lesson';
-import VnG0M3Lesson from './LessonComponent/Vietnamese_G0M3_lesson';
-import VnG0M1Lesson from './LessonComponent/Vietnamese_G0M1_Leson';
-import VnG4M1Lesson from './LessonComponent/Vietnamese_G4M1_lesson';
-import VnG5M1Lesson from './LessonComponent/Vietnamese_G5M1_lesson';
-import Math_MG1M3_P4 from './LessonComponent/Math_MG1M3_P4';
-import Science_SG6M3 from './LessonComponent/Science/Science_SG6M3';
-import Math_MG4M16 from './LessonComponent/Math_MG4M16';
 import {useI18n} from 'src/core/presentation/hooks/useI18n';
-import VnG4M3Lesson from './LessonComponent/Vietnamese_G4M3_lesson';
-import DragProvider from '../components/Drag/DragProvider';
-import VNG5M1NLesson from './LessonComponent/Vietnamese_G5M1_N_Leson';
-import VnG1M1Lesson from './LessonComponent/Vietnamese_SelectAnswer';
-import VnG1M4Lesson from './LessonComponent/Vietnamese_VNG1M4_Lesson';
-import VnG1M5Lesson from './LessonComponent/Vietnamese_VNG1M5_Lesson';
-import VnG1M7Lesson from './LessonComponent/Vietnamese_VNG1M7_Lesson';
-import VnG1M8Lesson from './LessonComponent/Vietnamese_VNG1M8_Lesson';
-import VnG1M9Lesson from './LessonComponent/Vietnamese_VNG1M9_Lesson';
-import VnG1M10Lesson from './LessonComponent/Vietnamese_VNG1M10_Lesson';
-import VnG1M2Lesson from './LessonComponent/Vietnamese_VNG1M2_Lesson';
-import VnG1M6Lesson from './LessonComponent/Vietnamese_G1M6_lesson';
-import VnG2M1Lesson from './LessonComponent/Vietnamese_VNG2M1_Lesson';
-import VnG2M12Lesson from './LessonComponent/Vietnamese_G2M12_lesson';
-import VnG3M1Lesson from './LessonComponent/Vietnamese_G3M1_lesson';
-import VnG3M2Lesson from './LessonComponent/Vietnamese_G3M2_lesson';
-import VnG3M3Lesson from './LessonComponent/Vietnamese_G3M3_lesson';
-import VnG3M4Lesson from './LessonComponent/Vietnamese_G3M4_lesson';
-import VnG3M5Lesson from './LessonComponent/Vietnamese_G3M5_lesson';
-import VnG3M6Lesson from './LessonComponent/Vietnamese_G3M6_lesson';
-import VnG3M7Lesson from './LessonComponent/Vietnamese_G3M7_lesson';
-import VnG3M8Lesson from './LessonComponent/Vietnamese_G3M8_lesson';
-import VnG3M10Lesson from './LessonComponent/Vietnamese_G3M10_lesson';
-import Mandarin_G4M_DrawCharacter from './LessonComponent/Mandarin_G4M_DrawCharacter';
-import Mandarin_G4M_SelectAnswer from './LessonComponent/Mandarin_G4M_SelectAnswer';
-import Mandarin_G4_Pronunciation from './LessonComponent/Mandarin_G4_Pronunciation';
-import Math_MG3_KeyboardNumber from './LessonComponent/Math_MG3_KeyboardNumber';
-import Math_G3M_SelectAnswer from './LessonComponent/Math_G3M_SelectAnswer';
-import Math_G4M_SelectAnswer from './LessonComponent/Math_G4M_SelectAnswer';
-import Math_MG2M11 from './LessonComponent/Math_MG2M11';
-import LatinLesson from './LessonComponent/LatinLesson';
-import English_Pronounciation from './LessonComponent/English_Pronounciation';
-import English_SelectAnswer from './LessonComponent/English_SelectAnswer';
-import English_DrawerCharacter from './LessonComponent/English_DrawerCharacter';
-import English_SelectText from './LessonComponent/English_SelectText';
-import English_QwertyKeyboard from './LessonComponent/English_QwertyKeyboard';
-import English_CharSelector_Meaning from './LessonComponent/English_CharSelector_Meaning';
-import English_Pronounciation_Meaning from './LessonComponent/English_Pronounciation_Meaning';
-import English_CombineSentences from './LessonComponent/English_CombineSentences';
-import English_PronounciationRepeat from './LessonComponent/English_PronounciationRepeat';
-import Math_Text_SelectAnswer from './LessonComponent/Math_Text_SelectAnswer';
-import English_SelectAnswer_Paragraph from './LessonComponent/English_SelectAnswer_Paragraph';
-import English_QwertyKeyboard_Paragraph from './LessonComponent/English_QwertyKeyboard_Paragraph';
-import Science_SG1M2 from './LessonComponent/Science/Science_SG1M2';
-import Science_SelectAnswer from './LessonComponent/Science/Science_SelectAnswer';
-import Science_SelectAnswer_Image_TextImageAnswer from './LessonComponent/Science/Science_SelectAnswer_Image_TextImageAnswer';
-import Science_SelectAnswer_2Question from './LessonComponent/Science/Science_SelectAnswer_2Question';
-import Science_SelectAnswer_Circle from './LessonComponent/Science/Science_SelectAnswer_Circle';
-import Science_G4M2 from './LessonComponent/Science/Science_G4M2';
-import Science_G4M5 from './LessonComponent/Science/Science_G4M5';
-import Science_G4M4 from './LessonComponent/Science/Science_G4M4';
-import Science_SelectAnswer_ImageLearning from './LessonComponent/Science/Science_SelectAnswer_ImageLearning';
-import Science_SelectAnswer_Image_TextUnderline from './LessonComponent/Science/Science_SelectAnswer_Image_TextUnderline';
-import Science_SelectAnswer_ParagraphImage from './LessonComponent/Science/Science_SelectAnswer_ParagraphImage';
-import Science_SelectAnswer_Image_Text from './LessonComponent/Science/Science_SelectAnswer_Image_Text';
-import Science_SelectAnswer_ImageMeaning_Image from './LessonComponent/Science/Science_SelectAnswer_ImageMeaning_Image';
-import Science_SelectAnswer_ScrollQuestion from './LessonComponent/Science/Science_SelectAnswer_ScrollQuestion';
-import Science_SG5M2 from './LessonComponent/Science/Science_SG5M2';
-import Science_SG2M8 from './LessonComponent/Science/Science_SG2M8';
-import Science_SelectAnswer_AnswerMeaning from './LessonComponent/Science/Science_SelectAnswer_AnswerMeaning';
-import Science_SelectAnswer_Explain_TextImageAnswer from './LessonComponent/Science/Science_SelectAnswer_Explain_TextImageAnswer';
-import Science_G5M1 from './LessonComponent/Science/Science_G5M1';
-import Science_SelectAnswer_AnswerImage_MultipleQuestion from './LessonComponent/Science/Science_SelectAnswer_AnswerImage_MultipleQuestion';
-import History_Finding_Diff_Point from './LessonComponent/History/History_Finding_Diff_Point';
-import History_SelectAnswer_SwipeImage from './LessonComponent/History/History_SelectAnswer_SwipeImage';
-import History_SelectAnswer_Image from './LessonComponent/History/History_SelectAnswer_Image';
-import History_SelectAnswer_Image_TextImageAnswer from './LessonComponent/History/History_SelectAnswer_Image_TextImageAnswer';
-import History_SelectAnswer from './LessonComponent/History/History_SelectAnswer';
-import History_SelectAnswer_Slider from './LessonComponent/History/History_SelectAnswer_Slider';
-import History_SelectImage_Description from './LessonComponent/History/History_SelectImage_Description';
-import HistoryHS1M2 from './LessonComponent/History/History_HS1M2';
-import HistoryHS1M5P1 from './LessonComponent/History/History_HS1M5P1';
-import History_SelectImage_ImageDescription from './LessonComponent/History/History_SelectImage_ImageDescription';
-import HistoryHS2M2P3 from './LessonComponent/History/History_HS2M2P3';
-import HistoryHS1M5P3 from './LessonComponent/History/History_HS1M5P3';
-import HistoryHS2M1P3 from './LessonComponent/History/History_HS2M1P3';
-import HistoryHS4M1P2 from './LessonComponent/History/History_HS4M1P2';
-import History_SelectAnswer_Text from './LessonComponent/History/History_SelectAnswer_Text';
-import HistoryHS6M1P1 from './LessonComponent/History/History_HS6M1P1';
-import History_HS6M1P2 from './LessonComponent/History/History_HS6M1P2';
-import HistoryHS6M1P3 from './LessonComponent/History/History_HS6M1P3';
-import History_HS6M3P1 from './LessonComponent/History/History_HS6M3P1';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 export type TResult = {
@@ -202,17 +425,17 @@ const LESSON_PATTERNS = [
   {
     pattern: /^ENGLISH_EG2M(1|3|5|7|9)$/,
     component: VowelsLesson,
-    props,
+    props: {},
   },
   {
     pattern: /^ENGLISH_EG2M(2|4|6|8|10|13|14|15|17)$/,
     component: English_Pronounciation,
-    props,
+    props: {},
   },
   {
     pattern: /^ENGLISH_EG2M(11)$/,
     component: English_DrawerCharacter,
-    props,
+    props: {},
   },
   {
     pattern: /^ENGLISH_EG2M(12)$/,
@@ -222,18 +445,18 @@ const LESSON_PATTERNS = [
   {
     pattern: /^ENGLISH_EG2M(17)$/,
     component: English_PronounciationRepeat,
-    props,
+    props: {},
   },
   {
     pattern: /^ENGLISH_EG2M(18|19|20|21|30|33|35)$/,
     component: English_CombineSentences,
-    props,
+    props: {},
   },
   {
     pattern:
       /^(ENGLISH_EG2M(16|22|23|24|25|26|27|28|29|31|32|34|36|37|38|39|40|42|43|44|45|46|47|48|49|51|52|53|54))$/,
     component: English_SelectAnswer,
-    props,
+    props: {},
   },
   {
     pattern: /^(ENGLISH_EG2M(41)|ENGLISH_EG3M(14|18|26|30|39))$/,
@@ -1577,11 +1800,21 @@ const LessonScreen = observer(() => {
     stt: testTask?.stt,
   };
 
+  const LoadingFallback = () => (
+    <View style={styles.loadingContainer}>
+      <ActivityIndicator size="large" color="#4A90D9" />
+    </View>
+  );
+
   const buildLesson = () => {
     const questionType = testTask?.question?.[lessonIndex]?.type.trim();
     console.log('questionType: ', questionType);
     if (!questionType) {
-      return <OnBoardingScreen />;
+      return (
+        <Suspense fallback={<LoadingFallback />}>
+          <OnBoardingScreen />
+        </Suspense>
+      );
     }
     // Find matching pattern
     const matchedPattern = LESSON_PATTERNS.find(pattern => {
@@ -1589,7 +1822,11 @@ const LessonScreen = observer(() => {
     });
 
     if (!matchedPattern) {
-      return <OnBoardingScreen />;
+      return (
+        <Suspense fallback={<LoadingFallback />}>
+          <OnBoardingScreen />
+        </Suspense>
+      );
     }
 
     // Get component - cast về React.ComponentType để TypeScript hiểu đây là JSX component
@@ -1613,24 +1850,32 @@ const LessonScreen = observer(() => {
     if (matchedPattern.wrapper) {
       const Wrapper = matchedPattern.wrapper;
       return (
-        <Wrapper>
-          <Component {...props} ref={vowelRef} />
-        </Wrapper>
+        <Suspense fallback={<LoadingFallback />}>
+          <Wrapper>
+            <Component {...props} ref={vowelRef} />
+          </Wrapper>
+        </Suspense>
       );
     }
 
-    return <Component {...props} ref={vowelRef} />;
+    return (
+      <Suspense fallback={<LoadingFallback />}>
+        <Component {...props} ref={vowelRef} />
+      </Suspense>
+    );
   };
 
   const buildHint = () => {
     return (
       <View style={styles.hint}>
-        <UseHintModal
-          onClose={() => {
-            toggleUseHint();
-          }}
-          onUseHint={onUseHint}
-        />
+        <Suspense fallback={<LoadingFallback />}>
+          <UseHintModal
+            onClose={() => {
+              toggleUseHint();
+            }}
+            onUseHint={onUseHint}
+          />
+        </Suspense>
       </View>
     );
   };
@@ -1656,5 +1901,11 @@ const styles = StyleSheet.create({
     zIndex: 999,
     width: '100%',
     height: '100%',
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'transparent',
   },
 });

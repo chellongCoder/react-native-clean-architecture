@@ -3,16 +3,16 @@ import React from 'react';
 import {FontFamily} from 'src/core/presentation/hooks/useFonts';
 import IconDiamond from 'assets/svg/IconDiamond';
 
-const Price = ({price}: {price: string}) => {
+const Price = React.memo(({price}: {price: string}) => {
   return (
     <View style={[styles.boxPrice]}>
       <Text style={[styles.fonts_SVN_Cherish, styles.textPrice]}>{price}</Text>
       <IconDiamond />
     </View>
   );
-};
+});
 
-export default Price;
+export default React.memo(Price);
 
 const styles = StyleSheet.create({
   boxPrice: {

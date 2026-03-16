@@ -16,7 +16,7 @@ type ButtonProps = {
   onPress: (event: GestureResponderEvent) => void;
   icon?: React.ReactNode;
 };
-const Button = (props: Partial<ButtonProps>) => {
+const Button = React.memo((props: Partial<ButtonProps>) => {
   const globalStyle = useGlobalStyle();
   return (
     <TouchableOpacity
@@ -33,9 +33,9 @@ const Button = (props: Partial<ButtonProps>) => {
       )}
     </TouchableOpacity>
   );
-};
+});
 
-export default Button;
+export default React.memo(Button);
 
 const styles = StyleSheet.create({
   container: {
