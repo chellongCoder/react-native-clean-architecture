@@ -198,7 +198,7 @@ const VnG0M1Lesson = observer(
         checkEmpty,
       } = usePronunciation({
         correctAnswer: getCorrectAnswer(
-          firstMiniTestTask?.question?.[moduleIndex].correctAnswer as string[],
+          firstMiniTestTask?.question?.[moduleIndex].correctAnswer as string,
         ),
       });
       console.log(
@@ -564,79 +564,19 @@ const styles = StyleSheet.create({
   fonts_EinaBold: {
     fontFamily: FontFamily.SVNNeuzeitBold,
   },
-  textColor: {
-    color: '#1C6349',
-  },
-  textLarge: {
-    fontSize: 140,
-    textAlign: 'center',
-    color: 'white',
-  },
+
   textQuestion: {
-    fontSize: 48,
+    fontSize: scale(48),
     textAlign: 'center',
     color: COLORS.GREEN_66C270,
   },
   textGreen: {
-    color: '#258F78',
+    color: COLORS.GREEN_66C270,
   },
   textRed: {
     color: COLORS.RED_E1460E,
   },
-  txtWhite: {
-    color: 'white',
-  },
-  rowAround: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-  },
-  rowAlignCenter: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  rowBetween: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-  },
-  pr16: {
-    paddingRight: 16,
-  },
-  ph24: {
-    paddingHorizontal: 24,
-  },
-  pb8: {
-    paddingBottom: verticalScale(8),
-  },
-  pb16: {
-    paddingBottom: verticalScale(16),
-  },
-  pb32: {
-    paddingBottom: verticalScale(32),
-  },
-  mt8: {
-    marginTop: verticalScale(8),
-  },
-  mt16: {
-    marginTop: verticalScale(16),
-  },
-  mt24: {
-    marginTop: verticalScale(24),
-  },
-  mt32: {
-    marginTop: verticalScale(32),
-  },
-  alignSelfCenter: {
-    alignSelf: 'center',
-  },
-  center: {
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  boxItemAnswer: {
-    height: 94,
-    backgroundColor: '#F2B559',
-    borderRadius: 30,
-  },
+
   boxSelected: {
     backgroundColor: COLORS.WHITE_FBF8CC,
     height: verticalScale(220),
@@ -645,27 +585,13 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  boxVowel: {
-    width: 56,
-    height: 56,
-    borderRadius: 10,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginHorizontal: 6,
-    marginVertical: 6,
-  },
+
   textVowel: {
     fontFamily: FontFamily.SVNCherishMoment,
     color: '#FBF8CC',
     fontSize: verticalScale(28),
   },
-  wapper: {
-    marginTop: 8,
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    justifyContent: 'center',
-    alignContent: 'center',
-  },
+
   wrapCharContainer: {
     flexDirection: 'row',
   },
@@ -674,25 +600,12 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     marginBottom: 8,
   },
-  iconImageContainer: {height: scale(71), width: scale(71)},
-  iconAIVoiceContainer: {height: scale(31), width: scale(31)},
   hintText: {
     fontFamily: FontFamily.SVNNeuzeitBold,
     color: COLORS.PRIMARY,
     fontSize: scale(12),
   },
-  wrapTextQuestion: {
-    paddingVertical: 8,
-    paddingHorizontal: 32,
-    marginHorizontal: 12,
-    borderRadius: 30,
-    backgroundColor: COLORS.WHITE_FBF8CC,
-    borderStyle: 'dashed',
-    borderWidth: 4,
-    borderColor: COLORS.BLUE_258F78,
-    marginBottom: 16,
-    flexDirection: 'row',
-  },
+
   buttonContainer: {
     borderRadius: scale(52),
     paddingVertical: verticalScale(9),

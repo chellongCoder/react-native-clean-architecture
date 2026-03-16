@@ -198,11 +198,12 @@ const History_SelectAnswer_Image_TextImageAnswer = observer(
           backgroundAnswerColor={
             settings.backgroundAnswerColor ?? COLORS.GREEN_DDF598
           }
-          prompt={
-            {
-              description: firstMiniTestTask?.question?.[moduleIndex]?.prompt ?? settings.prompt?.toString() ?? '',
-            }
-          }
+          prompt={{
+            description:
+              firstMiniTestTask?.question?.[moduleIndex]?.prompt ??
+              settings.prompt?.toString() ??
+              '',
+          }}
           price="Free"
           score={selectedChild?.adsPoints}
           txtCountDown={word && !isMMSS(word) ? undefined : word}

@@ -1,7 +1,5 @@
 import React, {useEffect} from 'react';
-import {View, Text} from 'react-native';
 import crashlytics from '@react-native-firebase/crashlytics';
-import firebase from '@react-native-firebase/app';
 
 const FirebaseCrashlyticProvider = ({
   children,

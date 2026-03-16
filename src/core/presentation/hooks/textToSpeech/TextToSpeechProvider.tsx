@@ -8,7 +8,6 @@ import {TextToSpeechContext} from './TextToSpeechContext';
 import Tts, {Voice} from 'react-native-tts';
 import {Platform} from 'react-native';
 import {isAndroid} from '../../utils';
-import {VolumeManager} from 'react-native-volume-manager';
 import {lessonModuleContainer} from 'src/lesson/LessonModule';
 import {LessonStore} from 'src/lesson/presentation/stores/LessonStore/LessonStore';
 import {HomeStore} from 'src/home/presentation/stores/HomeStore';
@@ -289,14 +288,25 @@ export const TextToSpeechProvider = ({children}: PropsWithChildren) => {
   const [onFinish, setOnFinish] = useState<() => void>();
 
   const ttsSpeak = async (text: string, callback?: () => void) => {
-    console.log('ttsSpeak: ', text);
-    // setIsSpeakDone(false);
+    console.log('ttsSpeak text: ', text);
+    console.log('ttsSpeak isInitialized: ', isInitialized);
+
+    if (!text || text.trim() === '') {
+      console.warn('TTS: Empty text provided');
+      return;
+    }
+
     if (isInitialized) {
-      await Tts.stop();
-      Tts.speak(text);
-      setOnFinish(callback);
+      try {
+        await Tts.stop();
+        setOnFinish(callback);
+        await Tts.speak(text);
+        console.log('TTS speak called successfully');
+      } catch (error) {
+        console.error('TTS speak error: ', error);
+      }
     } else {
-      console.log('TTS not initialized yet.');
+      console.warn('TTS not initialized yet.');
     }
 
     homeStore.putLoggingAction({
@@ -357,54 +367,75 @@ export const TextToSpeechProvider = ({children}: PropsWithChildren) => {
 
   const init = useCallback(() => {
     console.log('INIT TTS ✅');
-    // Tiếng nói
-    Tts.setDefaultLanguage(
-      Platform.OS === 'android'
-        ? androidVoice[0].language
-        : iosVoice[0].language,
-    );
-    // Giọng đọc
-    Tts.setDefaultVoice(
-      Platform.OS === 'android' ? androidVoice[0].id : iosVoice[3].id,
-    );
-    // Tốc độ nói
-    Tts.setDefaultRate(isAndroid ? 0.5 : 1);
+    try {
+      // Set language
+      Tts.setDefaultLanguage(
+        Platform.OS === 'android'
+          ? androidVoice[0].language
+          : iosVoice[0].language,
+      );
 
-    // Độ ấm của giọng càng thấp giọng càng trầm ấm
-    Tts.setDefaultPitch(1.0);
+      // Set voice
+      Tts.setDefaultVoice(
+        Platform.OS === 'android' ? androidVoice[0].id : iosVoice[3].id,
+      );
 
-    // Ignore the silent switch on the device, allowing TTS to play even if the device is set to silent
-    Tts.setIgnoreSilentSwitch('ignore');
+      // Set speech rate
+      Tts.setDefaultRate(isAndroid ? 0.5 : 0.5);
 
-    setIsInitialized(true);
+      // Set pitch
+      Tts.setDefaultPitch(1.0);
 
-    Tts.voices().then(vs => {
-      setVoices(vs);
-    });
+      // Ignore silent switch - allow TTS to play even in silent mode
+      Tts.setIgnoreSilentSwitch('ignore');
+
+      setIsInitialized(true);
+      console.log('TTS initialized successfully');
+
+      Tts.voices().then(vs => {
+        setVoices(vs);
+        console.log('Available voices:', vs.length);
+      });
+    } catch (error) {
+      console.error('TTS init error:', error);
+    }
   }, []);
 
   useEffect(() => {
-    Tts.getInitStatus()
-      .then(() => {
+    const initializeTTS = async () => {
+      try {
+        const status = await Tts.getInitStatus();
+        console.log('TTS Status:', status);
         init();
-      })
-      .catch(error => {
-        console.error('TTS initialization failed:', error);
+      } catch (error) {
+        console.error('TTS initialization error:', error);
         // If there is no TTS engine installed, request to install one
-        if (error.code === 'no_engine') {
-          console.log('NO ENGINE TTS ✅');
+        if ((error as any).code === 'no_engine') {
+          console.log('NO TTS ENGINE - Requesting installation');
           Tts.requestInstallEngine();
         }
-      });
+      }
+    };
+
+    initializeTTS();
 
     // Listen for the 'finish' event
-    Tts.addEventListener('tts-finish', event => {
-      console.log('Speech completed!');
+    const finishListener = Tts.addEventListener('tts-finish', event => {
+      console.log('TTS Speech completed!', event);
       onFinish?.();
-      // setOnFinish(undefined);
-      setIsSpeakDone(true); // Perform any action you need after speech is done
-      // Perform any action you need after speech is done
+      setIsSpeakDone(true);
     });
+
+    // Listen for error events
+    const errorListener = Tts.addEventListener('tts-error', event => {
+      console.error('TTS Error:', event);
+    });
+
+    // Cleanup listeners on unmount
+    return () => {
+      finishListener?.remove?.();
+      errorListener?.remove?.();
+    };
   }, [init, onFinish]);
 
   // useEffect(() => {

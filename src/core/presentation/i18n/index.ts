@@ -9,7 +9,7 @@ import {persist} from 'mobx-persist';
 @injectable()
 class I18n {
   private i18nJs;
-  @persist @observable deviceLocale = Localization.locale.substring(0, 2);
+  @persist @observable deviceLocale = (Localization.getLocales()[0]?.languageCode || 'en');
 
   @action
   setDeviceLocale(deviceLocale: string) {

@@ -76,14 +76,20 @@ export default StyleSheet.create({
     borderColor: 'transparent',
   },
   wrapBottomTabContainer: {
-    height: '100%',
+    alignItems: 'center',
+    justifyContent: 'center',
     paddingTop: scale(10),
   },
   wrapIconContainer: {
     justifyContent: 'center',
     alignItems: 'center',
   },
-  wrapTitleContainer: {marginTop: 'auto'},
+  wrapTitleContainer: {
+    marginTop: scale(4),
+    minHeight: scale(14),
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
   bottomTabIcon: {
     height: scale(24),
     width: scale(24),

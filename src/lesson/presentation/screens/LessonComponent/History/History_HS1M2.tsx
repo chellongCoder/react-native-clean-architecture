@@ -87,7 +87,6 @@ const HistoryHS1M2 = observer(
         isShowCorrectContainer,
         word,
         env,
-        learningTimer,
         submit,
         toggleShowHint,
         resetLearning,
@@ -193,7 +192,7 @@ const HistoryHS1M2 = observer(
       }));
 
       const buildItemAnswer = useCallback(
-        (items: string[], item: string, index: number) => {
+        (item: string, index: number) => {
           // console.log('🛠 LOG: 🚀 --> ~ item:', item);
           return (
             <DragItem
@@ -250,11 +249,12 @@ const HistoryHS1M2 = observer(
           backgroundAnswerColor={
             settings.backgroundAnswerColor ?? COLORS.GREEN_DDF598
           }
-          prompt={
-            {
-              description: firstMiniTestTask?.question?.[moduleIndex]?.prompt ?? settings.prompt?.toString() ?? '',
-            }
-          }
+          prompt={{
+            description:
+              firstMiniTestTask?.question?.[moduleIndex]?.prompt ??
+              settings.prompt?.toString() ??
+              '',
+          }}
           price="Free"
           score={selectedChild?.adsPoints}
           txtCountDown={
@@ -375,7 +375,6 @@ const HistoryHS1M2 = observer(
                         borderRadius: scale(4),
                       }}>
                       {buildItemAnswer(
-                        [],
                         index === 0 ? 'Ngày xưa' : 'Ngày nay',
                         index + 100,
                       )}

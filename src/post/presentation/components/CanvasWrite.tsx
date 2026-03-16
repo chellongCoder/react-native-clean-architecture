@@ -7,15 +7,12 @@ import React, {
   useRef,
   useState,
 } from 'react';
-import {StyleSheet, View} from 'react-native';
+import {StyleSheet, View, PanResponder} from 'react-native';
 import {
   Canvas,
   Path,
   SkPath,
   Skia,
-  Circle,
-  TouchInfo,
-  useTouchHandler,
   Text as TextSkia,
   matchFont,
   useFonts,
@@ -78,20 +75,32 @@ const CanvasWrite = forwardRef<CanvasWriteRef, Props>((props: Props, ref) => {
     );
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [fontMgr, size, props.text?.content]);
-  const [paths, setPaths] = useState<SkPath[]>([]);
+
+  // ===== FIX: Gộp tất cả stroke vào 1 path duy nhất =====
+  // Tránh lỗi nextPaint.assign khi render N <Path> components
+  const accumulatedPath = useRef<SkPath>(Skia.Path.Make());
+  const currentStroke = useRef<SkPath>(Skia.Path.Make());
+  const [renderPath, setRenderPath] = useState<SkPath>(() => Skia.Path.Make());
+  // Lưu từng stroke riêng cho getResult()
+  const strokesRef = useRef<SkPath[]>([]);
 
   const points = useRef<{x: number; y: number; passed?: boolean}[]>([]);
-
   const matchPointNumber = useRef(0);
-
   const maxDistance = useRef(0);
 
   const [matchDistance] = useState(props.matchDistance ?? 10);
   const [strokesNumber, setStrokesNumber] = useState(0);
 
+  // Cập nhật renderPath = accumulated + currentStroke gộp lại
+  const updateRenderPath = useCallback(() => {
+    const combined = accumulatedPath.current.copy();
+    combined.addPath(currentStroke.current);
+    setRenderPath(combined);
+  }, []);
+
+  // Tìm điểm gần nhất để kiểm tra khớp
   const findPointNear = useCallback(
-    (touchInfo: TouchInfo) => {
-      const {x, y} = touchInfo;
+    (x: number, y: number) => {
       const diemGanNhat = points.current.reduce<{
         kc2: number;
         x: number;
@@ -102,12 +111,7 @@ const CanvasWrite = forwardRef<CanvasWriteRef, Props>((props: Props, ref) => {
           const khoangCach2 =
             (value.x - x) * (value.x - x) + (value.y - y) * (value.y - y);
           if (khoangCach2 < min.kc2) {
-            return {
-              ...min,
-              ...value,
-              kc2: khoangCach2,
-              index: index,
-            };
+            return {...min, ...value, kc2: khoangCach2, index: index};
           } else {
             return min;
           }
@@ -132,53 +136,70 @@ const CanvasWrite = forwardRef<CanvasWriteRef, Props>((props: Props, ref) => {
     [],
   );
 
-  const onDrawingStart = useCallback((touchInfo: TouchInfo) => {
-    // points.current = [...points.current, {x: touchInfo.x, y: touchInfo.y}];
-    setPaths(old => {
-      const {x, y} = touchInfo;
-      const newPath = Skia.Path.Make();
-      newPath.moveTo(x, y);
-      newPath.lineTo(x + 1, y + 1);
-      return [...old, newPath];
-    });
-    setStrokesNumber(pre => pre + 1);
+  // Khi bắt đầu chạm — tạo stroke mới
+  const onDrawingStart = useCallback(
+    (x: number, y: number) => {
+      currentStroke.current = Skia.Path.Make();
+      currentStroke.current.moveTo(x, y);
+      currentStroke.current.lineTo(x + 1, y + 1);
+      setStrokesNumber(pre => pre + 1);
+      updateRenderPath();
+    },
+    [updateRenderPath],
+  );
+
+  // Khi di chuyển ngón tay — kéo dài stroke
+  const onDrawingActive = useCallback(
+    (x: number, y: number) => {
+      findPointNear(x, y);
+      const lastPt = currentStroke.current.getLastPt();
+      const xMid = (lastPt.x + x) / 2;
+      const yMid = (lastPt.y + y) / 2;
+      currentStroke.current.quadTo(lastPt.x, lastPt.y, xMid, yMid);
+      updateRenderPath();
+    },
+    [findPointNear, updateRenderPath],
+  );
+
+  // Khi nhấc tay — gộp stroke vào accumulated
+  const onDrawingEnd = useCallback(() => {
+    strokesRef.current.push(currentStroke.current.copy());
+    accumulatedPath.current.addPath(currentStroke.current);
+    currentStroke.current = Skia.Path.Make();
   }, []);
 
-  const onDrawingActive = useCallback(
-    (touchInfo: TouchInfo) => {
-      findPointNear(touchInfo);
+  // Refs để PanResponder luôn gọi phiên bản mới nhất
+  const onDrawingStartRef = useRef(onDrawingStart);
+  const onDrawingActiveRef = useRef(onDrawingActive);
+  const onDrawingEndRef = useRef(onDrawingEnd);
+  onDrawingStartRef.current = onDrawingStart;
+  onDrawingActiveRef.current = onDrawingActive;
+  onDrawingEndRef.current = onDrawingEnd;
 
-      setPaths(currentPaths => {
-        const {x, y} = touchInfo;
-        const currentPath = currentPaths[currentPaths.length - 1];
-        const lastPoint = currentPath.getLastPt();
-        const xMid = (lastPoint.x + x) / 2;
-        const yMid = (lastPoint.y + y) / 2;
+  // PanResponder thay thế useTouchHandler — tránh xung đột Skia reconciler
+  const panResponder = useRef(
+    PanResponder.create({
+      onStartShouldSetPanResponder: () => true,
+      onMoveShouldSetPanResponder: () => true,
+      onPanResponderGrant: evt => {
+        const {locationX, locationY} = evt.nativeEvent;
+        onDrawingStartRef.current(locationX, locationY);
+      },
+      onPanResponderMove: evt => {
+        const {locationX, locationY} = evt.nativeEvent;
+        onDrawingActiveRef.current(locationX, locationY);
+      },
+      onPanResponderRelease: () => onDrawingEndRef.current(),
+      onPanResponderTerminate: () => onDrawingEndRef.current(),
+    }),
+  ).current;
 
-        currentPath.quadTo(lastPoint.x, lastPoint.y, xMid, yMid);
-        return [...currentPaths.slice(0, currentPaths.length - 1), currentPath];
-      });
-    },
-    [findPointNear],
-  );
-
-  const touchHandler = useTouchHandler(
-    {
-      onActive: onDrawingActive,
-      onStart: onDrawingStart,
-    },
-    [onDrawingActive, onDrawingStart],
-  );
-
+  // Reset canvas về trạng thái ban đầu
   const reset = () => {
-    // console.log(
-    //   points.current.map(pre => [
-    //     pre.x - (positionText?.originX ?? 0),
-    //     pre.y - (positionText?.originY ?? 0),
-    //   ]),
-    //   'points',
-    // );
-    setPaths([]);
+    accumulatedPath.current = Skia.Path.Make();
+    currentStroke.current = Skia.Path.Make();
+    strokesRef.current = [];
+    setRenderPath(Skia.Path.Make());
     setStrokesNumber(0);
     matchPointNumber.current = 0;
     points.current = points.current.map(e => ({...e, passed: false}));
@@ -189,7 +210,7 @@ const CanvasWrite = forwardRef<CanvasWriteRef, Props>((props: Props, ref) => {
     reset,
     getResult: () => ({
       maxDistance: maxDistance.current,
-      paths: paths,
+      paths: strokesRef.current,
       matchPointNumber: matchPointNumber.current,
       strokesNumber: strokesNumber,
     }),
@@ -214,7 +235,9 @@ const CanvasWrite = forwardRef<CanvasWriteRef, Props>((props: Props, ref) => {
           width: e.nativeEvent.layout.width,
         });
       }}>
-      <Canvas style={styles.container} onTouch={touchHandler}>
+
+      {/* Canvas chỉ render, không nhận gesture trực tiếp */}
+      <Canvas style={styles.container}>
         {props?.text?.content && (
           <TextSkia
             text={props?.text?.content}
@@ -225,29 +248,23 @@ const CanvasWrite = forwardRef<CanvasWriteRef, Props>((props: Props, ref) => {
             opacity={props?.text?.opacity ?? 1}
           />
         )}
-        {false && //test
-          points.current.map((point, index) => (
-            <Circle
-              cx={point.x}
-              cy={point.y}
-              r={3}
-              key={index}
-              color={point.passed ? '#FF00FF' : 'black'}
-            />
-          ))}
-        {paths.map((path, index) => (
-          <Path
-            key={'path' + index}
-            path={path}
-            color={'black'}
-            style={'stroke'}
-            strokeWidth={2}
-          />
-        ))}
+        {/* Chỉ 1 Path duy nhất cho tất cả nét vẽ */}
+        <Path
+          path={renderPath}
+          color={'black'}
+          style={'stroke'}
+          strokeWidth={2}
+          strokeCap="round"
+          strokeJoin="round"
+        />
       </Canvas>
+
+      {/* View trong suốt bắt gesture qua PanResponder */}
+      <View style={StyleSheet.absoluteFill} {...panResponder.panHandlers} />
     </View>
   );
 });
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,

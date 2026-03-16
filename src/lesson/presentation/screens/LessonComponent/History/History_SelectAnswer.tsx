@@ -297,12 +297,12 @@ const History_SelectAnswer = observer(
                     gap: verticalScale(4),
                   }}>
                   <Text
-                    numberOfLines={2}
+                    numberOfLines={3}
                     style={[
                       styles.fonts_SVN_Neuzeit_Bold,
                       {
                         textAlign: 'center',
-                        fontSize: scale(18),
+                        fontSize: scale(10),
                         color: darkenColor(settings.backgroundColor!, 50),
                       },
                     ]}>

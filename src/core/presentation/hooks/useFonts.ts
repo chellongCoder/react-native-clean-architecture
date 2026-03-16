@@ -16,16 +16,16 @@ export const useFonts = () => {
     const loadFonts = async () => {
       try {
         await Font.loadAsync({
-          [FontFamily.BorelRegular]: require('assets/fonts/borel-regular.ttf'),
-          [FontFamily.Eina01Regular]: require('assets/fonts/eina-01-regular.ttf'),
-          [FontFamily.Eina01Bold]: require('assets/fonts/eina-01-bold.ttf'),
-          [FontFamily.SVNCherishMoment]: require('assets/fonts/SVN-Cherish Moment.ttf'),
-          [FontFamily.SVNNeuzeitRegular]: require('assets/fonts/SVN-Neuzeit Grotesk Regular.otf'),
-          [FontFamily.SVNNeuzeitBold]: require('assets/fonts/SVN-Neuzeit Grotesk Bold.otf'),
+          [FontFamily.BorelRegular]: require('../../../../assets/fonts/borel_regular.ttf'),
+          [FontFamily.Eina01Regular]: require('../../../../assets/fonts/eina_01_regular.ttf'),
+          [FontFamily.Eina01Bold]: require('../../../../assets/fonts/eina_01_bold.ttf'),
+          [FontFamily.SVNCherishMoment]: require('../../../../assets/fonts/svn_cherish_moment.ttf'),
+          [FontFamily.SVNNeuzeitRegular]: require('../../../../assets/fonts/svn_neuzeit_regular.otf'),
+          [FontFamily.SVNNeuzeitBold]: require('../../../../assets/fonts/svn_neuzeit_bold.otf'),
         });
         console.log('Fonts loaded successfully ✅');
       } catch (error) {
-        console.log('Fonts loaded failed ❌');
+        console.log('Fonts loaded failed ❌', error);
       }
       setFontsLoaded(true);
     };

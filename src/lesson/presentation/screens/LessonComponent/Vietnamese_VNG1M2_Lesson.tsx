@@ -437,9 +437,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  fonts_SVN_Cherish: {
-    fontFamily: FontFamily.SVNCherishMoment,
-  },
+
   fonts_Borel: {
     fontFamily: FontFamily.BorelRegular,
   },
@@ -461,22 +459,7 @@ const styles = StyleSheet.create({
     marginBottom: scale(-8),
     color: COLORS.WHITE_FBF8CC,
   },
-  rowAround: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-  },
-  rowAlignCenter: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  pb32: {},
-  mt32: {
-    marginTop: 32,
-  },
-  alignSelfCenter: {
-    alignSelf: 'center',
-  },
-  iconAIVoiceContainer: {height: scale(31), width: scale(31)},
+
   buttonContainer: {
     borderRadius: scale(52),
     paddingVertical: verticalScale(9),

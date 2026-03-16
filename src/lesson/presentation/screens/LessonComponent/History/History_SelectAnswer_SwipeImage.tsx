@@ -252,7 +252,7 @@ const History_SelectAnswer_SwipeImage = observer(
                   color: settings.backgroundButtonColor,
                   fontSize: scale(18),
                 }}
-                subtitleStyle={{color: COLORS.BLUE_258F78, fontSize: scale(12)}}
+                subtitleStyle={{color: COLORS.BLUE_258F78, fontSize: scale(10)}}
               />
             </Animated.View>
           }

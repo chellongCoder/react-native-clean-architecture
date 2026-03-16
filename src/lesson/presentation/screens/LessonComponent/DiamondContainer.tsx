@@ -4,7 +4,6 @@ import {
   View,
   Text,
   FlatList,
-  TouchableOpacity,
   Image,
   ImageBackground,
 } from 'react-native';
@@ -109,7 +108,7 @@ const DiamondContainer = (props: TProps) => {
         text={i18n.t('lesson.screens.Parent.checkout')}
         style={{marginVertical: verticalScale(20), borderRadius: scale(100)}}
         onPress={() => {
-          onBuyDiamond(iapState.products?.[itemIndex]);
+          onBuyDiamond(iapState.products?.[itemIndex] as TProduct);
         }}
         disable={!iapState.products || !iapState.products?.length}
       />

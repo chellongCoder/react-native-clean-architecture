@@ -8,10 +8,10 @@ import {
 import RootNavigator from './navigation/RootNavigator';
 import RootNavigation from './navigation/actions/RootNavigationActions';
 import {screenTracking} from './utils/ScreenTracking';
+import analytics from '@react-native-firebase/analytics';
+
 import {LoadingGlobalProvider} from './hooks/loading/LoadingGlobalProvider';
 import Toast from 'react-native-toast-message';
-import {requestScreenTime} from 'react-native-alphadex-screentime';
-import {isAndroid} from './utils';
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
 import {SoundGlobalProvider} from './hooks/sound/SoundGlobalProvider';
 import {LogBox, Platform, StatusBar, TextInput, Text} from 'react-native';
@@ -32,9 +32,10 @@ import SpInAppUpdates, {
   IAUInstallStatus,
   StatusUpdateEvent,
 } from 'sp-react-native-in-app-updates';
-import analytics from '@react-native-firebase/analytics';
 import useDeeplink from './hooks/appsflyer/useDeeplink';
-import {Settings, AppEventsLogger} from 'react-native-fbsdk-next';
+import {AppEventsLogger, Settings} from 'react-native-fbsdk-next';
+import {isAndroid} from './utils';
+import {requestScreenTime} from 'react-native-alphadex-screentime';
 
 LogBox.ignoreLogs(['Warning: ...']); // Ignore log notification by message
 LogBox.ignoreAllLogs(); //Ignore all log notifications

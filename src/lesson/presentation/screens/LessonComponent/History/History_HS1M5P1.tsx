@@ -93,7 +93,6 @@ const HistoryHS1M5P1 = observer(
         isShowCorrectContainer,
         word,
         env,
-        learningTimer,
         submit,
         toggleShowHint,
         resetLearning,
@@ -146,7 +145,7 @@ const HistoryHS1M5P1 = observer(
           firstMiniTestTask?.question?.[moduleIndex].correctAnswer;
 
         const isCorrect =
-          correctAnswers?.toString() === (selectedFeature[0]?.value)?.toString();
+          correctAnswers?.toString() === selectedFeature[0]?.value?.toString();
 
         setIsCorrectAnswer(!!isCorrect);
         isSubmitRef.current = false;
@@ -229,11 +228,12 @@ const HistoryHS1M5P1 = observer(
           backgroundAnswerColor={
             settings.backgroundAnswerColor ?? COLORS.GREEN_DDF598
           }
-          prompt={
-            {
-              description: firstMiniTestTask?.question?.[moduleIndex]?.prompt ?? settings.prompt?.toString() ?? '',
-            }
-          }
+          prompt={{
+            description:
+              firstMiniTestTask?.question?.[moduleIndex]?.prompt ??
+              settings.prompt?.toString() ??
+              '',
+          }}
           price="Free"
           score={selectedChild?.adsPoints}
           txtCountDown={
@@ -309,7 +309,7 @@ const HistoryHS1M5P1 = observer(
                         ),
                       },
                     ]}>
-                    {i18n.t('lesson.screens.Modules.chooseCorrectAnswer')}
+                    {i18n.t('lesson.screens.Modules.openSpeakerAndDragAnswer')}
                   </Text>
                 </View>
 

@@ -40,15 +40,15 @@ const BottomTabBar = observer(
     );
 
     useEffect(() => {
-      const temp =
-        routesView.current[Math.floor(state?.routes.length / 2 ?? 1)];
+      const temp = routesView.current[Math.floor(state.routes.length / 2)];
       const viewIndex = routesView.current.findIndex(i => i === state.index);
       routesView.current[2] = routesView.current[viewIndex];
       routesView.current[viewIndex] = temp;
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [state.index]);
 
-    if (focusedOptions.tabBarVisible === false) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    if ((focusedOptions as any)?.tabBarVisible === false) {
       return null;
     }
 
@@ -59,7 +59,7 @@ const BottomTabBar = observer(
             <View style={styles.blockRoutesContainer} />
           )}
           <View style={[styles.midBackground]} />
-          {state?.routes.map((route: any, index: number) => {
+          {state.routes.map((route, index: number) => {
             const {options} = descriptors[route.key];
 
             const isFocused = state.index === index;

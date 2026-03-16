@@ -56,19 +56,19 @@ platform :android do
   desc "Build and upload APK to Firebase App Distribution"
   lane :upload_to_firebase do
 
-    # increment_version_code
+    increment_version_code
 
     gradle(task: "assembleRelease")
 
 
     firebase_app_distribution(
-      app: "1:827845646125:android:61618b15b8dab04bf625a4",
-      firebase_cli_token: "1//0eoz3S6LpCLt9CgYIARAAGA4SNwF-L9IrDR3gSYYfWxmfhoeqG5TBuoeJBIYzoGCZOajUoHMwKGkDGUC5Cv6UuLaICEePCQmLIbE",
+      app: "1:595720239925:android:ed1b5e7b1885f37c46ea7c",
+      firebase_cli_token: "1//0eOB0G4Ef-rQ-CgYIARAAGA4SNwF-L9Irnu_Uji_pZv0Cc2X30UzZl2Wa8wsFC-oa9MTZRuEjf3FRZvk3C3YxbWe11XADyebMW_c",
       apk_path: "./app/build/outputs/apk/prod/release/app-prod-release.apk",
       release_notes: "New release",
       testers: "longnn17.developer@gmail.com",
       groups: "qa-team", # Comma-separated list of groups
-      debug: true
+      debug: false
     )
   end
 
@@ -76,7 +76,7 @@ platform :android do
   desc "Build AAB and upload to public testing on Play Console"
   lane :build_and_upload_aab do
     
-    increment_version_code
+    # increment_version_code
     gradle(task: "bundleRelease")
 
      # Ensure the path to the AAB file is correct
@@ -86,6 +86,8 @@ platform :android do
     end
 
     supply(
+      json_key: "./fastlane/optimal-analogy-473307-k3-f8609bd0cebc.json",
+      package_name: "com.algorz.abeeci.app",
       track: "beta", # Use "beta" for public testing track
       aab: aab_path,
       skip_upload_apk: true, # Skip uploading APK files
@@ -105,6 +107,8 @@ platform :android do
     aab_path = "/Users/mac/Workspaces/ReactNative/tbd-frontend/android/app/build/outputs/bundle/prodRelease/app-prod-release.aab"
 
     supply(
+      json_key: "./fastlane/optimal-analogy-473307-k3-f8609bd0cebc.json",
+      package_name: "com.algorz.abeeci.app",
       track: 'closed',
       aab: aab_path,
       skip_upload_metadata: true,

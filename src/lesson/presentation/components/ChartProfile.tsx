@@ -40,7 +40,7 @@ const ChartProfile = ({rowCount = 6, ...props}: Props) => {
   const wChart = wCanvas - paddingH - xStartChart;
 
   const fontMgr = useFonts({
-    eina01bold: [require('assets/fonts/eina-01-bold.ttf')],
+    eina01bold: [require('../../../../assets/fonts/eina_01_bold.ttf')],
   });
   const font = fontMgr
     ? matchFont(
