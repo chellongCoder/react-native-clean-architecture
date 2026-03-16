@@ -992,7 +992,7 @@ const LESSON_PATTERNS = [
       }
     },
     wrapper: DragProvider,
-    props,
+    props: {},
   },
   {
     pattern: /^HISTORY_HS(4|5)M(1|2|3|4|5|6|7|8|9|10)$/,

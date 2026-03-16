@@ -233,6 +233,9 @@ export default {
         combineWordSuccess: 'Ghép chữ thành công!',
         combineWord: 'Ghép các phần để tạo chữ',
         writeTheCharacter: 'Viết theo thứ tự và dấu',
+        fillTheBlank: 'Fill the blank',
+        openSpeakerAndDragAnswer:
+          'Mở loa nghe kể chuyện và kéo thả câu trả lời vào đúng cột',
       },
       NewMoreScreen: {
         parentName: 'Tên phụ huynh',

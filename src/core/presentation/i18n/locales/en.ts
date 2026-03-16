@@ -248,7 +248,7 @@ export default {
         youCanDoIt: 'You can do it !!',
         moreTime: 'more time',
         success: 'Success',
-        error: 'Lỗi',
+        error: 'Error',
         appsUnlocked: 'Your apps have been unlocked',
         resultNotEnough: 'Your result is not enough to open app lock',
         sorryMobilize:
@@ -258,6 +258,8 @@ export default {
         combineWord: 'Combine the parts to make a word',
         writeTheCharacter: 'Write follows strokes and sequence',
         fillTheBlank: 'Fill the blank',
+        openSpeakerAndDragAnswer:
+          'Open speaker to listen to the story and drag the answer to the correct column',
       },
       NewMoreScreen: {
         parentName: "Parent's Name",

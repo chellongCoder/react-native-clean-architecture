@@ -222,6 +222,7 @@ type GenericLocale = {
   'lesson.screens.Modules.combineWord': string;
   'lesson.screens.Modules.writeTheCharacter': string;
   'lesson.screens.Modules.fillTheBlank': string;
+  'lesson.screens.Modules.openSpeakerAndDragAnswer': string;
   'lesson.screens.NewMoreScreen': string;
   'lesson.screens.NewMoreScreen.parentName': string;
   'lesson.screens.NewMoreScreen.parentEmail': string;
