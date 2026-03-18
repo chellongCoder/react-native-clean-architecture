@@ -36,6 +36,7 @@ import useDeeplink from './hooks/appsflyer/useDeeplink';
 import {AppEventsLogger, Settings} from 'react-native-fbsdk-next';
 import {isAndroid} from './utils';
 import {requestScreenTime} from 'react-native-alphadex-screentime';
+import useJSLoopDetection from './hooks/useJSLoopDetection';
 
 LogBox.ignoreLogs(['Warning: ...']); // Ignore log notification by message
 LogBox.ignoreAllLogs(); //Ignore all log notifications
@@ -45,6 +46,8 @@ Settings.initializeSDK();
 
 const App = () => {
   useDeeplink({initializeSdk: true});
+  // Track JS loop performance globally
+  useJSLoopDetection('App');
 
   const routeNameRef = useRef<string>();
 

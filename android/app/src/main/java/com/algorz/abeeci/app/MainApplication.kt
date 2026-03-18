@@ -33,7 +33,12 @@ class MainApplication : Application(), ReactApplication {
           override fun getJSMainModuleName(): String = ".expo/.virtual-metro-entry"
 
           override fun getJSBundleFile(): String? {
-            return CodePush.getJSBundleFile()
+            return try {
+              CodePush.getJSBundleFile()
+            } catch (e: Throwable) {
+              // Fallback: use default bundle when CodePush fails (e.g. CODE_PUSH_APK_BUILD_TIME / binary resources modified time on some devices)
+              null
+            }
           }
 
           override fun getUseDeveloperSupport(): Boolean = BuildConfig.DEBUG

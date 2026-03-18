@@ -1,4 +1,4 @@
-import React, {useContext, useState} from 'react';
+import React, {useContext, useState, useCallback} from 'react';
 import {
   StyleSheet,
   View,
@@ -27,6 +27,62 @@ const DiamondContainer = (props: TProps) => {
 
   const [itemIndex, setItemIndex] = useState(-1);
 
+  const renderDiamondItem = useCallback(
+    ({item, index}: {item: TProduct; index: number}) => {
+      const isSecondRow = index >= 3 && index < 6;
+      const diamondImages = [
+        assets.diamondLeaf,
+        assets.diamondLeaf1,
+        assets.diamondLeaf2,
+        assets.diamondLeaf3,
+        assets.diamondLeaf4,
+        assets.diamondLeaf5,
+      ];
+      return (
+        <View id={index?.toString()} style={styles.touchableOpacity}>
+          <ItemCard
+            onPress={() => {
+              setItemIndex(index);
+            }}
+            Icon={
+              <Image
+                source={assets.diamond_pack}
+                style={styles.itemCardImage}
+              />
+            }
+            backgroundFocusColor={
+              itemIndex === index ? COLORS.GREEN_43F656 : COLORS.WHITE_FBF8CC
+            }
+            backgroundColor={COLORS.YELLOW_F2B559}
+            borderWidth={4}
+            isFocus={true}
+            size={scale(90)}
+          />
+          <ImageBackground
+            source={diamondImages[index % diamondImages.length]}
+            style={styles.imageBackground}>
+            <Text
+              style={[
+                styles.diamondText,
+                {color: isSecondRow ? COLORS.WHITE : COLORS.BLUE_1C6349},
+              ]}>
+              X{item?.diamond}
+            </Text>
+            <Text
+              style={[
+                styles.diamondTextSmall,
+                {color: isSecondRow ? COLORS.WHITE : COLORS.BLUE_1C6349},
+              ]}>
+              {i18n.t('lesson.screens.Parent.diamonds')}
+            </Text>
+          </ImageBackground>
+          <Text style={styles.priceText}>{item.price}</Text>
+        </View>
+      );
+    },
+    [itemIndex, i18n],
+  );
+
   return (
     <View style={styles.wrapDiamondPurchaseContainer}>
       <View style={styles.diamondPurchaseContainer}>
@@ -39,68 +95,11 @@ const DiamondContainer = (props: TProps) => {
         <FlatList
           data={iapState.products?.sort(
             (a, b) => Number(a?.diamond) - Number(b?.diamond),
-          )} // Sort products by price
+          )}
           numColumns={3}
           columnWrapperStyle={styles.columnWrapperStyle}
-          renderItem={({item, index}: {item: TProduct; index: number}) => {
-            const isSecondRow = index >= 3 && index < 6; // Check if the item is in the second row
-            const diamondImages = [
-              assets.diamondLeaf,
-              assets.diamondLeaf1,
-              assets.diamondLeaf2,
-              assets.diamondLeaf3,
-              assets.diamondLeaf4,
-              assets.diamondLeaf5,
-            ];
-            return (
-              <View id={index?.toString()} style={styles.touchableOpacity}>
-                <ItemCard
-                  onPress={() => {
-                    // onBuyDiamond(item);
-
-                    setItemIndex(index);
-                  }}
-                  Icon={
-                    <Image
-                      source={assets.diamond_pack}
-                      style={styles.itemCardImage}
-                    />
-                  }
-                  backgroundFocusColor={
-                    itemIndex === index
-                      ? COLORS.GREEN_43F656
-                      : COLORS.WHITE_FBF8CC
-                  }
-                  backgroundColor={COLORS.YELLOW_F2B559}
-                  borderWidth={4}
-                  isFocus={true}
-                  size={scale(90)}
-                />
-                <ImageBackground
-                  source={diamondImages[index % diamondImages.length]}
-                  style={styles.imageBackground}>
-                  <Text
-                    style={[
-                      styles.diamondText,
-                      {color: isSecondRow ? COLORS.WHITE : COLORS.BLUE_1C6349},
-                    ]}>
-                    X{item?.diamond}
-                  </Text>
-                  <Text
-                    style={[
-                      styles.diamondTextSmall,
-                      {color: isSecondRow ? COLORS.WHITE : COLORS.BLUE_1C6349},
-                    ]}>
-                    {i18n.t('lesson.screens.Parent.diamonds')}
-                  </Text>
-                </ImageBackground>
-                <Text style={styles.priceText}>
-                  {item.price}
-                  {/* {item.currency} */}
-                </Text>
-              </View>
-            );
-          }}
+          renderItem={renderDiamondItem}
+          keyExtractor={item => item.productId}
         />
       </View>
 

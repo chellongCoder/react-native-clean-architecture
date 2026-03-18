@@ -1,5 +1,5 @@
 import {StyleSheet} from 'react-native';
-import {scale} from 'react-native-size-matters';
+import {scale, verticalScale} from 'react-native-size-matters';
 import {COLORS} from '../../constants/colors';
 import {CustomTextStyle} from '../../constants/typography';
 
@@ -65,6 +65,7 @@ export default StyleSheet.create({
     ...CustomTextStyle.smallBold,
     color: COLORS.WHITE_FBF8CC,
     textTransform: 'uppercase',
+    position: 'absolute',
   },
   blockRoutesContainer: {
     height: 1,
@@ -85,7 +86,13 @@ export default StyleSheet.create({
     alignItems: 'center',
   },
   wrapTitleContainer: {
-    marginTop: scale(4),
+    marginTop: verticalScale(4),
+    minHeight: scale(14),
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  wrapTitleContainerActive: {
+    marginTop: verticalScale(-20),
     minHeight: scale(14),
     justifyContent: 'center',
     alignItems: 'center',

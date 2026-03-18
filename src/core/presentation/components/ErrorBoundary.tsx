@@ -1,6 +1,7 @@
 import React, {Component, ErrorInfo, ReactNode} from 'react';
 import {StyleSheet, Text, View, TouchableOpacity} from 'react-native';
 import {COLORS} from '../constants/colors';
+import {firebase} from '@react-native-firebase/analytics';
 
 interface Props {
   children: ReactNode;
@@ -15,7 +16,7 @@ interface State {
 
 class ErrorBoundary extends Component<Props, State> {
   private previousResetKey: number | string | undefined;
-
+  private renderStart = 0;
   constructor(props: Props) {
     super(props);
     this.state = {
@@ -23,6 +24,7 @@ class ErrorBoundary extends Component<Props, State> {
       error: null,
     };
     this.previousResetKey = props.resetKey;
+    this.renderStart = performance.now();
   }
 
   static getDerivedStateFromError(error: Error): State {
@@ -44,11 +46,26 @@ class ErrorBoundary extends Component<Props, State> {
         error: null,
       });
     }
+
+    // Track thời gian render
+    const renderTime = performance.now() - this.renderStart;
+    if (renderTime > 100) {
+      firebase.analytics().logEvent('slow_render', {
+        component: this.constructor.name,
+        render_time_ms: renderTime,
+      });
+    }
   }
 
   componentDidCatch(error: Error, errorInfo: ErrorInfo): void {
     console.error('ErrorBoundary caught an error:', error, errorInfo);
     // You can log the error to a service like Firebase Crashlytics here
+    firebase.analytics().logEvent('js_error', {
+      error_message: error.message,
+      error_stack: error.stack?.substring(0, 500), // limit length
+      component_stack: errorInfo.componentStack?.substring(0, 500),
+      timestamp: Date.now(),
+    });
   }
 
   resetError = (): void => {

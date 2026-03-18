@@ -9,7 +9,9 @@
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
     "noUnusedLocals": true,
-    "noUnusedParameters": true
+    "noUnusedParameters": true,
+    "module": "esnext",
+    "moduleResolution": "bundler"
   },
   "include": [
     "src",

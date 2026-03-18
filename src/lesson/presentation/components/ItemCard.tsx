@@ -29,86 +29,89 @@ export type ItemCardProps = {
   isHexagon?: boolean;
 };
 
-const ItemCard = ({
-  name,
-  Icon,
-  isFocus,
-  size = 64,
-  onPress,
-  backgroundColor = '#258F78',
-  backgroundFocusColor = '#F2B559',
-  iconFocusColor = '#FBF8CC',
-  borderWidth = 0,
-  space = 8,
-  isHexagon = false,
-}: ItemCardProps) => {
-  const globalStyle = useGlobalStyle();
+const ItemCard = React.memo(
+  ({
+    name,
+    Icon,
+    isFocus,
+    size = 64,
+    onPress,
+    backgroundColor = '#258F78',
+    backgroundFocusColor = '#F2B559',
+    iconFocusColor = '#FBF8CC',
+    borderWidth = 0,
+    space = 8,
+    isHexagon = false,
+  }: ItemCardProps) => {
+    const globalStyle = useGlobalStyle();
 
-  const bg = isFocus ? backgroundFocusColor : backgroundColor;
-  const ic = isFocus ? iconFocusColor : '#FBF8CC';
-  const bc = backgroundColor;
-  return (
-    <TouchableOpacity onPress={onPress} activeOpacity={0.6}>
-      {isHexagon && typeof Icon === 'function' && (
-        <ImageBackground
-          source={assets.hexagon_frame}
-          tintColor={bg}
-          style={{
-            padding: size / 12,
-            alignItems: 'center',
-          }}
-          resizeMode="contain">
-          <Icon height={size - size / 6} width={size - size / 6} />
-        </ImageBackground>
-      )}
-      {!isHexagon && (
-        <View
-          style={[
-            styles.card,
-            {
-              backgroundColor: bg,
-              borderColor: bc,
-              borderWidth: borderWidth,
-              height: size,
-              width: size,
-            },
-          ]}>
-          {typeof Icon === 'string' && (
-            <>
-              <View style={{position: 'absolute'}}>
-                {Icon === 'no_icon' ? (
-                  <Text style={[globalStyle.txtWord, {color: COLORS.WHITE}]}>
-                    {name}
-                  </Text>
-                ) : (
-                  <Image
-                    source={{uri: `data:image/jpg;base64,${Icon}`}}
-                    width={50}
-                    height={50}
-                  />
-                )}
-              </View>
-              <IconBlock color={ic} height={size / 2} width={size / 2} />
-            </>
-          )}
-          {typeof Icon === 'object' && Icon}
-          {typeof Icon === 'function' && (
-            <>
-              <Icon color={ic} height={size / 2} width={size / 2} />
-            </>
-          )}
-        </View>
-      )}
-      {name && (
-        <Text style={[globalStyle.txtButton, styles.name, {paddingTop: space}]}>
-          {name}
-        </Text>
-      )}
-    </TouchableOpacity>
-  );
-};
+    const bg = isFocus ? backgroundFocusColor : backgroundColor;
+    const ic = isFocus ? iconFocusColor : '#FBF8CC';
+    const bc = backgroundColor;
+    return (
+      <TouchableOpacity onPress={onPress} activeOpacity={0.6}>
+        {isHexagon && typeof Icon === 'function' && (
+          <ImageBackground
+            source={assets.hexagon_frame}
+            tintColor={bg}
+            style={{
+              padding: size / 12,
+              alignItems: 'center',
+            }}
+            resizeMode="contain">
+            <Icon height={size - size / 6} width={size - size / 6} />
+          </ImageBackground>
+        )}
+        {!isHexagon && (
+          <View
+            style={[
+              styles.card,
+              {
+                backgroundColor: bg,
+                borderColor: bc,
+                borderWidth: borderWidth,
+                height: size,
+                width: size,
+              },
+            ]}>
+            {typeof Icon === 'string' && (
+              <>
+                <View style={{position: 'absolute'}}>
+                  {Icon === 'no_icon' ? (
+                    <Text style={[globalStyle.txtWord, {color: COLORS.WHITE}]}>
+                      {name}
+                    </Text>
+                  ) : (
+                    <Image
+                      source={{uri: `data:image/jpg;base64,${Icon}`}}
+                      width={50}
+                      height={50}
+                    />
+                  )}
+                </View>
+                <IconBlock color={ic} height={size / 2} width={size / 2} />
+              </>
+            )}
+            {typeof Icon === 'object' && Icon}
+            {typeof Icon === 'function' && (
+              <>
+                <Icon color={ic} height={size / 2} width={size / 2} />
+              </>
+            )}
+          </View>
+        )}
+        {name && (
+          <Text
+            style={[globalStyle.txtButton, styles.name, {paddingTop: space}]}>
+            {name}
+          </Text>
+        )}
+      </TouchableOpacity>
+    );
+  },
+);
 
-export default ItemCard;
+export default React.memo(ItemCard);
 
 const styles = StyleSheet.create({
   card: {

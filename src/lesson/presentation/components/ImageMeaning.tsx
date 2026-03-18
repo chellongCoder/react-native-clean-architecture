@@ -6,7 +6,7 @@ import {coreModuleContainer} from 'src/core/CoreModule';
 import Env, {EnvToken} from 'src/core/domain/entities/Env';
 import {COLORS} from 'src/core/presentation/constants/colors';
 
-const ImageMeaning = ({descriptionImage, image}) => {
+const ImageMeaning = React.memo(({descriptionImage, image}) => {
   const env = coreModuleContainer.getProvided<Env>(EnvToken); // Instantiate CoreService
 
   const [isShowMeaning, setIsShowMeaning] = useState(false);
@@ -42,6 +42,6 @@ const ImageMeaning = ({descriptionImage, image}) => {
       />
     </TouchableOpacity>
   );
-};
+});
 
-export default ImageMeaning;
+export default React.memo(ImageMeaning);

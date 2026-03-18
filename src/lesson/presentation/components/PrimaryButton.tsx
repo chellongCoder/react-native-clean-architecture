@@ -23,7 +23,7 @@ type Props = {
   disable?: boolean;
 };
 
-const PrimaryButton = ({isLoading = false, ...props}: Props) => {
+const PrimaryButton = React.memo(({isLoading = false, ...props}: Props) => {
   const commonStyle = useGlobalStyle();
 
   const alignSelf = props.wrapContent ?? true ? 'center' : 'auto';
@@ -49,9 +49,9 @@ const PrimaryButton = ({isLoading = false, ...props}: Props) => {
       )}
     </TouchableOpacity>
   );
-};
+});
 
-export default PrimaryButton;
+export default React.memo(PrimaryButton);
 
 const styles = StyleSheet.create({
   button: {

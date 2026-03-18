@@ -6,7 +6,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import React, {useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useState, useMemo} from 'react';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import useGlobalStyle from 'src/core/presentation/hooks/useGlobalStyle';
 import IconUser from 'assets/svg/IconUser';
@@ -121,72 +121,75 @@ const NewMoreScreen = observer((props: Props) => {
     subject.fieldId,
   ]);
 
-  const renderModule = ({item}: {item: Module}) => {
-    return (
-      <View style={styles.item}>
-        <View
-          style={{
-            flex: 1,
-            flexDirection: 'row',
-            gap: scale(16),
-          }}>
-          <View style={styles.iconBook}>
-            <IconBook />
-          </View>
-          <View style={styles.itemContent}>
-            <Text
-              numberOfLines={2}
-              style={[globalStyle.txtLabel, styles.textColor]}>
-              {item.name}
-            </Text>
-            <Text style={[globalStyle.txtNote, styles.textColor]}>
-              {item.description}
-            </Text>
-          </View>
-        </View>
-
-        {userModule.some(userMod => userMod.lessonId === item._id) ? (
-          <Text style={[globalStyle.txtLabel, styles.textColor]}>
-            Purchased
-          </Text>
-        ) : (
+  const renderModule = useCallback(
+    ({item}: {item: Module}) => {
+      return (
+        <View style={styles.item}>
           <View
             style={{
-              alignItems: 'flex-end',
-              flexDirection: 'column',
-              justifyContent: 'space-between',
+              flex: 1,
+              flexDirection: 'row',
+              gap: scale(16),
             }}>
+            <View style={styles.iconBook}>
+              <IconBook />
+            </View>
+            <View style={styles.itemContent}>
+              <Text
+                numberOfLines={2}
+                style={[globalStyle.txtLabel, styles.textColor]}>
+                {item.name}
+              </Text>
+              <Text style={[globalStyle.txtNote, styles.textColor]}>
+                {item.description}
+              </Text>
+            </View>
+          </View>
+
+          {userModule.some(userMod => userMod.lessonId === item._id) ? (
+            <Text style={[globalStyle.txtLabel, styles.textColor]}>
+              Purchased
+            </Text>
+          ) : (
             <View
               style={{
-                flexDirection: 'row',
-                alignItems: 'center',
-                gap: scale(2),
+                alignItems: 'flex-end',
+                flexDirection: 'column',
+                justifyContent: 'space-between',
               }}>
-              <Text style={[globalStyle.txtLabel, styles.textColor]}>
-                {item.price}
-              </Text>
-              <Image
-                source={assets.diamond}
-                resizeMode="contain"
-                style={{width: scale(16), height: scale(16)}}
-              />
+              <View
+                style={{
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  gap: scale(2),
+                }}>
+                <Text style={[globalStyle.txtLabel, styles.textColor]}>
+                  {item.price}
+                </Text>
+                <Image
+                  source={assets.diamond}
+                  resizeMode="contain"
+                  style={{width: scale(16), height: scale(16)}}
+                />
+              </View>
+              <View style={{flex: 1}} />
+              <TouchableOpacity
+                style={[styles.button, styles.w70]}
+                onPress={() => onBuyModule(item)}
+                disabled={loadingModuleId === item._id}>
+                <Text style={[globalStyle.txtButton, styles.textBtn]}>
+                  {loadingModuleId === item._id
+                    ? 'Loading...'
+                    : i18n.t('lesson.screens.NewMoreScreen.buyModule')}
+                </Text>
+              </TouchableOpacity>
             </View>
-            <View style={{flex: 1}} />
-            <TouchableOpacity
-              style={[styles.button, styles.w70]}
-              onPress={() => onBuyModule(item)}
-              disabled={loadingModuleId === item._id}>
-              <Text style={[globalStyle.txtButton, styles.textBtn]}>
-                {loadingModuleId === item._id
-                  ? 'Loading...'
-                  : i18n.t('lesson.screens.NewMoreScreen.buyModule')}
-              </Text>
-            </TouchableOpacity>
-          </View>
-        )}
-      </View>
-    );
-  };
+          )}
+        </View>
+      );
+    },
+    [userModule, loadingModuleId, globalStyle, i18n],
+  );
 
   return (
     <View style={[styles.fill, styles.bg, {paddingTop: insets.top}]}>
