@@ -28,10 +28,7 @@ const appConfig: ExpoConfig = {
       backgroundColor: '#FFFFFF',
     },
   },
-  plugins: [
-    "expo-font",
-    "expo-localization"
-  ],
+  plugins: ['expo-font', 'expo-localization'],
   web: {
     favicon: './assets/images/favicon.png',
   },
@@ -50,7 +47,7 @@ const appConfig: ExpoConfig = {
     IMAGE_BACKGROUND_BASE_API_URL:
       'https://storage.googleapis.com/algorz-image-abeeci/backgrounds/',
     CODEPUSH_SERVER_URL: 'https://code-push.tbd-alphadex.com/',
-    CODEPUSH_DEPLOYMENT_KEY: '0Stgs2wPTZDLsxQQlEsaSQ7XKBr74ksvOXqog'
+    CODEPUSH_DEPLOYMENT_KEY: '0Stgs2wPTZDLsxQQlEsaSQ7XKBr74ksvOXqog',
   },
 };
 //storage.googleapis.com/algorz-image-abeeci/backgrounds/

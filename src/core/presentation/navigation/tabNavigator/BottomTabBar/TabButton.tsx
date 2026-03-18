@@ -207,7 +207,13 @@ const TabButton = ({
             />
           </Animated.View>
         </Animated.View>
-        <Animated.View style={[styles.wrapTitleContainer, scaleTextStyles]}>
+        <Animated.View
+          style={[
+            isFocused
+              ? styles.wrapTitleContainerActive
+              : styles.wrapTitleContainer,
+            scaleTextStyles,
+          ]}>
           <TitleTabBar name={route.name} isFocused={isFocused} />
         </Animated.View>
       </TouchableOpacity>

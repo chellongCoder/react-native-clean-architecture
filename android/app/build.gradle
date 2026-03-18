@@ -94,7 +94,7 @@ android {
         applicationId 'com.algorz.abeeci.app'
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 200
+        versionCode 201
         versionName "1.1.5"
         missingDimensionStrategy "store", "play"
         ndk {
@@ -106,6 +106,8 @@ android {
                 arguments "-DANDROID_PAGE_SIZE=16384"
             }
         }
+        // CodePush: required for getBinaryResourcesModifiedTime (fixes CodePushUnknownException on release)
+        resValue "string", "CODE_PUSH_APK_BUILD_TIME", String.format("\"%d\"", System.currentTimeMillis())
     }
 
     flavorDimensions "environment"
@@ -162,6 +164,12 @@ android {
     androidResources {
         ignoreAssetsPattern '!.svn:!.git:!.ds_store:!*.scc:!CVS:!thumbs.db:!picasa.ini:!*~'
     }
+}
+
+// CodePush: ensure CODE_PUSH_APK_BUILD_TIME is generated for ALL build types (AGP 4.2+ fix;
+// fixes "Error in getting binary resources modified time" on release / Samsung and other devices)
+android.buildTypes.each { buildType ->
+    buildType.resValue "string", "CODE_PUSH_APK_BUILD_TIME", String.format("\"%d\"", System.currentTimeMillis())
 }
 
 // Apply static values from `gradle.properties` to the `android.packagingOptions`

@@ -5,7 +5,7 @@ import React, {
   useMemo,
   useState,
 } from 'react';
-import {ActivityIndicator, Text, View, StyleSheet} from 'react-native';
+import {ActivityIndicator, Text, View, StyleSheet, Alert} from 'react-native';
 import CodePush, {DownloadProgress, LocalPackage} from 'react-native-code-push';
 import {coreModuleContainer} from 'src/core/CoreModule';
 import Env, {EnvToken} from 'src/core/domain/entities/Env';
@@ -43,37 +43,45 @@ const CodePushProvider: React.FC<Props> = observer(({children}) => {
   const [metaData, setMetaData] = useState<LocalPackage | null>(null);
   const i18n = useI18n();
 
-  const codePushStatusDidChange = (status: CodePush.SyncStatus) => {
-    switch (status) {
-      case CodePush.SyncStatus.CHECKING_FOR_UPDATE:
-        setProgress(0);
-        setStatusUpdate(
-          i18n.t('core.screens.codepush.checkingForUpdate') + '...',
-        );
-        break;
-      case CodePush.SyncStatus.DOWNLOADING_PACKAGE:
-        setStatusUpdate(
-          i18n.t('core.screens.codepush.downloadingUpdate') + '...',
-        );
-        break;
-      case CodePush.SyncStatus.INSTALLING_UPDATE:
-        setStatusUpdate(
-          i18n.t('core.screens.codepush.installingUpdate') + '...',
-        );
-        break;
-      case CodePush.SyncStatus.UP_TO_DATE:
-        setStatusUpdate(i18n.t('core.screens.codepush.upToDate'));
-        setProgress(-1);
-        break;
-      case CodePush.SyncStatus.UPDATE_INSTALLED:
-        setStatusUpdate(i18n.t('core.screens.codepush.updateInstalled'));
-        setProgress(-1);
-        break;
-      default:
-        setProgress(-1);
-        break;
-    }
-  };
+  const codePushStatusDidChange = useCallback(
+    (status: CodePush.SyncStatus) => {
+      switch (status) {
+        case CodePush.SyncStatus.CHECKING_FOR_UPDATE:
+          setProgress(0);
+          setStatusUpdate(
+            i18n.t('core.screens.codepush.checkingForUpdate') + '...',
+          );
+          break;
+        case CodePush.SyncStatus.DOWNLOADING_PACKAGE:
+          setStatusUpdate(
+            i18n.t('core.screens.codepush.downloadingUpdate') + '...',
+          );
+          break;
+        case CodePush.SyncStatus.INSTALLING_UPDATE:
+          setStatusUpdate(
+            i18n.t('core.screens.codepush.installingUpdate') + '...',
+          );
+          break;
+        case CodePush.SyncStatus.UP_TO_DATE:
+          setStatusUpdate(i18n.t('core.screens.codepush.upToDate'));
+          setProgress(-1);
+          break;
+        case CodePush.SyncStatus.UPDATE_INSTALLED:
+          setStatusUpdate(i18n.t('core.screens.codepush.updateInstalled'));
+          setProgress(-1);
+          Alert.alert(
+            i18n.t('core.screens.codepush.updateInstalled'),
+            `Label: ${metaData?.label}\nVersion: ${metaData?.appVersion}\nDeployment: ${metaData?.deploymentKey}`,
+          );
+          break;
+        default:
+          setProgress(-1);
+          break;
+      }
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [metaData],
+  );
 
   const downloadProgressCallback = useCallback((p: DownloadProgress) => {
     const ratio = Math.round((p.receivedBytes / p.totalBytes) * 100);
@@ -128,36 +136,12 @@ const CodePushProvider: React.FC<Props> = observer(({children}) => {
 
     if (isConfirm) {
       if (!CodePush) {
-        console.warn('⚠️ CodePush is undefined. Make sure the native module is correctly linked.');
+        console.warn(
+          '⚠️ CodePush is undefined. Make sure the native module is correctly linked.',
+        );
         return;
       }
       checkForUpdates();
-      CodePush.sync(
-        {
-          deploymentKey: env.CODEPUSH_DEPLOYMENT_KEY,
-          updateDialog: {
-            title: i18n.t('core.screens.codepush.updateAvailable'),
-            optionalUpdateMessage: i18n.t(
-              'core.screens.codepush.contentUpdate',
-            ),
-            optionalIgnoreButtonLabel: i18n.t('core.screens.codepush.later'),
-            optionalInstallButtonLabel: i18n.t('core.screens.codepush.install'),
-            mandatoryUpdateMessage: i18n.t(
-              'core.screens.codepush.mandatoryMessage',
-            ),
-            mandatoryContinueButtonLabel: i18n.t(
-              'core.screens.codepush.install',
-            ),
-          },
-          installMode: CodePush.InstallMode.IMMEDIATE,
-        },
-        codePushStatusDidChange,
-        downloadProgressCallback,
-      );
-
-      CodePush.getUpdateMetadata()
-        .then(setMetaData)
-        .catch(() => undefined);
     }
     // If deploymentKey is omitted here, native-configured key is used (from Info.plist / BuildConfig)
   }, [
@@ -167,6 +151,31 @@ const CodePushProvider: React.FC<Props> = observer(({children}) => {
     i18n,
     isConfirm,
   ]);
+
+  useEffect(() => {
+    CodePush.sync(
+      {
+        deploymentKey: env.CODEPUSH_DEPLOYMENT_KEY,
+        updateDialog: {
+          title: i18n.t('core.screens.codepush.updateAvailable'),
+          optionalUpdateMessage: i18n.t('core.screens.codepush.contentUpdate'),
+          optionalIgnoreButtonLabel: i18n.t('core.screens.codepush.later'),
+          optionalInstallButtonLabel: i18n.t('core.screens.codepush.install'),
+          mandatoryUpdateMessage: i18n.t(
+            'core.screens.codepush.mandatoryMessage',
+          ),
+          mandatoryContinueButtonLabel: i18n.t('core.screens.codepush.install'),
+        },
+        installMode: CodePush.InstallMode.ON_NEXT_SUSPEND,
+      },
+      codePushStatusDidChange,
+      downloadProgressCallback,
+    );
+    CodePush.getUpdateMetadata()
+      .then(setMetaData)
+      .catch(() => undefined);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const contextValue = useMemo<CodePushContextValue>(
     () => ({setProgress, metaData}),

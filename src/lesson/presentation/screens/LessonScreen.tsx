@@ -386,15 +386,6 @@ export type TLessonState = {
   trainingResult?: TResult[];
 };
 
-const props = (
-  dataProps: any,
-  testTask: any,
-  lessonIndex: number,
-  characterStyle: any,
-) => ({
-  ...dataProps,
-  characterStyle,
-});
 // Lesson component mapping with regex patterns
 const LESSON_PATTERNS = [
   // English Lessons
@@ -418,7 +409,7 @@ const LESSON_PATTERNS = [
   {
     pattern: /^ENGLISH_EG1M(9|10|11|12|13|14|15|16|17)$/,
     component: English_EG4M23,
-    props,
+    props: {},
   },
   // * English G2
   //: TODO: tồn động : M35, 33
@@ -461,163 +452,163 @@ const LESSON_PATTERNS = [
   {
     pattern: /^(ENGLISH_EG2M(41)|ENGLISH_EG3M(14|18|26|30|39))$/,
     component: English_QwertyKeyboard,
-    props,
+    props: {},
   },
   {
     pattern: /^ENGLISH_EG(2M(50)|3M(40|41))$/,
     component: English_SelectText,
-    props,
+    props: {},
   },
   {
     pattern: /^ENGLISH_EG2M(20)$/,
     component: English_CharSelector,
-    props,
+    props: {},
   },
   // * English G3
   {
     pattern: /^ENGLISH_EG3M(1|3|5|7|9|20|28|30)$/,
     component: English_CharSelector,
-    props,
+    props: {},
   },
   {
     pattern: /^ENGLISH_EG3M(2|4|6|8|10|11|12)$/,
     component: English_Pronounciation,
-    props,
+    props: {},
   },
   {
     pattern:
       /^ENGLISH_EG3M(13|15|16|17|19|21|22|23|24|27|29|31|32|33|34|35|36|37|38|39|42|43|44|45|46)$/,
     component: English_SelectAnswer,
-    props,
+    props: {},
   },
   {
     pattern: /^ENGLISH_EG3M(25|40|41)$/,
     component: English_SelectText,
-    props,
+    props: {},
   },
   // * English G4
   {
     pattern: /^ENGLISH_EG4M(1|3|5|7|9)$/,
     component: English_CharSelector_Meaning,
-    props,
+    props: {},
   },
   {
     pattern: /^ENGLISH_EG4M(2|4|6|8|10)$/,
     component: English_Pronounciation_Meaning,
-    props,
+    props: {},
   },
   {
     pattern: /^ENGLISH_EG4M(11|12|13|14|20|23|24|27|28|29|30|31|33|34)$/,
     component: English_SelectAnswer,
-    props,
+    props: {},
   },
   {
     pattern: /^ENGLISH_G4M23$/,
     component: English_EG4M23,
-    props,
+    props: {},
   },
   {
     pattern: /^ENGLISH_EG4M(15|16|17|18|19|21|22|25|26|32)$/,
     component: English_SelectText,
-    props,
+    props: {},
   },
   // * English G5
   {
     pattern: /^ENGLISH_EG5M(1|3|5|7|9)$/,
     component: English_CharSelector_Meaning,
-    props,
+    props: {},
   },
   {
     pattern: /^ENGLISH_EG5M(2|4|6|8|10)$/,
     component: English_Pronounciation_Meaning,
-    props,
+    props: {},
   },
   {
     pattern: /^ENGLISH_EG5M(11)$/,
     component: English_QwertyKeyboard,
-    props,
+    props: {},
   },
   {
     pattern: /^ENGLISH_EG5M(12|19|20|22|24|25|26|27|28|29|30|31|32|33|34)$/,
     component: English_SelectAnswer,
-    props,
+    props: {},
   },
   {
     pattern: /^ENGLISH_EG5M(17)$/,
     component: English_SelectAnswer_Paragraph,
-    props,
+    props: {},
   },
   {
     pattern: /^ENGLISH_EG5M(14)$/,
     component: English_SelectText,
-    props,
+    props: {},
   },
   {
     pattern: /^ENGLISH_G5M16$/,
     component: English_G5M16,
-    props,
+    props: {},
   },
   {
     pattern: /^ENGLISH_EG5M(13|15|18|21|23)$/,
     component: English_G5M16,
-    props,
+    props: {},
   },
   // * English G6
   {
     pattern: /^ENGLISH_EG6M(1|3|5|7|9)$/,
     component: English_CharSelector_Meaning,
-    props,
+    props: {},
   },
   {
     pattern: /^ENGLISH_EG6M(2|4|6|8|10)$/,
     component: English_Pronounciation_Meaning,
-    props,
+    props: {},
   },
   {
     pattern: /^ENGLISH_EG6M(11)$/,
     component: English_QwertyKeyboard,
-    props,
+    props: {},
   },
   {
     pattern: /^ENGLISH_EG6M(15|16|17|18)$/,
     component: English_QwertyKeyboard_Paragraph,
-    props,
+    props: {},
   },
   {
     pattern: /^ENGLISH_G6M(25|26)$/,
     component: English_G6M26,
-    props,
+    props: {},
   },
   {
     pattern: /^ENGLISH_EG6M(20|22|23|26|27|28)$/,
     component: English_SelectAnswer,
-    props,
+    props: {},
   },
   {
     pattern: /^ENGLISH_EG6M(12|13|14|19|21|24)$/,
     component: English_SelectAnswer_Paragraph,
-    props,
+    props: {},
   },
   // * Mandarin G2
   {
     pattern: /^MANDARIN_MDG[2-6]M4$/,
     component: Mandarin_G4M_DrawCharacter,
-    props,
+    props: {},
   },
   {
     pattern: /^(writing|MANDARIN_MDG2M(16|19|22|25))$/,
     component: Mandarin_G4M_DrawCharacter,
-    props,
+    props: {},
   },
   {
     pattern: /^MANDARIN_MDG2M(17|20|23)$/,
     component: Mandarin_G4M_SelectAnswer,
-    props,
+    props: {},
   },
   {
     pattern: /^MANDARIN_MDG2M(18|21|24)$/,
     component: Mandarin_G4_Pronunciation,
-    props,
+    props: {},
   },
   {
     pattern: /^MANDARIN_MDG2M25$/,
@@ -637,7 +628,7 @@ const LESSON_PATTERNS = [
   {
     pattern: /^MANDARIN_MDG5M(21|24)$/,
     component: Mandarin_G4M_SelectAnswer,
-    props,
+    props: {},
   },
   {
     pattern: /^MANDARIN_MDG6M31$/,
@@ -658,17 +649,17 @@ const LESSON_PATTERNS = [
   {
     pattern: /^(writing|MANDARIN_MDG[1-6]M(1|4|7|10|13|16|19|22|25|28|31))$/,
     component: Mandarin_G4M_DrawCharacter,
-    props,
+    props: {},
   },
   {
     pattern: /^MANDARIN_MDG[1-6]M(2|5|8|11|14|17|20|23|26|29|32)$/,
     component: Mandarin_G4M_SelectAnswer,
-    props,
+    props: {},
   },
   {
     pattern: /^MANDARIN_MDG[1-6]M(3|6|9|12|15|18|21|24|27|30|33)$/,
     component: Mandarin_G4_Pronunciation,
-    props,
+    props: {},
   },
   // Vietnamese Lessons
   {
@@ -741,7 +732,7 @@ const LESSON_PATTERNS = [
       };
       return componentMap[type] || VnG0M1Lesson;
     },
-    props,
+    props: {},
   },
   {
     pattern: /^VIETNAMESE_VNG4M3$/,
@@ -757,7 +748,7 @@ const LESSON_PATTERNS = [
   {
     pattern: /^VIETNAMESE_VNG4M(4|5|6|7|8|9|10)$/,
     component: VnG2M8Lesson,
-    props,
+    props: {},
   },
   {
     pattern: /^VIETNAMESE_VNG5M1$/,
@@ -772,7 +763,7 @@ const LESSON_PATTERNS = [
   {
     pattern: /^VIETNAMESE_VNG5M(3|4|5|6|7|8|9|10|11|12)$/,
     component: VnG2M8Lesson,
-    props,
+    props: {},
   },
   {
     pattern: /^VIETNAMESE_VNG6M1$/,
@@ -782,7 +773,7 @@ const LESSON_PATTERNS = [
   {
     pattern: /^VIETNAMESE_VNG6M(1_N|2|3|4|5|6|7|8|9|10)$/,
     component: VnG2M8Lesson,
-    props,
+    props: {},
   },
 
   // Science Lessons
@@ -805,7 +796,7 @@ const LESSON_PATTERNS = [
   {
     pattern: /^SCIENCE_SG1M(3)$/,
     component: Science_SelectAnswer,
-    props,
+    props: {},
   },
   {
     pattern: /^SCIENCE_SG2M(1|3)$/,
@@ -828,17 +819,17 @@ const LESSON_PATTERNS = [
   {
     pattern: /^SCIENCE_SG2M(5)$/,
     component: Science_SelectAnswer_2Question,
-    props,
+    props: {},
   },
   {
     pattern: /^SCIENCE_SG2M(6)$/,
     component: Science_SelectAnswer_Explain_TextImageAnswer,
-    props,
+    props: {},
   },
   {
     pattern: /^SCIENCE_SG2M(7)$/,
     component: Science_SelectAnswer_Circle,
-    props,
+    props: {},
   },
 
   {
@@ -852,7 +843,7 @@ const LESSON_PATTERNS = [
   {
     pattern: /^SCIENCE_SG3M(2)$/,
     component: Science_SelectAnswer_Image_TextImageAnswer,
-    props,
+    props: {},
   },
   {
     pattern: /^SCIENCE_SG3M(3)$/,
@@ -865,12 +856,12 @@ const LESSON_PATTERNS = [
   {
     pattern: /^SCIENCE_SG3M(6)$/,
     component: Science_SelectAnswer_Image_Text,
-    props,
+    props: {},
   },
   {
     pattern: /^SCIENCE_SG3M(4|5|7)$/,
     component: Science_SelectAnswer_Image_TextUnderline,
-    props,
+    props: {},
   },
   {
     pattern: /^SCIENCE_SG3M(8)$/,
@@ -883,28 +874,28 @@ const LESSON_PATTERNS = [
   {
     pattern: /^SCIENCE_SG3M(9|10)$/,
     component: Science_SG3M9,
-    props,
+    props: {},
   },
 
   {
     pattern: /^SCIENCE_SG4M(1)$/,
     component: Science_SelectAnswer_ParagraphImage,
-    props,
+    props: {},
   },
   {
     pattern: /^SCIENCE_SG4M(2)$/,
     component: Science_G4M2,
-    props,
+    props: {},
   },
   {
     pattern: /^SCIENCE_SG4M(3)$/,
     component: Science_SG4M3,
-    props,
+    props: {},
   },
   {
     pattern: /^SCIENCE_SG4M(4)$/,
     component: Science_G4M4,
-    props,
+    props: {},
   },
   {
     pattern: /^SCIENCE_SG4M(5)$/,
@@ -914,32 +905,32 @@ const LESSON_PATTERNS = [
   {
     pattern: /^SCIENCE_SG5M(1)$/,
     component: Science_G5M1,
-    props,
+    props: {},
   },
   {
     pattern: /^SCIENCE_SG5M(2)$/,
     component: Science_SG5M2,
-    props,
+    props: {},
   },
   {
     pattern: /^SCIENCE_SG5M(3|4)$/,
     component: Science_SelectAnswer_ScrollQuestion,
-    props,
+    props: {},
   },
   {
     pattern: /^SCIENCE_SG6M(1)$/,
     component: Science_G4M5,
-    props,
+    props: {},
   },
   {
     pattern: /^SCIENCE_SG6M(2)$/,
     component: Science_SelectAnswer_Image_Text,
-    props,
+    props: {},
   },
   {
     pattern: /^SCIENCE_SG6M(4)$/,
     component: Science_SelectAnswer_ImageMeaning_Image,
-    props,
+    props: {},
   },
   {
     pattern: /^SCIENCE_SG[1-6]M\d+$/,
@@ -973,7 +964,7 @@ const LESSON_PATTERNS = [
   {
     pattern: /^MATH_MG1M(1|2|4|5|6|7|8|9|10|11|12|13|14|15|16|17|18)$/,
     component: Math_G4M_SelectAnswer,
-    props,
+    props: {},
   },
   {
     pattern: /^MATH_MG1M3$/,
@@ -1129,12 +1120,12 @@ const LESSON_PATTERNS = [
   {
     pattern: /^MATH_MG6M(3)$/,
     component: Math_Text_SelectAnswer,
-    props,
+    props: {},
   },
   {
     pattern: /^MATH_MG6M(1|2|3|4|6|7|9|10|11|12|13|14)$/,
     component: Math_G4M_SelectAnswer,
-    props,
+    props: {},
   },
   {
     pattern: /^MATH_MG6M(8)$/,
@@ -1162,7 +1153,7 @@ const LESSON_PATTERNS = [
     pattern: /^HISTORY_HS1M2$/,
     component: HistoryHS1M2,
     wrapper: DragProvider,
-    props,
+    props: {},
   },
 
   {
@@ -1215,7 +1206,7 @@ const LESSON_PATTERNS = [
       }
     },
     wrapper: DragProvider,
-    props,
+    props: {},
   },
   {
     pattern: /^HISTORY_HS(4|5)M(1|2|3|4|5|6|7|8|9|10)$/,
@@ -1238,7 +1229,7 @@ const LESSON_PATTERNS = [
     },
     wrapper: DragProvider,
 
-    props,
+    props: {},
   },
   {
     pattern: /^HISTORY_HS6M1$/,
@@ -1251,7 +1242,7 @@ const LESSON_PATTERNS = [
       return componentMap[type + `_P${testTask?.stt}`] || null;
     },
     wrapper: DragProvider,
-    props,
+    props: {},
   },
   {
     pattern: /^HISTORY_HS6M2$/,
@@ -1262,7 +1253,7 @@ const LESSON_PATTERNS = [
       return componentMap[type + `_P${testTask?.stt}`] || null;
     },
     wrapper: DragProvider,
-    props,
+    props: {},
   },
   {
     pattern: /^HISTORY_HS6M3$/,
@@ -1274,7 +1265,7 @@ const LESSON_PATTERNS = [
       return componentMap[type + `_P${testTask?.stt}`] || null;
     },
     wrapper: DragProvider,
-    props,
+    props: {},
   },
   {
     pattern: /^HISTORY_HS6M4$/,
@@ -1286,7 +1277,7 @@ const LESSON_PATTERNS = [
       return componentMap[type + `_P${testTask?.stt}`] || null;
     },
     wrapper: DragProvider,
-    props,
+    props: {},
   },
   {
     pattern: /^HISTORY_HS6M5$/,
@@ -1298,7 +1289,7 @@ const LESSON_PATTERNS = [
       return componentMap[type + `_P${testTask?.stt}`] || null;
     },
     wrapper: DragProvider,
-    props,
+    props: {},
   },
   {
     pattern: /^HISTORY_HS6M6$/,
@@ -1310,7 +1301,7 @@ const LESSON_PATTERNS = [
       return componentMap[type + `_P${testTask?.stt}`] || null;
     },
     wrapper: DragProvider,
-    props,
+    props: {},
   },
   {
     pattern: /^HISTORY_HS6M7$/,
@@ -1323,7 +1314,7 @@ const LESSON_PATTERNS = [
       return componentMap[type + `_P${testTask?.stt}`] || null;
     },
     wrapper: DragProvider,
-    props,
+    props: {},
   },
   {
     pattern: /^HISTORY_HS6M8$/,
@@ -1335,7 +1326,7 @@ const LESSON_PATTERNS = [
       return componentMap[type + `_P${testTask?.stt}`] || null;
     },
     wrapper: DragProvider,
-    props,
+    props: {},
   },
   {
     pattern: /^HISTORY_HS6M9$/,
@@ -1348,7 +1339,7 @@ const LESSON_PATTERNS = [
       return componentMap[type + `_P${testTask?.stt}`] || null;
     },
     wrapper: DragProvider,
-    props,
+    props: {},
   },
   {
     pattern: /^HISTORY_HS6M10$/,
@@ -1361,7 +1352,7 @@ const LESSON_PATTERNS = [
       return componentMap[type + `_P${testTask?.stt}`] || null;
     },
     wrapper: DragProvider,
-    props,
+    props: {},
   },
   {
     pattern: /^HISTORY_HS6M11$/,
@@ -1374,7 +1365,7 @@ const LESSON_PATTERNS = [
       return componentMap[type + `_P${testTask?.stt}`] || null;
     },
     wrapper: DragProvider,
-    props,
+    props: {},
   },
 ];
 
