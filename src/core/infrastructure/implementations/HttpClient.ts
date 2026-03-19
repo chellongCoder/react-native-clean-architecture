@@ -25,8 +25,9 @@ class HttpClient implements IHttpClient {
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
       requestConfig.headers = {
-        ...requestConfig.headers,
         'Content-Type': 'application/json; charset=utf-8',
+        // Spread existing headers Content-Type (if any) from requestConfig.
+        ...requestConfig.headers,
         Accept: 'application/json',
         Origin: this.env.EXPO_BASE_V1_API_DOMAIN,
         ...(store.deviceToken && {'X-Device-Token': store.deviceToken}),

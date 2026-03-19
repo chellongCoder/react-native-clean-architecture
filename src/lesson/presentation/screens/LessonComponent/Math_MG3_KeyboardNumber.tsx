@@ -142,6 +142,10 @@ const Math_MG3_KeyboardNumber = observer(
         return updatedDescription;
       }, [answerSelected, firstMiniTestTask?.question, moduleIndex]);
 
+      const imagePath = Array.isArray(firstMiniTestTask?.question?.[moduleIndex].image)
+        ? firstMiniTestTask?.question?.[moduleIndex].image[0]
+        : firstMiniTestTask?.question?.[moduleIndex].image
+
       const onSpeechText = useCallback(() => {
         ttsSpeak?.(
           firstMiniTestTask?.question?.[moduleIndex]?.instruction
@@ -212,9 +216,11 @@ const Math_MG3_KeyboardNumber = observer(
           part={firstMiniTestTask?.name}
           backgroundColor={settings.backgroundAnswerColor}
           backgroundAnswerColor={settings.backgroundAnswerColor}
-          prompt={{
-            description: '',
-          }}
+          prompt={
+            firstMiniTestTask?.question?.[moduleIndex]?.instruction ?? {
+              description: settings.prompt?.toString() ?? '',
+            }
+          }
           score={selectedChild?.adsPoints}
           txtCountDown={
             word?.toString() ===
@@ -235,8 +241,7 @@ const Math_MG3_KeyboardNumber = observer(
                 style={[{}, animatedStyle]}
                 source={{
                   uri:
-                    env.IMAGE_QUESTION_BASE_API_URL +
-                    firstMiniTestTask?.question?.[moduleIndex].image,
+                    env.IMAGE_QUESTION_BASE_API_URL + imagePath,
                 }}
               />
             </View>
