@@ -1,15 +1,6 @@
-/* eslint-disable react/no-unstable-nested-components */
-import {
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-  Image,
-  ImageBackground,
-} from 'react-native';
+import {StyleSheet, Text, View, Image, ImageBackground} from 'react-native';
 import React, {
   forwardRef,
-  useCallback,
   useEffect,
   useImperativeHandle,
   useMemo,
@@ -41,9 +32,7 @@ import SelectionAnswersQuestion, {
 } from '../../../components/SelectionAnswersQuestion';
 import {useI18n} from 'src/core/presentation/hooks/useI18n';
 import VoiceButton from '../../../components/VoiceButton';
-import DragItem from '../../../components/Drag/DragSendItem';
 import {useDragContext} from '../../../components/Drag/DragProvider';
-import FastImage from 'react-native-fast-image';
 import TextHighlight from '../../../components/TextHighlight';
 import {useHistoryModule} from './hook';
 import {assets} from 'src/core/presentation/utils';
@@ -80,7 +69,7 @@ const HistoryHS6M1P3 = observer(
 
       const answerRef = useRef<SelectionAnswersQuestionRef>(null);
 
-      const {clear, listDragItem} = useDragContext();
+      const {clear} = useDragContext();
 
       const [answerSelected, setAnswerSelected] = useState('');
       const [isShowAnswerDesc, setIsShowAnswerDesc] = useState(false);
@@ -128,7 +117,6 @@ const HistoryHS6M1P3 = observer(
       });
       const {lessonSetting} = useHomeStore();
       const i18n = useI18n();
-      const isSubmitRef = useRef(false);
 
       const settings = useMemo(
         () => getSetting(lessonSetting),

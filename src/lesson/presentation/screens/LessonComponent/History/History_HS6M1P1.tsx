@@ -35,6 +35,14 @@ import TextHighlight from '../../../components/TextHighlight';
 import {useHistoryModule} from './hook';
 import {H6M1P1AnswerI} from 'src/home/application/types/GetListQuestionResponse';
 
+const CIRCULAR_LAYOUT_SCALE = 0.82;
+const CIRCULAR_CONTAINER_SIZE = scale(213 * CIRCULAR_LAYOUT_SCALE);
+const CIRCULAR_ITEM_SIZE = scale(92 * CIRCULAR_LAYOUT_SCALE);
+const CIRCULAR_CONTAINER_PADDING = scale(64 * CIRCULAR_LAYOUT_SCALE);
+const CIRCULAR_BORDER_WIDTH = 3 * CIRCULAR_LAYOUT_SCALE;
+const CIRCULAR_TITLE_FONT_SIZE = scale(20 * CIRCULAR_LAYOUT_SCALE);
+const CIRCULAR_ITEM_FONT_SIZE = scale(13 * CIRCULAR_LAYOUT_SCALE);
+
 type Props = {
   moduleIndex: number;
   totalModule: number;
@@ -91,7 +99,6 @@ const HistoryHS6M1P1 = observer(
         isShowCorrectContainer,
         word,
         env,
-        learningTimer,
         submit,
         toggleShowHint,
         resetLearning,
@@ -112,10 +119,9 @@ const HistoryHS6M1P1 = observer(
       const {lessonSetting} = useHomeStore();
 
       const i18n = useI18n();
-      const isSubmitRef = useRef(false);
 
       // Handle item selection
-      const handleItemSelection = (item: any) => {
+      const handleItemSelection = (item: H6M1P1AnswerI) => {
         setIsCorrectAnswer(true);
         setSelectedItem(item);
       };
@@ -123,8 +129,8 @@ const HistoryHS6M1P1 = observer(
       // Calculate circular positions for items
       const calculateCircularPositions = (itemCount: number) => {
         const maxItems = Math.min(itemCount, 5);
-        const containerSize = scale(213);
-        const itemSize = scale(92);
+        const containerSize = CIRCULAR_CONTAINER_SIZE;
+        const itemSize = CIRCULAR_ITEM_SIZE;
         const containerCenter = containerSize / 2;
         const itemRadius = itemSize / 2;
         // Position items on the circumference - adjust radius to balance distance from center
@@ -294,8 +300,8 @@ const HistoryHS6M1P1 = observer(
                 {selectedItem ? (
                   <>
                     <TextHighlight
-                      content={'Click vào các vòng tròn bên trên'}
-                      description={'Click vào các vòng tròn bên trên'}
+                      content={'Ấn vào các vòng tròn bên trên'}
+                      description={'Ấn vào các vòng tròn bên trên'}
                     />
                     <View style={styles.contentRow}>
                       <FastImage
@@ -324,7 +330,7 @@ const HistoryHS6M1P1 = observer(
                         styles.placeholderText,
                         styles.fonts_SVN_Cherish,
                       ]}>
-                      Click vào các vòng tròn bên trên để hiển thị bài học
+                      Ấn vào các vòng tròn bên trên để hiển thị bài học
                     </Text>
                   </View>
                 )}
@@ -393,24 +399,24 @@ const styles = StyleSheet.create({
 
   // New styles for the circular container and items
   circularContainer: {
-    height: scale(213),
-    width: scale(213),
+    height: CIRCULAR_CONTAINER_SIZE,
+    width: CIRCULAR_CONTAINER_SIZE,
     borderRadius: 999,
-    borderWidth: 3,
+    borderWidth: CIRCULAR_BORDER_WIDTH,
     borderColor: COLORS.YELLOW_F2B559,
     borderStyle: 'dashed',
     justifyContent: 'center',
     alignItems: 'center',
-    padding: scale(64),
+    padding: CIRCULAR_CONTAINER_PADDING,
   },
   centerTitle: {
-    fontSize: 25,
+    fontSize: CIRCULAR_TITLE_FONT_SIZE,
     color: COLORS.RED_D36323,
     textAlign: 'center',
   },
   circularItem: {
-    width: scale(92),
-    height: scale(92),
+    width: CIRCULAR_ITEM_SIZE,
+    height: CIRCULAR_ITEM_SIZE,
     backgroundColor: COLORS.YELLOW_F2B559,
     borderRadius: 999,
     justifyContent: 'center',
@@ -419,7 +425,7 @@ const styles = StyleSheet.create({
     padding: scale(8),
   },
   circularItemText: {
-    fontSize: 17,
+    fontSize: CIRCULAR_ITEM_FONT_SIZE,
     color: COLORS.WHITE_FBF8CC,
     textAlign: 'center',
   },

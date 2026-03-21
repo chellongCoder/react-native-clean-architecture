@@ -1224,12 +1224,6 @@ const LESSON_PATTERNS = [
           ] || <></>
         );
       } else {
-        console.log(
-          'componentMap[type + `_P${testTask?.stt}`]: ',
-          type,
-          `_P${testTask?.stt}`,
-          componentMap,
-        );
         return componentMap[type + `_P${testTask?.stt}`] || <></>;
       }
     },
