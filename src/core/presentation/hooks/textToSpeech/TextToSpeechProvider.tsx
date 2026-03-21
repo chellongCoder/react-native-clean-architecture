@@ -8,8 +8,6 @@ import {TextToSpeechContext} from './TextToSpeechContext';
 import Tts, {Voice} from 'react-native-tts';
 import {Platform} from 'react-native';
 import {isAndroid} from '../../utils';
-import {lessonModuleContainer} from 'src/lesson/LessonModule';
-import {LessonStore} from 'src/lesson/presentation/stores/LessonStore/LessonStore';
 import {HomeStore} from 'src/home/presentation/stores/HomeStore';
 import {ActionE} from 'src/home/application/types/LoggingActionPayload';
 import useAuthenticationStore from 'src/authentication/presentation/stores/useAuthenticationStore';
@@ -280,7 +278,6 @@ export const TextToSpeechProvider = ({children}: PropsWithChildren) => {
 
   const {selectedChild} = useAuthenticationStore();
 
-  const lesson = lessonModuleContainer.getProvided(LessonStore);
   const homeStore = homeModuleContainer.getProvided(HomeStore);
   const [isSpeakDone, setIsSpeakDone] = useState(false);
 
@@ -288,9 +285,6 @@ export const TextToSpeechProvider = ({children}: PropsWithChildren) => {
   const [onFinish, setOnFinish] = useState<() => void>();
 
   const ttsSpeak = async (text: string, callback?: () => void) => {
-    console.log('ttsSpeak text: ', text);
-    console.log('ttsSpeak isInitialized: ', isInitialized);
-
     if (!text || text.trim() === '') {
       console.warn('TTS: Empty text provided');
       return;

@@ -1224,6 +1224,12 @@ const LESSON_PATTERNS = [
           ] || <></>
         );
       } else {
+        console.log(
+          'componentMap[type + `_P${testTask?.stt}`]: ',
+          type,
+          `_P${testTask?.stt}`,
+          componentMap,
+        );
         return componentMap[type + `_P${testTask?.stt}`] || <></>;
       }
     },
@@ -1411,7 +1417,6 @@ const LessonScreen = observer(() => {
         }));
   }, [apiTasks]);
 
-  console.log('🛠 LOG: 🚀 --> ~ tasks:', tasks, apiTasks);
   const [activeTaskIndex, setActiveTaskIndex] = useState(0);
   const {selectedChild, getUserProfile, setSelectedChild} =
     useAuthenticationStore();
@@ -1421,7 +1426,6 @@ const LessonScreen = observer(() => {
     result: [],
     trainingResult: [],
   });
-  console.log('🛠 LOG: 🚀 --> ~ lessonState:', lessonState);
 
   const firstMiniTestTask = tasks.find(task => task.type === 'mini_test');
 
@@ -1433,8 +1437,6 @@ const LessonScreen = observer(() => {
     }
   }, [activeTaskIndex, firstMiniTestTask, tasks]);
 
-  console.log('🛠 LOG: 🚀 --> ~ testTask:', testTask);
-
   const settings = useMemo(
     () => getSetting(lessonSetting),
     [getSetting, lessonSetting],
@@ -1442,7 +1444,6 @@ const LessonScreen = observer(() => {
 
   const submitModule = useCallback(
     async (item: TResult) => {
-      console.log('🛠 LOG: 🚀 --> ~ item:', item);
       playSound(soundTrack.good_result);
       if (lessonState.result) {
         const totalResult = [...lessonState.result];
@@ -1681,18 +1682,19 @@ const LessonScreen = observer(() => {
       }
     },
     [
+      lessonIndex,
       testTask?.question,
       testTask?.type,
-      isShowHint,
-      lessonIndex,
-      lessonState.result,
-      lessonState.trainingResult,
-      nextPart,
+      firstMiniTestTask?.type,
       playSound,
       selectedChild?._id,
       setLessonState,
+      lessonState.result,
+      lessonState.trainingResult,
       submitModule,
+      isShowHint,
       toggleUseHint,
+      nextPart,
     ],
   );
 
@@ -1799,7 +1801,6 @@ const LessonScreen = observer(() => {
 
   const buildLesson = () => {
     const questionType = testTask?.question?.[lessonIndex]?.type.trim();
-    console.log('questionType: ', questionType);
     if (!questionType) {
       return (
         <Suspense fallback={<LoadingFallback />}>

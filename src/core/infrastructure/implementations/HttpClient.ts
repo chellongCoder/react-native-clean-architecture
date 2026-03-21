@@ -40,14 +40,9 @@ class HttpClient implements IHttpClient {
 
     this.axios.interceptors.response.use(
       response => {
-        console.log(
-          '🛠 LOG: 🚀 --> ~ HttpClient ~ constructor ~ response:',
-          response,
-        );
         return response;
       },
       async (error?: Record<string, any> | undefined) => {
-        console.log('🛠 LOG: 🚀 --> ~ HttpClient ~ constructor ~ error:', error);
         const originalRequest = error?.config;
         const store =
           authenticationModuleContainer.getProvided(AuthenticationStore);

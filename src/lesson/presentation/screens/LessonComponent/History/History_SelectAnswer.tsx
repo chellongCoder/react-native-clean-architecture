@@ -104,10 +104,10 @@ const History_SelectAnswer = observer(
           firstMiniTestTask?.question?.[moduleIndex]?.correctAnswer;
         const answerSelectedArray = (
           Array.isArray(answerSelected) ? answerSelected : [answerSelected]
-        ).map(e => e?.toLocaleString().toLocaleLowerCase());
+        ).map(e => e?.toLocaleString().toLocaleLowerCase().trim());
         const correctAnswerArray = (
           Array.isArray(correctAnswer) ? correctAnswer : [correctAnswer]
-        ).map(e => e?.toLocaleString().toLocaleLowerCase());
+        ).map(e => e?.toLocaleString().toLocaleLowerCase().trim());
         return arraysEqualWithExactItem(
           answerSelectedArray,
           correctAnswerArray,
