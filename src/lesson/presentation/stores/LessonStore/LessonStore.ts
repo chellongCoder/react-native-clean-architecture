@@ -51,7 +51,7 @@ import UserModuleEntity from 'src/lesson/domain/entities/UserModuleEntity';
 import BuyUserModulePayload from 'src/lesson/application/types/BuyUserModulePayload';
 import TranslateTextUsecase from 'src/authentication/application/useCases/TranslateTextUsecase';
 import {TranslateTextPayload} from 'src/authentication/application/types/TranslateTextPayload';
-import { HomeStore } from 'src/home/presentation/stores/HomeStore';
+import {HomeStore} from 'src/home/presentation/stores/HomeStore';
 import I18n from 'src/core/presentation/i18n';
 @injectable()
 export class LessonStore {
@@ -75,9 +75,38 @@ export class LessonStore {
   @observable isUsageStats?: boolean;
   @observable isPushNoti?: boolean;
   @observable trainingCount = TRAINING_COUNT;
-  @observable currentQuestion:
-    | {lessonId: string; questionIndex: number; activeTaskIndex: number}
-    | undefined;
+  @persist('list') @observable currentQuestion: Array<{
+    lessonId: string;
+    questionIndex: number;
+    activeTaskIndex: number;
+  }> = [];
+
+  getQuestionByLessonId(lessonId: string) {
+    return (this.currentQuestion ?? []).find(q => q.lessonId === lessonId);
+  }
+
+  removeQuestionByLessonId(lessonId: string) {
+    this.currentQuestion = (this.currentQuestion ?? []).filter(
+      q => q.lessonId !== lessonId,
+    );
+  }
+
+  @action
+  upsertQuestion(
+    lessonId: string,
+    questionIndex: number,
+    activeTaskIndex: number,
+  ) {
+    if (!this.currentQuestion) {
+      this.currentQuestion = [];
+    }
+    const idx = this.currentQuestion.findIndex(q => q.lessonId === lessonId);
+    if (idx >= 0) {
+      this.currentQuestion[idx] = {lessonId, questionIndex, activeTaskIndex};
+    } else {
+      this.currentQuestion.push({lessonId, questionIndex, activeTaskIndex});
+    }
+  }
 
   @observable isShowHint = false;
   @observable productFromBE = [];
@@ -457,48 +486,54 @@ export class LessonStore {
   }
 
   @action
-  public async handleGetModulesBySubject(homeStore: HomeStore, i18n: I18n, childrenId: string, subjectId: string) {
+  public async handleGetModulesBySubject(
+    homeStore: HomeStore,
+    i18n: I18n,
+    childrenId: string,
+    subjectId: string,
+  ) {
     this.isLoadingModulesBySubject = true;
     homeStore
-        .getListModules({
-          subjectId: subjectId,
-          childrenId: childrenId,
-        })
-        .then(response => {
-          const listTitle = response.data.map(item => item.description);
-          const listDesc = response.data.map(
-            item => item.tasks?.map(task => task.description).toString() ?? '',
-          );
-          Promise.all([
-            this.translateText({
-              text: listTitle,
-              targetLanguage: i18n.deviceLocale,
-            }),
-            this.translateText({
-              text: listDesc,
-              targetLanguage: i18n.deviceLocale,
-            }),
-          ])
-            .then(([resTitle, resDesc]) => {
-              const translatedModules = response.data.map((item, index) => ({
-                ...item,
-                name: resTitle.data[index],
-                tasks: item.tasks?.map((task, i) => ({
-                  ...task,
-                  description: (resDesc.data[index] ?? '').split(',')[i], // split by comma and get the index of the task
-                })),
-              }));
-              this.modulesBySubject = translatedModules;
-            })
-            .catch(() => {
-              this.modulesBySubject = response.data;
-            })
-            .finally(() => {
-              this.isLoadingModulesBySubject = false;
-            });
-        }).catch(() => {
-          this.isLoadingModulesBySubject = false;
-        });
+      .getListModules({
+        subjectId: subjectId,
+        childrenId: childrenId,
+      })
+      .then(response => {
+        const listTitle = response.data.map(item => item.description);
+        const listDesc = response.data.map(
+          item => item.tasks?.map(task => task.description).toString() ?? '',
+        );
+        Promise.all([
+          this.translateText({
+            text: listTitle,
+            targetLanguage: i18n.deviceLocale,
+          }),
+          this.translateText({
+            text: listDesc,
+            targetLanguage: i18n.deviceLocale,
+          }),
+        ])
+          .then(([resTitle, resDesc]) => {
+            const translatedModules = response.data.map((item, index) => ({
+              ...item,
+              name: resTitle.data[index],
+              tasks: item.tasks?.map((task, i) => ({
+                ...task,
+                description: (resDesc.data[index] ?? '').split(',')[i], // split by comma and get the index of the task
+              })),
+            }));
+            this.modulesBySubject = translatedModules;
+          })
+          .catch(() => {
+            this.modulesBySubject = response.data;
+          })
+          .finally(() => {
+            this.isLoadingModulesBySubject = false;
+          });
+      })
+      .catch(() => {
+        this.isLoadingModulesBySubject = false;
+      });
   }
 }
 

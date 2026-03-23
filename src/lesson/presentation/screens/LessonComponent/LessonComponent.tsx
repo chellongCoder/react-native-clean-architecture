@@ -207,7 +207,9 @@ const LessonComponent = ({
               <CustomSwitchNew
                 point={score}
                 value={false}
-                onValueChange={() => {}}
+                onValueChange={() => {
+                  console.log('onValueChange');
+                }}
               />
             </TouchableOpacity>
           </View>

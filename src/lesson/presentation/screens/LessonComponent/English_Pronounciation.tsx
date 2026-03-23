@@ -400,7 +400,7 @@ const English_Pronounciation = observer(
                 resizeMode={'contain'}
                 style={[
                   {
-                    width: WIDTH_SCREEN,
+                    width: WIDTH_SCREEN * 0.8,
                     height: verticalScale(150),
                   },
                   animatedStyle,

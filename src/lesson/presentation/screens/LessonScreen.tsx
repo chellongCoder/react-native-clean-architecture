@@ -372,6 +372,7 @@ import {LessonRef} from '../types';
 import useHomeStore from 'src/home/presentation/stores/useHomeStore';
 import {useI18n} from 'src/core/presentation/hooks/useI18n';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
+import {toJS} from 'mobx';
 
 export type TResult = {
   userId?: string;
@@ -1381,14 +1382,13 @@ const LessonScreen = observer(() => {
     >().params;
 
   const lessonStore = lessonModuleContainer.getProvided(LessonStore);
+
   const env = coreModuleContainer.getProvided<Env>(EnvToken);
 
   const {
     handlePostUserProgress,
     setTrainingCount,
     trainingCount,
-    setCurrentQuestion,
-    currentQuestion,
     isShowHint,
     toggleUseHint,
     getSetting,
@@ -1403,7 +1403,7 @@ const LessonScreen = observer(() => {
     return __DEV__
       ? apiTasks.slice(0, apiTasks.length).map(t => ({
           ...t,
-          question: __DEV__ ? t.question.slice(0, 5) : t.question,
+          question: __DEV__ ? t.question.slice(0, 12) : t.question,
         }))
       : apiTasks.map(t => ({
           ...t,
@@ -1751,28 +1751,29 @@ const LessonScreen = observer(() => {
   }, []);
 
   useEffect(() => {
+    // lưu lại state của lesson khi unmount
+    // * lessonId : id của lesson
+    // * activeTaskIndex : index của task hiện tại
+    // * questionIndex : index của question hiện tại
     return () => {
-      setCurrentQuestion({
-        lessonId: route.lessonId,
-        activeTaskIndex,
-        questionIndex: lessonIndex,
-      });
+      lessonStore.upsertQuestion(route.lessonId, lessonIndex, activeTaskIndex);
     };
-  }, [activeTaskIndex, lessonIndex, route.lessonId, setCurrentQuestion]);
+  }, [activeTaskIndex, lessonIndex, route.lessonId, lessonStore]);
 
   /**----------------------
    *todo    Logic đi tới câu đã làm khi back lại
    *------------------------**/
   useEffect(() => {
-    if (currentQuestion && currentQuestion.lessonId === route.lessonId) {
-      setActiveTaskIndex(currentQuestion.activeTaskIndex);
-      setLessonIndex(currentQuestion.questionIndex);
+    const list = toJS(lessonStore.currentQuestion) ?? [];
+    const saved = list.find(q => q.lessonId === route.lessonId);
+    if (saved) {
+      setActiveTaskIndex(saved.activeTaskIndex);
+      setLessonIndex(saved.questionIndex);
     } else {
       setTrainingCount(TRAINING_COUNT); // * set lại TRANING COUNT về ban đàu
     }
-
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [route.lessonId, lessonStore.currentQuestion]);
 
   const dataProps = {
     moduleIndex: lessonIndex,

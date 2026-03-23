@@ -19,6 +19,7 @@ import {
   darkenColor,
   getCorrectAnswer,
   isMMSS,
+  WIDTH_SCREEN,
 } from 'src/core/presentation/utils';
 import {scale, verticalScale} from 'react-native-size-matters';
 import Animated, {
@@ -85,6 +86,8 @@ const English_CharSelector_Meaning = observer(
         '',
       );
 
+      const [imageLayout, setImageLayout] = useState({width: 0, height: 0});
+
       const {trainingCount, getSetting} = useLessonStore();
 
       const {selectedChild} = useAuthenticationStore();
@@ -141,7 +144,7 @@ const English_CharSelector_Meaning = observer(
         );
       }, [firstMiniTestTask?.question, moduleIndex, ttsSpeak]);
 
-      const opacity = useSharedValue(0);
+      const opacity = useSharedValue(1);
       const scaleS = useSharedValue(1);
 
       /**
@@ -164,6 +167,7 @@ const English_CharSelector_Meaning = observer(
       }, [onSpeechText, focus]); // Added focus to the dependency array
 
       useEffect(() => {
+        setImageLayout({width: 0, height: 0});
         opacity.value = withTiming(0, {duration: 500}, () => {
           opacity.value = withTiming(1, {duration: 500});
         });
@@ -220,25 +224,49 @@ const English_CharSelector_Meaning = observer(
           onPressFlower={toggleShowHint}
           buildQuestion={
             <View style={[styles.containerMeaning]}>
-              {learningTimer !== 0 && (
-                <Animated.View
-                  style={[
-                    {
-                      width: scale(240),
-                      height: verticalScale(100),
-                    },
-                    animatedStyle,
-                  ]}>
-                  <FastImage
-                    resizeMode="contain"
-                    source={{
-                      uri:
-                        env.IMAGE_QUESTION_BASE_API_URL +
-                        firstMiniTestTask?.question?.[moduleIndex].image,
-                    }}
-                  />
-                </Animated.View>
-              )}
+              {(() => {
+                const maxH = verticalScale(200);
+                const containerW =
+                  imageLayout.height > 0
+                    ? Math.min(
+                        (maxH / imageLayout.height) * imageLayout.width,
+                        WIDTH_SCREEN * 0.8,
+                      )
+                    : WIDTH_SCREEN * 0.8;
+                const containerH =
+                  imageLayout.height > 0
+                    ? (containerW / imageLayout.width) * imageLayout.height
+                    : maxH;
+                return (
+                  <Animated.View
+                    style={[
+                      {
+                        width: containerW,
+                        height: containerH,
+                      },
+                      animatedStyle,
+                    ]}>
+                    <FastImage
+                      resizeMode="contain"
+                      style={{
+                        width: '100%',
+                        height: '100%',
+                      }}
+                      source={{
+                        uri:
+                          env.IMAGE_QUESTION_BASE_API_URL +
+                          firstMiniTestTask?.question?.[moduleIndex].image,
+                      }}
+                      onLoad={evt =>
+                        setImageLayout({
+                          width: evt.nativeEvent.width,
+                          height: evt.nativeEvent.height,
+                        })
+                      }
+                    />
+                  </Animated.View>
+                );
+              })()}
               <Text
                 style={[
                   styles.textMeaning,
@@ -302,7 +330,10 @@ const English_CharSelector_Meaning = observer(
                 <WordScramble
                   ref={charScrambleRep}
                   content={firstMiniTestTask?.question?.[moduleIndex]?.content}
-                  listChar={firstMiniTestTask?.question?.[moduleIndex]?.answers}
+                  listChar={
+                    firstMiniTestTask?.question?.[moduleIndex]
+                      ?.answers as string[]
+                  }
                   learningTimer={learningTimer}
                   onAnswerChanged={setAnswerSelected}
                   questionStyle={{color: settings.backgroundButtonColor}}
@@ -333,10 +364,6 @@ const styles = StyleSheet.create({
   fill: {
     flex: 1,
   },
-  fonts_SVN_Cherish: {
-    fontFamily: FontFamily.SVNCherishMoment,
-  },
-
   textQuestion: {
     fontSize: verticalScale(15),
     textAlign: 'left',
@@ -347,8 +374,10 @@ const styles = StyleSheet.create({
   },
   containerMeaning: {
     flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
+    // alignItems: 'center',
+    // justifyContent: 'center',
+    // backgroundColor: 'red',
+    // overflow: 'hidden',
   },
   textMeaning: {
     fontFamily: FontFamily.SVNNeuzeitRegular,
@@ -356,20 +385,10 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontWeight: '400',
   },
-  textVowel: {
-    fontFamily: FontFamily.SVNCherishMoment,
-    color: COLORS.YELLOW_F2B559,
-    fontSize: verticalScale(28),
-  },
-
   wrapHeaderContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     marginBottom: verticalScale(8),
-  },
-  iconImageContainer: {
-    height: verticalScale(39),
-    width: verticalScale(34),
   },
   buttonContainer: {
     borderRadius: scale(52),

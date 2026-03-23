@@ -15,7 +15,7 @@ import {FontFamily} from 'src/core/presentation/hooks/useFonts';
 import useGlobalStyle from 'src/core/presentation/hooks/useGlobalStyle';
 import {Task} from 'src/home/application/types/GetListQuestionResponse';
 import {COLORS} from 'src/core/presentation/constants/colors';
-import {getCorrectAnswer} from 'src/core/presentation/utils';
+import {getCorrectAnswer, WIDTH_SCREEN} from 'src/core/presentation/utils';
 import {scale, verticalScale} from 'react-native-size-matters';
 import Animated, {
   Easing,
@@ -216,7 +216,7 @@ const English_EG4M23 = observer(
               style={[
                 {
                   alignItems: 'center',
-                  width: '80%',
+                  width: WIDTH_SCREEN * 0.8,
                 },
                 animatedStyle,
               ]}>

@@ -219,7 +219,10 @@ const EssayLesson = observer(
               <CharScramble
                 ref={charScrambleRep}
                 content={firstMiniTestTask?.question?.[moduleIndex]?.content}
-                listChar={firstMiniTestTask?.question?.[moduleIndex]?.answers}
+                listChar={
+                  firstMiniTestTask?.question?.[moduleIndex]
+                    ?.answers as string[]
+                }
                 learningTimer={learningTimer}
                 onAnswerChanged={setAnswerSelected}
               />

@@ -231,9 +231,9 @@ const English_QwertyKeyboard = observer(
           onPressFlower={toggleShowHint}
           characterStyle={
             characterStyle ?? {
-              height: verticalScale(300),
-              marginBottom: -verticalScale(130),
-              marginLeft: -scale(40),
+              height: verticalScale(200),
+              marginLeft: -scale(20),
+              aspectRatio: 0.5,
             }
           }
           buildQuestion={
