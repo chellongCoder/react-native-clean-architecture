@@ -160,7 +160,8 @@ export const useSettingLesson = ({
     setIsSubmitting(true);
 
     try {
-      resetLearning();
+      intervalRef.current && stop(intervalRef.current);
+      intervalRef.current = start();
       resetTesting();
       stopRecord();
       clearSpeechResult();
