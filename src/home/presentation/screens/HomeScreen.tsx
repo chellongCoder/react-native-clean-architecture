@@ -1,4 +1,4 @@
-import React, {Fragment, useState} from 'react';
+import React, {Fragment, useMemo, useRef, useState} from 'react';
 import {
   ScrollView,
   StyleSheet,
@@ -87,16 +87,26 @@ const HomeScreenFallback = ({onRetry}: {onRetry?: () => void}) => {
 const HomeScreenContent = observer(() => {
   const inset = useSafeAreaInsets();
   const env = coreModuleContainer.getProvided<Env>(EnvToken);
+  const lastProgressRef = useRef(0);
 
   // Loading states
   const [isImageLoading, setIsImageLoading] = useState(true);
   const [imageLoadError, setImageLoadError] = useState(false);
   const [loadingProgress, setLoadingProgress] = useState(0);
 
-  // Create a low-quality version of the image URL (if your server supports it)
-  const getLowQualityImageUrl = (url: string) => {
-    return url + '?quality=20&blur=5';
-  };
+  const remoteImageUri = useMemo(
+    () => env.IMAGE_BACKGROUND_BASE_API_URL + 'bg-HOME.png',
+    [env.IMAGE_BACKGROUND_BASE_API_URL],
+  );
+
+  const remoteImageSource = useMemo(
+    () => ({
+      uri: remoteImageUri,
+      priority: FastImage.priority.high,
+      cache: FastImage.cacheControl.immutable,
+    }),
+    [remoteImageUri],
+  );
 
   return (
     <Fragment>
@@ -107,72 +117,81 @@ const HomeScreenContent = observer(() => {
           showsVerticalScrollIndicator={false}
           bounces={false}>
           <View style={styles.imageWrapper}>
-            {/* Low quality placeholder */}
-            {isImageLoading && (
+            {(isImageLoading || imageLoadError) && (
               <FastImage
-                source={{
-                  uri: getLowQualityImageUrl(
-                    env.IMAGE_BACKGROUND_BASE_API_URL + 'bg-HOME.png',
-                  ),
-                }}
+                source={assets.bee_bg}
                 style={[
                   styles.image,
-                  styles.blurredImage,
                   {height: WIDTH_SCREEN * 3.35, width: '100%'},
                 ]}
                 resizeMode="contain"
               />
             )}
 
-            {/* High quality image */}
-            <FastImage
-              source={
-                imageLoadError
-                  ? assets.bee_bg
-                  : {
-                      uri: env.IMAGE_BACKGROUND_BASE_API_URL + 'bg-HOME.png',
-                      priority: FastImage.priority.high,
-                      cache: FastImage.cacheControl.immutable,
-                    }
-              }
-              style={[
-                styles.image,
-                {
-                  height: WIDTH_SCREEN * 3.35,
-                  width: '100%',
-                  opacity: isImageLoading ? 0 : 1,
-                },
-              ]}
-              resizeMode="contain"
-              onLoadStart={() => {
-                setIsImageLoading(true);
-                setImageLoadError(false);
-                setLoadingProgress(0);
-              }}
-              onProgress={e => {
-                const progress = e.nativeEvent.loaded / e.nativeEvent.total;
-                setLoadingProgress(progress);
-                console.log(
-                  'Background image loading progress:',
-                  Math.round(progress * 100) + '%',
-                );
-              }}
-              onLoad={e => {
-                setIsImageLoading(false);
-                console.log(
-                  'Background image loaded:',
-                  e.nativeEvent.width,
-                  e.nativeEvent.height,
-                );
-              }}
-              onLoadEnd={() => setIsImageLoading(false)}
-              onError={() => {
-                setIsImageLoading(false);
-                setImageLoadError(true);
-                console.log('Background image loading failed');
-              }}
-              fallback={false}
-            />
+            {!imageLoadError && isImageLoading && (
+              <FastImage
+                source={remoteImageSource}
+                style={[
+                  styles.image,
+                  styles.preloadImage,
+                  {height: WIDTH_SCREEN * 3.35, width: '100%'},
+                ]}
+                resizeMode="contain"
+                onLoadStart={() => {
+                  lastProgressRef.current = 0;
+                  setIsImageLoading(true);
+                  setImageLoadError(false);
+                  setLoadingProgress(0);
+                }}
+                onProgress={e => {
+                  if (!e.nativeEvent.total) {
+                    return;
+                  }
+
+                  const nextProgress = Math.min(
+                    100,
+                    Math.round(
+                      (e.nativeEvent.loaded / e.nativeEvent.total) * 100,
+                    ),
+                  );
+
+                  if (nextProgress === lastProgressRef.current) {
+                    return;
+                  }
+
+                  lastProgressRef.current = nextProgress;
+                  setLoadingProgress(nextProgress);
+                }}
+                onLoad={() => {
+                  lastProgressRef.current = 100;
+                  setLoadingProgress(100);
+                  setIsImageLoading(false);
+                }}
+                onLoadEnd={() => {
+                  lastProgressRef.current = 100;
+                  setLoadingProgress(100);
+                  setIsImageLoading(false);
+                }}
+                onError={() => {
+                  setIsImageLoading(false);
+                  setImageLoadError(true);
+                  setLoadingProgress(0);
+                }}
+                fallback={false}
+              />
+            )}
+
+            {!imageLoadError && !isImageLoading && (
+              <FastImage
+                source={remoteImageSource}
+                style={[
+                  styles.image,
+                  {height: WIDTH_SCREEN * 3.35, width: '100%'},
+                ]}
+                resizeMode="contain"
+                fallback={false}
+              />
+            )}
 
             {/* Loading overlay */}
             {isImageLoading && (
@@ -183,7 +202,7 @@ const HomeScreenContent = observer(() => {
                     <View
                       style={[
                         styles.progressBar,
-                        {width: `${loadingProgress * 100}%`},
+                        {width: `${loadingProgress}%`},
                       ]}
                     />
                   </View>
@@ -243,9 +262,9 @@ const styles = StyleSheet.create({
   image: {
     width: '100%',
   },
-  blurredImage: {
+  preloadImage: {
     position: 'absolute',
-    opacity: 0.5,
+    opacity: 0,
     zIndex: 1,
   },
   loadingOverlay: {

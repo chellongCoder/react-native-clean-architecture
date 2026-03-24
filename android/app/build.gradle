@@ -1,3 +1,5 @@
+import org.gradle.internal.os.OperatingSystem
+
 apply plugin: "com.android.application"
 apply plugin: "org.jetbrains.kotlin.android"
 apply plugin: "com.facebook.react"
@@ -82,6 +84,30 @@ def enableProguardInReleaseBuilds = (findProperty('android.enableProguardInRelea
  * this variant is about 6MiB larger per architecture than default.
  */
 def jscFlavor = 'org.webkit:android-jsc:+'
+def ndkHostTag = OperatingSystem.current().isMacOsX() ? 'darwin-x86_64' : 'linux-x86_64'
+def ndkLibcxxTriples = [
+    'arm64-v8a': 'aarch64-linux-android',
+    'armeabi-v7a': 'arm-linux-androideabi',
+]
+def generatedLibcxxDir = layout.buildDirectory.dir("generated/ndk-libcxx")
+
+def syncNdkLibcxxShared = tasks.register("syncNdkLibcxxShared", Sync) {
+    def ndkRoot = new File(android.sdkDirectory, "ndk/${rootProject.ext.ndkVersion}")
+
+    into(generatedLibcxxDir)
+
+    doFirst {
+        if (!ndkRoot.exists()) {
+            throw new GradleException("Android NDK ${rootProject.ext.ndkVersion} not found at ${ndkRoot}")
+        }
+    }
+
+    ndkLibcxxTriples.each { abi, triple ->
+        from(new File(ndkRoot, "toolchains/llvm/prebuilt/${ndkHostTag}/sysroot/usr/lib/${triple}/libc++_shared.so")) {
+            into abi
+        }
+    }
+}
 
 android {
     ndkVersion rootProject.ext.ndkVersion
@@ -90,21 +116,20 @@ android {
     compileSdk rootProject.ext.compileSdkVersion
 
     namespace 'com.algorz.abeeci.app'
+    sourceSets {
+        main {
+            jniLibs.srcDir(generatedLibcxxDir)
+        }
+    }
     defaultConfig {
         applicationId 'com.algorz.abeeci.app'
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 201
+        versionCode 202
         versionName "1.1.5"
         missingDimensionStrategy "store", "play"
         ndk {
             abiFilters "armeabi-v7a", "arm64-v8a"
-        }
-        // Add these lines for 16KB page size support
-        externalNativeBuild {
-            cmake {
-                arguments "-DANDROID_PAGE_SIZE=16384"
-            }
         }
         // CodePush: required for getBinaryResourcesModifiedTime (fixes CodePushUnknownException on release)
         resValue "string", "CODE_PUSH_APK_BUILD_TIME", String.format("\"%d\"", System.currentTimeMillis())
@@ -153,6 +178,7 @@ android {
     packagingOptions {
         jniLibs {
             useLegacyPackaging (findProperty('expo.useLegacyPackaging')?.toBoolean() ?: false)
+            pickFirsts += ['**/libc++_shared.so']
         }
         resources {
             excludes += "/META-INF/INDEX.LIST"
@@ -191,6 +217,8 @@ android.buildTypes.each { buildType ->
         }
     }
 }
+
+preBuild.dependsOn(syncNdkLibcxxShared)
 
 dependencies {
     // The version of react-native is set by the React Native Gradle Plugin

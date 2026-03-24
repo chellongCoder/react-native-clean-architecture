@@ -6,12 +6,12 @@ buildscript {
         minSdkVersion = Integer.parseInt(findProperty('android.minSdkVersion') ?: '26')
         compileSdkVersion = Integer.parseInt(findProperty('android.compileSdkVersion') ?: '35')
         targetSdkVersion = Integer.parseInt(findProperty('android.targetSdkVersion') ?: '35')        
-        kotlinVersion = findProperty('android.kotlinVersion') ?: '1.9.25'
+        kotlinVersion = findProperty('android.kotlinVersion') ?: '2.0.21'
         androidXVersion = findProperty('android.androidXVersion') ?: '1.9.0'
         androidXAnnotation = findProperty('android.androidXAnnotation') ?: '1.8.2'
         androidXBrowser = findProperty('android.androidXBrowser') ?: '1.8.0'
 
-        ndkVersion = "26.1.10909125"
+        ndkVersion = findProperty('android.ndkVersion') ?: '29.0.14206865'
     }
     repositories {
         google()

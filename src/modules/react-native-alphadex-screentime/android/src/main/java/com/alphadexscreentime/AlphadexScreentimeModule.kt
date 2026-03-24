@@ -222,9 +222,8 @@ class AlphadexScreentimeModule(reactContext: ReactApplicationContext) : ReactCon
             for (i in 0 until array.size()) {
                 when (array.getType(i)) {
                     ReadableType.Map -> {
-                        val readableMap = array.getMap(i)
-                        val map = readableMap.toHashMap()
-                        arrayList.add(map)
+                        val readableMap = array.getMap(i) ?: continue
+                        arrayList.add(readableMap.toHashMap())
                     }
                     else -> {
                         // Handle other types if necessary
