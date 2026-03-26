@@ -3,218 +3,329 @@ import React, {
   useContext,
   useEffect,
   useMemo,
+  useRef,
   useState,
 } from 'react';
-import {ActivityIndicator, Text, View, StyleSheet, Alert} from 'react-native';
+import {Alert, Platform} from 'react-native';
 import CodePush, {DownloadProgress, LocalPackage} from 'react-native-code-push';
+import {getBundleId} from 'react-native-device-info';
+
 import {coreModuleContainer} from 'src/core/CoreModule';
 import Env, {EnvToken} from 'src/core/domain/entities/Env';
+
+import CodePushStatusView, {
+  CodePushPhase,
+  CodePushPresentationMode,
+} from '../components/CodePushStatusView';
 import {useI18n} from './useI18n';
-import {lessonModuleContainer} from 'src/lesson/LessonModule';
-import {LessonStore} from 'src/lesson/presentation/stores/LessonStore/LessonStore';
-import {observer} from 'mobx-react';
 
 export type CodePushContextValue = {
   setProgress: React.Dispatch<React.SetStateAction<number>>;
   metaData: LocalPackage | null;
 };
 
+type Props = {children: React.ReactNode};
+
+type CodePushUiState = {
+  phase: CodePushPhase;
+  progressPercent: number;
+  statusText: string;
+};
+
+const PROD_RELEASE_BUNDLE_ID = 'com.algorz.abeeci.app';
+const DEV_RELEASE_BUNDLE_ID = 'com.algorz.abeeci.app.dev';
+
 const CodePushContext = React.createContext<Partial<CodePushContextValue>>({});
 
 export const useCodePush = () => useContext(CodePushContext);
 
-type Props = {children: React.ReactNode};
-
-const CodePushProvider: React.FC<Props> = observer(({children}) => {
+function CodePushProvider({children}: Props) {
   const env = coreModuleContainer.getProvided<Env>(EnvToken);
-  const value = lessonModuleContainer.getProvided(LessonStore);
-
-  const {isOverlay, isPushNoti, isUsageStats} = value;
-
-  const isConfirm = useMemo(
-    () => isOverlay && isPushNoti && isUsageStats,
-    [isOverlay, isPushNoti, isUsageStats],
-  );
-
-  const [progress, setProgress] = useState<number>(-1);
-  const [statusUpdate, setStatusUpdate] = useState<string>('');
-  console.log('🛠 LOG: 🚀 --> ~ CodePushProvider ~ statusUpdate:', statusUpdate);
+  const i18n = useI18n();
+  const syncStartedRef = useRef(false);
+  const bundleId = useMemo(() => getBundleId(), []);
 
   const [metaData, setMetaData] = useState<LocalPackage | null>(null);
-  const i18n = useI18n();
+  const [uiState, setUiState] = useState<CodePushUiState>({
+    phase: 'idle',
+    progressPercent: 0,
+    statusText: '',
+  });
+
+  const codePushMode = useMemo<CodePushPresentationMode>(() => {
+    if (!CodePush) {
+      return 'disabled';
+    }
+
+    if (
+      Platform.OS === 'android' &&
+      !__DEV__ &&
+      [PROD_RELEASE_BUNDLE_ID, DEV_RELEASE_BUNDLE_ID].includes(bundleId)
+    ) {
+      return 'floating';
+    }
+
+    return 'interactive';
+  }, [bundleId]);
+
+  const shouldPromptForRestart = useMemo(
+    () =>
+      Platform.OS === 'android' &&
+      !__DEV__ &&
+      bundleId === DEV_RELEASE_BUNDLE_ID,
+    [bundleId],
+  );
+
+  const setProgress = useCallback((value: React.SetStateAction<number>) => {
+    setUiState(previousState => {
+      const nextProgress =
+        typeof value === 'function'
+          ? value(previousState.progressPercent)
+          : value;
+
+      if (nextProgress === previousState.progressPercent) {
+        return previousState;
+      }
+
+      return {
+        ...previousState,
+        progressPercent: nextProgress,
+      };
+    });
+  }, []);
+
+  const setCodePushUiState = useCallback(
+    (nextState: Partial<CodePushUiState>) => {
+      setUiState(previousState => {
+        const updatedState = {...previousState, ...nextState};
+
+        if (
+          updatedState.phase === previousState.phase &&
+          updatedState.progressPercent === previousState.progressPercent &&
+          updatedState.statusText === previousState.statusText
+        ) {
+          return previousState;
+        }
+
+        return updatedState;
+      });
+    },
+    [],
+  );
+
+  const refreshMetaData = useCallback(async () => {
+    try {
+      const currentPackage = await CodePush.getUpdateMetadata();
+      setMetaData(currentPackage);
+      return currentPackage;
+    } catch {
+      return null;
+    }
+  }, []);
+
+  const resetUiState = useCallback(() => {
+    setCodePushUiState({
+      phase: 'idle',
+      progressPercent: 0,
+      statusText: '',
+    });
+  }, [setCodePushUiState]);
 
   const codePushStatusDidChange = useCallback(
     (status: CodePush.SyncStatus) => {
       switch (status) {
         case CodePush.SyncStatus.CHECKING_FOR_UPDATE:
-          setProgress(0);
-          setStatusUpdate(
-            i18n.t('core.screens.codepush.checkingForUpdate') + '...',
-          );
+          resetUiState();
+          break;
+        case CodePush.SyncStatus.AWAITING_USER_ACTION:
+          resetUiState();
           break;
         case CodePush.SyncStatus.DOWNLOADING_PACKAGE:
-          setStatusUpdate(
-            i18n.t('core.screens.codepush.downloadingUpdate') + '...',
-          );
+          setCodePushUiState({
+            phase: 'downloading',
+            statusText: i18n.t('core.screens.codepush.downloadingUpdate'),
+          });
           break;
         case CodePush.SyncStatus.INSTALLING_UPDATE:
-          setStatusUpdate(
-            i18n.t('core.screens.codepush.installingUpdate') + '...',
-          );
+          setCodePushUiState({
+            phase: 'installing',
+            statusText: i18n.t('core.screens.codepush.installingUpdate'),
+          });
           break;
         case CodePush.SyncStatus.UP_TO_DATE:
-          setStatusUpdate(i18n.t('core.screens.codepush.upToDate'));
-          setProgress(-1);
+          setCodePushUiState({
+            phase: 'up_to_date',
+            progressPercent: 0,
+            statusText: i18n.t('core.screens.codepush.upToDate'),
+          });
           break;
         case CodePush.SyncStatus.UPDATE_INSTALLED:
-          setStatusUpdate(i18n.t('core.screens.codepush.updateInstalled'));
-          setProgress(-1);
-          Alert.alert(
-            i18n.t('core.screens.codepush.updateInstalled'),
-            `Label: ${metaData?.label}\nVersion: ${metaData?.appVersion}\nDeployment: ${metaData?.deploymentKey}`,
-          );
+          refreshMetaData()
+            .then(currentPackage => {
+              if (shouldPromptForRestart) {
+                Alert.alert(
+                  i18n.t('core.screens.codepush.updateInstalled'),
+                  `${i18n.t('core.screens.codepush.contentUpdate')}\n\nLabel: ${
+                    currentPackage?.label ?? '-'
+                  }\nVersion: ${currentPackage?.appVersion ?? '-'}`,
+                  [
+                    {
+                      text: i18n.t('core.screens.codepush.later'),
+                      style: 'cancel',
+                    },
+                    {
+                      text: i18n.t('core.screens.codepush.install'),
+                      onPress: () => CodePush.restartApp(),
+                    },
+                  ],
+                );
+                return;
+              }
+
+              if (codePushMode === 'interactive') {
+                Alert.alert(
+                  i18n.t('core.screens.codepush.updateInstalled'),
+                  `Label: ${currentPackage?.label ?? '-'}\nVersion: ${
+                    currentPackage?.appVersion ?? '-'
+                  }\nDeployment: ${currentPackage?.deploymentKey ?? '-'}`,
+                );
+              }
+            })
+            .catch(() => undefined);
+
+          setCodePushUiState({
+            phase: codePushMode === 'floating' ? 'ready' : 'idle',
+            progressPercent: 100,
+            statusText: i18n.t('core.screens.codepush.updateInstalled'),
+          });
+          break;
+        case CodePush.SyncStatus.UPDATE_IGNORED:
+          setCodePushUiState({
+            phase: 'idle',
+            progressPercent: 0,
+            statusText: i18n.t('core.screens.codepush.updateIgnored'),
+          });
+          break;
+        case CodePush.SyncStatus.UNKNOWN_ERROR:
+          setCodePushUiState({
+            phase: 'error',
+            progressPercent: 0,
+            statusText: i18n.t('core.screens.codepush.updateFailed'),
+          });
           break;
         default:
-          setProgress(-1);
+          resetUiState();
           break;
       }
     },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [metaData],
+    [
+      codePushMode,
+      i18n,
+      refreshMetaData,
+      resetUiState,
+      setCodePushUiState,
+      shouldPromptForRestart,
+    ],
   );
 
-  const downloadProgressCallback = useCallback((p: DownloadProgress) => {
-    const ratio = Math.round((p.receivedBytes / p.totalBytes) * 100);
-    setProgress(curr => (curr !== ratio ? ratio : curr));
-  }, []);
-
-  useEffect(() => {
-    const checkForUpdates = async () => {
-      try {
-        console.log(
-          '🔍 Checking for updates with deployment key:',
-          env.CODEPUSH_DEPLOYMENT_KEY,
-        );
-        // Check current app version info
-        const currentPackage = await CodePush.getUpdateMetadata();
-        console.log('📦 Current package (any state):', currentPackage);
-
-        // Check if running on binary or CodePush bundle
-        if (!currentPackage) {
-          console.log(
-            'ℹ️ Running on binary version (no CodePush update installed yet)',
-          );
-        } else {
-          console.log('✅ Running on CodePush bundle:', {
-            label: currentPackage.label,
-            appVersion: currentPackage.appVersion,
-            deploymentKey: currentPackage.deploymentKey,
-          });
-        }
-
-        // Check for remote updates
-        const remotePackage = await CodePush.checkForUpdate(
-          env.CODEPUSH_DEPLOYMENT_KEY,
-        );
-
-        if (!remotePackage) {
-          console.log('✅ App is up to date - no remote updates available');
-        } else {
-          console.log('🆕 Update available:', {
-            label: remotePackage.label,
-            appVersion: remotePackage.appVersion,
-            description: remotePackage.description,
-            isMandatory: remotePackage.isMandatory,
-            packageSize: remotePackage.packageSize,
-          });
-        }
-      } catch (error) {
-        console.error('❌ CodePush check failed:', error);
-        setProgress(-1);
-      }
-    };
-
-    if (isConfirm) {
-      if (!CodePush) {
-        console.warn(
-          '⚠️ CodePush is undefined. Make sure the native module is correctly linked.',
-        );
+  const downloadProgressCallback = useCallback(
+    (progress: DownloadProgress) => {
+      if (!progress.totalBytes) {
         return;
       }
-      checkForUpdates();
+
+      const progressPercent = Math.min(
+        100,
+        Math.round((progress.receivedBytes / progress.totalBytes) * 100),
+      );
+
+      setUiState(previousState => {
+        if (
+          previousState.phase === 'downloading' &&
+          previousState.progressPercent === progressPercent
+        ) {
+          return previousState;
+        }
+
+        return {
+          phase: 'downloading',
+          progressPercent,
+          statusText: i18n.t('core.screens.codepush.downloadingUpdate'),
+        };
+      });
+    },
+    [i18n],
+  );
+
+  useEffect(() => {
+    refreshMetaData().catch(() => undefined);
+  }, [refreshMetaData]);
+
+  useEffect(() => {
+    if (!CodePush || syncStartedRef.current) {
+      return;
     }
-    // If deploymentKey is omitted here, native-configured key is used (from Info.plist / BuildConfig)
+
+    syncStartedRef.current = true;
+
+    const syncOptions =
+      codePushMode === 'floating'
+        ? {
+            deploymentKey: env.CODEPUSH_DEPLOYMENT_KEY,
+            installMode: CodePush.InstallMode.ON_NEXT_RESTART,
+            mandatoryInstallMode: CodePush.InstallMode.ON_NEXT_RESTART,
+            updateDialog: false,
+          }
+        : {
+            deploymentKey: env.CODEPUSH_DEPLOYMENT_KEY,
+            updateDialog: {
+              title: i18n.t('core.screens.codepush.updateAvailable'),
+              optionalUpdateMessage: i18n.t(
+                'core.screens.codepush.contentUpdate',
+              ),
+              optionalIgnoreButtonLabel: i18n.t('core.screens.codepush.later'),
+              optionalInstallButtonLabel: i18n.t(
+                'core.screens.codepush.install',
+              ),
+              mandatoryUpdateMessage: i18n.t(
+                'core.screens.codepush.mandatoryMessage',
+              ),
+              mandatoryContinueButtonLabel: i18n.t(
+                'core.screens.codepush.install',
+              ),
+            },
+            installMode: CodePush.InstallMode.ON_NEXT_SUSPEND,
+          };
+
+    CodePush.sync(
+      syncOptions,
+      codePushStatusDidChange,
+      downloadProgressCallback,
+    );
   }, [
+    codePushMode,
     codePushStatusDidChange,
     downloadProgressCallback,
     env.CODEPUSH_DEPLOYMENT_KEY,
     i18n,
-    isConfirm,
   ]);
-
-  useEffect(() => {
-    CodePush.sync(
-      {
-        deploymentKey: env.CODEPUSH_DEPLOYMENT_KEY,
-        updateDialog: {
-          title: i18n.t('core.screens.codepush.updateAvailable'),
-          optionalUpdateMessage: i18n.t('core.screens.codepush.contentUpdate'),
-          optionalIgnoreButtonLabel: i18n.t('core.screens.codepush.later'),
-          optionalInstallButtonLabel: i18n.t('core.screens.codepush.install'),
-          mandatoryUpdateMessage: i18n.t(
-            'core.screens.codepush.mandatoryMessage',
-          ),
-          mandatoryContinueButtonLabel: i18n.t('core.screens.codepush.install'),
-        },
-        installMode: CodePush.InstallMode.ON_NEXT_SUSPEND,
-      },
-      codePushStatusDidChange,
-      downloadProgressCallback,
-    );
-    CodePush.getUpdateMetadata()
-      .then(setMetaData)
-      .catch(() => undefined);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
   const contextValue = useMemo<CodePushContextValue>(
     () => ({setProgress, metaData}),
-    [metaData],
+    [metaData, setProgress],
   );
 
   return (
     <CodePushContext.Provider value={contextValue}>
       {children}
-      {progress >= 0 && (
-        <View style={styles.overlay}>
-          <ActivityIndicator size="large" color="#007AFF" />
-          <Text style={styles.statusText}>
-            {statusUpdate}
-            {progress > 0 ? ` ${progress}%` : ''}
-          </Text>
-        </View>
-      )}
+      <CodePushStatusView
+        mode={codePushMode}
+        phase={uiState.phase}
+        progressPercent={uiState.progressPercent}
+        statusText={uiState.statusText}
+      />
     </CodePushContext.Provider>
   );
-});
+}
 
 export default CodePushProvider;
-
-const styles = StyleSheet.create({
-  overlay: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'rgba(0,0,0,0.35)',
-    zIndex: 9999,
-  },
-  statusText: {
-    marginTop: 12,
-    color: '#fff',
-    fontSize: 16,
-  },
-});
