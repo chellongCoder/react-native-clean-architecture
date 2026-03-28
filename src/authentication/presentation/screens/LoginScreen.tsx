@@ -45,7 +45,7 @@ const LoginScreen = observer(() => {
   return (
     <ImageBackground
       style={[styles.container]}
-      source={require('../../../../assets/images/authBackground.png')}>
+      source={require('../../../../assets/images/authBackground.webp')}>
       <View style={styles.overlay} />
 
       <ScrollView contentContainerStyle={[styles.wrapContentContainer]}>

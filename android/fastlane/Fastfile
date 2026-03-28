@@ -16,6 +16,10 @@
 default_platform(:android)
 
 platform :android do
+  PROD_AAB_PATH = "/Users/mac/Workspaces/ReactNative/tbd-frontend/android/app/build/outputs/bundle/prodRelease/app-prod-release.aab"
+  PROD_MAPPING_PATH = "/Users/mac/Workspaces/ReactNative/tbd-frontend/android/app/build/outputs/mapping/prodRelease/mapping.txt"
+  PROD_NATIVE_DEBUG_SYMBOLS_PATH = "/Users/mac/Workspaces/ReactNative/tbd-frontend/android/app/build/outputs/native-debug-symbols/prodRelease/native-debug-symbols.zip"
+
   desc "Runs all the tests"
   lane :test do
     gradle(task: "test")
@@ -25,7 +29,7 @@ platform :android do
   lane :beta do
     gradle(task: "clean assembleRelease")
     crashlytics
-  
+
     # sh "your_script.sh"
     # You can also use other beta testing services here
   end
@@ -38,7 +42,7 @@ platform :android do
 
   desc "Build AAB"
   lane :buildAab do
-    gradle(task: "clean bundleRelease")
+    gradle(task: "clean bundleProdRelease")
   end
 
   desc "Increment versionCode"
@@ -55,11 +59,9 @@ platform :android do
 
   desc "Build and upload APK to Firebase App Distribution"
   lane :upload_to_firebase do
-
     increment_version_code
 
     gradle(task: "assembleRelease")
-
 
     firebase_app_distribution(
       app: "1:595720239925:android:ed1b5e7b1885f37c46ea7c",
@@ -72,25 +74,28 @@ platform :android do
     )
   end
 
-
   desc "Build AAB and upload to public testing on Play Console"
   lane :build_and_upload_aab do
-    
     increment_version_code
-    gradle(task: "bundleRelease")
+    gradle(task: "bundleProdRelease")
 
-     # Ensure the path to the AAB file is correct
-    aab_path = "/Users/mac/Workspaces/ReactNative/tbd-frontend/android/app/build/outputs/bundle/prodRelease/app-prod-release.aab"
-    unless File.exist?(aab_path)
-      UI.user_error!("Could not find AAB file at path '#{aab_path}'")
+    unless File.exist?(PROD_AAB_PATH)
+      UI.user_error!("Could not find AAB file at path '#{PROD_AAB_PATH}'")
+    end
+
+    [PROD_MAPPING_PATH, PROD_NATIVE_DEBUG_SYMBOLS_PATH].each do |artifact_path|
+      unless File.exist?(artifact_path)
+        UI.user_error!("Could not find release artifact at path '#{artifact_path}'")
+      end
     end
 
     supply(
       json_key: "./fastlane/optimal-analogy-473307-k3-f8609bd0cebc.json",
       package_name: "com.algorz.abeeci.app",
-      track: "beta", # Use "beta" for public testing track
-      aab: aab_path,
-      skip_upload_apk: true, # Skip uploading APK files
+      track: "beta",
+      aab: PROD_AAB_PATH,
+      mapping_paths: [PROD_MAPPING_PATH, PROD_NATIVE_DEBUG_SYMBOLS_PATH],
+      skip_upload_apk: true,
       skip_upload_metadata: true,
       skip_upload_images: true,
       skip_upload_screenshots: true,
@@ -102,15 +107,24 @@ platform :android do
   lane :build_and_upload_aab_closed do
     # increment_version_code
 
-    gradle(task: 'bundle', build_type: 'Release')
+    gradle(task: "bundleProdRelease")
 
-    aab_path = "/Users/mac/Workspaces/ReactNative/tbd-frontend/android/app/build/outputs/bundle/prodRelease/app-prod-release.aab"
+    unless File.exist?(PROD_AAB_PATH)
+      UI.user_error!("Could not find AAB file at path '#{PROD_AAB_PATH}'")
+    end
+
+    [PROD_MAPPING_PATH, PROD_NATIVE_DEBUG_SYMBOLS_PATH].each do |artifact_path|
+      unless File.exist?(artifact_path)
+        UI.user_error!("Could not find release artifact at path '#{artifact_path}'")
+      end
+    end
 
     supply(
       json_key: "./fastlane/optimal-analogy-473307-k3-f8609bd0cebc.json",
       package_name: "com.algorz.abeeci.app",
-      track: 'closed',
-      aab: aab_path,
+      track: "closed",
+      aab: PROD_AAB_PATH,
+      mapping_paths: [PROD_MAPPING_PATH, PROD_NATIVE_DEBUG_SYMBOLS_PATH],
       skip_upload_metadata: true,
       skip_upload_images: true,
       skip_upload_screenshots: true,
@@ -122,17 +136,23 @@ platform :android do
   lane :build_and_upload_aab_internal do
     increment_version_code
 
-    gradle(task: 'bundle', build_type: 'Release')
+    gradle(task: "bundleProdRelease")
 
-    aab_path = "/Users/mac/Workspaces/ReactNative/tbd-frontend/android/app/build/outputs/bundle/prodRelease/app-prod-release.aab"
-    unless File.exist?(aab_path)
-      UI.user_error!("Could not find AAB file at path '#{aab_path}'")
+    unless File.exist?(PROD_AAB_PATH)
+      UI.user_error!("Could not find AAB file at path '#{PROD_AAB_PATH}'")
+    end
+
+    [PROD_MAPPING_PATH, PROD_NATIVE_DEBUG_SYMBOLS_PATH].each do |artifact_path|
+      unless File.exist?(artifact_path)
+        UI.user_error!("Could not find release artifact at path '#{artifact_path}'")
+      end
     end
 
     # supply(
-    #   track: 'internal',
-    #   aab: aab_path,
-    #   skip_upload_apk: true, # Skip uploading APK files
+    #   track: "internal",
+    #   aab: PROD_AAB_PATH,
+    #   mapping_paths: [PROD_MAPPING_PATH, PROD_NATIVE_DEBUG_SYMBOLS_PATH],
+    #   skip_upload_apk: true,
     #   skip_upload_metadata: true,
     #   skip_upload_images: true,
     #   skip_upload_screenshots: true,
@@ -143,7 +163,7 @@ platform :android do
   desc "Download metadata from Play Store"
   lane :download_metadata do
     supply(
-      track: 'beta', # or 'beta', 'alpha', 'internal'
+      track: "beta", # or 'beta', 'alpha', 'internal'
       skip_upload_apk: true,
       skip_upload_aab: true,
       skip_upload_metadata: false,
