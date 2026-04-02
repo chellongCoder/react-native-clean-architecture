@@ -10,6 +10,7 @@ import {AuthenticationStore} from 'src/authentication/presentation/stores/Authen
 class HttpClient implements IHttpClient {
   private axios: typeof axios;
   private isRefreshing = false;
+  private refreshPromise: Promise<any> | null = null;
   private requestQueue: ((config: AxiosRequestConfig) => Promise<any>)[] = [];
 
   constructor(@provided(EnvToken) private readonly env: Env) {
@@ -55,29 +56,36 @@ class HttpClient implements IHttpClient {
             this.isRefreshing = true;
             originalRequest._retry = true;
 
-            try {
-              getRefreshToken(refreshToken)
-                .then(response => {
-                  this.requestQueue.forEach(callback =>
-                    callback({
-                      ...originalRequest,
-                      headers: {
-                        Authorization: `Bearer ${response.data.accessToken}`,
-                      },
-                    }),
-                  );
-                  this.requestQueue = [];
-                })
-                .catch((err: AxiosError) => {
-                  console.log('RefresshToken failed: ', err);
-                  handleUserLogOut();
-                });
-            } catch (err) {
-              handleUserLogOut();
-              return Promise.reject(err);
-            } finally {
-              this.isRefreshing = false;
-            }
+            // Create a single refresh promise to be shared by all concurrent requests
+            this.refreshPromise = getRefreshToken(refreshToken)
+              .then(response => {
+                this.requestQueue.forEach(callback =>
+                  callback({
+                    ...originalRequest,
+                    headers: {
+                      Authorization: `Bearer ${response.data.accessToken}`,
+                    },
+                  }),
+                );
+                this.requestQueue = [];
+                return response;
+              })
+              .catch((err: AxiosError) => {
+                console.log('RefresshToken failed: ', err);
+                handleUserLogOut();
+                throw err;
+              })
+              .finally(() => {
+                this.isRefreshing = false;
+                this.refreshPromise = null;
+              });
+          }
+
+          // Wait for the shared refresh promise before retrying
+          if (this.refreshPromise) {
+            return this.refreshPromise.then(() => {
+              return this.axios({...originalRequest});
+            });
           }
 
           return this.requestQueue.push((config: AxiosRequestConfig) => {

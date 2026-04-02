@@ -5,32 +5,42 @@
     
     
       
-      <testcase classname="fastlane.lanes" name="0: default_platform" time="0.00019">
+      <testcase classname="fastlane.lanes" name="0: default_platform" time="0.000231">
         
       </testcase>
     
       
-      <testcase classname="fastlane.lanes" name="1: Switch to android increment_version_code lane" time="9.7e-05">
+      <testcase classname="fastlane.lanes" name="1: Switch to android increment_version_code lane" time="0.000145">
         
       </testcase>
     
       
-      <testcase classname="fastlane.lanes" name="2: grep versionCode ../app/build.gradle | awk &apos;{print $2}&apos;" time="0.011553">
+      <testcase classname="fastlane.lanes" name="2: grep versionCode ../app/build.gradle | awk &apos;{print $2}&apos;" time="0.01255">
         
       </testcase>
     
       
-      <testcase classname="fastlane.lanes" name="3: sed -i &apos;&apos; &apos;s/versionCode 204/versionCode 205/&apos; ../app/build.gradle" time="0.007946">
+      <testcase classname="fastlane.lanes" name="3: sed -i &apos;&apos; &apos;s/versionCode 207/versionCode 208/&apos; ../app/build.gradle" time="0.009972">
         
       </testcase>
     
       
-      <testcase classname="fastlane.lanes" name="4: bundleProdRelease" time="99.088062">
+      <testcase classname="fastlane.lanes" name="4: bundleProdRelease" time="137.098817">
         
       </testcase>
     
       
-      <testcase classname="fastlane.lanes" name="5: supply" time="162.294473">
+      <testcase classname="fastlane.lanes" name="5: /Users/mac/Workspaces/ReactNative/tbd-frontend/script/verify_android_release_artifact.sh /Users/mac/Workspaces/ReactNative/tbd-frontend/android/app/build/outputs/bundle/prodRelease/app-prod-release.aab" time="1.112677">
+        
+      </testcase>
+    
+      
+      <testcase classname="fastlane.lanes" name="6: Switch to android prod_release_mapping_paths lane" time="0.000211">
+        
+      </testcase>
+    
+      
+      <testcase classname="fastlane.lanes" name="7: supply" time="71.712288">
         
       </testcase>
     

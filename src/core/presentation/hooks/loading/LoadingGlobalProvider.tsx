@@ -1,4 +1,4 @@
-import React, {PropsWithChildren, useCallback, useRef, useState} from 'react';
+import React, {PropsWithChildren, useCallback, useRef, useState, useEffect} from 'react';
 import {LoadingGlobalContext} from './LoadingGlobalContext';
 import LoadingGlobal from '../../components/LoadingGlobal';
 import Animated, {
@@ -16,6 +16,7 @@ export const LoadingGlobalProvider = ({children}: PropsWithChildren) => {
   const nameSpaceRef = useRef<string | undefined>('');
   const opacity = useSharedValue(0);
   const styleGlobal = useGlobalStyle();
+  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   const show = useCallback(() => {
     setShown(true);
@@ -29,7 +30,12 @@ export const LoadingGlobalProvider = ({children}: PropsWithChildren) => {
     (bool: boolean, nameSpace?: string) => {
       opacity.value = bool ? 1 : 0;
 
-      setTimeout(
+      // Clear any pending timeout before setting a new one
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+      }
+
+      timeoutRef.current = setTimeout(
         () => {
           setStatus((prevState: boolean) => {
             if (!prevState) {
@@ -48,6 +54,15 @@ export const LoadingGlobalProvider = ({children}: PropsWithChildren) => {
     },
     [opacity],
   );
+
+  // Cleanup timeout on unmount
+  useEffect(() => {
+    return () => {
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+      }
+    };
+  }, []);
 
   const animatedStyle = useAnimatedStyle(() => {
     return {

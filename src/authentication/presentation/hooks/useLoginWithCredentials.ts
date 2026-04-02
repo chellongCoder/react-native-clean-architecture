@@ -233,9 +233,15 @@ const useLoginWithCredentials = () => {
       } else {
         console.log('No credentials stored');
         if (loginMethod === LoginMethods.Google) {
-          await getRefreshToken(refreshToken);
-          handleNavigateAuthenticationSuccess();
-          return;
+          try {
+            await getRefreshToken(refreshToken);
+            handleNavigateAuthenticationSuccess();
+            return;
+          } catch (refreshError) {
+            console.log('getRefreshToken failed: ', refreshError);
+            replaceScreen(STACK_NAVIGATOR.AUTH.LOGIN_SCREEN);
+            return null;
+          }
         }
         replaceScreen(STACK_NAVIGATOR.AUTH.LOGIN_SCREEN);
         return null;
@@ -297,6 +303,7 @@ const useLoginWithCredentials = () => {
           pushScreen(STACK_NAVIGATOR.AUTH.REGISTER_CHILD_SCREEN, {});
         }
       } catch (error) {
+        console.log('handleRegister error: ', error);
         if (isAxiosError(error)) {
           handleErrorRegister(error as AxiosError);
         }
@@ -337,6 +344,7 @@ const useLoginWithCredentials = () => {
           pushScreen(STACK_NAVIGATOR.AUTH.LIST_CHILDREN_SCREEN, {});
         }
       } catch (error) {
+        console.log('handleRegisterChild error: ', error);
         if (isAxiosError(error)) {
           handleErrorRegister(error as AxiosError);
         }
@@ -363,6 +371,7 @@ const useLoginWithCredentials = () => {
       }
       return res.data;
     } catch (error) {
+      console.log('handleGetListAllSubject error: ', error);
       if (isAxiosError(error)) {
         handleErrorRegister(error as AxiosError);
       }
@@ -387,6 +396,7 @@ const useLoginWithCredentials = () => {
       }
       return res.data;
     } catch (error) {
+      console.log('handleGetUserProfile error: ', error);
       if (isAxiosError(error)) {
         handleErrorRegister(error as AxiosError);
       }
@@ -398,7 +408,7 @@ const useLoginWithCredentials = () => {
   const handleLogOut = useCallback(async () => {
     try {
       removeCurrentCredentials();
-      clearUsernamePasswordInKeychain();
+      await clearUsernamePasswordInKeychain();
       resetNavigator(STACK_NAVIGATOR.AUTH_NAVIGATOR, {
         screen: STACK_NAVIGATOR.AUTH.LOGIN_SCREEN,
       });

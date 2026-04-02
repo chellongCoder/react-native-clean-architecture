@@ -19,6 +19,23 @@ platform :android do
   PROD_AAB_PATH = "/Users/mac/Workspaces/ReactNative/tbd-frontend/android/app/build/outputs/bundle/prodRelease/app-prod-release.aab"
   PROD_MAPPING_PATH = "/Users/mac/Workspaces/ReactNative/tbd-frontend/android/app/build/outputs/mapping/prodRelease/mapping.txt"
   PROD_NATIVE_DEBUG_SYMBOLS_PATH = "/Users/mac/Workspaces/ReactNative/tbd-frontend/android/app/build/outputs/native-debug-symbols/prodRelease/native-debug-symbols.zip"
+  PROD_NATIVE_LIB_VERIFY_SCRIPT = "/Users/mac/Workspaces/ReactNative/tbd-frontend/script/verify_android_release_artifact.sh"
+
+  private_lane :prod_release_mapping_paths do
+    unless File.exist?(PROD_MAPPING_PATH)
+      UI.user_error!("Could not find release artifact at path '#{PROD_MAPPING_PATH}'")
+    end
+
+    release_mapping_paths = [PROD_MAPPING_PATH]
+
+    if File.exist?(PROD_NATIVE_DEBUG_SYMBOLS_PATH)
+      release_mapping_paths << PROD_NATIVE_DEBUG_SYMBOLS_PATH
+    else
+      UI.important("Native debug symbols zip not found at '#{PROD_NATIVE_DEBUG_SYMBOLS_PATH}', skipping symbol upload.")
+    end
+
+    release_mapping_paths
+  end
 
   desc "Runs all the tests"
   lane :test do
@@ -43,6 +60,7 @@ platform :android do
   desc "Build AAB"
   lane :buildAab do
     gradle(task: "clean bundleProdRelease")
+    sh("#{PROD_NATIVE_LIB_VERIFY_SCRIPT} #{PROD_AAB_PATH}")
   end
 
   desc "Increment versionCode"
@@ -83,18 +101,16 @@ platform :android do
       UI.user_error!("Could not find AAB file at path '#{PROD_AAB_PATH}'")
     end
 
-    [PROD_MAPPING_PATH, PROD_NATIVE_DEBUG_SYMBOLS_PATH].each do |artifact_path|
-      unless File.exist?(artifact_path)
-        UI.user_error!("Could not find release artifact at path '#{artifact_path}'")
-      end
-    end
+    sh("#{PROD_NATIVE_LIB_VERIFY_SCRIPT} #{PROD_AAB_PATH}")
+
+    release_mapping_paths = prod_release_mapping_paths
 
     supply(
       json_key: "./fastlane/optimal-analogy-473307-k3-f8609bd0cebc.json",
       package_name: "com.algorz.abeeci.app",
       track: "beta",
       aab: PROD_AAB_PATH,
-      mapping_paths: [PROD_MAPPING_PATH, PROD_NATIVE_DEBUG_SYMBOLS_PATH],
+      mapping_paths: release_mapping_paths,
       skip_upload_apk: true,
       skip_upload_metadata: true,
       skip_upload_images: true,
@@ -113,18 +129,16 @@ platform :android do
       UI.user_error!("Could not find AAB file at path '#{PROD_AAB_PATH}'")
     end
 
-    [PROD_MAPPING_PATH, PROD_NATIVE_DEBUG_SYMBOLS_PATH].each do |artifact_path|
-      unless File.exist?(artifact_path)
-        UI.user_error!("Could not find release artifact at path '#{artifact_path}'")
-      end
-    end
+    sh("#{PROD_NATIVE_LIB_VERIFY_SCRIPT} #{PROD_AAB_PATH}")
+
+    release_mapping_paths = prod_release_mapping_paths
 
     supply(
       json_key: "./fastlane/optimal-analogy-473307-k3-f8609bd0cebc.json",
       package_name: "com.algorz.abeeci.app",
       track: "closed",
       aab: PROD_AAB_PATH,
-      mapping_paths: [PROD_MAPPING_PATH, PROD_NATIVE_DEBUG_SYMBOLS_PATH],
+      mapping_paths: release_mapping_paths,
       skip_upload_metadata: true,
       skip_upload_images: true,
       skip_upload_screenshots: true,
@@ -142,16 +156,14 @@ platform :android do
       UI.user_error!("Could not find AAB file at path '#{PROD_AAB_PATH}'")
     end
 
-    [PROD_MAPPING_PATH, PROD_NATIVE_DEBUG_SYMBOLS_PATH].each do |artifact_path|
-      unless File.exist?(artifact_path)
-        UI.user_error!("Could not find release artifact at path '#{artifact_path}'")
-      end
-    end
+    sh("#{PROD_NATIVE_LIB_VERIFY_SCRIPT} #{PROD_AAB_PATH}")
+
+    release_mapping_paths = prod_release_mapping_paths
 
     # supply(
     #   track: "internal",
     #   aab: PROD_AAB_PATH,
-    #   mapping_paths: [PROD_MAPPING_PATH, PROD_NATIVE_DEBUG_SYMBOLS_PATH],
+    #   mapping_paths: release_mapping_paths,
     #   skip_upload_apk: true,
     #   skip_upload_metadata: true,
     #   skip_upload_images: true,

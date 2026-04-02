@@ -27,7 +27,6 @@ import {IClock} from '../icons';
 import {useAsyncEffect} from 'src/core/presentation/hooks';
 import {observer} from 'mobx-react';
 import FastImage from 'react-native-fast-image';
-import Toast from 'react-native-toast-message';
 
 const ModuleItem = observer((props: ModuleItemProps) => {
   const globalStyle = useGlobalStyle();
@@ -70,15 +69,7 @@ const ModuleItem = observer((props: ModuleItemProps) => {
         }
       }
     }
-  }, [
-    props.progress,
-    props.totalQuestion,
-    trialStatus,
-    i18n,
-    gotoLesson,
-    popupHook,
-    isLocked,
-  ]);
+  }, [trialStatus, gotoLesson, popupHook, isLocked]);
 
   const renderIcon = () =>
     props?.image ? (

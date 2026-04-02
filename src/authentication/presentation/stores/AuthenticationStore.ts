@@ -57,7 +57,7 @@ export class AuthenticationStore implements AuthenticationStoreState {
   error = '';
   isHydrated = false;
   selectedChild: children | undefined = undefined;
-  @persist deviceToken = '1234567891011';
+  @persist deviceToken = '';
   @observable userProfile?: GetUserProfileResponse['data'];
   @observable appInfo?: ForceUpdateAppResponse['data'];
 

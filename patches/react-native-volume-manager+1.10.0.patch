@@ -1,0 +1,86 @@
+diff --git a/node_modules/react-native-volume-manager/android/src/main/java/com/reactnativevolumemanager/VolumeManagerModule.java b/node_modules/react-native-volume-manager/android/src/main/java/com/reactnativevolumemanager/VolumeManagerModule.java
+index 6f9bc7e..bd80cf5 100644
+--- a/node_modules/react-native-volume-manager/android/src/main/java/com/reactnativevolumemanager/VolumeManagerModule.java
++++ b/node_modules/react-native-volume-manager/android/src/main/java/com/reactnativevolumemanager/VolumeManagerModule.java
+@@ -76,22 +76,38 @@ public class VolumeManagerModule
+     }
+   }
+ 
++  private View getCurrentRootView() {
++    Activity currentActivity = mContext.getCurrentActivity();
++    if (currentActivity == null || currentActivity.getWindow() == null) {
++      return null;
++    }
++    return currentActivity.getWindow().getDecorView();
++  }
++
+   private void setupKeyListener() {
+     runOnUiThread(() -> {
+-      View rootView =
+-        ((ViewGroup) mContext.getCurrentActivity().getWindow().getDecorView());
++      if (showNativeVolumeUI || hardwareButtonListenerRegistered) return;
++
++      View rootView = getCurrentRootView();
++      if (rootView == null) {
++        Log.w(TAG, "Skipping volume key listener setup because activity is unavailable");
++        return;
++      }
++
+       rootView.setFocusableInTouchMode(true);
+       rootView.requestFocus();
+-
+-      if (hardwareButtonListenerRegistered) return;
+ 
+       rootView.setOnKeyListener((v, keyCode, event) -> {
+-        hardwareButtonListenerRegistered = true;
+         if (showNativeVolumeUI) return false;
+ 
+         switch (event.getKeyCode()) {
+           case KeyEvent.KEYCODE_VOLUME_UP:
+             am.adjustStreamVolume(
+@@ -116,10 +132,17 @@ public class VolumeManagerModule
+             return false;
+         }
+       });
++      hardwareButtonListenerRegistered = true;
+     });
+   }
+ 
+   @ReactMethod
+   public void showNativeVolumeUI(ReadableMap config) {
+     showNativeVolumeUI = config.getBoolean("enabled");
+-    // we want to listen to the hardware volume key buttons
++    if (showNativeVolumeUI) {
++      cleanupKeyListener();
++      return;
++    }
++
++    // We only need a key listener when the native volume UI is disabled.
+     setupKeyListener();
+   }
+ 
+@@ -290,10 +313,14 @@ public class VolumeManagerModule
+   private void cleanupKeyListener() {
+     runOnUiThread(() -> {
+       if (!hardwareButtonListenerRegistered) return;
+-      View rootView =
+-        ((ViewGroup) mContext.getCurrentActivity().getWindow().getDecorView());
+-      rootView.setOnKeyListener(null);
++
++      View rootView = getCurrentRootView();
++      if (rootView != null) {
++        rootView.setOnKeyListener(null);
++      }
+       hardwareButtonListenerRegistered = false;
+     });
+   }
+@@ -314,7 +341,9 @@ public class VolumeManagerModule
+ 
+   @Override
+   public void onHostResume() {
+-    setupKeyListener();
++    if (!showNativeVolumeUI) {
++      setupKeyListener();
++    }
+     registerVolumeReceiver();
+   }

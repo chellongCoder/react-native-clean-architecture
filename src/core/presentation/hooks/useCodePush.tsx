@@ -34,6 +34,7 @@ type CodePushUiState = {
 
 const PROD_RELEASE_BUNDLE_ID = 'com.algorz.abeeci.app';
 const DEV_RELEASE_BUNDLE_ID = 'com.algorz.abeeci.app.dev';
+const UP_TO_DATE_AUTO_HIDE_DELAY_MS = 3000;
 
 const CodePushContext = React.createContext<Partial<CodePushContextValue>>({});
 
@@ -43,6 +44,7 @@ function CodePushProvider({children}: Props) {
   const env = coreModuleContainer.getProvided<Env>(EnvToken);
   const i18n = useI18n();
   const syncStartedRef = useRef(false);
+  const autoHideTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const bundleId = useMemo(() => getBundleId(), []);
 
   const [metaData, setMetaData] = useState<LocalPackage | null>(null);
@@ -59,7 +61,6 @@ function CodePushProvider({children}: Props) {
 
     if (
       Platform.OS === 'android' &&
-      !__DEV__ &&
       [PROD_RELEASE_BUNDLE_ID, DEV_RELEASE_BUNDLE_ID].includes(bundleId)
     ) {
       return 'floating';
@@ -130,6 +131,13 @@ function CodePushProvider({children}: Props) {
       statusText: '',
     });
   }, [setCodePushUiState]);
+
+  const clearAutoHideTimeout = useCallback(() => {
+    if (autoHideTimeoutRef.current) {
+      clearTimeout(autoHideTimeoutRef.current);
+      autoHideTimeoutRef.current = null;
+    }
+  }, []);
 
   const codePushStatusDidChange = useCallback(
     (status: CodePush.SyncStatus) => {
@@ -262,6 +270,20 @@ function CodePushProvider({children}: Props) {
   }, [refreshMetaData]);
 
   useEffect(() => {
+    clearAutoHideTimeout();
+
+    if (uiState.phase !== 'up_to_date' && uiState.phase !== 'ready') {
+      return clearAutoHideTimeout;
+    }
+
+    autoHideTimeoutRef.current = setTimeout(() => {
+      resetUiState();
+    }, UP_TO_DATE_AUTO_HIDE_DELAY_MS);
+
+    return clearAutoHideTimeout;
+  }, [clearAutoHideTimeout, resetUiState, uiState.phase]);
+
+  useEffect(() => {
     if (!CodePush || syncStartedRef.current) {
       return;
     }
@@ -296,6 +318,15 @@ function CodePushProvider({children}: Props) {
             },
             installMode: CodePush.InstallMode.ON_NEXT_SUSPEND,
           };
+
+    console.log(
+      'CodePush.getUpdateMetadata(CodePush.UpdateState.RUNNING)',
+      CodePush.getUpdateMetadata(CodePush.UpdateState.RUNNING),
+      'CodePush.getUpdateMetadata(CodePush.UpdateState.PENDING)',
+      CodePush.getUpdateMetadata(CodePush.UpdateState.PENDING),
+      'CodePush.getUpdateMetadata(CodePush.UpdateState.LATEST)',
+      CodePush.getUpdateMetadata(CodePush.UpdateState.LATEST),
+    );
 
     CodePush.sync(
       syncOptions,

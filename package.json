@@ -8,6 +8,7 @@
     "android": "expo run:android --variant devDebug --device",
     "android:devRelease": "expo run:android --variant DevRelease --device",
     "android:prodRelease": "expo run:android --variant ProdRelease --device",
+    "android:verify-prod-native-libs": "bash ./script/verify_android_release_artifact.sh ./android/app/build/outputs/bundle/prodRelease/app-prod-release.aab",
     "ios": "expo run:ios",
     "eject": "expo eject",
     "lint": "eslint ./src --ext .ts,.tsx --max-warnings 0",

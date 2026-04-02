@@ -30,6 +30,7 @@ const FLOATING_VISIBLE_PHASES: CodePushPhase[] = [
   'downloading',
   'installing',
   'ready',
+  'up_to_date',
 ];
 
 function CodePushStatusView({mode, phase, progressPercent, statusText}: Props) {
@@ -72,7 +73,7 @@ function CodePushStatusView({mode, phase, progressPercent, statusText}: Props) {
       ]}>
       <View style={styles.floatingCard}>
         <View style={styles.row}>
-          {phase === 'ready' ? (
+          {phase === 'ready' || phase === 'up_to_date' ? (
             <View style={styles.readyDot} />
           ) : (
             <ActivityIndicator size="small" color={COLORS.WHITE} />

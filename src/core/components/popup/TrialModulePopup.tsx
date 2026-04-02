@@ -13,10 +13,7 @@ import {assets} from 'src/core/presentation/utils';
 import {scale, verticalScale} from 'react-native-size-matters';
 import useAuthenStore from 'src/authentication/presentation/hooks/useAuthenStore';
 import useHomeStore from 'src/home/presentation/stores/useHomeStore';
-import {
-  navigateScreen,
-  resetNavigator,
-} from 'src/core/presentation/navigation/actions/RootNavigationActions';
+import {navigateScreen} from 'src/core/presentation/navigation/actions/RootNavigationActions';
 import {STACK_NAVIGATOR} from 'src/core/presentation/navigation/ConstantNavigator';
 import {useI18n} from 'src/core/presentation/hooks/useI18n';
 
@@ -45,7 +42,6 @@ const TrialModulePopup: React.FC<TrialModulePopupProps> = ({
   }, [authStore.userProfile, homeStore]);
 
   const onUpdate = async () => {
-
     if (homeStore.moduleItem) {
       handleToggleTrialPopup(() => {
         navigateScreen(STACK_NAVIGATOR.HOME.LESSON, {
@@ -53,16 +49,15 @@ const TrialModulePopup: React.FC<TrialModulePopupProps> = ({
           lessonName: homeStore.moduleItem?.lessonName,
           moduleName: homeStore.moduleItem?.title,
         });
-        
       });
       authStore.updateTrialModules({});
     } else {
       homeStore.setIsGotoBuyModule(true);
       handleToggleTrialPopup();
       const selectedSubject = homeStore.listSubject.find(
-        (subject) => subject._id === homeStore.subjectId,
+        subject => subject._id === homeStore.subjectId,
       );
-      
+
       navigateScreen(STACK_NAVIGATOR.PARENT.MORE_MODULE_SCREEN, {
         subject: selectedSubject,
         userProfile: authStore.userProfile,
@@ -84,7 +79,11 @@ const TrialModulePopup: React.FC<TrialModulePopupProps> = ({
       />
       <View style={styles.contentContainer}>
         <View style={styles.wrapContentContainer}>
-          <Text style={[styles.title, {marginVertical: verticalScale(24), marginTop: verticalScale(64)}]}>
+          <Text
+            style={[
+              styles.title,
+              {marginVertical: verticalScale(24), marginTop: verticalScale(64)},
+            ]}>
             {isStart
               ? i18n.t('popup.TrialModule.title')
               : i18n.t('popup.TrialModule.endTrial')}
