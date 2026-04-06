@@ -1,0 +1,41 @@
+diff --git a/node_modules/expo-localization/ios/LocalizationModule.swift b/node_modules/expo-localization/ios/LocalizationModule.swift
+index 5165910..46fe4e1 100644
+--- a/node_modules/expo-localization/ios/LocalizationModule.swift
++++ b/node_modules/expo-localization/ios/LocalizationModule.swift
+@@ -96,12 +96,16 @@ public class LocalizationModule: Module {
+       return "chinese"
+     case .coptic:
+       return "coptic"
++    case .bangla:
++      return "bangla"
+     case .ethiopicAmeteAlem:
+       return "ethioaa"
+     case .ethiopicAmeteMihret:
+       return "ethiopic"
+     case .gregorian:
+       return "gregory"
++    case .gujarati:
++      return "gujarati"
+     case .hebrew:
+       return "hebrew"
+     case .indian:
+@@ -120,13 +124,21 @@ public class LocalizationModule: Module {
+       return "islamic-umalqura"
+     case .japanese:
+       return "japanese"
++    case .kannada:
++      return "kannada"
++    case .malayalam:
++      return "malayalam"
++    case .marathi:
++      return "marathi"
+     case .persian:
+       return "persian"
+     case .republicOfChina:
+       return "roc"
+     case .iso8601:
+       return "iso8601"
++    @unknown default:
++      return "gregory"
+     }
+   }

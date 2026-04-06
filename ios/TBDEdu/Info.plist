@@ -69,7 +69,7 @@
 	<key>NSAppleMusicUsageDescription</key>
 	<string>To select local pictures from library, and change your information photo in our application, allow us to access your Media</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string></string>
+	<string>ABeeCi uses your location only when needed to support location-based device or account flows.</string>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>$(PRODUCT_NAME) would like to use your microphone (for searching)</string>
 	<key>NSSpeechRecognitionUsageDescription</key>
@@ -92,7 +92,7 @@
 		<string>borel-regular.ttf</string>
 	</array>
 	<key>UILaunchStoryboardName</key>
-	<string>LaunchScreen</string>
+	<string>SplashScreen</string>
 	<key>UIRequiredDeviceCapabilities</key>
 	<array>
 		<string>arm64</string>

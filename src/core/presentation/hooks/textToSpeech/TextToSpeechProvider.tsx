@@ -420,10 +420,12 @@ export const TextToSpeechProvider = ({children}: PropsWithChildren) => {
       setIsSpeakDone(true);
     });
 
-    // Listen for error events
-    const errorListener = Tts.addEventListener('tts-error', event => {
-      console.error('TTS Error:', event);
-    });
+    const errorListener =
+      Platform.OS === 'android'
+        ? Tts.addEventListener('tts-error', event => {
+            console.error('TTS Error:', event);
+          })
+        : null;
 
     // Cleanup listeners on unmount
     return () => {

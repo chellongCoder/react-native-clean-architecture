@@ -1,3 +1,5 @@
+require 'fileutils'
+
 # Resolve react_native_pods.rb with node to allow for hoisting
 require File.join(File.dirname(`node --print "require.resolve('expo/package.json')"`), "scripts/autolinking")
 
@@ -11,6 +13,105 @@ def node_require(script)
 end
 node_require('react-native/scripts/react_native_pods.rb')
 node_require('react-native-permissions/scripts/setup.rb')
+
+def repair_sdwebimage_files!(installer)
+  sdwebimage_core_path = installer.sandbox.root + 'SDWebImage/SDWebImage/Core'
+  header_root = installer.sandbox.root + 'Headers'
+  cache_core_path = Dir[File.expand_path('~/Library/Caches/CocoaPods/Pods/Release/SDWebImage/*/SDWebImage/Core')].sort.last
+
+  return if cache_core_path.nil?
+
+  source_files = %w[
+    SDImageAPNGCoder.h
+    SDMemoryCache.h
+    SDWebImageCompat.h
+    SDWebImageError.h
+    UIImage+Metadata.m
+  ]
+
+  source_files.each do |file_name|
+    source_path = File.join(cache_core_path, file_name)
+    destination_path = sdwebimage_core_path + file_name
+
+    next unless File.exist?(source_path)
+    next if File.exist?(destination_path)
+
+    FileUtils.cp(source_path, destination_path)
+  end
+
+  header_files = %w[
+    SDImageAPNGCoder.h
+    SDMemoryCache.h
+    SDWebImageCompat.h
+    SDWebImageError.h
+  ]
+
+  %w[Public Private].each do |visibility|
+    header_dir = header_root + "#{visibility}/SDWebImage"
+
+    FileUtils.mkdir_p(header_dir)
+
+    header_files.each do |file_name|
+      link_path = header_dir + file_name
+      target_path = "../../../SDWebImage/SDWebImage/Core/#{file_name}"
+
+      FileUtils.rm_f(link_path)
+      FileUtils.ln_sf(target_path, link_path)
+    end
+  end
+end
+
+def repair_expo_autolinking!(installer)
+  installer.aggregate_targets.each do |target|
+    support_files_dir = target.support_files_dir
+    support_script_path = File.join(
+      support_files_dir,
+      Expo::Constants::CONFIGURE_PROJECT_SCRIPT_FILE_NAME
+    )
+
+    FileUtils.mkdir_p(support_files_dir)
+
+    autolinking_manager = target.target_definition.autolinking_manager
+
+    if autolinking_manager.present? && autolinking_manager.should_generate_modules_provider?
+      modules_provider_path = autolinking_manager.modules_provider_path(target)
+      entitlement_path = nil
+      native_target = target.user_project.native_targets.find do |user_native_target|
+        user_native_target.name == target.target_definition.name
+      end
+
+      if native_target
+        native_target.build_configurations.each do |build_configuration|
+          current_entitlement_path = build_configuration.build_settings['CODE_SIGN_ENTITLEMENTS']
+          next unless current_entitlement_path
+
+          entitlement_path ||= File.join(target.user_project.project_dir, current_entitlement_path)
+        end
+      end
+
+      autolinking_manager.generate_modules_provider(target.target_definition.name, modules_provider_path)
+
+      IO.write(
+        support_script_path,
+        Expo::ProjectIntegrator.generate_support_script(
+          autolinking_manager,
+          modules_provider_path,
+          entitlement_path
+        )
+      )
+    else
+      IO.write(
+        support_script_path,
+        <<~SCRIPT
+        #!/usr/bin/env bash
+        exit 0
+        SCRIPT
+      )
+    end
+
+    FileUtils.chmod('+x', support_script_path)
+  end
+end
 
 
 platform :ios, min_ios_version_supported
@@ -26,6 +127,18 @@ if linkage != nil
 end
 
 target 'TBDEdu' do
+  pod 'ExpoModulesCore', :path => '../node_modules/expo-modules-core'
+  pod 'ExpoAsset', :path => '../node_modules/expo-asset/ios'
+  pod 'EXConstants', :path => '../node_modules/expo-constants/ios'
+  pod 'ExpoFileSystem', :path => '../node_modules/expo-file-system/ios'
+  pod 'ExpoKeepAwake', :path => '../node_modules/expo-keep-awake/ios'
+  pod 'ExpoFont', :path => '../node_modules/expo-font/ios'
+  pod 'ExpoHaptics', :path => '../node_modules/expo-haptics/ios'
+  pod 'ExpoLinking', :path => '../node_modules/expo-linking/ios'
+  pod 'ExpoLocalization', :path => '../node_modules/expo-localization/ios'
+  pod 'ExpoSplashScreen', :path => '../node_modules/expo-splash-screen/ios'
+  pod 'ExpoScreenTime', :path => '../node_modules/expo-screen-time/ios'
+  pod 'ExpoSettings', :path => '../node_modules/expo-settings/ios'
   use_expo_modules!
 
   pod 'FirebaseCrashlytics', :modular_headers => true
@@ -41,6 +154,7 @@ target 'TBDEdu' do
   post_integrate do |installer|
     begin
       expo_patch_react_imports!(installer)
+      repair_expo_autolinking!(installer)
     rescue => e
       Pod::UI.warn e
     end
@@ -70,5 +184,6 @@ target 'TBDEdu' do
       :mac_catalyst_enabled => false,
       # :ccache_enabled => true
     )
+    repair_sdwebimage_files!(installer)
   end
 end
