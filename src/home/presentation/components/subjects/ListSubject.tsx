@@ -108,6 +108,7 @@ const ListSubject = () => {
   );
 
   const onSelectSubject = (e: IMergedData) => {
+    console.log('e', e);
     onSelectField(e);
   };
 
@@ -126,7 +127,7 @@ const ListSubject = () => {
       <SubjectItem
         key={index}
         item={item}
-        animatedStyle={[animatedStyle, {opacity: 0}]}
+        animatedStyle={[animatedStyle, {opacity: 1}]}
         onSelectSubject={onSelectSubject}
       />
     );

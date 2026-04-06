@@ -242,19 +242,26 @@ export const useSettingLesson = ({
   }, [submit, time]);
 
   /**
-   * * nếu chưa play sound đếm ngược 10s & 5s đã kết thúc -> play sound
+   * * play tiktak khi còn 10 giây, dừng khi hết giờ
    */
   useEffect(() => {
-    if (!playSoundRef.current && learningTimer === 0) {
+    if (learningTimer !== 0) {
+      return;
+    }
+    if (time <= 10 && time > 0) {
       playSound(soundTrack.tiktak);
       playSoundRef.current = true;
+    } else if (time === 0 && playSoundRef.current) {
+      pauseSound();
+      playSoundRef.current = false;
     }
+
     return () => {
       playSoundRef.current = true;
       pauseSound();
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [learningTimer]);
+  }, [time, learningTimer]);
 
   /**
    * * set âm lượng được lưu trong config khi vào màn làm bài
@@ -269,6 +276,8 @@ export const useSettingLesson = ({
 
   useEffect(() => {
     return () => {
+      pauseSound();
+      playSoundRef.current = false;
       stopRecord();
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps

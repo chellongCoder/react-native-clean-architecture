@@ -11,17 +11,15 @@ import React, {useEffect, useState, useRef} from 'react';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {FontFamily} from 'src/core/presentation/hooks/useFonts';
 import BookView from '../../components/BookView';
-import {assets, WIDTH_SCREEN} from 'src/core/presentation/utils';
+import {assets} from 'src/core/presentation/utils';
 import {COLORS} from 'src/core/presentation/constants/colors';
-import {moderateScale, scale, verticalScale} from 'react-native-size-matters';
-import useGlobalStyle from 'src/core/presentation/hooks/useGlobalStyle';
-import CustomSwitchNew from 'src/home/presentation/components/CustomSwitchNew';
-import {TYPOGRAPHY} from 'src/core/presentation/constants/typography';
+import {scale, verticalScale} from 'react-native-size-matters';
 import HintButton from 'src/core/components/hint/HintButton';
 import useHomeStore from 'src/home/presentation/stores/useHomeStore';
 import {Instruction} from 'src/home/application/types/GetListQuestionResponse';
 import {useI18n} from 'src/core/presentation/hooks/useI18n';
 import FastImage, {Source} from 'react-native-fast-image';
+import HeaderLessonDetail from './HeaderLessonDetail';
 
 type Props = {
   lessonName?: string;
@@ -70,7 +68,6 @@ const LessonComponent = ({
   const i18n = useI18n();
 
   const insets = useSafeAreaInsets();
-  const globalStyle = useGlobalStyle();
   const [isShowPrompt, setIsShowPrompt] = useState(true);
   const [source, setSource] = useState<number | Source | undefined>({
     uri: backgroundImage,
@@ -125,95 +122,15 @@ const LessonComponent = ({
           resizeMode={FastImage.resizeMode.cover}
         />
         <View style={{height: insets.top}} />
-        <View
-          style={[
-            styles.rowBetween,
-            {
-              alignItems: 'flex-start',
-              marginHorizontal: scale(10),
-            },
-          ]}>
-          <View
-            style={[
-              styles.rowBetween,
-              {
-                alignItems: 'center',
-              },
-            ]}>
-            <Text
-              numberOfLines={1}
-              style={[
-                styles.fonts_SVN_Cherish,
-                styles.textTitle,
-                {
-                  color: lessonSetting?.backgroundButtonColor,
-                  maxWidth: module.length > 20 ? WIDTH_SCREEN / 4 : '100%',
-                },
-              ]}
-              ellipsizeMode="middle">
-              {lessonName}
-            </Text>
-            <View
-              style={{
-                height: verticalScale(20),
-                width: scale(3),
-                backgroundColor: lessonSetting?.backgroundButtonColor,
-                borderRadius: scale(10),
-                marginHorizontal: scale(8),
-              }}
-            />
-            <View style={{maxWidth: WIDTH_SCREEN / 2}}>
-              <Text
-                adjustsFontSizeToFit
-                style={[
-                  globalStyle.txtButton,
-                  styles.textModule,
-                  {color: lessonSetting?.backgroundButtonColor},
-                ]}
-                numberOfLines={2}>
-                {module}
-              </Text>
-              <Text
-                adjustsFontSizeToFit
-                style={[
-                  globalStyle.txtNote,
-                  styles.textPart,
-                  {color: lessonSetting?.backgroundButtonColor},
-                ]}
-                numberOfLines={2}>
-                {part}
-              </Text>
-            </View>
-          </View>
-          <View style={{alignItems: 'flex-end'}}>
-            {txtCountDown && (
-              <View style={styles.countDown}>
-                <FastImage
-                  style={StyleSheet.absoluteFill}
-                  resizeMode={FastImage.resizeMode.contain}
-                  source={assets.drug_bg}
-                />
-                <Text
-                  numberOfLines={1}
-                  adjustsFontSizeToFit
-                  allowFontScaling
-                  style={styles.txtCountDown}>
-                  {txtCountDown}
-                </Text>
-              </View>
-            )}
-            <View style={{height: verticalScale(5)}} />
-            <TouchableOpacity onPress={onPressFlower}>
-              <CustomSwitchNew
-                point={score}
-                value={false}
-                onValueChange={() => {
-                  console.log('onValueChange');
-                }}
-              />
-            </TouchableOpacity>
-          </View>
-        </View>
+        <HeaderLessonDetail
+          lessonName={lessonName}
+          module={module}
+          part={part}
+          score={score}
+          txtCountDown={txtCountDown}
+          onPressFlower={onPressFlower}
+          accentColor={lessonSetting?.backgroundButtonColor}
+        />
 
         {buildQuestion && (
           <View style={[styles.boxQuestion, !isShowPrompt && {zIndex: 999}]}>
@@ -381,19 +298,6 @@ const styles = StyleSheet.create({
   fonts_SVN_Cherish: {
     fontFamily: FontFamily.SVNCherishMoment,
   },
-  textTitle: {
-    fontSize: scale(30),
-    color: COLORS.GREEN_1C6349,
-  },
-  textModule: {
-    fontSize: scale(10),
-    color: COLORS.BLUE_258F78,
-  },
-  textPart: {
-    fontSize: moderateScale(8),
-    color: COLORS.BLUE_258F78,
-    fontWeight: '300',
-  },
   boxQuestion: {
     flex: 1,
     alignItems: 'center',
@@ -481,18 +385,5 @@ const styles = StyleSheet.create({
   imageContainer: {
     height: '100%',
     width: '100%',
-  },
-  countDown: {
-    width: scale(60),
-    aspectRatio: 4 / 2,
-    borderRadius: scale(30),
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  txtCountDown: {
-    color: COLORS.WHITE_FBF8CC,
-    textTransform: 'uppercase',
-    fontFamily: TYPOGRAPHY.FAMILY.SVNCherishMoment,
-    fontSize: scale(16),
   },
 });

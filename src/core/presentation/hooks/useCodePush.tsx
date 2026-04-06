@@ -265,6 +265,19 @@ function CodePushProvider({children}: Props) {
     [i18n],
   );
 
+  const codePushStatusDidChangeRef = useRef(codePushStatusDidChange);
+  const downloadProgressCallbackRef = useRef(downloadProgressCallback);
+
+  useEffect(() => {
+    codePushStatusDidChangeRef.current = codePushStatusDidChange;
+  }, [codePushStatusDidChange]);
+
+  useEffect(() => {
+    downloadProgressCallbackRef.current = downloadProgressCallback;
+  }, [downloadProgressCallback]);
+
+  
+
   useEffect(() => {
     refreshMetaData().catch(() => undefined);
   }, [refreshMetaData]);
@@ -295,7 +308,7 @@ function CodePushProvider({children}: Props) {
         ? {
             deploymentKey: env.CODEPUSH_DEPLOYMENT_KEY,
             installMode: CodePush.InstallMode.ON_NEXT_RESTART,
-            mandatoryInstallMode: CodePush.InstallMode.ON_NEXT_RESTART,
+            mandatoryInstallMode: CodePush.InstallMode.IMMEDIATE,
             updateDialog: false,
           }
         : {
@@ -317,29 +330,15 @@ function CodePushProvider({children}: Props) {
               ),
             },
             installMode: CodePush.InstallMode.ON_NEXT_SUSPEND,
+            mandatoryInstallMode: CodePush.InstallMode.IMMEDIATE,
           };
-
-    console.log(
-      'CodePush.getUpdateMetadata(CodePush.UpdateState.RUNNING)',
-      CodePush.getUpdateMetadata(CodePush.UpdateState.RUNNING),
-      'CodePush.getUpdateMetadata(CodePush.UpdateState.PENDING)',
-      CodePush.getUpdateMetadata(CodePush.UpdateState.PENDING),
-      'CodePush.getUpdateMetadata(CodePush.UpdateState.LATEST)',
-      CodePush.getUpdateMetadata(CodePush.UpdateState.LATEST),
-    );
 
     CodePush.sync(
       syncOptions,
-      codePushStatusDidChange,
-      downloadProgressCallback,
+      status => codePushStatusDidChangeRef.current(status),
+      progress => downloadProgressCallbackRef.current(progress),
     );
-  }, [
-    codePushMode,
-    codePushStatusDidChange,
-    downloadProgressCallback,
-    env.CODEPUSH_DEPLOYMENT_KEY,
-    i18n,
-  ]);
+  }, [codePushMode, env.CODEPUSH_DEPLOYMENT_KEY, i18n]);
 
   const contextValue = useMemo<CodePushContextValue>(
     () => ({setProgress, metaData}),

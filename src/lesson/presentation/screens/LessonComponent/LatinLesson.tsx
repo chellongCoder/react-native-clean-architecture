@@ -2,7 +2,6 @@ import {StyleSheet, Text, View} from 'react-native';
 import React, {
   forwardRef,
   useCallback,
-  useContext,
   useEffect,
   useMemo,
   useRef,
@@ -20,8 +19,7 @@ import {darkenColor, getCorrectAnswer} from 'src/core/presentation/utils';
 import {useLessonStore} from '../../stores/LessonStore/useGetPostsStore';
 import {useSettingLesson} from '../../hooks/useSettingLesson';
 import {COLORS} from 'src/core/presentation/constants/colors';
-import {TextToSpeechContext} from 'src/core/presentation/hooks/textToSpeech/TextToSpeechContext';
-import {useIsFocused} from '@react-navigation/native';
+import {useLessonSpeech} from '../../hooks/useLessonSpeech';
 import ImageMeaning from '../../components/ImageMeaning';
 import useHomeStore from 'src/home/presentation/stores/useHomeStore';
 import {useI18n} from 'src/core/presentation/hooks/useI18n';
@@ -58,8 +56,6 @@ const LatinLesson = ({
   const [isCorrect, setIscorrect] = useState(false);
   const [countCall, setCountCall] = useState(0);
 
-  const {ttsSpeak} = useContext(TextToSpeechContext);
-  const focus = useIsFocused();
   const {lessonSetting} = useHomeStore();
 
   const i18n = useI18n();
@@ -69,17 +65,18 @@ const LatinLesson = ({
     [getSetting, lessonSetting],
   );
 
-  const {isAnswerCorrect, isShowCorrectContainer, submit} = useSettingLesson({
-    countDownTime: trainingCount <= 2 ? 0 : 5,
-    isCorrectAnswer: !!isCorrect,
-    onSubmit: () => {
-      setAnswerSelected('');
-      nextModule(answerSelected);
-      setIscorrect(false);
-    },
-    fullAnswer: firstMiniTestTask?.question?.[moduleIndex].fullAnswer,
-    totalTime: 5 * 60, // * tổng time làm 1câu
-  });
+  const {isAnswerCorrect, isShowCorrectContainer, submit, word} =
+    useSettingLesson({
+      countDownTime: trainingCount <= 2 ? 0 : 5,
+      isCorrectAnswer: !!isCorrect,
+      onSubmit: () => {
+        setAnswerSelected('');
+        nextModule(answerSelected);
+        setIscorrect(false);
+      },
+      fullAnswer: firstMiniTestTask?.question?.[moduleIndex].fullAnswer,
+      totalTime: 15 * 60, // * tổng time làm 1câu
+    });
 
   const characterImage = useMemo(() => {
     return isAnswerCorrect === true || isAnswerCorrect === undefined
@@ -87,33 +84,13 @@ const LatinLesson = ({
       : characterImageFail;
   }, [characterImageFail, characterImageSuccess, isAnswerCorrect]);
 
-  const onSpeechText = useCallback(() => {
-    ttsSpeak?.(
-      getCorrectAnswer(
-        firstMiniTestTask?.question?.[moduleIndex].correctAnswer
-          .toString()
-          .toLowerCase(),
-      ),
-    );
-  }, [firstMiniTestTask?.question, moduleIndex, ttsSpeak]);
-
-  useEffect(() => {
-    if (focus) {
-      // Check if the component is focused
-
-      const firstTimeout = setTimeout(() => {
-        onSpeechText();
-
-        const secondTimeout = setTimeout(() => {
-          onSpeechText();
-        }, 2500);
-
-        return () => clearTimeout(secondTimeout);
-      }, 1500);
-
-      return () => clearTimeout(firstTimeout);
-    }
-  }, [onSpeechText, focus]); // Added focus to the dependency array
+  const {onSpeechText} = useLessonSpeech({
+    text: getCorrectAnswer(
+      firstMiniTestTask?.question?.[moduleIndex]?.correctAnswer
+        ?.toString()
+        .toLowerCase(),
+    ),
+  });
 
   const onSubmit = useCallback(async () => {
     const base64 = canvasWriteRef.current?.getBase64();
@@ -181,18 +158,32 @@ const LatinLesson = ({
           description: settings.prompt?.toString() ?? '',
         }
       }
+      price="Free"
       score={selectedChild?.adsPoints}
+      txtCountDown={
+        word?.toString() ===
+        firstMiniTestTask?.question?.[moduleIndex].correctAnswer
+          ? undefined
+          : word
+      }
       isAnswerCorrect={isAnswerCorrect}
       isShowCorrectContainer={isShowCorrectContainer}
       buildQuestion={
         <View>
-          <Text style={[styles.fonts_SVN_Cherish, styles.textQuestion]}>
+          <Text
+            style={[
+              styles.fonts_SVN_Cherish,
+              styles.textQuestion,
+              {color: settings.backgroundColor},
+            ]}>
             {firstMiniTestTask?.question?.[moduleIndex].content}
           </Text>
 
           <ImageMeaning
-            descriptionImage={firstMiniTestTask?.question?.[moduleIndex].image}
-            image={firstMiniTestTask?.question?.[moduleIndex].image}
+            descriptionImage={
+              firstMiniTestTask?.question?.[moduleIndex].image as string
+            }
+            image={firstMiniTestTask?.question?.[moduleIndex].image as string}
           />
         </View>
       }

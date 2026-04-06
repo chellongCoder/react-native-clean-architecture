@@ -1867,10 +1867,8 @@ const LessonScreen = observer(() => {
     );
   };
 
-  const insets = useSafeAreaInsets().bottom;
-  const ins = Math.max(insets, 16);
   return (
-    <View style={[styles.fill, {paddingBottom: ins}]}>
+    <View style={[styles.fill]}>
       {buildLesson()}
       {isShowHint && buildHint()}
     </View>
@@ -1882,6 +1880,7 @@ export default withProviders(LessonStoreProvider)(LessonScreen);
 const styles = StyleSheet.create({
   fill: {
     flex: 1,
+    backgroundColor: 'red',
   },
   hint: {
     position: 'absolute',

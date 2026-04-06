@@ -133,6 +133,87 @@ Jest with `preset: 'react-native'`. Tests live in `__tests__/`. Run a specific t
 yarn jest __tests__/MyComponent.test.tsx
 ```
 
+## Quy tắc làm việc với Claude
+
+- **Sau mỗi câu trả lời, Claude phải gợi ý bước tiếp theo cần làm.** Không dừng lại ở việc sửa code — hãy tư duy như người giải quyết vấn đề tận gốc rễ: chỉ ra nguyên nhân gốc, tác động liên quan, và hành động tiếp theo cần thực hiện để hoàn toàn giải quyết vấn đề.
+
+---
+
+## 🧠 Session Memory (Claude tự cập nhật)
+
+### 📍 Tiến độ review LessonComponent
+
+| Môn | Module | Trạng thái |
+|---|---|---|
+| English | EG0M1–3 → `LatinLesson` | ✅ Đã refactor TTS |
+| English | EG1M1–8 → `EssayLesson` | ✅ Đã refactor TTS |
+| English | EG1M2 | 🔄 **Đang check đến đây** |
+| English | EG1M9–17 → `English_EG4M23` | ⏳ Chưa check |
+| English | EG2+ | ⏳ Chưa check |
+
+> Hỏi "đang check đến module nào?" → Claude trả lời: **English EG1 M2**
+
+---
+
+### ✅ Việc đã làm hôm nay (2026-04-07)
+
+#### 1. Tạo hook `useLessonSpeech` (generic TTS hook)
+- **File**: `src/lesson/presentation/hooks/useLessonSpeech.ts`
+- **Mục đích**: Thay thế logic TTS inline lặp lại ở nhiều component
+- **Tính năng**: Auto-speak khi focus (delay 1500ms), cleanup `ttsStop` khi unfocus, expose `onSpeechText` cho VoiceButton, `isSpeaking` state
+- **Backward compat**: `History/hook.ts` re-export alias `useHistoryModule` → 18 file History không bị break
+
+#### 2. Refactor `LatinLesson.tsx`
+- Bỏ: `TextToSpeechContext`, `useIsFocused`, `useContext`, `onSpeechText` callback, `useEffect` double-speak
+- Dùng: `useLessonSpeech({ text: getCorrectAnswer(correctAnswer) })`
+
+#### 3. Refactor `EssayLesson.tsx`
+- Bỏ: `TextToSpeechContext`, `useIsFocused`, `useContext`, `useCallback`, `onSpeechText` callback, `useEffect` focus/speech
+- Dùng: `useLessonSpeech({ text: correctAnswer })`
+- Lưu ý: `useImperativeHandle` vẫn expose `onSpeechText` từ hook (caller bên ngoài dùng ref)
+
+#### 4. Fix `useSettingLesson.ts` — tiktak sound
+- **Bug cũ**: `playSound(tiktak)` bật ngay khi `learningTimer === 0` → phát suốt cả giai đoạn làm bài
+- **Fix**: Chỉ bật khi `time <= 10 && time > 0`, tắt khi `time === 0`
+- **Cleanup**: `pauseSound()` + reset `playSoundRef` trong unmount effect
+
+---
+
+### ⚠️ Vấn đề phát hiện, chưa fix
+
+#### LessonComponent.tsx — khoảng trắng ở đáy
+- **Triệu chứng**: Màn `LatinLesson` (ENGLISH_EG0M1) có blank space ở cuối answer section
+- **Root cause nghi ngờ**:
+  1. `insets.bottom` không được dùng (chỉ có `insets.top`) → safe area bottom không được padding
+  2. `h450` dùng `height: '50%'` cứng → không responsive với các device có navigation bar khác nhau
+  3. `CanvasWrite` có `flex: 1` nhưng cần trace lại chain từ `BookView` → `boxAnswer`
+- **Chưa fix**, cần thêm `paddingBottom: insets.bottom` vào container phù hợp
+
+#### LESSON_PATTERNS — case-sensitive bug
+- Tất cả pattern dùng chữ hoa `M` (vd: `ENGLISH_EG1M1`) nhưng server có thể trả về chữ thường `m`
+- `.test(questionType)` không có case normalization → type `ENGLISH_EG1m1` sẽ không match → render null
+- **Chưa fix**, nên thêm `questionType.toUpperCase()` trước khi test
+
+---
+
+### 🔍 Quan sát kỹ thuật về project
+
+#### Pattern lặp lại (cần refactor dần)
+- **TTS logic** bị copy-paste ở rất nhiều lesson component (History ~18 files, English, Latin...) → đã tạo `useLessonSpeech`, cần áp dụng tiếp cho các component còn lại
+- `onSpeechText` + `useIsFocused` + `useContext(TextToSpeechContext)` xuất hiện ở hầu hết lesson component
+
+#### Kiến trúc LessonScreen
+- `LESSON_PATTERNS` dùng regex array để map type → component (lazy loaded) — đây là pattern tốt cho code splitting
+- Có ~100+ lesson components, mỗi cái là 1 lazy import riêng
+- Regex patterns không có flag `i` → dễ bị lỗi case mismatch với data từ server
+
+#### Performance concerns
+- Rất nhiều `lazy()` import trong LessonScreen → bundle splitting tốt nhưng cần đảm bảo Suspense fallback mượt
+- `useSettingLesson` là hook nặng (TTS, countdown, sound, volume, speech-to-text, translate) — được dùng ở hầu hết lesson component
+- `BookView` dùng SVG `height={3000}` cố định → có thể gây paint overhead trên low-end Android
+
+---
+
 ## Key Conventions
 
 - **UseCase pattern**: all application logic lives in use cases implementing `UseCase<Payload, Response>` with a single `execute()` method.
