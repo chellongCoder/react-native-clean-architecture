@@ -11,8 +11,8 @@
 cd .. &&
 npx code-push release-react ABeeCi-android android \
  --deploymentName Staging \
- --targetBinaryVersion "1.1.5" \
- --description "v13 - update $(date)" \
+ --targetBinaryVersion "1.1.6" \
+ --description "v1.1.6 - update $(date)" \
  --rollout 100% \
   --verbose \
   --development false \

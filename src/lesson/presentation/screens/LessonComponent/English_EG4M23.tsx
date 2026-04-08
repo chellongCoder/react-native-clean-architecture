@@ -1,8 +1,6 @@
 import {StyleProp, StyleSheet, Text, View, ViewStyle} from 'react-native';
 import React, {
   forwardRef,
-  useCallback,
-  useContext,
   useEffect,
   useImperativeHandle,
   useMemo,
@@ -24,10 +22,9 @@ import Animated, {
   useSharedValue,
   withTiming,
 } from 'react-native-reanimated';
-import {TextToSpeechContext} from 'src/core/presentation/hooks/textToSpeech/TextToSpeechContext';
 import {useLessonStore} from '../../stores/LessonStore/useGetPostsStore';
 import {useSettingLesson} from '../../hooks/useSettingLesson';
-import {useIsFocused} from '@react-navigation/native';
+import {useLessonSpeech} from '../../hooks/useLessonSpeech';
 import useAuthenticationStore from 'src/authentication/presentation/stores/useAuthenticationStore';
 import {observer} from 'mobx-react';
 import {LessonRef} from '../../types';
@@ -64,14 +61,11 @@ const English_EG4M23 = observer(
         backgroundImage,
         characterImageSuccess,
         characterImageFail,
-        characterStyle,
       },
       ref,
     ) => {
       const globalStyle = useGlobalStyle();
 
-      const {ttsSpeak} = useContext(TextToSpeechContext);
-      const focus = useIsFocused();
       const answerRef = useRef<SelectionAnswersQuestionRef>(null);
 
       const [answerSelected, setAnswerSelected] = useState('');
@@ -104,6 +98,7 @@ const English_EG4M23 = observer(
           answerRef.current?.resetAnswerSelected?.();
         },
         fullAnswer: firstMiniTestTask?.question?.[moduleIndex].fullAnswer,
+        totalTime: 1 * 60,
       });
 
       const {lessonSetting} = useHomeStore();
@@ -121,12 +116,11 @@ const English_EG4M23 = observer(
           : characterImageFail;
       }, [characterImageFail, characterImageSuccess, isAnswerCorrect]);
 
-      const onSpeechText = useCallback(() => {
-        const content = //she _ a song in the school choir next month.
-          firstMiniTestTask?.question?.[moduleIndex].instruction?.description ??
-          '';
-        ttsSpeak?.(content);
-      }, [firstMiniTestTask?.question, moduleIndex, ttsSpeak]);
+      const {onSpeechText} = useLessonSpeech({
+        text:
+          firstMiniTestTask?.question?.[moduleIndex]?.instruction
+            ?.description ?? '',
+      });
 
       const opacity = useSharedValue(0);
       const scaleS = useSharedValue(1);
@@ -143,17 +137,6 @@ const English_EG4M23 = observer(
         resetLearning();
         // eslint-disable-next-line react-hooks/exhaustive-deps
       }, [trainingCount]);
-
-      useEffect(() => {
-        if (focus) {
-          // Check if the component is focused
-          const timeout = setTimeout(() => {
-            onSpeechText();
-          }, 1500);
-
-          return () => clearTimeout(timeout);
-        }
-      }, [onSpeechText, focus]); // Added focus to the dependency array
 
       useEffect(() => {
         opacity.value = withTiming(0, {duration: 500}, () => {
@@ -176,18 +159,15 @@ const English_EG4M23 = observer(
           );
         },
       }));
+      console.log(
+        '🚀 ~ firstMiniTestTask?.question?.[moduleIndex]?.instruction:',
+        firstMiniTestTask?.question?.[moduleIndex]?.instruction,
+      );
 
       return (
         <LessonComponent
           backgroundImage={backgroundImage}
           characterImage={characterImage}
-          characterStyle={
-            characterStyle ?? {
-              height: verticalScale(260),
-              marginBottom: -verticalScale(100),
-              marginLeft: -verticalScale(20),
-            }
-          }
           lessonName={lessonName}
           module={moduleName}
           part={firstMiniTestTask?.name}
@@ -228,6 +208,19 @@ const English_EG4M23 = observer(
                 ]}>
                 {firstMiniTestTask?.question?.[moduleIndex].content}
               </Text>
+              {typeof firstMiniTestTask?.question?.[moduleIndex]?.image ===
+                'string' &&
+                !!firstMiniTestTask?.question?.[moduleIndex]?.image && (
+                  <Animated.Image
+                    resizeMode="contain"
+                    style={[styles.questionImage, animatedStyle]}
+                    source={{
+                      uri:
+                        env.IMAGE_QUESTION_BASE_API_URL +
+                        firstMiniTestTask?.question?.[moduleIndex]?.image,
+                    }}
+                  />
+                )}
             </Animated.View>
           }
           buildAnswer={
@@ -297,6 +290,11 @@ const styles = StyleSheet.create({
     fontSize: scale(32),
     textAlign: 'center',
     color: COLORS.BLUE_258F78,
+  },
+  questionImage: {
+    width: scale(200),
+    height: verticalScale(140),
+    marginTop: verticalScale(12),
   },
 
   boxSelected: {

@@ -139,6 +139,12 @@ const EssayLesson = observer(
           transform: [{scale: scaleS.value}],
         };
       });
+      console.log(
+        '🚀 ~ firstMiniTestTask?.question?.[moduleIndex]?.instruction:',
+        firstMiniTestTask?.question?.[moduleIndex]?.instruction,
+        settings.prompt,
+      );
+
       return (
         <LessonComponent
           backgroundImage={backgroundImage}
@@ -149,7 +155,8 @@ const EssayLesson = observer(
           backgroundColor="#66c270"
           backgroundAnswerColor={settings.backgroundAnswerColor}
           prompt={
-            firstMiniTestTask?.question?.[moduleIndex]?.instruction ?? {
+            firstMiniTestTask?.question?.[moduleIndex]?.instruction
+              ?.description ?? {
               description: settings.prompt?.toString() ?? '',
             }
           }
@@ -160,7 +167,12 @@ const EssayLesson = observer(
           isShowCorrectContainer={isShowCorrectContainer}
           buildQuestion={
             <View style={{alignItems: 'center'}}>
-              <Text style={[styles.fonts_SVN_Cherish, styles.textQuestion]}>
+              <Text
+                style={[
+                  styles.fonts_SVN_Cherish,
+                  styles.textQuestion,
+                  {color: settings.backgroundButtonColor},
+                ]}>
                 {firstMiniTestTask?.type !== 'mini_test'
                   ? firstMiniTestTask?.question?.[moduleIndex].correctAnswer
                   : ' '}
@@ -207,6 +219,7 @@ const EssayLesson = observer(
                 }
                 learningTimer={learningTimer}
                 onAnswerChanged={setAnswerSelected}
+                questionStyle={{color: settings.backgroundButtonColor}}
               />
 
               <PrimaryButton

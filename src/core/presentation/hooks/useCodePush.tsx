@@ -276,8 +276,6 @@ function CodePushProvider({children}: Props) {
     downloadProgressCallbackRef.current = downloadProgressCallback;
   }, [downloadProgressCallback]);
 
-  
-
   useEffect(() => {
     refreshMetaData().catch(() => undefined);
   }, [refreshMetaData]);
@@ -307,7 +305,7 @@ function CodePushProvider({children}: Props) {
       codePushMode === 'floating'
         ? {
             deploymentKey: env.CODEPUSH_DEPLOYMENT_KEY,
-            installMode: CodePush.InstallMode.ON_NEXT_RESTART,
+            installMode: CodePush.InstallMode.IMMEDIATE,
             mandatoryInstallMode: CodePush.InstallMode.IMMEDIATE,
             updateDialog: false,
           }
@@ -329,7 +327,7 @@ function CodePushProvider({children}: Props) {
                 'core.screens.codepush.install',
               ),
             },
-            installMode: CodePush.InstallMode.ON_NEXT_SUSPEND,
+            installMode: CodePush.InstallMode.IMMEDIATE,
             mandatoryInstallMode: CodePush.InstallMode.IMMEDIATE,
           };
 

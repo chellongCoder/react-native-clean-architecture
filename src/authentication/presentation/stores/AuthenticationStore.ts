@@ -57,7 +57,7 @@ export class AuthenticationStore implements AuthenticationStoreState {
   error = '';
   isHydrated = false;
   selectedChild: children | undefined = undefined;
-  @persist deviceToken = '';
+  @persist deviceToken = '1234567891011';
   @observable userProfile?: GetUserProfileResponse['data'];
   @observable appInfo?: ForceUpdateAppResponse['data'];
 
@@ -283,7 +283,7 @@ export class AuthenticationStore implements AuthenticationStoreState {
 
     // FAMILIES POLICY COMPLIANT: Use app-scoped UUID instead of device identifiers
     let deviceToken;
-    
+
     try {
       // Try to get existing UUID from storage
       const storedToken = await AsyncStorage.getItem('@app_device_token');
@@ -298,7 +298,7 @@ export class AuthenticationStore implements AuthenticationStoreState {
       console.log('Error getting device token:', error);
       deviceToken = uuidv4(); // Fallback to temporary UUID
     }
-    
+
     const response = await this.assignChildrenUseCase.execute({
       deviceToken: deviceToken || '',
       childrenId: child._id,

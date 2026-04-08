@@ -112,7 +112,6 @@ const CharScramble = forwardRef<CharScrambleRep, Props>(
           style={[
             styles.fonts_SVN_Cherish,
             styles.textQuestion,
-            styles.textGreen,
             styles.mt8,
             questionStyle,
           ]}>

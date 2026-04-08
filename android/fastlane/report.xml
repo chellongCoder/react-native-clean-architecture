@@ -5,42 +5,42 @@
     
     
       
-      <testcase classname="fastlane.lanes" name="0: default_platform" time="0.000187">
+      <testcase classname="fastlane.lanes" name="0: default_platform" time="0.000199">
         
       </testcase>
     
       
-      <testcase classname="fastlane.lanes" name="1: Switch to android increment_version_code lane" time="0.000112">
+      <testcase classname="fastlane.lanes" name="1: Switch to android increment_version_code lane" time="7.5e-05">
         
       </testcase>
     
       
-      <testcase classname="fastlane.lanes" name="2: grep versionCode ../app/build.gradle | awk &apos;{print $2}&apos;" time="0.015519">
+      <testcase classname="fastlane.lanes" name="2: grep versionCode ../app/build.gradle | awk &apos;{print $2}&apos;" time="0.012976">
         
       </testcase>
     
       
-      <testcase classname="fastlane.lanes" name="3: sed -i &apos;&apos; &apos;s/versionCode 208/versionCode 209/&apos; ../app/build.gradle" time="0.012807">
+      <testcase classname="fastlane.lanes" name="3: sed -i &apos;&apos; &apos;s/versionCode 209/versionCode 210/&apos; ../app/build.gradle" time="0.010403">
         
       </testcase>
     
       
-      <testcase classname="fastlane.lanes" name="4: bundleProdRelease" time="219.17182">
+      <testcase classname="fastlane.lanes" name="4: bundleProdRelease" time="144.877406">
         
       </testcase>
     
       
-      <testcase classname="fastlane.lanes" name="5: /Users/mac/Workspaces/ReactNative/tbd-frontend/script/verify_android_release_artifact.sh /Users/mac/Workspaces/ReactNative/tbd-frontend/android/app/build/outputs/bundle/prodRelease/app-prod-release.aab" time="8.7824">
+      <testcase classname="fastlane.lanes" name="5: /Users/mac/Workspaces/ReactNative/tbd-frontend/script/verify_android_release_artifact.sh /Users/mac/Workspaces/ReactNative/tbd-frontend/android/app/build/outputs/bundle/prodRelease/app-prod-release.aab" time="1.231658">
         
       </testcase>
     
       
-      <testcase classname="fastlane.lanes" name="6: Switch to android prod_release_mapping_paths lane" time="0.000733">
+      <testcase classname="fastlane.lanes" name="6: Switch to android prod_release_mapping_paths lane" time="0.000183">
         
       </testcase>
     
       
-      <testcase classname="fastlane.lanes" name="7: supply" time="92.645517">
+      <testcase classname="fastlane.lanes" name="7: supply" time="80.659839">
         
       </testcase>
     

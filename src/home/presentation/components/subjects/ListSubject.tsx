@@ -127,7 +127,7 @@ const ListSubject = () => {
       <SubjectItem
         key={index}
         item={item}
-        animatedStyle={[animatedStyle, {opacity: 1}]}
+        animatedStyle={[animatedStyle, {opacity: 0}]}
         onSelectSubject={onSelectSubject}
       />
     );

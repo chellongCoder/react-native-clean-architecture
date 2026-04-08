@@ -1403,7 +1403,7 @@ const LessonScreen = observer(() => {
     return __DEV__
       ? apiTasks.slice(0, apiTasks.length).map(t => ({
           ...t,
-          question: __DEV__ ? t.question.slice(0, 12) : t.question,
+          question: t.question?.slice(0, 5) ?? [],
         }))
       : apiTasks.map(t => ({
           ...t,
@@ -1866,9 +1866,11 @@ const LessonScreen = observer(() => {
       </View>
     );
   };
+  const insets = useSafeAreaInsets().bottom;
+  const ins = Math.max(insets, 0);
 
   return (
-    <View style={[styles.fill]}>
+    <View style={[styles.fill, {paddingBottom: ins}]}>
       {buildLesson()}
       {isShowHint && buildHint()}
     </View>

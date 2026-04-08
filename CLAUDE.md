@@ -86,7 +86,7 @@ Uses **InversifySugar** (`inversify-sugar`). The app bootstraps via `InversifySu
 
 **React Navigation v6** with `@react-navigation/stack`.
 
-- All route names are string constants in `src/core/presentation/navigation/ConstantNavigator.ts` — always use these, never inline strings.
+- All route names are string constants in `src/core/presentation/navigation/ConstantNavigator.ts` — always use these, n ever inline strings.
 - `RootNavigator` → `AppNavigator` (function returning `<AppStack.Screen>` elements) → feature stacks.
 - Imperative navigation via `RootNavigationActions.ts` (`resetNavigator`, `navigate`, etc.) — use this for navigation outside component scope (e.g., from stores).
 - Bottom tab visibility is toggled per-screen via `showBottomTab` / `hideBottomTab` focus listeners.
@@ -147,8 +147,8 @@ yarn jest __tests__/MyComponent.test.tsx
 |---|---|---|
 | English | EG0M1–3 → `LatinLesson` | ✅ Đã refactor TTS |
 | English | EG1M1–8 → `EssayLesson` | ✅ Đã refactor TTS |
-| English | EG1M2 | 🔄 **Đang check đến đây** |
-| English | EG1M9–17 → `English_EG4M23` | ⏳ Chưa check |
+| English | EG1M9 | 🔄 **Đang check đến đây** |
+| English | EG1M9–17 → `English_EG4M23` | ✅ Đã refactor TTS |
 | English | EG2+ | ⏳ Chưa check |
 
 > Hỏi "đang check đến module nào?" → Claude trả lời: **English EG1 M2**
