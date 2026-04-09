@@ -34,6 +34,7 @@ import SelectionAnswersQuestion, {
 } from '../../components/SelectionAnswersQuestion';
 import {useI18n} from 'src/core/presentation/hooks/useI18n';
 import VoiceButton from '../../components/VoiceButton';
+import LearningImage from '../../components/LearningImage';
 
 type Props = {
   moduleIndex: number;
@@ -162,6 +163,9 @@ const English_EG4M23 = observer(
       console.log(
         '🚀 ~ firstMiniTestTask?.question?.[moduleIndex]?.instruction:',
         firstMiniTestTask?.question?.[moduleIndex]?.instruction,
+        firstMiniTestTask?.question?.[moduleIndex]?.image,
+        env.IMAGE_QUESTION_BASE_API_URL +
+          firstMiniTestTask?.question?.[moduleIndex]?.image,
       );
 
       return (
@@ -208,19 +212,14 @@ const English_EG4M23 = observer(
                 ]}>
                 {firstMiniTestTask?.question?.[moduleIndex].content}
               </Text>
-              {typeof firstMiniTestTask?.question?.[moduleIndex]?.image ===
-                'string' &&
-                !!firstMiniTestTask?.question?.[moduleIndex]?.image && (
-                  <Animated.Image
-                    resizeMode="contain"
-                    style={[styles.questionImage, animatedStyle]}
-                    source={{
-                      uri:
-                        env.IMAGE_QUESTION_BASE_API_URL +
-                        firstMiniTestTask?.question?.[moduleIndex]?.image,
-                    }}
-                  />
-                )}
+              {
+                <LearningImage
+                  images={
+                    firstMiniTestTask?.question?.[moduleIndex]
+                      ?.image as string[]
+                  }
+                />
+              }
             </Animated.View>
           }
           buildAnswer={

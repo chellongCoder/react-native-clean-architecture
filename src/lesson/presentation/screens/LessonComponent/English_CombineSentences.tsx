@@ -1,13 +1,5 @@
 import {StyleSheet, Text, View} from 'react-native';
-import React, {
-  forwardRef,
-  useCallback,
-  useContext,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from 'react';
+import React, {forwardRef, useEffect, useMemo, useRef, useState} from 'react';
 import LessonComponent from './LessonComponent';
 import PrimaryButton from '../../components/PrimaryButton';
 import {FontFamily} from 'src/core/presentation/hooks/useFonts';
@@ -26,11 +18,10 @@ import {useSettingLesson} from '../../hooks/useSettingLesson';
 import useHomeStore from 'src/home/presentation/stores/useHomeStore';
 import {useLessonStore} from '../../stores/LessonStore/useGetPostsStore';
 import useAuthenticationStore from 'src/authentication/presentation/stores/useAuthenticationStore';
-import {TextToSpeechContext} from 'src/core/presentation/hooks/textToSpeech/TextToSpeechContext';
 import {CharScrambleRep} from '../../components/CharScramble';
 import {useI18n} from 'src/core/presentation/hooks/useI18n';
 import VoiceButton from '../../components/VoiceButton';
-import {useIsFocused} from '@react-navigation/native';
+import {useLessonSpeech} from '../../hooks/useLessonSpeech';
 import {LessonRef} from '../../types';
 import WordScramble from '../../components/WordScramble';
 
@@ -74,8 +65,6 @@ const English_CombineSentences = forwardRef<LessonRef, Props>(
       () => getSetting(lessonSetting),
       [getSetting, lessonSetting],
     );
-    const {ttsSpeak} = useContext(TextToSpeechContext);
-
     const charScrambleRep = useRef<CharScrambleRep>(null);
 
     const animatedStyle = useAnimatedStyle(() => {
@@ -106,32 +95,18 @@ const English_CombineSentences = forwardRef<LessonRef, Props>(
       totalTime: 60,
     });
 
-    const focus = useIsFocused();
-
-    const onSpeechText = useCallback(() => {
-      ttsSpeak?.(
-        firstMiniTestTask?.question?.[moduleIndex].fullAnswer
-          .toString()
+    const {onSpeechText} = useLessonSpeech({
+      text:
+        firstMiniTestTask?.question?.[moduleIndex]?.fullAnswer
+          ?.toString()
           .toLowerCase() ?? '',
-      );
-    }, [firstMiniTestTask?.question, moduleIndex, ttsSpeak]);
+    });
 
     const characterImage = useMemo(() => {
       return isAnswerCorrect === true || isAnswerCorrect === undefined
         ? characterImageSuccess
         : characterImageFail;
     }, [characterImageFail, characterImageSuccess, isAnswerCorrect]);
-
-    useEffect(() => {
-      if (focus) {
-        // Check if the component is focused
-        const firstTimeout = setTimeout(() => {
-          onSpeechText();
-        }, 1500);
-
-        return () => clearTimeout(firstTimeout);
-      }
-    }, [onSpeechText, focus]); // Added focus to the dependency array
 
     useEffect(() => {
       opacity.value = withTiming(0, {duration: 500}, () => {

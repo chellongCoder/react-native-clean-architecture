@@ -3,7 +3,6 @@ import {StyleSheet, Text, View} from 'react-native';
 import React, {
   forwardRef,
   useCallback,
-  useContext,
   useEffect,
   useImperativeHandle,
   useMemo,
@@ -18,12 +17,11 @@ import CanvasWrite, {CanvasWriteRef} from '../../components/CanvasWrite';
 import {Task} from 'src/home/application/types/GetListQuestionResponse';
 import useAuthenticationStore from 'src/authentication/presentation/stores/useAuthenticationStore';
 import {scale, verticalScale} from 'react-native-size-matters';
-import {darkenColor, getCorrectAnswer} from 'src/core/presentation/utils';
+import {darkenColor} from 'src/core/presentation/utils';
 import {useLessonStore} from '../../stores/LessonStore/useGetPostsStore';
 import {useSettingLesson} from '../../hooks/useSettingLesson';
 import {COLORS} from 'src/core/presentation/constants/colors';
-import {TextToSpeechContext} from 'src/core/presentation/hooks/textToSpeech/TextToSpeechContext';
-import {useIsFocused} from '@react-navigation/native';
+import {useLessonSpeech} from '../../hooks/useLessonSpeech';
 import useHomeStore from 'src/home/presentation/stores/useHomeStore';
 import LearningImage from '../../components/LearningImage';
 import LearningText from '../../components/LearningText';
@@ -71,8 +69,6 @@ const English_DrawerCharacter = forwardRef<LessonRef, Props>(
     const [countCall, setCountCall] = useState(0);
     const answerRef = useRef<SelectionAnswersQuestionRef>(null);
 
-    const {ttsSpeak} = useContext(TextToSpeechContext);
-    const focus = useIsFocused();
     const {lessonSetting} = useHomeStore();
 
     const i18n = useI18n();
@@ -114,45 +110,11 @@ const English_DrawerCharacter = forwardRef<LessonRef, Props>(
       return true;
     }, []);
 
-    const onSpeechText = useCallback(
-      (text: string) => {
-        text.split('/').forEach((answer, index) => {
-          setTimeout(() => {
-            ttsSpeak?.(getCorrectAnswer(answer?.trim()));
-          }, index * 1250);
-        });
-      },
-      [ttsSpeak],
-    );
-
-    useEffect(() => {
-      if (focus) {
-        // Check if the component is focused
-        const firstTimeout = setTimeout(() => {
-          onSpeechText(
-            firstMiniTestTask?.question?.[moduleIndex]?.instruction
-              ?.description ?? '',
-          );
-
-          const secondTimeout = setTimeout(() => {
-            onSpeechText(
-              firstMiniTestTask?.question?.[moduleIndex]?.instruction
-                ?.description ?? '',
-            );
-          }, 2500);
-
-          return () => clearTimeout(secondTimeout);
-        }, 1500);
-
-        return () => clearTimeout(firstTimeout);
-      }
-    }, [
-      onSpeechText,
-      focus,
-      firstMiniTestTask?.question,
-      moduleIndex,
-      firstMiniTestTask?.type,
-    ]); // Added focus to the dependency array
+    const {onSpeechText} = useLessonSpeech({
+      text:
+        firstMiniTestTask?.question?.[moduleIndex]?.instruction?.description ??
+        '',
+    });
 
     const getDataString = (data: any): string => {
       return data instanceof Array
@@ -286,17 +248,7 @@ const English_DrawerCharacter = forwardRef<LessonRef, Props>(
                     )}"`
                   : i18n.t('lesson.screens.Modules.chooseCorrectAnswer')}
               </Text>
-              <VoiceButton
-                onPress={() =>
-                  onSpeechText(
-                    getCorrectAnswer(
-                      firstMiniTestTask?.type === 'mini_test'
-                        ? firstMiniTestTask?.question?.[moduleIndex].fullAnswer
-                        : firstMiniTestTask?.question?.[moduleIndex].content,
-                    ),
-                  )
-                }
-              />
+              <VoiceButton onPress={onSpeechText} />
             </View>
 
             <View style={{height: verticalScale(10)}} />
@@ -311,7 +263,6 @@ const English_DrawerCharacter = forwardRef<LessonRef, Props>(
                       ),
                   style: {
                     color: isCorrect ? COLORS.PRIMARY : COLORS.RED_F28759,
-                    marginBottom: -80,
                     fontFamily: FontFamily.BorelRegular,
                   },
                   show: true,
@@ -428,13 +379,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
   },
-  pb32: {},
-  mt32: {
-    marginTop: 32,
-  },
-  alignSelfCenter: {
-    alignSelf: 'center',
-  },
+
   iconAIVoiceContainer: {height: scale(31), width: scale(31)},
   buttonContainer: {
     borderRadius: scale(52),

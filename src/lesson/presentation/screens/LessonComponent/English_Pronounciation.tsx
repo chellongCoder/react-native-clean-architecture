@@ -556,15 +556,13 @@ const styles = StyleSheet.create({
   fonts_SVN_Cherish: {
     fontFamily: FontFamily.SVNCherishMoment,
   },
-  fonts_EinaBold: {
-    fontFamily: FontFamily.SVNNeuzeitBold,
-  },
+
   fonts_NeuzeitBold: {
     fontFamily: FontFamily.SVNNeuzeitBold,
   },
 
   textQuestion: {
-    fontSize: 48,
+    fontSize: scale(48),
     textAlign: 'center',
     color: COLORS.GREEN_66C270,
   },
@@ -573,11 +571,6 @@ const styles = StyleSheet.create({
   },
   textRed: {
     color: COLORS.RED_E1460E,
-  },
-
-  center: {
-    justifyContent: 'center',
-    alignItems: 'center',
   },
 
   boxSelected: {
@@ -589,21 +582,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
 
-  textVowel: {
-    fontFamily: FontFamily.SVNCherishMoment,
-    color: '#FBF8CC',
-    fontSize: verticalScale(28),
-  },
-  wapper: {
-    marginTop: 8,
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    justifyContent: 'center',
-    alignContent: 'center',
-  },
-  wrapCharContainer: {
-    flexDirection: 'row',
-  },
   wrapHeaderContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',

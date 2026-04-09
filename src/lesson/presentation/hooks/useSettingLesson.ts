@@ -13,7 +13,7 @@ import {SoundGlobalContext} from 'src/core/presentation/hooks/sound/SoundGlobalC
 import {soundTrack} from 'src/core/presentation/hooks/sound/SoundGlobalProvider';
 import {coreModuleContainer} from 'src/core/CoreModule';
 import Env, {EnvToken} from 'src/core/domain/entities/Env';
-import {VolumeManager} from 'react-native-volume-manager';
+import {VolumeManager, addVolumeListener} from 'react-native-volume-manager';
 import {useLessonStore} from '../stores/LessonStore/useGetPostsStore';
 import useAuthenticationStore from 'src/authentication/presentation/stores/useAuthenticationStore';
 import Toast from 'react-native-toast-message';
@@ -264,11 +264,18 @@ export const useSettingLesson = ({
   }, [time, learningTimer]);
 
   /**
-   * * set âm lượng được lưu trong config khi vào màn làm bài
+   * * set âm lượng khi vào màn làm bài
+   * * lắng nghe nút âm lượng vật lý → sync charSound vào store
    */
   useEffect(() => {
     VolumeManager.setVolume(lessonStore.charSound);
+
+    const subscription = addVolumeListener(result => {
+      lessonStore.setCharSound(result.volume);
+    });
+
     return () => {
+      subscription.remove();
       VolumeManager.setVolume(lessonStore.backgroundSound);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps

@@ -1,8 +1,6 @@
 import {StyleProp, StyleSheet, Text, View, ViewStyle} from 'react-native';
 import React, {
   forwardRef,
-  useCallback,
-  useContext,
   useEffect,
   useImperativeHandle,
   useMemo,
@@ -24,10 +22,9 @@ import Animated, {
   useSharedValue,
   withTiming,
 } from 'react-native-reanimated';
-import {TextToSpeechContext} from 'src/core/presentation/hooks/textToSpeech/TextToSpeechContext';
 import {useLessonStore} from '../../stores/LessonStore/useGetPostsStore';
 import {useSettingLesson} from '../../hooks/useSettingLesson';
-import {useIsFocused} from '@react-navigation/native';
+import {useLessonSpeech} from '../../hooks/useLessonSpeech';
 import useAuthenticationStore from 'src/authentication/presentation/stores/useAuthenticationStore';
 import {observer} from 'mobx-react';
 import {LessonRef} from '../../types';
@@ -70,9 +67,6 @@ const VowelsLesson = observer(
     ) => {
       const globalStyle = useGlobalStyle();
       const answerRef = useRef<SelectionAnswersQuestionRef>(null);
-
-      const {ttsSpeak} = useContext(TextToSpeechContext);
-      const focus = useIsFocused();
 
       const [answerSelected, setAnswerSelected] = useState('');
 
@@ -120,13 +114,12 @@ const VowelsLesson = observer(
           : characterImageFail;
       }, [characterImageFail, characterImageSuccess, isAnswerCorrect]);
 
-      const onSpeechText = useCallback(() => {
-        ttsSpeak?.(
-          firstMiniTestTask?.question?.[moduleIndex].fullAnswer
-            .toString()
+      const {onSpeechText} = useLessonSpeech({
+        text:
+          firstMiniTestTask?.question?.[moduleIndex]?.fullAnswer
+            ?.toString()
             .toLowerCase() ?? '',
-        );
-      }, [firstMiniTestTask?.question, moduleIndex, ttsSpeak]);
+      });
 
       const opacity = useSharedValue(0);
       const scaleS = useSharedValue(1);
@@ -138,23 +131,6 @@ const VowelsLesson = observer(
         resetLearning();
         // eslint-disable-next-line react-hooks/exhaustive-deps
       }, [trainingCount]);
-
-      useEffect(() => {
-        if (focus) {
-          // Check if the component is focused
-          const firstTimeout = setTimeout(() => {
-            onSpeechText();
-
-            const secondTimeout = setTimeout(() => {
-              onSpeechText();
-            }, 2500);
-
-            return () => clearTimeout(secondTimeout);
-          }, 1500);
-
-          return () => clearTimeout(firstTimeout);
-        }
-      }, [onSpeechText, focus]); // Added focus to the dependency array
 
       useEffect(() => {
         opacity.value = withTiming(0, {duration: 500}, () => {
@@ -329,7 +305,7 @@ const styles = StyleSheet.create({
     color: COLORS.BLUE_258F78,
   },
   textGreen: {
-    color: '#258F78',
+    color: COLORS.GREEN_258F78,
   },
 
   center: {

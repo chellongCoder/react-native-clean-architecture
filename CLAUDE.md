@@ -147,9 +147,16 @@ yarn jest __tests__/MyComponent.test.tsx
 |---|---|---|
 | English | EG0M1–3 → `LatinLesson` | ✅ Đã refactor TTS |
 | English | EG1M1–8 → `EssayLesson` | ✅ Đã refactor TTS |
-| English | EG1M9 | 🔄 **Đang check đến đây** |
+| English | EG2M → `English_QwertyKeyboard`, `English_SelectText` | 🔄 **Đang check đến đây** |
 | English | EG1M9–17 → `English_EG4M23` | ✅ Đã refactor TTS |
-| English | EG2+ | ⏳ Chưa check |
+| English | EG2M1,3,5,7,9 → `VowelsLesson` | ✅ Đã refactor TTS |
+| English | EG2M11 → `English_DrawerCharacter` | ✅ Đã refactor TTS |
+| English | EG2M(2,4,6,8,10,13,14,15,17) → `English_Pronounciation` | ⏳ Chưa check |
+| English | EG2M(16,22–54) → `English_SelectAnswer` | ✅ Đã refactor TTS |
+| English | EG2M(18,19,20,21,30,33,35) → `English_CombineSentences` | ✅ Đã refactor TTS |
+| English | EG2M → `English_QwertyKeyboard` | ✅ Đã refactor TTS |
+| English | EG2M → `English_SelectText` | ✅ Đã refactor TTS |
+| English | EG2M12 → `MultiPronunciationLesson` | ⏳ Chưa check |
 
 > Hỏi "đang check đến module nào?" → Claude trả lời: **English EG1 M2**
 

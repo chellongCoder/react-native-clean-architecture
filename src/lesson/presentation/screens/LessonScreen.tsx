@@ -1882,7 +1882,6 @@ export default withProviders(LessonStoreProvider)(LessonScreen);
 const styles = StyleSheet.create({
   fill: {
     flex: 1,
-    backgroundColor: 'red',
   },
   hint: {
     position: 'absolute',

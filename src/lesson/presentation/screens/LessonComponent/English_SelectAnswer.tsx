@@ -1,8 +1,6 @@
 import {StyleProp, StyleSheet, Text, View, ViewStyle} from 'react-native';
 import React, {
   forwardRef,
-  useCallback,
-  useContext,
   useEffect,
   useImperativeHandle,
   useMemo,
@@ -29,10 +27,9 @@ import Animated, {
   useSharedValue,
   withTiming,
 } from 'react-native-reanimated';
-import {TextToSpeechContext} from 'src/core/presentation/hooks/textToSpeech/TextToSpeechContext';
 import {useLessonStore} from '../../stores/LessonStore/useGetPostsStore';
 import {useSettingLesson} from '../../hooks/useSettingLesson';
-import {useIsFocused} from '@react-navigation/native';
+import {useLessonSpeech} from '../../hooks/useLessonSpeech';
 import useAuthenticationStore from 'src/authentication/presentation/stores/useAuthenticationStore';
 import {observer} from 'mobx-react';
 import {LessonRef} from '../../types';
@@ -76,8 +73,6 @@ const English_SelectAnswer = observer(
     ) => {
       const globalStyle = useGlobalStyle();
 
-      const {ttsSpeak} = useContext(TextToSpeechContext);
-      const focus = useIsFocused();
       const answerRef = useRef<SelectionAnswersQuestionRef>(null);
 
       const [answerSelected, setAnswerSelected] = useState<string | string[]>(
@@ -135,14 +130,13 @@ const English_SelectAnswer = observer(
           : characterImageFail;
       }, [characterImageFail, characterImageSuccess, isAnswerCorrect]);
 
-      const onSpeechText = useCallback(() => {
-        ttsSpeak?.(
+      const {onSpeechText} = useLessonSpeech({
+        text:
           firstMiniTestTask?.question?.[moduleIndex]?.instruction
             ?.description ??
-            settings.prompt?.toString() ??
-            '',
-        );
-      }, [firstMiniTestTask?.question, moduleIndex, settings.prompt, ttsSpeak]);
+          settings.prompt?.toString() ??
+          '',
+      });
 
       const opacity = useSharedValue(0);
       const scaleS = useSharedValue(1);
@@ -154,23 +148,6 @@ const English_SelectAnswer = observer(
         resetLearning();
         // eslint-disable-next-line react-hooks/exhaustive-deps
       }, [trainingCount]);
-
-      useEffect(() => {
-        if (focus) {
-          // Check if the component is focused
-          const firstTimeout = setTimeout(() => {
-            onSpeechText();
-
-            const secondTimeout = setTimeout(() => {
-              onSpeechText();
-            }, 2500);
-
-            return () => clearTimeout(secondTimeout);
-          }, 1500);
-
-          return () => clearTimeout(firstTimeout);
-        }
-      }, [onSpeechText, focus]); // Added focus to the dependency array
 
       useEffect(() => {
         opacity.value = withTiming(0, {duration: 500}, () => {
@@ -298,7 +275,7 @@ const English_SelectAnswer = observer(
                       firstMiniTestTask?.question?.[moduleIndex].description ??
                       ''
                     }
-                    style={styles.fonts_SVN_Neuzeit_Bold}
+                    style={[styles.fonts_SVN_Neuzeit_Bold, styles.textQuestion]}
                   />
                 }
                 answer={
@@ -348,7 +325,6 @@ const styles = StyleSheet.create({
   },
   textQuestion: {
     fontSize: verticalScale(15),
-    textAlign: 'left',
     color: COLORS.BLUE_258F78,
   },
 

@@ -222,7 +222,7 @@ export default {
         youDoingGreat: 'Bạn đang làm rất tốt.',
         excellent: 'xuất sắc',
         youCanDoIt: 'Bạn có thể làm được!!',
-        moreTime: 'thêm thời gian',
+        moreTime: 'Lần nữa nhé',
         success: 'Thành công',
         error: 'Lỗi',
         appsUnlocked: 'Ứng dụng của bạn đã được mở khóa',

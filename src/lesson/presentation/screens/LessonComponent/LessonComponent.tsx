@@ -357,7 +357,7 @@ const styles = StyleSheet.create({
   promptContent: {
     color: COLORS.GREEN_1C6A59,
     fontFamily: FontFamily.SVNNeuzeitBold,
-    maxWidth: '38%',
+    maxWidth: '100%',
     marginRight: scale(6),
     fontSize: scale(11),
     zIndex: 998,
