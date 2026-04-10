@@ -1,4 +1,3 @@
-/* eslint-disable react-native/no-inline-styles */
 /* eslint-disable react/no-unstable-nested-components */
 import {StyleSheet, Text, View} from 'react-native';
 import React, {
@@ -254,7 +253,13 @@ const VnG3M1Lesson = observer(
                 description={
                   firstMiniTestTask?.question?.[moduleIndex]?.paragraph ?? ''
                 }
-                style={[styles.fonts_SVN_Cherish, styles.textParagraph]}
+                style={[
+                  styles.fonts_SVN_Cherish,
+                  styles.textParagraph,
+                  {
+                    textAlign: 'center',
+                  },
+                ]}
                 styleHighlight={{
                   textDecorationLine: 'underline',
                   fontWeight: '400',

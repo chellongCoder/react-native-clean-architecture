@@ -1,4 +1,3 @@
-/* eslint-disable react-native/no-inline-styles */
 import React, {useMemo, useRef, useState} from 'react';
 import {
   View,
@@ -17,9 +16,11 @@ interface ScrollIndicatorProps {
   containerStyle?: StyleProp<ViewStyle>;
   indicatorStyle?: ViewStyle;
   scrollViewStyle?: StyleProp<ViewStyle>;
+  contentContainerStyle?: StyleProp<ViewStyle>;
   indicatorColor?: string;
   indicatorContainerColor?: string;
   horizontal?: boolean;
+  nestedScrollEnabled?: boolean;
   children: React.ReactNode;
 }
 
@@ -27,9 +28,11 @@ const ScrollIndicator: React.FC<ScrollIndicatorProps> = ({
   containerStyle,
   indicatorStyle,
   scrollViewStyle,
+  contentContainerStyle,
   indicatorColor = COLORS.PRIMARY,
   indicatorContainerColor = COLORS.PRIMARY,
   horizontal = false,
+  nestedScrollEnabled = true,
   children,
 }) => {
   const scrollIndicator = useRef(new Animated.Value(0)).current;
@@ -97,19 +100,20 @@ const ScrollIndicator: React.FC<ScrollIndicatorProps> = ({
       <ScrollView
         ref={scrollRef}
         horizontal={horizontal}
+        nestedScrollEnabled={nestedScrollEnabled}
         showsHorizontalScrollIndicator={false}
         showsVerticalScrollIndicator={false}
         onScroll={handleScroll}
         onContentSizeChange={handleContentSizeChange}
         scrollEventThrottle={16}
-        style={[
-          styles.scrollView,
-          scrollViewStyle,
+        contentContainerStyle={[
           {
             paddingRight: horizontal ? 0 : 10,
             paddingBottom: horizontal ? 10 : 0,
           },
-        ]}>
+          contentContainerStyle,
+        ]}
+        style={[styles.scrollView, scrollViewStyle]}>
         {children}
       </ScrollView>
 

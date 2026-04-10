@@ -215,6 +215,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     flexWrap: 'wrap',
     alignContent: 'center',
+    justifyContent: 'center',
   },
   boxVowel: {
     width: scale(56),

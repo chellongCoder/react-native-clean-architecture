@@ -1,4 +1,3 @@
-/* eslint-disable react-native/no-inline-styles */
 /* eslint-disable react/no-unstable-nested-components */
 import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import React, {
@@ -167,14 +166,6 @@ const VnG4M1Lesson = observer(
       }, [onSpeechText, focus]); // Added focus to the dependency array
 
       useEffect(() => {
-        console.log(
-          '🛠 LOG: 🚀 --> -----------------------------------------------------🛠 LOG: 🚀 -->',
-        );
-        console.log('🛠 LOG: 🚀 --> ~ Tts.voices ~ lessonName:', lessonName);
-        console.log(
-          '🛠 LOG: 🚀 --> -----------------------------------------------------🛠 LOG: 🚀 -->',
-        );
-
         Tts.voices().then(voices => {
           if (lessonName.toLocaleLowerCase().includes('english')) {
             const engVoice = voices.find(
@@ -277,8 +268,11 @@ const VnG4M1Lesson = observer(
                 style={[
                   styles.fonts_SVN_Cherish,
                   styles.textParagraph,
-                  txtDescription && {color: txtDescription},
-                ].flat()}
+                  txtDescription && {
+                    color: txtDescription,
+                  },
+                  {textAlign: 'center'},
+                ]}
                 styleHighlight={{
                   textDecorationLine: 'underline',
                   fontWeight: '400',

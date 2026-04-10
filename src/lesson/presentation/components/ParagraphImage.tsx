@@ -35,9 +35,11 @@ const ParagraphImage: React.FC<ParagraphImageProps> = ({
           source={{uri: imageUrl}}
         />
         <View style={styles.boxName}>
-          <Text style={styles.textParagraph}>{name}</Text>
+          <Text style={styles.boxText}>{name}</Text>
         </View>
-        <ScrollIndicator containerStyle={styles.boxParagraph}>
+        <ScrollIndicator
+          containerStyle={styles.boxParagraph}
+          nestedScrollEnabled={true}>
           <Text style={styles.textParagraph}>{paragraph}</Text>
         </ScrollIndicator>
       </View>
@@ -47,7 +49,7 @@ const ParagraphImage: React.FC<ParagraphImageProps> = ({
 
 const styles = StyleSheet.create({
   boxParagraph: {
-    height: verticalScale(100),
+    height: verticalScale(80),
     alignSelf: 'center',
     position: 'absolute',
     bottom: verticalScale(0),
@@ -56,18 +58,17 @@ const styles = StyleSheet.create({
     paddingHorizontal: scale(10),
   },
   boxName: {
-    position: 'absolute',
-    top: verticalScale(0),
-    left: 0,
-    right: 0,
     alignItems: 'center',
-    height: verticalScale(30),
-    justifyContent: 'center',
-    backgroundColor: COLORS.WHITE_FBF8CC,
+    marginTop: verticalScale(8),
+  },
+  boxText: {
+    fontFamily: FontFamily.SVNCherishMoment,
+    fontSize: verticalScale(12),
+    color: COLORS.BLUE_0877B6,
   },
   textParagraph: {
     fontFamily: FontFamily.SVNNeuzeitRegular,
-    fontSize: verticalScale(14),
+    fontSize: verticalScale(10),
     color: COLORS.GREEN_258F78,
     letterSpacing: 0.1,
   },
