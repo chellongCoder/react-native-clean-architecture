@@ -15,11 +15,10 @@ export const useListModule = () => {
   const [modules, setModules] = useState<Module[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const authStore = useAuthenStore();
- 
-  
+
   useEffect(() => {
     setModules(lessonStore.modulesBySubject);
-  }, [lessonStore.modulesBySubject])
+  }, [lessonStore.modulesBySubject]);
 
   useEffect(() => {
     if (lessonStore.isLoadingModulesBySubject) {
@@ -27,8 +26,8 @@ export const useListModule = () => {
     } else {
       setIsLoading(false);
     }
-  }, [lessonStore.isLoadingModulesBySubject])
-  
+  }, [lessonStore.isLoadingModulesBySubject]);
+
   return {
     modules,
     selectedSubject: homeStore.listSubject.find(

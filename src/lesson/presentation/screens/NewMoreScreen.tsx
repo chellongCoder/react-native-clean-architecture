@@ -6,7 +6,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import React, {useCallback, useEffect, useState, useMemo} from 'react';
+import React, {useCallback} from 'react';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import useGlobalStyle from 'src/core/presentation/hooks/useGlobalStyle';
 import IconUser from 'assets/svg/IconUser';
@@ -20,15 +20,10 @@ import {COLORS} from 'src/core/presentation/constants/colors';
 import {useI18n} from 'src/core/presentation/hooks/useI18n';
 import {RouteProp, ParamListBase} from '@react-navigation/native';
 import {Subject} from 'src/home/application/types/GetListSubjectResponse';
-import useHomeStore from 'src/home/presentation/stores/useHomeStore';
-import useAuthenStore from 'src/authentication/presentation/hooks/useAuthenStore';
 import {Module} from 'src/home/application/types/GetListLessonResponse';
 import AccountStatus from 'src/home/presentation/components/AccountStatus';
-import {useLessonStore} from '../stores/LessonStore/useGetPostsStore';
 import PurchaseSuccessScreen from 'src/core/presentation/screens/PurchaseSuccessScreen';
-import {UserModule} from 'src/lesson/application/types/GetUserModuleResponse';
-import useGetUserProfile from '../hooks/useGetUserProfile';
-import useAuthenticationStore from 'src/authentication/presentation/stores/useAuthenticationStore';
+import useGetModulesBySubject from '../hooks/useGetModulesBySubject';
 import {assets} from 'src/core/presentation/utils';
 
 interface Props {
@@ -44,85 +39,21 @@ const NewMoreScreen = observer((props: Props) => {
   const insets = useSafeAreaInsets();
   const globalStyle = useGlobalStyle();
   const i18n = useI18n();
-  const homeStore = useHomeStore();
-  const authStore = useAuthenStore();
-  const lessonStore = useLessonStore();
-  const {handleGetUserProfile} = useGetUserProfile();
-  const {userProfile} = useAuthenticationStore();
 
-  const [modules, setModules] = useState<Module[]>([]);
-  const [userModule, setUserModule] = useState<UserModule[]>([]);
-
-  const [isLoading, setIsLoading] = useState(true);
-  const [loadingModuleId, setLoadingModuleId] = useState<string | null>(null);
-  const [purchaseState, setPurchaseState] = useState<{
-    isShowModal?: boolean;
-    isPurchaseSuccess?: boolean;
-  }>({
-    isShowModal: false,
-    isPurchaseSuccess: false,
-  });
-
-  const onCheckout = () => {
-    console.log('onCheckout');
-  };
-
-  const onBuyModule = async (item: Module) => {
-    try {
-      setLoadingModuleId(item._id);
-      const res = await lessonStore.handleBuyUserModule({
-        lessonId: item._id,
-      });
-      if (res) {
-        handleGetUserProfile();
-        setPurchaseState({
-          isShowModal: true,
-          isPurchaseSuccess: true,
-        });
-      }
-    } catch (error) {
-      setPurchaseState({
-        isShowModal: true,
-        isPurchaseSuccess: false,
-      });
-    } finally {
-      setLoadingModuleId(null);
-    }
-  };
-
-  useEffect(() => {
-    const handleGetUserModule = async () => {
-      try {
-        const res = await lessonStore.handleGetUserModule(modules);
-        setUserModule(res);
-      } catch (error) {
-        console.log('error', error);
-      }
-    };
-    handleGetUserModule();
-  }, [lessonStore, modules, purchaseState.isPurchaseSuccess]);
-
-  useEffect(() => {
-    setIsLoading(true);
-    homeStore
-      .getListModules({
-        subjectId: subject._id,
-        childrenId: authStore.selectedChild?._id ?? '',
-      })
-      .then(response => {
-        setModules(response.data);
-      })
-      .finally(() => setIsLoading(false));
-  }, [
-    authStore.selectedChild?._id,
-    homeStore,
-    homeStore.subjectId,
-    subject._id,
-    subject.fieldId,
-  ]);
+  const {
+    modules,
+    isLoading,
+    userModule,
+    loadingModuleId,
+    purchaseState,
+    setPurchaseState,
+    onBuyModule,
+    userProfile,
+  } = useGetModulesBySubject({subjectId: subject._id});
 
   const renderModule = useCallback(
     ({item}: {item: Module}) => {
+      console.log('🚀 ~ item:', item.description);
       return (
         <View style={styles.item}>
           <View
@@ -140,7 +71,9 @@ const NewMoreScreen = observer((props: Props) => {
                 style={[globalStyle.txtLabel, styles.textColor]}>
                 {item.name}
               </Text>
-              <Text style={[globalStyle.txtNote, styles.textColor]}>
+              <Text
+                numberOfLines={2}
+                style={[globalStyle.txtNote, styles.textColor, styles.txtDesc]}>
                 {item.description}
               </Text>
             </View>
@@ -188,7 +121,7 @@ const NewMoreScreen = observer((props: Props) => {
         </View>
       );
     },
-    [userModule, loadingModuleId, globalStyle, i18n],
+    [userModule, loadingModuleId, globalStyle, i18n, onBuyModule],
   );
 
   return (
@@ -241,14 +174,6 @@ const NewMoreScreen = observer((props: Props) => {
             </View>
           }
         />
-        {/* <View style={styles.checkout}>
-          <TouchableOpacity style={styles.iconCheckout} onPress={onCheckout}>
-            <View style={styles.dot}>
-              <Text style={[globalStyle.txtButton, styles.textDot]}>2</Text>
-            </View>
-            <IconCheckout />
-          </TouchableOpacity>
-        </View> */}
       </BookView>
       {purchaseState.isShowModal ? (
         <View style={styles.absoluteContent}>
@@ -271,17 +196,6 @@ const styles = StyleSheet.create({
   bg: {
     backgroundColor: COLORS.WHITE_FBF8CC,
   },
-  btnLogout: {
-    backgroundColor: COLORS.GREEN_66C270,
-    marginTop: 8,
-    paddingVertical: 10,
-    paddingHorizontal: 16,
-    alignSelf: 'flex-start',
-    borderRadius: 50,
-  },
-  txtLogout: {
-    color: COLORS.GREEN_1C6349,
-  },
   rowHCenter: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -302,7 +216,7 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   head: {
-    paddingHorizontal: 16,
+    paddingHorizontal: scale(16),
     alignItems: 'center',
   },
   textColor: {
@@ -310,44 +224,25 @@ const styles = StyleSheet.create({
   },
   txtParentName: {
     color: COLORS.GREEN_1C6349,
-    marginRight: 12,
+    marginRight: scale(12),
   },
   pt16: {
-    paddingTop: 16,
+    paddingTop: scale(16),
   },
   mt16: {
-    marginTop: 16,
+    marginTop: scale(16),
   },
   bookContent: {},
   title: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginVertical: 16,
-    paddingLeft: 8,
+    marginVertical: scale(16),
+    paddingLeft: scale(8),
   },
   txtTitle: {
     color: COLORS.GREEN_1C6349,
-    fontSize: 16,
-  },
-  bodyContent: {
-    marginTop: -50,
-    paddingTop: 66,
-    borderRadius: 30,
-    paddingHorizontal: 16,
-    paddingBottom: 16,
-    backgroundColor: COLORS.WHITE_FBF8CC,
-  },
-  center: {
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  iconClose: {
-    top: 15,
-  },
-  lstItem: {
-    flexDirection: 'column',
-    gap: 16,
+    fontSize: scale(16),
   },
   item: {
     backgroundColor: COLORS.WHITE_FBF8CC,
@@ -362,9 +257,11 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     justifyContent: 'space-between',
     alignItems: 'flex-start',
-    flexWrap: 'wrap',
     maxWidth: scale(130),
     gap: verticalScale(4),
+  },
+  txtDesc: {
+    maxWidth: scale(200),
   },
   iconBook: {
     width: scale(60),
@@ -384,38 +281,6 @@ const styles = StyleSheet.create({
   textBtn: {
     fontSize: 10,
     fontWeight: 'bold',
-    color: COLORS.WHITE_FBF8CC,
-  },
-  checkout: {
-    flexDirection: 'column',
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginTop: 16,
-    marginBottom: 16,
-  },
-  iconCheckout: {
-    width: 60,
-    height: 60,
-    borderRadius: 15,
-    justifyContent: 'center',
-    borderWidth: 3,
-    borderColor: COLORS.GREEN_66C270,
-    alignItems: 'center',
-  },
-  dot: {
-    width: 16,
-    height: 16,
-    justifyContent: 'center',
-    alignItems: 'center',
-    position: 'absolute',
-    top: 2,
-    right: 2,
-    backgroundColor: COLORS.RED_DD2424,
-    borderRadius: 15,
-    zIndex: 2,
-  },
-  textDot: {
-    fontSize: 8,
     color: COLORS.WHITE_FBF8CC,
   },
   emptyContainer: {
