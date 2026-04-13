@@ -214,6 +214,27 @@ const VNG5M1NLesson = observer(
         [getSetting, lessonSetting],
       );
 
+      const normalizedCorrectAnswers = useMemo(() => {
+        const currentCorrectAnswer =
+          firstMiniTestTask?.question?.[moduleIndex]?.correctAnswer;
+
+        if (Array.isArray(currentCorrectAnswer)) {
+          return currentCorrectAnswer
+            .flatMap(answer => (Array.isArray(answer) ? answer : [answer]))
+            .filter(
+              (answer): answer is string =>
+                typeof answer === 'string' && answer.trim() !== '',
+            )
+            .map(answer => answer.trim().toLocaleLowerCase());
+        }
+
+        if (typeof currentCorrectAnswer === 'string') {
+          return [currentCorrectAnswer.trim().toLocaleLowerCase()];
+        }
+
+        return [];
+      }, [firstMiniTestTask?.question, moduleIndex]);
+
       const characterImage = useMemo(() => {
         return isAnswerCorrect === true || isAnswerCorrect === undefined
           ? characterImageSuccess
@@ -469,17 +490,13 @@ const VNG5M1NLesson = observer(
                   {answerSelected !== '' &&
                     answerSelected
                       .split(' ') // * nếu correctAnswer là mảng thì check xem correctAnswer đã là chuỗi chưa, nếu chưa thì hiển thị phần tử khác với answerSelected
-                      ?.map(voicedAnswer => {
+                      ?.map((voicedAnswer, index) => {
+                        const isMatch = normalizedCorrectAnswers.includes(
+                          voicedAnswer.trim().toLocaleLowerCase(),
+                        );
                         return (
-                          <View style={styles.wrapCharContainer}>
-                            {(
-                              firstMiniTestTask?.question?.[moduleIndex]
-                                .correctAnswer as string[]
-                            )?.find(
-                              e =>
-                                e.toLocaleLowerCase() ===
-                                voicedAnswer.toLocaleLowerCase(),
-                            ) ? (
+                          <View style={styles.wrapCharContainer} key={index}>
+                            {isMatch ? (
                               <Text
                                 style={[
                                   styles.fonts_SVN_Cherish,

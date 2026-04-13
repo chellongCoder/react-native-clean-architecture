@@ -83,6 +83,22 @@ const initSpeechLanguageCloud: TLanguageMap = {
 
 type TLanguageKeys = keyof typeof initSpeechLanguage; // Create a union type of the keys
 
+const getFirstSpeechValue = (value: unknown): string => {
+  if (typeof value === 'string') {
+    return value.trim();
+  }
+
+  if (Array.isArray(value)) {
+    const firstValidValue = value.find(
+      item => typeof item === 'string' && item.trim() !== '',
+    );
+
+    return typeof firstValidValue === 'string' ? firstValidValue.trim() : '';
+  }
+
+  return '';
+};
+
 export const useSpeechToText = (fullAnswer?: string) => {
   const [voiceState, setVoiceState] = useStateCustom<TState>({
     recognized: false,
@@ -124,24 +140,14 @@ export const useSpeechToText = (fullAnswer?: string) => {
         partialResults: undefined,
       });
       try {
-        if (RECOGNIZER_ENGINE) {
-          await Voice.start(
-            language ? initSpeechLanguageCloud[language] : 'en-US',
-            {
-              EXTRA_SPEECH_INPUT_COMPLETE_SILENCE_LENGTH_MILLIS: 10000, //Extra time to recognize voice when no text change
-              RECOGNIZER_ENGINE: RECOGNIZER_ENGINE,
-            },
-          );
-        } else {
-          await Voice.start(language ? initSpeechLanguage[language] : 'en-US', {
-            EXTRA_SPEECH_INPUT_COMPLETE_SILENCE_LENGTH_MILLIS: 10000, //Extra time to recognize voice when no text change
-          });
-        }
+        await Voice.start(language ? initSpeechLanguage[language] : 'en-US', {
+          EXTRA_SPEECH_INPUT_COMPLETE_SILENCE_LENGTH_MILLIS: 10000, //Extra time to recognize voice when no text change
+        });
       } catch (error: any) {
         console.log('error raised', error);
       }
     },
-    [RECOGNIZER_ENGINE, setVoiceState],
+    [setVoiceState],
   );
 
   const clearSpeechResult = useCallback(() => {
@@ -247,8 +253,10 @@ export const useSpeechToText = (fullAnswer?: string) => {
       );
 
       if (isAndroid) {
+        const currentSpeechValue = getFirstSpeechValue(e?.value);
+
         // Checks if the event contains any speech recognition results.
-        if (!e?.value?.length && !refText.current) {
+        if (!currentSpeechValue && !refText.current) {
           setVoiceState({checkEmpty: true});
           return; // Exits the function if there are no results.
         }
@@ -257,9 +265,9 @@ export const useSpeechToText = (fullAnswer?: string) => {
         // * nếu ref text chưa có giá trị || ref text có giá trị và giá trị mới khác giá trị cũ
         if (
           !refText.current ||
-          (refText.current !== e.value && e.value !== '')
+          (currentSpeechValue && refText.current !== currentSpeechValue)
         ) {
-          refText.current = e.value; // Sets to the exact match if found.
+          refText.current = currentSpeechValue; // Sets to the exact match if found.
         }
 
         // Updates the voice state with the new result and sets `time` to false.
@@ -280,7 +288,8 @@ export const useSpeechToText = (fullAnswer?: string) => {
         }
 
         // Attempts to find a result that matches the `fullAnswer` exactly, ignoring case.
-        const approximateResult = e.value.find(
+        const speechValues = Array.isArray(e.value) ? e.value : [];
+        const approximateResult = speechValues.find(
           (item: string) =>
             item.toLocaleUpperCase() === fullAnswer?.toLocaleUpperCase(),
         );
@@ -289,7 +298,7 @@ export const useSpeechToText = (fullAnswer?: string) => {
         if (approximateResult) {
           refText.current = approximateResult; // Sets to the exact match if found.
         } else {
-          refText.current = e.value[0]; // Sets to the first result if no exact match is found.
+          refText.current = getFirstSpeechValue(speechValues); // Sets to the first result if no exact match is found.
         }
 
         // Updates the voice state with the new result and sets `time` to false.
