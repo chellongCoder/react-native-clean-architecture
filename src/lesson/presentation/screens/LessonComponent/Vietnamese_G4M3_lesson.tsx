@@ -341,7 +341,7 @@ const VnG4M3Lesson = observer(
               ).map((item, index) => {
                 return (
                   <DragItem
-                    key={index}
+                    key={index + item}
                     index={index}
                     value={item}
                     canSwap={false}

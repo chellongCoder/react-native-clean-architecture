@@ -114,62 +114,64 @@ Props) => {
   }, [value]);
 
   return (
-    <GestureHandlerRootView
-      // style={{zIndex: 100000}}
-      pointerEvents={canDrag ? 'auto' : 'none'}>
-      {canDrag && (
-        <View
-          style={{
-            position: 'absolute',
-            top: 0,
-            left: 0,
-            opacity:
-              isFocus ||
-              listDragItem[index]?.isSelected ||
-              listDragItem[index]?.isMatch
-                ? 0.5
-                : 1,
-          }}
-          pointerEvents={listDragItem[index]?.parentId > -1 ? 'auto' : 'none'}>
-          <TouchableOpacity
-            onPress={() => {
-              rollback(index);
-            }}>
-            {createItem({
-              value: getValue(index) || value,
-              isFocus: false,
-              index,
-            })}
-          </TouchableOpacity>
-        </View>
-      )}
-      <GestureDetector
-        gesture={
-          !listDragItem[index]?.isSelected && !canSwap ? pan : Gesture.Pan()
-        }>
-        <Animated.View
-          ref={ref}
-          style={[animatedStyles]}
-          pointerEvents={
-            listDragItem[index]?.parentId > -1 ? 'none' : 'box-only'
-          }
-          onLayout={e => {
-            if (canDrag) {
-              e.target.measureInWindow((x, y, width, height) => {
-                attachView(x, y, width, height);
-              });
-            }
-          }}>
-          <View style={{opacity: canDrag ? 0 : 1}}>
-            {createItem({
-              value: listDragItem[index]?.value,
-              isFocus: false,
-              index,
-            })}
+    <View>
+      <GestureHandlerRootView
+        style={{alignSelf: 'stretch'}}
+        pointerEvents={canDrag ? 'auto' : 'none'}>
+        {canDrag && (
+          <View
+            style={{
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              opacity:
+                isFocus ||
+                listDragItem[index]?.isSelected ||
+                listDragItem[index]?.isMatch
+                  ? 0.5
+                  : 1,
+            }}
+            pointerEvents={listDragItem[index]?.parentId > -1 ? 'auto' : 'none'}>
+            <TouchableOpacity
+              onPress={() => {
+                rollback(index);
+              }}>
+              {createItem({
+                value: getValue(index) || value,
+                isFocus: false,
+                index,
+              })}
+            </TouchableOpacity>
           </View>
-        </Animated.View>
-      </GestureDetector>
-    </GestureHandlerRootView>
+        )}
+        <GestureDetector
+          gesture={
+            !listDragItem[index]?.isSelected && !canSwap ? pan : Gesture.Pan()
+          }>
+          <Animated.View
+            ref={ref}
+            style={[animatedStyles]}
+            pointerEvents={
+              listDragItem[index]?.parentId > -1 ? 'none' : 'box-only'
+            }
+            onLayout={e => {
+              if (canDrag) {
+                e.target.measureInWindow((x, y, width, height) => {
+                  attachView(x, y, width, height);
+                });
+              }
+            }}>
+            <View style={{opacity: canDrag ? 0 : 1}}>
+              {createItem({
+                value: listDragItem[index]?.value,
+                isFocus: false,
+                index,
+              })}
+            </View>
+          </Animated.View>
+        </GestureDetector>
+      </GestureHandlerRootView>
+    </View>
   );
 };
 
